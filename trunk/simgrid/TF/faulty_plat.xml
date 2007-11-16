@@ -1,0 +1,84 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform_description SYSTEM "surfxml.dtd">
+<platform_description version="1">
+  <!-- ljlkj -->
+  <cpu name="Tremblay" power="98095000"/>
+  <cpu name="Jupiter" power="76296000"/>
+  <cpu name="Fafard" power="76296000"/>
+  <cpu name="Ginette" power="48492000"/>
+  <cpu name="Bourassa" power="48492000"/>
+  <network_link name="T_out" bandwidth="41279125" latency="5.9904e-05"/>
+  <network_link name="T_in" bandwidth="252750" latency="0.00570455"/>
+  <network_link name="J_out" bandwidth="34285625" latency="0.000514433"/>
+  <network_link name="J_in" bandwidth="11618875" latency="0.00018998"/>
+  <network_link name="F_out" bandwidth="7209750" latency="0.001461517"/>
+  <network_link name="F_in" bandwidth="1792625" latency="0.007877863"/>
+  <network_link name="B_out" bandwidth="118682500" latency="0.000136931"/>
+  <network_link name="B_in" bandwidth="8158000" latency="0.000270544"/>
+  <network_link name="G_out" bandwidth="34285625" latency="0.000514433"/>
+  <network_link name="G_in" bandwidth="10099625" latency="0.00047978"/>
+  <network_link name="loopback_FATPIPE" bandwidth="10000000" latency="0.1" sharing_policy="FATPIPE"/>
+  <network_link name="loopback" bandwidth="498000000" latency="0.000015"/>
+  <route src="Tremblay" dst="Tremblay"><route_element name="loopback"/></route>
+  <route src="Jupiter" dst="Jupiter"><route_element name="loopback"/></route>
+  <route src="Fafard" dst="Fafard"><route_element name="loopback"/></route>
+  <route src="Ginette" dst="Ginette"><route_element name="loopback"/></route>
+  <route src="Bourassa" dst="Bourassa"><route_element name="loopback"/></route>
+  <route src="Tremblay" dst="Jupiter">
+		<route_element name="T_out"/><route_element name="J_in"/>
+  </route>
+  <route src="Tremblay" dst="Fafard">
+    <route_element name="T_out"/><route_element name="F_in"/>
+  </route>
+  <route src="Tremblay" dst="Ginette">
+    <route_element name="T_out"/><route_element name="G_in"/>
+  </route>
+  <route src="Jupiter" dst="Tremblay">
+		<route_element name="J_out"/><route_element name="T_in"/>
+  </route>
+  <route src="Jupiter" dst="Fafard">
+		<route_element name="J_out"/><route_element name="F_in"/>
+  </route>
+  <route src="Jupiter" dst="Ginette">
+		<route_element name="J_out"/><route_element name="G_in"/>
+  </route>
+  <route src="Jupiter" dst="Bourassa">
+		<route_element name="J_out"/><route_element name="B_in"/>
+  </route>
+  <route src="Fafard" dst="Tremblay">
+		<route_element name="F_out"/><route_element name="T_in"/>
+  </route>
+  <route src="Fafard" dst="Jupiter">
+		<route_element name="F_out"/><route_element name="J_in"/>
+  </route>
+  <route src="Fafard" dst="Ginette">
+		<route_element name="F_out"/><route_element name="G_in"/>
+  </route>
+  <route src="Fafard" dst="Bourassa">
+		<route_element name="F_out"/><route_element name="B_in"/>
+  </route>
+  <route src="Ginette" dst="Tremblay">
+		<route_element name="G_out"/><route_element name="T_in"/>
+  </route>
+  <route src="Ginette" dst="Jupiter">
+		<route_element name="G_out"/><route_element name="J_in"/>
+  </route>
+  <route src="Ginette" dst="Fafard">
+		<route_element name="G_out"/><route_element name="F_in"/>
+  </route>
+  <route src="Ginette" dst="Bourassa">
+		<route_element name="G_out"/><route_element name="B_in"/>
+  </route>
+  <route src="Bourassa" dst="Tremblay">
+		<route_element name="B_out"/><route_element name="T_in"/>
+  </route>
+  <route src="Bourassa" dst="Jupiter">
+		<route_element name="B_out"/><route_element name="J_in"/>
+  </route>
+  <route src="Bourassa" dst="Fafard">
+		<route_element name="B_out"/><route_element name="F_in"/>
+  </route>
+  <route src="Bourassa" dst="Ginette">
+		<route_element name="B_out"/><route_element name="G_in"/>
+  </route>
+</platform_description>

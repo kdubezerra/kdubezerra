@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform_description SYSTEM "surfxml.dtd">
+<platform_description version="1">
+  <!-- The master process (with some arguments) -->
+  <process host="Tremblay" function="master">
+     <argument value="RR"/>       <!-- Type of scheduling -->
+	  <argument value="500"/>      <!-- Number of tasks to execute -->
+     <argument value="Jupiter"/>  <!-- First slave -->
+     <argument value="Fafard"/>   <!-- Second slave -->
+     <argument value="Ginette"/>  <!-- Third slave -->
+     <argument value="Bourassa"/> <!-- Last slave -->
+     <argument value="Tremblay"/> <!-- Me! I can work too! -->
+  </process>
+  <!-- The slave process (with no argument) -->
+  <process host="Tremblay" function="slave"/>
+  <process host="Jupiter" function="slave"/>
+  <process host="Fafard" function="slave"/>
+  <process host="Ginette" function="slave"/>
+  <process host="Bourassa" function="slave"/>
+</platform_description>
