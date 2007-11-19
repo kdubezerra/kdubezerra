@@ -1,0 +1,50 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform_description SYSTEM "surfxml.dtd">
+<platform_description version="1">
+	<process host="Nodo_0" function="master">
+		<argument value="RR"/>     	<!-- Type of scheduling -->
+		<argument value="2000"/>     	<!-- Number of tasks to execute -->
+		<argument value="Nodo_1"/>
+		<argument value="Nodo_2"/>
+		<argument value="Nodo_3"/>
+		<argument value="Nodo_4"/>
+		<argument value="Nodo_5"/>
+		<argument value="Nodo_6"/>
+		<argument value="Nodo_7"/>
+		<argument value="Nodo_8"/>
+		<argument value="Nodo_9"/>
+		<argument value="Nodo_10"/>
+		<argument value="Nodo_11"/>
+		<argument value="Nodo_12"/>
+		<argument value="Nodo_13"/>
+		<argument value="Nodo_14"/>
+		<argument value="Nodo_15"/>
+		<argument value="Nodo_16"/>
+		<argument value="Nodo_17"/>
+		<argument value="Nodo_18"/>
+		<argument value="Nodo_19"/>
+		<argument value="Nodo_20"/>
+		<argument value="Nodo_0"/>
+	</process>
+	<process host="Nodo_0" function="slave"/>
+	<process host="Nodo_1" function="slave"/>
+	<process host="Nodo_2" function="slave"/>
+	<process host="Nodo_3" function="slave"/>
+	<process host="Nodo_4" function="slave"/>
+	<process host="Nodo_5" function="slave"/>
+	<process host="Nodo_6" function="slave"/>
+	<process host="Nodo_7" function="slave"/>
+	<process host="Nodo_8" function="slave"/>
+	<process host="Nodo_9" function="slave"/>
+	<process host="Nodo_10" function="slave"/>
+	<process host="Nodo_11" function="slave"/>
+	<process host="Nodo_12" function="slave"/>
+	<process host="Nodo_13" function="slave"/>
+	<process host="Nodo_14" function="slave"/>
+	<process host="Nodo_15" function="slave"/>
+	<process host="Nodo_16" function="slave"/>
+	<process host="Nodo_17" function="slave"/>
+	<process host="Nodo_18" function="slave"/>
+	<process host="Nodo_19" function="slave"/>
+	<process host="Nodo_20" function="slave"/>
+</platform_description>

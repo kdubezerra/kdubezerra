@@ -1,0 +1,1350 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform_description SYSTEM "surfxml.dtd">
+<platform_description version="1">
+	<cpu name="Nodo_0" power="99999000"/>
+	<cpu name="Nodo_1" power="4307383"/>
+	<cpu name="Nodo_2" power="46938886"/>
+	<cpu name="Nodo_3" power="81708777"/>
+	<cpu name="Nodo_4" power="14653915"/>
+	<cpu name="Nodo_5" power="57766793"/>
+	<cpu name="Nodo_6" power="24242335"/>
+	<cpu name="Nodo_7" power="19892386"/>
+	<cpu name="Nodo_8" power="49776492"/>
+	<cpu name="Nodo_9" power="96521649"/>
+	<cpu name="Nodo_10" power="89652421"/>
+	<cpu name="Nodo_11" power="25212362"/>
+	<cpu name="Nodo_12" power="50503027"/>
+	<cpu name="Nodo_13" power="83375690"/>
+	<cpu name="Nodo_14" power="2531059"/>
+	<cpu name="Nodo_15" power="44917763"/>
+	<cpu name="Nodo_16" power="67532926"/>
+	<cpu name="Nodo_17" power="65193540"/>
+	<cpu name="Nodo_18" power="40398426"/>
+	<cpu name="Nodo_19" power="4092172"/>
+	<cpu name="Nodo_20" power="3468736"/>
+	<network_link name="Nodo_0_in" bandwidth="50000000" latency="0.005105"/>
+	<network_link name="Nodo_0_out" bandwidth="10000000" latency="0.001695"/>
+	<network_link name="Nodo_1_in" bandwidth="26956429" latency="0.004803"/>
+	<network_link name="Nodo_1_out" bandwidth="1021530" latency="0.006566"/>
+	<network_link name="Nodo_2_in" bandwidth="33665123" latency="0.008823"/>
+	<network_link name="Nodo_2_out" bandwidth="3703135" latency="0.005274"/>
+	<network_link name="Nodo_3_in" bandwidth="1979802" latency="0.001614"/>
+	<network_link name="Nodo_3_out" bandwidth="723058" latency="0.005734"/>
+	<network_link name="Nodo_4_in" bandwidth="25898167" latency="0.009233"/>
+	<network_link name="Nodo_4_out" bandwidth="4018456" latency="0.010061"/>
+	<network_link name="Nodo_5_in" bandwidth="6478042" latency="0.008275"/>
+	<network_link name="Nodo_5_out" bandwidth="3377373" latency="0.001276"/>
+	<network_link name="Nodo_6_in" bandwidth="14544919" latency="0.009584"/>
+	<network_link name="Nodo_6_out" bandwidth="1898537" latency="0.008514"/>
+	<network_link name="Nodo_7_in" bandwidth="23594324" latency="0.004675"/>
+	<network_link name="Nodo_7_out" bandwidth="3664370" latency="0.009898"/>
+	<network_link name="Nodo_8_in" bandwidth="34803526" latency="0.009666"/>
+	<network_link name="Nodo_8_out" bandwidth="4268980" latency="0.002876"/>
+	<network_link name="Nodo_9_in" bandwidth="49241873" latency="0.001860"/>
+	<network_link name="Nodo_9_out" bandwidth="2999170" latency="0.007907"/>
+	<network_link name="Nodo_10_in" bandwidth="35497281" latency="0.003007"/>
+	<network_link name="Nodo_10_out" bandwidth="4420925" latency="0.001802"/>
+	<network_link name="Nodo_11_in" bandwidth="27336327" latency="0.007577"/>
+	<network_link name="Nodo_11_out" bandwidth="4126505" latency="0.002760"/>
+	<network_link name="Nodo_12_in" bandwidth="32621729" latency="0.005851"/>
+	<network_link name="Nodo_12_out" bandwidth="3925857" latency="0.000761"/>
+	<network_link name="Nodo_13_in" bandwidth="34353895" latency="0.001716"/>
+	<network_link name="Nodo_13_out" bandwidth="1100545" latency="0.009920"/>
+	<network_link name="Nodo_14_in" bandwidth="48233367" latency="0.008999"/>
+	<network_link name="Nodo_14_out" bandwidth="990364" latency="0.000615"/>
+	<network_link name="Nodo_15_in" bandwidth="10313750" latency="0.004444"/>
+	<network_link name="Nodo_15_out" bandwidth="1426808" latency="0.007271"/>
+	<network_link name="Nodo_16_in" bandwidth="39947178" latency="0.005217"/>
+	<network_link name="Nodo_16_out" bandwidth="4393584" latency="0.000796"/>
+	<network_link name="Nodo_17_in" bandwidth="18502651" latency="0.001805"/>
+	<network_link name="Nodo_17_out" bandwidth="4612399" latency="0.002493"/>
+	<network_link name="Nodo_18_in" bandwidth="14095060" latency="0.004100"/>
+	<network_link name="Nodo_18_out" bandwidth="3993368" latency="0.001650"/>
+	<network_link name="Nodo_19_in" bandwidth="34210012" latency="0.004048"/>
+	<network_link name="Nodo_19_out" bandwidth="4698586" latency="0.005736"/>
+	<network_link name="Nodo_20_in" bandwidth="6297539" latency="0.009448"/>
+	<network_link name="Nodo_20_out" bandwidth="3480570" latency="0.006241"/>
+	<network_link name="loopback_FATPIPE" bandwidth="10000000" latency="0.1" sharing_policy="FATPIPE"/>
+	<network_link name="loopback" bandwidth="498000000" latency="0.000015"/>
+	<route src="Nodo_0" dst="Nodo_0"><route_element name="loopback"/></route>
+	<route src="Nodo_1" dst="Nodo_1"><route_element name="loopback"/></route>
+	<route src="Nodo_2" dst="Nodo_2"><route_element name="loopback"/></route>
+	<route src="Nodo_3" dst="Nodo_3"><route_element name="loopback"/></route>
+	<route src="Nodo_4" dst="Nodo_4"><route_element name="loopback"/></route>
+	<route src="Nodo_5" dst="Nodo_5"><route_element name="loopback"/></route>
+	<route src="Nodo_6" dst="Nodo_6"><route_element name="loopback"/></route>
+	<route src="Nodo_7" dst="Nodo_7"><route_element name="loopback"/></route>
+	<route src="Nodo_8" dst="Nodo_8"><route_element name="loopback"/></route>
+	<route src="Nodo_9" dst="Nodo_9"><route_element name="loopback"/></route>
+	<route src="Nodo_10" dst="Nodo_10"><route_element name="loopback"/></route>
+	<route src="Nodo_11" dst="Nodo_11"><route_element name="loopback"/></route>
+	<route src="Nodo_12" dst="Nodo_12"><route_element name="loopback"/></route>
+	<route src="Nodo_13" dst="Nodo_13"><route_element name="loopback"/></route>
+	<route src="Nodo_14" dst="Nodo_14"><route_element name="loopback"/></route>
+	<route src="Nodo_15" dst="Nodo_15"><route_element name="loopback"/></route>
+	<route src="Nodo_16" dst="Nodo_16"><route_element name="loopback"/></route>
+	<route src="Nodo_17" dst="Nodo_17"><route_element name="loopback"/></route>
+	<route src="Nodo_18" dst="Nodo_18"><route_element name="loopback"/></route>
+	<route src="Nodo_19" dst="Nodo_19"><route_element name="loopback"/></route>
+	<route src="Nodo_20" dst="Nodo_20"><route_element name="loopback"/></route>
+	<route src="Nodo_0" dst="Nodo_1">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_2">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_3">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_4">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_5">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_6">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_7">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_8">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_9">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_10">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_11">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_12">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_13">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_14">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_15">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_16">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_17">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_18">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_19">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_0" dst="Nodo_20">
+		<route_element name="Nodo_0_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_0">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_2">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_3">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_4">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_5">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_6">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_7">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_8">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_9">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_10">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_11">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_12">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_13">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_14">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_15">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_16">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_17">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_18">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_19">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_1" dst="Nodo_20">
+		<route_element name="Nodo_1_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_0">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_1">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_3">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_4">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_5">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_6">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_7">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_8">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_9">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_10">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_11">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_12">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_13">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_14">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_15">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_16">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_17">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_18">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_19">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_2" dst="Nodo_20">
+		<route_element name="Nodo_2_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_0">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_1">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_2">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_4">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_5">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_6">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_7">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_8">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_9">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_10">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_11">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_12">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_13">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_14">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_15">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_16">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_17">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_18">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_19">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_3" dst="Nodo_20">
+		<route_element name="Nodo_3_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_0">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_1">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_2">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_3">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_5">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_6">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_7">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_8">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_9">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_10">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_11">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_12">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_13">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_14">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_15">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_16">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_17">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_18">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_19">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_4" dst="Nodo_20">
+		<route_element name="Nodo_4_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_0">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_1">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_2">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_3">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_4">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_6">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_7">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_8">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_9">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_10">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_11">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_12">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_13">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_14">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_15">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_16">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_17">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_18">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_19">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_5" dst="Nodo_20">
+		<route_element name="Nodo_5_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_0">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_1">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_2">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_3">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_4">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_5">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_7">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_8">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_9">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_10">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_11">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_12">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_13">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_14">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_15">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_16">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_17">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_18">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_19">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_6" dst="Nodo_20">
+		<route_element name="Nodo_6_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_0">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_1">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_2">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_3">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_4">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_5">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_6">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_8">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_9">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_10">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_11">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_12">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_13">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_14">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_15">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_16">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_17">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_18">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_19">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_7" dst="Nodo_20">
+		<route_element name="Nodo_7_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_0">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_1">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_2">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_3">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_4">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_5">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_6">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_7">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_9">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_10">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_11">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_12">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_13">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_14">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_15">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_16">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_17">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_18">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_19">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_8" dst="Nodo_20">
+		<route_element name="Nodo_8_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_0">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_1">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_2">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_3">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_4">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_5">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_6">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_7">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_8">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_10">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_11">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_12">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_13">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_14">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_15">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_16">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_17">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_18">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_19">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_9" dst="Nodo_20">
+		<route_element name="Nodo_9_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_0">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_1">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_2">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_3">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_4">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_5">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_6">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_7">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_8">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_9">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_11">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_12">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_13">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_14">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_15">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_16">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_17">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_18">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_19">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_10" dst="Nodo_20">
+		<route_element name="Nodo_10_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_0">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_1">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_2">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_3">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_4">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_5">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_6">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_7">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_8">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_9">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_10">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_12">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_13">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_14">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_15">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_16">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_17">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_18">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_19">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_11" dst="Nodo_20">
+		<route_element name="Nodo_11_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_0">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_1">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_2">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_3">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_4">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_5">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_6">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_7">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_8">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_9">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_10">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_11">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_13">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_14">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_15">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_16">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_17">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_18">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_19">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_12" dst="Nodo_20">
+		<route_element name="Nodo_12_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_0">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_1">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_2">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_3">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_4">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_5">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_6">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_7">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_8">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_9">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_10">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_11">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_12">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_14">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_15">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_16">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_17">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_18">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_19">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_13" dst="Nodo_20">
+		<route_element name="Nodo_13_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_0">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_1">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_2">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_3">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_4">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_5">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_6">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_7">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_8">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_9">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_10">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_11">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_12">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_13">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_15">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_16">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_17">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_18">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_19">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_14" dst="Nodo_20">
+		<route_element name="Nodo_14_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_0">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_1">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_2">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_3">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_4">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_5">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_6">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_7">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_8">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_9">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_10">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_11">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_12">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_13">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_14">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_16">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_17">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_18">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_19">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_15" dst="Nodo_20">
+		<route_element name="Nodo_15_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_0">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_1">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_2">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_3">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_4">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_5">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_6">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_7">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_8">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_9">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_10">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_11">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_12">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_13">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_14">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_15">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_17">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_18">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_19">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_16" dst="Nodo_20">
+		<route_element name="Nodo_16_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_0">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_1">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_2">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_3">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_4">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_5">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_6">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_7">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_8">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_9">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_10">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_11">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_12">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_13">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_14">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_15">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_16">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_18">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_19">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_17" dst="Nodo_20">
+		<route_element name="Nodo_17_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_0">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_1">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_2">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_3">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_4">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_5">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_6">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_7">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_8">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_9">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_10">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_11">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_12">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_13">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_14">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_15">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_16">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_17">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_19">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_19_in"/>
+	</route>
+	<route src="Nodo_18" dst="Nodo_20">
+		<route_element name="Nodo_18_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_0">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_1">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_2">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_3">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_4">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_5">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_6">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_7">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_8">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_9">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_10">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_11">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_12">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_13">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_14">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_15">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_16">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_17">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_18">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_19" dst="Nodo_20">
+		<route_element name="Nodo_19_out"/><route_element name="Nodo_20_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_0">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_0_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_1">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_1_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_2">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_2_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_3">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_3_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_4">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_4_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_5">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_5_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_6">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_6_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_7">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_7_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_8">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_8_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_9">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_9_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_10">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_10_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_11">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_11_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_12">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_12_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_13">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_13_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_14">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_14_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_15">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_15_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_16">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_16_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_17">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_17_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_18">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_18_in"/>
+	</route>
+	<route src="Nodo_20" dst="Nodo_19">
+		<route_element name="Nodo_20_out"/><route_element name="Nodo_19_in"/>
+	</route>
+</platform_description>
