@@ -4,6 +4,7 @@
   <!-- The master process (with some arguments) -->
   <process host="Tremblay" function="master">
      <argument value="DYN"/>      <!-- Type of scheduling -->
+     <argument value="50"/>      <!-- Number of tasks to execute -->
      <argument value="Jupiter"/>  <!-- First slave -->
      <argument value="Fafard"/>   <!-- Second slave -->
      <argument value="Ginette"/>  <!-- Third slave -->

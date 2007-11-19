@@ -1,5 +1,5 @@
-all: masterslave 
-masterslave: masterslave.o
+all: sched
+sched: sched.o
 
 INSTALL_PATH = $$HOME
 CC = gcc
