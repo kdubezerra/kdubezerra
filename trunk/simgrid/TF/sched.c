@@ -44,6 +44,9 @@ int master(int argc, char *argv[])
 	int number_of_tasks = 0;
 	double task_comp_size = 0;
 	double task_comm_size = 0;
+	
+	int task_cpu_range = 1;
+	int task_net_range = 1;
 
 
 	int i;
@@ -61,12 +64,20 @@ int master(int argc, char *argv[])
 
 	
 	xbt_assert1(sscanf(argv[2],"%d", &number_of_tasks),
-					"Parametro invalido %s\n",argv[1]);
+					"Parametro invalido %s\n",argv[2]);
 //   xbt_assert1(sscanf(argv[2],"%lg", &task_comp_size),
 // 				  "Invalid argument %s\n",argv[2]);
 //   xbt_assert1(sscanf(argv[3],"%lg", &task_comm_size),
 // 				  "Invalid argument %s\n",argv[3]);
   
+	xbt_assert1(sscanf(argv[3],"%d", &task_cpu_range),
+					"Parametro invalido %s\n",argv[3]);
+	if (task_cpu_range <= 0) task_cpu_range=1;
+		
+	xbt_assert1(sscanf(argv[4],"%d", &task_net_range),
+					"Parametro invalido %s\n",argv[4]);
+	if (task_net_range <= 0) task_net_range=1;
+	
 	master_host = MSG_host_self();
 
 	{                  /*  Task creation */
@@ -76,8 +87,8 @@ int master(int argc, char *argv[])
 
 		srand(1);
 		for (i = 0; i < number_of_tasks; i++) {
-			task_comp_size = (double) (rand() % 500000);
-			task_comm_size = 0.0f /*(double) (rand() % 50)*/;
+			task_comp_size = (double) (rand() % task_cpu_range); //era 500'000,00
+			task_comm_size = 0.0f /*(double) (rand() % task_net_range)*/; //era 50
 			INFO3("Custo da tarefa %d: CPU (%ld) ; NET (%d)", i, (long) task_comp_size, (int) task_comm_size);
 			sprintf(sprintf_buffer, "Tarefa_%d", i);
 			todo[i] = MSG_task_create(sprintf_buffer, task_comp_size, task_comm_size, NULL /*(void*) &sched*/);
@@ -85,12 +96,12 @@ int master(int argc, char *argv[])
 	}
 
 	{                  /* Process organisation */
-		slaves_count = argc - 3;
+		slaves_count = argc - 5;
 		slaves = calloc(slaves_count, sizeof(m_host_t));
     
-		for (i = 3; i < argc; i++) {
-			slaves[i-3] = MSG_get_host_by_name(argv[i]);
-			if(slaves[i-3]==NULL) {
+		for (i = 5; i < argc; i++) {
+			slaves[i-5] = MSG_get_host_by_name(argv[i]);
+			if(slaves[i-5]==NULL) {
 				INFO1("Host nao encontrado %s. Finalizando! ", argv[i]);
 				abort();
 			}
