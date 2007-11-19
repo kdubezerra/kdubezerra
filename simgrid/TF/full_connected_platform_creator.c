@@ -6,10 +6,10 @@ FILE *arq_dep;
 int main (int argc, char** argv) {
 	char host_name[255];
 	int i, j, num_of_slaves = 100;
-	int num_of_tasks;
+	int num_of_tasks, max_cpu_task_usage, max_net_task_usage;
 	
-	if (argc != 4) {
-		printf ("\tUtilização: ./fcpc <no. de escravos> <no. de tarefas> <tipo de escalonamento (RR, DYN ou FUJI)>\n");
+	if (argc != 6) {
+		printf ("\tUtilização: %s <no. de escravos> <no. de tarefas> <tipo de escalonamento (RR, DYN ou FUJI)> <max_cpu_task_usage> <max_net_task_usage>\n", argv[0]);
 		return(1);
 	}
 		 
@@ -71,6 +71,8 @@ int main (int argc, char** argv) {
 	arq_dep = fopen("new_dep.xml","w");
 	
 	sscanf(argv[2], "%d", &num_of_tasks);
+	sscanf(argv[4], "%d", &max_cpu_task_usage);
+	sscanf(argv[5], "%d", &max_net_task_usage);
 	
 	fprintf (arq_dep, "<?xml version='1.0'?>\n");
 	fprintf (arq_dep, "<!DOCTYPE platform_description SYSTEM \"surfxml.dtd\">\n");
@@ -80,6 +82,8 @@ int main (int argc, char** argv) {
 	
 	fprintf (arq_dep, "\t\t<argument value=\"%s\"/>     \t<!-- Type of scheduling -->\n", argv[3]);
 	fprintf (arq_dep, "\t\t<argument value=\"%d\"/>     \t<!-- Number of tasks to execute -->\n", num_of_tasks);
+	fprintf (arq_dep, "\t\t<argument value=\"%d\"/>     \t<!-- Range of the random task cpu requirement -->\n", max_cpu_task_usage);
+	fprintf (arq_dep, "\t\t<argument value=\"%d\"/>     \t<!-- Range of the random task net requirement -->\n", max_net_task_usage);
 	
 	for (i = 1 ; i <= num_of_slaves ; i++){
 		fprintf (arq_dep, "\t\t<argument value=\"Nodo_%d\"/>\n", i);
