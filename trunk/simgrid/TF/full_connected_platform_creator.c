@@ -9,7 +9,7 @@ int main (int argc, char** argv) {
 	int num_of_tasks, max_cpu_task_usage, max_net_task_usage;
 	
 	if (argc != 6) {
-		printf ("\tUtilização: %s <no. de escravos> <no. de tarefas> <tipo de escalonamento (RR, DYN ou FUJI)> <max_cpu_task_usage> <max_net_task_usage>\n", argv[0]);
+		printf ("\tUtilização: %s <no. de escravos> <no. de tarefas> <tipo de escalonamento (RR, DYN ou HEAP)> <max_cpu_task_usage> <max_net_task_usage>\n", argv[0]);
 		return(1);
 	}
 		 
@@ -68,9 +68,11 @@ int main (int argc, char** argv) {
 	
 	
 	//INICIO da criação do deployment
-	arq_dep_rr = fopen("fc_dep_rr.xml","w");
-	arq_dep_dyn = fopen("fc_dep_dyn.xml","w");
-	arq_dep_heap = fopen("fc_dep_heap.xml","w");
+	char arq_name[16];
+	
+	sprintf(arq_name,"fc_dep_%s.xml", argv[3]);
+	
+	arq_dep = fopen(arq_name,"w");
 	
 	sscanf(argv[2], "%d", &num_of_tasks);
 	sscanf(argv[4], "%d", &max_cpu_task_usage);
