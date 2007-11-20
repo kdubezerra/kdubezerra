@@ -15,7 +15,7 @@ CFLAGS = -g $(WARNINGS)
 
 INCLUDES = -I$(INSTALL_PATH)/include
 DEFS = -L$(INSTALL_PATH)/lib/
-LDADD = -lm -lsimgrid 
+LDADD = -lm -lsimgrid -L. -lmyheap
 LIBS = 
 
 %: %.o

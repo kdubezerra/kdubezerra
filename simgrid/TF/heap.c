@@ -90,40 +90,7 @@ void* heap_extractMax (heap_v* heap) {
 	return data;		
 }
 
-int maior (void* _a, void* _b) {
-	
-// 	printf ("Estou dentro da função\n");
-	
-	int a = *((int*) _a);
-	int b = *((int*) _b);
-	
-// 	printf ("Fiz os casts\n");
-	
-	if (a > b)
-		return 1;
-	else
-		return 0;
-}
 
-int main () {
-	int i, *novo;
-	
-	heap_v* my_heap = heap_create(16, &maior);
-	
-	for (i = 0; i < 16; i++) {
-		novo = malloc(sizeof(int));
-		*novo = rand() % 256;
-		printf ("Inserindo o novo elemento %d\n", *novo);
-		heap_insert((void*) novo, my_heap);
-	}
-	
-	heap_extractMax (my_heap);
-	heap_extractMax (my_heap);
-	heap_extractMax (my_heap);
-	
-	sweep(my_heap);
-	
-}
 
 
 void sweep (heap_v* heap) {
