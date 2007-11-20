@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "heap.h"
 #include "msg/msg.h"
 #include "xbt/sysdep.h"
 
@@ -13,13 +14,16 @@ int slave(int argc, char *argv[]);
 int forwarder(int argc, char *argv[]);
 void scatter_tasks_rr (int number_of_tasks, m_task_t* todo, int slaves_count, m_host_t* slaves);
 void scatter_tasks_dyn (int number_of_tasks, m_task_t* todo, int slaves_count, m_host_t* slaves);
-void scatter_tasks_ ();
+void scatter_tasks_heap (int number_of_tasks, m_task_t* todo, int slaves_count, m_host_t* slaves);
 MSG_error_t test_all(const char *platform_file, const char *application_file);
+
+int greater_slave (void* _host_a, void* _host_b);
+int greater_task (void* _task_a, void* _task_b);
 
 typedef enum {
 	ROUND_ROBIN = 0,
  DYNAMIC,
- FUJIMOTO
+ HEAP
 } scheduling;
 
 typedef enum {
@@ -58,8 +62,8 @@ int master(int argc, char *argv[])
 	else if (!strcmp(argv[1],"DYN")) {
 		sched = DYNAMIC;
 	}
-	else if (!strcmp(argv[1],"FUJI")) {
-		sched = FUJIMOTO;
+	else if (!strcmp(argv[1],"HEAP")) {
+		sched = HEAP;
 	}
 
 	
@@ -123,7 +127,8 @@ int master(int argc, char *argv[])
 		scatter_tasks_rr (number_of_tasks, todo, slaves_count, slaves);
 	else if (sched == DYNAMIC)
 		scatter_tasks_dyn (number_of_tasks, todo, slaves_count, slaves);
-	else if (sched == FUJIMOTO);
+	else if (sched == HEAP)
+		scatter_tasks_heap (number_of_tasks, todo, slaves_count, slaves);
   
 	INFO0("FIM.");
 	free(slaves);
@@ -135,20 +140,12 @@ int slave(int argc, char *argv[])
 {
 	m_host_t master = master_host;
 	
-// 	if (/*(*(scheduling*)MSG_task_get_data (task))*/ sched != ROUND_ROBIN) {
-// 		INFO0 ("PEDINDO TAREFA");
-// 		MSG_task_put(MSG_task_create("task_request", REQ_CPU, REQ_NET, TASK_REQUEST), master, TO_MASTER);
-// 	}
+	if (/*(*(scheduling*)MSG_task_get_data (task))*/ sched == DYNAMIC) {
+		INFO0 ("PEDINDO TAREFA");
+		MSG_task_put(MSG_task_create("task_request", REQ_CPU, REQ_NET, TASK_REQUEST), master, TO_MASTER);
+	}
 	
-	while(1) {
-		
-
-		
-		if (/*(*(scheduling*)MSG_task_get_data (task))*/ sched != ROUND_ROBIN) {
-			INFO0 ("PEDINDO TAREFA");
-			MSG_task_put(MSG_task_create("task_request", REQ_CPU, REQ_NET, TASK_REQUEST), master, TO_MASTER);
-		}
-		
+	while(1) {	
 
 		m_task_t task = NULL;
 		int a;
@@ -168,6 +165,11 @@ int slave(int argc, char *argv[])
 			INFO0("Ocorreu um erro ");
 			xbt_assert0(0,"Unexpected behavior");
 		}		
+		
+		if (/*(*(scheduling*)MSG_task_get_data (task))*/ sched != ROUND_ROBIN) {
+			INFO0 ("PEDINDO TAREFA");
+			MSG_task_put(MSG_task_create("task_request", REQ_CPU, REQ_NET, TASK_REQUEST), master, TO_MASTER);
+		}
 		
 	}
 	INFO0("Processo terminado");
@@ -325,17 +327,81 @@ void scatter_tasks_dyn (int number_of_tasks, m_task_t* todo, int slaves_count, m
 		MSG_task_destroy(request);
 		
 		MSG_task_put(MSG_task_create("finalize", 0, 0, FINALIZE), requester, PORT_22);
+	}	
+	
+}
+
+
+void scatter_tasks_heap (int number_of_tasks, m_task_t* todo, int slaves_count, m_host_t* slaves) {
+	heap_v* tasks_heap = heap_create(number_of_tasks , &greater_task);
+	heap_v* slaves_heap = heap_create(slaves_count , &greater_slave);	
+	
+	int i;
+	
+	m_task_t request, fatter_task;
+	m_host_t requester, fatter_guy;	
+	
+	for (i = 0 ; i < number_of_tasks ; i++)
+		heap_insert( (void*) todo[i], tasks_heap );	
+	for (i = 0 ; i < slaves_count ; i++)
+		heap_insert( (void*) slaves[i], slaves_heap );
+	
+	
+	for (i = 0; i < number_of_tasks; i++) {
+		while (MSG_task_Iprobe (TO_MASTER)) { //ver como fica só com IF, ao invés de WHILE
+			request = NULL;		
+		//	INFO0 ("Receberando request ...");
+			MSG_task_get(&request, TO_MASTER);
+			requester = MSG_task_get_source (request);
+			heap_insert( (void*) requester, slaves_heap );
+		}
+		
+		fatter_task = (m_task_t) heap_extractMax(tasks_heap);
+		fatter_guy = (m_host_t) heap_extractMax(slaves_heap);
+		
+		INFO2("Enviando \"%s\" para \"%s\"", fatter_task->name, fatter_guy->name);
+
+		MSG_task_put(fatter_task, fatter_guy, PORT_22);
 	}
 	
+	while (slaves_heap->last < slaves_count - 1) {
+		request = NULL;		
+		//	INFO0 ("Receberando request ...");
+		MSG_task_get(&request, TO_MASTER);
+		requester = MSG_task_get_source (request);
+		heap_insert( (void*) requester, slaves_heap );
+	}
+	
+	for (i = 0 ; i < slaves_count ; i++) {
+		fatter_guy = (m_host_t) heap_extractMax(slaves_heap);
+		MSG_task_put(MSG_task_create("finalize", 0, 0, FINALIZE), fatter_guy, PORT_22);
+	}
 	
 	
 }
 
 
 
+int greater_slave (void* _host_a, void* _host_b) {
+	m_host_t host_a = (m_host_t) _host_a;
+	m_host_t host_b = (m_host_t) _host_b;
+	
+	if (MSG_get_host_speed(host_a) > MSG_get_host_speed(host_b))
+		return 1;
+	else
+		return 0;	
+}
 
 
-
+int greater_task (void* _task_a, void* _task_b) {
+	m_task_t task_a = (m_task_t) _task_a;
+	m_task_t task_b = (m_task_t) _task_b;
+	
+	if (MSG_task_get_compute_duration (task_a) > MSG_task_get_compute_duration (task_b))
+		return 1;
+	else
+		return 0;
+}
 
 
 
