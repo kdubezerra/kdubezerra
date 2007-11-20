@@ -93,7 +93,7 @@ int master(int argc, char *argv[])
 		for (i = 0; i < number_of_tasks; i++) {
 			task_comp_size = (double) (rand() % task_cpu_range); //era 500'000,00
 			task_comm_size = 0.0f /*(double) (rand() % task_net_range)*/; //era 50
-			INFO3("Custo da tarefa %d: CPU (%ld) ; NET (%d)", i, (long) task_comp_size, (int) task_comm_size);
+			//INFO3("Custo da tarefa %d: CPU (%ld) ; NET (%d)", i, (long) task_comp_size, (int) task_comm_size);
 			sprintf(sprintf_buffer, "Tarefa_%d", i);
 			todo[i] = MSG_task_create(sprintf_buffer, task_comp_size, task_comm_size, NULL /*(void*) &sched*/);
 		}
@@ -106,21 +106,21 @@ int master(int argc, char *argv[])
 		for (i = 5; i < argc; i++) {
 			slaves[i-5] = MSG_get_host_by_name(argv[i]);
 			if(slaves[i-5]==NULL) {
-				INFO1("Host nao encontrado %s. Finalizando! ", argv[i]);
+				//INFO1("Host nao encontrado %s. Finalizando! ", argv[i]);
 				abort();
 			}
 		}
 	}
 
-	INFO1("Existem %d escravo(s) :", slaves_count);
+	//INFO1("Existem %d escravo(s) :", slaves_count);
 	for (i = 0; i < slaves_count; i++) {
-		INFO1("%s", slaves[i]->name);
+		//INFO1("%s", slaves[i]->name);
 	}
 	
-	INFO1("Existem %d tarefas a processar :", number_of_tasks);
+	//INFO1("Existem %d tarefas a processar :", number_of_tasks);
 
 	for (i = 0; i < number_of_tasks; i++) {
-		INFO1("\"%s\"", todo[i]->name);
+		//INFO1("\"%s\"", todo[i]->name);
 	}
 
 	if (sched == ROUND_ROBIN)
@@ -130,7 +130,7 @@ int master(int argc, char *argv[])
 	else if (sched == HEAP)
 		scatter_tasks_heap (number_of_tasks, todo, slaves_count, slaves);
   
-	INFO0("FIM.");
+	//INFO0("FIM.");
 	free(slaves);
 	free(todo);
 	return 0;
@@ -141,7 +141,7 @@ int slave(int argc, char *argv[])
 	m_host_t master = master_host;
 	
 	if (/*(*(scheduling*)MSG_task_get_data (task))*/ sched == DYNAMIC) {
-		INFO0 ("PEDINDO TAREFA");
+		//INFO0 ("PEDINDO TAREFA");
 		MSG_task_put(MSG_task_create("task_request", REQ_CPU, REQ_NET, TASK_REQUEST), master, TO_MASTER);
 	}
 	
@@ -152,27 +152,27 @@ int slave(int argc, char *argv[])
 		a = MSG_task_get(&(task), PORT_22);
 		
 		if (a == MSG_OK) {
-			INFO1("Recebido \"%s\"", MSG_task_get_name(task));
+			//INFO1("Recebido \"%s\"", MSG_task_get_name(task));
 			if(MSG_task_get_data(task)==FINALIZE) {
 				MSG_task_destroy(task);
 				break;
 			}
-			INFO1("Processando \"%s\"", MSG_task_get_name(task));
+			//INFO1("Processando \"%s\"", MSG_task_get_name(task));
 			MSG_task_execute(task);
-			INFO1("\"%s\" concluida", MSG_task_get_name(task));
+			//INFO1("\"%s\" concluida", MSG_task_get_name(task));
 			MSG_task_destroy(task);
 		} else {
-			INFO0("Ocorreu um erro ");
+			//INFO0("Ocorreu um erro ");
 			xbt_assert0(0,"Unexpected behavior");
 		}		
 		
 		if (/*(*(scheduling*)MSG_task_get_data (task))*/ sched != ROUND_ROBIN) {
-			INFO0 ("PEDINDO TAREFA");
+			//INFO0 ("PEDINDO TAREFA");
 			MSG_task_put(MSG_task_create("task_request", REQ_CPU, REQ_NET, TASK_REQUEST), master, TO_MASTER);
 		}
 		
 	}
-	INFO0("Processo terminado");
+	//INFO0("Processo terminado");
 	return 0;
 } /* end_of_slave */
 
@@ -189,7 +189,7 @@ int forwarder(int argc, char *argv[])
 		for (i = 1; i < argc; i++) {
 			slaves[i-1] = MSG_get_host_by_name(argv[i]);
 			if(slaves[i-1]==NULL) {
-				INFO1("Unknown host %s. Stopping Now! ", argv[i]);
+				//INFO1("Unknown host %s. Stopping Now! ", argv[i]);
 				abort();
 			}
 		}
@@ -201,26 +201,26 @@ int forwarder(int argc, char *argv[])
 		int a;
 		a = MSG_task_get(&(task), PORT_22);
 		if (a == MSG_OK) {
-			INFO1("Received \"%s\"", MSG_task_get_name(task));
+			//INFO1("Received \"%s\"", MSG_task_get_name(task));
 			if(MSG_task_get_data(task)==FINALIZE) {
-				INFO0("All tasks have been dispatched. Let's tell everybody the computation is over.");
+				//INFO0("All tasks have been dispatched. Let's tell everybody the computation is over.");
 				for (i = 0; i < slaves_count; i++) 
 					MSG_task_put(MSG_task_create("finalize", 0, 0, FINALIZE),
 									 slaves[i], PORT_22);
 				MSG_task_destroy(task);
 				break;
 			}
-			INFO2("Sending \"%s\" to \"%s\"", MSG_task_get_name(task), slaves[i% slaves_count]->name);
+			//INFO2("Sending \"%s\" to \"%s\"", MSG_task_get_name(task), slaves[i% slaves_count]->name);
 			MSG_task_put(task, slaves[i % slaves_count],
 							 PORT_22);
 			i++;
 		} else {
-			INFO0("Hey ?! What's up ? ");
+			//INFO0("Hey ?! What's up ? ");
 			xbt_assert0(0,"Unexpected behavior");
 		}
 	}
 
-	INFO0("I'm done. See you!");
+	//INFO0("I'm done. See you!");
 	return 0;
 } /* end_of_forwarder */
 
@@ -243,7 +243,7 @@ MSG_error_t test_all(const char *platform_file,
 	}
 	res = MSG_main();
   
-	INFO1("Tempo de simulacao: %g",MSG_get_clock());
+	printf("Tempo de simulacao: %g\n",MSG_get_clock());
 	return res;
 } /* end_of_test_all */
 
@@ -270,17 +270,17 @@ void scatter_tasks_rr (int number_of_tasks, m_task_t* todo, int slaves_count, m_
 	int i;	
 	
 	for (i = 0; i < number_of_tasks; i++) {
-		INFO2("Enviando \"%s\" para \"%s\"", todo[i]->name, slaves[i % slaves_count]->name);
+		//INFO2("Enviando \"%s\" para \"%s\"", todo[i]->name, slaves[i % slaves_count]->name);
 		if(MSG_host_self() == slaves[i % slaves_count]) {
 			//... O mestre também executa
 		}
 
 		MSG_task_put(todo[i], slaves[i % slaves_count],
 						 PORT_22);
-		INFO1("Tarefa %d - Envio completado", i);
+		//INFO1("Tarefa %d - Envio completado", i);
 	}
 	
-	INFO0("Todas as tarefas foram despachadas. Mandando os escravos finalizarem.");
+	//INFO0("Todas as tarefas foram despachadas. Mandando os escravos finalizarem.");
 	for (i = 0; i < slaves_count; i++) 
 		MSG_task_put(MSG_task_create("finalize", 0, 0, FINALIZE),
 						 slaves[i], PORT_22);
@@ -296,7 +296,7 @@ void scatter_tasks_dyn (int number_of_tasks, m_task_t* todo, int slaves_count, m
 	for (i = 0; i < number_of_tasks; i++) {
 		request = NULL;
 		
-		INFO0 ("Receberando request ...");
+		//INFO0 ("Receberando request ...");
 		MSG_task_get(&request, TO_MASTER);
 //		MSG_task_execute(request); //o processamento do pedido implica em um certo custo de cpu/net
 		
@@ -304,18 +304,18 @@ void scatter_tasks_dyn (int number_of_tasks, m_task_t* todo, int slaves_count, m
 		requester = MSG_task_get_source (request);
 		MSG_task_destroy(request);
 		
-		INFO1 ("Recebido request de \"%s\"", requester->name);
+		//INFO1 ("Recebido request de \"%s\"", requester->name);
 		
-		INFO2("Enviando \"%s\" para \"%s\"", todo[i]->name, requester->name);
+		//INFO2("Enviando \"%s\" para \"%s\"", todo[i]->name, requester->name);
 		if(MSG_host_self() == requester) {
 			//... O mestre também executa
 		}
 
 		MSG_task_put(todo[i], requester, PORT_22);
-		INFO1("Tarefa %d - Envio completado", i);
+		//INFO1("Tarefa %d - Envio completado", i);
 	}
 	
-	INFO0("Todas as tarefas foram despachadas. Mandando os escravos finalizarem.");
+	//INFO0("Todas as tarefas foram despachadas. Mandando os escravos finalizarem.");
 	
 	for (i = 0 ; i < slaves_count; i++) {		
 		request = NULL;
@@ -359,7 +359,7 @@ void scatter_tasks_heap (int number_of_tasks, m_task_t* todo, int slaves_count, 
 		fatter_task = (m_task_t) heap_extractMax(tasks_heap);
 		fatter_guy = (m_host_t) heap_extractMax(slaves_heap);
 		
-		INFO2("Enviando \"%s\" para \"%s\"", fatter_task->name, fatter_guy->name);
+		//INFO2("Enviando \"%s\" para \"%s\"", fatter_task->name, fatter_guy->name);
 
 		MSG_task_put(fatter_task, fatter_guy, PORT_22);
 	}

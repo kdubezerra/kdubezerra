@@ -18,7 +18,7 @@ int main (int argc, char** argv) {
 	printf ("\n  Numero de escravos = %d\n\n", num_of_slaves);
 	
 	//INICIO da criação da plataforma
-	arq_plat = fopen("new_plat.xml","w");
+	arq_plat = fopen("fc_plat.xml","w");
 	
 	
 	fprintf (arq_plat, "<?xml version='1.0'?>\n");
@@ -68,7 +68,9 @@ int main (int argc, char** argv) {
 	
 	
 	//INICIO da criação do deployment
-	arq_dep = fopen("new_dep.xml","w");
+	arq_dep_rr = fopen("fc_dep_rr.xml","w");
+	arq_dep_dyn = fopen("fc_dep_dyn.xml","w");
+	arq_dep_heap = fopen("fc_dep_heap.xml","w");
 	
 	sscanf(argv[2], "%d", &num_of_tasks);
 	sscanf(argv[4], "%d", &max_cpu_task_usage);
