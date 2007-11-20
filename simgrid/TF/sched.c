@@ -91,8 +91,8 @@ int master(int argc, char *argv[])
 
 		srand(1);
 		for (i = 0; i < number_of_tasks; i++) {
-			task_comp_size = (double) (rand() % task_cpu_range); //era 500'000,00
-			task_comm_size = 0.0f /*(double) (rand() % task_net_range)*/; //era 50
+			task_comp_size = (double) (rand() % task_cpu_range); //era 500'000 - mas o melhor é 5'000'000
+			task_comm_size = (double) (rand() % task_net_range); //era 50
 			//INFO3("Custo da tarefa %d: CPU (%ld) ; NET (%d)", i, (long) task_comp_size, (int) task_comm_size);
 			sprintf(sprintf_buffer, "Tarefa_%d", i);
 			todo[i] = MSG_task_create(sprintf_buffer, task_comp_size, task_comm_size, NULL /*(void*) &sched*/);
