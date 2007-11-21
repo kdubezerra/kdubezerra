@@ -21,14 +21,14 @@ int greater_slave (void* _host_a, void* _host_b);
 int greater_task (void* _task_a, void* _task_b);
 
 typedef enum {
-	ROUND_ROBIN = 0,
- DYNAMIC,
+ ROUND_ROBIN = 0,
+ DYNAMIC, 
  HEAP
 } scheduling;
 
 typedef enum {
-	PORT_22 = 0,
-	TO_MASTER,
+ PORT_22 = 0,
+ TO_MASTER,
  MAX_CHANNEL
 } channel_t;
 
@@ -348,7 +348,7 @@ void scatter_tasks_heap (int number_of_tasks, m_task_t* todo, int slaves_count, 
 	
 	
 	for (i = 0; i < number_of_tasks; i++) {
-		while (MSG_task_Iprobe (TO_MASTER)) { //ver como fica só com IF, ao invés de WHILE
+		while (MSG_task_Iprobe (TO_MASTER) || slaves_heap->last == -1) { //ver como fica só com IF, ao invés de WHILE
 			request = NULL;		
 		//	INFO0 ("Receberando request ...");
 			MSG_task_get(&request, TO_MASTER);

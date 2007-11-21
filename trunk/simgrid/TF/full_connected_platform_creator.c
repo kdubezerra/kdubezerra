@@ -15,7 +15,7 @@ int main (int argc, char** argv) {
 		 
 	sscanf(argv[1], "%d", &num_of_slaves);
 	
-	printf ("\n  Numero de escravos = %d\n\n", num_of_slaves);
+	//printf ("\n  Numero de escravos = %d\n\n", num_of_slaves);
 	
 	//INICIO da criação da plataforma
 	arq_plat = fopen("fc_plat.xml","w");
@@ -48,8 +48,8 @@ int main (int argc, char** argv) {
 	
 	//criando os links de todos-com-todos
 	for (i = 0 ; i <= num_of_slaves ; i++) {
-		if (!(i % 100))
-		printf ("%d origens prontas\n", i);
+		//if (!(i % 100))
+		//printf ("%d origens prontas\n", i);
 		for (j = 0 ; j <= num_of_slaves ; j++) {			
 			if (i==j) continue;
 			
@@ -58,7 +58,7 @@ int main (int argc, char** argv) {
 			fprintf (arq_plat, "\t</route>\n");
 		}
 	}
-	if (num_of_slaves%100) printf ("%d origens prontas\n", num_of_slaves);
+	if (num_of_slaves%100) /*printf ("%d origens prontas\n", num_of_slaves)*/;
 
 	fprintf (arq_plat, "</platform_description>\n");
 	
