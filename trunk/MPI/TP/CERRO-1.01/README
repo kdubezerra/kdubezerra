@@ -1,0 +1,443 @@
+=head1 A) PROJECT TITLE
+
+=head2 SPEEDY PARALLEL TEXT SEARCH USING MPI. ver 0.04
+       (https://sourceforge.net/projects/sptsumpi)      
+
+=over 5
+       
+=item Course : CS8621
+
+=item Date   : 11/03/2005
+
+=back
+
+=head1 B) PROJECT DEVELOPMENT TEAM DETAILS
+
+=head3 Team Name    : Cerro Porteno
+
+=head3 Team Members : Vikram Malik, Ajit Marathe, John Moe and Vinayak Patil
+
+=head1 C) INTRODUCTION
+
+=head2 a) Objectives 
+
+To design, implement and deploy a fast parallel text search system. The system builds an in-memory index 
+to enable fast searching of SGML files like those in the GigaWord[1] corpus.  Both single terms and phrases 
+can be searched for.  Phrases must be enclosed in quotes.  Multiple terms and phrases can be combined using AND, OR 
+and () (parentheses).  AND and OR have equal precedence, and a left to right evaluation in the 
+absence of parenthesis. All queries must be validly formed. The indexing and searching is 
+case insensitive and only letters, numbers and apostrophes are included.
+
+=head2 b) Application
+
+This project can be leveraged to do large scale text search operations on a very large data set.  This is exactly 
+what Google is so good at doing!
+
+
+=head3 An introduction to text search :
+
+
+Text search is the most common operation that search engines perform. This
+involves parsing millions of documents, constructing an index of these documents 
+and then searching this index to retrieve documents that match the query. However 
+what appears to be a simple task involves numerous behind-the-scene activities.
+
+The basic objectives in constructing a search engine for text search is 
+to attain high recall and precision.  Recall refers to the time the system 
+takes to give results relevant to an input query or queries, and precision 
+refers to how relevant search results are to the input query.  A search 
+engine also requires considerable hardware and software resources.  Since a
+search engine looks through a very large index of words built for the set of 
+documents to be searched, having a single machine to do this is not feasible. 
+An effective approach to the problem is to have a large number of machines 
+operating in parallel, each searching a part of the index to look for the 
+required documents. In the most common architecture, groups of such machines 
+are scattered over various geographical locations and each group is commonly 
+referred to as a cluster. Each cluster replies to a different query and thus 
+multiple requests can be satisfied simultaneously thus providing speed of 
+response.[2]
+
+
+=head3 Our Approach
+
+
+Our search engine has been implemented to perform a parallel search on the
+documents in the GigaWord corpus. 
+
+Using a user specified root directory, the system reads all files in the directory and all child
+directories.  An index is then constructed using data structures that holds the words and which documents
+the words are contained in and where in the document the word is located.  After indexing is complete, the file 
+containing the queries is read and the index is searched.  For each query, an output file is 
+created containing the documents that match the query.
+
+Multiple techniques exist for indexing, searching the index, and load balancing.
+Indexing involves constructing data structures to hold the words read from the input files in a way that
+allows fast retrieval of the list of documents matching a query.  Two different indexing methods are provided 
+(binary search tree and hashing).
+Searching is the fast retrieval of the list of documents matching a query.  Only one searching method is provided 
+(except for the parts that directly interact with the two different indexing methods).
+Load balancing refers to distributing the work among the processors.  A characteristic of good load 
+balancing is almost equal work loads for each processor to minimize overall time. Two load balancing methods
+are included.
+The user can select any combination of the load balancing and indexing schemes.
+
+In the load balancing approach using threads, we create a set of master threads that are 
+used to read files from the GigaWord corpus and pass this data to the slave processors 
+for parsing and indexing.  Since all the threads operate in parallel, it greatly reduces 
+the time for file reading as compared to all the files being read by a single processor
+sequentially. 
+
+=head2 c)Input and output
+       
+=head3 Input 
+
+The system takes two inputs: a path to directory to read the text to be indexed and a text file named INPUT.
+Each line of the INPUT file is a query.  The query language is described above.
+
+=head3 Output 
+
+Each query in the INPUT file results in one output file.  The file contains the text of all documents
+that match the query.  If the query has no matches, then an empty file is created.  Statistics are printed 
+to master.out showing how much text was indexed and how long the various operations took.
+
+=head2 d) Program modules
+
+
+=head3 1) Load balancing 
+
+There are two implementations of the load balancing scheme, both using threads :
+
+Implementation 1: 
+
+The load balancing function spawns multiple threads, one per slave processor.
+Each thread first reads data from the corpus which is to be passed to the slave
+processors for parsing and indexing. Each thread then waits for a message from 
+the slave processors to indicate that the slave is idle and needs data. Once the 
+thread receives this message , it transmits two messages to the slave processor :
+the first indicating the size of the data to be transmitted and the second indicating
+a file-unique id. The thread then transmits the actual data to the slave processor.
+Once all the files have been sent to the slave processors, the master threads send a
+terminating signal to all the processors to prevent them from sending any further
+requests for data.
+ 
+
+Implementation 2:
+
+This implementation harnesses the fact that each SP node comprises of multiple threads. Multiple root threads are created to read the files in parallel. The choice of the number of threads is important for the overall effectiveness of this load balancer. Creating too many root threads causes all the threads to begin reading the files simultaneously, making request for memory from the heap, and crashing the program. We experimented with different values for this number, and found that 15 gives us the best performance for this implementation of the load balancer. However, if the number of slaves is less that 15, we choose the number of slaves as the number of root threads so we still have one root thread per slave. Once the distribution is done with, each of the root thread sends a termination message to the slave processes it was communicating with. For 15 root threads, and n (>15) slave processors available, each root thread communicates with slaves for which root_thread_id = slave_id % 15. This means we could have some root threads servicing one more slave process that other root threads, and this is something that needs to be taken care of when sending out termination messages.
+
+
+=head3 2.1) Reading and indexing each word in each of the documents using a Binary Search Tree(BST)
+
+This step first involves considering one file at a time as input and parsing 
+each word in each document of the file. Since each file also contains thousands 
+of documents, this module identifies the start of each document within a file. We 
+also parse each word in all the documents and pass the word and its doc id to the 
+document indexing module. It then creates a structure containing the file id and 
+start and end byte of each document.
+
+We use a BST to create an index of all words in the input files. Every node of the 
+BST is a singly linked list. Every node of the linked list contains a structure 
+consisting of the document ids and position of the words within a given document.
+For every unique word in the file, we create a new node in the BST. If a word 
+repeats, we simply append the structure of the word to the linked list of that 
+word instead of inserting the word in a new node.
+
+Searching the BST for a word or a phrase :
+
+To search for a given word in the index we check the nodes of the BST. We start
+at the root of the tree. If the word to be searched is smaller(character comparison)
+than the word at the root we traverse the left subtree, else we traverse the
+right subtree. Once the word is found we return the document ids and the
+number of matches. We use the Divide and Conquer approach to search for a word
+in the BST. While searching for a phrase in the BST, the program creates a
+two dimensional array with the first dimension being the word to be searched
+and the second, the number of matches of that word. We compare the first two rows
+of this two dimensional array. The result is than compared with the third row
+and so on thus reducing the number of comparisons. The final result will be the
+document ids in which the all words are present consecutively.
+The process of searching for all words in a phrase is done in parallel.Every word 
+in the phrase is searched separately ie in parallel.
+
+=head3 2.2  Reading and indexing each word in each of the documents using hashing :
+
+After a file is received from the load balancing module, this component identifies
+and stores the start and end bytes for each document and calls the AddWord function
+for every word (contiguous letters, numbers and/or apostrophes) with the word,
+the document id (sequential integer), and the index of the word in the current document.  
+An array is used to both check if a character can be part of a word and also convert it to
+lowercase.
+
+The hash algorithm used is FNV-1 [3].  This has algorithm was created by Glenn Fowler, Phong Vo 
+and Landon Curt Noll.  The word is provided as input and a number from 0 - (2^21-1) is returned.
+
+Each possible hash value has a (possibly empty) linked list of words that hash to that value.  
+Associated with each word is the number of time that the word appears as well as the list of 
+which documents the word is in and where in those documents it appears.  The list is stored
+using some compression.  First, since the document ids are non-decreasing, rather than storing
+the document id itself, the difference between the current document id and the previous id is stored.
+The id then is encoded using Elias Gamma Coding[4].  This coding stores small numbers using a small 
+number of bits (for example the number 1 is stored using only one bit).  A similar approach is
+taken for word indexes.  Coding the numbers in this way resulted in a 75% savings over using
+standard integers.
+
+Searching for a phrase:
+
+Searching for a phrase consists only of merging the lists of document and word ids for each word.  Each 
+document id is included only once even if it has multiple matches.  Since we have sorted lists, this is done using 
+the standard list merging technique of advancing the current position of any of the lists that are currently less 
+than the highest current position of any of the other lists. 
+
+=head3 3) Searching
+
+Given the ability to find phrases in the indexing code, we need only to get the list of document ids that 
+match a word/phrase and then combine it using AND or OR with the next word/phrase.
+
+=head2 e) Complexity analysis
+
+
+The complexity analysis of a program involves calculating the total
+execution time of a program which is the sum of its computation time complexity 
+and communication time complexity.
+
+
+For our program :
+
+a ] overall computation complexity = read and distribute complexity 
+    + parsing complexity + hashing complexity + searching complexity  
+ 
+
+a.1) Read and distribute complexity:-
+	Complexity for balancer configuration 2:-
+	
+n-> 	no of words
+p-> 	no of processors
+Tread-> time to read a word
+Tsend->	time to send a word across the network to a slave
+k->	total number of files in the corpus (= 314 for GIGAWORD version 1)
+
+
+
+Load balancing complexity:- It comprises of reading the files, and then distributing them to slave  processors.
+
+Read Complexity: 
+________________
+
+We have a total of n words to be read. Multiple root threads are created for this task. Number of  root threads is equal to 15 or the number of slaves, whichever is lesser.
+
+So total read time would be: 
+
+( n * Tread) / min(p, 15)    
+[This is of course based on the assumption that n threads make the reading n times faster, which may vary from system to system]
+
+
+Distribute Complexity:
+______________________
+
+Average size of each chunk of data sent by the root threads:- n/k
+
+Total time to distribute the entire corpus is:-
+
+{ [ (n/k) * Tsend ] / min(p, 15)    }
+
+
+So total read and distribute time is given as:-
+
+Read time  + Distribute time
+
+= [ ( n*Tread) / min(p, 15) ] + [ ( (n/k)*Tsend ) / min(p,15) ]
+
+
+
+So the overall complexity for read and distribute operation for configuration 2 of the load balancer  would be:-
+
+O [ (n/k) / p ]      
+
+*(Tsend and Tread would be constant, or network and system dependent respectively)
+      
+
+   Vinayak's computation complexity.
+
+   n - number of files to be searched and indexed
+
+   The only computation involved here is the loop to create the thread, the rest is
+   communication complexity.
+
+   comp complexity = O(n)
+ 
+   ===============================
+
+   communication complexity.
+
+   k - the time required to send one unit of data
+   m - maximum number of data units to be send for any file 
+   p - number of slave processors
+
+   Initial complexity to send a single array to the slaves is O(p)
+   
+   complexity of sending n files , each a maximum of m data units to p 
+   processors will be = O(n*m / p) since the p processors receive the data
+   in parallel.
+    
+   total communication complexity = O(p) + O(n*m/p)
+
+
+
+------------------------------------------------------------------------------------- 
+
+a.2) Parsing complexity : O(n)
+
+where
+n   -  number of characters in a file. 
+In the parsing function, for each of the documents, we check every character 
+that we encounter. Depending upon the current character ,  we decide whether 
+the control should be in either neither, word or tag state. 
+----------------------------------------------------------------------------------------
+   
+ Ajit's complexity.
+
+
+a.3)Indexing(using BST) complexity
+
+Suppose w is the number of unique words in a file. We consider that the 
+height of the BST constructed is h. Then the time complexity of creating 
+the BST would be O(w*h).
+h=log base2 (w+1) -1
+because we know that 2 pow (h+1) -1 = w
+Since we have w unique words,we would have w unique singly linked lists
+to which we append a node. Each node contains a document id & the index 
+of the word within the document.
+O(w*w) would be the time complexity for this because we are creating
+w lists for w words.
+total Indexing(BST) time complexity would be O(w pow(2) logw)   
+----------------------------------------------------------------------------------------
+ 
+
+Hashing complexity (close enough to O(n/p) for practical ammounts of data):
+
+Because the system is using a fixed size array in the hash table, the number of words per hash value
+will increase as more distinct words are encountered.  Thankfully, it is not possible to add enough
+words to actually make the increasing number of string compares significant.
+
+
+
+a.4) Searching complexity:
+
+It has two parts:
+
+1. Finding matches for each search term .
+   For reasonable values of h, there should be ~1 string compare required. 
+   And then the creation of a list with the size of the number of results.
+      
+2.Merging the results
+   Currently this has  a  worst  case timem complexity proportional to the 
+   number of items being merged. 
+          
+Searching a BST would have a time complexity of O(h) where h is the height 
+of the tree. Thus time complexity would be O(log w) for w words in the 
+BST. (h=log base2 (w+1) -1
+
+ 
+b] Overall communication complexity = file read & distribute time complexity
++ receiving results complexity
+
+Here n - number of files
+     w - time to send one query
+
+Reading each of the n files to be distributed to the p processors involves 
+n fread() operations. This can be approximated to be equivalent to reading
+'c' characters per file. Here , 'c' is of the order of 25*10^6 ( 25 MB) so 
+that would be c*n characters read operations which involves a communication 
+complexity of O(cn) 
+
+
+MPI_Send  :  Time to send these files to the idle processors using MPI_Send
+involves w*t-data time where t-data is  the  time  to  send  one  data item 
+(in this case one character)
+
+Thus, total send time = w*t-data = c*n*t-data 
+
+  
+MPI_Recv : w*t-data = c*n*t-data
+
+MPI_Bcast : This involves sending all queries to all the processors.
+
+Let q - no of queries.
+Thus, broadcast of all queries to all processors involves q sends. This is 
+q times times to send q queries to one processor = q*w*t-data
+
+
+MPI_Send from slaves to root of the result of the queries  = r * t-data
+where
+   r - number of results found.
+
+MPI_Recv : receiving results by root from slaves  = r * t-data
+  
+  
+
+Thus,
+
+Total communication complexity = c * n + 2(c * n * t-data ) + 2( r * t-data )
+where
+  c  -  number of characters/file
+  n  -  number of files to be indexed
+  t-data  -  time to send one data item
+  q  -  number of queries
+  r  -  number of results found by a processor for a query
+    
+ =>Total communication time complexity = c * n + 2( t-data ( c * n + r) )
+                                       = O( c * n +2( c* n + r ))
+                                       = O( c * n +r )
+ 
+
+ACTUAL RESULTS
+
+  Processors   Total Wall       Indexing
+               Clock Time    Parallel Time
+     14         460            430
+     16         353            420
+     18         399            369
+     20         376            344
+     22         357            329
+     24         316            289
+     26         325            296
+     28         295            270
+     32         316            291
+     36         326            298
+     38         300            274
+     40         309            284
+     55         319            291
+     
+The results show very nice improvement through about 24 processors.  After that, there is no improvement.  We believe 
+this to be primarily a result of the time required to read or send the files by the root.  We experimented with 
+reading and sending compressed files.  The improvement in performance seemed to very dramatic.
+     
+
+=head2 f) Possible improvements 
+   
+
+=over 6
+
+=item 1) Reducing the time and space complexity of the overall execution time.
+
+=back
+
+
+=head2 g) References
+
+[1] http://www.ldc.upenn.edu/Catalog/Catalogentry.jsp?catalogId=LDC2003T05
+
+[2] Luiz Andre Barroso , Jeffery dean , Urs Holzle
+    "Web search for a Planet : The Google Cluster Architecture" ,2005 Google.
+    http://labs.google.com/papers/googlecluster-ieee.pdf
+    
+[3] http://www.isthe.com/chongo/tech/comp/fnv/
+
+[4] P. Elias. Universal codeword sets and representations of the integers. 
+    IEEE Transactions on Information Theory, IT-21(2):194{203, March 1975.
+
+
+
+
+
+
+

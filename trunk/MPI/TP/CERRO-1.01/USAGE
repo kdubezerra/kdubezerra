@@ -1,0 +1,122 @@
+
+=head1 THIS FILE GIVES INSTALLATION INSTRUCTIONS AND OTHER MISCELLANEOUS DETAILS ABOUT THE 
+PROJECT NAMED SPEEDY, PARALLEL TEXT SEARCH USING MPI 
+                                ( Ver 1.00) (https://sourceforge.net/projects/sptsumpi)
+
+=over 5
+
+=item Course : CS8621
+
+=item Date   : 12/22/2005
+
+=back
+
+
+=head1 B) PROJECT DEVELOPMENT TEAM DETAILS
+
+=head3 Team Name    : Cerro
+
+=head3 Team Members : Vikram Malik, Ajit Marathe, John Moe, Vinayak Patil
+
+=head2 RUNNING THE PROGRAM :
+
+This program is meant to run on an IBM SP supercomputer. You need to have an
+account on the SP or a similar computer to run this program. This program was tested 
+and run on the Minnesota Supercomputing Institute (MSI) IBM SP ( www.msi.umn.edu/sp )
+
+
+To run the program, you must be logged into the SP system. You will need the following file:
+
+    CERRO-1.01.tar.gz
+
+
+In order to extract the files from this compressed folder, type in at the command prompt:
+
+   gunzip < CERRO-1.01.tar.gz | tar xvf - 
+
+
+All the files will be extracted to a folder named CERRO-1.01. Once the files have been extracted, change 
+to the directory CERRO-1.01 using the command :
+
+  cd CERRO-1.01
+
+ 
+Next, run the file named runit.sh using the following command :
+
+   ./runit.sh [proc_count] [subset]
+
+   runit.sh takes the following optional command line parameters:-
+   proc_count      - number of processors to run the program on (optional parameter)
+   subset          - the percentage of the corpus to use for a run (optional parameter)
+
+Here runit.sh is a shell script that submits the MPI program to the IBM SP Load Leveller for execution.
+The program makes use of the corpus path specified in runit.sh. This path can be changed to make the
+program use your copy of the corpus.
+
+To check the status of your program on the IBM SP, you can run the command :
+  
+  llq -u <username>
+
+
+=head1 INTERPRETING THE RESULTS :
+
+Once the program finishes executing, the documents which contained the search words 
+will be written to files placed in the directory called results as specified in the runit.sh 
+file. This output folder name and its location can be changed in the runit.sh file. This
+directory will be placed in the same directory  as the code. One file will be created per query.
+These files will be named according to the order of the queries in the input file. For example, 
+the resulting documents of the first query will be written to the file named results.0, the 
+resulting document of the second query will be written to the file named results.1 and so on. 
+
+
+=head1 ASSUMPTIONS IN QUERY EXECUTION :
+
+ 1. AND and OR have equal precedence and performs a left to right evaluation in the absence of parentheses.
+
+ 2. Parentheses are not embedded.
+
+ 3. Queries are validly formed.
+
+ 4. Indexing and searching are case insensitive.
+
+ 5. Only alphanumeric strings will be searched.
+
+ 6. The  search takes into account only apostrophes in the input query and treats all
+    other punctuation as spaces.
+      
+ 7. The seraph does not return a document if the query word is only a part of a word in  
+    any of the documents. 
+ 
+ 5. All special characters except apostrophes are ignored and treated as spaces. 
+
+
+=head1 QUERY FORMULATION :
+
+ 1. The input file named INPUT contains one query per line and the query is assumed to be correct.
+ 
+ 2. You can specify either a single word or phrase or multiple words and/or phrases per query line.   
+ 
+ 3. If two words on one query line are separated by only a space, it will be treated as an AND operation.
+
+ 4. You can specify an AND or an OR operation in the following manner :
+   
+      AND :   word1 AND word2
+              
+      OR  :   word1 OR word2
+
+ 5. You can specify a search for a phrase by enclosing it in double quotes.
+
+ 6. You can specify any combinations of AND and OR operations or phrases:
+
+      eg:  ( word1 AND word2 ) OR (word3 AND "phrase" )
+
+ 
+=head1 SAMPLE QUERIES :
+
+ 1. Pele OR Tyson
+
+ 2. election AND ( Bush OR Kerry )
+
+ 3. Duluth OR ("The University of Wisconsin" AND Shavlik ) 
+
+
