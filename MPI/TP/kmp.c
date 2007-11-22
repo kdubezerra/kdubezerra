@@ -1,45 +1,72 @@
-algorithm kmp_search:
-    input:
-		an array of characters, S (the text to be searched)
-		an array of characters, W (the word sought)
-    output:
-				an integer (the zero-based position in S at which W is found)
+#include <stdio.h>
+#include <stdlib.h>
 
-    define variables:
-				an integer, i ← 0 (the position of the current character in W)
-				an integer, j ← 0 (the beginning of the current match in S)				
-						an array of integers, T (the table, computed elsewhere)
+#define XSIZE 100
+#define XL 10000000000
 
-    while m + i is less than the length of S, do:
-			if W[i] = S[m + i],
-				let i ← i + 1
-				if i equals the length of W,
-					return m
-			otherwise,
-				let m ← m + i - T[i],
-				if i is greater than 0,
-					let i ← T[i]
+void preKmp(char *x, unsigned long m, unsigned long kmpNext[]) {
+   unsigned long i, j;
+
+   i = 0;
+   j = kmpNext[0] = -1;
+   while (i < m) {
+      while (j > -1 && x[i] != x[j])
+         j = kmpNext[j];
+      i++;
+      j++;
+      if (x[i] == x[j])
+         kmpNext[i] = kmpNext[j];
+      else
+         kmpNext[i] = j;
+   }
+}
+
+
+void KMP(char *x, unsigned long m, char *y, unsigned long n) {
+   unsigned long i, j, kmpNext[XSIZE];
+
+   /* Preprocessing */
+   preKmp(x, m, kmpNext);
+
+   /* Searching */
+   i = j = 0;
+   while (j < n) {
+      while (i > -1 && x[i] != y[j])
+         i = kmpNext[i];
+      i++;
+      j++;
+      if (i >= m) {
+         printf("%d\n",j - i);
+         i = kmpNext[i];
+      }
+   }
+}
+
+unsigned long main (unsigned long argc, char** argv) {
+	char lalphabet[] = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y', 'z'};
+	unsigned long i;
 	
-		(if we reach here, we have searched all of S unsuccessfully)
-		return the length of S
-		 
- int m = 0;
- int i = 0;
- int T[];
- 
- while (j + i < S.length) {
-	 
-	 if (W[i] == S[j+i]) {
-		 i++;
-		 
-		 if (i == W.length)
-			 return j
-					 
-	 } else {
-			 j += i - T[i] + 1;
-			 if (i > 0)
-				 i += T[i];
-			 
-	 }
-	 
- }
+	
+	if (argc != 3) {
+		printf ("Uso: %s <padrão> <comprimento do padrão>\n", argv[0]);
+	}
+	
+	char *pattern = argv[1];
+	unsigned long m = atoi (argv[2]);
+	char *text = argv[3];
+	unsigned long n = atoi (argv[4]);
+	
+	text = calloc (XL, sizeof(char));
+	for (i = 0; i < XL; i++) {
+		text[i] = lalphabet[rand() % 26];
+	}
+	text[XL-1] = '\0';
+	
+	printf ("É AGORA\n");
+		
+	KMP(pattern, m, text, XL);
+	
+	//printf ("%s\n", text + 85454910);
+	
+	
+}
