@@ -19,14 +19,17 @@ typedef struct _matriz {
 
 float* el (matriz m, int i, int j) {
 	static float* s = NULL;
-	if (!m.soma)
+	if (!(m.soma))
 		return &(m.array[i + m.start_x][j + m.start_y]);
 	else {
-		if (s) free (s);
-		
+		if (s) free (s);			
 		s = malloc(sizeof(float));
-		(*s) = E(m.M1, i, j) + E(m.M2, i ,j);
-		
+		if (m.soma == 1) {
+			(*s) = E(m.M1, i, j) + E(m.M2, i ,j);
+		}
+		else {
+			(*s) = E(m.M1, i, j) - E(m.M2, i ,j);
+		}
 		return s;
 	}
 }
@@ -47,13 +50,23 @@ matriz new_matrix (int x) {
 	return mat;
 }
 
-matriz soma (matriz A, matriz B) {
+matriz some (matriz A, matriz B) {
+	return suboradd(A, B, 1);
+}
+
+matriz sub (matriz A, matriz B) {
+	return suboradd(A, B, -1);
+}
+
+matriz suboradd (matriz A, matriz B, int addorsub) {
 	matriz s;
 	
-	s.soma = 1;
+	s.soma = addorsub;
 	s.M1 = A;
 	s.M2 = B;
 	s.ordem = A.ordem; // ou B.ordem, tanto faz...
+	
+	return matriz
 	
 }
 
@@ -82,7 +95,16 @@ void mult (matriz A, matriz B, matriz C, int n, int min_rank) {
 		
 				
 		
-		matriz S_1a = some (A_11, A_22)
+		matriz S_1a = some (A_11, A_22);
+		matriz S_1b = some (B_11, B_22);
+		matriz S_2 = some (A_21, A_22);
+		matriz D_3 = sub (B_12, B_22);
+		matriz D_4 = sub (B_21, B_11);
+		matriz S_5 = some (A_11, A_12);
+		matriz D_6 = sub (A_21, A_11);
+		matriz S_6 = some (B_11, B_12);
+		matriz D_7 = sub (A_12, A_22);
+		matriz S_7 = some (B_21, B_22);
 		
 		
 	}
