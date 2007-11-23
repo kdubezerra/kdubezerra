@@ -20,7 +20,7 @@ typedef struct _matriz {
 float* el (matriz m, int i, int j) {
 // 	static float* s = NULL;
 // 	if (!(m.soma))
-		return &(m.array[i + m.start_x][j + m.start_y]);
+	return &(m.array[i + m.start_x][j + m.start_y]);
 // 	else {
 // 		if (s) free (s);			
 // 		s = malloc(sizeof(float));
