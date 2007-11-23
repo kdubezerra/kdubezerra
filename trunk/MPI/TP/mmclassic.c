@@ -3,8 +3,13 @@
 
 #define MIN_RANK 2
 
-//#define ORDEM 2
 #define E(X,i,j) (* el(X,i,j))
+
+typedef struct _matriz {
+	float** array;
+	int ordem, start_x, start_y;	
+} matriz;
+
 
 float f (int i, int j) {
 
@@ -12,27 +17,11 @@ float f (int i, int j) {
 
 }
 
-typedef struct _matriz {
-	float** array;
-	int ordem, start_x, start_y;	
-} matriz;
 
 float* el (matriz m, int i, int j) {
-// 	static float* s = NULL;
-// 	if (!(m.soma))
 	return &(m.array[i + m.start_x][j + m.start_y]);
-// 	else {
-// 		if (s) free (s);			
-// 		s = malloc(sizeof(float));
-// 		if (m.soma == 1) {
-// 			(*s) = E((*m.M1), i, j) + E((*m.M1), i ,j);
-// 		}
-// 		else {
-// 			(*s) = E((*m.M1), i, j) - E((*m.M2), i ,j);
-// 		}
-// 		return s;
-// 	}
 }
+
 
 matriz new_matrix (int x) {
 	int i;
@@ -49,29 +38,27 @@ matriz new_matrix (int x) {
 	return mat;
 }
 
+
 void print_matrix (char* name, matriz m) {
 	int i , j;
 	
 	for (i = 0 ; i < m.ordem ; i++) {
 		for (j = 0; j < m.ordem ; j++) {
-			printf("%s[%d][%d] = %f\n",name, i, j, E(m,i,j));
+// 			printf("%s[%d][%d] = %f\n",name, i, j, E(m,i,j));
 		}
 	}
-	printf("\n");
-	
+	printf("\n");	
 }
+
 
 void acc (matriz A, matriz B) {
 	int i,j;
-	
-	if (A.ordem != B.ordem) {
-		//printf ("erro: somando matrizes de ordens diferentes\n");
-	}
 	
 	for (i = 0 ; i < A.ordem ; i++)
 		for (j = 0 ; j < A.ordem ; j++)
 			E(A,i,j) += E(B,i,j);
 }
+
 
 matriz some (matriz A, matriz B) {
 	int i,j;
@@ -82,8 +69,8 @@ matriz some (matriz A, matriz B) {
 			E(new_soma, i, j) = E(A, i, j) + E(B,i,j);
 	
 	return new_soma;
-// 	return suboradd(A, B, 1);
 }
+
 
 matriz sub (matriz A, matriz B) {
 	int i,j;
@@ -95,21 +82,8 @@ matriz sub (matriz A, matriz B) {
 			E(new_sub, i, j) = E(A, i, j) - E(B,i,j);
 	
 	return new_sub;
-	
-// 	return suboradd(A, B, -1);
 }
 
-// matriz suboradd (matriz A, matriz B, int addorsub) {
-// 	matriz s;
-// 	
-// 	s.soma = addorsub;
-// 	s.M1 = &A;
-// 	s.M2 = &B;
-// 	s.ordem = A.ordem; // ou B.ordem, tanto faz...
-// 	
-// 	return s;
-// 	
-// }
 
 void free_matrix (matriz m) {
 	int i;
@@ -118,6 +92,7 @@ void free_matrix (matriz m) {
 	
 	free (m.array);
 }
+
 
 matriz merge_matrix (matriz a11, matriz a12, matriz a21, matriz a22) {
 	int ordem = a11.ordem;
@@ -136,25 +111,21 @@ matriz merge_matrix (matriz a11, matriz a12, matriz a21, matriz a22) {
 	return m;
 }
 
+
 void part_matrix (matriz A, matriz *a11, matriz *a12, matriz *a21, matriz *a22) {
 	int meia_ordem = A.ordem / 2;	
 	(*a11) = (*a12) = (*a21) = (*a22) = A;	
 	a11->ordem = a12->ordem = a21->ordem = a22->ordem = meia_ordem;	
 		
 	a12->start_x = a22->start_x = meia_ordem + A.start_x;
-	a21->start_y = a22->start_y = meia_ordem + A.start_y;
-	
+	a21->start_y = a22->start_y = meia_ordem + A.start_y;	
 }
-
-
 
 
 matriz mult (matriz A, matriz B) {
 	int i,j,k, ordem;
 	matriz C;
-	ordem = A.ordem;
-	
-	//printf ("Recursão da multiplicação, ordem %d\n", ordem);
+	ordem = A.ordem;	
 	
 	if ( ordem > MIN_RANK ) {		
 		
@@ -193,9 +164,7 @@ matriz mult (matriz A, matriz B) {
 		free_matrix(C_11);
 		free_matrix(C_12);
 		free_matrix(C_21);
-		free_matrix(C_22);
-		
-		//printf ("Deu free nas Cij's\n");
+		free_matrix(C_22);		
 		
 		return C;
 		
@@ -211,16 +180,11 @@ matriz mult (matriz A, matriz B) {
 				for (k = 0 ; k < ordem ; k++) {
 					E(C, i, j) += E(A, i, k) * E(B, k, j);
 				}
-// 				printf ("C[%d][%d] = %f\n",i,j,E(C, i,j));
 			}
-		}
+		}		
 		
-		print_matrix("C", C);
-		
-		return C;
-		
-	}
-	
+		return C;		
+	}	
 }
 
 
@@ -232,11 +196,7 @@ int main (int argc, char** argv) {
 	int ORDEM = atoi(argv[1]);
 	
 	A = new_matrix(ORDEM);
-	B = new_matrix(ORDEM);	
-	
-//	A = calloc(ORDEM*ORDEM, sizeof(unsigned int));
-//	B = calloc(ORDEM*ORDEM, sizeof(unsigned int));
-//	C = calloc(ORDEM*ORDEM, sizeof(unsigned int));
+	B = new_matrix(ORDEM);		
 
 	printf ("PREENCHENDO\n");
 	
