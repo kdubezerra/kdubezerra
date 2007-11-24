@@ -1,0 +1,1403 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 16.53     10.87    10.87 80052370     0.00     0.00  Vector::Normalize() const
+ 16.51     21.73    10.86 122140824     0.00     0.00  Vector::Vector(double, double, double)
+  4.08     24.41     2.68 86685501     0.00     0.00  Vector::Vector(Point const&, Point const&)
+  3.45     26.68     2.27 21359351     0.00     0.00  unit_limiter(double)
+  3.28     28.83     2.16 23690444     0.00     0.00  Vector::Cross(Vector const&) const
+  3.22     30.95     2.12 23403779     0.00     0.00  Point::Y(double)
+  2.90     32.86     1.91  6334688     0.00     0.00  Sphere::Intersect(Ray const&, Point&) const
+  2.83     34.72     1.86 15025582     0.00     0.00  Vector::operator*(double) const
+  2.81     36.58     1.85 64459540     0.00     0.00  Vector::Dot(Vector const&) const
+  2.78     38.41     1.83 23403779     0.00     0.00  Point::Z(double)
+  2.71     40.19     1.79  6334688     0.00     0.00  Triangle::Intersect(Ray const&, Point&) const
+  2.51     41.84     1.65 23403779     0.00     0.00  Point::X(double)
+  2.34     43.38     1.54 17239388     0.00     0.00  Vector::NormalizeThis()
+  2.24     44.85     1.47 80052370     0.00     0.00  Vector::Magnitude() const
+  1.69     45.96     1.11 12295276     0.00     0.00  Point::Point()
+  1.59     47.01     1.05 195006733     0.00     0.00  Point::X() const
+  1.46     47.97     0.96 11108503     0.00     0.00  Point::Point(double, double, double)
+  1.44     48.91     0.95 195006733     0.00     0.00  Point::Z() const
+  1.40     49.83     0.92 195006733     0.00     0.00  Point::Y() const
+  1.32     50.70     0.87  3167344     0.00     0.00  RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*)
+  1.08     51.41     0.71 230882595     0.00     0.00  Vector::~Vector()
+  1.03     52.09     0.68  8547692     0.00     0.00  Point::Distance(Point const&) const
+  0.97     52.73     0.64  6565283     0.00     0.00  Ray::Direction(Vector)
+  0.93     53.34     0.61  5699246     0.00     0.00  Color::Color(double, double, double)
+  0.91     53.94     0.60 113772855     0.00     0.00  Vector::K() const
+  0.87     54.51     0.57 10069403     0.00     0.00  Triangle::Normal(Point const&, Point const&) const
+  0.87     55.08     0.57 18103060     0.00     0.00  Vector::IsSameDirection(Vector const&) const
+  0.85     55.64     0.56  5990167     0.00     0.00  Vector::ReverseDirection()
+  0.82     56.18     0.54  6562918     0.00     0.00  Color::Green(double)
+  0.82     56.72     0.54   863672     0.00     0.00  RayTracer::Shade(Shape const*, Point const&)
+  0.79     57.24     0.52  6562918     0.00     0.00  Color::Blue(double)
+  0.77     57.75     0.51 113772855     0.00     0.00  Vector::J() const
+  0.76     58.25     0.50  5125283     0.00     0.00  Ray::Origin(Point)
+  0.76     58.75     0.50  1698969     0.00     0.00  Shape::Reflect(Point const&, Ray const&) const
+  0.73     59.23     0.48  6562918     0.00     0.00  Color::Red(double)
+  0.70     59.69     0.46                             Vector::~Vector()
+  0.65     60.12     0.43 113772855     0.00     0.00  Vector::I() const
+  0.58     60.50     0.38        1     0.38    64.18  RayTracer::RayTrace()
+  0.54     60.85     0.36  4320000     0.00     0.00  Color::ByteValue(double) const
+  0.53     61.20     0.35  1440000     0.00     0.00  RayTracer::Render(Ray const&, bool, Shape const*)
+  0.50     61.53     0.33 33069401     0.00     0.00  Point::~Point()
+  0.46     61.83     0.30  2301300     0.00     0.00  Color::operator*(double) const
+  0.40     62.09     0.26 40030388     0.00     0.00  Ray::Origin() const
+  0.36     62.33     0.24  4540347     0.00     0.00  Vector::operator+(Point) const
+  0.32     62.54     0.21   233458     0.00     0.00  Vector::ToPoint() const
+  0.30     62.74     0.20 19493628     0.00     0.00  Vector::Vector()
+  0.30     62.93     0.20   835297     0.00     0.00  Ray::Ray(Point const&, Point const&)
+  0.26     63.10     0.17                             Vector::I(double)
+  0.26     63.27     0.17   863673     0.00     0.00  Ray::Ray(Point const&, Vector const&)
+  0.24     63.43     0.16                             Vector::Vector(Point const&, Point const&)
+  0.23     63.58     0.15                             Vector::K(double)
+  0.21     63.72     0.14 15836724     0.00     0.00  std::list<Shape*, std::allocator<Shape*> >::end()
+  0.21     63.86     0.14 12669376     0.00     0.00  std::_List_iterator<Shape*>::operator++(int)
+  0.21     64.00     0.14 15836720     0.00     0.00  std::_List_iterator<Shape*>::operator!=(std::_List_iterator<Shape*> const&) const
+  0.21     64.13     0.14                             Vector::Vector(double, double, double)
+  0.20     64.26     0.13  2562641     0.00     0.00  Color::operator+(Color const&) const
+  0.18     64.38     0.12   835297     0.00     0.00  RayTracer::Specular(Shape const*, Point const&, Light const*)
+  0.17     64.50     0.12                             Vector::J(double)
+  0.17     64.61     0.11 23403779     0.00     0.00  Point::Name(int)
+  0.16     64.71     0.11  1698969     0.00     0.00  Vector::operator-(Vector) const
+  0.11     64.79     0.08 27682274     0.00     0.00  Ray::Direction() const
+  0.09     64.85     0.06  5125283     0.00     0.00  Ray::~Ray()
+  0.09     64.91     0.06                             Vector::Vector()
+  0.08     64.96     0.05  8868963     0.00     0.00  Color::~Color()
+  0.08     65.01     0.05                             Point::~Point()
+  0.08     65.06     0.05                             Sphere::~Sphere()
+  0.08     65.11     0.05                             bool std::operator==<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const*)
+  0.08     65.16     0.05 16578781     0.00     0.00  std::_List_iterator<Shape*>::operator*() const
+  0.08     65.21     0.05  3426313     0.00     0.00  Ray::Ray()
+  0.08     65.26     0.05  3167344     0.00     0.00  std::list<Shape*, std::allocator<Shape*> >::begin()
+  0.06     65.30     0.04 19004068     0.00     0.00  std::_List_iterator<Shape*>::_List_iterator(std::_List_node_base*)
+  0.06     65.34     0.04  5125282     0.00     0.00  Color::Green() const
+  0.06     65.38     0.04                             Color::~Color()
+  0.05     65.41     0.04   863672     0.00     0.00  std::_List_iterator<Light*>::operator++(int)
+  0.05     65.44     0.03  4261610     0.00     0.00  std::_List_iterator<Light*>::operator*() const
+  0.05     65.47     0.03  1727344     0.00     0.00  std::_List_iterator<Light*>::operator!=(std::_List_iterator<Light*> const&) const
+  0.05     65.50     0.03   863672     0.00     0.00  std::list<Light*, std::allocator<Light*> >::begin()
+  0.05     65.53     0.03        1     0.03     0.03  std::list<Light*, std::allocator<Light*> >::push_back(Light* const&)
+  0.04     65.56     0.03                             Triangle::~Triangle()
+  0.04     65.58     0.03  5125282     0.00     0.00  Color::Blue() const
+  0.03     65.60     0.02  3426313     0.00     0.00  Light::LightPoint() const
+  0.03     65.62     0.02                             Point::operator==(Point const&) const
+  0.02     65.64     0.02  1440000     0.00     0.00  Color::BlueByte() const
+  0.02     65.65     0.02  1440000     0.00     0.00  Color::GreenByte() const
+  0.02     65.66     0.01  2303678     0.00     0.00  Color::Color()
+  0.02     65.67     0.01  1440000     0.00     0.00  Color::RedByte() const
+  0.02     65.68     0.01   233458     0.00     0.00  Vector::operator+(Vector) const
+  0.02     65.69     0.01                             Ray::Ray(Point const&, Point const&)
+  0.02     65.70     0.01                             Color::Color()
+  0.02     65.71     0.01                             Point::Point(double, double, double)
+  0.02     65.72     0.01                             Point::Name() const
+  0.01     65.73     0.01  5125282     0.00     0.00  Color::Red() const
+  0.01     65.73     0.01  1670594     0.00     0.00  Light::Intensity() const
+  0.01     65.74     0.01                             Color::Color(double, double, double)
+  0.01     65.74     0.01                             Light::LightPoint(Point const&)
+  0.00     65.74     0.00  2591017     0.00     0.00  std::_List_iterator<Light*>::_List_iterator(std::_List_node_base*)
+  0.00     65.74     0.00  1727345     0.00     0.00  std::list<Light*, std::allocator<Light*> >::end()
+  0.00     65.74     0.00  1727344     0.00     0.00  Shape::DiffuseReflectivity() const
+  0.00     65.74     0.00   863672     0.00     0.00  Shape::ShapeColor() const
+  0.00     65.74     0.00   863672     0.00     0.00  Shape::AmbientReflectivity() const
+  0.00     65.74     0.00   835297     0.00     0.00  Shape::SpecularSize() const
+  0.00     65.74     0.00   498520     0.00     0.00  Sphere::Normal(Point const&, Point const&) const
+  0.00     65.74     0.00        9     0.00     0.00  __gnu_cxx::new_allocator<Shape*>::new_allocator()
+  0.00     65.74     0.00        9     0.00     0.00  __gnu_cxx::new_allocator<Shape*>::~new_allocator()
+  0.00     65.74     0.00        9     0.00     0.00  std::allocator<Shape*>::~allocator()
+  0.00     65.74     0.00        8     0.00     0.00  std::_List_base<Shape*, std::allocator<Shape*> >::get_allocator() const
+  0.00     65.74     0.00        8     0.00     0.00  std::allocator<Shape*>::allocator<std::_List_node<Shape*> >(std::allocator<std::_List_node<Shape*> > const&)
+  0.00     65.74     0.00        5     0.00     0.00  operator new(unsigned int, void*)
+  0.00     65.74     0.00        4     0.00     0.00  Shape::ShapeColor(Color const&)
+  0.00     65.74     0.00        4     0.00     0.00  Shape::Type(std::string const&)
+  0.00     65.74     0.00        4     0.00     0.00  Shape::Shape()
+  0.00     65.74     0.00        4     0.00     0.00  RayTracer::AddShape(Shape*)
+  0.00     65.74     0.00        4     0.00     0.00  __gnu_cxx::new_allocator<Shape*>::destroy(Shape**)
+  0.00     65.74     0.00        4     0.00     0.00  __gnu_cxx::new_allocator<Shape*>::construct(Shape**, Shape* const&)
+  0.00     65.74     0.00        4     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Shape*> >::deallocate(std::_List_node<Shape*>*, unsigned int)
+  0.00     65.74     0.00        4     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Shape*> >::allocate(unsigned int, void const*)
+  0.00     65.74     0.00        4     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Shape*> >::max_size() const
+  0.00     65.74     0.00        4     0.00     0.00  std::list<Shape*, std::allocator<Shape*> >::get_allocator() const
+  0.00     65.74     0.00        4     0.00     0.00  std::_List_base<Shape*, std::allocator<Shape*> >::_M_get_node()
+  0.00     65.74     0.00        4     0.00     0.00  std::_List_base<Shape*, std::allocator<Shape*> >::_M_put_node(std::_List_node<Shape*>*)
+  0.00     65.74     0.00        4     0.00     0.00  std::list<Shape*, std::allocator<Shape*> >::_M_create_node(Shape* const&)
+  0.00     65.74     0.00        4     0.00     0.00  std::list<Shape*, std::allocator<Shape*> >::_M_insert(std::_List_iterator<Shape*>, Shape* const&)
+  0.00     65.74     0.00        4     0.00     0.00  std::list<Shape*, std::allocator<Shape*> >::push_back(Shape* const&)
+  0.00     65.74     0.00        3     0.00     0.00  __gnu_cxx::new_allocator<Light*>::new_allocator()
+  0.00     65.74     0.00        3     0.00     0.00  __gnu_cxx::new_allocator<Light*>::~new_allocator()
+  0.00     65.74     0.00        3     0.00     0.00  std::allocator<Light*>::~allocator()
+  0.00     65.74     0.00        2     0.00     0.00  Shape::DiffuseReflectivity(double)
+  0.00     65.74     0.00        2     0.00     0.00  Sphere::Sphere(Point, double)
+  0.00     65.74     0.00        2     0.00     0.00  Triangle::Triangle(Point const&, Point const&, Point const&)
+  0.00     65.74     0.00        2     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Light*> >::~new_allocator()
+  0.00     65.74     0.00        2     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Shape*> >::~new_allocator()
+  0.00     65.74     0.00        2     0.00     0.00  std::_List_base<Light*, std::allocator<Light*> >::get_allocator() const
+  0.00     65.74     0.00        2     0.00     0.00  std::allocator<Light*>::allocator<std::_List_node<Light*> >(std::allocator<std::_List_node<Light*> > const&)
+  0.00     65.74     0.00        1     0.00     0.00  global constructors keyed to _ZN9RayTracerC2Ev
+  0.00     65.74     0.00        1     0.00     0.00  __static_initialization_and_destruction_0(int, int)
+  0.00     65.74     0.00        1     0.00     0.00  Light::Intensity(double)
+  0.00     65.74     0.00        1     0.00     0.00  Light::Light(Point const&)
+  0.00     65.74     0.00        1     0.00     0.00  RayTracer::OutputFilename(std::string const&)
+  0.00     65.74     0.00        1     0.00     0.00  RayTracer::BackgroundColor(Color const&)
+  0.00     65.74     0.00        1     0.00     0.03  RayTracer::AddLight(Light*)
+  0.00     65.74     0.00        1     0.00     0.00  RayTracer::RayTracer()
+  0.00     65.74     0.00        1     0.00     0.00  RayTracer::~RayTracer()
+  0.00     65.74     0.00        1     0.00     0.00  __gnu_cxx::new_allocator<Light*>::destroy(Light**)
+  0.00     65.74     0.00        1     0.00     0.00  __gnu_cxx::new_allocator<Light*>::construct(Light**, Light* const&)
+  0.00     65.74     0.00        1     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Light*> >::deallocate(std::_List_node<Light*>*, unsigned int)
+  0.00     65.74     0.00        1     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Light*> >::allocate(unsigned int, void const*)
+  0.00     65.74     0.00        1     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Light*> >::new_allocator(__gnu_cxx::new_allocator<std::_List_node<Light*> > const&)
+  0.00     65.74     0.00        1     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Light*> >::new_allocator()
+  0.00     65.74     0.00        1     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Shape*> >::new_allocator(__gnu_cxx::new_allocator<std::_List_node<Shape*> > const&)
+  0.00     65.74     0.00        1     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Shape*> >::new_allocator()
+  0.00     65.74     0.00        1     0.00     0.00  __gnu_cxx::new_allocator<std::_List_node<Light*> >::max_size() const
+  0.00     65.74     0.00        1     0.00     0.00  std::list<Light*, std::allocator<Light*> >::get_allocator() const
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<Light*>::allocator()
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<Shape*>::allocator()
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<std::_List_node<Light*> >::allocator<Light*>(std::allocator<Light*> const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<std::_List_node<Light*> >::allocator(std::allocator<std::_List_node<Light*> > const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<std::_List_node<Light*> >::~allocator()
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<std::_List_node<Light*> >::~allocator()
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<std::_List_node<Shape*> >::allocator<Shape*>(std::allocator<Shape*> const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<std::_List_node<Shape*> >::allocator(std::allocator<std::_List_node<Shape*> > const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<std::_List_node<Shape*> >::~allocator()
+  0.00     65.74     0.00        1     0.00     0.00  std::allocator<std::_List_node<Shape*> >::~allocator()
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Light*, std::allocator<Light*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Light*> > const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Light*, std::allocator<Light*> >::_List_impl::~_List_impl()
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Light*, std::allocator<Light*> >::_M_get_node()
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Light*, std::allocator<Light*> >::_M_put_node(std::_List_node<Light*>*)
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Light*, std::allocator<Light*> >::_M_init()
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Light*, std::allocator<Light*> >::_M_clear()
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Light*, std::allocator<Light*> >::_List_base(std::allocator<Light*> const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Light*, std::allocator<Light*> >::~_List_base()
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Shape*> > const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::~_List_impl()
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Shape*, std::allocator<Shape*> >::_M_init()
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Shape*, std::allocator<Shape*> >::_M_clear()
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Shape*, std::allocator<Shape*> >::_List_base(std::allocator<Shape*> const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::_List_base<Shape*, std::allocator<Shape*> >::~_List_base()
+  0.00     65.74     0.00        1     0.00     0.00  std::list<Light*, std::allocator<Light*> >::_M_create_node(Light* const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::list<Light*, std::allocator<Light*> >::_M_insert(std::_List_iterator<Light*>, Light* const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::list<Light*, std::allocator<Light*> >::list(std::allocator<Light*> const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::list<Light*, std::allocator<Light*> >::~list()
+  0.00     65.74     0.00        1     0.00     0.00  std::list<Shape*, std::allocator<Shape*> >::list(std::allocator<Shape*> const&)
+  0.00     65.74     0.00        1     0.00     0.00  std::list<Shape*, std::allocator<Shape*> >::~list()
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+ 
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this 
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.02% of 65.74 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     97.7    0.00   64.21                 main [1]
+                0.38   63.80       1/1           RayTracer::RayTrace() [2]
+                0.00    0.03       1/1           RayTracer::AddLight(Light*) [84]
+                0.00    0.00       5/5699246     Color::Color(double, double, double) [18]
+                0.00    0.00       9/11108503     Point::Point(double, double, double) [19]
+                0.00    0.00       1/1           RayTracer::RayTracer() [99]
+                0.00    0.00       2/2           Triangle::Triangle(Point const&, Point const&, Point const&) [100]
+                0.00    0.00       2/2           Sphere::Sphere(Point, double) [101]
+                0.00    0.00       2/2           Shape::DiffuseReflectivity(double) [102]
+                0.00    0.00       1/1           Light::Intensity(double) [103]
+                0.00    0.00       9/33069401     Point::~Point() [49]
+                0.00    0.00       4/4           RayTracer::AddShape(Shape*) [104]
+                0.00    0.00       5/8868963     Color::~Color() [71]
+                0.00    0.00       1/1           RayTracer::~RayTracer() [106]
+                0.00    0.00       1/1           Light::Light(Point const&) [108]
+                0.00    0.00       4/4           Shape::ShapeColor(Color const&) [127]
+                0.00    0.00       1/1           RayTracer::OutputFilename(std::string const&) [148]
+                0.00    0.00       1/1           RayTracer::BackgroundColor(Color const&) [149]
+-----------------------------------------------
+                0.38   63.80       1/1           main [1]
+[2]     97.6    0.38   63.80       1         RayTracer::RayTrace() [2]
+                0.35   62.77 1440000/1440000     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+                0.14    0.00 1440000/6565283     Ray::Direction(Vector) [42]
+                0.02    0.12 1440000/1440000     Color::GreenByte() const [63]
+                0.02    0.12 1440000/1440000     Color::BlueByte() const [62]
+                0.01    0.12 1440000/1440000     Color::RedByte() const [64]
+                0.13    0.00 1440001/122140824     Vector::Vector(double, double, double) [9]
+                0.01    0.00 1440001/8868963     Color::~Color() [71]
+                0.00    0.00 1440001/230882595     Vector::~Vector() [39]
+                0.00    0.00       1/863673      Ray::Ray(Point const&, Vector const&) [41]
+                0.00    0.00       1/5125283     Ray::~Ray() [65]
+                0.00    0.00       1/2303678     Color::Color() [90]
+-----------------------------------------------
+                              863672             RayTracer::Render(Ray const&, bool, Shape const*) [3]
+                0.35   62.77 1440000/1440000     RayTracer::RayTrace() [2]
+[3]     96.0    0.35   62.77 1440000+863672  RayTracer::Render(Ray const&, bool, Shape const*) [3]
+                0.63   29.16 2303672/3167344     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+                0.54   24.10  863672/863672      RayTracer::Shade(Shape const*, Point const&) [6]
+                0.25    3.28  863672/1698969     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.30    1.52 2301300/2301300     Color::operator*(double) const [27]
+                0.09    1.19 1727344/2562641     Color::operator+(Color const&) const [24]
+                0.21    0.56 2303672/12295276     Point::Point() [17]
+                0.17    0.48  863672/863673      Ray::Ray(Point const&, Vector const&) [41]
+                0.11    0.08  863672/15025582     Vector::operator*(double) const [20]
+                0.02    0.02 1727344/5125283     Ray::~Ray() [65]
+                0.03    0.00 5758360/8868963     Color::~Color() [71]
+                0.02    0.00 2303672/33069401     Point::~Point() [49]
+                0.01    0.00 2303672/2303678     Color::Color() [90]
+                0.00    0.00  863672/230882595     Vector::~Vector() [39]
+                0.00    0.00  863672/27682274     Ray::Direction() const [68]
+                0.00    0.00 1727344/1727344     Shape::DiffuseReflectivity() const [117]
+                0.00    0.00  863672/863672      Shape::ShapeColor() const [118]
+                              863672             RayTracer::Render(Ray const&, bool, Shape const*) [3]
+-----------------------------------------------
+                0.24   10.93  863672/3167344     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.63   29.16 2303672/3167344     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[4]     62.3    0.87   40.09 3167344         RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+                1.79   25.68 6334688/6334688     Triangle::Intersect(Ray const&, Point&) const [5]
+                1.91    8.81 6334688/6334688     Sphere::Intersect(Ray const&, Point&) const [10]
+                0.29    0.77 3167344/12295276     Point::Point() [17]
+                0.18    0.07 2213004/8547692     Point::Distance(Point const&) const [37]
+                0.14    0.03 15836720/15836724     std::list<Shape*, std::allocator<Shape*> >::end() [54]
+                0.14    0.00 12669376/12669376     std::_List_iterator<Shape*>::operator++(int) [59]
+                0.14    0.00 15836720/15836720     std::_List_iterator<Shape*>::operator!=(std::_List_iterator<Shape*> const&) const [60]
+                0.05    0.01 3167344/3167344     std::list<Shape*, std::allocator<Shape*> >::begin() [70]
+                0.05    0.00 16578781/16578781     std::_List_iterator<Shape*>::operator*() const [75]
+                0.03    0.00 3167344/33069401     Point::~Point() [49]
+                0.01    0.00 2213004/40030388     Ray::Origin() const [52]
+-----------------------------------------------
+                1.79   25.68 6334688/6334688     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+[5]     41.8    1.79   25.68 6334688         Triangle::Intersect(Ray const&, Point&) const [5]
+                0.36   10.78 6334688/10069403     Triangle::Normal(Point const&, Point const&) const [8]
+                0.20    3.39 6334688/18103060     Vector::IsSameDirection(Vector const&) const [11]
+                1.24    1.58 13621041/23690444     Vector::Cross(Vector const&) const [16]
+                1.23    1.19 39911458/86685501     Vector::Vector(Point const&, Point const&) [14]
+                0.24    1.57 4540347/4540347     Vector::operator+(Point) const [28]
+                0.86    0.68 6334688/80052370     Vector::Normalize() const [7]
+                0.56    0.40 4540347/15025582     Vector::operator*(double) const [20]
+                0.65    0.31 22701735/64459540     Vector::Dot(Vector const&) const [21]
+                0.22    0.00 70742222/230882595     Vector::~Vector() [39]
+                0.10    0.00 15415382/40030388     Ray::Origin() const [52]
+                0.09    0.00 9080694/33069401     Point::~Point() [49]
+                0.04    0.00 15415382/27682274     Ray::Direction() const [68]
+-----------------------------------------------
+                0.54   24.10  863672/863672      RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[6]     37.5    0.54   24.10  863672         RayTracer::Shade(Shape const*, Point const&) [6]
+                0.24   10.93  863672/3167344     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+                0.12    4.84  835297/835297      RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.13    3.81 2240829/10069403     Triangle::Normal(Point const&, Point const&) const [8]
+                0.03    0.60 1727344/3426313     Ray::Ray() [32]
+                0.04    0.57  835297/2562641     Color::operator+(Color const&) const [24]
+                0.15    0.41 1698969/12295276     Point::Point() [17]
+                0.09    0.46  835297/5699246     Color::Color(double, double, double) [18]
+                0.11    0.09  835297/80052370     Vector::Normalize() const [7]
+                0.17    0.00 1727344/5125283     Ray::Origin(Point) [45]
+                0.17    0.00 1727344/6565283     Ray::Direction(Vector) [42]
+                0.07    0.09  863672/6562918     Color::Green(double) [31]
+                0.07    0.09  863672/6562918     Color::Blue(double) [33]
+                0.06    0.09  863672/6562918     Color::Red(double) [34]
+                0.07    0.03 2534266/64459540     Vector::Dot(Vector const&) const [21]
+                0.05    0.05 1727344/86685501     Vector::Vector(Point const&, Point const&) [14]
+                0.00    0.09  293437/498520      Sphere::Normal(Point const&, Point const&) const [57]
+                0.09    0.00  835297/21359351     unit_limiter(double) [22]
+                0.02    0.02 1727344/5125283     Ray::~Ray() [65]
+                0.04    0.00  863672/863672      std::_List_iterator<Light*>::operator++(int) [79]
+                0.03    0.00 3426313/33069401     Point::~Point() [49]
+                0.03    0.00 4261610/4261610     std::_List_iterator<Light*>::operator*() const [81]
+                0.03    0.00 1727344/1727344     std::_List_iterator<Light*>::operator!=(std::_List_iterator<Light*> const&) const [82]
+                0.03    0.00  863672/863672      std::list<Light*, std::allocator<Light*> >::begin() [83]
+                0.02    0.00 5096907/230882595     Vector::~Vector() [39]
+                0.02    0.00 2591016/3426313     Light::LightPoint() const [88]
+                0.01    0.00 1698969/40030388     Ray::Origin() const [52]
+                0.01    0.00 1670594/8868963     Color::~Color() [71]
+                0.01    0.00 2534266/27682274     Ray::Direction() const [68]
+                0.00    0.00  835297/1670594     Light::Intensity() const [96]
+                0.00    0.00 1727344/1727345     std::list<Light*, std::allocator<Light*> >::end() [116]
+                0.00    0.00  863672/863672      Shape::AmbientReflectivity() const [119]
+-----------------------------------------------
+                0.07    0.05  498520/80052370     Sphere::Normal(Point const&, Point const&) const [57]
+                0.11    0.09  835297/80052370     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.11    0.09  835297/80052370     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.23    0.18 1698969/80052370     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.86    0.68 6334688/80052370     Sphere::Intersect(Ray const&, Point&) const [10]
+                0.86    0.68 6334688/80052370     Triangle::Intersect(Ray const&, Point&) const [5]
+                1.37    1.08 10069403/80052370     Triangle::Normal(Point const&, Point const&) const [8]
+                2.34    1.85 17239388/80052370     Vector::NormalizeThis() [13]
+                4.92    3.88 36206120/80052370     Vector::IsSameDirection(Vector const&) const [11]
+[7]     29.6   10.87    8.59 80052370         Vector::Normalize() const [7]
+                7.12    0.00 80052370/122140824     Vector::Vector(double, double, double) [9]
+                1.47    0.00 80052370/80052370     Vector::Magnitude() const [30]
+-----------------------------------------------
+                0.08    2.54 1493886/10069403     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.13    3.81 2240829/10069403     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.36   10.78 6334688/10069403     Triangle::Intersect(Ray const&, Point&) const [5]
+[8]     26.9    0.57   17.14 10069403         Triangle::Normal(Point const&, Point const&) const [8]
+                0.32    5.38 10069403/18103060     Vector::IsSameDirection(Vector const&) const [11]
+                0.90    2.48 10069403/17239388     Vector::NormalizeThis() [13]
+                1.37    1.08 10069403/80052370     Vector::Normalize() const [7]
+                0.92    1.17 10069403/23690444     Vector::Cross(Vector const&) const [16]
+                0.93    0.90 30208209/86685501     Vector::Vector(Point const&, Point const&) [14]
+                0.48    1.10 5080733/5990167     Vector::ReverseDirection() [25]
+                0.12    0.00 40277612/230882595     Vector::~Vector() [39]
+-----------------------------------------------
+                0.02    0.00  233458/122140824     Vector::operator+(Vector) const [80]
+                0.13    0.00 1440001/122140824     RayTracer::RayTrace() [2]
+                0.15    0.00 1698969/122140824     Vector::operator-(Vector) const [51]
+                1.34    0.00 15025582/122140824     Vector::operator*(double) const [20]
+                2.11    0.00 23690444/122140824     Vector::Cross(Vector const&) const [16]
+                7.12    0.00 80052370/122140824     Vector::Normalize() const [7]
+[9]     16.5   10.86    0.00 122140824         Vector::Vector(double, double, double) [9]
+-----------------------------------------------
+                1.91    8.81 6334688/6334688     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+[10]    16.3    1.91    8.81 6334688         Sphere::Intersect(Ray const&, Point&) const [10]
+                0.57    1.56 6334688/17239388     Vector::NormalizeThis() [13]
+                0.55    1.55 6334688/11108503     Point::Point(double, double, double) [19]
+                0.86    0.68 6334688/80052370     Vector::Normalize() const [7]
+                0.53    0.25 18586213/64459540     Vector::Dot(Vector const&) const [21]
+                0.39    0.38 12669376/86685501     Vector::Vector(Point const&, Point const&) [14]
+                0.50    0.19 6334688/8547692     Point::Distance(Point const&) const [37]
+                0.21    0.08  233458/233458      Vector::ToPoint() const [50]
+                0.13    0.00 12669376/19493628     Vector::Vector() [53]
+                0.12    0.00 19004064/40030388     Ray::Origin() const [52]
+                0.10    0.00 32140356/230882595     Vector::~Vector() [39]
+                0.07    0.00 6568146/33069401     Point::~Point() [49]
+                0.03    0.02  233458/15025582     Vector::operator*(double) const [20]
+                0.01    0.02  233458/233458      Vector::operator+(Vector) const [80]
+                0.02    0.00 6334688/27682274     Ray::Direction() const [68]
+-----------------------------------------------
+                0.05    0.91 1698969/18103060     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.20    3.39 6334688/18103060     Triangle::Intersect(Ray const&, Point&) const [5]
+                0.32    5.38 10069403/18103060     Triangle::Normal(Point const&, Point const&) const [8]
+[11]    15.6    0.57    9.68 18103060         Vector::IsSameDirection(Vector const&) const [11]
+                4.92    3.88 36206120/80052370     Vector::Normalize() const [7]
+                0.52    0.24 18103060/64459540     Vector::Dot(Vector const&) const [21]
+                0.11    0.00 36206120/230882595     Vector::~Vector() [39]
+-----------------------------------------------
+                0.25    3.17  835297/1698969     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.25    3.28  863672/1698969     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[12]    10.6    0.50    6.45 1698969         Shape::Reflect(Point const&, Ray const&) const [12]
+                0.08    2.54 1493886/10069403     Triangle::Normal(Point const&, Point const&) const [8]
+                0.05    0.91 1698969/18103060     Vector::IsSameDirection(Vector const&) const [11]
+                0.42    0.30 3397938/15025582     Vector::operator*(double) const [20]
+                0.02    0.59 1698969/3426313     Ray::Ray() [32]
+                0.23    0.18 1698969/80052370     Vector::Normalize() const [7]
+                0.09    0.20  909434/5990167     Vector::ReverseDirection() [25]
+                0.11    0.17 1698969/1698969     Vector::operator-(Vector) const [51]
+                0.17    0.00 1698969/5125283     Ray::Origin(Point) [45]
+                0.17    0.00 1698969/6565283     Ray::Direction(Vector) [42]
+                0.05    0.02 1698969/64459540     Vector::Dot(Vector const&) const [21]
+                0.00    0.06  205083/498520      Sphere::Normal(Point const&, Point const&) const [57]
+                0.04    0.00 11892783/230882595     Vector::~Vector() [39]
+                0.02    0.00 1698969/19493628     Vector::Vector() [53]
+                0.02    0.00 1698969/33069401     Point::~Point() [49]
+                0.01    0.00 1698969/40030388     Ray::Origin() const [52]
+                0.00    0.00 1698969/27682274     Ray::Direction() const [68]
+-----------------------------------------------
+                0.07    0.21  835297/17239388     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.57    1.56 6334688/17239388     Sphere::Intersect(Ray const&, Point&) const [10]
+                0.90    2.48 10069403/17239388     Triangle::Normal(Point const&, Point const&) const [8]
+[13]     8.8    1.54    4.24 17239388         Vector::NormalizeThis() [13]
+                2.34    1.85 17239388/80052370     Vector::Normalize() const [7]
+                0.05    0.00 17239388/230882595     Vector::~Vector() [39]
+-----------------------------------------------
+                0.02    0.01  498520/86685501     Sphere::Normal(Point const&, Point const&) const [57]
+                0.03    0.02  835297/86685501     Ray::Ray(Point const&, Point const&) [40]
+                0.03    0.02  835297/86685501     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.05    0.05 1727344/86685501     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.39    0.38 12669376/86685501     Sphere::Intersect(Ray const&, Point&) const [10]
+                0.93    0.90 30208209/86685501     Triangle::Normal(Point const&, Point const&) const [8]
+                1.23    1.19 39911458/86685501     Triangle::Intersect(Ray const&, Point&) const [5]
+[14]     8.0    2.68    2.59 86685501         Vector::Vector(Point const&, Point const&) [14]
+                0.93    0.00 173371002/195006733     Point::X() const [35]
+                0.84    0.00 173371002/195006733     Point::Z() const [36]
+                0.82    0.00 173371002/195006733     Point::Y() const [38]
+-----------------------------------------------
+                0.12    4.84  835297/835297      RayTracer::Shade(Shape const*, Point const&) [6]
+[15]     7.5    0.12    4.84  835297         RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.25    3.17  835297/1698969     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.20    0.51  835297/835297      Ray::Ray(Point const&, Point const&) [40]
+                0.07    0.21  835297/17239388     Vector::NormalizeThis() [13]
+                0.11    0.09  835297/80052370     Vector::Normalize() const [7]
+                0.09    0.00  835297/21359351     unit_limiter(double) [22]
+                0.03    0.02  835297/86685501     Vector::Vector(Point const&, Point const&) [14]
+                0.02    0.02 1670594/5125283     Ray::~Ray() [65]
+                0.02    0.01  835297/64459540     Vector::Dot(Vector const&) const [21]
+                0.01    0.00 1670594/230882595     Vector::~Vector() [39]
+                0.00    0.00  835297/3426313     Light::LightPoint() const [88]
+                0.00    0.00  835297/1670594     Light::Intensity() const [96]
+                0.00    0.00  835297/27682274     Ray::Direction() const [68]
+                0.00    0.00  835297/835297      Shape::SpecularSize() const [120]
+-----------------------------------------------
+                0.92    1.17 10069403/23690444     Triangle::Normal(Point const&, Point const&) const [8]
+                1.24    1.58 13621041/23690444     Triangle::Intersect(Ray const&, Point&) const [5]
+[16]     7.5    2.16    2.75 23690444         Vector::Cross(Vector const&) const [16]
+                2.11    0.00 23690444/122140824     Vector::Vector(double, double, double) [9]
+                0.25    0.00 47380888/113772855     Vector::K() const [43]
+                0.21    0.00 47380888/113772855     Vector::J() const [44]
+                0.18    0.00 47380888/113772855     Vector::I() const [47]
+-----------------------------------------------
+                0.00    0.00       2/12295276     Sphere::Sphere(Point, double) [101]
+                0.00    0.00       6/12295276     Triangle::Triangle(Point const&, Point const&, Point const&) [100]
+                0.08    0.20  835297/12295276     Ray::Ray(Point const&, Point const&) [40]
+                0.08    0.21  863673/12295276     Ray::Ray(Point const&, Vector const&) [41]
+                0.15    0.41 1698969/12295276     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.21    0.56 2303672/12295276     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+                0.29    0.77 3167344/12295276     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+                0.31    0.84 3426313/12295276     Ray::Ray() [32]
+[17]     6.3    1.11    3.00 12295276         Point::Point() [17]
+                1.11    0.00 12295276/23403779     Point::Y(double) [23]
+                0.96    0.00 12295276/23403779     Point::Z(double) [26]
+                0.87    0.00 12295276/23403779     Point::X(double) [29]
+                0.06    0.00 12295276/23403779     Point::Name(int) [67]
+-----------------------------------------------
+                0.00    0.00       3/5699246     RayTracer::RayTracer() [99]
+                0.00    0.00       5/5699246     main [1]
+                0.09    0.46  835297/5699246     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.25    1.27 2301300/5699246     Color::operator*(double) const [27]
+                0.27    1.42 2562641/5699246     Color::operator+(Color const&) const [24]
+[18]     5.7    0.61    3.15 5699246         Color::Color(double, double, double) [18]
+                0.47    0.61 5699246/6562918     Color::Green(double) [31]
+                0.45    0.61 5699246/6562918     Color::Blue(double) [33]
+                0.42    0.61 5699246/6562918     Color::Red(double) [34]
+-----------------------------------------------
+                0.00    0.00       1/11108503     RayTracer::RayTracer() [99]
+                0.00    0.00       9/11108503     main [1]
+                0.02    0.06  233458/11108503     Vector::ToPoint() const [50]
+                0.39    1.11 4540347/11108503     Vector::operator+(Point) const [28]
+                0.55    1.55 6334688/11108503     Sphere::Intersect(Ray const&, Point&) const [10]
+[19]     5.6    0.96    2.71 11108503         Point::Point(double, double, double) [19]
+                1.01    0.00 11108503/23403779     Point::Y(double) [23]
+                0.87    0.00 11108503/23403779     Point::Z(double) [26]
+                0.78    0.00 11108503/23403779     Point::X(double) [29]
+                0.05    0.00 11108503/23403779     Point::Name(int) [67]
+-----------------------------------------------
+                0.03    0.02  233458/15025582     Sphere::Intersect(Ray const&, Point&) const [10]
+                0.11    0.08  863672/15025582     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+                0.42    0.30 3397938/15025582     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.56    0.40 4540347/15025582     Triangle::Intersect(Ray const&, Point&) const [5]
+                0.74    0.53 5990167/15025582     Vector::ReverseDirection() [25]
+[20]     4.9    1.86    1.34 15025582         Vector::operator*(double) const [20]
+                1.34    0.00 15025582/122140824     Vector::Vector(double, double, double) [9]
+-----------------------------------------------
+                0.02    0.01  835297/64459540     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.05    0.02 1698969/64459540     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.07    0.03 2534266/64459540     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.52    0.24 18103060/64459540     Vector::IsSameDirection(Vector const&) const [11]
+                0.53    0.25 18586213/64459540     Sphere::Intersect(Ray const&, Point&) const [10]
+                0.65    0.31 22701735/64459540     Triangle::Intersect(Ray const&, Point&) const [5]
+[21]     4.1    1.85    0.87 64459540         Vector::Dot(Vector const&) const [21]
+                0.34    0.00 64459540/113772855     Vector::K() const [43]
+                0.29    0.00 64459540/113772855     Vector::J() const [44]
+                0.24    0.00 64459540/113772855     Vector::I() const [47]
+-----------------------------------------------
+                0.00    0.00       1/21359351     Light::Intensity(double) [103]
+                0.00    0.00       2/21359351     Shape::DiffuseReflectivity(double) [102]
+                0.09    0.00  835297/21359351     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.09    0.00  835297/21359351     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.70    0.00 6562918/21359351     Color::Blue(double) [33]
+                0.70    0.00 6562918/21359351     Color::Green(double) [31]
+                0.70    0.00 6562918/21359351     Color::Red(double) [34]
+[22]     3.5    2.27    0.00 21359351         unit_limiter(double) [22]
+-----------------------------------------------
+                1.01    0.00 11108503/23403779     Point::Point(double, double, double) [19]
+                1.11    0.00 12295276/23403779     Point::Point() [17]
+[23]     3.2    2.12    0.00 23403779         Point::Y(double) [23]
+-----------------------------------------------
+                0.04    0.57  835297/2562641     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.09    1.19 1727344/2562641     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[24]     2.9    0.13    1.76 2562641         Color::operator+(Color const&) const [24]
+                0.27    1.42 2562641/5699246     Color::Color(double, double, double) [18]
+                0.04    0.00 5125282/5125282     Color::Green() const [77]
+                0.03    0.00 5125282/5125282     Color::Blue() const [87]
+                0.01    0.00 5125282/5125282     Color::Red() const [95]
+-----------------------------------------------
+                0.09    0.20  909434/5990167     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.48    1.10 5080733/5990167     Triangle::Normal(Point const&, Point const&) const [8]
+[25]     2.8    0.56    1.29 5990167         Vector::ReverseDirection() [25]
+                0.74    0.53 5990167/15025582     Vector::operator*(double) const [20]
+                0.02    0.00 5990167/230882595     Vector::~Vector() [39]
+-----------------------------------------------
+                0.87    0.00 11108503/23403779     Point::Point(double, double, double) [19]
+                0.96    0.00 12295276/23403779     Point::Point() [17]
+[26]     2.8    1.83    0.00 23403779         Point::Z(double) [26]
+-----------------------------------------------
+                0.30    1.52 2301300/2301300     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[27]     2.8    0.30    1.52 2301300         Color::operator*(double) const [27]
+                0.25    1.27 2301300/5699246     Color::Color(double, double, double) [18]
+-----------------------------------------------
+                0.24    1.57 4540347/4540347     Triangle::Intersect(Ray const&, Point&) const [5]
+[28]     2.7    0.24    1.57 4540347         Vector::operator+(Point) const [28]
+                0.39    1.11 4540347/11108503     Point::Point(double, double, double) [19]
+                0.02    0.00 4540347/195006733     Point::X() const [35]
+                0.02    0.00 4540347/195006733     Point::Z() const [36]
+                0.02    0.00 4540347/195006733     Point::Y() const [38]
+-----------------------------------------------
+                0.78    0.00 11108503/23403779     Point::Point(double, double, double) [19]
+                0.87    0.00 12295276/23403779     Point::Point() [17]
+[29]     2.5    1.65    0.00 23403779         Point::X(double) [29]
+-----------------------------------------------
+                1.47    0.00 80052370/80052370     Vector::Normalize() const [7]
+[30]     2.2    1.47    0.00 80052370         Vector::Magnitude() const [30]
+-----------------------------------------------
+                0.07    0.09  863672/6562918     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.47    0.61 5699246/6562918     Color::Color(double, double, double) [18]
+[31]     1.9    0.54    0.70 6562918         Color::Green(double) [31]
+                0.70    0.00 6562918/21359351     unit_limiter(double) [22]
+-----------------------------------------------
+                0.02    0.59 1698969/3426313     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.03    0.60 1727344/3426313     RayTracer::Shade(Shape const*, Point const&) [6]
+[32]     1.9    0.05    1.18 3426313         Ray::Ray() [32]
+                0.31    0.84 3426313/12295276     Point::Point() [17]
+                0.04    0.00 3426313/19493628     Vector::Vector() [53]
+-----------------------------------------------
+                0.07    0.09  863672/6562918     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.45    0.61 5699246/6562918     Color::Color(double, double, double) [18]
+[33]     1.9    0.52    0.70 6562918         Color::Blue(double) [33]
+                0.70    0.00 6562918/21359351     unit_limiter(double) [22]
+-----------------------------------------------
+                0.06    0.09  863672/6562918     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.42    0.61 5699246/6562918     Color::Color(double, double, double) [18]
+[34]     1.8    0.48    0.70 6562918         Color::Red(double) [34]
+                0.70    0.00 6562918/21359351     unit_limiter(double) [22]
+-----------------------------------------------
+                0.02    0.00 4540347/195006733     Vector::operator+(Point) const [28]
+                0.09    0.00 17095384/195006733     Point::Distance(Point const&) const [37]
+                0.93    0.00 173371002/195006733     Vector::Vector(Point const&, Point const&) [14]
+[35]     1.6    1.05    0.00 195006733         Point::X() const [35]
+-----------------------------------------------
+                0.02    0.00 4540347/195006733     Vector::operator+(Point) const [28]
+                0.08    0.00 17095384/195006733     Point::Distance(Point const&) const [37]
+                0.84    0.00 173371002/195006733     Vector::Vector(Point const&, Point const&) [14]
+[36]     1.4    0.95    0.00 195006733         Point::Z() const [36]
+-----------------------------------------------
+                0.18    0.07 2213004/8547692     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+                0.50    0.19 6334688/8547692     Sphere::Intersect(Ray const&, Point&) const [10]
+[37]     1.4    0.68    0.26 8547692         Point::Distance(Point const&) const [37]
+                0.09    0.00 17095384/195006733     Point::X() const [35]
+                0.08    0.00 17095384/195006733     Point::Z() const [36]
+                0.08    0.00 17095384/195006733     Point::Y() const [38]
+-----------------------------------------------
+                0.02    0.00 4540347/195006733     Vector::operator+(Point) const [28]
+                0.08    0.00 17095384/195006733     Point::Distance(Point const&) const [37]
+                0.82    0.00 173371002/195006733     Vector::Vector(Point const&, Point const&) [14]
+[38]     1.4    0.92    0.00 195006733         Point::Y() const [38]
+-----------------------------------------------
+                0.00    0.00  498520/230882595     Sphere::Normal(Point const&, Point const&) const [57]
+                0.00    0.00  835297/230882595     Ray::Ray(Point const&, Point const&) [40]
+                0.00    0.00  863672/230882595     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+                0.00    0.00  863673/230882595     Ray::Ray(Point const&, Vector const&) [41]
+                0.00    0.00 1440001/230882595     RayTracer::RayTrace() [2]
+                0.01    0.00 1670594/230882595     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.02    0.00 5096907/230882595     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.02    0.00 5125283/230882595     Ray::~Ray() [65]
+                0.02    0.00 5990167/230882595     Vector::ReverseDirection() [25]
+                0.04    0.00 11892783/230882595     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.05    0.00 17239388/230882595     Vector::NormalizeThis() [13]
+                0.10    0.00 32140356/230882595     Sphere::Intersect(Ray const&, Point&) const [10]
+                0.11    0.00 36206120/230882595     Vector::IsSameDirection(Vector const&) const [11]
+                0.12    0.00 40277612/230882595     Triangle::Normal(Point const&, Point const&) const [8]
+                0.22    0.00 70742222/230882595     Triangle::Intersect(Ray const&, Point&) const [5]
+[39]     1.1    0.71    0.00 230882595         Vector::~Vector() [39]
+-----------------------------------------------
+                0.20    0.51  835297/835297      RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+[40]     1.1    0.20    0.51  835297         Ray::Ray(Point const&, Point const&) [40]
+                0.08    0.20  835297/12295276     Point::Point() [17]
+                0.08    0.00  835297/5125283     Ray::Origin(Point) [45]
+                0.08    0.00  835297/6565283     Ray::Direction(Vector) [42]
+                0.03    0.02  835297/86685501     Vector::Vector(Point const&, Point const&) [14]
+                0.01    0.00  835297/19493628     Vector::Vector() [53]
+                0.01    0.00  835297/33069401     Point::~Point() [49]
+                0.00    0.00  835297/230882595     Vector::~Vector() [39]
+-----------------------------------------------
+                0.00    0.00       1/863673      RayTracer::RayTrace() [2]
+                0.17    0.48  863672/863673      RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[41]     1.0    0.17    0.48  863673         Ray::Ray(Point const&, Vector const&) [41]
+                0.08    0.21  863673/12295276     Point::Point() [17]
+                0.08    0.00  863673/5125283     Ray::Origin(Point) [45]
+                0.08    0.00  863673/6565283     Ray::Direction(Vector) [42]
+                0.01    0.00  863673/19493628     Vector::Vector() [53]
+                0.01    0.00  863673/33069401     Point::~Point() [49]
+                0.00    0.00  863673/230882595     Vector::~Vector() [39]
+-----------------------------------------------
+                0.08    0.00  835297/6565283     Ray::Ray(Point const&, Point const&) [40]
+                0.08    0.00  863673/6565283     Ray::Ray(Point const&, Vector const&) [41]
+                0.14    0.00 1440000/6565283     RayTracer::RayTrace() [2]
+                0.17    0.00 1698969/6565283     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.17    0.00 1727344/6565283     RayTracer::Shade(Shape const*, Point const&) [6]
+[42]     1.0    0.64    0.00 6565283         Ray::Direction(Vector) [42]
+-----------------------------------------------
+                0.00    0.00  233458/113772855     Vector::operator+(Vector) const [80]
+                0.01    0.00 1698969/113772855     Vector::operator-(Vector) const [51]
+                0.25    0.00 47380888/113772855     Vector::Cross(Vector const&) const [16]
+                0.34    0.00 64459540/113772855     Vector::Dot(Vector const&) const [21]
+[43]     0.9    0.60    0.00 113772855         Vector::K() const [43]
+-----------------------------------------------
+                0.00    0.00  233458/113772855     Vector::operator+(Vector) const [80]
+                0.01    0.00 1698969/113772855     Vector::operator-(Vector) const [51]
+                0.21    0.00 47380888/113772855     Vector::Cross(Vector const&) const [16]
+                0.29    0.00 64459540/113772855     Vector::Dot(Vector const&) const [21]
+[44]     0.8    0.51    0.00 113772855         Vector::J() const [44]
+-----------------------------------------------
+                0.08    0.00  835297/5125283     Ray::Ray(Point const&, Point const&) [40]
+                0.08    0.00  863673/5125283     Ray::Ray(Point const&, Vector const&) [41]
+                0.17    0.00 1698969/5125283     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.17    0.00 1727344/5125283     RayTracer::Shade(Shape const*, Point const&) [6]
+[45]     0.8    0.50    0.00 5125283         Ray::Origin(Point) [45]
+-----------------------------------------------
+                                                 <spontaneous>
+[46]     0.7    0.46    0.00                 Vector::~Vector() [46]
+-----------------------------------------------
+                0.00    0.00  233458/113772855     Vector::operator+(Vector) const [80]
+                0.01    0.00 1698969/113772855     Vector::operator-(Vector) const [51]
+                0.18    0.00 47380888/113772855     Vector::Cross(Vector const&) const [16]
+                0.24    0.00 64459540/113772855     Vector::Dot(Vector const&) const [21]
+[47]     0.7    0.43    0.00 113772855         Vector::I() const [47]
+-----------------------------------------------
+                0.12    0.00 1440000/4320000     Color::RedByte() const [64]
+                0.12    0.00 1440000/4320000     Color::GreenByte() const [63]
+                0.12    0.00 1440000/4320000     Color::BlueByte() const [62]
+[48]     0.5    0.36    0.00 4320000         Color::ByteValue(double) const [48]
+-----------------------------------------------
+                0.00    0.00       1/33069401     RayTracer::~RayTracer() [106]
+                0.00    0.00       9/33069401     main [1]
+                0.01    0.00  835297/33069401     Ray::Ray(Point const&, Point const&) [40]
+                0.01    0.00  863673/33069401     Ray::Ray(Point const&, Vector const&) [41]
+                0.02    0.00 1698969/33069401     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.02    0.00 2303672/33069401     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+                0.03    0.00 3167344/33069401     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+                0.03    0.00 3426313/33069401     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.05    0.00 5125283/33069401     Ray::~Ray() [65]
+                0.07    0.00 6568146/33069401     Sphere::Intersect(Ray const&, Point&) const [10]
+                0.09    0.00 9080694/33069401     Triangle::Intersect(Ray const&, Point&) const [5]
+[49]     0.5    0.33    0.00 33069401         Point::~Point() [49]
+-----------------------------------------------
+                0.21    0.08  233458/233458      Sphere::Intersect(Ray const&, Point&) const [10]
+[50]     0.4    0.21    0.08  233458         Vector::ToPoint() const [50]
+                0.02    0.06  233458/11108503     Point::Point(double, double, double) [19]
+-----------------------------------------------
+                0.11    0.17 1698969/1698969     Shape::Reflect(Point const&, Ray const&) const [12]
+[51]     0.4    0.11    0.17 1698969         Vector::operator-(Vector) const [51]
+                0.15    0.00 1698969/122140824     Vector::Vector(double, double, double) [9]
+                0.01    0.00 1698969/113772855     Vector::K() const [43]
+                0.01    0.00 1698969/113772855     Vector::J() const [44]
+                0.01    0.00 1698969/113772855     Vector::I() const [47]
+-----------------------------------------------
+                0.01    0.00 1698969/40030388     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.01    0.00 1698969/40030388     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.01    0.00 2213004/40030388     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+                0.10    0.00 15415382/40030388     Triangle::Intersect(Ray const&, Point&) const [5]
+                0.12    0.00 19004064/40030388     Sphere::Intersect(Ray const&, Point&) const [10]
+[52]     0.4    0.26    0.00 40030388         Ray::Origin() const [52]
+-----------------------------------------------
+                0.01    0.00  835297/19493628     Ray::Ray(Point const&, Point const&) [40]
+                0.01    0.00  863673/19493628     Ray::Ray(Point const&, Vector const&) [41]
+                0.02    0.00 1698969/19493628     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.04    0.00 3426313/19493628     Ray::Ray() [32]
+                0.13    0.00 12669376/19493628     Sphere::Intersect(Ray const&, Point&) const [10]
+[53]     0.3    0.20    0.00 19493628         Vector::Vector() [53]
+-----------------------------------------------
+                0.00    0.00       4/15836724     std::list<Shape*, std::allocator<Shape*> >::push_back(Shape* const&) [105]
+                0.14    0.03 15836720/15836724     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+[54]     0.3    0.14    0.03 15836724         std::list<Shape*, std::allocator<Shape*> >::end() [54]
+                0.03    0.00 15836724/19004068     std::_List_iterator<Shape*>::_List_iterator(std::_List_node_base*) [76]
+-----------------------------------------------
+                                                 <spontaneous>
+[55]     0.3    0.17    0.00                 Vector::I(double) [55]
+-----------------------------------------------
+                                                 <spontaneous>
+[56]     0.2    0.16    0.00                 Vector::Vector(Point const&, Point const&) [56]
+-----------------------------------------------
+                0.00    0.06  205083/498520      Shape::Reflect(Point const&, Ray const&) const [12]
+                0.00    0.09  293437/498520      RayTracer::Shade(Shape const*, Point const&) [6]
+[57]     0.2    0.00    0.15  498520         Sphere::Normal(Point const&, Point const&) const [57]
+                0.07    0.05  498520/80052370     Vector::Normalize() const [7]
+                0.02    0.01  498520/86685501     Vector::Vector(Point const&, Point const&) [14]
+                0.00    0.00  498520/230882595     Vector::~Vector() [39]
+-----------------------------------------------
+                                                 <spontaneous>
+[58]     0.2    0.15    0.00                 Vector::K(double) [58]
+-----------------------------------------------
+                0.14    0.00 12669376/12669376     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+[59]     0.2    0.14    0.00 12669376         std::_List_iterator<Shape*>::operator++(int) [59]
+-----------------------------------------------
+                0.14    0.00 15836720/15836720     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+[60]     0.2    0.14    0.00 15836720         std::_List_iterator<Shape*>::operator!=(std::_List_iterator<Shape*> const&) const [60]
+-----------------------------------------------
+                                                 <spontaneous>
+[61]     0.2    0.14    0.00                 Vector::Vector(double, double, double) [61]
+-----------------------------------------------
+                0.02    0.12 1440000/1440000     RayTracer::RayTrace() [2]
+[62]     0.2    0.02    0.12 1440000         Color::BlueByte() const [62]
+                0.12    0.00 1440000/4320000     Color::ByteValue(double) const [48]
+-----------------------------------------------
+                0.02    0.12 1440000/1440000     RayTracer::RayTrace() [2]
+[63]     0.2    0.02    0.12 1440000         Color::GreenByte() const [63]
+                0.12    0.00 1440000/4320000     Color::ByteValue(double) const [48]
+-----------------------------------------------
+                0.01    0.12 1440000/1440000     RayTracer::RayTrace() [2]
+[64]     0.2    0.01    0.12 1440000         Color::RedByte() const [64]
+                0.12    0.00 1440000/4320000     Color::ByteValue(double) const [48]
+-----------------------------------------------
+                0.00    0.00       1/5125283     RayTracer::RayTrace() [2]
+                0.02    0.02 1670594/5125283     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.02    0.02 1727344/5125283     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.02    0.02 1727344/5125283     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[65]     0.2    0.06    0.07 5125283         Ray::~Ray() [65]
+                0.05    0.00 5125283/33069401     Point::~Point() [49]
+                0.02    0.00 5125283/230882595     Vector::~Vector() [39]
+-----------------------------------------------
+                                                 <spontaneous>
+[66]     0.2    0.12    0.00                 Vector::J(double) [66]
+-----------------------------------------------
+                0.05    0.00 11108503/23403779     Point::Point(double, double, double) [19]
+                0.06    0.00 12295276/23403779     Point::Point() [17]
+[67]     0.2    0.11    0.00 23403779         Point::Name(int) [67]
+-----------------------------------------------
+                0.00    0.00  835297/27682274     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.00    0.00  863672/27682274     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+                0.00    0.00 1698969/27682274     Shape::Reflect(Point const&, Ray const&) const [12]
+                0.01    0.00 2534266/27682274     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.02    0.00 6334688/27682274     Sphere::Intersect(Ray const&, Point&) const [10]
+                0.04    0.00 15415382/27682274     Triangle::Intersect(Ray const&, Point&) const [5]
+[68]     0.1    0.08    0.00 27682274         Ray::Direction() const [68]
+-----------------------------------------------
+                                                 <spontaneous>
+[69]     0.1    0.06    0.00                 Vector::Vector() [69]
+-----------------------------------------------
+                0.05    0.01 3167344/3167344     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+[70]     0.1    0.05    0.01 3167344         std::list<Shape*, std::allocator<Shape*> >::begin() [70]
+                0.01    0.00 3167344/19004068     std::_List_iterator<Shape*>::_List_iterator(std::_List_node_base*) [76]
+-----------------------------------------------
+                0.00    0.00       3/8868963     RayTracer::~RayTracer() [106]
+                0.00    0.00       5/8868963     main [1]
+                0.01    0.00 1440001/8868963     RayTracer::RayTrace() [2]
+                0.01    0.00 1670594/8868963     RayTracer::Shade(Shape const*, Point const&) [6]
+                0.03    0.00 5758360/8868963     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[71]     0.1    0.05    0.00 8868963         Color::~Color() [71]
+-----------------------------------------------
+                                                 <spontaneous>
+[72]     0.1    0.05    0.00                 Point::~Point() [72]
+-----------------------------------------------
+                                                 <spontaneous>
+[73]     0.1    0.05    0.00                 Sphere::~Sphere() [73]
+-----------------------------------------------
+                                                 <spontaneous>
+[74]     0.1    0.05    0.00                 bool std::operator==<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const*) [74]
+-----------------------------------------------
+                0.05    0.00 16578781/16578781     RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [4]
+[75]     0.1    0.05    0.00 16578781         std::_List_iterator<Shape*>::operator*() const [75]
+-----------------------------------------------
+                0.01    0.00 3167344/19004068     std::list<Shape*, std::allocator<Shape*> >::begin() [70]
+                0.03    0.00 15836724/19004068     std::list<Shape*, std::allocator<Shape*> >::end() [54]
+[76]     0.1    0.04    0.00 19004068         std::_List_iterator<Shape*>::_List_iterator(std::_List_node_base*) [76]
+-----------------------------------------------
+                0.04    0.00 5125282/5125282     Color::operator+(Color const&) const [24]
+[77]     0.1    0.04    0.00 5125282         Color::Green() const [77]
+-----------------------------------------------
+                                                 <spontaneous>
+[78]     0.1    0.04    0.00                 Color::~Color() [78]
+-----------------------------------------------
+                0.04    0.00  863672/863672      RayTracer::Shade(Shape const*, Point const&) [6]
+[79]     0.1    0.04    0.00  863672         std::_List_iterator<Light*>::operator++(int) [79]
+-----------------------------------------------
+                0.01    0.02  233458/233458      Sphere::Intersect(Ray const&, Point&) const [10]
+[80]     0.1    0.01    0.02  233458         Vector::operator+(Vector) const [80]
+                0.02    0.00  233458/122140824     Vector::Vector(double, double, double) [9]
+                0.00    0.00  233458/113772855     Vector::K() const [43]
+                0.00    0.00  233458/113772855     Vector::J() const [44]
+                0.00    0.00  233458/113772855     Vector::I() const [47]
+-----------------------------------------------
+                0.03    0.00 4261610/4261610     RayTracer::Shade(Shape const*, Point const&) [6]
+[81]     0.0    0.03    0.00 4261610         std::_List_iterator<Light*>::operator*() const [81]
+-----------------------------------------------
+                0.03    0.00 1727344/1727344     RayTracer::Shade(Shape const*, Point const&) [6]
+[82]     0.0    0.03    0.00 1727344         std::_List_iterator<Light*>::operator!=(std::_List_iterator<Light*> const&) const [82]
+-----------------------------------------------
+                0.03    0.00  863672/863672      RayTracer::Shade(Shape const*, Point const&) [6]
+[83]     0.0    0.03    0.00  863672         std::list<Light*, std::allocator<Light*> >::begin() [83]
+                0.00    0.00  863672/2591017     std::_List_iterator<Light*>::_List_iterator(std::_List_node_base*) [115]
+-----------------------------------------------
+                0.00    0.03       1/1           main [1]
+[84]     0.0    0.00    0.03       1         RayTracer::AddLight(Light*) [84]
+                0.03    0.00       1/1           std::list<Light*, std::allocator<Light*> >::push_back(Light* const&) [85]
+-----------------------------------------------
+                0.03    0.00       1/1           RayTracer::AddLight(Light*) [84]
+[85]     0.0    0.03    0.00       1         std::list<Light*, std::allocator<Light*> >::push_back(Light* const&) [85]
+                0.00    0.00       1/1727345     std::list<Light*, std::allocator<Light*> >::end() [116]
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::_M_insert(std::_List_iterator<Light*>, Light* const&) [185]
+-----------------------------------------------
+                                                 <spontaneous>
+[86]     0.0    0.03    0.00                 Triangle::~Triangle() [86]
+-----------------------------------------------
+                0.03    0.00 5125282/5125282     Color::operator+(Color const&) const [24]
+[87]     0.0    0.03    0.00 5125282         Color::Blue() const [87]
+-----------------------------------------------
+                0.00    0.00  835297/3426313     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.02    0.00 2591016/3426313     RayTracer::Shade(Shape const*, Point const&) [6]
+[88]     0.0    0.02    0.00 3426313         Light::LightPoint() const [88]
+-----------------------------------------------
+                                                 <spontaneous>
+[89]     0.0    0.02    0.00                 Point::operator==(Point const&) const [89]
+-----------------------------------------------
+                0.00    0.00       1/2303678     Light::Light(Point const&) [108]
+                0.00    0.00       1/2303678     RayTracer::RayTrace() [2]
+                0.00    0.00       4/2303678     Shape::Shape() [107]
+                0.01    0.00 2303672/2303678     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[90]     0.0    0.01    0.00 2303678         Color::Color() [90]
+-----------------------------------------------
+                                                 <spontaneous>
+[91]     0.0    0.01    0.00                 Ray::Ray(Point const&, Point const&) [91]
+-----------------------------------------------
+                                                 <spontaneous>
+[92]     0.0    0.01    0.00                 Color::Color() [92]
+-----------------------------------------------
+                                                 <spontaneous>
+[93]     0.0    0.01    0.00                 Point::Point(double, double, double) [93]
+-----------------------------------------------
+                                                 <spontaneous>
+[94]     0.0    0.01    0.00                 Point::Name() const [94]
+-----------------------------------------------
+                0.01    0.00 5125282/5125282     Color::operator+(Color const&) const [24]
+[95]     0.0    0.01    0.00 5125282         Color::Red() const [95]
+-----------------------------------------------
+                0.00    0.00  835297/1670594     RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+                0.00    0.00  835297/1670594     RayTracer::Shade(Shape const*, Point const&) [6]
+[96]     0.0    0.01    0.00 1670594         Light::Intensity() const [96]
+-----------------------------------------------
+                                                 <spontaneous>
+[97]     0.0    0.01    0.00                 Color::Color(double, double, double) [97]
+-----------------------------------------------
+                                                 <spontaneous>
+[98]     0.0    0.01    0.00                 Light::LightPoint(Point const&) [98]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[99]     0.0    0.00    0.00       1         RayTracer::RayTracer() [99]
+                0.00    0.00       3/5699246     Color::Color(double, double, double) [18]
+                0.00    0.00       1/11108503     Point::Point(double, double, double) [19]
+                0.00    0.00       1/1           std::allocator<Shape*>::allocator() [161]
+                0.00    0.00       1/1           std::list<Shape*, std::allocator<Shape*> >::list(std::allocator<Shape*> const&) [188]
+                0.00    0.00       1/9           std::allocator<Shape*>::~allocator() [123]
+                0.00    0.00       1/1           std::allocator<Light*>::allocator() [160]
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::list(std::allocator<Light*> const&) [186]
+                0.00    0.00       1/3           std::allocator<Light*>::~allocator() [141]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[100]    0.0    0.00    0.00       2         Triangle::Triangle(Point const&, Point const&, Point const&) [100]
+                0.00    0.00       6/12295276     Point::Point() [17]
+                0.00    0.00       2/4           Shape::Shape() [107]
+                0.00    0.00       2/4           Shape::Type(std::string const&) [128]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[101]    0.0    0.00    0.00       2         Sphere::Sphere(Point, double) [101]
+                0.00    0.00       2/12295276     Point::Point() [17]
+                0.00    0.00       2/4           Shape::Shape() [107]
+                0.00    0.00       2/4           Shape::Type(std::string const&) [128]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[102]    0.0    0.00    0.00       2         Shape::DiffuseReflectivity(double) [102]
+                0.00    0.00       2/21359351     unit_limiter(double) [22]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[103]    0.0    0.00    0.00       1         Light::Intensity(double) [103]
+                0.00    0.00       1/21359351     unit_limiter(double) [22]
+-----------------------------------------------
+                0.00    0.00       4/4           main [1]
+[104]    0.0    0.00    0.00       4         RayTracer::AddShape(Shape*) [104]
+                0.00    0.00       4/4           std::list<Shape*, std::allocator<Shape*> >::push_back(Shape* const&) [105]
+-----------------------------------------------
+                0.00    0.00       4/4           RayTracer::AddShape(Shape*) [104]
+[105]    0.0    0.00    0.00       4         std::list<Shape*, std::allocator<Shape*> >::push_back(Shape* const&) [105]
+                0.00    0.00       4/15836724     std::list<Shape*, std::allocator<Shape*> >::end() [54]
+                0.00    0.00       4/4           std::list<Shape*, std::allocator<Shape*> >::_M_insert(std::_List_iterator<Shape*>, Shape* const&) [138]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[106]    0.0    0.00    0.00       1         RayTracer::~RayTracer() [106]
+                0.00    0.00       3/8868963     Color::~Color() [71]
+                0.00    0.00       1/33069401     Point::~Point() [49]
+                0.00    0.00       1/1           std::list<Shape*, std::allocator<Shape*> >::~list() [189]
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::~list() [187]
+-----------------------------------------------
+                0.00    0.00       2/4           Sphere::Sphere(Point, double) [101]
+                0.00    0.00       2/4           Triangle::Triangle(Point const&, Point const&, Point const&) [100]
+[107]    0.0    0.00    0.00       4         Shape::Shape() [107]
+                0.00    0.00       4/2303678     Color::Color() [90]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[108]    0.0    0.00    0.00       1         Light::Light(Point const&) [108]
+                0.00    0.00       1/2303678     Color::Color() [90]
+-----------------------------------------------
+                0.00    0.00  863672/2591017     std::list<Light*, std::allocator<Light*> >::begin() [83]
+                0.00    0.00 1727345/2591017     std::list<Light*, std::allocator<Light*> >::end() [116]
+[115]    0.0    0.00    0.00 2591017         std::_List_iterator<Light*>::_List_iterator(std::_List_node_base*) [115]
+-----------------------------------------------
+                0.00    0.00       1/1727345     std::list<Light*, std::allocator<Light*> >::push_back(Light* const&) [85]
+                0.00    0.00 1727344/1727345     RayTracer::Shade(Shape const*, Point const&) [6]
+[116]    0.0    0.00    0.00 1727345         std::list<Light*, std::allocator<Light*> >::end() [116]
+                0.00    0.00 1727345/2591017     std::_List_iterator<Light*>::_List_iterator(std::_List_node_base*) [115]
+-----------------------------------------------
+                0.00    0.00 1727344/1727344     RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[117]    0.0    0.00    0.00 1727344         Shape::DiffuseReflectivity() const [117]
+-----------------------------------------------
+                0.00    0.00  863672/863672      RayTracer::Render(Ray const&, bool, Shape const*) [3]
+[118]    0.0    0.00    0.00  863672         Shape::ShapeColor() const [118]
+-----------------------------------------------
+                0.00    0.00  863672/863672      RayTracer::Shade(Shape const*, Point const&) [6]
+[119]    0.0    0.00    0.00  863672         Shape::AmbientReflectivity() const [119]
+-----------------------------------------------
+                0.00    0.00  835297/835297      RayTracer::Specular(Shape const*, Point const&, Light const*) [15]
+[120]    0.0    0.00    0.00  835297         Shape::SpecularSize() const [120]
+-----------------------------------------------
+                0.00    0.00       1/9           std::allocator<Shape*>::allocator() [161]
+                0.00    0.00       8/9           std::allocator<Shape*>::allocator<std::_List_node<Shape*> >(std::allocator<std::_List_node<Shape*> > const&) [125]
+[121]    0.0    0.00    0.00       9         __gnu_cxx::new_allocator<Shape*>::new_allocator() [121]
+-----------------------------------------------
+                0.00    0.00       9/9           std::allocator<Shape*>::~allocator() [123]
+[122]    0.0    0.00    0.00       9         __gnu_cxx::new_allocator<Shape*>::~new_allocator() [122]
+-----------------------------------------------
+                0.00    0.00       1/9           RayTracer::RayTracer() [99]
+                0.00    0.00       4/9           std::_List_base<Shape*, std::allocator<Shape*> >::_M_clear() [181]
+                0.00    0.00       4/9           std::list<Shape*, std::allocator<Shape*> >::_M_create_node(Shape* const&) [137]
+[123]    0.0    0.00    0.00       9         std::allocator<Shape*>::~allocator() [123]
+                0.00    0.00       9/9           __gnu_cxx::new_allocator<Shape*>::~new_allocator() [122]
+-----------------------------------------------
+                0.00    0.00       4/8           std::_List_base<Shape*, std::allocator<Shape*> >::_M_clear() [181]
+                0.00    0.00       4/8           std::list<Shape*, std::allocator<Shape*> >::get_allocator() const [134]
+[124]    0.0    0.00    0.00       8         std::_List_base<Shape*, std::allocator<Shape*> >::get_allocator() const [124]
+                0.00    0.00       8/8           std::allocator<Shape*>::allocator<std::_List_node<Shape*> >(std::allocator<std::_List_node<Shape*> > const&) [125]
+-----------------------------------------------
+                0.00    0.00       8/8           std::_List_base<Shape*, std::allocator<Shape*> >::get_allocator() const [124]
+[125]    0.0    0.00    0.00       8         std::allocator<Shape*>::allocator<std::_List_node<Shape*> >(std::allocator<std::_List_node<Shape*> > const&) [125]
+                0.00    0.00       8/9           __gnu_cxx::new_allocator<Shape*>::new_allocator() [121]
+-----------------------------------------------
+                0.00    0.00       1/5           __gnu_cxx::new_allocator<Light*>::construct(Light**, Light* const&) [151]
+                0.00    0.00       4/5           __gnu_cxx::new_allocator<Shape*>::construct(Shape**, Shape* const&) [130]
+[126]    0.0    0.00    0.00       5         operator new(unsigned int, void*) [126]
+-----------------------------------------------
+                0.00    0.00       4/4           main [1]
+[127]    0.0    0.00    0.00       4         Shape::ShapeColor(Color const&) [127]
+-----------------------------------------------
+                0.00    0.00       2/4           Sphere::Sphere(Point, double) [101]
+                0.00    0.00       2/4           Triangle::Triangle(Point const&, Point const&, Point const&) [100]
+[128]    0.0    0.00    0.00       4         Shape::Type(std::string const&) [128]
+-----------------------------------------------
+                0.00    0.00       4/4           std::_List_base<Shape*, std::allocator<Shape*> >::_M_clear() [181]
+[129]    0.0    0.00    0.00       4         __gnu_cxx::new_allocator<Shape*>::destroy(Shape**) [129]
+-----------------------------------------------
+                0.00    0.00       4/4           std::list<Shape*, std::allocator<Shape*> >::_M_create_node(Shape* const&) [137]
+[130]    0.0    0.00    0.00       4         __gnu_cxx::new_allocator<Shape*>::construct(Shape**, Shape* const&) [130]
+                0.00    0.00       4/5           operator new(unsigned int, void*) [126]
+-----------------------------------------------
+                0.00    0.00       4/4           std::_List_base<Shape*, std::allocator<Shape*> >::_M_put_node(std::_List_node<Shape*>*) [136]
+[131]    0.0    0.00    0.00       4         __gnu_cxx::new_allocator<std::_List_node<Shape*> >::deallocate(std::_List_node<Shape*>*, unsigned int) [131]
+-----------------------------------------------
+                0.00    0.00       4/4           std::_List_base<Shape*, std::allocator<Shape*> >::_M_get_node() [135]
+[132]    0.0    0.00    0.00       4         __gnu_cxx::new_allocator<std::_List_node<Shape*> >::allocate(unsigned int, void const*) [132]
+                0.00    0.00       4/4           __gnu_cxx::new_allocator<std::_List_node<Shape*> >::max_size() const [133]
+-----------------------------------------------
+                0.00    0.00       4/4           __gnu_cxx::new_allocator<std::_List_node<Shape*> >::allocate(unsigned int, void const*) [132]
+[133]    0.0    0.00    0.00       4         __gnu_cxx::new_allocator<std::_List_node<Shape*> >::max_size() const [133]
+-----------------------------------------------
+                0.00    0.00       4/4           std::list<Shape*, std::allocator<Shape*> >::_M_create_node(Shape* const&) [137]
+[134]    0.0    0.00    0.00       4         std::list<Shape*, std::allocator<Shape*> >::get_allocator() const [134]
+                0.00    0.00       4/8           std::_List_base<Shape*, std::allocator<Shape*> >::get_allocator() const [124]
+-----------------------------------------------
+                0.00    0.00       4/4           std::list<Shape*, std::allocator<Shape*> >::_M_create_node(Shape* const&) [137]
+[135]    0.0    0.00    0.00       4         std::_List_base<Shape*, std::allocator<Shape*> >::_M_get_node() [135]
+                0.00    0.00       4/4           __gnu_cxx::new_allocator<std::_List_node<Shape*> >::allocate(unsigned int, void const*) [132]
+-----------------------------------------------
+                0.00    0.00       4/4           std::_List_base<Shape*, std::allocator<Shape*> >::_M_clear() [181]
+[136]    0.0    0.00    0.00       4         std::_List_base<Shape*, std::allocator<Shape*> >::_M_put_node(std::_List_node<Shape*>*) [136]
+                0.00    0.00       4/4           __gnu_cxx::new_allocator<std::_List_node<Shape*> >::deallocate(std::_List_node<Shape*>*, unsigned int) [131]
+-----------------------------------------------
+                0.00    0.00       4/4           std::list<Shape*, std::allocator<Shape*> >::_M_insert(std::_List_iterator<Shape*>, Shape* const&) [138]
+[137]    0.0    0.00    0.00       4         std::list<Shape*, std::allocator<Shape*> >::_M_create_node(Shape* const&) [137]
+                0.00    0.00       4/4           std::_List_base<Shape*, std::allocator<Shape*> >::_M_get_node() [135]
+                0.00    0.00       4/4           std::list<Shape*, std::allocator<Shape*> >::get_allocator() const [134]
+                0.00    0.00       4/4           __gnu_cxx::new_allocator<Shape*>::construct(Shape**, Shape* const&) [130]
+                0.00    0.00       4/9           std::allocator<Shape*>::~allocator() [123]
+-----------------------------------------------
+                0.00    0.00       4/4           std::list<Shape*, std::allocator<Shape*> >::push_back(Shape* const&) [105]
+[138]    0.0    0.00    0.00       4         std::list<Shape*, std::allocator<Shape*> >::_M_insert(std::_List_iterator<Shape*>, Shape* const&) [138]
+                0.00    0.00       4/4           std::list<Shape*, std::allocator<Shape*> >::_M_create_node(Shape* const&) [137]
+-----------------------------------------------
+                0.00    0.00       1/3           std::allocator<Light*>::allocator() [160]
+                0.00    0.00       2/3           std::allocator<Light*>::allocator<std::_List_node<Light*> >(std::allocator<std::_List_node<Light*> > const&) [145]
+[139]    0.0    0.00    0.00       3         __gnu_cxx::new_allocator<Light*>::new_allocator() [139]
+-----------------------------------------------
+                0.00    0.00       3/3           std::allocator<Light*>::~allocator() [141]
+[140]    0.0    0.00    0.00       3         __gnu_cxx::new_allocator<Light*>::~new_allocator() [140]
+-----------------------------------------------
+                0.00    0.00       1/3           RayTracer::RayTracer() [99]
+                0.00    0.00       1/3           std::_List_base<Light*, std::allocator<Light*> >::_M_clear() [175]
+                0.00    0.00       1/3           std::list<Light*, std::allocator<Light*> >::_M_create_node(Light* const&) [184]
+[141]    0.0    0.00    0.00       3         std::allocator<Light*>::~allocator() [141]
+                0.00    0.00       3/3           __gnu_cxx::new_allocator<Light*>::~new_allocator() [140]
+-----------------------------------------------
+                0.00    0.00       1/2           std::allocator<std::_List_node<Light*> >::~allocator() [165]
+                0.00    0.00       1/2           std::allocator<std::_List_node<Light*> >::~allocator() [164]
+[142]    0.0    0.00    0.00       2         __gnu_cxx::new_allocator<std::_List_node<Light*> >::~new_allocator() [142]
+-----------------------------------------------
+                0.00    0.00       1/2           std::allocator<std::_List_node<Shape*> >::~allocator() [169]
+                0.00    0.00       1/2           std::allocator<std::_List_node<Shape*> >::~allocator() [168]
+[143]    0.0    0.00    0.00       2         __gnu_cxx::new_allocator<std::_List_node<Shape*> >::~new_allocator() [143]
+-----------------------------------------------
+                0.00    0.00       1/2           std::_List_base<Light*, std::allocator<Light*> >::_M_clear() [175]
+                0.00    0.00       1/2           std::list<Light*, std::allocator<Light*> >::get_allocator() const [159]
+[144]    0.0    0.00    0.00       2         std::_List_base<Light*, std::allocator<Light*> >::get_allocator() const [144]
+                0.00    0.00       2/2           std::allocator<Light*>::allocator<std::_List_node<Light*> >(std::allocator<std::_List_node<Light*> > const&) [145]
+-----------------------------------------------
+                0.00    0.00       2/2           std::_List_base<Light*, std::allocator<Light*> >::get_allocator() const [144]
+[145]    0.0    0.00    0.00       2         std::allocator<Light*>::allocator<std::_List_node<Light*> >(std::allocator<std::_List_node<Light*> > const&) [145]
+                0.00    0.00       2/3           __gnu_cxx::new_allocator<Light*>::new_allocator() [139]
+-----------------------------------------------
+                0.00    0.00       1/1           __do_global_ctors_aux [232]
+[146]    0.0    0.00    0.00       1         global constructors keyed to _ZN9RayTracerC2Ev [146]
+                0.00    0.00       1/1           __static_initialization_and_destruction_0(int, int) [147]
+-----------------------------------------------
+                0.00    0.00       1/1           global constructors keyed to _ZN9RayTracerC2Ev [146]
+[147]    0.0    0.00    0.00       1         __static_initialization_and_destruction_0(int, int) [147]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[148]    0.0    0.00    0.00       1         RayTracer::OutputFilename(std::string const&) [148]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[149]    0.0    0.00    0.00       1         RayTracer::BackgroundColor(Color const&) [149]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_M_clear() [175]
+[150]    0.0    0.00    0.00       1         __gnu_cxx::new_allocator<Light*>::destroy(Light**) [150]
+-----------------------------------------------
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::_M_create_node(Light* const&) [184]
+[151]    0.0    0.00    0.00       1         __gnu_cxx::new_allocator<Light*>::construct(Light**, Light* const&) [151]
+                0.00    0.00       1/5           operator new(unsigned int, void*) [126]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_M_put_node(std::_List_node<Light*>*) [173]
+[152]    0.0    0.00    0.00       1         __gnu_cxx::new_allocator<std::_List_node<Light*> >::deallocate(std::_List_node<Light*>*, unsigned int) [152]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_M_get_node() [172]
+[153]    0.0    0.00    0.00       1         __gnu_cxx::new_allocator<std::_List_node<Light*> >::allocate(unsigned int, void const*) [153]
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<std::_List_node<Light*> >::max_size() const [158]
+-----------------------------------------------
+                0.00    0.00       1/1           std::allocator<std::_List_node<Light*> >::allocator(std::allocator<std::_List_node<Light*> > const&) [163]
+[154]    0.0    0.00    0.00       1         __gnu_cxx::new_allocator<std::_List_node<Light*> >::new_allocator(__gnu_cxx::new_allocator<std::_List_node<Light*> > const&) [154]
+-----------------------------------------------
+                0.00    0.00       1/1           std::allocator<std::_List_node<Light*> >::allocator<Light*>(std::allocator<Light*> const&) [162]
+[155]    0.0    0.00    0.00       1         __gnu_cxx::new_allocator<std::_List_node<Light*> >::new_allocator() [155]
+-----------------------------------------------
+                0.00    0.00       1/1           std::allocator<std::_List_node<Shape*> >::allocator(std::allocator<std::_List_node<Shape*> > const&) [167]
+[156]    0.0    0.00    0.00       1         __gnu_cxx::new_allocator<std::_List_node<Shape*> >::new_allocator(__gnu_cxx::new_allocator<std::_List_node<Shape*> > const&) [156]
+-----------------------------------------------
+                0.00    0.00       1/1           std::allocator<std::_List_node<Shape*> >::allocator<Shape*>(std::allocator<Shape*> const&) [166]
+[157]    0.0    0.00    0.00       1         __gnu_cxx::new_allocator<std::_List_node<Shape*> >::new_allocator() [157]
+-----------------------------------------------
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<std::_List_node<Light*> >::allocate(unsigned int, void const*) [153]
+[158]    0.0    0.00    0.00       1         __gnu_cxx::new_allocator<std::_List_node<Light*> >::max_size() const [158]
+-----------------------------------------------
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::_M_create_node(Light* const&) [184]
+[159]    0.0    0.00    0.00       1         std::list<Light*, std::allocator<Light*> >::get_allocator() const [159]
+                0.00    0.00       1/2           std::_List_base<Light*, std::allocator<Light*> >::get_allocator() const [144]
+-----------------------------------------------
+                0.00    0.00       1/1           RayTracer::RayTracer() [99]
+[160]    0.0    0.00    0.00       1         std::allocator<Light*>::allocator() [160]
+                0.00    0.00       1/3           __gnu_cxx::new_allocator<Light*>::new_allocator() [139]
+-----------------------------------------------
+                0.00    0.00       1/1           RayTracer::RayTracer() [99]
+[161]    0.0    0.00    0.00       1         std::allocator<Shape*>::allocator() [161]
+                0.00    0.00       1/9           __gnu_cxx::new_allocator<Shape*>::new_allocator() [121]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_List_base(std::allocator<Light*> const&) [176]
+[162]    0.0    0.00    0.00       1         std::allocator<std::_List_node<Light*> >::allocator<Light*>(std::allocator<Light*> const&) [162]
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<std::_List_node<Light*> >::new_allocator() [155]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Light*> > const&) [170]
+[163]    0.0    0.00    0.00       1         std::allocator<std::_List_node<Light*> >::allocator(std::allocator<std::_List_node<Light*> > const&) [163]
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<std::_List_node<Light*> >::new_allocator(__gnu_cxx::new_allocator<std::_List_node<Light*> > const&) [154]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_List_base(std::allocator<Light*> const&) [176]
+[164]    0.0    0.00    0.00       1         std::allocator<std::_List_node<Light*> >::~allocator() [164]
+                0.00    0.00       1/2           __gnu_cxx::new_allocator<std::_List_node<Light*> >::~new_allocator() [142]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_List_impl::~_List_impl() [171]
+[165]    0.0    0.00    0.00       1         std::allocator<std::_List_node<Light*> >::~allocator() [165]
+                0.00    0.00       1/2           __gnu_cxx::new_allocator<std::_List_node<Light*> >::~new_allocator() [142]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_List_base(std::allocator<Shape*> const&) [182]
+[166]    0.0    0.00    0.00       1         std::allocator<std::_List_node<Shape*> >::allocator<Shape*>(std::allocator<Shape*> const&) [166]
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<std::_List_node<Shape*> >::new_allocator() [157]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Shape*> > const&) [178]
+[167]    0.0    0.00    0.00       1         std::allocator<std::_List_node<Shape*> >::allocator(std::allocator<std::_List_node<Shape*> > const&) [167]
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<std::_List_node<Shape*> >::new_allocator(__gnu_cxx::new_allocator<std::_List_node<Shape*> > const&) [156]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_List_base(std::allocator<Shape*> const&) [182]
+[168]    0.0    0.00    0.00       1         std::allocator<std::_List_node<Shape*> >::~allocator() [168]
+                0.00    0.00       1/2           __gnu_cxx::new_allocator<std::_List_node<Shape*> >::~new_allocator() [143]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::~_List_impl() [179]
+[169]    0.0    0.00    0.00       1         std::allocator<std::_List_node<Shape*> >::~allocator() [169]
+                0.00    0.00       1/2           __gnu_cxx::new_allocator<std::_List_node<Shape*> >::~new_allocator() [143]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_List_base(std::allocator<Light*> const&) [176]
+[170]    0.0    0.00    0.00       1         std::_List_base<Light*, std::allocator<Light*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Light*> > const&) [170]
+                0.00    0.00       1/1           std::allocator<std::_List_node<Light*> >::allocator(std::allocator<std::_List_node<Light*> > const&) [163]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::~_List_base() [177]
+[171]    0.0    0.00    0.00       1         std::_List_base<Light*, std::allocator<Light*> >::_List_impl::~_List_impl() [171]
+                0.00    0.00       1/1           std::allocator<std::_List_node<Light*> >::~allocator() [165]
+-----------------------------------------------
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::_M_create_node(Light* const&) [184]
+[172]    0.0    0.00    0.00       1         std::_List_base<Light*, std::allocator<Light*> >::_M_get_node() [172]
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<std::_List_node<Light*> >::allocate(unsigned int, void const*) [153]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_M_clear() [175]
+[173]    0.0    0.00    0.00       1         std::_List_base<Light*, std::allocator<Light*> >::_M_put_node(std::_List_node<Light*>*) [173]
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<std::_List_node<Light*> >::deallocate(std::_List_node<Light*>*, unsigned int) [152]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_List_base(std::allocator<Light*> const&) [176]
+[174]    0.0    0.00    0.00       1         std::_List_base<Light*, std::allocator<Light*> >::_M_init() [174]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::~_List_base() [177]
+[175]    0.0    0.00    0.00       1         std::_List_base<Light*, std::allocator<Light*> >::_M_clear() [175]
+                0.00    0.00       1/2           std::_List_base<Light*, std::allocator<Light*> >::get_allocator() const [144]
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<Light*>::destroy(Light**) [150]
+                0.00    0.00       1/3           std::allocator<Light*>::~allocator() [141]
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_M_put_node(std::_List_node<Light*>*) [173]
+-----------------------------------------------
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::list(std::allocator<Light*> const&) [186]
+[176]    0.0    0.00    0.00       1         std::_List_base<Light*, std::allocator<Light*> >::_List_base(std::allocator<Light*> const&) [176]
+                0.00    0.00       1/1           std::allocator<std::_List_node<Light*> >::allocator<Light*>(std::allocator<Light*> const&) [162]
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Light*> > const&) [170]
+                0.00    0.00       1/1           std::allocator<std::_List_node<Light*> >::~allocator() [164]
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_M_init() [174]
+-----------------------------------------------
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::~list() [187]
+[177]    0.0    0.00    0.00       1         std::_List_base<Light*, std::allocator<Light*> >::~_List_base() [177]
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_M_clear() [175]
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_List_impl::~_List_impl() [171]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_List_base(std::allocator<Shape*> const&) [182]
+[178]    0.0    0.00    0.00       1         std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Shape*> > const&) [178]
+                0.00    0.00       1/1           std::allocator<std::_List_node<Shape*> >::allocator(std::allocator<std::_List_node<Shape*> > const&) [167]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::~_List_base() [183]
+[179]    0.0    0.00    0.00       1         std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::~_List_impl() [179]
+                0.00    0.00       1/1           std::allocator<std::_List_node<Shape*> >::~allocator() [169]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_List_base(std::allocator<Shape*> const&) [182]
+[180]    0.0    0.00    0.00       1         std::_List_base<Shape*, std::allocator<Shape*> >::_M_init() [180]
+-----------------------------------------------
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::~_List_base() [183]
+[181]    0.0    0.00    0.00       1         std::_List_base<Shape*, std::allocator<Shape*> >::_M_clear() [181]
+                0.00    0.00       4/8           std::_List_base<Shape*, std::allocator<Shape*> >::get_allocator() const [124]
+                0.00    0.00       4/4           __gnu_cxx::new_allocator<Shape*>::destroy(Shape**) [129]
+                0.00    0.00       4/9           std::allocator<Shape*>::~allocator() [123]
+                0.00    0.00       4/4           std::_List_base<Shape*, std::allocator<Shape*> >::_M_put_node(std::_List_node<Shape*>*) [136]
+-----------------------------------------------
+                0.00    0.00       1/1           std::list<Shape*, std::allocator<Shape*> >::list(std::allocator<Shape*> const&) [188]
+[182]    0.0    0.00    0.00       1         std::_List_base<Shape*, std::allocator<Shape*> >::_List_base(std::allocator<Shape*> const&) [182]
+                0.00    0.00       1/1           std::allocator<std::_List_node<Shape*> >::allocator<Shape*>(std::allocator<Shape*> const&) [166]
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Shape*> > const&) [178]
+                0.00    0.00       1/1           std::allocator<std::_List_node<Shape*> >::~allocator() [168]
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_M_init() [180]
+-----------------------------------------------
+                0.00    0.00       1/1           std::list<Shape*, std::allocator<Shape*> >::~list() [189]
+[183]    0.0    0.00    0.00       1         std::_List_base<Shape*, std::allocator<Shape*> >::~_List_base() [183]
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_M_clear() [181]
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::~_List_impl() [179]
+-----------------------------------------------
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::_M_insert(std::_List_iterator<Light*>, Light* const&) [185]
+[184]    0.0    0.00    0.00       1         std::list<Light*, std::allocator<Light*> >::_M_create_node(Light* const&) [184]
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_M_get_node() [172]
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::get_allocator() const [159]
+                0.00    0.00       1/1           __gnu_cxx::new_allocator<Light*>::construct(Light**, Light* const&) [151]
+                0.00    0.00       1/3           std::allocator<Light*>::~allocator() [141]
+-----------------------------------------------
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::push_back(Light* const&) [85]
+[185]    0.0    0.00    0.00       1         std::list<Light*, std::allocator<Light*> >::_M_insert(std::_List_iterator<Light*>, Light* const&) [185]
+                0.00    0.00       1/1           std::list<Light*, std::allocator<Light*> >::_M_create_node(Light* const&) [184]
+-----------------------------------------------
+                0.00    0.00       1/1           RayTracer::RayTracer() [99]
+[186]    0.0    0.00    0.00       1         std::list<Light*, std::allocator<Light*> >::list(std::allocator<Light*> const&) [186]
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::_List_base(std::allocator<Light*> const&) [176]
+-----------------------------------------------
+                0.00    0.00       1/1           RayTracer::~RayTracer() [106]
+[187]    0.0    0.00    0.00       1         std::list<Light*, std::allocator<Light*> >::~list() [187]
+                0.00    0.00       1/1           std::_List_base<Light*, std::allocator<Light*> >::~_List_base() [177]
+-----------------------------------------------
+                0.00    0.00       1/1           RayTracer::RayTracer() [99]
+[188]    0.0    0.00    0.00       1         std::list<Shape*, std::allocator<Shape*> >::list(std::allocator<Shape*> const&) [188]
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::_List_base(std::allocator<Shape*> const&) [182]
+-----------------------------------------------
+                0.00    0.00       1/1           RayTracer::~RayTracer() [106]
+[189]    0.0    0.00    0.00       1         std::list<Shape*, std::allocator<Shape*> >::~list() [189]
+                0.00    0.00       1/1           std::_List_base<Shape*, std::allocator<Shape*> >::~_List_base() [183]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+
+Index by function name
+
+ [146] global constructors keyed to _ZN9RayTracerC2Ev (RayTracer.cpp) [99] RayTracer::RayTracer() [158] __gnu_cxx::new_allocator<std::_List_node<Light*> >::max_size() const
+  [22] unit_limiter(double)  [106] RayTracer::~RayTracer() [133] __gnu_cxx::new_allocator<std::_List_node<Shape*> >::max_size() const
+ [147] __static_initialization_and_destruction_0(int, int) (RayTracer.cpp) [150] __gnu_cxx::new_allocator<Light*>::destroy(Light**) [144] std::_List_base<Light*, std::allocator<Light*> >::get_allocator() const
+  [45] Ray::Origin(Point)    [151] __gnu_cxx::new_allocator<Light*>::construct(Light**, Light* const&) [124] std::_List_base<Shape*, std::allocator<Shape*> >::get_allocator() const
+  [42] Ray::Direction(Vector) [139] __gnu_cxx::new_allocator<Light*>::new_allocator() [81] std::_List_iterator<Light*>::operator*() const
+  [41] Ray::Ray(Point const&, Vector const&) [140] __gnu_cxx::new_allocator<Light*>::~new_allocator() [82] std::_List_iterator<Light*>::operator!=(std::_List_iterator<Light*> const&) const
+  [40] Ray::Ray(Point const&, Point const&) [129] __gnu_cxx::new_allocator<Shape*>::destroy(Shape**) [75] std::_List_iterator<Shape*>::operator*() const
+  [32] Ray::Ray()            [130] __gnu_cxx::new_allocator<Shape*>::construct(Shape**, Shape* const&) [60] std::_List_iterator<Shape*>::operator!=(std::_List_iterator<Shape*> const&) const
+  [91] Ray::Ray(Point const&, Point const&) [121] __gnu_cxx::new_allocator<Shape*>::new_allocator() [159] std::list<Light*, std::allocator<Light*> >::get_allocator() const
+  [65] Ray::~Ray()           [122] __gnu_cxx::new_allocator<Shape*>::~new_allocator() [134] std::list<Shape*, std::allocator<Shape*> >::get_allocator() const
+  [34] Color::Red(double)    [152] __gnu_cxx::new_allocator<std::_List_node<Light*> >::deallocate(std::_List_node<Light*>*, unsigned int) [160] std::allocator<Light*>::allocator()
+  [33] Color::Blue(double)   [153] __gnu_cxx::new_allocator<std::_List_node<Light*> >::allocate(unsigned int, void const*) [145] std::allocator<Light*>::allocator<std::_List_node<Light*> >(std::allocator<std::_List_node<Light*> > const&)
+  [31] Color::Green(double)  [154] __gnu_cxx::new_allocator<std::_List_node<Light*> >::new_allocator(__gnu_cxx::new_allocator<std::_List_node<Light*> > const&) [141] std::allocator<Light*>::~allocator()
+  [18] Color::Color(double, double, double) [155] __gnu_cxx::new_allocator<std::_List_node<Light*> >::new_allocator() [161] std::allocator<Shape*>::allocator()
+  [90] Color::Color()        [142] __gnu_cxx::new_allocator<std::_List_node<Light*> >::~new_allocator() [125] std::allocator<Shape*>::allocator<std::_List_node<Shape*> >(std::allocator<std::_List_node<Shape*> > const&)
+  [97] Color::Color(double, double, double) [131] __gnu_cxx::new_allocator<std::_List_node<Shape*> >::deallocate(std::_List_node<Shape*>*, unsigned int) [123] std::allocator<Shape*>::~allocator()
+  [92] Color::Color()        [132] __gnu_cxx::new_allocator<std::_List_node<Shape*> >::allocate(unsigned int, void const*) [162] std::allocator<std::_List_node<Light*> >::allocator<Light*>(std::allocator<Light*> const&)
+  [71] Color::~Color()       [156] __gnu_cxx::new_allocator<std::_List_node<Shape*> >::new_allocator(__gnu_cxx::new_allocator<std::_List_node<Shape*> > const&) [163] std::allocator<std::_List_node<Light*> >::allocator(std::allocator<std::_List_node<Light*> > const&)
+  [78] Color::~Color()       [157] __gnu_cxx::new_allocator<std::_List_node<Shape*> >::new_allocator() [164] std::allocator<std::_List_node<Light*> >::~allocator()
+  [98] Light::LightPoint(Point const&) [143] __gnu_cxx::new_allocator<std::_List_node<Shape*> >::~new_allocator() [165] std::allocator<std::_List_node<Light*> >::~allocator()
+ [103] Light::Intensity(double) [52] Ray::Origin() const [166] std::allocator<std::_List_node<Shape*> >::allocator<Shape*>(std::allocator<Shape*> const&)
+ [108] Light::Light(Point const&) [68] Ray::Direction() const [167] std::allocator<std::_List_node<Shape*> >::allocator(std::allocator<std::_List_node<Shape*> > const&)
+  [29] Point::X(double)       [95] Color::Red() const    [168] std::allocator<std::_List_node<Shape*> >::~allocator()
+  [23] Point::Y(double)       [87] Color::Blue() const   [169] std::allocator<std::_List_node<Shape*> >::~allocator()
+  [26] Point::Z(double)       [77] Color::Green() const  [170] std::_List_base<Light*, std::allocator<Light*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Light*> > const&)
+  [67] Point::Name(int)       [64] Color::RedByte() const [171] std::_List_base<Light*, std::allocator<Light*> >::_List_impl::~_List_impl()
+  [19] Point::Point(double, double, double) [62] Color::BlueByte() const [172] std::_List_base<Light*, std::allocator<Light*> >::_M_get_node()
+  [17] Point::Point()         [48] Color::ByteValue(double) const [173] std::_List_base<Light*, std::allocator<Light*> >::_M_put_node(std::_List_node<Light*>*)
+  [93] Point::Point(double, double, double) [63] Color::GreenByte() const [174] std::_List_base<Light*, std::allocator<Light*> >::_M_init()
+  [49] Point::~Point()        [27] Color::operator*(double) const [175] std::_List_base<Light*, std::allocator<Light*> >::_M_clear()
+  [72] Point::~Point()        [24] Color::operator+(Color const&) const [176] std::_List_base<Light*, std::allocator<Light*> >::_List_base(std::allocator<Light*> const&)
+ [127] Shape::ShapeColor(Color const&) [88] Light::LightPoint() const [177] std::_List_base<Light*, std::allocator<Light*> >::~_List_base()
+ [102] Shape::DiffuseReflectivity(double) [96] Light::Intensity() const [178] std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::_List_impl(std::allocator<std::_List_node<Shape*> > const&)
+ [128] Shape::Type(std::string const&) [35] Point::X() const [179] std::_List_base<Shape*, std::allocator<Shape*> >::_List_impl::~_List_impl()
+ [107] Shape::Shape()         [38] Point::Y() const      [135] std::_List_base<Shape*, std::allocator<Shape*> >::_M_get_node()
+ [101] Sphere::Sphere(Point, double) [36] Point::Z() const [136] std::_List_base<Shape*, std::allocator<Shape*> >::_M_put_node(std::_List_node<Shape*>*)
+  [73] Sphere::~Sphere()      [94] Point::Name() const   [180] std::_List_base<Shape*, std::allocator<Shape*> >::_M_init()
+  [13] Vector::NormalizeThis() [37] Point::Distance(Point const&) const [181] std::_List_base<Shape*, std::allocator<Shape*> >::_M_clear()
+  [25] Vector::ReverseDirection() [89] Point::operator==(Point const&) const [182] std::_List_base<Shape*, std::allocator<Shape*> >::_List_base(std::allocator<Shape*> const&)
+  [55] Vector::I(double)     [118] Shape::ShapeColor() const [183] std::_List_base<Shape*, std::allocator<Shape*> >::~_List_base()
+  [66] Vector::J(double)     [120] Shape::SpecularSize() const [115] std::_List_iterator<Light*>::_List_iterator(std::_List_node_base*)
+  [58] Vector::K(double)     [119] Shape::AmbientReflectivity() const [79] std::_List_iterator<Light*>::operator++(int)
+  [14] Vector::Vector(Point const&, Point const&) [117] Shape::DiffuseReflectivity() const [76] std::_List_iterator<Shape*>::_List_iterator(std::_List_node_base*)
+   [9] Vector::Vector(double, double, double) [12] Shape::Reflect(Point const&, Ray const&) const [59] std::_List_iterator<Shape*>::operator++(int)
+  [53] Vector::Vector()       [57] Sphere::Normal(Point const&, Point const&) const [184] std::list<Light*, std::allocator<Light*> >::_M_create_node(Light* const&)
+  [56] Vector::Vector(Point const&, Point const&) [10] Sphere::Intersect(Ray const&, Point&) const [116] std::list<Light*, std::allocator<Light*> >::end()
+  [61] Vector::Vector(double, double, double) [11] Vector::IsSameDirection(Vector const&) const [83] std::list<Light*, std::allocator<Light*> >::begin()
+  [69] Vector::Vector()       [47] Vector::I() const     [185] std::list<Light*, std::allocator<Light*> >::_M_insert(std::_List_iterator<Light*>, Light* const&)
+  [39] Vector::~Vector()      [44] Vector::J() const      [85] std::list<Light*, std::allocator<Light*> >::push_back(Light* const&)
+  [46] Vector::~Vector()      [43] Vector::K() const     [186] std::list<Light*, std::allocator<Light*> >::list(std::allocator<Light*> const&)
+ [100] Triangle::Triangle(Point const&, Point const&, Point const&) [21] Vector::Dot(Vector const&) const [187] std::list<Light*, std::allocator<Light*> >::~list()
+  [86] Triangle::~Triangle()  [16] Vector::Cross(Vector const&) const [137] std::list<Shape*, std::allocator<Shape*> >::_M_create_node(Shape* const&)
+   [4] RayTracer::QueryScene(Ray const&, Point&, bool, Shape const*) [50] Vector::ToPoint() const [54] std::list<Shape*, std::allocator<Shape*> >::end()
+ [148] RayTracer::OutputFilename(std::string const&) [30] Vector::Magnitude() const [70] std::list<Shape*, std::allocator<Shape*> >::begin()
+ [149] RayTracer::BackgroundColor(Color const&) [7] Vector::Normalize() const [138] std::list<Shape*, std::allocator<Shape*> >::_M_insert(std::_List_iterator<Shape*>, Shape* const&)
+   [6] RayTracer::Shade(Shape const*, Point const&) [51] Vector::operator-(Vector) const [105] std::list<Shape*, std::allocator<Shape*> >::push_back(Shape* const&)
+   [3] RayTracer::Render(Ray const&, bool, Shape const*) [20] Vector::operator*(double) const [188] std::list<Shape*, std::allocator<Shape*> >::list(std::allocator<Shape*> const&)
+  [84] RayTracer::AddLight(Light*) [28] Vector::operator+(Point) const [189] std::list<Shape*, std::allocator<Shape*> >::~list()
+ [104] RayTracer::AddShape(Shape*) [80] Vector::operator+(Vector) const [74] bool std::operator==<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, char const*)
+   [2] RayTracer::RayTrace()   [8] Triangle::Normal(Point const&, Point const&) const [126] operator new(unsigned int, void*)
+  [15] RayTracer::Specular(Shape const*, Point const&, Light const*) [5] Triangle::Intersect(Ray const&, Point&) const
