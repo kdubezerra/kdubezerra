@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-// #include <mpi.h>
+#include <mpi.h>
 
 #define MIN_RANK 2
 #define E(X,i,j) (* el(X,i,j))
@@ -141,6 +141,85 @@ int acha_irmao (int nivel_recursao, int irmao) { //nivel começa em 0
 		return processo_irmao;		
 }
 
+			
+void despache (int processo, matriz A, matriz B, int nr) {
+	int ordem = A.ordem;
+	int tamanho = pot(ordem,2);
+	int i,j;
+	float* message = calloc (2*tamanho, sizeof (float));	
+	
+	for (i = 0 ; i < ordem ; i++) {
+		for (j = 0 ; j < ordem ; j++) {
+			message[i + ordem*j] = E(A,i,j);
+			message[tamanho + i + ordem*j] = E(B,i,j);
+		}
+	}	
+	
+	MPI_Send(&nr, 1, MPI_INTEGER, processo, 99, MPI_COMM_WORLD);
+	MPI_Send(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD);
+	MPI_Send(message, 2*tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD);
+	
+	free(message);
+}
+
+
+matriz receba_matriz (int processo) {
+	matriz m;
+	int ordem;
+	int tamanho;
+	float* message;
+	int i,j;
+	MPI_Status recv_status;
+		
+	MPI_Recv(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD, &recv_status);
+		
+	tamanho = pot(ordem,2);
+	
+	printf ("P%d recebeu a ordem (%d) da matriz...\n", my_rank, ordem);
+	
+	MPI_Recv(message, tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD, &recv_status);
+	
+	printf ("P%d recebeu a matriz...\n", my_rank);
+	
+	m = new_matrix(ordem);
+	
+	
+	
+	for (i = 0 ; i < ordem ; i++) {
+		for (j = 0 ; j < ordem ; j++) {
+			E(m,i,j) = message[i + ordem*j];
+		}
+	}
+	
+	
+	
+	return m;
+	
+}
+
+
+void envie_matriz (int processo, matriz m) {	
+	int i,j;
+	int ordem = m.ordem;
+	int tamanho = pot(ordem,2);
+	float* message = calloc(tamanho, sizeof(float));;
+	
+	for (i = 0 ; i < ordem ; i++) {
+		for (j = 0 ; j < ordem ; j++) {
+			message[i + ordem*j] = E(m,i,j);
+		}
+	}
+	
+	MPI_Send(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD);	
+	
+	MPI_Send(message, tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD);	
+	
+	free (message);
+}
+
+
+
+
 
 matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 	int i,j,k, ordem;
@@ -167,15 +246,19 @@ matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 		matriz S_7 = some (B_21, B_22);		
 		
 		matriz M[8];
-		int p_irmao[7];
+		int irmao[7];
+		
 		
 		for (i = 1 ; i <= 6 ; i++)
-			p_irmao[i] = acha_irmao(nr + 1,i);
+			irmao[i] = acha_irmao(nr + 1,i);
+		
 		
 		if (irmao[1])			
 			despache (irmao[1], S_1a, S_1b, nr + 1);
 		else
 			M[1] = mult (S_1a, S_1b, nr + 1);
+		
+		printf ("Despachou OK\n");
 		
 		if (irmao[2])
 			despache (irmao[2], S_2, B_11, nr + 1);
@@ -214,6 +297,10 @@ matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 		free_matrix (S_6);
 		free_matrix (D_7);
 		free_matrix (S_7);
+		
+		for (i = 1 ; i < 7 && irmao[i] ; i++) {
+			M[i] = receba_matriz (irmao[i]);
+		}
 		
 		matriz C_11 = sub (M[4], M[5]);
 		acc(C_11, M[1]);
@@ -261,6 +348,43 @@ matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 		
 	}
 	
+}
+
+
+void espere_ordem () {
+	matriz A, B, C;
+	int ordem, tamanho, nr;	
+	int i,j;
+	float* message;
+	MPI_Status recv_status;
+	
+	MPI_Recv(&nr, 1, MPI_INT, MPI_ANY_SOURCE, 99, MPI_COMM_WORLD, &recv_status);
+	MPI_Recv(&ordem, 1, MPI_INT, MPI_ANY_SOURCE, 100, MPI_COMM_WORLD, &recv_status);
+	
+	tamanho = pot(ordem,2);
+	
+	MPI_Recv(message, tamanho * 2, MPI_FLOAT, MPI_ANY_SOURCE, 101, MPI_COMM_WORLD, &recv_status);
+	
+	A = new_matrix(ordem);
+	B = new_matrix(ordem);
+		
+	for (i = 0 ; i < ordem ; i++) {
+		for (j = 0 ; j < ordem ; j++) {
+			E(A,i,j) = message[i + ordem*j];
+			E(B,i,j) = message[tamanho + i + ordem*j];
+		}
+	}	
+	
+	free(message);	
+		
+	C = mult(A,B,nr);
+		
+	free_matrix(A);
+	free_matrix(B);
+		
+	envie_matriz(recv_status.MPI_SOURCE, C);	
+	
+	free_matrix(C);
 }
 
 
@@ -331,22 +455,26 @@ matriz cmult (matriz A, matriz B) {
 
 
 int main (int argc, char** argv) {
-// 	MPI_Init(&argc, &argv);
+ 	
 	
-
-// 
-// 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-// 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
+	MPI_Init(&argc, &argv);
+	 
+ 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+ 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 	
 	int i,j,k;
 	double x,y;
 	matriz A, B, C;
 	
+	if (!my_rank) {
+	
 	int ORDEM = atoi(argv[1]);
 	
 	A = new_matrix(ORDEM);
-	B = new_matrix(ORDEM);	
-
+	B = new_matrix(ORDEM);		
+	
+	
+	
 	printf ("PREENCHENDO\n");
 	
 	for (i = 0 ; i < ORDEM ; i++) {
@@ -357,9 +485,15 @@ int main (int argc, char** argv) {
 	
 	print_matrix("A" , A);
 	printf ("\nAGORA SIM!\n\n");	
-	C = mult (A, A);	
+	C = mult (A, A, 0);	
 	print_matrix("C" , C);
 	
-// 	MPI_Finalize();	
+	} else {
+		espere_ordem();
+	}
+	
+ 	MPI_Finalize();
+	
+	return 0;
 }
 
