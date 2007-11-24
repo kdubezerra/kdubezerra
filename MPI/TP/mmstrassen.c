@@ -457,10 +457,10 @@ int main (int argc, char** argv) {
 	int i,j,k;
 	double x,y;
 	matriz A, B, C;
-	
-	if (!my_rank) {
-	
+
 	int ORDEM = atoi(argv[1]);
+	
+	if (!my_rank) {	
 	
 	A = new_matrix(ORDEM);
 	B = new_matrix(ORDEM);		
@@ -481,7 +481,11 @@ int main (int argc, char** argv) {
 	print_matrix("C" , C);
 	
 	} else {
-		espere_ordem();
+		int altura = (int) ( log( (double) ORDEM ) / log ( 2 ) );
+		int nramos = pot (7, altura - 1);
+
+		if (my_rank < nramos)
+			espere_ordem();
 	}
 	
  	MPI_Finalize();
