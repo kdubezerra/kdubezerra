@@ -178,29 +178,29 @@ matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 			M[1] = mult (S_1a, S_1b, nr + 1);
 		
 		if (irmao[2])
-			despache (irmao[2], S_2 , B_11, nr + 1);
+			despache (irmao[2], S_2, B_11, nr + 1);
 		else
 			M[2] = mult (S_2 , B_11, nr + 1);
 			
 		if (irmao[3])
-			despache (irmao[3], A_11,  D_3, nr + 1);
+			despache (irmao[3], A_11, D_3, nr + 1);
 		else
 			M[3] = mult (A_11,  D_3, nr + 1);
 		
 		if (irmao[4])
-			despache (irmao[4], A_22,  D_4, nr + 1);
+			despache (irmao[4], A_22, D_4, nr + 1);
 		else
 			M[4] = mult (A_22,  D_4, nr + 1);
 		
 		if (irmao[5])
-			despache (irmao[5], S_5 , B_22, nr + 1);
+			despache (irmao[5], S_5, B_22, nr + 1);
 		else
 			M[5] = mult (S_5 , B_22, nr + 1);
 		
 		if (irmao[6])
-			despache (irmao[6]
-		
-		M[6] = mult (D_6 ,  S_6, nr + 1);
+			despache (irmao[6], D_6, S_6, nr + 1);
+		else
+			M[6] = mult (D_6 ,  S_6, nr + 1);		
 		
 		M[7] = mult (D_7 ,  S_7, nr + 1);
 		
