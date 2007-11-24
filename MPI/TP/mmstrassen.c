@@ -1,8 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+// #include <mpi.h>
 
 #define MIN_RANK 2
 #define E(X,i,j) (* el(X,i,j))
+
+int my_rank, nprocs;
+
+int pot (int base, int exp) {
+	return (int) pow ((double) base, (double) exp);	
+}
 
 float f (int i, int j) {
 
@@ -121,9 +129,20 @@ void part_matrix (matriz A, matriz *a11, matriz *a12, matriz *a21, matriz *a22) 
 }
 
 
+int acha_irmao (int nivel_recursao, int irmao) { //nivel começa em 0
+	int processo_irmao = my_rank;
+	
+	if (nivel_recursao) // diferente do nivel 0
+		processo_irmao += irmao * pot(7,nivel_recursao - 1);
+	
+	if (processo_irmao >= nprocs)
+		return 0;
+	else
+		return processo_irmao;		
+}
 
 
-matriz mult (matriz A, matriz B) {
+matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 	int i,j,k, ordem;
 	matriz C;
 	ordem = A.ordem;
@@ -147,13 +166,43 @@ matriz mult (matriz A, matriz B) {
 		matriz D_7 = sub (A_12, A_22);
 		matriz S_7 = some (B_21, B_22);		
 		
-		matriz M_1 = mult (S_1a, S_1b);
-		matriz M_2 = mult (S_2 , B_11);
-		matriz M_3 = mult (A_11,  D_3);
-		matriz M_4 = mult (A_22,  D_4);
-		matriz M_5 = mult (S_5 , B_22);
-		matriz M_6 = mult (D_6 ,  S_6);
-		matriz M_7 = mult (D_7 ,  S_7);
+		matriz M[8];
+		int p_irmao[7];
+		
+		for (i = 1 ; i <= 6 ; i++)
+			p_irmao[i] = acha_irmao(nr + 1,i);
+		
+		if (irmao[1])			
+			despache (irmao[1], S_1a, S_1b, nr + 1);
+		else
+			M[1] = mult (S_1a, S_1b, nr + 1);
+		
+		if (irmao[2])
+			despache (irmao[2], S_2 , B_11, nr + 1);
+		else
+			M[2] = mult (S_2 , B_11, nr + 1);
+			
+		if (irmao[3])
+			despache (irmao[3], A_11,  D_3, nr + 1);
+		else
+			M[3] = mult (A_11,  D_3, nr + 1);
+		
+		if (irmao[4])
+			despache (irmao[4], A_22,  D_4, nr + 1);
+		else
+			M[4] = mult (A_22,  D_4, nr + 1);
+		
+		if (irmao[5])
+			despache (irmao[5], S_5 , B_22, nr + 1);
+		else
+			M[5] = mult (S_5 , B_22, nr + 1);
+		
+		if (irmao[6])
+			despache (irmao[6]
+		
+		M[6] = mult (D_6 ,  S_6, nr + 1);
+		
+		M[7] = mult (D_7 ,  S_7, nr + 1);
 		
 		free_matrix (S_1a);
 		free_matrix (S_1b);
@@ -166,24 +215,24 @@ matriz mult (matriz A, matriz B) {
 		free_matrix (D_7);
 		free_matrix (S_7);
 		
-		matriz C_11 = sub (M_4, M_5);
-		acc(C_11, M_1);
-		acc(C_11, M_7);
-		free_matrix(M_7);
+		matriz C_11 = sub (M[4], M[5]);
+		acc(C_11, M[1]);
+		acc(C_11, M[7]);
+		free_matrix(M[7]);
 		
-		matriz C_12 = some (M_3, M_5);
-		free_matrix(M_5);
+		matriz C_12 = some (M[3], M[5]);
+		free_matrix(M[5]);
 		
-		matriz C_21 = some (M_2, M_4);
-		free_matrix(M_4);
+		matriz C_21 = some (M[2], M[4]);
+		free_matrix(M[4]);
 		
-		matriz C_22 = sub (M_1, M_2);		
-		acc(C_22, M_3);		
-		acc(C_22, M_6);
-		free_matrix(M_1);
-		free_matrix(M_2);
-		free_matrix(M_3);
-		free_matrix(M_6);
+		matriz C_22 = sub (M[1], M[2]);		
+		acc(C_22, M[3]);		
+		acc(C_22, M[6]);
+		free_matrix(M[1]);
+		free_matrix(M[2]);
+		free_matrix(M[3]);
+		free_matrix(M[6]);
 		
 		C = merge_matrix(C_11, C_12, C_21, C_22);		
 		free_matrix(C_11);
@@ -215,7 +264,80 @@ matriz mult (matriz A, matriz B) {
 }
 
 
+matriz cmult (matriz A, matriz B) {
+	int i,j,k, ordem;
+	matriz C;
+	ordem = A.ordem;	
+	
+	if ( ordem > MIN_RANK ) {		
+		
+		matriz A_11, A_12, A_21, A_22;
+		part_matrix (A, &A_11, &A_12, &A_21, &A_22);
+		
+		matriz B_11, B_12, B_21, B_22;		
+		part_matrix (B, &B_11, &B_12, &B_21, &B_22);
+		
+		matriz M_111 = cmult (A_11, B_11);
+		matriz M_112 = cmult (A_12, B_21);
+		matriz M_121 = cmult (A_11, B_12);
+		matriz M_122 = cmult (A_12, B_22);
+		matriz M_211 = cmult (A_21, B_11);
+		matriz M_212 = cmult (A_22, B_21);
+		matriz M_221 = cmult (A_21, B_12);
+		matriz M_222 = cmult (A_22, B_12);
+
+		matriz C_11 = some (M_111, M_112);
+		free_matrix(M_111);
+		free_matrix(M_112);
+		
+		matriz C_12 = some (M_121, M_122);
+		free_matrix(M_121);
+		free_matrix(M_122);
+				
+		matriz C_21 = some (M_211, M_212);
+		free_matrix(M_211);
+		free_matrix(M_212);
+		
+		matriz C_22 = some (M_221, M_222);
+		free_matrix(M_221);
+		free_matrix(M_222);
+		
+		C = merge_matrix(C_11, C_12, C_21, C_22);		
+		free_matrix(C_11);
+		free_matrix(C_12);
+		free_matrix(C_21);
+		free_matrix(C_22);		
+		
+		return C;
+		
+	}
+		
+	if (ordem <= MIN_RANK) {
+		
+		C = new_matrix(ordem);
+		
+		for (i = 0 ; i < ordem ; i++) {
+			for (j = 0 ; j < ordem ; j++) {
+				E(C, i, j) = 0;
+				for (k = 0 ; k < ordem ; k++) {
+					E(C, i, j) += E(A, i, k) * E(B, k, j);
+				}
+			}
+		}		
+		
+		return C;		
+	}	
+}
+
+
 int main (int argc, char** argv) {
+// 	MPI_Init(&argc, &argv);
+	
+
+// 
+// 	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+// 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
+	
 	int i,j,k;
 	double x,y;
 	matriz A, B, C;
@@ -238,5 +360,6 @@ int main (int argc, char** argv) {
 	C = mult (A, A);	
 	print_matrix("C" , C);
 	
+// 	MPI_Finalize();	
 }
 
