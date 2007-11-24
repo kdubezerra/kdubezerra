@@ -169,15 +169,17 @@ matriz receba_matriz (int processo) {
 	int tamanho;
 	float* message;
 	int i,j;
-	MPI_Status recv_status;
+	MPI_Status recv_status, rs;
 		
 	MPI_Recv(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD, &recv_status);
 		
 	tamanho = pot(ordem,2);
 	
-	printf ("P%d recebeu a ordem (%d) da matriz...\n", my_rank, ordem);
+	printf ("P%d recebeu a ordem (%d) da matriz...\nEntre com um numero para disparar o SIGSEGV...", my_rank, ordem);
 	
-	MPI_Recv(message, tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD, &recv_status);
+//  	scanf ("%d",&i);
+	
+	MPI_Recv(message, tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD, &rs);
 	
 	printf ("P%d recebeu a matriz...\n", my_rank);
 	
@@ -191,8 +193,8 @@ matriz receba_matriz (int processo) {
 		}
 	}
 	
-	
-	
+	print_matrix("m", m);
+		
 	return m;
 	
 }
@@ -216,7 +218,7 @@ void envie_matriz (int processo, matriz m) {
 	
 	MPI_Send(message, tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD);	
 	
-	free (message);
+// 	free (message);
 }
 
 
@@ -258,9 +260,8 @@ matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 		if (irmao[1])			
 			despache (irmao[1], S_1a, S_1b, nr + 1);
 		else
-			M[1] = mult (S_1a, S_1b, nr + 1);
+			M[1] = mult (S_1a, S_1b, nr + 1);		
 		
-		printf ("Despachou OK\n");
 		
 		if (irmao[2])
 			despache (irmao[2], S_2, B_11, nr + 1);
@@ -289,16 +290,16 @@ matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 		
 		M[7] = mult (D_7 ,  S_7, nr + 1);
 		
-		free_matrix (S_1a);
-		free_matrix (S_1b);
-		free_matrix (S_2);
-		free_matrix (D_3);
-		free_matrix (D_4);
-		free_matrix (S_5);
-		free_matrix (D_6);
-		free_matrix (S_6);
-		free_matrix (D_7);
-		free_matrix (S_7);
+// 		free_matrix (S_1a);
+// 		free_matrix (S_1b);
+// 		free_matrix (S_2);
+// 		free_matrix (D_3);
+// 		free_matrix (D_4);
+// 		free_matrix (S_5);
+// 		free_matrix (D_6);
+// 		free_matrix (S_6);
+// 		free_matrix (D_7);
+// 		free_matrix (S_7);
 		
 		for (i = 1 ; i < 7 && irmao[i] ; i++) {
 			M[i] = receba_matriz (irmao[i]);
@@ -488,7 +489,7 @@ int main (int argc, char** argv) {
 	//print_matrix("A" , A);
 	printf ("\nAGORA SIM!\n\n");	
 	C = mult (A, A, 0);	
-	//print_matrix("C" , C);
+	print_matrix("C" , C);
 	
 	} else {
 		espere_ordem();
