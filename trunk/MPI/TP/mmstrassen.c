@@ -171,21 +171,12 @@ matriz receba_matriz (int processo) {
 	int i,j;
 	MPI_Status recv_status, rs;
 		
-	MPI_Recv(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD, &recv_status);
-		
-	tamanho = pot(ordem,2);
-	
-	printf ("P%d recebeu a ordem (%d) da matriz...\nEntre com um numero para disparar o SIGSEGV...", my_rank, ordem);
-	
-//  	scanf ("%d",&i);
-	
+	MPI_Recv(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD, &recv_status);		
+	tamanho = pot(ordem,2);	
+	message = calloc (tamanho, sizeof(float));	
 	MPI_Recv(message, tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD, &rs);
 	
-	printf ("P%d recebeu a matriz...\n", my_rank);
-	
-	m = new_matrix(ordem);
-	
-	
+	m = new_matrix(ordem);	
 	
 	for (i = 0 ; i < ordem ; i++) {
 		for (j = 0 ; j < ordem ; j++) {
@@ -193,8 +184,8 @@ matriz receba_matriz (int processo) {
 		}
 	}
 	
-	print_matrix("m", m);
-		
+	free (message);
+				
 	return m;
 	
 }
@@ -211,14 +202,11 @@ void envie_matriz (int processo, matriz m) {
 			message[i + ordem*j] = E(m,i,j);
 		}
 	}
-	
-	print_matrix("m",m);
-	
-	MPI_Send(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD);	
-	
+			
+	MPI_Send(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD);		
 	MPI_Send(message, tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD);	
 	
-// 	free (message);
+	free (message);
 }
 
 
@@ -363,10 +351,11 @@ void espere_ordem () {
 	
 	MPI_Recv(&nr, 1, MPI_INT, MPI_ANY_SOURCE, 99, MPI_COMM_WORLD, &recv_status);
 	MPI_Recv(&ordem, 1, MPI_INT, MPI_ANY_SOURCE, 100, MPI_COMM_WORLD, &recv_status);
-	
-	tamanho = pot(ordem,2);
-	
+	tamanho = pot(ordem,2);	
+	message = calloc(tamanho * 2, sizeof(float));	
 	MPI_Recv(message, tamanho * 2, MPI_FLOAT, MPI_ANY_SOURCE, 101, MPI_COMM_WORLD, &recv_status);
+	
+	printf ("P%d recebeu uma multiplicação do nível %d da recursão\n", my_rank, nr);
 	
 	A = new_matrix(ordem);
 	B = new_matrix(ordem);
