@@ -50,7 +50,7 @@ void print_matrix (char* name, matriz m) {
 	
 	for (i = 0 ; i < m.ordem ; i++) {
 		for (j = 0; j < m.ordem ; j++) {
-// 			printf("%s[%d][%d] = %f\n",name, i, j, E(m,i,j));
+ 			printf("%s[%d][%d] = %f\n",name, i, j, E(m,i,j));
 		}
 	}
 	printf("\n");
@@ -202,13 +202,15 @@ void envie_matriz (int processo, matriz m) {
 	int i,j;
 	int ordem = m.ordem;
 	int tamanho = pot(ordem,2);
-	float* message = calloc(tamanho, sizeof(float));;
+	float* message = calloc(tamanho, sizeof(float));
 	
 	for (i = 0 ; i < ordem ; i++) {
 		for (j = 0 ; j < ordem ; j++) {
 			message[i + ordem*j] = E(m,i,j);
 		}
 	}
+	
+	print_matrix("m",m);
 	
 	MPI_Send(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD);	
 	
@@ -483,10 +485,10 @@ int main (int argc, char** argv) {
 		}
 	}
 	
-	print_matrix("A" , A);
+	//print_matrix("A" , A);
 	printf ("\nAGORA SIM!\n\n");	
 	C = mult (A, A, 0);	
-	print_matrix("C" , C);
+	//print_matrix("C" , C);
 	
 	} else {
 		espere_ordem();
