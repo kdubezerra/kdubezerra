@@ -1,0 +1,12 @@
+Resultados encontrados com os benchmarks de tempo de comunicação e cpu do cluster (expressados em usec):
+
+tc:
+tc(length) ~= 703.4286 + 0,1817*length
+
+tp:
+tp(n) = 50347.323 - 3969.8118N + 44.2142N² + 0.1926N³
+
+complexidade em 
+
+
+
