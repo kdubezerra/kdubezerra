@@ -47,7 +47,7 @@ int main (int argc, char** argv) {
 	
 		desvio = sqrt (desvio);
 	
-		//cout.precision(10);
+		cout.precision(0);
 	
 		cout << arq_name << endl;
 		cout << "Media: " << fixed << media << "s" << endl;
