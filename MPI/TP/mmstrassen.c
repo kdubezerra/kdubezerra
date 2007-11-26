@@ -2,11 +2,17 @@
 #include <stdlib.h>
 #include <math.h>
 #include <mpi.h>
+#include <sys/time.h>
 
 #define MIN_RANK 2
 #define E(X,i,j) (* el(X,i,j))
 
 int my_rank, nprocs;
+
+int my_log2 (int x) {
+	if (x == 2) return 1; 
+	else return 1 + my_log2(x/2);
+}
 
 int pot (int base, int exp) {
 	return (int) pow ((double) base, (double) exp);	
@@ -50,10 +56,10 @@ void print_matrix (char* name, matriz m) {
 	
 	for (i = 0 ; i < m.ordem ; i++) {
 		for (j = 0; j < m.ordem ; j++) {
- 			printf("%s[%d][%d] = %f\n",name, i, j, E(m,i,j));
+ 		//	printf("%s[%d][%d] = %f\n",name, i, j, E(m,i,j));
 		}
 	}
-	printf("\n");
+	//printf("\n");
 	
 }
 
@@ -158,6 +164,8 @@ void despache (int processo, matriz A, matriz B, int nr) {
 	MPI_Send(&nr, 1, MPI_INTEGER, processo, 99, MPI_COMM_WORLD);
 	MPI_Send(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD);
 	MPI_Send(message, 2*tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD);
+
+	//printf ("P_%d despachou uma ordem de nr %d para P_%d\n",my_rank,nr,processo);
 	
 	free(message);
 }
@@ -170,12 +178,16 @@ matriz receba_matriz (int processo) {
 	float* message;
 	int i,j;
 	MPI_Status recv_status, rs;
-		
+	
+	//printf ("P_%d esperando a resposta de P_%d\n",my_rank, processo);
+
 	MPI_Recv(&ordem, 1, MPI_INT, processo, 100, MPI_COMM_WORLD, &recv_status);		
 	tamanho = pot(ordem,2);	
 	message = calloc (tamanho, sizeof(float));	
 	MPI_Recv(message, tamanho, MPI_FLOAT, processo, 101, MPI_COMM_WORLD, &rs);
 	
+	//printf ("P_%d recebeu a matriz de P_%d\n",my_rank, processo);
+
 	m = new_matrix(ordem);	
 	
 	for (i = 0 ; i < ordem ; i++) {
@@ -217,6 +229,9 @@ matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 	int i,j,k, ordem;
 	matriz C;
 	ordem = A.ordem;
+
+//	if (nr == 2)
+//		printf("NR %d\n", nr);
 	
 	if ( ordem > MIN_RANK ) {		
 		
@@ -278,16 +293,16 @@ matriz mult (matriz A, matriz B, int nr /* nivel da recursao */) {
 		
 		M[7] = mult (D_7 ,  S_7, nr + 1);
 		
-// 		free_matrix (S_1a);
-// 		free_matrix (S_1b);
-// 		free_matrix (S_2);
-// 		free_matrix (D_3);
-// 		free_matrix (D_4);
-// 		free_matrix (S_5);
-// 		free_matrix (D_6);
-// 		free_matrix (S_6);
-// 		free_matrix (D_7);
-// 		free_matrix (S_7);
+ 		free_matrix (S_1a);
+ 		free_matrix (S_1b);
+ 		free_matrix (S_2);
+ 		free_matrix (D_3);
+ 		free_matrix (D_4);
+ 		free_matrix (S_5);
+ 		free_matrix (D_6);
+ 		free_matrix (S_6);
+ 		free_matrix (D_7);
+ 		free_matrix (S_7);
 		
 		for (i = 1 ; i < 7 && irmao[i] ; i++) {
 			M[i] = receba_matriz (irmao[i]);
@@ -348,6 +363,8 @@ void espere_ordem () {
 	int i,j;
 	float* message;
 	MPI_Status recv_status;
+
+	//printf ("P_%d esperando ordem\n", my_rank);
 	
 	MPI_Recv(&nr, 1, MPI_INT, MPI_ANY_SOURCE, 99, MPI_COMM_WORLD, &recv_status);
 	MPI_Recv(&ordem, 1, MPI_INT, MPI_ANY_SOURCE, 100, MPI_COMM_WORLD, &recv_status);
@@ -355,7 +372,7 @@ void espere_ordem () {
 	message = calloc(tamanho * 2, sizeof(float));	
 	MPI_Recv(message, tamanho * 2, MPI_FLOAT, MPI_ANY_SOURCE, 101, MPI_COMM_WORLD, &recv_status);
 	
-	printf ("P%d recebeu uma multiplicação do nível %d da recursão\n", my_rank, nr);
+	//printf ("P_%d recebeu uma ordem de mult do nr %d\n", my_rank, nr);
 	
 	A = new_matrix(ordem);
 	B = new_matrix(ordem);
@@ -448,8 +465,11 @@ matriz cmult (matriz A, matriz B) {
 
 int main (int argc, char** argv) {
  	
-	
+//	printf("antes de inicializar\n");
+
 	MPI_Init(&argc, &argv);
+
+//	printf("depois de inicializar\n");
 	 
  	MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
  	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
@@ -460,32 +480,44 @@ int main (int argc, char** argv) {
 
 	int ORDEM = atoi(argv[1]);
 	
-	if (!my_rank) {	
+	if (!my_rank) {
+		struct timeval start, end;
+		long total_usec;
+
+		A = new_matrix(ORDEM);
+		B = new_matrix(ORDEM);		
 	
-	A = new_matrix(ORDEM);
-	B = new_matrix(ORDEM);		
 	
 	
+		//printf ("PREENCHENDO\n");
 	
-	printf ("PREENCHENDO\n");
-	
-	for (i = 0 ; i < ORDEM ; i++) {
-		for (j = 0 ; j < ORDEM ; j++) {
-			E(A, i, j) = f(i,j);
+		for (i = 0 ; i < ORDEM ; i++) {
+			for (j = 0 ; j < ORDEM ; j++) {
+				E(A, i, j) = f(i,j);
+			}
 		}
-	}
 	
-	//print_matrix("A" , A);
-	printf ("\nAGORA SIM!\n\n");	
-	C = mult (A, A, 0);	
-	print_matrix("C" , C);
+		//print_matrix("A" , A);
+		//printf ("\nAGORA SIM!\n\n");
+		gettimeofday(&start, NULL);
+		C = mult (A, A, 0);
+		gettimeofday(&end, NULL);
+		print_matrix("C" , C);
+
+		total_usec = (end.tv_sec - start.tv_sec)*1e6 + (end.tv_usec - start.tv_usec);
+
+		printf ("%ld\n",total_usec);
 	
 	} else {
-		int altura = (int) ( log( (double) ORDEM ) / log ( 2 ) );
+		int altura = my_log2 (ORDEM);
 		int nramos = pot (7, altura - 1);
 
-		if (my_rank < nramos)
+		//printf ("altura = %d\n", altura);
+
+		if (my_rank < nramos) {
+			//printf ("P_%d ira participar... %d < %d\n",my_rank, my_rank, nramos);
 			espere_ordem();
+		}
 	}
 	
  	MPI_Finalize();
