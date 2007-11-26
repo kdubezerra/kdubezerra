@@ -8,31 +8,33 @@ using namespace std;
 int main (int argc, char** argv) {
 	long unsigned tempo=666;
 	long unsigned valor[20]; //somatorio de (Xi - Xmedio)**2
+	int linhas;
 	double media = 0;
 	double desvio = 0;
 		
 	string bli1, bli2, bli3, bli4, bli5;
 	char buffer[255];
 
-	if (argc == 1) {
-		cout << "Porra diga o nome do arquivo caralho!!!" << endl;
+	if (argc != 3) {
+		cout << "Uso: " << argv[0] << " <arquivocomvalores> <numero de linhas>" << endl;
 		exit (1298);
 	}
 
 	ifstream resultFile (argv[1]);
+	linhas = atoi (argv[2]);
 
-	for ( int linha = 0 ; linha < 20 ; linha++ ) {
+	for ( int linha = 0 ; linha < linhas ; linha++ ) {
 		resultFile >> valor[linha];
-		media += valor[linha];
+		media += (double) valor[linha];
 	}
 
-	media /= 20;
+	media /= linhas;
 
-	for (int bli = 0 ; bli < 20 ; bli++) {
+	for (int bli = 0 ; bli < linhas ; bli++) {
 		desvio += pow (    ( (double) valor[bli] )    -    media , 2);
 	}
 
-	desvio /= 20;
+	desvio /= linhas;
 
 	desvio = sqrt (desvio);
 
