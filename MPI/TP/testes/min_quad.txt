@@ -8,6 +8,9 @@ tp(n) = 50347.323 - 3969.8118N + 44.2142N² + 0.1926N³
 
 complexidade de processamento:
 
+32768 flops = 5702114 usec
+1 flop = 174 usec
+
 Proc(N) = 
 		Proc(N/2) + 18 * (n/2)², caso N > 2**bottom(log7(P));
 
