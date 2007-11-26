@@ -1,0 +1,19 @@
+dados <- read.table("notas.txt")
+notas <- dados$V1[ dados$V1 > 0.0 ]
+n <- length(notas)
+mean(notas) ; sd(notas)
+> mean(notas) - qnorm(0.975,mean(notas),sd(notas))*sd(notas)/sqrt(n)
+[1] 3.068199
+> mean(notas) + qnorm(0.975,mean(notas),sd(notas))*sd(notas)/sqrt(n)
+[1] 9.756801
+> mean(notas) - qt(0.975,n-1)*sd(notas)/sqrt(n)
+[1] 5.762006
+> mean(notas) + qt(0.975,n-1)*sd(notas)/sqrt(n)
+[1] 7.062994
+hist(notas,breaks=pretty(c(0:10),20),xlab="Notas entre 0 e 10", main="Histograma")
+dens <- density(notas)
+xlim <- range(dens$x)
+ylim <- range(dens$y)
+hist(notas,breaks=pretty(c(0:10),20),xlab="Notas entre 0 e 10", main="Histograma",xlim=xlim,ylim=ylim,probability=T)
+lines(dens,xlim=xlim,ylim=ylim)
+lines(dens$x, dnorm(dens$x, mean(notas), sd(notas)),xlim=xlim,ylim=ylim)
