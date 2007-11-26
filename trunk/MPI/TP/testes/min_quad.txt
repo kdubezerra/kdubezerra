@@ -6,7 +6,17 @@ tc(length) ~= 703.4286 + 0,1817*length
 tp:
 tp(n) = 50347.323 - 3969.8118N + 44.2142N² + 0.1926N³
 
-complexidade em 
+complexidade de processamento:
+
+Proc(N) = 
+		Proc(N/2) + 18 * (n/2)², caso N > 2**bottom(log7(P));
+
+		10 * (n/2)² + 
+		
+		(7 - P + 7**bottom(log7(P))) * (Proc(N/2) + 10
+		 + 
+		(P - 7**bottom(log7(P))) * (Proc(N/4) + 18* )
+	 
 
 
 
