@@ -70,8 +70,20 @@ Coefficients:
 =============================================================
 Comm(N):
 
-p/ P = 1
-Comm(n) = 0
+Pelos meus cálculos:
 
-p/ P >= 7**(log2(n)-1):
-Comm(n) = 7*Comm(n/2) + 
+p/ P = 1
+Comm(N) = 0
+
+p/ P >= 7**(log2(N)-1):
+Comm(N) = Comm(N/2) + 12*alpha + 9*(beta*N**2)/2, se n > 2
+Comm(2) = 0
+
+p/ P = 7**k, int k > 0;
+Comm(N) = Comm(N/2) + 12*alpha + 9*(beta*N**2)/2, se n > 2 e n > N/(2**log7(P))
+Comm(N) = 0, se n = 2 ou n <= N/(2**log7(P))
+
+p/ P = x, int x > 1
+Comm(N) = Comm(N/2) + 12*alpha + 9*(beta*N**2)/2, se n > 2 e n > N/(2**bottom(log7(P)))
+Comm(N) = ((P - 7**(bottom(log7(P))))/(7**bottom(log7(P)))) * (2*alpha + 3*beta*(n/2)**2), se n = N/(2**bottom(log7(P))) e n > 2
+Comm(N) = 0, n = 2 ou n < N/(2**bottom(log7(P)))
