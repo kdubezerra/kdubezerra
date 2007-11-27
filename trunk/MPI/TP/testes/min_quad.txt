@@ -2,8 +2,8 @@ Resultados encontrados com os benchmarks de tempo de comunicação e cpu do clus
 
 tc:
 tc(length) ~= 703.4286 + 0,1817*length
-alpha = 703,4286;
-beta  = 0,1817	
+alpha = 755,6127;
+beta  = 0,1815	
 
 
 tp:
