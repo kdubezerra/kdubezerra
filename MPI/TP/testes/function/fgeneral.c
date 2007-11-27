@@ -2,6 +2,7 @@
 
 double alpha = 755.6127f;
 double beta = 0.1815f;
+double tp = 0.193891;
 
 int pot (int base, int exp) {
 	if (exp == 0)
@@ -88,14 +89,14 @@ double Comm (int n, int N, int P) {
 	
 	else if (P >= pot(7, b_log(2,N) - 1)) {
 		if (n > 2)
-			return Comm(n/2) + 12*alpha + 9*(beta*pot(n,2))/2;
+			return Comm(n/2, N, P) + 12*alpha + 9*(beta*pot(n,2))/2;
 		else if (n == 2)
-			return 0;		
+			return 0;
 	}
 	
 	else if (P == pot(7, b_log(7,P))) {
 		if ((n > 2) && n > N/pot(2, b_log(7,P))) {
-			return Comm(n/2) + 12*alpha + 9*(beta*pot(n,2))/2;
+			return Comm(n/2, N, P) + 12*alpha + 9*(beta*pot(n,2))/2;
 		}
 		else 
 			return 0;
@@ -103,7 +104,7 @@ double Comm (int n, int N, int P) {
 	
 	else {
 		if ((n > 2) && n > N/pot(2, b_log(7,P))) {
-			return Comm(n/2) + 12*alpha + 9*(beta*pot(n,2))/2;
+			return Comm(n/2, N, P) + 12*alpha + 9*(beta*pot(n,2))/2;
 		}
 		else if ((n > 2) && n == N/pot(2, b_log(7,P))) {
 			return t_div( (P - pot(7,b_log(7,P))) , pot(7,b_log(7,P)) ) * (2*alpha + 3*beta*pot(n,2)/4);
@@ -112,7 +113,15 @@ double Comm (int n, int N, int P) {
 			return 0;
 	}
 	
-}	
+}
+
+
+
+double Total (int n, int N, int P) {
+	
+	return Proc(n, N, P) * tp + Comm(n, N, P);
+	
+}
 	
 	
 
@@ -130,7 +139,7 @@ int main(int argc, char** argv) {
 	FILE* saida = fopen(arq_name,"w");
 				
 	for (N = 2 ; N <= 1024 ; N *= 2) {
-		fprintf (saida, "%d\n", Proc(N,N,P));
+		fprintf (saida, "%lf\n", Total(N,N,P));
 	}	
 	
 }
