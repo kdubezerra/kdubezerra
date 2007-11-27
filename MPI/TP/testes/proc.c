@@ -79,6 +79,12 @@ int main (int argc, char** argv) {
 	printf ("P1(4) = %d\n", P1( 4 ) );
 	printf ("P1(8) = %d\n", P1( 8 ) );
 	printf ("P1(16) = %d\n", P1( 16 ) );
+	printf ("P1(32) = %d\n", P1( 32 ) );
+	printf ("P1(64) = %d\n", P1( 64 ) );
+	printf ("P1(128) = %d\n", P1( 128 ) );
+	printf ("P1(256) = %d\n", P1( 256 ) );
+	printf ("P1(512) = %d\n", P1( 512 ) );
+	printf ("P1(1024) = %d\n", P1( 1024 ) );
 	
 	printf ("\nP7(2) = %d\n", P7( 2 , 2 ) );
 	printf ("P7(4) = %d\n", P7( 4 , 4 ) );
