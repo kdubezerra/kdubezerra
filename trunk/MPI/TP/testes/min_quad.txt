@@ -6,57 +6,71 @@ alpha = 703,4286;
 beta  = 0,1817	
 
 tp:
-tp(n) = 50347.323 - 3969.8118N + 44.2142N² + 0.1926N³
+tp = 0,1938..... ~ 1,194
 
 complexidade de processamento:
 
 32768 flops = 5702114 usec
 1 flop = 174 usec = tc
 
-Pelo cálculo do R:
-
-Proc1(n) = -0,9549 	+ 1,0325  * n 	- 6,4083 * n**2	+ 4,7113 * n**2,8
-Proc7(n) = Proc13(n)
-Proc13(n) = -26,8258 	+ 12,1721 * n 	+ 1,2533 * n**2	+ 0,7852 * n**2,8
-Proc19(n) = -25,4686	+ 10,5463 * n	+ 1,9320 * n**2	+ 0,6674 * n**2,8
-Proc25(n) = -24,1114	+ 8,9205  * n	+ 2,6106 * n**2 + 0,5496 * n**2,8
 
 Pelos meus cálculos:
 
-Comm1 (n) = 0
-Comm7 (n) = 12*alpha + 18*beta * (n/2)**2
-Comm13(n) = 14*alpha + (75/16)*beta * n**2
-Comm19(n) = 16*alpha + (78/16)*beta * n**2
-Comm25(n) = 18*alpha + (81/16)*beta * n**2
+p/ P = 1
+Proc(n) = 7*Proc(n/2) + 18*(n/2)**2, se n > 2
+Proc(2) = 8
 
-Somando tudo:
+p/ P >= 7**(log2(n)-1):
+Proc(n) = Proc(n/2) + 18*(n/2)**2, se n > 2
+Proc(2) = 8
 
-Total1(n) = Proc1(n) * tc = Proc1(n) * 174 usec
+p/ P = 7**k, int k > 0;
+Proc(n) = Proc(n/2) + 18*(n/2)**2, se n > N/(2**(log7(P))) e n > 2
+Proc(n) = 7*Proc(n/2) + 18*(n/2)**2, se 2 < n <= N/(2**(log7(P)))
+Proc(2) = 8
 
-
-Totalx(n) = Procx(n) + Commx(n)
-
-
-
-
-
-
-
-
+p/ P = x, int x > 1
+Proc(n) = Proc(n/2) + 18*(n/2)**2, se n > N/(2**bottom(log7(P))) e n > 2
+Proc(n) = (7 - bottom( (P - 7**bottom(log7(P))) / 7 ))*Proc(n/2) + 18*(n/2)**2, se 2 < n = N/(2**bottom(log7(P)))
+Proc(n) = 7*Proc(n/2) + 18*(n/2)**2, se 2 < n < N/(2**bottom(log7(P)))
+Proc(2) = 8
 
 
+Pelo cálculo do R:
+
+Proc1(N) = -11474.768 + 920.894*N - 17.314*N**2 + 4.851*N**2,8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+ -11474.768      920.894      -17.314        4.851
+
+Proc7(N)  = -1641.313 + 131.583*N + 1.384*N**2 + 0.693*N**2,8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+  -1641.313      131.583        1.384        0.693
+
+Proc13(N) = -1641.313 + 131.583*N + 1.384*N**2 + 0.693*N**2,8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+  -1641.313      131.583        1.384        0.693
+
+Proc19(N) = -1407.672 + 112.795*N + 1.989*N**2 + 0.594*N**2,8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+  -1407.672      112.795        1.989        0.594
+
+Proc25(N) = -1174.030 + 94.008*N + 2.595*N**2 + 0.495*N**2,8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+  -1174.030       94.008        2.595        0.495
 
 
 
-Proc(N) = 
-		Proc(N/2) + 18 * (n/2)², caso N > 2**bottom(log7(P));
+=============================================================
+=============================================================
+Comm(N):
 
-		10 * (n/2)² + 
-		
-		(7 - P + 7**bottom(log7(P))) * (Proc(N/2) + 10
-		 + 
-		(P - 7**bottom(log7(P))) * (Proc(N/4) + 18* )
-	 
+p/ P = 1
+Comm(n) = 0
 
-
-
+p/ P >= 7**(log2(n)-1):
+Comm(n) = 7*Comm(n/2) + 
