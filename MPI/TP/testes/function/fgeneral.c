@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+double alpha = 755.6127f;
+double beta = 0.1815f;
+
 int pot (int base, int exp) {
 	if (exp == 0)
 		return 1;
@@ -16,6 +19,14 @@ int b_log (int base, int x) { // Bottom(log(base,x))
 
 int b_div (int a, int b) {
 	return ((int) (a / b));
+}
+
+int t_div (int a, int b) {
+	int res = (int) (a/b);
+	if (res*b == a)
+		return res;
+	else
+		return res + 1;
 }
 
 int Proc(int n, int N, int P) {
@@ -65,6 +76,43 @@ int Proc(int n, int N, int P) {
 		}
 	}
 }
+	
+	
+	
+	
+double Comm (int n, int N, int P) {
+	
+	if (P == 1) {
+		return 0;
+	}
+	
+	else if (P >= pot(7, b_log(2,N) - 1)) {
+		if (n > 2)
+			return Comm(n/2) + 12*alpha + 9*(beta*pot(n,2))/2;
+		else if (n == 2)
+			return 0;		
+	}
+	
+	else if (P == pot(7, b_log(7,P))) {
+		if ((n > 2) && n > N/pot(2, b_log(7,P))) {
+			return Comm(n/2) + 12*alpha + 9*(beta*pot(n,2))/2;
+		}
+		else 
+			return 0;
+	}
+	
+	else {
+		if ((n > 2) && n > N/pot(2, b_log(7,P))) {
+			return Comm(n/2) + 12*alpha + 9*(beta*pot(n,2))/2;
+		}
+		else if ((n > 2) && n == N/pot(2, b_log(7,P))) {
+			return t_div( (P - pot(7,b_log(7,P))) , pot(7,b_log(7,P)) ) * (2*alpha + 3*beta*pot(n,2)/4);
+		}
+		else
+			return 0;
+	}
+	
+}	
 	
 	
 
