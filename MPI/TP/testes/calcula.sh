@@ -1,20 +1,24 @@
-FILE=1
-while [ $FILE -le 16 ]
+P=1
+while [ $P -le 25 ]
 
 do
 	
 	echo ===============================
-	echo ===============================
-	echo CALCULANDO O TEMPO COM $FILE PROCESSOS
+	echo Calculando o tempo com $P processos
 
+	N=2
+	while [ $N -le 1024 ]
+		do
 
-	./media_dp tempo${FILE}.txt
+		echo Calculando o tempo com $P processos, entrada de tamanho $N		
 
+		./media_dp tempo_${P}_${N}.txt 10 >> experiment_${P}.txt
+
+		N=$((N*2))
+		done
 
 	echo FIM DO CALCULO
-	echo ===============================
-	echo ===============================
 
-	FILE=$((FILE+1))
+	P=$((P+6))
 
 done

@@ -7,7 +7,7 @@ beta  = 0,1815
 
 
 tp:
-tp = 0,1938..... ~ 1,194
+tp ~ 0,193891
 
 complexidade de processamento:
 
@@ -87,3 +87,39 @@ p/ P = x, int x > 1
 Comm(N) = Comm(N/2) + 12*alpha + 9*(beta*N**2)/2, se n > 2 e n > N/(2**bottom(log7(P)))
 Comm(N) = ((P - 7**(bottom(log7(P))))/(7**bottom(log7(P)))) * (2*alpha + 3*beta*(n/2)**2), se n = N/(2**bottom(log7(P))) e n > 2
 Comm(N) = 0, n = 2 ou n < N/(2**bottom(log7(P)))
+
+=============================================================
+=============================================================
+Total(N):
+
+Pelos meus cálculos,
+T(N) = Proc(N)*tp + Comm(N)
+
+ .................
+pelos Cálculos do R
+ °°°°°°°°°°°°°°°°°
+
+T1(N) = -2224.8542 + 178.5531*N - 3.3571*N**2 + 0.9406*N**2.8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+ -2224.8542     178.5531      -3.3571       0.9406
+
+T7(N) = 6568.8634 + 53.2971*N + 1.0074*N**2 + 0.1346*N**2.8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+  6568.8634      53.2971       1.0074       0.1346
+
+T13(N) = 7363.1484 + 62.2530*N + 1.0166*N**2 + 0.1346*N**2.8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+  7363.1484      62.2530       1.0166       0.1346
+
+T19(N) = 8202.7343 + 67.5663*N + 1.1432*N**2 + 0.1155*N**2.8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+  8202.7343      67.5663       1.1432       0.1155
+
+T25(N) = 9042 + 72.88*N + 1.270*N**2+ 0.09638*N**2.8
+Coefficients:
+(Intercept)            N       I(N^2)     I(N^2.8)
+  9.042e+03    7.288e+01    1.270e+00    9.638e-02
