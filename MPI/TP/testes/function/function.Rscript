@@ -1,0 +1,25 @@
+R1 <- scan("Proc1.txt");
+R7 <- scan("Proc7.txt");
+R13 <- scan("Proc13.txt");
+R19 <- scan("Proc19.txt");
+R25 <- scan("Proc25.txt");
+
+T1 <- function(N) {
+	return (0 - 2224.8542 + 178.5531*N - 3.3571*N^2 + 0.9406*N^2.8)
+}
+
+T7 <- function(N) {
+	return (6568.8634 + 53.2971*N + 1.0074*N^2 + 0.1346*N^2.8)
+}
+
+T13 <- function(N) {
+	return (7363.1484 + 62.2530*N + 1.0166*N^2 + 0.1346*N^2.8)
+}
+
+T19 <- function(N) {
+	return (8202.7343 + 67.5663*N + 1.1432*N^2 + 0.1155*N^2.8)
+}
+
+T25 <- function(N) {
+	return (9042 + 72.88*N + 1.270*N^2 + 0.09638*N^2.8)
+}

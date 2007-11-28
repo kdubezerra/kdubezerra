@@ -122,8 +122,6 @@ double Total (int n, int N, int P) {
 	return Proc(n, N, P) * tp + Comm(n, N, P);
 	
 }
-	
-	
 
 
 int main(int argc, char** argv) {
