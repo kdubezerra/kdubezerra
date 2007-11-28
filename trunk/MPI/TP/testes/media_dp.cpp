@@ -40,9 +40,9 @@ int main (int argc, char** argv) {
 
 	cout.precision(4);
 
-	cout << argv[1] << endl;
-	cout << "Media: " << fixed << media/1e6 << "s" << endl;
-	cout << "Desvio: " << fixed << desvio/1e6 << "s" << endl << endl;
+	//cout << argv[1] << endl;
+	cout << fixed << media << " ";
+	cout << fixed << desvio << endl;
 
 	exit(0);
 }
