@@ -1,25 +1,18 @@
 #include <stdio.h>
 #include <math.h>
+#include "fgeneral.h"
 
 
 double mean_time[26][1025];
 double deviation[26][1025];
 	
 
-int pot (int base, int exp) {
-	if (exp == 0)
-		return 1;
-	else 
-		return base*pot(base,exp-1);
-}
-
-
-int b_log (int base, int x) { // Bottom(log(base,x))
-	int exp;	
-	for (exp = 0 ; pot(base,exp) <= x ; exp++);
-	exp--;		
-	return exp;	
-}
+// int b_log (int base, int x) { // Bottom(log(base,x))
+// 	int exp;	
+// 	for (exp = 0 ; pot(base,exp) <= x ; exp++);
+// 	exp--;		
+// 	return exp;	
+// }
 
 
 void load_values (void) {
@@ -102,7 +95,7 @@ int main () {
 			fprintf(arq_saida[P], "%d : %lf", N, plot(P, N));
 // 			printf ("Imprimiu no arquivo plot_%d.txt\n", P);
 			if (N > 1 && pot(2,b_log(2,N)) == N) {
-				fprintf(arq_saida[P], " : %lf : %lf", mean_time[P][N], deviation[P][N]);
+				fprintf(arq_saida[P], " : %lf : %lf : %lf", mean_time[P][N], deviation[P][N], Total (N,N,P));
 			}
 // 			printf ("Passou pelo if\n");
 			fprintf(arq_saida[P], "\n");
