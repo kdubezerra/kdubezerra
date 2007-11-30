@@ -1,17 +1,18 @@
+set terminal postscript enhanced color solid lw 2 "Helvetica" 13
 set title 'Execution time with 25 processors'
-set xlabel 'Rank'
-set ylabel 'Time (usec)'
+set xlabel 'Rank of the matrices'
+set ylabel 'Time ({/Symbol m}s)'
 #set xtics auto
 #set ytics auto
 set autoscale
 set xtics (2,32,64,128,256,512,1024)
 set xrange [-20:1050]
-set yrange [-1e+07:2.6e+08]
+set yrange [-1.5e+06:3.5e+07]
 set grid
 set key top left
-#set key width 1 box 1
+set key below
+#set key width 1 box 9
 #load 'teorico.gp'
-set terminal postscript enhanced color solid lw 2 "Helvetica" 13
 #set terminal postscript enhanced color solid lw 2 "Times-Roman" 20
 #set terminal postscript eps enhanced color
 set output "P25.ps"
@@ -19,6 +20,7 @@ set output "P25.ps"
 #unset colorbox
 #set style line 1 lt 2 lw 1
 #set style line 2 lt 1 lw 1
+set label "T_{25}(n) {/Symbol \273} 9042 + 72.88n + 1.270n^2+ 0.09638n^{2.8}"  at 520,3.25e+07
 
 #plot "plot_25.txt" using 5 title 'Actual time' with linespoints linetype 20 pointtype 5 pointsize 2, "plot_25.txt" using 3 title 'Theoretical estimation' linetype 3 with lines, 'plot_25.txt' using 3:5:($5-$7):($5+$7) title 'Standard deviation' with yerrorbars
 

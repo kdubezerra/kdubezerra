@@ -141,7 +141,7 @@ int main(int argc, char** argv) {
 //		fprintf (saida, "%lf\n", Total(N,N,P));
 //	}
 	
-	for (P = 1 ; P <= 16807 ; P++) {
+	for (P = 1 ; P <= 500 ; P++) {
 		fprintf (TvsP, /*"%d*/" %lf\n", Total(1024,1024,P));
 	}
 		
