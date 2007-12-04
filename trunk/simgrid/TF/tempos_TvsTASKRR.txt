@@ -1,6 +1,6 @@
-Tempo de simulacao: 47.4862
-Tempo de simulacao: 350.542
-Tempo de simulacao: 739.504
-Tempo de simulacao: 1063.48
-Tempo de simulacao: 1321.11
-Tempo de simulacao: 1667.55
+47.4862
+350.542
+739.504
+1063.48
+1321.11
+1667.55
