@@ -10,46 +10,51 @@ INC_COMM=89
 MAX_PLAT_SIZE=91
 INC_PLAT=18
 
-COMM_SIZE=225
-PLAT_SIZE=45
-TASK_SIZE=500000
-while [ $TASK_SIZE -le $MAX_TASK_SIZE ]
+
+for SCHED in RR DYN HEAP
 do
-	for SCHED in RR DYN HEAP
+	COMM_SIZE=225
+	PLAT_SIZE=45
+	TASK_SIZE=500000
+	while [ $TASK_SIZE -le $MAX_TASK_SIZE ]
 	do
+	
 		./fcpc $PLAT_SIZE 5000 $SCHED $TASK_SIZE $COMM_SIZE
 		echo $PLAT_SIZE $TASK_SIZE $COMM_SIZE $SCHED
-		./sched fc_plat.xml fc_dep_${SCHED}.xml >> tempos_TvsTASK.txt
-	done			  
-	TASK_SIZE=$((INC_TASK+TASK_SIZE))
+		./sched fc_plat.xml fc_dep_${SCHED}.xml >> tempos_TvsTASK${SCHED}.txt	
+		TASK_SIZE=$((INC_TASK+TASK_SIZE))
+
+	done
+done			  
+
+for SCHED in RR DYN HEAP
+do
+	COMM_SIZE=225
+	TASK_SIZE=22500000
+	PLAT_SIZE=1
+	while [ $PLAT_SIZE -le $MAX_PLAT_SIZE ]
+	do
+	
+		./fcpc $PLAT_SIZE 5000 $SCHED $TASK_SIZE $COMM_SIZE
+		echo $PLAT_SIZE $TASK_SIZE $COMM_SIZE $SCHED
+		./sched fc_plat.xml fc_dep_${SCHED}.xml >> tempos_TvsPLAT${SCHED}.txt
+		PLAT_SIZE=$((INC_PLAT+PLAT_SIZE))
+
+	done
 done
 
-
-COMM_SIZE=225
-TASK_SIZE=22500000
-PLAT_SIZE=1
-while [ $PLAT_SIZE -le $MAX_PLAT_SIZE ]
+for SCHED in RR DYN HEAP
 do
-	for SCHED in RR DYN HEAP
+	TASK_SIZE=22500000
+	PLAT_SIZE=45
+	COMM_SIZE=1
+	while [ $COMM_SIZE -le $MAX_COMM_SIZE ]
 	do
+	
 		./fcpc $PLAT_SIZE 5000 $SCHED $TASK_SIZE $COMM_SIZE
 		echo $PLAT_SIZE $TASK_SIZE $COMM_SIZE $SCHED
-		./sched fc_plat.xml fc_dep_${SCHED}.xml >> tempos_TvsPLAT.txt
-	done			  
-	PLAT_SIZE=$((INC_PLAT+PLAT_SIZE))
-done
+		./sched fc_plat.xml fc_dep_${SCHED}.xml >> tempos_TvsCOMM${SCHED}.txt	
+		COMM_SIZE=$((INC_COMM+COMM_SIZE))
 
-
-TASK_SIZE=22500000
-PLAT_SIZE=45
-COMM_SIZE=1
-while [ $COMM_SIZE -le $MAX_COMM_SIZE ]
-do
-	for SCHED in RR DYN HEAP
-	do
-		./fcpc $PLAT_SIZE 5000 $SCHED $TASK_SIZE $COMM_SIZE
-		echo $PLAT_SIZE $TASK_SIZE $COMM_SIZE $SCHED
-		./sched fc_plat.xml fc_dep_${SCHED}.xml >> tempos_TvsCOMM.txt
-	done			  
-	COMM_SIZE=$((INC_COMM+COMM_SIZE))
+	done
 done
