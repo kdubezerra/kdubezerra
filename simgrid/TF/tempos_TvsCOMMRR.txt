@@ -1,6 +1,6 @@
-Tempo de simulacao: 859.631
-Tempo de simulacao: 859.667
-Tempo de simulacao: 859.695
-Tempo de simulacao: 859.728
-Tempo de simulacao: 859.759
-Tempo de simulacao: 859.792
+859.631
+859.667
+859.695
+859.728
+859.759
+859.792

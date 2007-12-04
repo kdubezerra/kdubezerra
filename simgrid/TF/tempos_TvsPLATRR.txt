@@ -1,6 +1,6 @@
-Tempo de simulacao: 6603.13
-Tempo de simulacao: 1197.44
-Tempo de simulacao: 1065.91
-Tempo de simulacao: 737.828
-Tempo de simulacao: 1192.65
-Tempo de simulacao: 961.791
+6603.13
+1197.44
+1065.91
+737.828
+1192.65
+961.791
