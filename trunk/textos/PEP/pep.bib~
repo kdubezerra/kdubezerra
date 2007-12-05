@@ -1,0 +1,577 @@
+
+
+%--------------------------------------------------------------
+
+@misc{Reis-02,
+    author = {H. L. Reis and J. M. MAGALHÃES and M. P. Ruthner},
+    title = {Geração de {M}alhas {T}riangulares 2D},
+    note = {Disponível em http://www.inf.puc-rio.br/\char126 heloreis/. Acesso em: jul. 2005},
+    year = 2002
+}
+
+
+%-------------------------------------------------------------
+
+
+@TechReport{Fil-96,
+  author={M. Filipiak},
+  title ={Mesh {G}eneration},
+  type ={Technical Watch Report},
+  number={Version 1.0},
+  institution={Edinburgh Parallel Computing Centre. The University of Edinburgh},
+  year={1996}
+}
+
+%-------------------------------------------------------------
+
+@TechReport{Plas-97,
+  author={M. W. Bern and P. E. Plassmann},
+  title ={Mesh {G}eneration},
+  type ={Technical Report},
+  number={CSE-97-019},
+  institution={Pennsylvania State U., Dept. of Computer Science and Engineering},
+  year={1997}
+}
+
+%-------------------------------------------------------------
+
+@TechReport{Gal-04,
+  author={G. Galante},
+  title ={Geração e {P}articionamento de {M}alhas {N}ão {E}struturadas {O}rtogonais},
+  type ={Trabalho Individual},
+  institution={Instituto de Informática, Universidade Federal do Rio Grande do Sul, Porto Alegre},
+  year={2004}
+}
+
+%-------------------------------------------------------------
+
+@misc{Shew-99,
+  author = {Jonathan Richard Shewchuk},
+  title = {Lecture {N}otes on {D}elaunay {M}esh {G}eneration},
+  note = {Disponível em http://citeseer.ist.psu.edu/shewchuk99lecture.html. Acesso em: jul. 2005},
+  year= 1999
+}
+
+%--------------------------------------------------------------
+@TechReport{Modi-97,
+  author={Anirudh Modi},
+  title ={Unstructured {M}esh {G}eneration on {P}lanes and {S}urfaces using {G}raded {T}riangulation},
+  type ={B.Tech Project Report},
+  institution={Indian Institute of Technology, Department of Aerospace Engineering},
+  year={1997}
+}
+
+%---------------------------------------------------------------------------
+
+@Book{Mal-95,
+  author = 	 {C. R. Maliska},
+  ALTeditor = 	 {},
+  title = 	 {Transferência de {C}alor e {M}ecânica dos {F}luídos {C}omputacional},
+  publisher = 	 {Editora Livro Técnico e Científico},
+  year = 	 {1995},
+  OPTkey = 	 {},
+  OPTvolume = 	 {},
+  OPTnumber = 	 {},
+  OPTseries = 	 {},
+  OPTaddress = 	 {},
+  OPTedition = 	 {},
+  OPTmonth = 	 {},
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+
+%---------------------------------------------------------------------------
+@misc{Guedes-96,
+  author = {Andre Luiz Pires Guedes},
+  title = {Introdução à Geometria Computacional},
+  note = {Disponível em http://www.inf.ufpr.br/\char126 andre/geom/geom.html. Acesso em: jul. 2005},
+  year= 1994
+}
+
+%--------------------------------------------------------------
+
+@Book{Gropp-03,
+  author = 	 {William Gropp and Ken Kennedy and Linda Torczon and Andy White and Jack Dongarra and Ian Foster and Geoffrey C. Fox},
+  ALTeditor = 	 {},
+  title = 	 {The Sourcebook of {P}arallel {C}omputing},
+  publisher = 	 {The Morgan Kaufmann Publisher},
+  year = 	 {2003},
+  OPTkey = 	 {},
+  OPTvolume = 	 {},
+  OPTnumber = 	 {},
+  OPTseries = 	 {},
+  OPTaddress = 	 {},
+  OPTedition = 	 {},
+  OPTmonth = 	 {},
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+
+%--------------------------------------------------------------
+@Article{Gois-02,
+  author={J. P. GOIS and M. A. PITERI},
+  title ={Geração {A}utomática de {M}alhas de {E}lementos {F}initos e a {E}strutura de {D}ados {W}inged-{E}dge {M}odificada},
+  journal = 	 {Tendências em Matemática Aplicada e Computacional},
+  year = 	 {2002},
+  OPTkey = 	 {},
+  OPTvolume = 	 {},
+  OPTnumber = 	 {1},
+  pages = 	 {121-130},
+  OPTmonth = 	 {},
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+
+%---------------------------------------------------------------------------
+
+@book{Geo-92,
+ author = {P. L. George},
+ title = {Automatic Mesh Generation: Applications to Finite Element Methods},
+ year = {1992},
+ isbn = {0471930970},
+ publisher = {John Wiley \& Sons, Inc.},
+ address = {New York, NY, USA},
+ }
+
+%---------------------------------------------------------------------------
+
+@misc{Heriot-03,
+  title = {Mesh Generation Methods},
+  note = {Disponível em http://www.iecn.u-nancy.fr/\char126 magoules/pai/edinburgh/mesh/index-online.html. Acesso em: ago. 2005},
+  year = 2003
+}
+%---------------------------------------------------------------------------
+
+@misc{Tris-98,
+  author = {J. Tristano and S. Owen and S. Canann},
+  title = {Advancing Front Surface Mesh Generation in Parametric Space Using a Reimannian Surface Definition},
+  text = {submitted to the 7 th International Meshing Roundtable, Dearborn, MI, Oct 1998.},
+  year = {1998}
+}
+%---------------------------------------------------------------------------
+
+
+@misc{Malta-00,
+	author= {Lucas MALTA and Leonardo ARAÚJO},
+	title= {Triangulação de Delaunay},
+	year= {2000},
+	note= {Disponível em http://www.ead.eee.ufmg.br/\char126 renato/geocomp/delaunay. Acesso em: ago 2005}
+}
+
+%---------------------------------------------------------------------------
+
+@TechReport{ Chris-96,
+  author = {N. Chrisochoides and F. Sukup},
+  title = {Task Parallel Implementation of the BowyerWatson Algorithm},
+  type ={Technical Report},
+  institution={Cornell Theory Center},
+  year = {1996},
+  note = {Disponível em http://citeseer.ist.psu.edu/chrisochoides96task.html. Acesso em: ago 2005}
+}
+
+%---------------------------------------------------------------------------
+
+@misc{ Shew-02,
+  author = {J. Shewchuk},
+  title = {Delaunay Refinement Algorithms for Triangular Mesh Generation},
+  year = {2002},
+  note = {Disponível em http://citeseer.ist.psu.edu/shewchuk01delaunay.html. Acesso em: ago 2005} 
+}
+
+%---------------------------------------------------------------------------
+
+@article{ li-01,
+    author = {Xiang-Yang Li},
+    title = {Generating Well-Shaped d -dimensional Delaunay Meshes},
+    journal = {Lecture Notes in Computer Science},
+    volume = {2108},
+    pages = {91--??},
+    year = {2001},
+    note = {Disponível em http://citeseer.ist.psu.edu/594735.html. Acesso em: ago 2005}
+}    
+
+%---------------------------------------------------------------------------
+
+@misc{ Owen-04,
+  author = {Steve Owen},
+  title = {An Introduction to Unstrutured Mesh Generation},
+  year = {2004},
+  note = {Disponível em http://ima.udg.es/\char126 sellares/ComGeo/Delaunay.ppt. Acesso em: ago 2005} }
+
+%-----------------------------------------------------------------------------
+
+@misc{ Fang-93,
+  author = {Tsung-Pao Fang and Les A. Piegl},
+  title = {Delaunay Triangulation Using a Uniform Grid},
+  year = {1993},
+  note = {Disponível em http://csdl2.computer.org/persagen/DLAbsToc.jsp?resourcePath=/dl/mags/cg/
+\&toc=comp/mags/cg/1993/03/g3toc.xml\&DOI=10.1109/38.210490. Acesso em: ago 2005} 
+}
+
+
+%---------------------------------------------------------------------------
+
+@misc{ Cetin-00,
+  author = {Nurhan Cetin},
+  title = {Mesh},
+  year = {2000},
+  note = {Disponível em http://www.inf.ethz.ch/personal/cetin/thesis/
+  thesis/thesis.html. Acesso em: ago 2005} 
+}
+
+%---------------------------------------------------------------------------
+
+@misc{ CGAL-04,
+  author = {CGAL Project},
+  title = {CGAL - User and Reference Manual},
+  year = {2004},
+  note = {Disponível em http://www.cgal.org/Manual/doc\_html/cgal\_manual/title.html. Acesso em: ago 2005} 
+}
+
+%---------------------------------------------------------------------------
+
+@TechReport{Barth-95,
+  author={Timothy J. Barth},
+  title ={Aspects of Unstructured Grid And Finite-Volumes Solvers for The Euler And Navier-Stokes Equations},
+  type ={Technical Report},
+  institution={Computational Technology Branch - NASA Ames Research Center},
+  year={1995}
+}
+
+%---------------------------------------------------------------------------
+
+@TechReport{Monte-97,
+  author={Anselmo Antunes Montenegro},
+  title ={Investigação de novos Critérios para Inserção de Pontos em Método para Simplificiação de Modelos de Terreno através de Refinamento},
+  type ={Dissertação de Mestrado},
+  institution={Departamento de Informática - Pontifícia Universidade Católica do Rio de Janeiro},
+  year={1997}
+}
+
+%---------------------------------------------------------------------------
+
+@misc{Cho-03,
+  author = {W. Cho and N. M. Patrikalakis},
+  title = {Computational Geometry},
+  year = {2003},
+  institution= {Massachusetts Institute of Technology}
+}
+
+
+@misc{Shene-03,
+  author = {C. K. Shene},
+  title = {Introduction to Computing with Geometry Notes},
+  year = {2003},
+  institution= {Michigan Technological University},
+  note = {Disponível em http://www.cs.mtu.edu/~shene/COURSES/cs3621/NOTES/. Acesso em: set 2003}
+}
+
+@misc{Noma-00,
+  author = {Alexandre Noma},
+  title = {Estrutura de Dados para o Problema do Fecho Convexo Tridimensional},
+  year = {2000},
+  institution= {Universidade de São Paulo},
+  note = {Disponível em http://www.ime.usp.br/~coelho/geocomp2000/projetos/noma/. Acesso em: set 2003}
+}
+
+%---------------------------------------------------------------------------
+
+@article{Neto-00,
+        title = {Um Algoritmo para Geração de Malha Não-estruturada Tetraédrica para Regiões Arbitrárias},
+	author = {Joaquim B. Cavalcante Neto and Marcelo T. Carvalho and Luiz F. Martha},
+        journal = {21st Iberian Latin-American Congress on Computational Methods in Engineering,  Rio de Janeiro},
+        year = {2000},
+        volume = {3},
+        number = {1},
+	pages = {11.1-11.21},
+	OPTaddress = {},
+	PTmonth = {},								
+}
+
+%---------------------------------------------------------------------------
+
+@TechReport{Souza-04,
+  author={Daniel Lima Sousa},
+  title ={Geração Adaptativa de Malha Baseada em Erro de Curvatura},
+  type ={Dissertação de Mestrado},
+  institution={Universidade Federal do Ceará},
+  year={2004}
+}
+
+%---------------------------------------------------------------------------
+
+@TechReport{Shew-96,
+  author={Jonathan Richard Shewchuk},
+  title ={Triangle: {E}ngineering a 2D {Q}uality {M}esh {G}enerator and {D}elaunay {T}riangulator},
+  type ={},
+  institution={School of Computer Science - Carnegie Mellon University },
+  year={1996}
+}
+
+%--------------------------------------------------------------
+
+@misc{Freitas-05,
+    author = {Eduardo Garcia de Freitas},
+    title = {Geometria Computacional},
+    note = {Disponível em http://www.ime.usp.br/~freitas/gc/index.html. Acesso em: set. 2005},
+    year = 2005
+}
+
+%---------------------------------------------------------------------------
+
+@TechReport{Rypl-02,
+  author={Daniel Rypl},
+  title ={Sequential and Parallel Generation of Unstructured 3D Meshes},
+  type ={},
+  institution={Department of Structural Mechanics, Faculty of Civil Engineering Czech Technical University in Prague },
+  year={2002}
+}
+
+%--------------------------------------------------------------
+
+@book{Soni-03,
+ author = {Bharat K. Soni and Joe F. Thompson},
+ title = {Sourcebook of Parallel Computing},
+ year = {2003},
+ publisher = {Morgan Kauffman Publishing},
+}
+
+%---------------------------------------------------------------------------
+
+@TechReport{Lacassa-05,
+  author={Alexandre De Lacassa and Antonio Castelo Filho},
+  title ={Refinamento e Simplificação de Malhas Isotrópicas e Anisotrópicas},
+  type ={},
+  institution={Instituto de Ciências Matemáticas e de Computação, ICMC, USP},
+  year={2005}
+}
+
+%--------------------------------------------------------------
+
+@misc{Owen-05,
+    author = {Steven J. Owen},
+    title = {A Survey of Unstructured Mesh Generation Technology},
+    note = {Disponível em http://www.andrew.cmu.edu/user/sowen/survey/index.html. Acesso em: out. 2005},
+    year = 2005
+}
+
+%---------------------------------------------------------------------------
+
+@TechReport{Ruppert-94,
+  author={Jim Ruppert},
+  title ={A Delaunay Refinement Algorithm for Quality 2-Dimensional Mesh generation},
+  type ={},
+  institution={NASA Ames Research Center},
+  year={1994}
+}
+
+%---------------------------------------------------------------------------
+
+@misc{Open-05,
+    title = {OpenGL High Performance 2D/3D Graphics},
+    note = {Disponível em http://www.opengl.org/. Acesso em: nov. 2005},
+    year = 2005
+}
+
+%---------------------------------------------------------------------------
+
+@misc{Gmsh-05,
+    author={Christophe Geuzaine and Jean-François Remacle},
+    title = {Gmsh: {A} {T}hree-dimensional {F}inite {E}lement {M}esh {G}enerator with {B}uilt-in {P}re- and {P}ost-processing {F}acilities},
+    note = {Disponível em http://www.geuz.org/gmsh/. Acesso em: nov. 2005},
+    year = 2005
+}
+
+
+%---------------------------------------------------------------------------
+
+@misc{GNU-05,
+    title = {GNU General Public License},
+    note = {Disponível em http://www.gnu.org/copyleft/gpl.html. Acesso em: nov. 2005},
+    year = 2005
+}
+
+%-------------------------------------------------------------
+
+@TechReport{Rizzi-04,
+  author={Rogério Luis Rizzi},
+  title ={UnHIDRA: {M}odelo {C}omputacional {P}aralelo e {T}ridimensional para a {H}idrodinâmica e o {T}ransporte {E}scalar de {S}ubstâncias.},
+  type ={Relatório Técnico},
+  year={2004}
+}
+
+%-------------------------------------------------------------
+
+@article{Casulli-00,
+        author = {V. Casulli and R. A. Walters},
+	      title = {An Unstructured Grid, Three-Dimensional Model based on the Shallow Water Equations.},
+        journal = {International journal for numerical methods in fluids},
+        year = {2000},
+        volume = {3},
+        number = {},
+	      pages = {331-348},
+	      OPTaddress = {},
+      	PTmonth = {},								
+}
+									
+
+%http://www.cs.berkeley.edu/~jrs/mesh
+%http://www.openmesh.org/
+%http://www.flipcode.com/articles/article_halfedge.shtml
+%http://ezekiel.vancouver.wsu.edu/~cs442/lectures/winged-edge/winged-edge/
+
+
+
+%--------------------------------------------------------------------------------------------------------
+
+%[3] BRENNER, D. W. Empirical potential for hydrocarbons for use in simulating the chemical vapor deposition of diamond films. Phys. Rev. B, v. 42, p. 9458-9471. Errata: Phys. Rev. B, v. 46, p. 1948, 1992. 
+%[5] DEVRIES, R. C, BADZIAN, R. R. Diamond Synthesis: the Russian Connection. MRS Bulletin, v. 21, p.65-75,1996. 
+%[6] DORNELES, R.V.; RIZZI, R. L.; ZEFERINO, C.A.; DIVERIO, T. A.; NAVAUX, P.O.A.; SUSIN, A.A.; BAMPI, S. A PC Cluster Implementation of a Mass Transport Two Dimensional Model. SBAC-PAD – Symposium on Computer Architecture and High Performance Computing, 2000, São Pedro, SP. 2000. p. 17-24. 
+%[7] DORNELES, R. V.; RIZZI, R.L.; DIVERIO, T.A.; NAVAUX, P.O.A. A h-refined Krylov-Schwarz Solution for Hydrodynamics and Mass Transport in a PC Cluster. SBAC-PAD – Symposium on Computer Architecture and High Performance Computing, 2001, Pirinópolis, GO. 2001. 
+%[8] DORNELES, R. V., DIVERIO, T. A. Particionamento de Domínio e Balanceamento de Carga. Porto Alegre RS – Brasil: Universidade Federal do Rio Grande do Sul, 2003. (Tese de Doutorado). 
+%[9] DORNELES, R. V.; RIZZI, R.L.; DIVERIO, T.A.; NAVAUX, P.O.A. Dynamic Load Balancing in PC Clusters: An Application to a Multi-Physics Model. SBAC-PAD – Symposium on Computer Architecture and High Performance Computing, 2003, São Paulo, SP. 2003. 
+%[10] DORNELES, R.V., RIZZI, R. L., MARTINOTTO, A. L., PICININ, D., NAVAUX, P. O. A.  DIVERIO, T. A. Parallel Computational Model with Dynamic Load Balancing in PC Clusters. Vecpar. 2004.  Valencia, Espanha, 2004. (A ser publicado) 
+%[11] FOSTER, I. Designing and Building Parallel Programs. 1. ed. Reading, USA: Addison-Wesley, 1994. 381p. 
+%[12] FOSTER, I., KESSELMAN, C. (Eds). The Grid: blueprint for a new computing infrastructure. San Francisco., CA: Morgan Kaufmann, 1999. 
+%[14] High Performance Computational Chemistry Group, NWChem, A Computational Chemistry Package for Parallel Computers, Version 4.0.1 (2001), Pacific Northwest National Laboratory, Richland, Washington 99352, USA. 
+%[15] MARTINOTTO, A. L., DIVERIO, T. A. Resolução de Sistemas de Equações Lineares através de Métodos de Decomposição de Domínio. Porto Alegre RS – Brasil: Universidade Federal do Rio Grande do Sul, 2004. (Dissertação de Mestrado). 
+%[16] MARTINOTTO, A. L., DORNELES, R. V. Paralelização de Métodos Numéricos de Resolução de Sistemas de Equações Utilizando MPI e Threads. Caxias do Sul RS - Brasil: Universidade de Caxias do Sul, 2001. (Trabalho de Conclusão de Curso). 
+%[17] PICININ, D.; MARTINOTTO, A. L.; RIZZI, R. L.; DORNELES, R. V.; DIVERIO,T. A.; NAVAUX, P. O. A. Parallelizing Conjugate Gradiente Method for Clusters Using MPI and Threads. PDPTA – International Conference on Parallel and Distributed Processing Techniques and Applications. Las Vegas, Estados Unidos, 2002. 
+%[18] PICININ, D.; MARTINOTTO, A. L.; HOLBIG, C. A.; RIZZI, R. L.; DORNELES, R. V.; DIVERIO, T. A.; NAVAUX, P. O. A. Parallelization of Krylov's Subspace Methods in Multiprocessor PC Clusters. PARCO2003 – International Conference on Parallel Computing, 2003, 2003, Dresden, Germany. 2003. 
+%[19] RIZZI, R. L., DORNELES, R. V., DIVERIO, T. A., NAVAUX, P. A., Fluvial Flowing of Guaíba River Estuary: A Parallel Solution for the Shallow Water Equations Model. Vecpar. 2000. Porto, Portugal, 2002. P.885-896. 
+%[20] RIZZI, R. L., DORNELES, R. V., DIVERIO, T. A., NAVAUX, P. A., Parallel Solution in PC Clusters by the Schwarz Domain Decomposition for Three-dimensional Hydrodynamics Models. Vecpar. 2002. Porto, Portugal, 2002. 
+%[21] TRENTIN, R., PEROTTONI, C. A., DORNELES, R. V.  Grid Computing. Caxias do Sul RS - Brasil: Universidade de Caxias do Sul, 2001. (Trabalho de Conclusão de Curso). 
+%[22] WOOTEN, F., WEAIRE, D. Modeling tetrahedrally bonded random networks by computer, Solid State Physics, V. 40, p.1-42, 1987. 
+
+
+
+@article{Barkema-00,
+  title = {High-quality continuous random networks},
+  author = {Barkema, G. T. and Mousseau, Normand },
+  journal = {Phys. Rev. B},
+  volume = {62},
+  number = {8},
+  pages = {4985--4990},
+  numpages = {5},
+  year = {2000},
+  month = {Aug},
+  doi = {10.1103/PhysRevB.62.4985},
+  publisher = {American Physical Society}
+}
+
+		
+@article{Tu-98,
+        author = {Yuhai Tu and J. Tersoff and G. Grinstein and David Vanderbilt},
+	      title = {Properties of a Continuous-Random-Network Model for Amorphous Systems},
+        journal = {Physical Review Letters},
+        year = {1998},
+        volume = {81},
+        number = {22},
+	      pages = {4899-4902},
+	      OPTaddress = {},
+      	PTmonth = {},								
+}
+
+@book{Allen-92,
+ author = {M. P. Allen and D. J. Tildesley},
+ title = {Computer simulation of liquids},
+ year = {1992},
+ publisher = {Oxford: Clarendon Press},
+}
+
+@article{Car-85,
+        author = {R. Car and M. Parrinello},
+	      title = {Unified approach for molecular-dynamics and density-functional theory},
+        journal = {Physical Review Letters},
+        year = {1985},
+        volume = {55},
+        number = {},
+	      pages = {2471-2474},
+	      OPTaddress = {},
+      	PTmonth = {},								
+}
+
+@book{Frenkel-96,
+ author = {D. Frenkel and B. Smit},
+ title = {Understanding molecular simulation},
+ year = {1996},
+ publisher = {San Diego: Academic Press},
+}
+
+
+@TechReport{Lei-03,
+  author={Ming Lei},
+  title ={Modeling Non-Crystalline Networks},
+  type ={Tese de Doutorado},
+  year={2003}
+}
+
+@article{Wooten-85,
+        author = {F. Wooten and K. Winer and D. Weaire},
+	      title = {Computer Generation of Structural Models of Amorphous Si e Ge},
+        journal = {Physical Review Letters},
+        year = {1985},
+        volume = {54},
+        number = {13},
+	      pages = {1392-1395},
+	      OPTaddress = {},
+      	PTmonth = {},								
+}
+
+@article{Wooten-87,
+        author = {F. Wooten and D. Weaire},
+	      title = {Modeling Tetrahedrally Bounded Random Networks by Computer},
+        journal = {Solid State Physical},
+        year = {1987},
+        volume = {40},
+        number = {},
+	      pages = {1-42},
+	      OPTaddress = {},
+      	PTmonth = {},								
+}
+
+
+@book{Riedel-00,
+ author = {Ralf Riedel},
+ title = {Handbook of ceramic hard materials},
+ year = {2000},
+ publisher = {Wiley-VCH},
+}
+
+
+@article{Perottoni-02,
+        author = {C. A. Perottoni and J. A. H. Jornada},
+	      title = {First-principle calculation of the structure and elastic properties of a 3D-polymerized fullerite},
+        journal = {Phys. Rev. B},
+        year = {2002},
+        volume = {65},
+        number = {},
+	      pages = {},
+	      OPTaddress = {},
+      	PTmonth = {},								
+}
+
+@article{Perottoni-01,
+        author = {C. A. Perottoni and J. A. H. Jornada},
+	      title = {The carbon analogues of type-I silicon clatrates},
+        journal = {J. Phys.: Condens. Matter},
+        year = {2001},
+        volume = {13},
+        number = {},
+	      pages = {5981-5998},
+	      OPTaddress = {},
+      	PTmonth = {},								
+}
+
+@article{Yan-04,
+        author = {C. Yan and H. Mao and W. L. Qian and Y. Zhao, R. J. Hemley},
+	      title = {Ultrahard diamond single crystals from chemical vapor deposition},
+        journal = {Phys. Stat. Sol.},
+        year = {2004},
+        volume = {201},
+        number = {4},
+	      pages = {R25-R27},
+	      OPTaddress = {},
+      	PTmonth = {},								
+}
+

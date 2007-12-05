@@ -1,0 +1,383 @@
+%
+% exemplo genérico de uso da classe iiufrgs.cls
+% $Id: iiufrgs.tex,v 4.6 2003/11/21 22:36:13 avila Exp $
+%
+\documentclass[pep]{iiufrgs}
+% um tipo específico de monografia pode ser informado como parâmetro opcional:
+%\documentclass[tese]{iiufrgs}
+% monografias em inglês devem receber o parâmetro `english':
+%\documentclass[diss,english]{iiufrgs}
+% a opção `openright' pode ser usada para forçar inícios de capítulos
+% em páginas ímpares
+% \documentclass[openright]{iiufrgs}
+% para gerar uma versão somente-frente, basta utilizar a opção `oneside':
+% \documentclass[oneside]{iiufrgs}
+\usepackage[T1]{fontenc}        % pacote para conj. de caracteres correto
+\usepackage[latin1]{inputenc}   % pacote para acentuação
+\usepackage{graphicx}           % pacote para importar figuras
+\usepackage{times}              % pacote para usar fonte Adobe Times
+%\usepackage{mathptmx}          % p/ usar fonte Adobe Times nas fórmulas
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+
+
+%\renewcommand{\listalgorithmname}{Lista de Algoritmos}
+
+%
+% Informações gerais
+%
+\title{Paralelização do Algorítmo de Geração de Redes Aleatórias Contínuas \\ (Título Provisório)}
+
+\author{Romano}{Gustavo}
+% alguns documentos podem ter varios autores:
+%\author{Flaumann}{Frida Gutenberg}
+%\author{Flaumann}{Klaus Gutenberg}
+
+% orientador e co-orientador são opcionais (não diga isso pra eles :))
+\advisor[Prof.~Dr.]{Maillard}{Nicolas}
+%\coadvisor[Prof.~Dr.]{Knuth}{Donald Ervin}
+
+% a data deve ser a da defesa; se nao especificada, são gerados
+% mes e ano correntes
+%\date{maio}{2001}
+
+% o nome do curso pode ser redefinido (ex. para TCs)
+%\course{Curso de Especialização em Cachaça}
+
+% o local de realização do trabalho pode ser especificado (ex. para TCs)
+% com o comando \location:
+%\location{Itaquaquecetuba}{SP}
+
+% itens individuais da nominata podem ser redefinidos com os comandos
+% abaixo:
+% \renewcommand{\nominataReit}{Prof\textsuperscript{a}.~Wrana Maria Panizzi}
+% \renewcommand{\nominataReitname}{Reitora}
+% \renewcommand{\nominataPRE}{Prof.~Jos{\'e} Carlos Ferraz Hennemann}
+% \renewcommand{\nominataPREname}{Pr{\'o}-Reitor de Ensino}
+% \renewcommand{\nominataPRAPG}{Prof\textsuperscript{a}.~Joc{\'e}lia Grazia}
+% \renewcommand{\nominataPRAPGname}{Pr{\'o}-Reitora Adjunta de P{\'o}s-Gradua{\c{c}}{\~a}o}
+% \renewcommand{\nominataDir}{Prof.~Philippe Olivier Alexandre Navaux}
+% \renewcommand{\nominataDirname}{Diretor do Instituto de Inform{\'a}tica}
+% \renewcommand{\nominataCoord}{Prof.~Carlos Alberto Heuser}
+% \renewcommand{\nominataCoordname}{Coordenador do PPGC}
+% \renewcommand{\nominataBibchefe}{Beatriz Regina Bastos Haro}
+% \renewcommand{\nominataBibchefename}{Bibliotec{\'a}ria-chefe do Instituto de Inform{\'a}tica}
+% \renewcommand{\nominataChefeINA}{Prof.~Jos{\'e} Valdeni de Lima}
+% \renewcommand{\nominataChefeINAname}{Chefe do \deptINA}
+% \renewcommand{\nominataChefeINT}{Prof.~Leila Ribeiro}
+% \renewcommand{\nominataChefeINTname}{Chefe do \deptINT}
+
+
+%\renewcommand{\ALG@name}{Algoritmo}
+
+
+% A seguir são apresentados comandos específicos para alguns
+% tipos de documentos.
+
+% Relatório de Pesquisa [rp]:
+% \rp{123}             % numero do rp
+% \financ{CNPq, CAPES} % orgaos financiadores
+
+% Trabalho Individual [ti]:
+% \ti{123}     % numero do TI
+% \ti[II]{456} % no caso de ser o segundo TI
+
+% Trabalho de Conclusão [tc]:
+% além de definir explicitamente o nome do curso (\course) e o local
+% de realização (\location), é necessário redefinir a nominata,
+% pois as informações necessárias dependem do curso. Ex.:
+%\renewcommand{\nominata}{
+%        UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL\\
+%        Reitora: Prof\textsuperscript{a}.~Wrana Maria Panizzi\\
+%        Pró-Reitor de Ensino: Prof.~José Carlos Ferraz Hennemann\\
+%        Diretor do Instituto de Informática: Prof.~Philippe Olivier Alexandre Navaux\\
+%        Coordenador do curso: Prof.~Seu Creysson\\
+%        Bibliotecária-chefe do Instituto de Informática: Beatriz Regina Bastos Haro
+%}
+
+% Monografias de Especialização [espec]:
+% \espec{Redes e Sistemas Distribuídos}      % nome do curso
+% \coord[Profa.~Dra.]{Weber}{Taisy da Silva} % coordenador do curso
+% \dept{INA}                                 % departamento relacionado
+
+%
+% palavras-chave
+% iniciar todas com letras minúsculas, exceto no caso de abreviaturas
+%
+\keyword{CRN}
+\keyword{redes aleatórias contínuas}
+\keyword{paralelização}
+%
+% inicio do documento
+%
+\begin{document}
+
+% folha de rosto
+% às vezes é necessário redefinir algum comando logo antes de produzir
+% a folha de rosto:
+% \renewcommand{\coordname}{Coordenadora do Curso}
+\maketitle
+
+% dedicatoria
+%\clearpage
+%\begin{flushright}
+%\mbox{}\vfill
+%{\sffamily\itshape
+%``Se eu enxerguei mais longe,\\
+% foi porque me apoiei nos ombros de gigantes.''\\}--- \textsc{Sir~Isaac Newton}
+%\end{flushright}
+%
+%% agradecimentos
+%\chapter*{Agradecimentos}
+%Agradeço a todos\ldots
+
+% sumario
+\tableofcontents
+
+% lista de abreviaturas e siglas
+% o parametro deve ser a abreviatura mais longa
+%\begin{listofabbrv}{SPMD}
+%		\item[CRN] Continuous Random Networks (Redes Aleatórias Contínuas)
+%		\item[WWW] Wooten-Winer-Weaire
+%		\item[DM] Dinâmica Molecular
+%\end{listofabbrv}
+
+% idem para a lista de símbolos
+%\begin{listofsymbols}{$\alpha\beta\pi\omega$}
+%       \item[$\sum{\frac{a}{b}}$] Somatório do produtório
+%       \item[$\alpha\beta\pi\omega$] Fator de inconstância do resultado
+%\end{listofsymbols}
+
+% lista de figuras
+%\listoffigures
+
+% lista de tabelas
+%\listoftables
+
+% resumo na língua do documento
+\begin{abstract}
+
+
+Esse trabalho propõe a paralelização do algoritmo proposto pelo Instituto de Física da UFRGS para geração de redes aleatórias contínuas (CRN - Continuous Randon Network). Esse algoritmo, através da geração de redes com hibridização mista $sp^2$ e $sp^3$, pretende encontrar novos materiais cuja dureza e módulo volumétrico sejam significativamente superiores aos do diamante superior à do diamante. O objetivo desse trabalho, além de diminuir significativamente o tempo de geração dessas redes (que hoje esta na casa de semanas), é testar e comparar diferentes algoritmos e ferramentas de paralelização. Dentre os algoritmos a serem testados está o algoritmo genético e dentre as ferramentas estão o Open-MP, o MPI e o MPI-2.
+\end{abstract}
+
+% resumo na outra língua
+% como parametros devem ser passados o titulo e as palavras-chave
+% na outra língua, separadas por vírgulas
+%\begin{englishabstract}{English Title}{English KeyWords}
+%
+%\end{englishabstract}
+
+% aqui comeca o texto propriamente dito
+
+% introducao
+\chapter{Introdução}
+
+Materiais amorfos têm sido intensivamente estudados por causa de sua importância tecnológica. Devido à complexidade desses modelos, estudos teóricos têm sido realizados principalmente sobre simulação numérica. O método padrão para esse estudo é a Dinâmica Molecular (DM), onde átomos são representados por partículas pontuarias com interações entre si, tendo as equações de movimento integradas numericamente \cite{Tu-98}. 
+
+Embora o método de DM seja bastante usado, ele é inerentemente pouco eficiente para materiais formados por redes fortes pois existe uma grande barreira de energia para que seja feita a quebra e reconstrução de ligações nesse sistema. Nesse método, uma maior parte do tempo de simulação é gasta na busca por vibrações locais, ocasionadas por troca de ligações que acontecem com pouca freqüência \cite{Tu-98}.
+
+Uma alternativa a esse método é o uso de redes aleatórias contínuas (CRN - do inglês Continuous Randon Network). Essas têm sido utilizadas com sucesso para a descrição de semicondutores amorfos desde meados da década de 1930 \cite{Barkema-00, Lei-03}. O interesse neste modelo reside em sua simplicidade, uma vez que a única imposição consiste em que os átomos cumpram com certos requisitos de conectividade. Porém, o estudo experimental é extremamente dificultado pela impossibilidade de se exercer um controle rigoroso sobre vários parâmetros físicos importantes, incluindo o grau de hibridização, a distribuição espacial dos átomos e a conectividade da rede em longo alcance. Esses parâmetros, no entanto podem ser controlados em simulações computacionais, permitindo assim inferir acerca da influência dos mesmos sobre as propriedades mecânicas de CRNs. Esse tipo de simulação provê informações que podem auxiliar na interpretação de experimentos reais, além de permitir estudar o comportamento da matéria em condições difíceis de realizar experimentalmente \cite{Allen-92,Car-85,Frenkel-96}.
+%Esta abordagem constitui uma excelente alternativa para a construção de modelos estruturais de sólidos amorfos, que possam mais tarde ser utilizados como ponto de partida para o cálculo de propriedades físicas.
+
+O algoritmo mais popular para geração desse tipo de redes é o algoritmo Wooten-Winer-Weaire (WWW) \cite{Wooten-85,Wooten-87}. A partir dele foram gerados de forma satisfatória modelos com alguns milhares de átomos. Basicamente, o algoritmo WWW inicia com uma estrutura periódica cúbica do diamante. Em seguida, são retirados alguns átomos e refeitas as ligações. Por fim, a estrutura é aleatoriamente alterada através da transposição das ligações (Figura \ref{fig:WWW}) e relaxação da estrutura \cite{Barkema-00}. Embora o algoritmo WWW gere bons modelos de átomos, ele funciona apenas para modelos cujos átomos tenham hibridização $sp^3$.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.50\textwidth]{imagens/www.eps}
+ \caption{Troca de ligações no algoritmo WWW. Esquerda: configuração inicial; Direita: configuração após a troca}
+ \label{fig:WWW}
+\end{figure}
+
+ Na tentativa de busca de materiais de elevada dureza, os quais desempenham um importante papel na indústria moderna \cite{Riedel-00}, o Instituto de Física da UFRGS propôs a geração de redes aleatórias contínuas formadas de átomos de carbono com hibridização mista $sp^3$/$sp^2$. Esta redes podem propor novos material (real ou hipotético) cuja dureza e módulo volumétrico sejam significativamente superiores aos do diamante. Materiais deste tipo ainda não foram propostos pela literatura científica, embora sejam de grande importância \cite{Perottoni-01,Perottoni-02,Yan-04}.
+
+O algoritmo proposto para gerar essas redes consiste em posicionar de forma aleatória, em uma região do espaço, uma certa quantidade de átomos com hibridização $sp^3$ e $sp^2$. Após isso, através do método de \textit{Simulated Annealing}, altera-se aleatoriamente as posições dos átomos até convergir em um sistema estável que atenda as restrições impostas.
+
+A cada mudança de posição, cálculos locais são realizados para verificar se a nova posição do átomo é aceitável ou não. Para realizar esse cálculo, leva-se em conta o número de ligações, a distância e o ângulo dos átomos que esse deslocamento criou. Se o movimento não for aceito, o átomo volta a sua posição anterior. No argoritmo \ref{alg:crn} pode ser visto um esboço desse processo.
+
+Pode-se ver na equação \ref{equ:Hib} o cálculo do custo da hibridização, onde N é o número de tipos de hibridizações ($sp^3, sp^2 ...$), $C_i$ o custo de cada hibridização errada, $N_i$ o número de átomos com a hibridização $i$ e $N_{0_i}$ o número de átomos esperados com a hibridização $i$. Na equação \ref{equ:Ene} pode-se ver o cálculo da energia em função da distância e o ângulo das ligações, onde $k_r$ é o custo de cada distância irregular, $r_{ij}$ é a distância dos átomos $i$ e $j$, $r_{0_{ij}}$ é a distância esperada dos átomos $i$ e $j$, $K_a$ é o custo de cada ângulo irregular, $\theta_{ijk}$ é o ângulo formado pelos átomos $i$, $j$ e $k$ e $\theta_{0_{i}}$ é o ângulo esperado.
+
+\begin{equation}
+	\label{equ:Hib}
+	 Hib=\frac{1}{N}\sum_{i=1}^NC_i(N_i-N_{0_i})^2 
+\end{equation}
+
+\begin{equation}
+	\label{equ:Ene}
+	 Energ=\sum_{r_{ij}<r_{max}}[k_r(r_{ij}-r_{0_{ij}})^2+\sum_{r_{ik}<r_{max}}K_a(\theta_{ijk}-\theta_{0_i})^2] 
+\end{equation}
+
+
+
+
+O sistema atual foi desenvolvido em linguagem $C$ para funcionar em uma única máquina monoprocessada. Atualmente uma simulação com um universo de $128$ átomos demora em média de uma semana para ser realizada. Para um bom resultado e maiores chances de encontrar algum material com as propriedades desejadas, novas simulações devem ser realizadas com um universo superior a $1000$ átomos. Porém, com o sistema atual esse tipo de simulação é inviável, pois seriam necessários meses para se obter um resultado, o qual poderia ainda não ser o desejado.
+
+A proposta do trabalho consiste em buscar formas de minimizar o tempo de execução dessas tarefas.
+
+\chapter{Objetivo}
+
+Os principais objetivos desse trabalho são:
+
+\begin{enumerate}
+	\item Gerar uma versão paralela para o algoritmo de geração de redes aleatórias de carbono a fim de minimizar o tempo de geração de cada rede;
+
+Para paralelizar, as células serão distribuídas entre vários processos. A problemática da paralelização se encontra nas linhas \ref{desloc_ini} e \ref{desloc_fim} do algoritmo \ref{alg:crn} onde a movimentação do átomo pode implicar na sua mudança para uma célula que esteja sendo calculada por um outro processo.
+	\item Testar/comparar diferentes ferramentas de paralelização, entre elas, Open-MP, MPI e MPI-2;
+
+Tentar-se-á tirar o máximo de proveito de cada ferramenta verificando em cada parte da aplicação quais podem ser utilizadas.
+
+	\item Comparar diversos algoritmos de paralelização;
+
+	Como na parte inicial da simulação a temperatura do \textit{Simulated Annealing} estará elevada, muitas alterações de posições serão aceitas, causando uma grande quantidade de mudanças de células. Nessa etapa, pretende-se utilizar algoritmos genéticos, para tentar acelerar a convergência e minimizar os danos causados pelas trocas de células.
+
+	\item Comparar diversas distribuições das células entre os processos;
+
+	Para tirar maior proveito do paralelismo, tenta-se-á diferentes distribuições das células, prevendo-se a possibilidade de sobreposições (célula presente em mais de um processo) para que um maior número de processos possa ser utilizado.
+
+	\item Prover uma aplicação que possa ser utilizada para testar novos recursos criados pelo grupo \cite{Cera-06}.
+\end{enumerate}
+
+\begin{algorithm}
+\caption{Algoritmo para geração de CRN}
+\begin{algorithmic}[1]
+\label{alg:crn}
+\FOR{$i=0$ to $STEPS$}
+\STATE{at = atomos[rand(NATM)];}\COMMENT{\textit{pega um átomo aleatóriamente}}
+\STATE{E\_local = local\_energy(at);}\COMMENT{\textit{calcula a energia local da célula onde o átomo está inserido}}
+\STATE{Hibri = hibri\_cost(at);}\COMMENT{\textit{calcula o custo de hibridização local da célula onde o átomo está inserido}}
+\STATE{at$\rightarrow$x = at$\rightarrow$x + randf();}\COMMENT{\textit{desloca o átomo na direção x}}
+\label{desloc_ini}
+\STATE{at$\rightarrow$y = at$\rightarrow$y + randf();}\COMMENT{\textit{desloca o átomo na direção y}}
+\STATE{at$\rightarrow$z = at$\rightarrow$z + randf();}\COMMENT{\textit{desloca o átomo na direção z}}
+\label{desloc_fim}
+\STATE{E\_local\_new = local\_energy(at);}\COMMENT{\textit{calcula a nova energia local da célula onde o átomo está inserido}}
+\STATE{Hibri\_new = hibri\_cost(at);}\COMMENT{\textit{calcula o novo custo de hibridização local da célula onde o átomo está inserido}}
+
+\STATE{dE = E\_new - E\_old;}\COMMENT{\textit{calcula a variação de energia}}
+\STATE{dH = Hibri\_new - Hibri\_old;}\COMMENT{\textit{calcula a variação do custo de hibridização}}
+		
+		
+\STATE{dfc = (1.0f - COST\_HIBRI)*(dE) + COST\_HIBRI*(dH);}\COMMENT{\textit{calcula a variação da função custo}}
+
+\IF{aceita(dfc)}%\COMMENT{\textit{verifica a aceitação de acordo com a temperatura atual}}
+\STATE{atualiza\_posicao();}\COMMENT{\textit{atualiza a posição do átomo}}
+\ELSE
+\STATE{desfaz\_movimento();}\COMMENT{\textit{volta átomo para posição anterior}}
+\ENDIF
+
+\STATE{temperatura = temperatura * 0.98}\COMMENT{\textit{diminui a temperatura}}
+
+
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\chapter{Metodologia}
+
+As etapas para o desenvolvimento desse trabalho serão:
+
+\begin{enumerate}
+	\item encontrar maneiras de otimizar essa implementação seqüencial. 
+	
+	\item Buscar formas de paralelizar a aplicação tentando diminuir ainda mais o tempo de execução.
+ Primeiramente essa paralização será feita pela adição da primitivas OpenMP \cite{Chandra-00} no programa seqüencial para tentar explorar o paralelismo nas máquinas multiprocessadas e em novas máquinas multi-core. Essas primitivas serão introduzidas na etapa de cálculo local, que é a etapa que consome mais tempo de processamento e pode facilmente ser paralalelizada através da primitiva ``\textit{parallel for}''. 
+Espera-se, com essa alteração, uma diminuição no tempo de execução, porém, como apenas pequenas partes do programa poderão ser paralelizadas e as máquinas disponíveis para simulação tem no máximo quatro processadores, acredita-se que o tempo de execução continuará ainda alto.%, necessitando assim, uma outra etapa de paralelização.
+	\item Buscar formas de paralelizar a aplicação através do uso da biblioteca de troca de mensagens MPI \cite{Pacheco-96,Snir-98} (\textit{Message Passing Interface}). Essa etapa tem duas fases previstas:
+				
+\begin{enumerate}
+	\item Na primeira, será realizada uma paralelização de forma simples, usando primitivas básicas do MPI. Nessa fase as redes serão geradas com o auxílio de algoritmos genéticos para tentar convergir mais rapidamente em um estado estável.
+	\item Na segunda, além da utilização das primitivas básicas, tentar-se-á introduzir primitivas novas, presentes na norma MPI-2 \cite{Gropp-99}. Uma dessas primitivas é a \textit{MPI\_Comm\_spawn}, que possibilita a criação dinâmica de novos processos. Esses processos serão criados para permitir uma maior concorrência na geração das redes. Com a utilização do MPI, pretende-se obter um bom desempenho, diminuindo significativamente o tempo de execução da aplicação, uma vez que um número bem maior de processadores poderá ser utilizado. 
+\end{enumerate}
+				
+			\end{enumerate}
+
+
+
+
+
+
+
+\chapter{Cronograma}
+
+A Tabela \ref{tab:cronograma} apresenta o
+cronograma de atividades a serem desenvolvidas, conforme citadas abaixo
+
+\begin{enumerate}
+	\item Levantamento bibliográfico sobre Redes Aleatórias Contínuas;
+	\item Levantamento bibliográfico sobre \textit{Simulated Annealing};
+	\item Estudo sobre a versão seqüencial do algoritmo de geração das CRN;
+	\item Otimizar a implementação seqüencial;
+	\item Levantamento bibliográfico sobre técnicas de paralização;
+	\item Elaboração de artigo a ser submetido para WSCAD;
+	\item Elaboração de artigo científico relativo ao trabalho já desenvolvido na Dissertação;
+	\item Desenvolvimento do Seminário de Andamento;
+	\item Semana acadêmica;
+	\item Paralelização através do Open-MP;
+	\item Paralelização através do MPI;
+	\item Paralelização através do MPI-2;
+	\item Comparação de resultados;
+	\item Redação da dissertação;
+	\item Elaboração de artigo a ser submetido em evento da área (Alto desempenho e Física computacional);
+	\item Entrega da dissertação;
+	\item Defesa da dissertação
+\end{enumerate}
+
+\begin{table}[!ht]
+
+\begin{center}
+\caption{Cronograma}
+\label{tab:cronograma}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Etapa 
+   &Jan&Fev&Mar&Abr&Mai&Jun&Jul&Ago&Set&Out&Nov&Dez\\ \hline
+1  & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+2  & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+3  & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+4  &   & X &   &   &   &   &   &   &   &   &   &   \\ \hline
+5  &   & X &   &   &   &   &   &   &   &   &   &   \\ \hline
+6  &   &   & X & X &   &   &   &   &   &   &   &   \\ \hline
+7  &   &   & X & X &   &   &   &   &   &   &   &   \\ \hline
+8  &   &   &   & X &   &   &   &   &   &   &   &   \\ \hline
+9  &   &   &   &   & X &   &   &   &   &   &   &   \\ \hline
+10 &   &   &   &   & X & X &   &   &   &   &   &   \\ \hline
+11 &   &   &   &   &   & X & X &   &   &   &   &   \\ \hline
+12 &   &   &   &   &   &   & X & X &   &   &   &   \\ \hline
+13 &   &   &   &   &   & X & X & X &   &   &   &   \\ \hline
+14 &   &   &   &   & X & X & X & X & X & X & X &   \\ \hline
+15 &   &   &   &   &   &   &   &   &   & X & X &   \\ \hline
+16 &   &   &   &   &   &   &   &   &   &   & X &   \\ \hline
+17 &   &   &   &   &   &   &   &   &   &   &   & X \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\bibliography{pep}
+\bibliographystyle{abnt} 
+
+
+\chapter*{Assinaturas}
+
+
+
+\vspace{2cm}
+
+
+
+\begin{center}
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  \\
+Gustavo Romano
+
+
+\vspace{4cm}
+
+
+
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  \\
+Prof.~Dr. Nicolas Maillard
+
+\end{center}
+
+
+\end{document}
