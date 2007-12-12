@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.6) (preloaded format=pdflatex 2007.8.15)  30 OCT 2007 13:57
+This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.6) (preloaded format=pdflatex 2007.12.12)  12 DEC 2007 20:53
 entering extended mode
-**F:/Mestrado/PEPs/Proposta/pep.tex
-(F:\Mestrado\PEPs\Proposta\pep.tex
+**F:/svn/trunk/textos/PEP/pep.tex
+(F:\svn\trunk\textos\PEP\pep.tex
 LaTeX2e <2005/12/01>
 Babel <v3.8g> and hyphenation patterns for english, dumylang, nohyphenation, ge
 rman, ngerman, french, loaded.
@@ -85,19 +85,19 @@ Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
 ("C:\Arquivos de programas\MiKTeX 2.6\tex\latex\00miktex\graphics.cfg"
-File: graphics.cfg 2005/12/29 v1.2 MiKTeX 'graphics' configuration
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: pdftex.def on input line 90.
 
 ("C:\Arquivos de programas\MiKTeX 2.6\tex\latex\graphics\pdftex.def"
-File: pdftex.def 2007/04/17 v0.04g Graphics/color for pdfTeX
+File: pdftex.def 2007/06/12 v0.04h Graphics/color for pdfTeX
 \Gread@gobject=\count89
 ))
 \Gin@req@height=\dimen104
 \Gin@req@width=\dimen105
 ))
 ("C:\Arquivos de programas\MiKTeX 2.6\tex\latex\natbib\natbib.sty"
-Package: natbib 2007/02/05 8.0 (PWD)
+Package: natbib 2007/10/30 8.1 (PWD)
 \bibhang=\skip43
 \bibsep=\skip44
 LaTeX Info: Redefining \cite on input line 602.
@@ -311,7 +311,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [6] [7
 
 ]
-Overfull \hbox (16.09966pt too wide) in paragraph at lines 381--382
+Overfull \hbox (16.09966pt too wide) in paragraph at lines 387--388
 []\T1/ptm/m/n/12 Propor in-te-gração das mes-mas, com otimiza-ções fo-cadas no 
 con-texto definido (disponi-
  []
@@ -324,7 +324,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [8
 
 ]
-Overfull \hbox (30.38203pt too wide) in paragraph at lines 546--565
+Overfull \hbox (30.38203pt too wide) in paragraph at lines 552--571
  [] 
  []
 
@@ -346,13 +346,13 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 ] (pep.aux) ) 
 Here is how much of TeX's memory you used:
- 2510 strings out of 95295
- 28199 string characters out of 1184623
- 92844 words of memory out of 1085792
- 5523 multiletter control sequences out of 60000
+ 2511 strings out of 95295
+ 28195 string characters out of 1184622
+ 92870 words of memory out of 1085818
+ 5524 multiletter control sequences out of 60000
  31522 words of font info for 41 fonts, out of 1000000 for 2000
  21 hyphenation exceptions out of 8191
- 39i,7n,26p,1569b,284s stack positions out of 5000i,500n,10000p,200000b,32768s
+ 39i,7n,26p,1567b,284s stack positions out of 5000i,500n,10000p,200000b,32768s
 {8r.enc}<C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/bluesky/c
 m/cmmi12.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmr8.p
 fb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmsy10.pfb><C:/A
@@ -360,7 +360,7 @@ rquivos de programas/MiKTeX 2.6/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Arquivo
 s de programas/MiKTeX 2.6/fonts/type1/urw/times/utmb8a.pfb><C:/Arquivos de prog
 ramas/MiKTeX 2.6/fonts/type1/urw/times/utmr8a.pfb><C:/Arquivos de programas/MiK
 TeX 2.6/fonts/type1/urw/times/utmri8a.pfb>
-Output written on pep.pdf (13 pages, 85405 bytes).
+Output written on pep.pdf (13 pages, 85679 bytes).
 PDF statistics:
  74 PDF objects out of 300000 (max. 8388607)
  0 named destinations out of 300000 (max. 131072)
