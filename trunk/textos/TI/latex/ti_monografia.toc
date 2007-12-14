@@ -1,29 +1,49 @@
 \select@language {brazilian}
-\contentsline {chapter}{Lista de Abreviaturas e Siglas}{3}
-\contentsline {chapter}{Lista de Figuras}{4}
-\contentsline {chapter}{Resumo}{5}
-\select@language {brazilian}
+\contentsline {chapter}{Lista de Abreviaturas e Siglas}{4}
+\contentsline {chapter}{Lista de Figuras}{5}
 \contentsline {chapter}{Resumo}{6}
 \select@language {brazilian}
-\contentsline {chapter}{\numberline {1}Introdu\c c\~ao}{7}
-\contentsline {chapter}{\numberline {2}Uma arquitetura distribu\IeC {\'\i }da para MMORPG}{8}
-\contentsline {section}{\numberline {2.1}Defini\c c\~oes}{8}
-\contentsline {subsection}{\numberline {2.1.1}Eventos}{8}
-\contentsline {subsection}{\numberline {2.1.2}A\c c\~oes}{9}
-\contentsline {subsection}{\numberline {2.1.3}\'Area de interesse}{9}
-\contentsline {section}{\numberline {2.2}Design}{9}
-\contentsline {subsection}{\numberline {2.2.1}Mecanismos de travamento}{10}
-\contentsline {subsubsection}{\numberline {2.2.1.1}Travas de regi\~ao}{10}
-\contentsline {subsubsection}{\numberline {2.2.1.2}Travas de objeto}{10}
-\contentsline {subsection}{\numberline {2.2.2}Mecanismo de an\'uncio de eventos}{10}
-\contentsline {subsection}{\numberline {2.2.3}Eventos pr\'oximos \`a fronteira do servidor}{12}
-\contentsline {subsubsection}{\numberline {2.2.3.1}Requisitos de consist\^encia}{12}
-\contentsline {subsubsection}{\numberline {2.2.3.2}Eventos}{12}
-\contentsline {subsubsection}{\numberline {2.2.3.3}Transfer\^encias de objetos}{13}
-\contentsline {subsection}{\numberline {2.2.4}Abortando eventos}{14}
-\contentsline {section}{\numberline {2.3}Escalabilidade}{14}
-\contentsline {subsection}{\numberline {2.3.1}Hotspots}{14}
-\contentsline {subsection}{\numberline {2.3.2}Escalabilidade}{15}
-\contentsline {subsection}{\numberline {2.3.3}Toler\^ancia a falhas}{15}
-\contentsline {section}{\numberline {2.4}Avalia\c c\~ao do trabalho}{15}
-\contentsline {chapter}{Refer{\^e}ncias}{17}
+\contentsline {chapter}{Resumo}{7}
+\select@language {brazilian}
+\contentsline {chapter}{\numberline {1}Introdu\c c\~ao}{8}
+\contentsline {chapter}{\numberline {2}Uma arquitetura distribu\IeC {\'\i }da para MMORPG}{9}
+\contentsline {section}{\numberline {2.1}Defini\c c\~oes}{9}
+\contentsline {subsection}{\numberline {2.1.1}Eventos}{9}
+\contentsline {subsection}{\numberline {2.1.2}A\c c\~oes}{10}
+\contentsline {subsection}{\numberline {2.1.3}\'Area de interesse}{10}
+\contentsline {section}{\numberline {2.2}Design}{10}
+\contentsline {subsection}{\numberline {2.2.1}Mecanismos de travamento}{11}
+\contentsline {subsubsection}{\numberline {2.2.1.1}Travas de regi\~ao}{11}
+\contentsline {subsubsection}{\numberline {2.2.1.2}Travas de objeto}{11}
+\contentsline {subsection}{\numberline {2.2.2}Mecanismo de an\'uncio de eventos}{11}
+\contentsline {subsection}{\numberline {2.2.3}Eventos pr\'oximos \`a fronteira do servidor}{13}
+\contentsline {subsubsection}{\numberline {2.2.3.1}Requisitos de consist\^encia}{13}
+\contentsline {subsubsection}{\numberline {2.2.3.2}Eventos}{13}
+\contentsline {subsubsection}{\numberline {2.2.3.3}Transfer\^encias de objetos}{14}
+\contentsline {subsection}{\numberline {2.2.4}Abortando eventos}{15}
+\contentsline {section}{\numberline {2.3}Escalabilidade}{15}
+\contentsline {subsection}{\numberline {2.3.1}Hotspots}{15}
+\contentsline {subsection}{\numberline {2.3.2}Escalabilidade}{16}
+\contentsline {subsection}{\numberline {2.3.3}Toler\^ancia a falhas}{16}
+\contentsline {section}{\numberline {2.4}Avalia\c c\~ao do trabalho}{16}
+\contentsline {chapter}{\numberline {3}Uma arquitetura multi-servidor para walkthrough virtual distribu\IeC {\'\i }do}{18}
+\contentsline {section}{\numberline {3.1}Vis\~ao geral do CyberWalk}{18}
+\contentsline {section}{\numberline {3.2}Arquitetura paralela do CyberWalk}{19}
+\contentsline {section}{\numberline {3.3}Balanceamento de carga adaptativo}{21}
+\contentsline {subsection}{\numberline {3.3.1}O esquema de particionamento adaptativo em regi\~oes}{22}
+\contentsline {subsection}{\numberline {3.3.2}Aloca\c c\~ao de sub-regi\~ao}{23}
+\contentsline {section}{\numberline {3.4}Avalia\c c\~ao do trabalho}{23}
+\contentsline {chapter}{\numberline {4}Um esquema de distribui\c c\~ao de carga escal\'avel para sistemas de ambiente virtual distribu\IeC {\'\i }do em multi-servidor com distribui\c c\~ao de usu\'arios altamente assim\'etrica}{25}
+\contentsline {section}{\numberline {4.1}Projeto}{26}
+\contentsline {subsection}{\numberline {4.1.1}Considera\c c\~oes de projeto}{26}
+\contentsline {subsubsection}{\numberline {4.1.1.1}Escalabilidade}{26}
+\contentsline {subsubsection}{\numberline {4.1.1.2}Adaptatividade}{26}
+\contentsline {subsection}{\numberline {4.1.2}Modelo do sistema}{27}
+\contentsline {subsection}{\numberline {4.1.3}O esquema de distribui\c c\~ao de carga din\^amico proposto}{28}
+\contentsline {subsubsection}{\numberline {4.1.3.1}Sele\c c\~ao adaptativa de servidor}{28}
+\contentsline {subsubsection}{\numberline {4.1.3.2}Particionamento de regi\~ao}{29}
+\contentsline {subsubsection}{\numberline {4.1.3.3}Migra\c c\~ao de usu\'ario e c\'elula}{30}
+\contentsline {section}{\numberline {4.2}Padr\~ao de movimenta\c c\~ao do usu\'ario}{30}
+\contentsline {section}{\numberline {4.3}Avalia\c c\~ao do trabalho}{30}
+\contentsline {chapter}{\numberline {5}Balanceamento de carga otimista em um ambiente virtual distribu\IeC {\'\i }do}{32}
+\contentsline {chapter}{Refer{\^e}ncias}{33}

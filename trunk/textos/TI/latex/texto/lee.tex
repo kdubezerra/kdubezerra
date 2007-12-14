@@ -1,0 +1,121 @@
+\chapter{Um esquema de distribuição de carga escalável para sistemas de ambiente virtual distribuído em multi-servidor com distribuição de usuários altamente assimétrica}
+
+Neste trabalho, \cite{lee2003sdl} propõem um esquema dinâmico de distribuição de carga para os servidores de um sistema multi-servidor de ambiente virtual, levando em conta que os usuários podem estar distribuídos através deste mundo de maneira não uniforme. De acordo com o esquema proposto, um servidor sobrecarregado inicia a distribuição de carga selecionando um um conjunto de outros servidores para fazerem parte da distribuição, adptando-se dinamicamente ao nível de carga destes servidores selecionados. Após completar a seleção de servidores, o servidor que iniciou o processo reparte as regiões dedicadas ao grupo resultante de servidores utilizando um algoritmo de particionamento de grafo, de forma que os servidores envolvidos tenham carga final de trabalho semelhante. Após decidir-se quem fica com que trabalho, os servidores envolvidos migram suas cargas entre si de maneira par-a-par.
+
+Essa distribuição de carga é necessária, pois assume-se - e, de fato, é a situação mais comum - que os jogadores não estejam distribuídos no mundo virtual uniformemente. Assim, algumas áreas do mapa terão mais jogadores que outras e os servidore associados a áreas mais populosas terão maior carga de trabalho. Servidores sobrecarregados não conseguiriam manter os jogadores a eles associados atualizados em tempo satisfatórios. Estes, então, experimentariam atraso em sua interação com o ambiente virtual, prejudicando significativamente a experiência de jogo.
+
+Uma questão que foi considerada para resolver este problema foi a da escolha de utilização de informações locais (servidor e seus vizinhos) ou globais (todos os servidores estarão envolvidos). A primeira apresenta pouco overhead, mas pode não resolver o problema de maneira eficiente em poucos passos, já que servidores sobrecarregados tendem a estar adjacentes. A segunda alternativa é capaz de dividir a carga de trabalho o mais equilibradamente possível, mas sua complexidade cresce exponencialmente com o número de servidores envolvidos. A solução apontada pelos autores é de utilizar apenas um subconjunto de servidores, sendo que a quantidade de servidores envolvidos varia de acordo com a necessidade (se os vizinhos do iniciador estiverem também sobrecarregados, são selecionados mais servidores). Dessa forma, tem-se um pouco mais de informação do que a abordagem local, mas sem o problema inerente de complexidade da abordagem global.
+
+%1
+\section{Projeto}
+
+Nesta seção, será apresentado o esquema dinâmico de distribuição proposto por \cite{lee2003sdl}. Discute-se o que deve ser levado em conta para projetar tal esquema e, em seguida, é apresentada a proposta dos autores.
+
+%1.1
+\subsection{Considerações de projeto}
+
+O principal objetivo da distribuição da carga entre os servidores do multi-servidor é manter a qualidade de interação dos usuários em um nível aceitável, reduzindo a carga de servidores sobrecarregados e delegando-a a outros, menos carregados, mantendo o nível de carregamento uniforme, ainda que a distribuição dos usuários no ambiente virtual não o seja. Se um servidor lida com muitos usuários além de sua capacidade computacional, ele não pode enviar mensagens de atualização de estado em tempo satisfatório; como resultado, a interação dos usuários é degradada. Distribuição dinâmica de carga pode evitar tal problema transferindo algumas porções de uma região (células e usuários) de servidores sobrecarregados para servidores menos carregados. No entanto, a migração de células e usuários impõe um novo sobrecusto nos servidores porque a informação de estado atualizada dos usuários que migraram deve ser replicada dos velhos servidores para os novos; consequentemente, a própria distribuição dinâmica da carga também pode degradar a qualidade do jogo. Portanto, um esquema dinâmico de distribuição de carga deve reduzir o número de jogadores prejudicados por servidores sobrecarregados, assim como minimizar o número de migrações necessárias.
+
+%1.1.1
+\subsubsection{Escalabilidade}
+
+Um esquema dinâmico de distribuição de carga deve funcionar bem independentemente do teamanho do sistema. Em termos de sobrecusto, a abordagem local é adequada para sistemas de larga escala porque seu sobrecusto é limitado à comunicação do servidor com seus vizinhos, sem ser afetado pelo tamanho do sistema. No entanto, a abordagem local - apesar de funcionar bem com pequeno número de servidores - não funciona de maneira eficiente no caso de um desbalanceamento da carga de trabalho entre os servidores, que pode ser altamente assimétrica. A abordagem global apresenta grande eficácia independentemente do tamanho do sistema, pois todos os servidores no sistema pooperam para balancear suas cargas de trabalho. Porém, a abordagem global não é escalável, pois tem um sobrecusto que aumenta exponencialmente com o número de servidores no sistema multi-servidor. Logo, deve ser encontrada uma nova abordagem que funcione de maneira eficiente, com pequeno sobrecusto, independente do tamanho do sistema.
+
+%1.1.2
+\subsubsection{Adaptatividade}
+
+Para prover tal solução escalável, o esquema dinâmico de distribuição de carga deve ser executado adptando-se dinamicamente ao estado de sobrecarga dos servidores. Infelizmente, os esquemas existentes - local e global - não se adaptam ao estado de sobrecarga dos servidores. Na abordagem local, servidores sobrecarregados apenas consideram servidores vizinhos como seus parceiros para redistribuição da carga, de forma que não pode haver distribuição da sua carga excessiva de forma eficiente, se todos seus vizinhos estão sobrecarregados também. Por outro lado, a abordagem global reparte o ambiente virtual inteiro com informações de todos os servidores. Isto é desnecessário quando apenas um pequeno subconjunto dos servidores pode resolver de forma satisfatória o problema de desbalanceamento de carga do sistema. Sendo assim, um subconjunto de servidores do sistema deve ser determinado, considerando o estado de sobrecarga dos outros servidores.
+
+%1.2
+\subsection{Modelo do sistema}
+
+É considerado um sistema multi-servidor de ambiente virtual distribuído, consistindo de Ns servidores: S1, S2, ..., SNs. O ambiente virtual que o sistema mantém é espacialmente subdividido em Nc células retangulares: C1, C2, ..., CNc, sendo que Ns $<<$ Nc. As células são agrupadas em Nr regiões e cada região é gerenciada por um servidor (i.e., Ns = Nr). Cada servidor mantém atualizadas informações de estado dos usuários e lida com as interações entre usuário na região a ele dedicada. Cada usuário envia e recebe atualizações de estado através do servidor que gerencia a região na qual ele está jogando. A Figura \ref{fig:leeA} ilustra o modelo de um sistema multi-servidor consistindo de 16 servidores. O ambiente virtual é dividido em 256 células, que são agrupadas em 16 regiões.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{imagens/LEE_leeA.jpg}
+ \caption{Um modelo multi-servidor para ambiente virtual distribuído}
+ \label{fig:leeA}
+\end{figure}
+
+Duas células são ditas adjacentes (ou vizinhas) se elas compartilham uma fronteira em comum. Analogamente, duas regiões (e seus respectivos servidores designados) são ditos adjacentes se uma região contém uma célula que pertença à outra região. Um usuário representado por um avatar circula livremente de região a região e interage com outros usuários no ambiente virtual.
+
+Define-se a carga de trabalho de uma célula, denotada por w(C), como o número de usuários presentes naquela célula. Assumindo que todos usuários atualizam seus estados na mesma frequência, a carga de processamento (computação e comunicação) que uma célula impõe a um servidor é proporcional ao número de usuários naquela célula. Similarmente, a carga de trabalho de uma região e seu servidor designado, denotada por w(R), é definida como a soma das cargas de trabalho das células que compõem aquela região.
+
+Cada servidor periodicamente avalia sua carga de trabalho e troca informações de carga com os servidores vizinhos. Assume-se que estes servidores estejam conectados através de uma rede de alta velocidade. Dessa forma, o sobrecusto de trocar informações de sobrecarga entre vizinhos é limitada e considerada negligenciável, se comparada com outros custos da distribuição de carga.
+
+A capacidade de processamento de um servidor é limitada; isto é, uma grande quantidade de carga, além da capacidade de um servidor aumenta o tempo de processamento das mensagens de atualizações de estado dos usuários. Define-se como capacidade de um servidor, representada por CP, o máximo número de usuários que o servidor pode suportar sem prejudicar a performance da interação entre os usuários. Considera-se que todos os servidores têm a mesma capacidade.
+
+%1.3
+\subsection{O esquema de distribuição de carga dinâmico proposto}
+
+Um servidor inicia a distribuição de carga quando sua carga excede sua capacidade. O servidor iniciador primeiro seleciona um conjunto de servidores para se envolver com a distribuição. Após completar a seleção dos servidores, o servidor que iniciou reparte as regiões que eram dedicadas a ele entre os servidores envolvidos, de forma que eles terão aproximadamente a mesma carga. Então, os servidores envolvidos migram suas celulas e usuarios entre si de maneira par-a-par, de acordo com o resultado do reparticionamento. Nas sessoes seguintes, será descrito em detalhe como isso é realizado.
+
+%1.3.1
+\subsubsection{Seleção adaptativa de servidor}
+
+Diferente dos esquemas global e local, um servidor iniciador no esquema proposto seleciona um conjunto de servidores para se envolver com a distribuição de carga dinamicamente se adptando ao status dos outros servidores. O servidor iniciaddor primeiro escolhe o menos carregado dentre seus vizinhos e pede que ele participe da distribuição. O vizinho escolhido rejeita o pedido se ele já participa ou executa outra distribuição de carga; caso contrário, ele participa da distribuição de carga respondendo ao servidor iniciador com a informação de carga de seus servidores vizinhos. Se o servidor vizinho que está partcipando não for capaz de absorver a carga de trabalho excedente do servidor iniciador, a seleção é executada novamente entre os servidores vizinhos de não apenas o servidor sobrecarregado, como também os vizinhos do vizinho escolhido na primeira fase. A seleção continua até que a carga de trabalho excedente do primeiro servidor possa ser absorvida - isto é, a carga de trabalho de todos os servidores selecionados torna-se menor que o limite. Pode-se definir este limite como 90\% do CP, de forma a evitar o imediato reinício da distribuição de carga.
+
+O procedimento para determinar o conjunto de servidores envolvidos é descrito da seguinte forma:
+
+\begin{enumerate}
+
+	\item Um servidor iniciador é inserido a SELECIONADOS, que é o conjunto de servidores envolvidos na distribuição de carga. Os servidores vizinhos do iniciador são adicionados como CANDIDATOS, que é o conjunto formado pelos servidores candidadtos a seleção.
+	
+	\item De CANDIDATOS, é selecionado o servidor com menor carga de trabalho; então, o servidor iniciador faz um pedido a ele para participar na distribuição de carga
+	
+	\begin{enumerate}
+	
+		\item Se o servidor escolhido não está envolvido em outra distribuição de carga, ele responde ao servidor iniciador com a carga de trabalho de seus vizinhos. Quando o servidor iniciador recebe esta resposta, o servidor escolhido é inserido em SELECIONADOS e seus vizinhos são inseridos em CANDIDATOS, se eles já não estiverem dentro de SELECIONADOS ou de CANDIDATOS.
+		
+		\item Se o servidor escolhido já está participando de outra distribuição de carga, ele rejeita o pedido e é removido do conjunto CANDIDATOS.
+	
+	\end{enumerate}
+	
+	\item O passo 2 é repetido até que a carga de trabalho média dos servidores selecionados se torne menor que um limite: 0,9 x CP.
+	
+\end{enumerate}
+
+Para exemplificar o funcionamento do algoritmo, pode-se observar a Figura \ref{fig:lee2}. Todos os servidores têm a mesma capacidade de 100 - isto é, CP = 100. Primeiro, o servidor iniciador, S6, é inserido em SELECIONADOS e seus vizinhos (S2, S5, S7 e  S10) são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(a)). Então, S7, que têm a menor carga de trabalho dentre os servidore em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Quando S7 responde a S6 com a informação de carga de seus vizinhos (S3, S6, S8 e S11), S7 é inserido em SELECIONADOS e seus vizinhos, exceto S6, são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(b)). Agora, S11, que tem a menor carga de trabalho dentre os servidores em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Porém, S11 rejeita o convite, pois já está envolvido em outra distribuição, iniciada por S12. Assim, S11 é removido de CANDIDATOS e S10 é selecionado porque tem agora a menor carga de trabalho dentre os servidores em CANDIDATOS (Figura \ref{fig:lee2}(c)). Até que a carga de trabalho média dos servidores em SELECIONADOS se tornar menor que 0,9xCP = 90, o procedimento acima continua (Figura \ref{fig:lee2}(d) e Figura \ref{fig:lee2}(e)).
+
+\begin{figure}
+ \centering
+ \includegraphics[width=1.0\textwidth]{imagens/LEE_distribution.jpg}
+ \caption{Um exemplo do algoritmo proposto para seleção de servidor}
+ \label{fig:lee2}
+\end{figure}
+
+%1.3.2
+\subsubsection{Particionamento de região}
+
+Uma vez que o servidor iniciador seleciona um conjunto de servidores para se envolverem na distribuição de carga, ele reparte as regiões a ele dedicadas com os servidores envolvidos.  Depois de reparticionar as regiões, todos os servidores envolvidos terão aproximadamente a mesma carga de trabalho. É utilizada a técnica de particionamento de grafos, que é extensivamente utilizada em computação paralela e de alta performance.
+
+Um grafo G = (V, E, P) é construído utilizando informações detalhadas, isto é, a carga de trabalho de cada célula. Um vértice Vi pertencente a V representa a célula Ci. O peso do vértice Vi é ajustado como a carga de trabalho da célula Ci - isto é, w(Ci). Uma aresta Eij representa que duas células Ci e Cj são adjacentes. Os vértices são agrupados em partições $P = \{P1, P2, ... P|selected|\}$ que representam as regiões selecionadas. O grafo construído é reparticionado utilizando um algoritmo de particionamento de grafo, de forma que cada partição tem um subconjunto de vértices de peso total aproximadamente igual - ou seja, cada servidor terá aproximadamente a mesma carga de trabalho.
+
+%1.3.3
+\subsubsection{Migração de usuário e célula}
+
+Com o término do reparticionamento da região, o servidor iniciador dissemina o resultado do reparticionamento para os servidores envolvidos. O resultado inclue a informação de que células devem migrar para quais servidores. Os servidores que recebem o resultado executam a migração de células e usuários uns com os outros de maneira par-a-par.
+
+Primeiro um servidor replica a informação atualizada de usuários nas células migrantes para os servidores que as receberão. A informação que deve ser replicada varia de acordo com as características da apliação. Por exemplo, pode incluir apenas a localização dos usuários; ou pode conter informações mais detalhadas, como qual é o modelo 3D do avatar do usuário. Depois de completar a replicação, o servidor notifica os usuários nas células migrantes a respeito do novo servidor. Os usuários, então migram para o novo servidor; eles simplesmente deixam o servidor antigo e juntam-se ao novo.
+
+%2
+\section{Padrão de movimentação do usuário}
+
+Este artigo também propõe um modelo de movimentação de usuário, que baseia-se no \emph{Random Waypoint Mobility Model}, que é extensivamente utilizado para avaliação de performance em redes sem fio ad-hoc. Usuários estão aleatoriamente distribuídos no ambiente virtual. Eles têm suas próprias localizações de destino traçadas, que são escolhidas aleatoriamente no mundo virtual. A cada passo t no tempo, cada usuário se move em direção ao seu destino através de uma linha reta com velocidade escolhida aleatoriamente entre 0 e max\_speed. A velocidade máxima dos usuários, max\_speed, é escolhida de forma que um usuário possa ir da esquerda para a direita do ambiente virtual em 100 passos de tempo. Por exemplo, se o tamanho do ambiente virtual é de $500x500(m^{2})$, a velocidade máxima dos usuários é de 500/100 = 5 (m/passo de tempo). Quando um usuário chega à sua posição de destino, ele começa a se mover novamente de acordo com a mesma regra. Figura \ref{fig:lee3}(a) mostra a distribuição inicial de usuários no ambiente virtual no instante t=0 e a Figura \ref{fig:lee3}(b) mostra a distribuição de usuários no instante t=100. A distribuição de usuários mostrada nas figuras está de acordo com os resultados da distribuição espacial do \emph{Random Waypoint Mobility Model}: os usuários tendem a se aglomerar na área central, ao invés da área das bordas.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=1.0\textwidth]{imagens/LEE_mobility.jpg}
+ \caption{Distribuição dos usuários com o modelo de movimentação proposto}
+ \label{fig:lee3}
+\end{figure}
+
+%3
+\section{Avaliação do trabalho}
+
+Tal como os trabalhos vistos anteriormente, \cite{lee2003sdl} contém uma proposta de suporte a ambientes virtuais distribuídos (onde se encaixam jogos maciçamente multijogador), baseada na distribuição do servidor do ambiente, porém, considerando uma rede local e que não há atraso significativo na comunicação entre os nodos servidores.
+
+De qualquer forma, este trabalho traz um algoritmo interessante para reparticionamento do ambiente virtual do jogo, de maneira dinâmica e adaptativa, buscando repartir a carga de trabalho com servidores menos sobrecarregados, seguindo uma heurística definida pelos autores.
+
+Além disso, é proposto um modelo simples de movimentação dos usuários, baseado no \emph{Random Waypoint Mobility Model}, que pode vir a ser útil numa futura simulação em algum trabalho futuro.
