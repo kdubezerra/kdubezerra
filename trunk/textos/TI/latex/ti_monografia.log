@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.6) (preloaded format=pdflatex 2007.12.12)  14 DEC 2007 01:49
+This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.6) (preloaded format=pdflatex 2007.12.12)  14 DEC 2007 02:45
 entering extended mode
 **F:/svn/trunk/textos/TI/latex/ti_monografia.tex
 (F:\svn\trunk\textos\TI\latex\ti_monografia.tex
@@ -318,7 +318,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 48--48
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 49--49
+Underfull \hbox (badness 10000) in paragraph at lines 57--57
  []  
  []
 
@@ -518,7 +518,15 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 30
  []
 
-[30]) [31 <imagens/LEE_mobility.jpg>] (texto\fahmy.tex)
+[30]) [31 <imagens/LEE_mobility.jpg>] (texto\fahmy.tex
+
+Package natbib Warning: Citation `chertov:olb' on page 32 undefined on input li
+ne 3.
+
+<imagens/FAHMY_gateways.jpg, id=117, 961.5925pt x 333.245pt>
+File: imagens/FAHMY_gateways.jpg Graphic file (type jpg)
+
+<use imagens/FAHMY_gateways.jpg>
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 32
  []
@@ -527,11 +535,59 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 
 
-] (ti_monografia.bbl
+]
+
+Package natbib Warning: Citation `chertov:olb' on page 33 undefined on input li
+ne 23.
+
+<imagens/FAHMY_2.jpg, id=121, 712.6625pt x 405.515pt>
+File: imagens/FAHMY_2.jpg Graphic file (type jpg)
+
+<use imagens/FAHMY_2.jpg>
+<imagens/FAHMY_3.jpg, id=122, 657.45625pt x 427.5975pt>
+File: imagens/FAHMY_3.jpg Graphic file (type jpg)
+
+<use imagens/FAHMY_3.jpg> [33 <imagens/FAHMY_gateways.jpg>]
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 34
+ []
+
+[34 <imagens/FAHMY_2.jpg> <imagens/FAHMY_3.jpg>]
+<imagens/FAHMY_4.jpg, id=129, 1353.055pt x 433.62pt>
+File: imagens/FAHMY_4.jpg Graphic file (type jpg)
+ <use imagens/FAHMY_4.jpg>
+[35 <imagens/FAHMY_4.jpg>]
+<imagens/FAHMY_5.jpg, id=133, 1298.8525pt x 426.59375pt>
+File: imagens/FAHMY_5.jpg Graphic file (type jpg)
+
+<use imagens/FAHMY_5.jpg>
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 36
+ []
+
+[36 <imagens/FAHMY_5.jpg>] [37]
+Overfull \hbox (1.9096pt too wide) in paragraph at lines 140--141
+[]\T1/ptm/m/n/12 A com-plex-i-dad com-puta-cional é, en-tão: $\OML/ztmcm/m/it/1
+2 O\OT1/ztmcm/m/n/12 (\OML/ztmcm/m/it/12 N[]$ \T1/ptm/m/n/12 + $\OT1/ztmcm/m/n/
+12 (\OML/ztmcm/m/it/12 N[] [][] N[]\OT1/ztmcm/m/n/12 )[])$ \T1/ptm/m/n/12 se as
+sumir-se tempo
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 38
+ []
+
+[38]) [39] (ti_monografia.bbl
 
 Package natbib Warning: Empty `thebibliography' environment on input line 3.
 
-) AED: lastpage setting LastPage [33
+) AED: lastpage setting LastPage
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 40
+ []
+
+[40
 
 
 ]
@@ -539,28 +595,31 @@ Package natbib Warning: Empty `thebibliography' environment on input line 3.
 Package natbib Warning: There were undefined citations.
 
 (ti_monografia.aux (texto\01-resumo.aux) (texto\02-introducao.aux)
-(texto\assiotis.aux) (texto\ng.aux) (texto\lee.aux) (texto\fahmy.aux)) ) 
+(texto\assiotis.aux) (texto\ng.aux) (texto\lee.aux) (texto\fahmy.aux))
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 2579 strings out of 95295
- 28983 string characters out of 1184622
- 83506 words of memory out of 1083110
- 5376 multiletter control sequences out of 60000
+ 2620 strings out of 95295
+ 29681 string characters out of 1184622
+ 83561 words of memory out of 1083165
+ 5402 multiletter control sequences out of 60000
  50990 words of font info for 77 fonts, out of 1000000 for 2000
  14 hyphenation exceptions out of 8191
  39i,6n,28p,1622b,317s stack positions out of 5000i,500n,10000p,200000b,32768s
-{8r.enc
-}<C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmmi10.pfb><C:/Arq
-uivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmr10.pfb><C:/Arquivos de 
-programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmss12.pfb><C:/Arquivos de programa
-s/MiKTeX 2.6/fonts/type1/bluesky/cm/cmsy10.pfb><C:/Arquivos de programas/MiKTeX
- 2.6/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/f
-onts/type1/urw/symbol/usyr.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1
-/urw/times/utmb8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/urw/time
-s/utmr8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/urw/times/utmri8a
-.pfb>
-Output written on ti_monografia.pdf (33 pages, 1242219 bytes).
+{8r.enc}<C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmmi10.pf
+b><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmr10.pfb><C:/Arq
+uivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmss12.pfb><C:/Arquivos de
+ programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmsy10.pfb><C:/Arquivos de program
+as/MiKTeX 2.6/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Arquivos de programas/MiK
+TeX 2.6/fonts/type1/urw/symbol/usyr.pfb><C:/Arquivos de programas/MiKTeX 2.6/fo
+nts/type1/urw/times/utmb8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1
+/urw/times/utmr8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/urw/time
+s/utmri8a.pfb>
+Output written on ti_monografia.pdf (40 pages, 1685109 bytes).
 PDF statistics:
- 153 PDF objects out of 300000 (max. 8388607)
+ 182 PDF objects out of 300000 (max. 8388607)
  0 named destinations out of 300000 (max. 131072)
- 41 words of extra memory for PDF output out of 65536 (max. 10000000)
+ 66 words of extra memory for PDF output out of 65536 (max. 10000000)
 
