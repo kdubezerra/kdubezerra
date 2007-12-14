@@ -5,4 +5,4 @@
 \contentsline {chapter}{\numberline {3}Metodologia}{8}
 \contentsline {chapter}{\numberline {4}Cronograma}{9}
 \contentsline {chapter}{Refer{\^e}ncias}{11}
-\contentsline {chapter}{Assinaturas}{13}
+\contentsline {chapter}{Assinaturas}{12}
