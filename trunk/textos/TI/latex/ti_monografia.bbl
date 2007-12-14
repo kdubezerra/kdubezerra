@@ -1,3 +1,25 @@
 \begin{thebibliography}{\hspace{\parindent}}
 
+\bibitem[ASSIOTIS; TZANOV(2006)ASSIOTIS; TZANOV]{assiotis2006dam} ASSIOTIS, M.;
+  TZANOV, V\@. {A distributed architecture for MMORPG}. \textbf{Proceedings of
+  5th ACM SIGCOMM workshop on Network and system support for games}, [S.l.],
+  2006.
+
+\bibitem[CHERTOV; FAHMY(2006)CHERTOV; FAHMY]{chertov:olb} CHERTOV, R.; FAHMY,
+  S\@. {Optimistic Load Balancing in a Distributed Virtual Environment}.
+  \textbf{Proceedings of the 16th ACM International Workshop on Network and
+  Operating Systems Support for Digital Audio and Video (NOSSDAV)}, [S.l.],
+  2006.
+
+\bibitem[LEE; LEE(2003)LEE; LEE]{lee2003sdl} LEE, K.; LEE, D\@. {A scalable
+  dynamic load distribution scheme for multi-server distributed virtual
+  environment systems with highly-skewed user distribution}.
+  \textbf{Proceedings of the ACM symposium on Virtual reality software and
+  technology}, [S.l.], p.160--168, 2003.
+
+\bibitem[NG et~al.(2002)NG; SI; LAU; LI]{ng2002msa} NG, B.; SI, A.; LAU, R.;
+  LI, F\@. {A multi-server architecture for distributed virtual walkthrough}.
+  \textbf{Proceedings of the ACM symposium on Virtual reality software and
+  technology}, [S.l.], p.163--170, 2002.
+
 \end{thebibliography}
