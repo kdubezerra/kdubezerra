@@ -22,7 +22,7 @@
 \contentsline {subsection}{\numberline {2.3.1}Hotspots}{15}
 \contentsline {subsection}{\numberline {2.3.2}Escalabilidade}{16}
 \contentsline {subsection}{\numberline {2.3.3}Toler\^ancia a falhas}{16}
-\contentsline {section}{\numberline {2.4}Avalia\c c\~ao do trabalho}{16}
+\contentsline {section}{\numberline {2.4}Avalia\c c\~ao do trabalho}{17}
 \contentsline {chapter}{\numberline {3}Uma arquitetura multi-servidor para walkthrough virtual distribu\IeC {\'\i }do}{18}
 \contentsline {section}{\numberline {3.1}Vis\~ao geral do CyberWalk}{18}
 \contentsline {section}{\numberline {3.2}Arquitetura paralela do CyberWalk}{19}
@@ -52,4 +52,5 @@
 \contentsline {subsection}{\numberline {5.2.2}M\'ultiplos servidores}{38}
 \contentsline {subsection}{\numberline {5.2.3}Custo otimizado}{38}
 \contentsline {section}{\numberline {5.3}Avalia\c c\~ao do trabalho}{39}
-\contentsline {chapter}{Refer{\^e}ncias}{40}
+\contentsline {chapter}{\numberline {6}Considera\c c\~oes finais}{40}
+\contentsline {chapter}{Refer{\^e}ncias}{41}
