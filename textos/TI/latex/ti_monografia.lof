@@ -19,4 +19,9 @@
 \contentsline {figure}{\numberline {Figura\nobreakspace 4.2:}{\ignorespaces Um exemplo do algoritmo proposto para sele\c c\~ao de servidor}}{29}
 \contentsline {figure}{\numberline {Figura\nobreakspace 4.3:}{\ignorespaces Distribui\c c\~ao dos usu\'arios com o modelo de movimenta\c c\~ao proposto}}{31}
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {Figura\nobreakspace 5.1:}{\ignorespaces Arquitetura do sistema}}{33}
+\contentsline {figure}{\numberline {Figura\nobreakspace 5.2:}{\ignorespaces Particionamento ideal dos clientes}}{34}
+\contentsline {figure}{\numberline {Figura\nobreakspace 5.3:}{\ignorespaces Sobreposi\c c\~ao de cobertura devido ao uso de ret\^angulos como fronteira}}{34}
+\contentsline {figure}{\numberline {Figura\nobreakspace 5.4:}{\ignorespaces Migra\c c\~ao de um cliente quando o n\'umero de clientes de um servidor excede o client\_threshold de 3}}{35}
+\contentsline {figure}{\numberline {Figura\nobreakspace 5.5:}{\ignorespaces Resolu\c c\~ao do problema de interse\c c\~ao de \'areas de cobertura}}{36}
 \addvspace {10\p@ }
