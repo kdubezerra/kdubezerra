@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.6) (preloaded format=pdflatex 2007.12.12)  14 DEC 2007 04:20
+This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.6) (preloaded format=pdflatex 2007.12.12)  14 DEC 2007 04:44
 entering extended mode
 **F:/svn/trunk/textos/TI/latex/ti_monografia.tex
 (F:\svn\trunk\textos\TI\latex\ti_monografia.tex
@@ -535,7 +535,7 @@ iotis.aux)
 Here is how much of TeX's memory you used:
  2645 strings out of 95295
  29919 string characters out of 1184622
- 84653 words of memory out of 1083745
+ 84665 words of memory out of 1083757
  5401 multiletter control sequences out of 60000
  46543 words of font info for 74 fonts, out of 1000000 for 2000
  14 hyphenation exceptions out of 8191
@@ -550,7 +550,7 @@ fonts/type1/urw/symbol/usyr.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type
 1/urw/times/utmb8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/urw/tim
 es/utmr8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/urw/times/utmri8
 a.pfb>
-Output written on ti_monografia.pdf (41 pages, 1690371 bytes).
+Output written on ti_monografia.pdf (41 pages, 1690390 bytes).
 PDF statistics:
  185 PDF objects out of 300000 (max. 8388607)
  0 named destinations out of 300000 (max. 131072)
