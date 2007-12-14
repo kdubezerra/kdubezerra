@@ -1,0 +1,21 @@
+This is BibTeX, Version 0.99cThe top-level auxiliary file: F:\svn\trunk\textos\TI\latex\ti.aux
+I couldn't open database file pep.bib
+---line 36 of file F:\svn\trunk\textos\TI\latex\ti.aux
+ : \bibdata{pep
+ :             }
+I'm skipping whatever remains of this command
+The style file: abnt.bst
+I found no database files---while reading file F:\svn\trunk\textos\TI\latex\ti.aux
+Warning--I didn't find a database entry for "cecin2004fsa"
+Warning--I didn't find a database entry for "worldofwarcraft"
+Warning--I didn't find a database entry for "lineage2"
+Warning--I didn't find a database entry for "chen2006pch"
+Warning--I didn't find a database entry for "schiele2007rpp"
+Warning--I didn't find a database entry for "indigente"
+Warning--I didn't find a database entry for "lamport1982bgp"
+Warning--I didn't find a database entry for "elrhalibi2005abm"
+Warning--I didn't find a database entry for "iimura2004zfg"
+Warning--I didn't find a database entry for "lee2003sdl"
+Warning--I didn't find a database entry for "ng2002msa"
+Warning--I didn't find a database entry for "assiotis2006dam"
+(There were 2 error messages)
