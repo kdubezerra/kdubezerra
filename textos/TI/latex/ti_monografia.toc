@@ -2,10 +2,7 @@
 \contentsline {chapter}{Lista de Abreviaturas e Siglas}{4}
 \contentsline {chapter}{Lista de Figuras}{5}
 \contentsline {chapter}{Resumo}{6}
-\select@language {brazilian}
-\contentsline {chapter}{Resumo}{7}
-\select@language {brazilian}
-\contentsline {chapter}{\numberline {1}Introdu\c c\~ao}{8}
+\contentsline {chapter}{\numberline {1}Introdu\c c\~ao}{7}
 \contentsline {chapter}{\numberline {2}Uma arquitetura distribu\IeC {\'\i }da para MMORPG}{9}
 \contentsline {section}{\numberline {2.1}Defini\c c\~oes}{9}
 \contentsline {subsection}{\numberline {2.1.1}Eventos}{9}

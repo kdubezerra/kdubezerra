@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.6) (preloaded format=pdflatex 2007.12.12)  14 DEC 2007 02:45
+This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.6) (preloaded format=pdflatex 2007.12.12)  14 DEC 2007 03:43
 entering extended mode
 **F:/svn/trunk/textos/TI/latex/ti_monografia.tex
 (F:\svn\trunk\textos\TI\latex\ti_monografia.tex
@@ -273,38 +273,33 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--4
  []
 
 
+Underfull \hbox (badness 10000) in paragraph at lines 5--5
+ []  
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 6--6
  []  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 8--8
+Underfull \hbox (badness 10000) in paragraph at lines 26--26
  []  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 9--9
- []  
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 29--29
- []  
- []
-
-
-Overfull \hbox (6.33589pt too wide) in paragraph at lines 29--29
+Overfull \hbox (6.33589pt too wide) in paragraph at lines 26--26
  [][] []\T1/phv/b/n/12 UMA AR-QUITE-TURA MULTI-SERVIDOR PARA WALK-THROUGH VIR- 
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 36--36
+Underfull \hbox (badness 10000) in paragraph at lines 33--33
  []  
  []
 
 
-Overfull \hbox (29.57843pt too wide) in paragraph at lines 36--36
+Overfull \hbox (29.57843pt too wide) in paragraph at lines 33--33
  \T1/phv/b/n/12 SIS-TEMAS DE AM-BI-ENTE VIR-TUAL DIS-TRIBUÌDO EM MULTI-SERVIDOR
  
  []
@@ -313,12 +308,12 @@ Overfull \hbox (29.57843pt too wide) in paragraph at lines 36--36
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 48--48
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
  []  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 57--57
+Underfull \hbox (badness 10000) in paragraph at lines 55--55
  []  
  []
 
@@ -330,46 +325,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 57--57
 \tf@lof=\write4
  [5
 
-] (texto\01-resumo.tex [6
+] (texto\01-resumo.tex) [6
 
 
 ]
-LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <9> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 14.
-
-Overfull \hbox (3.0pt too wide) in paragraph at lines 14--14
-[] 
- []
+(texto\02-introducao.tex [7
 
 
-Overfull \hbox (13.37714pt too wide) in paragraph at lines 15--19
-\T1/ptm/m/n/12 general-purpose com-mands. \T1/ptm/m/it/12 The text in the ab-st
-ract should not con-tain more than 500 words.
- []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 15--19
-
- []
-
-) [7
-
-
-] (texto\02-introducao.tex)
+])
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 8
  []
 
-[8
-
-
-
-] (texto\assiotis.tex
-
-Package natbib Warning: Citation `assiotis2006dam' on page 9 undefined on input
- line 3.
-
-
+[8] (texto\assiotis.tex
 Overfull \hbox (2.45686pt too wide) in paragraph at lines 10--11
 \T1/ptm/m/n/12 gador e um per-son-agem con-tro-lado por I.A. como NPC (non-play
 er-character). Considere-
@@ -401,24 +370,15 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 14
  []
 
-[14] [15]
-
-Package natbib Warning: Citation `assiotis2006dam' on page 16 undefined on inpu
-t line 225.
-
-)
+[14] [15])
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 16
  []
 
-[16] [17] (texto\ng.tex
-
-Package natbib Warning: Citation `ng2002msa' on page 18 undefined on input line
- 3.
-
-<imagens/NG_Z.JPG, id=63, 570.13pt x 214.8025pt>
+[16] [17] (texto\ng.tex <imagens/NG_Z.JPG, id=63, 570.13pt x 214.8025pt>
 File: imagens/NG_Z.JPG Graphic file (type jpg)
- <use imagens/NG_Z.JPG>
+
+<use imagens/NG_Z.JPG>
 LaTeX Font Info:    Try loading font information for OMS+ptm on input line 19.
 
 ("C:\Arquivos de programas\MiKTeX 2.6\tex\latex\psnfss\omsptm.fd"
@@ -453,12 +413,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 22
  []
 
-[22]
-
-Package natbib Warning: Citation `ng2002msa' on page 23 undefined on input line
- 108.
-
-[23])
+[22] [23])
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 24
  []
@@ -472,14 +427,6 @@ Overfull \hbox (37.53532pt too wide) in paragraph at lines 1--1
 Overfull \hbox (7.64812pt too wide) in paragraph at lines 1--1
 \T1/phv/b/n/16 EM MULTI-SERVIDOR COM DIS-TRIBUI«√O DE USU¡RIOS
  []
-
-
-Package natbib Warning: Citation `lee2003sdl' on page 25 undefined on input lin
-e 3.
-
-
-Package natbib Warning: Citation `lee2003sdl' on page 25 undefined on input lin
-e 12.
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -509,20 +456,11 @@ File: imagens/LEE_distribution.jpg Graphic file (type jpg)
 File: imagens/LEE_mobility.jpg Graphic file (type jpg)
 
 <use imagens/LEE_mobility.jpg>
-
-Package natbib Warning: Citation `lee2003sdl' on page 30 undefined on input lin
-e 117.
-
-
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 30
  []
 
 [30]) [31 <imagens/LEE_mobility.jpg>] (texto\fahmy.tex
-
-Package natbib Warning: Citation `chertov:olb' on page 32 undefined on input li
-ne 3.
-
 <imagens/FAHMY_gateways.jpg, id=117, 961.5925pt x 333.245pt>
 File: imagens/FAHMY_gateways.jpg Graphic file (type jpg)
 
@@ -535,12 +473,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 
 
 
-]
-
-Package natbib Warning: Citation `chertov:olb' on page 33 undefined on input li
-ne 23.
-
-<imagens/FAHMY_2.jpg, id=121, 712.6625pt x 405.515pt>
+] <imagens/FAHMY_2.jpg, id=121, 712.6625pt x 405.515pt>
 File: imagens/FAHMY_2.jpg Graphic file (type jpg)
 
 <use imagens/FAHMY_2.jpg>
@@ -578,11 +511,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 38
  []
 
-[38]) [39] (ti_monografia.bbl
-
-Package natbib Warning: Empty `thebibliography' environment on input line 3.
-
-) AED: lastpage setting LastPage
+[38]) [39] (ti_monografia.bbl) AED: lastpage setting LastPage
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 40
  []
@@ -590,34 +519,27 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [40
 
 
-]
-
-Package natbib Warning: There were undefined citations.
-
-(ti_monografia.aux (texto\01-resumo.aux) (texto\02-introducao.aux)
-(texto\assiotis.aux) (texto\ng.aux) (texto\lee.aux) (texto\fahmy.aux))
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+] (ti_monografia.aux (texto\01-resumo.aux) (texto\02-introducao.aux)
+(texto\assiotis.aux) (texto\ng.aux) (texto\lee.aux) (texto\fahmy.aux)) ) 
 Here is how much of TeX's memory you used:
- 2620 strings out of 95295
- 29681 string characters out of 1184622
- 83561 words of memory out of 1083165
- 5402 multiletter control sequences out of 60000
- 50990 words of font info for 77 fonts, out of 1000000 for 2000
+ 2616 strings out of 95295
+ 29638 string characters out of 1184622
+ 84352 words of memory out of 1083444
+ 5399 multiletter control sequences out of 60000
+ 46543 words of font info for 74 fonts, out of 1000000 for 2000
  14 hyphenation exceptions out of 8191
- 39i,6n,28p,1622b,317s stack positions out of 5000i,500n,10000p,200000b,32768s
-{8r.enc}<C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmmi10.pf
-b><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmr10.pfb><C:/Arq
-uivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmss12.pfb><C:/Arquivos de
- programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmsy10.pfb><C:/Arquivos de program
-as/MiKTeX 2.6/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Arquivos de programas/MiK
-TeX 2.6/fonts/type1/urw/symbol/usyr.pfb><C:/Arquivos de programas/MiKTeX 2.6/fo
-nts/type1/urw/times/utmb8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1
-/urw/times/utmr8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/urw/time
-s/utmri8a.pfb>
-Output written on ti_monografia.pdf (40 pages, 1685109 bytes).
+ 39i,6n,26p,1622b,289s stack positions out of 5000i,500n,10000p,200000b,32768s
+{8r.enc
+}<C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmmi10.pfb><C:/Arq
+uivos de programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmr10.pfb><C:/Arquivos de 
+programas/MiKTeX 2.6/fonts/type1/bluesky/cm/cmss12.pfb><C:/Arquivos de programa
+s/MiKTeX 2.6/fonts/type1/bluesky/cm/cmsy10.pfb><C:/Arquivos de programas/MiKTeX
+ 2.6/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/f
+onts/type1/urw/symbol/usyr.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1
+/urw/times/utmb8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/urw/time
+s/utmr8a.pfb><C:/Arquivos de programas/MiKTeX 2.6/fonts/type1/urw/times/utmri8a
+.pfb>
+Output written on ti_monografia.pdf (40 pages, 1688236 bytes).
 PDF statistics:
  182 PDF objects out of 300000 (max. 8388607)
  0 named destinations out of 300000 (max. 131072)
