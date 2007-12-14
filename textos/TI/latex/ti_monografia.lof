@@ -8,6 +8,15 @@
 \select@language {brazilian}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {Figura\nobreakspace 2.1:}{\ignorespaces O conceito de \'area de interesse com m\'ultiplos servidores}}{9}
-\contentsline {figure}{\numberline {Figura\nobreakspace 2.2:}{\ignorespaces Dois jogadores em servidores diferentes interagindo entre si}}{11}
+\contentsline {figure}{\numberline {Figura\nobreakspace 2.1:}{\ignorespaces O conceito de \'area de interesse com m\'ultiplos servidores}}{10}
+\contentsline {figure}{\numberline {Figura\nobreakspace 2.2:}{\ignorespaces Dois jogadores em servidores diferentes interagindo entre si}}{12}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.1:}{\ignorespaces Escopo de objeto (object) e escopo de observador (viewer)}}{18}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.2:}{\ignorespaces Arquitetura paralela do CyberWalk}}{20}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.3:}{\ignorespaces Particionamento em regi\~oes}}{21}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.1:}{\ignorespaces Um modelo multi-servidor para ambiente virtual distribu\IeC {\'\i }do}}{27}
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.2:}{\ignorespaces Um exemplo do algoritmo proposto para sele\c c\~ao de servidor}}{29}
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.3:}{\ignorespaces Distribui\c c\~ao dos usu\'arios com o modelo de movimenta\c c\~ao proposto}}{31}
+\addvspace {10\p@ }
 \addvspace {10\p@ }

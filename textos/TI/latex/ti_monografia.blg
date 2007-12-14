@@ -2,7 +2,12 @@ This is BibTeX, Version 0.99cThe top-level auxiliary file: F:\svn\trunk\textos\T
 A level-1 auxiliary file: texto/01-resumo.aux
 A level-1 auxiliary file: texto/02-introducao.aux
 A level-1 auxiliary file: texto/assiotis.aux
+A level-1 auxiliary file: texto/ng.aux
+A level-1 auxiliary file: texto/lee.aux
+A level-1 auxiliary file: texto/fahmy.aux
 The style file: abnt.bst
 Database file #1: referencias.bib
 Warning--I didn't find a database entry for "assiotis2006dam"
-(There was 1 warning)
+Warning--I didn't find a database entry for "ng2002msa"
+Warning--I didn't find a database entry for "lee2003sdl"
+(There were 3 warnings)

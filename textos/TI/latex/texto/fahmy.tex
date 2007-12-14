@@ -1,0 +1,25 @@
+\chapter{Balanceamento de carga otimista em um ambiente virtual distribuído}
+
+Neste trabalho, \cite{chertov:olb} investigam a arquitetura de um ambiente unificado onde o mundo virtual online não é particionado com fronteiras rígidas, mas de acordo com um paradigma adaptativo. Como é difícil desenvolver um algoritmo de balanceamento de carga ótimo para um ambiente unificado, propõe-se um esquema otimista que converge rapidamente. O custo de migrações frequentes é reduzido seguindo um modelo de troca de dados push/push. Analisa-se também o custo de tempo computacional de tal sistema.
+
+A grande questão deste trabalho é que o ambiente virtual é unificado, e não desconectado. Seria trivial criar um ambiente onde as regiões não tivessem nenhuma relação umas com as outras, e, ao invés de ter um grande ambiente com um grande suporte de rede, ter-se-ia vários pequenos ambientes, com soluções triviais para seu funcionamento.
+
+Uma questão crucial a ser resolvida ao se criar um esquema para esse tipo de ambiente é o atraso da rede. Se houver um atraso na comunicação entre os jogadores, ou entre o servidor e o jogador, maior que o máximo tolerável, estes jogadores irão perceber movimentações inusitadas e não naturais de si mesmos e de seus parceiros de jogo. É necessário, pois, manter uma qualidade de serviço mínima para a simulação do ambiente virtual distribuído.  Como serviços integrados e diferenciados não estão amplamente implementados no suporte atual da Internet, os autores empregam roteamento e políticas para manutenção de qualidade de serviço no nível da aplicação. Cada provedor de serviço de Internet pode prover um ou mais nodos gateway para os quais seus clientes conectar-se-iam para participar do ambiente virtual distribuído. Figura \ref{fig:fahmy1} ilustra dois gateways em dois provedores diferentes, que conectam-se ao mesmo núcleo servidor (ou cluster de servidores). Os gateways podem atuar como pontos de agregação de dados de usuários. Além de prover acesso rápido ao servidor, os gateways podem ser pontos de filtragem. Por fim, os gateways podem atuar como sincronizadores para garantir que todos os clientes receberão atualizações aproximadamente ao mesmo tempo, de forma a garantir a fairness.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{imagens/FAHMY_gateways.jpg}
+ \caption{Arquitetura do sistema}
+ \label{fig:fahmy1}
+\end{figure}
+
+Criar e gerenciar tais gateways é vantajoso apenas se o núcleo servidor puder suportar um número extremamente grande de clientes. Clientes ficarão relutantes em pagar taxas de assinatura se o servidor permanecer maior parte do tempo muito ocupado e ele não puder participar. Além disso, o núcleo servidor deve ser um cluster de máquinas que executam balanceamento inteligente de carga para compartilhar a carga do cliente de uma maneira escalável. É empregado um modelo de troca de dados push/push para reduzir os custos de migração de clientes entre os servidores.
+
+Este paper fornece uma arquitetura e algoritmos para um ambiente virtual distribuído similar ao sistema ilustrado na Figura \ref{fig:fahmy1}. O sistema permite que os clientes se movam com direções e velocidades selecionadas, assumindo-se que o percurso no eixo vertical não é relevante, significando que o ambiente pode ser decomposto em um mapa de apenas duas dimensões. Isto é adequado para a maior parte dos sistemas interativos no mercado atualmente. É projetada e avaliada a performance de um novo esquema adaptativo de balanceamento de carga para o núcleo servidor que explora o fato de que os clientes tendem a se aglomerar ao redor de pontos de interesse.
+
+%1
+\section{Visão geral do sistema}
+
+Clientes de ambientes virtuais distribuídos  não se movem tipicamente de acordo com um caminhar aleatório: sempre há alguma estrutura para a posição geral dos clientes. Neste trabalho, \cite{FAHMY} exploram o fato de que os clientes tendem a se aglomerar ao redor de pontos de interesse, que variam de um ambiente virtual para o outro. Os pontos de interesse podem ser dinâmicos e desconhecidos com antecedência, tornando difícil, senão impossível, particionar o espaço de jogo com antecedência. Assim sendo, um balanceador de carga altamente dinâmico é necessário. Um bom balanceador de carga deve satisfazer as seguintes propriedades:
+
+\begin{enumerate}
