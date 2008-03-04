@@ -1,0 +1,308 @@
+-----------------------------------------------------------------------------
+ZIG: Version 2.1.0 (5 September 2007)
+-----------------------------------------------------------------------------
+
+This release fixes some bugs, introduces a new "convenience" stream type for 
+ZIG connections, and brings internal enhancements (mostly simplifications).
+
+- A new stream type was added: STREAM_NO_ACK, which doesn't guarantee neither 
+message ordering nor the delivery (the same semantics of UDP/IP packets).
+This stream also works exactly as the "unreliable data block" argument of 
+zigserver_c::send_packet() and zigclient_c::send_packet(): Any Messages sent 
+through a STREAM_NO_ACK are sent ONLY ONCE. They might not be sent on the 
+next outgoing packet (depends on the send_interval and max_outgoing_flow 
+policies of the stream, and also on the global max outgoing flow of the ZIG 
+connection), but when the message IS sent in an outgoing packet, it is 
+immediately erased from the outgoing message queue of the connection's 
+stream. And, on the receiver side, no effort is made to guarantee ordering.
+
+- A new configuration parameter was added for streams: "Discard unsent 
+unreliables". This is a boolean value which can be set on a stream policy 
+(see class "policy_c" documentation). The default value for this flag is 
+"false", which doesn't modify a stream's expected behavior. If it is set to 
+"true" however, then, after a packet is sent (for instance, through 
+zigclient_c::send_packet() or zigserver_c::send_packet()), ALL PENDING 
+(NON-ACKED) *UNRELIABLE* OUTGOING MESSAGES ON THE STREAM QUEUE ARE 
+DISCARDED. This is intended for use together with the new stream type 
+STREAM_NO_ACK, but it also works for STREAM_CUMULATIVE_ACK if you are 
+sending any messages through it that are marked as "unreliable". Please 
+see the Doxygen-generated documentation of class policy_c for more details.
+
+- The default "send interval" for class policy_c has been changed from 0.1s 
+to 0.0s (ZERO seconds). This is a better default value since the "send 
+interval" parameter is more meaningful for streams of type 
+STREAM_CUMULATIVE_ACK, which are intented for a more aggressive sending 
+strategy which prefers low latency than the lowest possible byte overhead 
+on outgoing UDP packets. Anyway, ZIG users should always explicitly set a 
+custom policy for each created stream, even if it's the same as the default.
+
+- The disconnection protocol has been greatly simplified (around 500 lines 
+of unnecessary code were removed). The previous disconnection protoocol was 
+2-way: client (or server) told about a disconnection attempt, and waited for 
+a disconnection message back, or a timeout. This however had almost zero 
+benefit since the whole point of waiting for an ack is to keep sending a 
+message until it is acked; in the case of disconnection, the client or server 
+would send a fixed amount of packets and wait for one ack, which was used 
+just to cut the torrent of disconnection packets short, which was an useless 
+optimization. 
+Now the disconnection is 1-way and unconditional: the disconnecting side 
+sends a lot of "disconnect" packets (10 or 20) to the other side and 
+immediately cuts the communication channel, calling the local callback that 
+notifies about the disconnection (instead of waiting for the ack to call the 
+"xxx_disconnected()" callback). 
+
+- Fixed several bugs on disconnection by implementing the redesigned 
+disconnection protocol (see above). Thanks Milan Mimica for spotting those 
+issues and Diego Midon Pereira for implementing the new protocol.
+
+- Some other bugs (Valgrind-related?) were fixed, however the ZIG team failed 
+to keep track of those. 
+Thanks Milan Mimica for reporting all issues with ZIG 2.0.0 so far! And also 
+helping with the fixes.
+
+-----------------------------------------------------------------------------
+ZIG: Version 2.0.0 (26 July 2007)
+-----------------------------------------------------------------------------
+
+- PROTOCOL CHANGE: the ZIG 2.0 protocol is now version 8 and is incompatible 
+with previous versions.
+
+- Documentation basically rewritten from scratch!!! And generates fine with 
+the latest Doxygen version!
+
+- Build system:
+-- Visual Studio .NET 2003 (VC7) project files reviewed and fixed for more 
+ease of use;
+-- Also, added Visual Studio 2005 (VC8) project files, since the VS2005 
+project converter doesn't seem to work too well;
+-- Added Makefiles for Linux compilation (Thanks to Milan Mimica).
+
+- This version is based on ZIG-EXP (see below), so its main feature (if 
+compared to ZIG 1.5.0) is still "support for connection streams". Please 
+see the Doxygen-generated HTML documentation of ZIG 2.0 (especially the doc 
+for class zigclient_c) for an explanation of the STREAMS feature and API.
+
+- Numerous small API changes and additions:
+-- zigserver_c::send_frame() method is now send_packet()
+-- zigclient_c/zigserver_c::run_nonblocking() methods are now start()
+-- zigclient_c::send_packet_now() is now send_input_packet_soon()
+-- zigclient_c::get_all_server_info() is now get_local_server_info()
+-- <zig/utils.h> APIs for configuring the packet loss / net delay emulator
+-- others (?)... if your ZIGLITE project doesn't compile, please look into 
+the documentation to look for the new method names, or send email to 
+fcecin,at,gmail,dot,com.
+
+- Maybe other changes that weren't kept track of. But anything that 
+compiled and worked with ZIGLITE 1.0 should be portable to ZIG 2.0 with not 
+much trouble. 
+
+The main change are the connection streams. These will give 
+the most work to port, but should be fairly manageable:
+  
+  !!! TIP !!!
+
+  When porting your ZIG 1.x/ZIGLITE project to ZIG 2.0:
+
+  Create a single stream for all connections using the default stream type 
+  (most parameters in zigclient_c::create_stream() and 
+  zigserver_c::create_stream() are optional).
+  When sending and receiving stream messages, use that single stream ID. 
+  This will emulate ZIG's previous versions which had only a single, 
+  hard-coded channel per client-server connection for sending and receiving 
+  messages.
+
+-----------------------------------------------------------------------------
+ZIG-EXP Experimental version (NEVER RELEASED)
+-----------------------------------------------------------------------------
+
+- The ZIG library in 2006 has forked to an experimental (unreleased 
+branch) called zig-exp (forked from the unreleased ziglite code branch, 
+which stayed mostly inactive)
+-- Unfortunately we didn't keep up with logging internal implementation 
+changes. 
+-- As for API changes, these should be covered by the new ZIG 2.0 Doxygen 
+documentation (see above). ZIG 2.0 is basically zig-exp with some minor 
+API and implementation clean-ups.
+
+- Main feature: support for connection streams. Please see the Doxygen 
+documentation of ZIG 2.0 (especially the doc for class zigclient_c) for 
+an explanation of the STREAMS feature and API.
+
+-----------------------------------------------------------------------------
+ZIGLITE: Version 1.1.0 (NEVER RELEASED)
+-----------------------------------------------------------------------------
+
+- PROTOCOL CHANGE: the ZIGLITE 1.1 protocol is now version 7 and is 
+incompatible with previous versions. the limits on outgoing acks 
+and reliable messages per packet have both been increased to 2047, 
+from the previous values of 7 and 31, respectively. The protocol 
+overhead for this feature, however, should remain the same as 
+before, most of the time (1 byte for outgoing packets with less 
+than 7 acks and less than 7 reliable message retransmissions, with 
+1 extra byte for when more than 7 acks are needed and 1 extra byte 
+for when more than 7 reliable messages are being retransmitted). 
+This change also removes the maximum limit of 31 outgoing reliable 
+messages that can be flagged as "critical" at the same time (and 
+so the ZIGCLIENT and ZIGSERVER error codes associated with that 
+limitation have been removed).
+
+- Fixed a (bad) design flaw: the contract that outgoing reliable 
+messages tagged as "critical" would be received before or simultaneously 
+with all outgoing unreliable data was not being enforced. The cause was 
+that although "critical" messages were being dispatched first, the 
+message reordered on the receiving end would not give those to the 
+client if there were any previous "non-critical" reliable messages yet 
+to be received. This was not affecting any game protocol that sent 
+less than 31 reliable messages per network tick (including message 
+retransmissions). This is now fixed: outgoing reliable messages are 
+dispatched in the original order, disregarding the "critical" flag and, 
+if needed, outgoing unreliable data blocks are dropped and not sent, to 
+enforce the contract. The threshold for dropping the unreliable blocks 
+is determined by the "maximum absolute packet size" parameter 
+(see below).
+
+- Fixed another issue related to the design flaw above: the zigclient_c 
+implementation can send packets with the unreliable data block but 
+without retransmission of reliable messages. This was implemented since 
+"frenetic" player interaction with the game can increase the 
+client-to-server packet sending rates. However, this can also break the 
+"critical" message contract. The fix adopted is that packets tagged 
+for sending without the reliable messages retransmission payload are 
+dropped entirely (not sent) if there are any "critical" messages for 
+(re)transmission in the zigclient_c's queue. This fix should have minor 
+impact since "critical" messages were designed primarily for 
+server-to-client communication. 
+
+ NOTE: A more permanent fix for this whole issue is under consideration 
+ (e.g. revamping the ZIG messaging API, support for more than one 
+ ordering stream, etc)
+
+- NEW APIs: zigclient::set_max_outgoing_packet_sizes(), 
+zigserver::set_max_outgoing_packet_sizes() and
+zigserver::set_max_outgoing_packet_sizes_for_client() have been added to 
+allow the limiting the size of the outgoing packets that are generated by 
+the library. the first parameter for all these methods is the 
+"maximum recommended" outgoing packet size, which is used to determine 
+if additional, non-critical reliable messages are to be added to the 
+packet. as a default policy, you should set the first parameter to 
+the same value of the second paramter, which is the "maximum absolute" 
+outgoing packet size. the "maximum absolute" is used to determine if 
+the unreliable block of data of the outgoing packet needs to be dropped 
+in order for some or all of the pending "critical" reliable messages 
+to be sent out. these parameters are important to provide flow control 
+for the more aggressive game protocols, especially ones that send a 
+great amount of data through reliable messages.
+
+- Fixed a bug where the client or server would disconnect when any socket 
+buffer was full when attempting to send more packets (through nlWrite() 
+calls). Thanks to Marcos Slomp for finding and fixing this bug.
+
+- Fixed a bug on log_open() (module <zig/log.h>) where a return value 
+of 0 (zero) could mean an error (can't open log) but also could mean 
+that the log with ID=0 has been sucessfully opened. The fix makes sure 
+that the return value of "0" is reserved for error conditions and that 
+log IDs are allocated within 1 and ZIG_MAX_LOG_FILES (32). Thanks 
+Milan Mimica for spotting this bug.
+
+- Fixed two bugs related to internal ID generation: one was in 
+older_ushort_id which didn't work as expected with values higher than 
+HALF_USHORT_ID. Second bug was the increment of msg_current in 
+station_c::read_reliable(). It is now incremented using inc_ushort_id 
+to wrap at LAST_USHORT_ID. Thanks Milan Mimica for finding and fixing 
+these bugs.
+
+- Fixed a bug where it was possible for zigclient_c::incoming_data() 
+to be called for a connection that hasn't yet been completed by a 
+zigclient_c::connected() callback.
+
+- Fixed crash on trying to connect to an unexisting server on local 
+machine (or any other situation where the connection attempt is 
+replied with an UDP "peer disconnected" packet or somesuch)
+
+- Fixed overlapping memcpy bug on UDP packet reading code that triggered 
+for umcompressed packets. Thanks Milan Mimica for isolating the bug and 
+providing one fix.
+
+- Fixed some missing virtual destructors that have now been added. 
+Thanks Daniel K. Osmari for the bugfix and Milan Mimica for the 
+patch check and commit.
+
+- New "automake" files that will automatically add a flag 
+"-I(...)/ziglite/include" to the compiler, so the source files only 
+need #include "zig/whatever.h", no need for the relative include. 
+The .vcproj files (Visual C++) have also been fixed. 
+Thanks Daniel K. Osmari for the bugfix and Milan Mimica for the
+patch check and commit (and also .vcproj file fixes).
+
+- Miscellaneous internal improvements to the code. Connection "handshake" 
+code was moved to lower-level classes (was in client and server, now moved 
+to the point-to-point protocol stack classes station_c and msocket_c) 
+to avoid code duplication and to offer better support for future 
+"peer-to-peer" functionality over the ZIG classes. Thanks Diego Pereira 
+for spotting the duplication.
+
+- Added a simple global switch for emulating packet loss and packet 
+transmission latency. these switches are in the following global 
+extern variables declared in <zig/station.h> :
+
+  // percentage [0..100] of emulated packet loss 
+  extern int zig_global_packet_loss_percent;
+
+  // emulated packet latency: value is between [base, base+delta]
+  extern int zig_global_packet_delay_base;
+  extern int zig_global_packet_delay_delta;
+
+these switches all default to 0 so there is no artificial packet 
+loss or packet transmission latency added by default.
+
+- Fixed operator< of class address_c which was wasting a lot of CPU with 
+unnecessary creation of temp objects. Thanks Paulo Zaffari for finding 
+and fixing this bug.
+
+- Fixed receipt of corrupt packets not handled internally by ZIG. This 
+is related only for corruption related to the internal data fields on 
+UDP packets that are read by ZIG and doesn't concern data corruption in 
+data generated by the application/game layer. Thanks to Luigi Auriemma 
+for spotting this and Milan Mimica for help with the fixing.
+
+
+-----------------------------------------------------------------------------
+ZIGLITE: Version 1.0.0 (12 November 2005)
+-----------------------------------------------------------------------------
+
+initial release of ziglite.
+
+ziglite is based on the "main" ziglib project, version 1.5.0 (NEVER 
+RELEASED), and the differences are the following:
+
+- no threading
+
+- no "blocking mode" zigclient/zigserver APIs
+
+- no support for TCP sockets (at least not yet, it must be redone 
+for the non-threaded mode)
+
+- no support for the "ziglets" feature (which was heavily based 
+off TCP and threading support)
+
+- works mainly with only one UDP socket on a zig server node, the only 
+exception being the (optional) UDP broadcast port that can be opened for 
+servicing incoming LAN "server-info" queries
+
+- works mainly with only one UDP socket on a zig client node, the only 
+exceptions being temporary UDP broadcast ports and UDP ports opened 
+when making "server-info" queries (both UDP broadcast and specific 
+queries to known servers)
+
+- changing server tick / net ratio while zigserver is started is no 
+longer supported
+
+- various minor zigclient_c and zigserver_c interface changes (changed 
+some method return values, reduced number of arguments of some methods, 
+and removed a few useless methods)
+
+-----------------------------------------------------------------------------
+ZIG: Version 1.4.0 and earlier ...
+-----------------------------------------------------------------------------
+
+Please see CHANGES.TXT from the ZIG 1.x series.

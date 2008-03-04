@@ -1,0 +1,76 @@
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" content="text/html; charset=Windows-1252">
+</head>
+<body>
+<pre>
+<table width=100% bgcolor=#CFCFE5><tr> <td> <font face=arial size=+3>
+Build Log
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
+<h3>------- Build started: Project: HawkNL, Configuration: Debug|Win32 -------
+</h3>
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Command Lines
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "f:\svn_google\trunk\HawkNL\Debug\RSP000001.rsp" with contents
+[
+/Od /D "WIN32" /D "_DEBUG" /D "_LIB" /D "WIN_STATIC_LIB" /D "_MBCS" /Gm /EHsc /RTC1 /MTd /Fo"Debug/" /Fd"Debug/vc70.pdb" /W3 /c /Wp64 /ZI /TC
+.\src\sock.c
+.\src\nltime.c
+.\src\nl.c
+.\src\loopback.c
+.\src\ipx.c
+.\src\htmutex.c
+.\src\hthread.c
+.\src\htcondition.c
+.\src\group.c
+.\src\errorstr.c
+.\src\err.c
+.\src\crc.c
+]
+Creating command line "cl.exe @f:\svn_google\trunk\HawkNL\Debug\RSP000001.rsp /nologo"
+Creating temporary file "f:\svn_google\trunk\HawkNL\Debug\RSP000002.rsp" with contents
+[
+/OUT:"./Lib/NLStaticd.lib" /NOLOGO
+.\Debug\crc.obj
+.\Debug\err.obj
+.\Debug\errorstr.obj
+.\Debug\group.obj
+.\Debug\htcondition.obj
+.\Debug\hthread.obj
+.\Debug\htmutex.obj
+.\Debug\ipx.obj
+.\Debug\loopback.obj
+.\Debug\nl.obj
+.\Debug\nltime.obj
+.\Debug\sock.obj
+]
+Creating command line "lib.exe @f:\svn_google\trunk\HawkNL\Debug\RSP000002.rsp"
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Output Window
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Compiling...
+sock.c
+f:\svn_google\trunk\HawkNL\src\sock.c(699) : warning C4267: '+=' : conversion from 'size_t' to 'NLint', possible loss of data
+nltime.c
+nl.c
+loopback.c
+ipx.c
+f:\svn_google\trunk\HawkNL\src\ipx.c(222) : warning C4267: '+=' : conversion from 'size_t' to 'NLint', possible loss of data
+htmutex.c
+hthread.c
+f:\svn_google\trunk\HawkNL\src\hthread.c(41) : warning C4311: 'type cast' : pointer truncation from 'void *' to 'unsigned int'
+f:\svn_google\trunk\HawkNL\src\hthread.c(187) : warning C4312: 'type cast' : conversion from 'DWORD' to 'HThreadID' of greater size
+htcondition.c
+group.c
+errorstr.c
+err.c
+f:\svn_google\trunk\HawkNL\src\err.c(66) : warning C4312: 'type cast' : conversion from 'NLenum' to 'LPVOID' of greater size
+f:\svn_google\trunk\HawkNL\src\err.c(98) : warning C4311: 'type cast' : pointer truncation from 'LPVOID' to 'NLenum'
+crc.c
+Generating Code...
+Creating library...
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Results
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
+Build log was saved at "file://f:\svn_google\trunk\HawkNL\Debug\BuildLog.htm"
+HawkNL - 0 error(s), 6 warning(s)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
+</font></table></body></html>

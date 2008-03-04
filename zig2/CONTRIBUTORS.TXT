@@ -1,0 +1,92 @@
+----------------------------------------------------------------------------- 
+ CONTRIBUTORS:
+ list of the people that have contributed to the project
+ if you should be here and isn't, please tell me: fcecin AT gmail DOT com
+-----------------------------------------------------------------------------
+
+Daniel K. Osmari
+- added automake files with cleaner #include code (L1.1.0)
+- fixed missing virtual destructors (L1.1.0)
+
+David Jenssens
+- Dev-C++ library compilation help
+
+Diego M. Pereira
+- work on the new "connection handshake" code in station_c/msocket_c (L1.1.0)
+- several improvements to internal classes (better coding practices) (L1.1.0)
+- work on the new "disconnection handshake" code in station/msocket_c (L1.1.0)
+- new "ZIG streams" feature supported by msocket/station (L1.1.0)
+- removed several bugs (L1.1.0)
+- helped to fix memleak in station_c: missing deletion of stream data (v2.0.0)
+- fixed several issues in ZIG 2.0.0: disconnection, streams, ... (v2.1.0)
+- *** and lots of other stuff I couldn't keep track of!
+
+José Aliste P.
+- finding the console multithreading bug
+- finding and helping to fix miscellaneos compilation problems in mingw/gcc
+
+Luigi Auriemma
+- found bugs related to receipt of corrupted packets by zig (L1.1.0)
+
+Marcos Slomp
+- work on "run non-blocking" mode
+- help on bug hunting, suggestions, ...
+- found net-ratio bug that showed up in incorrect ping results (v1.2.4)
+- fixed console_c's totally broken default constructor (v1.2.6)
+- helped improving client round trip time latency measurement code (v1.2.6)
+- found bug: clients disconnecting because of problem in v1.3.0rc1
+- reported clients disconnecting because of badly reported internal limitation
+- help on testing the new client-side-NATs-friendliness code (v1.5.0)
+- fixed nlWrite()==0 causing disconnections (L1.1.0)
+
+Milan Mimica
+- fix for compatability issues in Linux (Pthreads priority fix)
+- fixes to the code so it can be compiled with gcc-3.4.x
+- bash scripts for building ZIG and minigame under unix machines
+- stream << >> operators for buffer_c
+- const correctness for buffer_c
+- help on the new #include discipline for ZIG v1.2.3
+- found bug and wrote test case: screw-up in zigclient_c::send_frame() (v1.2.4)
+- found and fixed bug in the object serialization code (typereg.h, v1.2.4)
+- found bug and tested fix: client connection timeout problem on Linux (v1.2.5)
+- reported the "reliable messages longer than 255 bytes" bug (v1.3.0)
+- found and fixed bug in new packet unzip code with growable buffers (v1.3.1)
+- found and gave profile of zigserver_c's pure virtual call bug (v1.3.1)
+- found and helped fix broken compression code (again) (v1.3.2)
+- found and fixed two memory leaks on buffer_c (v1.3.2)
+- found/fixed two rounding-error bugs in client ping estimation code (v1.4.0)
+- patch: discard compressed packets that are bigger than the original (v1.4.0)
+- patch: const-correctness for serializable_c::write(buffer_c&) (v1.4.0)
+- found/fixed missing virtual destructor on class serializable_c (v1.5.0)
+- found reproducible testcase for the nlGroupDeleteSocket-related bug (v1.5.0)
+- found reproducible testcase for the nlPollGroup vs. nlPollSocket bug (v1.5.0)
+- found two memory leaks on console_c and log_c (v1.5.0)
+- found many jumps and other non-inited value usages (v1.5.0)
+- miscellaneous testing, debugging & suggestions for LAN-serverinfo (v1.5.0)
+- found un-needed zigserver_c::client_disconnected() call on unreleased v1.5.0
+- found second local client unable to connect on unreleased v1.5.0
+- found out-of-order-packets-related bug on the packet id encoding (v1.5.0)
+- found integer vs. enum value exception problem (v1.5.0)
+- suggestion for zig_set_compression_level() (v1.5.0)
+- found and fixed overlapping memcpy bug on receive packet code (L1.0.0)
+- found zigclient::incoming_data() called before ::connected() (L1.1.0)
+- found bug: log_open() API returning 0 for both error and no-error (L1.1.0)
+- fixed older_ushort_id to work with values higher than HALF_USHORT_ID (L1.1.0)
+- fixed increment of msg_current in station_c::read_reliable() (L1.1.0)
+- tested and applied Daniel Osmari's patches plus .vcproj file fixes (L1.1.0)
+- help with bugs related to receipt of corrupted packets by zig (L1.1.0)
+- help with testing the ZIG 2.0.0 release compat. with ZIGLITE 1.0 (v2.0.0)
+- makefiles for ZIG 2.0.0 library and minigame (v2.0.0)
+- found/fixed unitialized station::compression_config member var (v2.0.0)
+- found memleak in station_c: missing deletion of stream data (v2.0.0)
+- found several issues in ZIG 2.0.0: disconnection, streams, ... (v2.1.0)
+- And probably some stuff I missed!
+
+Paulo Zaffari
+- bzip2 (http://sources.redhat.com/bzip2) integration into the ZIG sources
+- work on object serialization ("typereg" module)
+- work on "run non-blocking" mode
+- help on bug hunting, suggestions, ...
+- bug report for: process_nonblocking()'s lagging behind messages (v1.3.0)
+- suggestions for panic_drop() and related "helper to overloaded server" APIs
+- fixed address_c operator< wasting CPU with temp object creation (L1.1.0)
