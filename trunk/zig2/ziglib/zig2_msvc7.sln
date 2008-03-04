@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zig2", "zig2.vcproj", "{3C02250C-AA8C-494A-9DEA-0216A8DEE1E0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{3C02250C-AA8C-494A-9DEA-0216A8DEE1E0}.Debug.ActiveCfg = Debug|Win32
+		{3C02250C-AA8C-494A-9DEA-0216A8DEE1E0}.Debug.Build.0 = Debug|Win32
+		{3C02250C-AA8C-494A-9DEA-0216A8DEE1E0}.Release.ActiveCfg = Release|Win32
+		{3C02250C-AA8C-494A-9DEA-0216A8DEE1E0}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
