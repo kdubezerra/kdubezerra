@@ -68,6 +68,14 @@ $ns attach-agent $n3 $null0
 $ns connect $udp0 $null0  
 $ns connect $udp1 $null0
 
+set eddd [new Eddie]
+set ed2 [new Eddie]
+
+$eddd call-brother $ed2
+$ed2 call-brother $eddd
+
+$ed2 iskedule
+
 #Schedule events for the CBR agents
 $ns at 0.5 "$cbr0 start"
 $ns at 1.0 "$cbr1 start"

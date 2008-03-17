@@ -1,0 +1,14 @@
+#Plotador oficial do trabalho de redes
+reset
+set xlabel 'Tempo (microssegundos)'
+set ylabel 'Banda (bytes)'
+
+#set xrange [500:1500]
+set yrange [0:150000]
+
+plot "client1.dat" with linespoints 1
+rep "client2.dat" with impulses 7
+rep "client3.dat" with impulses 5
+rep "client4.dat" with linespoints 4
+rep "client5.dat" with impulses 3
+

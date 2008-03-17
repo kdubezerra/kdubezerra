@@ -1,9 +1,11 @@
+#pragma once
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 
 #include <SDL/SDL.h>
-#include <SDL.h>
+// #include <SDL.h>
 #include <signal.h>
 
 #include <math.h>
@@ -24,10 +26,11 @@ void setSdl(SDL_Surface** screen);
 void drawOnScreen(SDL_Surface* screen, int x, int y, unsigned char R, unsigned char G, unsigned char B);
 void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 int approx(float number);
-int apow(int a, int b);
-float distance (int xo, int yo, int xf, int yf);
+float apow(float a, int b);
+float distance (float xo, float yo, float xf, float yf);
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination );
 SDL_Surface* load_image( string filename );
+bool belongsToVisibility (float px, float py, float dx, float dy, float ox, float oy); //visibility is defined as a semicircle with the observer in the center
 
 
 #ifdef _SDL_H
@@ -163,11 +166,32 @@ int approx(float number) {
 	return round_up_diff > round_dn_diff ? (int)floor(number) : (int)ceil(number);	
 }
 
-float distance (int xo, int yo, int xf, int yf) {
+float distance (float xo, float yo, float xf, float yf) {
 	return sqrt( apow(xf-xo,2) + apow(yf-yo,2) );
 }
 
-int apow(int a, int b) { //power ... only works with non-negative exponnents (b)
+float apow(float a, int b) { //power ... only works with non-negative exponnents (b)
 	if (b == 0) return 1;
 	return a * apow(a, b - 1);
+}
+
+bool belongsToVisibility (float px, float py, float dx, float dy, float ox, float oy) {
+
+	float hipo = distance (0.0, 0.0, dx, dy);
+	float cos_alpha = dx / hipo;
+	float sin_alpha = dy / hipo;
+// 	float oy__, py__;
+	float ox__, px__;
+
+	ox__ = ox * cos_alpha + oy * sin_alpha;
+	px__ = px * cos_alpha + py * sin_alpha;
+
+// 	oy__ = -ox * sin_alpha + oy * cos_alpha;
+// 	py__ = -px * sin_alpha + py * cos_alpha;
+
+	if (ox__ >= px__)
+		return true;
+	else
+		return false;
+
 }
