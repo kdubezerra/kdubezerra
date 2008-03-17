@@ -1,0 +1,17 @@
+Content-type: text/html
+X-Powered-By: PHP/4.4.0
+
+ >> 20 simulacoes com 200 usuarios
+    Processando...
+    Executando: $ ns freemmg_all-center-sem.tcl 200 6 80 32 (Tempo: 5678.2653648853)
+    Executando: $ ns freemmg_all-center-com.tcl 200 6 80 32 (Tempo: 21038.576658964)
+    Executando: $ ns freemmg_all-center-sem.tcl 200 6 80 3 (Tempo: 66836.21459794)
+    Executando: $ ns freemmg_all-center-com.tcl 200 6 80 3 (Tempo: 85277.303900957)
+    Executando: $ ns freemmg_all-center-sem.tcl 200 6 80 42 (Tempo: 5359.8217339516)
+    Executando: $ ns freemmg_all-center-com.tcl 200 6 80 42 (Tempo: 15896.167239904)
+    Executando: $ ns freemmg_all-center-sem.tcl 200 6 80 26 (Tempo: 5348.994204998)
+    Executando: $ ns freemmg_all-center-com.tcl 200 6 80 26 (Tempo: 14010.700942993)
+    Executando: $ ns freemmg_all-center-sem.tcl 200 6 80 13 (Tempo: 12741.904487848)
+    Executando: $ ns freemmg_all-center-com.tcl 200 6 80 13 (Tempo: 34308.910466909)
+    Executando: $ ns freemmg_all-center-sem.tcl 200 6 80 97 (Tempo: 12769.968305111)
+    Executando: $ ns freemmg_all-center-com.tcl 200 6 80 97

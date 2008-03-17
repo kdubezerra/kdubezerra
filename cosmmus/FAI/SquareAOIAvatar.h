@@ -1,6 +1,6 @@
-#include "Avatar.h"
+#pragma once
 
-#define VIEW_DISTANCE 85
+#include "Avatar.h"
 
 class SquareAOIAvatar : public Avatar {
 	

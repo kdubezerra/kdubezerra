@@ -1,0 +1,7 @@
+Content-type: text/html
+X-Powered-By: PHP/4.4.0
+
+ >> 20 simulacoes com 200 usuarios
+    Processando...
+    Executando: $ ns freemmg_all-center-sem.tcl 200 6 80 11 (Tempo: 5241.6974248886)
+    Executando: $ ns freemmg_all-center-com.tcl 200 6 80 11

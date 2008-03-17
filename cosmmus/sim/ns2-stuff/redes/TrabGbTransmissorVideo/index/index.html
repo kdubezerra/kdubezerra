@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>[ Redes de Computadores ]</title>
+<style type=text/css><!--
+	BODY 	{background-color:#ddc; font-family: Verdana, Arial, Helvetica; font-size:14px;}
+	H2 	{font-family: Verdana, Arial, Helvetica; color:#333; font-size:20px;}
+	A	{text-decoration:none; }
+	A:hover	{color:red; text-decoration:underline;}
+//--></style>
+</head>
+<body leftmargin=0 topmargin=0>
+<center>
+<table width=100%>
+<tr>
+<td width=10%> </td>
+
+<td>
+<center>
+	UNISINOS - Universidade do Vale do Rio dos Sinos, Centro 6<br />
+	Redes de computadores - 2004-1 - Prof. Valter Roesler
+	<br />
+	<h2>Trabalho de programação - Transmissão de vídeo</h2>
+</center>
+
+Rodrigo Machado Hahn, Solon Junior & Pancho Diniz Benitez<br />
+<a href="mailto:dormento@ig.com.br">dormento@ig.com.br</a><br />
+<a href="mailto:solon1983@yahoo.com.br">solon1983@yahoo.com.br</a><br />
+<a href="mailto:epifanio@exatas.unisinos.br">epifanio@exatas.unisinos.br</a>.
+<br /><br />
+
+Esse trabalho consistiu na implementação e teste de um programa servidor de vídeo, bem como um programa cliente que fizesse uso das facilidades providas pelo programa servidor.<br />
+<ul>
+<li>Funcionalidade <br />
+O servidor de vídeo limita o tráfego da conexão para cada cliente. O limite passado pelo usuário como parâmetro na linha de comando ao inicializar o servidor.<br />
+<br />
+
+<li>Descrição dos parâmetros no cliente:<br />
+<i>IPDestino</i>: IP do computador servidor. Se for usado (para testes) entre computadores da mesma rede, pode-se usar o nome da máquina nesta rede.<br />
+<i>nomearquivo</i>: nome do arquivo a ser baixado.<br />
+<i>porta</i>: porta na qual o transmissor e o receptor vão receber e transmitir os pacotes.<br />
+<i>nomearquivorec</i>: nome do arquivo a ser salvo na máquina do receptor.<br />
+<br />
+<li>Descrição dos parâmetros no servidor:<br />
+<i>banda</i>: banda máxima (em bytes/s) que o transmissor pode utilizar por cliente<br />
+<i>porta</i>: porta na qual o transmissor e o receptor vão receber e transmitir os pacotes<br />
+<i>tampacote</i>: tamanho do pacote que o transmissor vai utilizar<br />
+Se qualquer dos parâmetros informados estiver em branco, o programa mostrará uma mensagem de erro e encerrará imediatamente.<br />
+<br />
+<li>fontes do trabalho:<br />
+Os programas necessários para ilustrar os conceitos explorados neste trabalho foram desenvolvidos usando a linguagem C, em máquinas GNU-Linux (GoboLinux , RedHat 8, Debian), especialmente as do Laboratório de Redes (pipca), com gcc versão 2.3.2.<br />
+<a href="server.c">server.c</a><br />
+<a href="client.c">client.c</a><br />
+</td><td width=10%> </td></tr> 
+</table></center>
+<hr noshade width=100%>
+<font size=1>01:54 17/6/2004</font>
+</body>
+</html>

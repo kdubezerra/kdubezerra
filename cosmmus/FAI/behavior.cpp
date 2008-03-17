@@ -1,15 +1,22 @@
 #include "SquareAOIAvatar.h"
+#include "RoundAOIAvatar.h"
+#include "RoundSmoothAOIAvatar.h"
+#include "SemicircleAOIAvatar.h"
+#include "CosmmusAvatar.h"
+#include "CosmmusSmoothAvatar.h"
 
 int main () {
 
 #ifdef _SDL_H	
 	setSdl(&screen);	
 #endif	
-	srand(0);
+	srand(time(NULL));
 	
 	bg = load_image ("bg.bmp");
 	
-	SquareAOIAvatar player[nplayers];
+	RoundSmoothAOIAvatar player[nplayers];
+	
+	if (!player[0].setImage("player0.bmp")) cerr << "\nErro setando a imagem do player 0\n" << endl;
 	
 // 	for (int i = 0 ; i < WW ; i ++) player[i] = new Avatar();
 	
@@ -17,12 +24,12 @@ int main () {
 		apply_surface(0,0,bg,screen);
 
 		for (int i = 1 ; i < nplayers ; i ++) player[0].OtherRelevance(&player[i]);
-		for (int i = 0 ; i < nplayers ; i ++) player[i].step();
+		for (int i = 0 ; i < nplayers ; i ++) player[i].step(50);
 // 		while (1);
 		
 		SDL_Flip( screen );
 		
-// 		SDL_Delay(100);
+ 		SDL_Delay(10);
 	}
 
 }
