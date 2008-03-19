@@ -51,7 +51,7 @@ class Avatar {
 	
 			Uint32 elapsed_time = SDL_GetTicks() - last_move;
 			
-			drawMe();
+// 			drawMe();
 			
 			float distance_ = distance(posx, posy, destx, desty);
 	

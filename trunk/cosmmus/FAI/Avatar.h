@@ -15,7 +15,8 @@ class Avatar {
 
 	public:
 	
-		Avatar() {			
+		Avatar() {	
+			srand(0);		
 			posx = rand() % WW;
 			posy = rand() % WW;
 			dirx = rand() % WW;
