@@ -12,7 +12,7 @@
 
 #define uint64 unsigned long
 #define nplayers WW
-#define WW 750 
+#define WW 400 
 // ww = world width
 #define P_SIZE 5
 
@@ -33,7 +33,7 @@ SDL_Surface* load_image( string filename );
 bool belongsToVisibility (float px, float py, float dx, float dy, float ox, float oy); //visibility is defined as a semicircle with the observer in the center
 
 
-#ifdef _SDL_H
+
 void setSdl(SDL_Surface** screen) {
 	if( SDL_Init(SDL_INIT_EVERYTHING) < 0 ) {
 		cerr <<	"Couldn't initialize SDL: " << SDL_GetError() << endl;
@@ -157,7 +157,7 @@ void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination 
 	SDL_BlitSurface( source, NULL, destination, &offset );
 }
 
-#endif
+
 
 int approx(float number) {
 	float round_up_diff = ceil(number) - number;
