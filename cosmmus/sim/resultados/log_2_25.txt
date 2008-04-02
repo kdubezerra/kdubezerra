@@ -1,0 +1,8 @@
+25 2 out_2_25.nam graph_2_25.tr 1200 0
+Number of players set to 25
+Avatar type is 2
+Simulation started with 50 ms step interval and 2 avatar
+Average bandwidth: 9429.6666666666661
+Maximum bandwidth: 17000
+Estimated maximum needed bandwidth for 25 players: 425000 B/s
+Estimated average needed bandwidth for 25 players: 235741.66666666666 B/s
