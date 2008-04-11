@@ -1,0 +1,306 @@
+//  	
+// Author:    Jae Chung  
+// File:      mm-app.cc
+// Written:   07/17/99 (for ns-2.1b4a)  
+// Modifed:   10/14/01 (for ns-2.1b8a)  
+//   
+//	Modified by: Carlos Eduardo Bezerra
+//	File:	cosmmus-agent.h
+//	Written:	03/18/2008			
+// Last modified: 03/18/2008
+
+
+#include <iostream>
+#include "pp-app.h"
+#include "pp-simulator.h"
+
+using namespace std;
+
+// MmApp OTcl linkage class
+static class PPAppClass : public TclClass {
+ public:
+  PPAppClass() : TclClass("Application/P2pseApp") {}
+  TclObject* create(int, const char*const*) {
+    return (new PPApp);
+  }
+} class_pp_app;
+
+
+// When snd_timer_ expires call MmApp:send_mm_pkt()
+void PPSendTimer::expire(Event*)
+{
+	t_->check_send_sched();
+}
+
+
+// Constructor (also initialize instances of timers)
+PPApp::PPApp() : running_(0), snd_timer_(this), last_snd_time(0), next_snd_time(0), isPending(0), packetGrouping(0), acc(0), last(0.0f), server(true)
+{
+  bind("pktsize_", &pktsize_);  
+  bind("interval_", &normal_interval);
+  bind("packetGrouping_", &packetGrouping);
+  bind("pack_aggr_time_", &pack_aggr_time);
+}
+
+
+// OTcl command interpreter
+int PPApp::command(int argc, const char*const* argv)
+{
+  Tcl& tcl = Tcl::instance();
+
+  if (argc == 2) {
+	  if (strcmp(argv[1], "start") == 0) {
+		  start();
+		  return(TCL_OK);
+	  }
+	  if (strcmp(argv[1], "stop") == 0) {
+		  stop();
+		  return(TCL_OK);
+	  }
+  }
+  
+  if (argc == 3) {
+	  if (strcmp(argv[1], "attach-agent") == 0) {
+		  agent_ = (Agent*) TclObject::lookup(argv[2]);
+		  if (agent_ == 0) {
+			  tcl.resultf("no such agent %s", argv[2]);
+			  return(TCL_ERROR);
+		  }
+		  agent_->attachApp(this);
+		  return(TCL_OK);
+	  }
+
+	  if (strcmp(argv[1], "set_full_rate") == 0) {
+		  max_rate = atoi(argv[2]);
+		  return(TCL_OK);
+	  }
+	  
+	  if (strcmp(argv[1], "set_packet_size") == 0) {
+		  pktsize_ = atoi(argv[2]);
+		  return(TCL_OK);
+	  }
+  }
+
+  if (argc == 5) {
+	  if (strcmp(argv[1], "attach-simulator") == 0) {
+		  
+		  if (strcmp(argv[4], "serverapp") == 0) {		  
+			  pp_simulator = (PPSim*) TclObject::lookup(argv[2]);
+			  player_number = atoi(argv[3]);
+			  num_players = pp_simulator->get_num_players();
+			  pp_simulator->setServerApp(this);
+			  server = true;
+			  cout << "Set to server." << endl;
+		  }
+		  
+		  if (strcmp(argv[4], "clientapp") == 0) {		  
+			  pp_simulator = (PPSim*) TclObject::lookup(argv[2]);
+			  player_number = atoi(argv[3]);
+			  num_players = pp_simulator->get_num_players();
+			  pp_simulator->setClientApp(this);
+			  server = false;
+			  cout << "Set to client." << endl;
+		  }
+		  cout << "Number of players = " << num_players << endl;
+		  isPending = new bool*[num_players];
+		  last_snd_time = new double*[num_players];
+		  next_snd_time = new double*[num_players];
+		  mv_pstate = new pp_state[num_players];
+		  
+		  for (int player_i = 0 ; player_i < num_players ; player_i++) {
+			  
+			  mv_pstate[player_i] = pp_simulator->getStatus(player_i);
+			  
+			  isPending[player_i] = new bool[num_players];
+			  last_snd_time[player_i] = new double[num_players];
+			  next_snd_time[player_i] = new double[num_players];			  
+			  					  
+			  for (int player_j = 0 ; player_j < num_players ; player_j++) {
+				  isPending[player_i][player_j] = false;				  
+				  last_snd_time[player_i][player_j] = ((double) (rand() % 250)) / 1000.0f;
+			  }
+			  
+		  }
+		  
+		  return(TCL_OK);
+	  }
+  }
+
+  return (Application::command(argc, argv));
+}
+
+
+void PPApp::start()
+{
+  running_ = 1;
+  check_send_sched();
+}
+
+
+void PPApp::stop()
+{
+	running_ = 0;
+	
+}
+
+
+// Send application data packet
+void PPApp::send_pp_pkt()
+{
+
+	double now = Scheduler::instance().clock();
+	
+	if (running_) { 
+	  
+		if(!packetGrouping) {			
+			agent_->sendmsg(pktsize_);		
+		}
+		
+		else if (now - last >= pack_aggr_time || acc * pktsize_ >= agent_->size()) {
+			agent_->sendmsg(pktsize_ * acc);
+			acc = 0;
+			last = now;
+		}
+		
+		else {
+			acc++;
+		}
+
+	}		
+	
+}
+
+
+// Receive message from underlying agent
+void PPApp::recv_msg(int nbytes, const char *msg)
+{
+
+}
+
+
+bool PPApp::isIdle(void) {
+	return (snd_timer_.status() == TIMER_IDLE);
+}
+		
+		
+double PPApp::relevance(long unsigned int dest_player, long unsigned int src_player) {
+	return pp_simulator->relevanceRelation(dest_player, src_player);
+}
+
+
+void PPApp::check_send_sched() {
+
+	if (server) {
+		check_server_send_schedule();
+	}
+	else {
+		check_player_send_schedule();
+	}
+	
+	if (running_) snd_timer_.resched(0.001f);
+
+}
+
+
+void PPApp::check_player_send_schedule() {
+	static double* last_packet_time = 0;
+	double now = Scheduler::instance().clock();
+	
+	if (!last_packet_time) {
+		last_packet_time = (double*)malloc(num_players * sizeof(double));
+		for ( int i = 0 ; i < num_players ; i++)
+			last_packet_time[i] = ((double)(rand() % (int)(normal_interval*1000.0f))) / 1000.0f;
+	}
+	
+	for( int player = 0 ; player < num_players ; player++ ){
+		if (pp_simulator->getStatus(player) == action) continue;
+		if (now - last_packet_time[player]  >= normal_interval) {
+			send_pp_pkt();
+			last_packet_time[player] = now;
+		}		
+	}
+	
+}
+
+
+void PPApp::check_server_send_schedule() {
+	for (int src_player = 0 ; src_player < num_players ; src_player++) {	
+		for (int dest_player = 0 ; dest_player < num_players ; dest_player++)    {
+			if (src_player == dest_player) continue;
+			if (pp_simulator->getStatus(src_player) == action) continue;
+			if (pp_simulator->getStatus(dest_player) == action) continue;
+			check_player_update_schedule(dest_player, src_player);
+		}
+	}
+}
+
+
+void PPApp::check_player_update_schedule(long unsigned dest_player, long unsigned src_player) {
+	double rel_ = relevance(dest_player, src_player);
+	double now = Scheduler::instance().clock();	
+	
+	if (rel_ > 0.001) {
+		double new_snd_time = last_snd_time[src_player][dest_player] + normal_interval / rel_;
+		if(!isPending[src_player][dest_player] || new_snd_time < next_snd_time[src_player][dest_player])
+			next_snd_time[src_player][dest_player] = new_snd_time;
+		isPending[src_player][dest_player] = true;
+	}
+
+	if (now > next_snd_time[src_player][dest_player] && isPending[src_player][dest_player]) {
+		send_pp_pkt();
+		last_snd_time[src_player][dest_player] = now;
+		isPending[src_player][dest_player] = false;
+	}	
+
+}
+
+
+void PPApp::appChangeCB (pp_state from_state, pp_state to_state, long unsigned pl_id) {
+	if (from_state == action && to_state == action) {
+		mv_pstate[pl_id] = action;
+		fireATAEvent(pl_id);
+	}
+	
+	if (from_state == action && to_state == social) {
+		mv_pstate[pl_id] = social;
+		fireATSEvent(pl_id);
+	}
+	
+	if (from_state == social && to_state == action){
+		mv_pstate[pl_id] = action;
+		fireSTAEvent(pl_id);
+	}
+}
+
+void PPApp::fireATAEvent(long unsigned pl_id) {
+	if (server) {
+// 		cout << "Server app received an ATA event" << endl;
+		//... generate and send s->c messages related to this event
+	}
+	else {
+// 		cout << "Client app received an ATA event" << endl;
+		//... generate and send c->s messages related to this event
+	}
+}
+
+void PPApp::fireATSEvent(long unsigned pl_id) {
+	if (server) {
+// 		cout << "Server app received an ATS event" << endl;
+		//... generate and send s->c messages related to this event
+	}
+	else {
+// 		cout << "Client app received an ATS event" << endl;
+		//... generate and send c->s messages related to this event
+	}
+}
+
+void PPApp::fireSTAEvent(long unsigned pl_id) {
+	if (server) {
+// 		cout << "Server app received an STA event" << endl;
+		//... generate and send s->c messages related to this event
+	}
+	else {
+// 		cout << "Client app received an STA event" << endl;
+		//... generate and send c->s messages related to this event
+	}
+}
