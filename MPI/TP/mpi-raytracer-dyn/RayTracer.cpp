@@ -76,7 +76,7 @@ RayTracer::RayTracer(int rank, int nprocs , int bl_size) : mBackgroundColor(1,1,
 	}
 
 	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);	
+	signal(SIGQUIT, SIG_DFL);
 
 	/* Clean up on exit */
 	atexit(SDL_Quit);
