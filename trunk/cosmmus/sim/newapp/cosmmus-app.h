@@ -55,6 +55,10 @@ private:
 	double normal_interval;
 	int max_rate;
 	
+	int packetGrouping;
+	int acc;
+	double last;
+	
 	long unsigned num_players;
 	bool* isPending;	
 	double* last_snd_time;

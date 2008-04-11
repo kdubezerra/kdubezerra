@@ -38,6 +38,7 @@ class CSim : public TclObject {
 		long unsigned get_ww() {
 			return ww;
 		}
+		void print_pl_pos();
 	private:
 		int    my_var1;
 		double my_var2;
@@ -83,14 +84,17 @@ int CSim::command(int argc, const char*const* argv) {
 		if(strcmp(argv[1], "call-my-priv-func") == 0) {
 			MyPrivFunc();
 			return(TCL_OK);
-		}
-		
+		}		
 		if(strcmp(argv[1], "iskedule") == 0) {
 			step_timer.resched(0.2f);
 			return(TCL_OK);
 		}
 		if(strcmp(argv[1], "stop") == 0) {
 			stopSimulation();
+			return(TCL_OK);
+		}
+		if(strcmp(argv[1], "ppl") == 0) {
+			print_pl_pos();
 			return(TCL_OK);
 		}
 		
@@ -106,7 +110,7 @@ int CSim::command(int argc, const char*const* argv) {
 		}
 		if(strcmp(argv[1], "start") == 0) {
 			step_interval = atoi(argv[2]);
-			cout << "OK til here: " << step_interval << "ms interval." << endl;		
+// 			cout << "OK til here: " << step_interval << "ms interval." << endl;		
 			startSimulation(step_interval);
 			Tcl::instance().evalf("puts \"Simulation started with %ld ms step interval\"", step_interval);
 			return(TCL_OK);
@@ -123,7 +127,7 @@ int CSim::command(int argc, const char*const* argv) {
 		}
 	}
 	
-	if(argc == 5) {
+	if(argc == 4) {
 		if(strcmp(argv[1], "start") == 0) {
 			step_interval = atoi(argv[2]);
 			char atype = atoi(argv[3]);			
@@ -161,6 +165,8 @@ int CSim::startSimulation(long unsigned interval, char avatar_type) {
 	
 	step_interval = interval;
 	
+ 	cout << "Avatar type is " << (short) avatar_type << endl;
+			
 	switch (avatar_type) {
 		case 0: {
 			playerList = new EveryoneAvatar[nPlayers];
@@ -175,6 +181,7 @@ int CSim::startSimulation(long unsigned interval, char avatar_type) {
 			break;
 		}
 		case 3: {
+// 			cout << "These avatar are round smooth AOI avatars" << endl;
 			playerList = new RoundSmoothAOIAvatar[nPlayers];
 			break;
 		}
@@ -204,8 +211,9 @@ int CSim::startSimulation(long unsigned interval, char avatar_type) {
 void CSim::worldStep() {
 	
 	for (int i = 0 ;  i < nPlayers ; i++) {
-// 		cout << "Stepping player[" << i << "]" << endl;
-		playerList[i].step(step_interval);
+// 		cout << "\nStepping player[" << i << "]" << endl;
+//		playerList[i].player_id = i;
+		playerList[i].step(step_interval);		
 	}
 	
 // 	cout << "OK til here (3)" << endl;
@@ -241,5 +249,13 @@ void CSim::setNPlayers(long unsigned n) {
 
 
 double CSim::relevanceRelation(int a, int b) {
+//	cout << "Player number is " << a << endl;
+//	playerList[a].player_id = a;
 	return playerList[a].OtherRelevance(&playerList[b]);
+}
+
+void CSim::print_pl_pos() {
+	for (int i = 0 ; i < nPlayers ; i++) {
+// 		cout << "X = " << playerList[i].GetX() << " ; Y = " << playerList[i].GetY() << endl;
+	}
 }
