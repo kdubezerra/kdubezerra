@@ -7,7 +7,8 @@ class EveryoneAvatar : public Avatar {
 	public:
 	
 		double OtherRelevance(Avatar* other) {
-			return 1;
+			other->markAsSeen( 1.0f );
+			return 1.0f;
 		}
 	
 };

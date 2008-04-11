@@ -16,7 +16,7 @@ class CosmmusSmoothAvatar : public Avatar {
 			if (dist < THRESHOLD_DISTANCE) {
 				other->markAsSeen(1.0);
 				return 1;				
-			}
+			}			
 			
 			if (/*dist < VIEW_DISTANCE && */belongsToVisibility(posx, posy, incr_x, incr_y, ox, oy)) {
 				double relevance = 1 - ( 

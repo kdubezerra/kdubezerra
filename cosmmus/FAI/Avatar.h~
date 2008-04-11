@@ -2,27 +2,43 @@
 
 #include "myutils.h"
 
-#define VIEW_DISTANCE 100
-#define THRESHOLD_DISTANCE 35
-
-#ifdef _SDL_H
-	SDL_Surface* screen;
-	SDL_Surface* bg;
-	SDL_Surface* player[nplayers];
-#endif
+#define VIEW_DISTANCE 120
+#define THRESHOLD_DISTANCE 40
 
 class Avatar {
 
 	public:
-	
-		Avatar() {			
-			posx = rand() % WW;
-			posy = rand() % WW;
-			dirx = rand() % WW;
-			diry = rand() % WW;
-			destx = rand() % WW;
-			desty = rand() % WW;
-	
+
+		
+		Avatar() {
+			init();
+			isDrawable = false;
+			usesAOI = true;
+			player_id = 555;
+		}
+		
+		
+		void setDrawable(string my_surface_file, string seen_surface_file, SDL_Surface* out_screen) {			
+			my_surface = load_image(my_surface_file);
+			seen_surface = load_image(seen_surface_file);
+			isDrawable = true;
+			screen = out_screen;
+		}
+
+		~Avatar() {}
+		
+		
+		void init() {
+			
+			do {
+				posx = rand() % WW;
+				posy = rand() % WW;
+				dirx = rand() % WW;
+				diry = rand() % WW;
+				destx = rand() % WW;
+				desty = rand() % WW;				
+			} while (distance(posx, posy, destx, desty) <= 20);
+			 
 			R = rand() % 255;
 			G = rand() % 255;
 			B = rand() % 255;
@@ -33,17 +49,6 @@ class Avatar {
 			last_move = 0;
 			isSeen = false;
 		}
-
-		
-		
-		
-		
-		
-		
-		~Avatar() {}
-		
-		
-		
 		
 		
 
@@ -51,19 +56,22 @@ class Avatar {
 	
 			Uint32 elapsed_time = SDL_GetTicks() - last_move;
 			
-// 			drawMe();
+ 			if (isDrawable) draw();
 			
 			float distance_ = distance(posx, posy, destx, desty);
 	
 			if (distance_ > 20) {
 	
-				int speed = rand() % 5 + 1;				
+				int speed = rand() % 5 + 1;		
 				incr_y =  speed * (desty - posy) / distance(posx, posy, destx, desty); // sin of the direction angle
 				incr_x =  speed * (destx - posx) / distance(posx, posy, destx, desty); // cossin of the direction angle				
-				incr_y *= (double)delay/(double)250;
-				incr_x *= (double)delay/(double)250;
+				
+				incr_y *= (double)delay/250.0f;
+				incr_x *= (double)delay/250.0f;
+
 				posy += incr_y;
-				posx += incr_x;			
+				posx += incr_x;							
+				
 				if (posx < 3) posx = 3;
 				if (posx >= WW - 3) posx = WW - 3;
 				if (posy < 3) posy = 3;
@@ -122,7 +130,7 @@ class Avatar {
 		
 		
 		
-		void drawMe() {
+		void draw() {
 			if (isSeen) {
 				SDL_SetAlpha( seen_surface, SDL_SRCALPHA, approx(255*relevance) );
 				apply_surface( approx(posx), approx(posy), my_surface, screen );
@@ -134,6 +142,8 @@ class Avatar {
 			}
 			isSeen = false;
 		}
+		
+
 
 
 
@@ -151,5 +161,11 @@ class Avatar {
 		double incr_x;
 		double relevance;
 		unsigned long stopped_time;
+		bool isDrawable;		
+		unsigned long player_id;
+		
+#ifdef _SDL_H
+		SDL_Surface* screen;		
+#endif
 
 };
