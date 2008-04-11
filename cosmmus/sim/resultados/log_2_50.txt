@@ -6,3 +6,4 @@ Average bandwidth: 18699.666666666668
 Maximum bandwidth: 34000
 Estimated maximum needed bandwidth for 50 players: 1700000 B/s
 Estimated average needed bandwidth for 50 players: 934983.33333333337 B/s
+Packets lost: 0; packets received: 112338

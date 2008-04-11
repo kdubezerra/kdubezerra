@@ -6,3 +6,4 @@ Average bandwidth: 124866.33333333333
 Maximum bandwidth: 125000
 Estimated maximum needed bandwidth for 200 players: 25000000 B/s
 Estimated average needed bandwidth for 200 players: 24973266.666666668 B/s
+Packets lost: 168374; packets received: 749823
