@@ -30,10 +30,11 @@ void CSendTimer::expire(Event*)
 
 
 // Constructor (also initialize instances of timers)
-CosmmusApp::CosmmusApp() : running_(0), snd_timer_(this), last_snd_time(0), next_snd_time(0), isPending(0)
+CosmmusApp::CosmmusApp() : running_(0), snd_timer_(this), last_snd_time(0), next_snd_time(0), isPending(0), packetGrouping(0), acc(0), last(0.0f)
 {
   bind("pktsize_", &pktsize_);
   bind("interval_", &normal_interval);
+  bind("packetGrouping_", &packetGrouping);
 }
 
 
@@ -80,14 +81,14 @@ int CosmmusApp::command(int argc, const char*const* argv)
 		  cosmmus_simulator = (CSim*) TclObject::lookup(argv[2]);
 		  player_number = atoi(argv[3]);
 		  num_players = cosmmus_simulator->get_num_players();
-		  cout << "Number of players = " << num_players << endl;
+// 		  cout << "Number of players = " << num_players << endl;
 		  isPending = new bool[num_players];
 		  last_snd_time = new double[num_players];
 		  next_snd_time = new double[num_players];
 		  
 		  for (int player = 0 ; player < num_players ; player++) {
 			  isPending[player] = false;
-			  last_snd_time[player] = 0.0f;
+			  last_snd_time[player] = ((double) (rand() % 250)) / 1000.0f;
 		  }
 		  
 		  return(TCL_OK);
@@ -115,8 +116,25 @@ void CosmmusApp::stop()
 // Send application data packet
 void CosmmusApp::send_cosmmus_pkt()
 {
-  if (running_)
-    agent_->sendmsg(pktsize_);
+
+	double now = Scheduler::instance().clock();
+	
+	if (running_) { 
+	  
+		if(!packetGrouping)    
+			agent_->sendmsg(pktsize_);
+		
+		else if (now - last >= normal_interval) {
+				agent_->sendmsg(pktsize_ * acc);
+				acc = 0;
+				last = now;
+		}
+		else {
+				acc++;
+		}
+
+	}		
+	
 }
 
 
@@ -157,23 +175,23 @@ void CosmmusApp::check_player_update_schedule(long unsigned player) {
 	double myRel = relevance(player);
 	double now = Scheduler::instance().clock();	
 
-	cout << "Relevance[" << player << "] is " << myRel << endl;	
+// 	cout << "Relevance[" << player << "] is " << myRel << endl;	
 	
 	if (myRel > 0.001) {
-		cout << "Now it's: " << now << ". Calculating new send time[" << player << "]: ";
+// 		cout << "Now it's: " << now << ". Calculating new send time[" << player << "]: ";
 		double new_snd_time = last_snd_time[player] + normal_interval / myRel;
 		if(!isPending[player] || new_snd_time < next_snd_time[player])
 			next_snd_time[player] = new_snd_time;
 		isPending[player] = true;
-		cout << next_snd_time[player] << endl;
+// 		cout << next_snd_time[player] << endl;
 	}
 
 	if (now > next_snd_time[player] && isPending[player]) {
-		cout << "Now sending a packet[" << player << "]" << endl;
+// 		cout << "Now sending a packet[" << player << "]" << endl;
 		send_cosmmus_pkt();
 		last_snd_time[player] = now;
 		isPending[player] = false;
 	}
 	
-	cout << endl;
+// 	cout << endl;
 }

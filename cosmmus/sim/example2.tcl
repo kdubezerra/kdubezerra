@@ -4,6 +4,7 @@ set ns [new Simulator]
 #Define different colors for data flows
 $ns color 1 Blue
 $ns color 2 Red
+$ns color 3 Yellow
 
 #Open the nam trace file
 set nf [open out.nam w]
@@ -60,13 +61,26 @@ $cbr1 set packetSize_ 500
 $cbr1 set interval_ 0.005
 $cbr1 attach-agent $udp1
 
+set udpx [new Agent/UDP]
+$udpx set class_ 3
+$ns attach-agent $n0 $udpx
+
+set cbrx [new Application/Traffic/CBR]
+$cbrx set packetSize_ 200
+$cbrx set interval_ 0.003
+$cbrx attach-agent $udpx
+
 #Create a Null agent (a traffic sink) and attach it to node n3
 set null0 [new Agent/Null]
 $ns attach-agent $n3 $null0
 
+set null1 [new Agent/Null]
+$ns attach-agent $n1 $null1
+
 #Connect the traffic sources with the traffic sink
 $ns connect $udp0 $null0  
 $ns connect $udp1 $null0
+$ns connect $udpx $null1
 
 set eddd [new Eddie]
 set ed2 [new Eddie]
@@ -78,9 +92,12 @@ $ed2 iskedule
 
 #Schedule events for the CBR agents
 $ns at 0.5 "$cbr0 start"
+$ns at 0.75 "$cbrx start"
 $ns at 1.0 "$cbr1 start"
 $ns at 4.0 "$cbr1 stop"
 $ns at 4.5 "$cbr0 stop"
+$ns at 4.75 "$cbrx stop"
+
 #Call the finish procedure after 5 seconds of simulation time
 $ns at 5.0 "finish"
 

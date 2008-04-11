@@ -1,6 +1,0 @@
-Content-type: text/html
-X-Powered-By: PHP/4.4.0
-
- >> 20 simulacoes com 300 usuarios
-    Processando...
-    Executando: $ ns freemmg_all-center-sem.tcl 300 6 120 1
