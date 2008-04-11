@@ -6,3 +6,4 @@ Average bandwidth: 95284.166666666672
 Maximum bandwidth: 97200
 Estimated maximum needed bandwidth for 125 players: 12150000 B/s
 Estimated average needed bandwidth for 125 players: 11910520.833333334 B/s
+Packets lost: 0; packets received: 572179

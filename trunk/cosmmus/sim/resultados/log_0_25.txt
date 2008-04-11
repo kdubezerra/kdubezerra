@@ -6,3 +6,4 @@ Average bandwidth: 18442.0
 Maximum bandwidth: 18800
 Estimated maximum needed bandwidth for 25 players: 470000 B/s
 Estimated average needed bandwidth for 25 players: 461050.0 B/s
+Packets lost: 0; packets received: 110745

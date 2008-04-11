@@ -27,7 +27,7 @@ set graph [open $graph_file w]
 
 #Define a 'finish' procedure
 proc finish {} {
-   global ns nf graph graph_file bw_total bw_max exec_time num_players
+   global ns nf graph graph_file bw_total bw_max exec_time num_players null0
    $ns flush-trace
 	#Close the trace file
    close $nf
@@ -38,6 +38,9 @@ proc finish {} {
 	puts "Maximum bandwidth: [expr $bw_max]"
 	puts "Estimated maximum needed bandwidth for $num_players players: [expr $bw_max*$num_players] B/s"
 	puts "Estimated average needed bandwidth for $num_players players: [expr $bw_total*$num_players/$exec_time] B/s"
+	set rcvd_pkts [$null0 set npkts_]
+	set lost_pkts [$null0 set nlost_]
+	puts "Packets lost: $lost_pkts; packets received: $rcvd_pkts"
    #exec xgraph $graph_file -geometry 800x400 &
    exit 0
 }
@@ -51,9 +54,9 @@ set n2 [$ns node]
 set n3 [$ns node]
 
 #Create links between the nodes
-$ns duplex-link $n0 $n2 1Mb 10ms DropTail
-$ns duplex-link $n1 $n2 1Mb 10ms DropTail
-$ns duplex-link $n3 $n2 1Mb 10ms SFQ
+$ns duplex-link $n0 $n2 2Mb 10ms DropTail
+$ns duplex-link $n1 $n2 2Mb 10ms DropTail
+$ns duplex-link $n3 $n2 2Mb 10ms SFQ
 
 $ns duplex-link-op $n0 $n2 orient right-down
 $ns duplex-link-op $n1 $n2 orient right-up

@@ -6,3 +6,4 @@ Average bandwidth: 76074.0
 Maximum bandwidth: 77600
 Estimated maximum needed bandwidth for 100 players: 7760000 B/s
 Estimated average needed bandwidth for 100 players: 7607400.0 B/s
+Packets lost: 0; packets received: 456824
