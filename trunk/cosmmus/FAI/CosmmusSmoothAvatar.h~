@@ -18,6 +18,8 @@ class CosmmusSmoothAvatar : public Avatar {
 				return 1;				
 			}
 			
+			cout << "My player number is" <<
+			
 			if (/*dist < VIEW_DISTANCE && */belongsToVisibility(posx, posy, incr_x, incr_y, ox, oy)) {
 				double relevance = 1 - ( 
 												
@@ -28,6 +30,8 @@ class CosmmusSmoothAvatar : public Avatar {
 												 ( (double)(VIEW_DISTANCE)-(double)(THRESHOLD_DISTANCE) ) 
 							
 											  );
+				
+				if (relevance < 0) relevance = 0;
 				other->markAsSeen(relevance);
 				return relevance;
 			}
