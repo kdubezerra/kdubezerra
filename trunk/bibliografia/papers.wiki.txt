@@ -1,0 +1,149 @@
+Objetivo inicial: 100 referências. Necessário definir categorias para os artigos (fazer mais páginas com lista de atalhos para cada categoria).
+
+Sem data
+
+   * [[%ATTACHURL%/Selected.pdf][%ICON{pdf}%]] [[lauro:sti]]: Selected Techniques to Improve Communication in Massively Multiplayer Games
+
+2007
+
+   * [[http://portal.acm.org/citation.cfm?id=1280483][Support for resilient Peer-to-Peer gaming]]: Desce o pau no FreeMMG! :-)
+   * [[http://portal.acm.org/citation.cfm?id=1306840][Design of a cheat-resistant P2P online gaming system]]
+   * [[http://www.springerlink.com/content/3085q83277kh4666/][Cheating detection through game time modeling: A better way to avoid time cheats in P2P MOGs?]]
+   * (QUENTE) [[norden2007srp]]: Support for resilient Peer-to-Peer gaming
+   * [[%ATTACHURL%/MMOG_CCGRID07.pdf][%ICON{pdf}%]] [[schiele2007rpp]]: Requirements of Peer-to-Peer-based Massively Multiplayer Online Gaming
+   * [[%ATTACHURL%/PangUyedaLorch.pdf][%ICON{pdf}%]] [[pang2007spp]]: Scaling Peer-to-Peer Games in Low-Bandwidth Environments
+   * [[endo2005dam]]: A Distributed Architecture for Massively Multiplayer Online Services with Peer-to-Peer Support
+   * [[rueda2007cpp]]: On the Characterization of Peer-To-Peer Distributed Virtual Environments
+   * [[%ATTACHURL%/wsi-2006-04.pdf][%ICON{pdf}%]] [[rieche2007ppb]]: Peer-to-Peer-based Infrastructure Support for Massively Multiplayer Online Games
+   * [[obsolescencebased2007sfm]]: AN OPTIMISTIC OBSOLESCENCE-BASED APPROACH TO EVENT SYNCHRONIZATION FOR MASSIVELY MULTIPLAYER ONLINE GAMES
+   * [[jiang2007enc]]: Enhancing Neighborship Consistency for Peer-to-Peer Distributed Virtual Environments
+   * [[jin2007ppp]]: PKTown: A Peer-to-Peer Middleware to Support Multiplayer Online Games 
+   * [[jang2007edm]]: An Efficient Distributed MMOG Server Using 2Layer-Cell Method
+   * [[laurens2007nad]]: (Solves Wallhacking) A Novel Approach to the Detection of Cheating in Multiplayer Online Games
+   * [[neumann2007cpp]]: Challenges in peer-to-peer gaming
+   * [[%ATTACHURL%/europar07.pdf][%ICON{pdf}%]] [[gai2007aps]]: Acyclic Preference Systems in P2P Networks
+   * [[baughman2007cpp]]: (AS: Asynchronous Synchronization) Cheat-proof playout for centralized and peer-to-peer gaming
+   * [[%ATTACHURL%/056.ps][%ICON{ps}%]] [[jha2007esi]]: (Simulação Verificada por "Criptografia") Enforcing Semantic Integrity on Untrusted Clients in Networked Virtual Environments
+
+2006
+
+   * [[http://portal.acm.org/citation.cfm?id=1230087][Protecting Online Games against Cheating]]: Proteção contra modificação do executável
+   * [[%ATTACHURL%/a6-boulanger.pdf][%ICON{pdf}%]] [[boulanger2006cim]]: Comparing interest management algorithms for massively multiplayer games
+   * [[%ATTACHURL%/p15-webb.pdf][%ICON{pdf}%]] [[webb2006nal]]: NGS: An Application Layer Network Game Simulator
+   * [[%ATTACHURL%/P2P_beyond_filesharing.pdf][%ICON{pdf}%]] [[darlagiannis2006ppa]]: Peer-to-peer applications beyond file sharing: overlay network requirements and solutions
+   * [[http://saloon/twiki/viewfile/Projetos/Jogos/Arquivos?rev=1;filename=P2PSE_DS-RT_2006_CAMREADY_PDFeXpress_FINAL.pdf][%ICON{pdf}%]] [[cecin2006pps]]: A peer-to-peer simulation technique for instanced massively multiplayer games
+   * [[%ATTACHURL%/a48-hampel.pdf][%ICON{pdf}%]] [[hampel2006ppa]]: A Peer-to-Peer Architecture for Massive Multiplayer Online Games (DHT short paper netgames 2006 4 pags)
+   * [[mohamudally2006mmg]]: A Massive Multiplayer Game Framework for Mobile Learning
+*Eduardo*:
+   * [[%ATTACHURL%/a11chen.pdf][%ICON{pdf}%]] [[chen2006pch]]: Peer clustering: a hybrid approach to distributed virtual environments
+   * [[%ATTACHURL%/a4-assiotis.pdf][%ICON{pdf}%]] [[assiotis2006dam]]: A distributed architecture for MMORPG
+
+
+2005
+
+   * [[%ATTACHURL%/p9-de_vleeschauwer.pdf][%ICON{pdf}%]] [[devleeschauwer2005dma]]: Dynamic microcell assignment for massively multiplayer online gaming
+   * [[%ATTACHURL%/p6-kabus.pdf][%ICON{pdf}%]] [[kabus2005acd]]: Addressing cheating in distributed MMOGs
+   * [[%ATTACHURL%/01593234.pdf][%ICON{pdf}%]] [[liu2006ipp]]: Immersive Peer-to-Peer Audio Streaming Platform for Massive Online Games
+   * [[%ATTACHURL%/2005-GDTW.pdf][%ICON{pdf}%]] [[ferretti2005fha]]: FILA, a Holistic Approach to Massive Online Gaming: Algorithm Comparison and Performance Analysis
+*Eduardo*:
+   * [[%ATTACHURL%/p3b-el_rhalibi.pdf][%ICON{pdf}%]] [[elrhalibi2005abm]]: Agents-based modeling for a peer-to-peer MMOG architecture
+   * [[%ATTACHURL%/kim2005tcm.pdf][%ICON{pdf}%]] [[kim2005tcm]]: Traffic Characteristics of a Massively Multi-player Online Role Playing Game *(bom para obter parâmetros para simulações)*
+
+2004
+
+   * [[%ATTACHURL%/knuttson-infocomm04.pdf][%ICON{pdf}%]] [[knutsson2004pps]]: Peer-to-peer support for massively multiplayer games
+   * [[%ATTACHURL%/chrisg-nossdav04.pdf][%ICON{pdf}%]] [[gauthierdickey2004lla]]: Low latency and cheat-proof event ordering for peer-to-peer games
+   * [[%ATTACHURL%/01299353.pdf][%ICON{pdf}%]] [[%ATTACHURL%/041230.pdf][%ICON{ppt}%]] [[rooney2004fpp]]: A federated peer-to-peer network game architecture
+*Eduardo*:
+   * [[%ATTACHURL%/cecin2004fsa.pdf][%ICON{pdf}%]] [[cecin2004fsa]]: FreeMMG: A Scalable and Cheat-Resistant Distribution Model for Internet Games 
+   * [[%ATTACHURL%/p116-iimura.pdf][%ICON{pdf}%]] [[iimura2004zfg]]: Zoned federation of game servers: a peer-to-peer approach to scalable multi-player online games
+
+2003
+
+*Eduardo*:
+   * [[%ATTACHURL%/p160-lee.pdf][%ICON{pdf}%]] [[lee2003sdl]]: A scalable dynamic load distribution scheme for multi-server distributed virtual environment systems with highly-skewed user distribution
+
+2002
+
+   * [[%ATTACHURL%/p3-bharambe.pdf][%ICON{pdf}%]] [[bharambe2002msp]]: Mercury: a scalable publish-subscribe system for internet games
+*Eduardo*:
+   * [[%ATTACHURL%/topologically-aware-infocom02.pdf][%ICON{pdf}%]] [[ratnasamy2002tao]]: Topologically-aware overlay construction and server selection
+   * [[%ATTACHURL%/p163-ng.pdf][%ICON{pdf}%]] [[ng2002msa]]: A multi-server architecture for distributed virtual walkthrough
+
+2000
+
+   * [[%ATTACHURL%/morse-96.pdf][%ICON{pdf}%]] [[morse2000iml]]: Interest Management in Large-Scale Virtual Environments
+   * [[%ATTACHURL%/p119-greenhalgh.pdf][%ICON{pdf}%]] [[greenhalgh2000imf]]: Inside MASSIVE-3: Flexible Support for Data Consistency and World Structuring
+
+1982
+
+*Eduardo*:
+   * [[%ATTACHURL%/p382-lamport.pdf][%ICON{pdf}%]] [[lamport1982bgp]]: The Byzantine Generals Problem
+
+
+Referências WWW a artigos:
+
+   * Advanced WinSock Multiplayer Game Programming: Multicasting by Denis Lukianov - http://www.gamedev.net/reference/articles/article1587.asp - diz que "multicast na internet não é em geral suportado". Acessado em 12 de agosto de 2007.
+
+Referências WWW a jogos:
+
+@Misc{everquest, 
+   author = "Sony Online Entertainment", 
+   title = "EverQuest", 
+   note = "http://www.everquest.com/"
+}
+
+@Misc{ultimaonline, 
+   author = "Origin", 
+   title = "Ultima Online", 
+   note = "http://www.owo.com/"
+}
+
+@Misc{worldofwarcraft, 
+    author = "Blizzard",
+    title = "World of Warcraft",
+    note = "http://www.worldofwarcraft.com/",
+    year = "2004"
+}
+
+@Misc{guildwars, 
+    author = "ArenaNet",
+    title = "Guild Wars",
+    note = "http://www.guildwars.com/"
+}
+
+@Misc{planetside, 
+   author = "Sony Online Entertainment", 
+   title = "PlanetSide", 
+   note = "http://www.planetside.com/"
+}
+
+*Eduardo*:
+
+@Misc{broodwar, 
+    author = "Blizzard",
+    title = "Starcraft: Brood War",
+    note = "http://www.blizzard.com/broodwar/",
+    year = "1998"
+}
+
+@Misc{warcraft3, 
+    author = "Blizzard",
+    title = "Warcraft III",
+    note = "http://www.blizzard.com/war3/",
+    year = "2002"
+}
+
+@Misc{counterstrike, 
+    author = "Valve",
+    title = "Counter-Strike",
+    note = "http://www.counter-strike.net/",
+    year = "2000"
+}
+
+@Misc{lineage2, 
+    author = "NCsoft",
+    title = "Lineage II",
+    note = "http://www.lineage2.com/",
+    year = "2003"
+}
