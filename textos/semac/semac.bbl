@@ -5,6 +5,12 @@ ArenaNet (2005).
 \newblock Guild wars.
 \newblock http://www.guildwars.com/.
 
+\bibitem[Assiotis and Tzanov 2006]{assiotis2006dam}
+Assiotis, M. and Tzanov, V. (2006).
+\newblock {A distributed architecture for MMORPG}.
+\newblock {\em Proceedings of 5th ACM SIGCOMM workshop on Network and system
+  support for games}.
+
 \bibitem[Blizzard 2004]{worldofwarcraft}
 Blizzard (2004).
 \newblock World of warcraft.
