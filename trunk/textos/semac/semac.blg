@@ -2,44 +2,44 @@ This is BibTeX, Version 0.99c (Web2C 7.5.4)
 The top-level auxiliary file: semac.aux
 The style file: sbc.bst
 Database file #1: semac.bib
-You've used 9 entries,
+You've used 10 entries,
             1935 wiz_defined-function locations,
-            524 strings with 4985 characters,
-and the built_in function-call counts, 3499 in all, are:
-= -- 347
-> -- 145
-< -- 10
-+ -- 49
-- -- 47
-* -- 254
-:= -- 614
-add.period$ -- 29
-call.type$ -- 9
-change.case$ -- 67
-chr.to.int$ -- 9
-cite$ -- 9
-duplicate$ -- 146
-empty$ -- 233
-format.name$ -- 62
-if$ -- 700
+            529 strings with 5245 characters,
+and the built_in function-call counts, 4019 in all, are:
+= -- 402
+> -- 163
+< -- 11
++ -- 55
+- -- 53
+* -- 292
+:= -- 694
+add.period$ -- 32
+call.type$ -- 10
+change.case$ -- 75
+chr.to.int$ -- 10
+cite$ -- 10
+duplicate$ -- 169
+empty$ -- 268
+format.name$ -- 69
+if$ -- 811
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 7
-newline$ -- 48
-num.names$ -- 31
-pop$ -- 63
+missing$ -- 8
+newline$ -- 53
+num.names$ -- 34
+pop$ -- 71
 preamble$ -- 1
-purify$ -- 67
+purify$ -- 75
 quote$ -- 0
-skip$ -- 122
+skip$ -- 144
 stack$ -- 0
-substring$ -- 198
-swap$ -- 31
-text.length$ -- 3
+substring$ -- 242
+swap$ -- 41
+text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 52
+type$ -- 58
 warning$ -- 0
-while$ -- 29
+while$ -- 34
 width$ -- 0
-write$ -- 116
+write$ -- 129
