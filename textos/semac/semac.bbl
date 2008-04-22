@@ -1,3 +1,51 @@
 \begin{thebibliography}{}
 
+\bibitem[ArenaNet 2005]{guildwars}
+ArenaNet (2005).
+\newblock Guild wars.
+\newblock http://www.guildwars.com/.
+
+\bibitem[Blizzard 2004]{worldofwarcraft}
+Blizzard (2004).
+\newblock World of warcraft.
+\newblock http://www.worldofwarcraft.com/.
+
+\bibitem[Boulic and Renault 1991]{boulic:91}
+Boulic, R. and Renault, O. (1991).
+\newblock 3d hierarchies for animation.
+\newblock In Magnenat-Thalmann, N. and Thalmann, D., editors, {\em New Trends
+  in Animation and Visualization}. John Wiley {\&} Sons ltd.
+
+\bibitem[Cecin et~al. 2004]{cecin2004fsa}
+Cecin, F., Real, R., de~Oliveira~Jannone, R., Geyer, C., Martins, M., and
+  Barbosa, J. (2004).
+\newblock {FreeMMG: A Scalable and Cheat-Resistant Distribution Model for
+  Internet Games}.
+\newblock {\em IEEE Int. Sym. on Distributed Simulation and Real-Time
+  Applications}, pages 83--90.
+
+\bibitem[Knuth 1984]{knuth:84}
+Knuth, D.~E. (1984).
+\newblock {\em The {\TeX} Book}.
+\newblock Addison-Wesley, 15th edition.
+
+\bibitem[NCsoft 2003]{lineage2}
+NCsoft (2003).
+\newblock Lineage ii.
+\newblock http://www.lineage2.com/.
+
+\bibitem[Schiele et~al. 2007]{schiele2007rpp}
+Schiele, G., Suselbeck, R., Wacker, A., Hahner, J., Becker, C., and Weis, T.
+  (2007).
+\newblock {Requirements of Peer-to-Peer-based Massively Multiplayer Online
+  Gaming}.
+\newblock {\em Proceedings of the Seventh IEEE International Symposium on
+  Cluster Computing and the Grid}, pages 773--782.
+
+\bibitem[Smith and Jones 1999]{smith:99}
+Smith, A. and Jones, B. (1999).
+\newblock On the complexity of computing.
+\newblock In Smith-Jones, A.~B., editor, {\em Advances in Computer Science},
+  pages 555--566. Publishing Press.
+
 \end{thebibliography}

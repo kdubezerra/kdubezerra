@@ -9,7 +9,8 @@
 %\usepackage[brazil]{babel}   
 \usepackage[latin1]{inputenc}  
 
-     
+\hyphenation{ba-lan-ce-a-men-to}
+
 \sloppy
 
 \title{Suporte a jogos maciçamente multijogador em cenários com recursos limitados}
@@ -27,23 +28,36 @@
 \maketitle
 
 \begin{abstract}
-  This meta-paper describes the style to be used in articles and short papers
-  for SBC conferences. For papers in English, you should add just an abstract
-  while for the papers in Portuguese, we also ask for an abstract in
-  Portuguese (``resumo''). In both cases, abstracts should not have more than
-  10 lines and must be in the first page of the paper.
+  %Jogos maciçamente multijogador, onde o número de participantes simultâneos é da ordem de dezenas de milhares [cit], necessitam de um infra-estrutura de suporte que atenda à sua demanda por capacidade de processamento para simular o ambiente virtual e de largura de banda disponível para que possa haver interação satisfatória dos jogadores entre si e com o mundo do jogo, onde a partida ocorre. 
+Tradicionalmente, utiliza-se um servidor central %, ao qual os jogadores se conectam, 
+para prover suporte a jogos maciçamente multijogador, onde o número de participantes é da ordem de dezenas de milhares. Neste trabalho, propõe-se utilizar nodos geograficamente distribuídos de menor custo, empregando-se técnicas para minimizar o consumo de largura de banda necessário para estes nodos servidores. Uma das técnicas é um refinamento do gerenciamento de interesse [cit], que obteve resultados significativos nas simulações realizadas. Outras técnicas ainda em fase preliminar de especificação são: construção da topologia de rede overlay de nodos servidores utilizando conhecimento da topologia real da rede, balanceamento de carga e detecção de aglomerados de jogadores (hotspots).
+  %Atualmente, jogos eletrônicos têm se tornado bastante populares, especialmente os jogos maciçamente multijogador, onde há um número de participantes simultâneos da ordem de dezenas de milhares[citação]. Usualmente, o suporte de rede para este tipo de aplicação consiste em um servidor com recursos - capacidade de processamento e largura de banda para comunicação com os jogadores - super-dimensionados, ao qual se conectam os clientes.[/sa] Diversos trabalhos [citações] têm proposto técnicas para desonerar a carga de processamento e comunicação associada a servidores de jogos maciçamente multijogador, sendo uma alternativa a distribuição desta carga entre diversos servidores, cada um com custo de aquisição e manutenção menor do que o de um grande servidor central. Ainda assim, com as atuais técnicas de distribuição e modelo de comunicação entre os servidores e os clientes, têm-se um alto custo para manter o sistema servidor distribuído como um todo. O presente trabalho tem o objetivo de propor um método para reduzir o consumo de largura de banda causado pelo tráfego do jogo entre os servidores e os clientes, diminuindo a quantidade de recursos necessários para manutenção deste tipo de jogo. [rever-repensar]Uma das propostas consiste em um refinamento da técnica de gerenciamento de interesse[citação], que obteve resultados significativos nas simulações realizadas. Além disso, propõe-se uma técnica que visa prover qualidade de serviço, adaptando a freqüência de atualizações enviadas pelo servidor à disponibilidade de recursos. [sure?]Outra consiste em um heurística para detecção de aglomerados de jogadores - ou hotspots - de forma a otimizar o balanceamento de carga entre os servidores.[/sure?]Este trabalho busca possibilitar a criação de um modelo de suporte a jogos maciçamente multijogador que possa ser composto por servidores com conexão doméstica, através de uma redução considerável da quantidade de dados trafegando entre clientes e servidores.
 \end{abstract}
      
 \begin{resumo} 
-  Este meta-artigo descreve o estilo a ser usado na confecção de artigos e
-  resumos de artigos para publicação nos anais das conferências organizadas
-  pela SBC. É solicitada a escrita de resumo e abstract apenas para os artigos
-  escritos em português. Artigos em inglês deverão apresentar apenas abstract.
-  Nos dois casos, o autor deve tomar cuidado para que o resumo (e o abstract)
-  não ultrapassem 10 linhas cada, sendo que ambos devem estar na primeira
-  página do artigo.
+ % Massively multiplayer games, where the number of simultaneous participants is of the order of tens of thousands [cit], must have a support infra-structure that meets its demand for processing power to simulate the virtual environment and available bandwidth so that there can be satisfactory interaction of the players with one another and with the game world, where the match happens.
+Traditionally, a central server is utilized %, to which players connect,
+to provide support to massively multiplayer games, where the number of participants is of the order of tens of thousands. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, employing techniques to minimize the necessary bandwidth to theses server nodes. One of these techniques is a refinement of interest management algorithm [cit], which obtained significant results in simulations. Other techniques still in preliminary phase of specification are: server nodes overlay network topology construction using knowledge of the real network topology, load balancing and hotspots dectection.
 \end{resumo}
 
+
+
+
+\section{Introdução}
+
+Atualmente, jogos eletrônicos têm se tornado bastante populares, especialmente os jogos maciçamente multijogador, onde há um número de participantes simultâneos da ordem de dezenas de milhares \cite{cecin2004fsa}. Como exemplos, podemos citar World of Warcraft \cite{worldofwarcraft}, Lineage II \cite{lineage2} e Guild Wars \cite{guildwars}.
+
+Usualmente, o suporte de rede para este tipo de aplicação consiste em um servidor central com recursos - capacidade de processamento e largura de banda para comunicação com os jogadores - super-dimensionados, ao qual se conectam as máquinas clientes. Cada jogador interage através de um destes clientes, que envia suas ações para o servidor, que as processa, verificando que alterações no jogo elas causam, e difunde o resultado para todos os clientes envolvidos. Em virtude do número de participantes simultâneos que este tipo de jogo costuma ter, percebe-se que tais tarefas demandam por uma quantidade de recursos significativa, no que tange a poder de processamento e, principalmente, largura de banda disponível para que sejam enviadas e recebidas as atualizações de estado.
+
+Nos últimos anos, têm-se pesquisado alternativas à abordagem com servidor centralizado. Uma delas é a distribuição, entre os próprios participantes, tanto da simulação do jogo quanto da responsabilidade de atualizarem-se entre si quando realizarem ações. A comunicação entre eles ocorre par-a-par, formando uma rede descentralizada \cite{schiele2007rpp}. Esta abordagem seria o ideal, não fossem alguns prolemas que lhe são inerentes. Por exemplo, como os jogadores participam do processamento da simulação, é necessário que eles entrem em acordo no que diz respeito ao estado da partida, sob pena de haver inconsistências caso isto não seja feito.
+
+Outra questão se refere ao número de envios que cada participante tem que executar. No modelo cliente-servidor, basta que cada um envie suas ações para o servidor, que se encarrega de simular e difundir o novo estado para os outros jogadores. No caso do modelo par-a-par, cada par envolvido torna-se responsável por enviar atualizações de estado para os outros participantes. O problema disto reside no fato de que não se pode garantir que todos os jogadores possuam conexões de rede com largura de banda suficiente para isso. Por fim, sem um servidor central, que poderia atuar como árbitro, o jogo torna-se dependente da simulação que os próprios jogadores executam, que pode ser desvirtuada de forma a chegar a um resultado inválido, que beneficie indevidamente determinado jogador ou mesmo que invalide a sessão de jogo.
+
+Além do modelo par-a-par, existe também o modelo de servidor distribuído, no qual diversos nodos conectados entre si dividem a responsabilidade de simular o jogo, com também de efetuar as atualizações de estado para os jogadores a eles conectados que lhes enviem suas ações.
+
+Devido a estas questões, este trabalho está voltado para o modelo 
+
+Diversos trabalhos [citações] têm proposto técnicas para reduzir a carga de processamento e comunicação associada a servidores de jogos maciçamente multijogador, sendo uma alternativa a distribuição desta carga entre diversos servidores, cada um com custo de aquisição e manutenção menor do que o de um grande servidor central. Ainda assim, com as atuais técnicas de distribuição e modelo de comunicação entre os servidores e os clientes, têm-se um alto custo para manter o sistema servidor distribuído como um todo. O presente trabalho tem o objetivo de propor um método para reduzir o consumo de largura de banda causado pelo tráfego do jogo entre os servidores e os clientes, diminuindo a quantidade de recursos necessários para manutenção deste tipo de jogo. [rever-repensar]Uma das propostas consiste em um refinamento da técnica de gerenciamento de interesse[citação], que obteve resultados significativos nas simulações realizadas. Além disso, propõe-se uma técnica que visa prover qualidade de serviço, adaptando a freqüência de atualizações enviadas pelo servidor à disponibilidade de recursos. [sure?]Outra consiste em um heurística para detecção de aglomerados de jogadores - ou hotspots - de forma a otimizar o balanceamento de carga entre os servidores.[/sure?]Este trabalho busca possibilitar a criação de um modelo de suporte a jogos maciçamente multijogador que possa ser composto por servidores com conexão doméstica, através de uma redução considerável da quantidade de dados trafegando entre clientes e servidores.
 
 \section{General Information}
 
@@ -104,14 +118,14 @@ caption.
 
 \begin{figure}[ht]
 \centering
-%\includegraphics[width=.5\textwidth]{fig1.jpg}
+\includegraphics[width=.5\textwidth]{fig1.jpg}
 \caption{A typical figure}
 \label{fig:exampleFig1}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
-%\includegraphics[width=.3\textwidth]{fig2.jpg}
+\includegraphics[width=.3\textwidth]{fig2.jpg}
 \caption{This figure is an example of a figure caption taking more than one
   line and justified considering margins mentioned in Section~\ref{sec:figs}.}
 \label{fig:exampleFig2}
@@ -152,6 +166,6 @@ before each reference. The first line of each reference should not be
 indented, while the subsequent should be indented by 0.5 cm.
 
 \bibliographystyle{sbc}
-\bibliography{sbc-template}
+\bibliography{semac}
 
 \end{document}
