@@ -30,6 +30,13 @@ Cecin, F., Real, R., de~Oliveira~Jannone, R., Geyer, C., Martins, M., and
 \newblock {\em IEEE Int. Sym. on Distributed Simulation and Real-Time
   Applications}, pages 83--90.
 
+\bibitem[Iimura et~al. 2004]{iimura2004zfg}
+Iimura, T., Hazeyama, H., and Kadobayashi, Y. (2004).
+\newblock {Zoned federation of game servers: a peer-to-peer approach to
+  scalable multi-player online games}.
+\newblock {\em Proceedings of ACM SIGCOMM 2004 workshops on NetGames' 04:
+  Network and system support for games}, pages 116--120.
+
 \bibitem[Knuth 1984]{knuth:84}
 Knuth, D.~E. (1984).
 \newblock {\em The {\TeX} Book}.
