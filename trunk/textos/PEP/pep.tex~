@@ -20,22 +20,28 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
+\hyphenation{di-fe-ren-tes}
+\hyphenation{re-qui-si-to}
+\hyphenation{sa-tis-fa-tó-ria}
+\hyphenation{a-tu-a-li-za-ções}
+\hyphenation{res-trin-ge}
+\hyphenation{pre-ci-sa-rão}
 
-
-%\renewcommand{\listalgorithmname}{Lista de Algoritmos}
+%\renewcomd{\listalgorithmname}{Lista de Algoritmos}
 
 %
 % Informações gerais
 %
-\title{Paralelização do Algorítmo de Geração de Redes Aleatórias Contínuas \\ (Título Provisório)}
+\title{Suporte distribuído para jogos MMG em cenários com recursos limitados%Uma proposta de arquitetura híbrida (par-a-par e cliente-servidor) para jogos maciçamente distribuídos 
+\\ (Título Provisório)}
 
-\author{Romano}{Gustavo}
+\author{Benevides Bezerra}{Carlos Eduardo}
 % alguns documentos podem ter varios autores:
 %\author{Flaumann}{Frida Gutenberg}
 %\author{Flaumann}{Klaus Gutenberg}
 
 % orientador e co-orientador são opcionais (não diga isso pra eles :))
-\advisor[Prof.~Dr.]{Maillard}{Nicolas}
+\advisor[Prof.~Dr.]{Resin Geyer}{Cláudio Fernando}
 %\coadvisor[Prof.~Dr.]{Knuth}{Donald Ervin}
 
 % a data deve ser a da defesa; se nao especificada, são gerados
@@ -105,9 +111,11 @@
 % palavras-chave
 % iniciar todas com letras minúsculas, exceto no caso de abreviaturas
 %
-\keyword{CRN}
-\keyword{redes aleatórias contínuas}
-\keyword{paralelização}
+\keyword{jogos maciçamente multijogador}
+\keyword{MMG}
+\keyword{simulação interativa distribuída}
+
+\hyphenation{ma-ci-ça-men-te}
 %
 % inicio do documento
 %
@@ -156,10 +164,35 @@
 %\listoftables
 
 % resumo na língua do documento
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \begin{abstract}
 
 
-Esse trabalho propõe a paralelização do algoritmo proposto pelo Instituto de Física da UFRGS para geração de redes aleatórias contínuas (CRN - Continuous Randon Network). Esse algoritmo, através da geração de redes com hibridização mista $sp^2$ e $sp^3$, pretende encontrar novos materiais cuja dureza e módulo volumétrico sejam significativamente superiores aos do diamante superior à do diamante. O objetivo desse trabalho, além de diminuir significativamente o tempo de geração dessas redes (que hoje esta na casa de semanas), é testar e comparar diferentes algoritmos e ferramentas de paralelização. Dentre os algoritmos a serem testados está o algoritmo genético e dentre as ferramentas estão o Open-MP, o MPI e o MPI-2.
+Este trabalho visa analisar a aplicabilidade das técnicas utilizadas para dar suporte a jogos maciçamente multijogador em cenários onde os recursos computacionais são mais limitados. Como geralmente são utilizadas redes de servidores de alto custo, com links que dão suporte à comunicação entre dezenas de milhares de jogadores \cite{cecin2004fsa}, é necessário revisar o que foi feito e analisar sua aplicabilidade em arquiteturas que não dispõem de tais recursos. Assim sendo, objetiva-se avaliar e, quando possível, aperfeiçoar as técnicas pesquisadas%\cite{os artigos pesquisados}
+, considerando um cenário em que a infra-estrutura de suporte se restringe a um conjunto de nodos de capacidade menor - ou super-nodos, no sentido em que têm links e capacidade de processamento superiores às dos usuários de Internet em geral, mas inferiores às dos grandes servidores. Pretende-se, por fim, construir um modelo arquitetural de suporte a jogos maciçamente multijogador, que defina a distribuição das cargas de processamento e comunicação associadas ao jogo entre o conjunto de nodos servidores e integre - tantas quanto for possível - as técnicas pesquisadas e/ou propostas. Após isso, será feito um protótipo e simulações para validar o trabalho.
+
+%O objetivo do trabalho é propor uma arquitetura de sistema distribuído sobre a Internet, que seja tolerante a falhas e escalável. Tal sistema funcionará como um grande servidor para jogos maciçamente multijogador. A idéia é que diversos computadores de baixo ou médio custo, conectados à Internet, com conexão de banda larga, formem um sistema distribuído que aceitará e repartirá conexões oriundas de jogadores. Os diferentes nodos desse sistema dividirão a carga de processamento e de comunicação dos diferentes jogadores conectados, assim como a simulação do ambiente virtual do jogo. Tal sistema poderá ser expandido por novos computadores que satisfaçam alguns requisitos mínimos de capacidade de processamento, armazenamento e largura de banda disponível para transmissão e recebimento de mensagens. Também deverá ser possível que qualquer nodo se retire do sistema, delegando sua carga aos restantes. Por fim, tal sistema deverá ser tolerante a falhas, de forma a prejudicar o mínimo possível a simulação e a entrega de atualizações de estado aos clientes. O objetivo principal, além da tolerância a falhas, é que o sistema seja escalável, ou seja, suporte um grande número de jogadores, porém sem comprometer severamente a qualidade do serviço.
+
 \end{abstract}
 
 % resumo na outra língua
@@ -172,125 +205,304 @@ Esse trabalho propõe a paralelização do algoritmo proposto pelo Instituto de Fís
 % aqui comeca o texto propriamente dito
 
 % introducao
-\chapter{Introdução}
-
-Materiais amorfos têm sido intensivamente estudados por causa de sua importância tecnológica. Devido à complexidade desses modelos, estudos teóricos têm sido realizados principalmente sobre simulação numérica. O método padrão para esse estudo é a Dinâmica Molecular (DM), onde átomos são representados por partículas pontuarias com interações entre si, tendo as equações de movimento integradas numericamente \cite{Tu-98}. 
-
-Embora o método de DM seja bastante usado, ele é inerentemente pouco eficiente para materiais formados por redes fortes pois existe uma grande barreira de energia para que seja feita a quebra e reconstrução de ligações nesse sistema. Nesse método, uma maior parte do tempo de simulação é gasta na busca por vibrações locais, ocasionadas por troca de ligações que acontecem com pouca freqüência \cite{Tu-98}.
-
-Uma alternativa a esse método é o uso de redes aleatórias contínuas (CRN - do inglês Continuous Randon Network). Essas têm sido utilizadas com sucesso para a descrição de semicondutores amorfos desde meados da década de 1930 \cite{Barkema-00, Lei-03}. O interesse neste modelo reside em sua simplicidade, uma vez que a única imposição consiste em que os átomos cumpram com certos requisitos de conectividade. Porém, o estudo experimental é extremamente dificultado pela impossibilidade de se exercer um controle rigoroso sobre vários parâmetros físicos importantes, incluindo o grau de hibridização, a distribuição espacial dos átomos e a conectividade da rede em longo alcance. Esses parâmetros, no entanto podem ser controlados em simulações computacionais, permitindo assim inferir acerca da influência dos mesmos sobre as propriedades mecânicas de CRNs. Esse tipo de simulação provê informações que podem auxiliar na interpretação de experimentos reais, além de permitir estudar o comportamento da matéria em condições difíceis de realizar experimentalmente \cite{Allen-92,Car-85,Frenkel-96}.
-%Esta abordagem constitui uma excelente alternativa para a construção de modelos estruturais de sólidos amorfos, que possam mais tarde ser utilizados como ponto de partida para o cálculo de propriedades físicas.
-
-O algoritmo mais popular para geração desse tipo de redes é o algoritmo Wooten-Winer-Weaire (WWW) \cite{Wooten-85,Wooten-87}. A partir dele foram gerados de forma satisfatória modelos com alguns milhares de átomos. Basicamente, o algoritmo WWW inicia com uma estrutura periódica cúbica do diamante. Em seguida, são retirados alguns átomos e refeitas as ligações. Por fim, a estrutura é aleatoriamente alterada através da transposição das ligações (Figura \ref{fig:WWW}) e relaxação da estrutura \cite{Barkema-00}. Embora o algoritmo WWW gere bons modelos de átomos, ele funciona apenas para modelos cujos átomos tenham hibridização $sp^3$.
-
-\begin{figure}
- \centering
- \includegraphics[width=0.50\textwidth]{imagens/www.eps}
- \caption{Troca de ligações no algoritmo WWW. Esquerda: configuração inicial; Direita: configuração após a troca}
- \label{fig:WWW}
-\end{figure}
-
- Na tentativa de busca de materiais de elevada dureza, os quais desempenham um importante papel na indústria moderna \cite{Riedel-00}, o Instituto de Física da UFRGS propôs a geração de redes aleatórias contínuas formadas de átomos de carbono com hibridização mista $sp^3$/$sp^2$. Esta redes podem propor novos material (real ou hipotético) cuja dureza e módulo volumétrico sejam significativamente superiores aos do diamante. Materiais deste tipo ainda não foram propostos pela literatura científica, embora sejam de grande importância \cite{Perottoni-01,Perottoni-02,Yan-04}.
-
-O algoritmo proposto para gerar essas redes consiste em posicionar de forma aleatória, em uma região do espaço, uma certa quantidade de átomos com hibridização $sp^3$ e $sp^2$. Após isso, através do método de \textit{Simulated Annealing}, altera-se aleatoriamente as posições dos átomos até convergir em um sistema estável que atenda as restrições impostas.
-
-A cada mudança de posição, cálculos locais são realizados para verificar se a nova posição do átomo é aceitável ou não. Para realizar esse cálculo, leva-se em conta o número de ligações, a distância e o ângulo dos átomos que esse deslocamento criou. Se o movimento não for aceito, o átomo volta a sua posição anterior. No argoritmo \ref{alg:crn} pode ser visto um esboço desse processo.
-
-Pode-se ver na equação \ref{equ:Hib} o cálculo do custo da hibridização, onde N é o número de tipos de hibridizações ($sp^3, sp^2 ...$), $C_i$ o custo de cada hibridização errada, $N_i$ o número de átomos com a hibridização $i$ e $N_{0_i}$ o número de átomos esperados com a hibridização $i$. Na equação \ref{equ:Ene} pode-se ver o cálculo da energia em função da distância e o ângulo das ligações, onde $k_r$ é o custo de cada distância irregular, $r_{ij}$ é a distância dos átomos $i$ e $j$, $r_{0_{ij}}$ é a distância esperada dos átomos $i$ e $j$, $K_a$ é o custo de cada ângulo irregular, $\theta_{ijk}$ é o ângulo formado pelos átomos $i$, $j$ e $k$ e $\theta_{0_{i}}$ é o ângulo esperado.
-
-\begin{equation}
-	\label{equ:Hib}
-	 Hib=\frac{1}{N}\sum_{i=1}^NC_i(N_i-N_{0_i})^2 
-\end{equation}
-
-\begin{equation}
-	\label{equ:Ene}
-	 Energ=\sum_{r_{ij}<r_{max}}[k_r(r_{ij}-r_{0_{ij}})^2+\sum_{r_{ik}<r_{max}}K_a(\theta_{ijk}-\theta_{0_i})^2] 
-\end{equation}
 
 
 
 
-O sistema atual foi desenvolvido em linguagem $C$ para funcionar em uma única máquina monoprocessada. Atualmente uma simulação com um universo de $128$ átomos demora em média de uma semana para ser realizada. Para um bom resultado e maiores chances de encontrar algum material com as propriedades desejadas, novas simulações devem ser realizadas com um universo superior a $1000$ átomos. Porém, com o sistema atual esse tipo de simulação é inviável, pois seriam necessários meses para se obter um resultado, o qual poderia ainda não ser o desejado.
 
-A proposta do trabalho consiste em buscar formas de minimizar o tempo de execução dessas tarefas.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Motivação}
+
+%Jogos eletrônicos on-line têm se popularizado bastante nos últimos tempos, devido principalmente ao aumento do público com acesso à Internet, especialmente com conexões de banda larga. Como exemplos de títulos de sucesso, podem ser citados Starcraft: Brood War \cite{broodwar}, Counter-Strike \cite{counterstrike} e Warcraft III \cite{warcraft3}, que possuem a opção de multijogador (ou \emph{multiplayer}), permitindo que diferentes usuários joguem entre si.
+
+%Mais especificamente, j
+Jogos do tipo MMG (\emph{massively multiplayer games}, jogos maciçamente multijogador) têm se popularizado bastante nos últimos tempos. Além de poderem ser jogados on-line, permitem a interação simultânea de um grande número de participantes. Nos casos de maior sucesso, como World of Warcraft \cite{worldofwarcraft} e Lineage II \cite{lineage2}, por exemplo, é dado suporte a uma base de dezenas a centenas de milhares de jogadores simultâneos \cite{chen2006pch}. Estes jogadores podem, então, interagir entre si e com o ambiente virtual do jogo. Cada jogador controla uma entidade chamada de \emph{avatar}, que nada mais é que sua representação no ambiente virtual.% Para que a partida se mantenha consistente para diferentes participantes, cada alteração de cada avatar deve ser notificada para todos os jogadores que estejam por perto, ou para quem aquela mudança possa dizer respeito.
+
+Jogos dessa natureza têm alguns requisitos \cite{schiele2007rpp}, dentre os quais podem ser citados: \textbf{persistência} do estado do mundo virtual e dos avatares; \textbf{disponibilidade} do serviço; \textbf{consistência} do estado do mundo e dos avatares entre os diferentes participantes; \textbf{segurança}, no que se refere a tentativas de subversão das regras do jogo por trapaceiros e \textbf{escalabilidade}, tendo em vista o grande número esperado de jogadores.
+
+%\begin{itemize}
+%
+%	\item \textbf{Persistência} - Jogos MMG, em geral, consistem em um mundo virtual onde os jogadores interagem entre si e com o mundo virtual, alterando o estado do mesmo e de seus avatares (representação virtual do jogador no jogo). Espera-se que essas mudanças não sejam desfeitas entre uma sessão de jogo e outra. Por este motivo, é necessário suporte a persistência dos estados; 
+%		
+%	\item \textbf{Disponibilidade} - Em geral, jogos MMG são pagos - tais como World of Warcraft \cite{worldofwarcraft} - e, por causa disso, seus usuários costumam ser exigentes quanto ao quesito de disponibilidade. Assim, deseja-se que, a qualquer momento, o sistema esteja disponível;
+%	
+%	\item \textbf{Consistência} - Jogos multijogador consistem em um ambiente virtual compartilhado entre os jogadores, que disputam a mesma partida. Sendo assim, é necessário que aquele ambiente seja representado de maneira equivalente nas máquinas dos diferentes jogadores para que estes possam se coordenar. Isto se torna mais complexo com o aumento do número de participantes;
+%	
+%	\item \textbf{Segurança} - Em um sistema onde há dezenas de milhares de participantes, não é razoável confiar em todos eles, o que torna necessário algum mecanismo que proveja segurança. Segurança aqui se refere não somente a autenticação de usuários cadastrados, como também verificar se os estados/ações que os diferentes jogadores enviam são válidos. Jogadores trapaceiros, por exemplo, podem alterar o software executado em suas máquinas de forma que sejam enviados estados/ações que lhes dêem alguma vantagem no jogo, o que deve ser impedido;
+%	
+%	\item \textbf{Escalabilidade} - Levando-se em conta o número de participantes em um jogo MMG, é necessário que o sistema que lhe dá suporte seja capaz de suportar bem a carga crescente de processamento e comunicação exigida para isso. No entanto, muitas das técnicas utilizadas para jogos em pequena escala - com algumas dezenas de jogadores - não funcionam bem em cenários com um número muito maior de participantes.
+%	
+%\end{itemize}
+
+Para dar suporte à grande quantidade de participantes, geralmente é usado o paradigma cliente-servidor, sendo que toda interação é feita através da máquina servidora. Neste paradigma, o computador servidor possui a cópia oficial do estado e é responsável pela computação sobre a mesma, enquanto o cliente atua na apresentação do estado para o usuário. O servidor é responsável, também, por atualizar os clientes, em tempo real, sobre as alterações que ocorrem no ambiente virtual do jogo. A centralização nesse computador servidor, devido ao grande número de participantes, faz com que seu custo de manutenção seja bastante elevado. Geralmente, é necessária uma capacidade de comunicação de dezenas de GBps e um razoável poder de processamento para executar toda a simulação. Torna-se inviável, por exemplo, a manutenção de jogos maciçamente multijogador por grupos independentes sem grande disponibilidade de recursos financeiros, como o Indigente \cite{indigente}, por exemplo.
+
+A \textbf{arquitetura cliente-servidor} supre diversos aspectos necessários para a execução satisfatória de jogos do tipo MMG, o que inclui um alto nível de controle sobre o sistema como um todo, o que facilita autenticação, persistência e segurança. Porém isso custa caro, como já foi dito, além de ser um possível gargalo. Objetivando minimizar este problema, foram propostas algumas alternativas. Uma delas é a de usar computação agregada, onde um cluster, ao invés de um computador único, faz o papel de servidor. Tal abordagem tem um ganho expressivo de poder de processamento, mas não resolve todos os problemas dos jogos maciçamente multijogador. Deve-se prover também a largura de banda necessária para dar suporte ao tráfego intenso entre o servidor e os jogadores.
+
+Outra abordagem possível é a \textbf{arquitetura par-a-par}, ou P2P, onde se divide a simulação entre os computadores envolvidos. Pode-se ter um sistema sem qualquer servidor, onde os pares (antes clientes), que são as máquinas dos jogadores, entram em algum tipo de acordo para os diversos passos da simulação. No que se refere à escalabilidade, tal abordagem não é ótima, pois garantir esse "acordo"{} é custoso em termos de troca de mensagens \cite{lamport1982bgp}. Ainda que seja eleito um dos pares para decidir o andamento da simulação, ainda haverá o problema de que todos os pares precisarão trocar mensagens com todos. Tendo-se $n$ pares, há uma complexidade de O({$n^2$}) trocas de mensagem para cada passo da simulação. É evidente que tal abordagem não é tão escalável quanto se possa querer para um sistema onde se pretende executar um jogo maciçamente multijogador. Além disso, seria necessário prover armazenamento distribuído e recuperação dos estados do jogo.
+
+Alguns trabalhos já foram realizados no sentido de tornar jogos em redes P2P mais escaláveis, como \cite{schiele2007rpp}. Para reduzir o tráfego entre os pares, cada um envia atualizações de estado apenas àqueles que tiverem interesse nas mesmas. Para atingir este objetivo, o ambiente virtual é dividido em regiões, cada uma com um coordenador. O coordenador de cada região é eleito entre os pares ali presentes e se encarrega, apenas, de decidir para quem cada atualização de estado interessa - ele \emph{não} intermedia as trocas de mensagens entre os pares, que se comunicam diretamente entre si. No entanto, tal abordagem se baseia no fato de que aquele par seria confiável, o que não pode ser garantido, já que o software utilizado por aquele usuário pode ter sido alterado de forma a agir de maneira incorreta. Outra abordagem seria a de eleger múltiplos coordenadores por região, mas isso implicaria na implementação de algum mecanismo de votação, além de depender da disponibilidades de pares para gerenciarem. Além disso, não seria eliminada a necessidade de cada par enviar atualizações de estado a diversos outros pares. Outros trabalhos que têm proposta bastante semelhante são \cite{elrhalibi2005abm} e \cite{iimura2004zfg}.
+
+Existem também as propostas de \textbf{arquiteturas híbridas}, que utilizam servidores ao mesmo tempo em que fazem uso de infra-estrutura P2P. %Um exemplo disso são os "pares agregados"{} \cite{chen2006pch}. Neste trabalho, é
+É proposta, por exemplo, uma arquitetura onde pares e servidor dividem a simulação do jogo \cite{chen2006pch}. O ambiente virtual é dividido em regiões, cada uma gerenciada por um dos pares, que atua como um sub-servidor. É para ele que cada um dos outros pares naquela região envia cada atualização de estado, que de lá é encaminhada aos outros pares interessados na mesma. Isto pode gerar problemas de segurança e disponibilidade, já que não há garantias de que aquele par é confiável para servir aquela região, ou que ele irá permanecer no sistema enquanto for necessário. Para tratar a segurança, os autores sugerem o uso dos agregados de pares - que consistem no gerenciador de região, mais pares "reserva"{} - para fazerem verificação da simulação, além de prover robustez ao sistema, no caso do gerenciador sofrer colapso. Porém, tal abordagem novamente remete ao problema da eficiência de comunicação e escalabilidade, já que é necessário haver acordo entre os pares integrantes daquele agregado. %Haverá um sobrecusto adicional considerável, se for levado em conta que, para cada passo da simulação a ser executado, eles devem entrar em acordo.% Uma alternativa seria a utilização de validação em bloco dos passos. Periodicamente, os reservas receberiam algum tipo de histórico de eventos e, baseado nisso, verificariam a corretude da simulação que foi feita. No entanto, quanto maior o intervalo entre uma verificação e outra, maior seria a perda por roll-back para o último estado válido da simulação.
+
+Outra arquitetura híbrida é a do FreeMMG \cite{cecin2004fsa}. Nela, os pares se organizam de maneira P2P em cada região do ambiente virtual e o servidor intermedia a comunicação entre diferentes regiões. Novamente, tem-se o problema da segurança: os pares dentro de uma região controlam a simulação que ocorre ali, podendo subvertê-la. É feita uma abordagem probabilística, utilizando um par selecionado aleatoriamente de outro ponto do ambiente para verificar a simulação naquela região. Espera-se que, caso os pares ali desejem entrar em conluio para subverter o jogo, pelo menos o nodo inserido ali detecte as ações inválidas e reporte ao servidor. No entanto, além de não garantir completamente segurança, persiste o problema de poder haver muitos pares se comunicando com muitos, o que pode comprometer a qualidade do jogo.
+
+%\textbf{... por esses motivos, decidiu-se utiliza o msoi (ver \emph{"discussao autista.txt"})}
+O que se pretende investigar é o uso de um sistema servidor composto de "super-nodos"{} distribuídos geograficamente. Cada super-nodo teria uma capacidade de processamento e link de comunicação mínimos exigidos para fazer parte do sistema. No entanto, como a simulação seria distribuída entre eles, não seria necessário que cada um destes super-nodos tivesse a mesma capacidade de processamento ou comunicação possuída pelos grandes servidores centrais usados comumente para jogos MMG. O mundo do jogo poderia então ser dividido em regiões, cada uma gerenciada por um destes super-nodos. Dessa forma, os jogadores que estivessem em uma dada região apenas enviariam atualizações de estado àquele nodo servidor, que as processaria, armazenaria e enviaria para a quem fossem relevantes.
+
+Utilizando esta abordagem, seria preciso apenas garantir a confiabilidade dos nodos servidores, que, então, verificariam se cada ação dos jogadores é válida. %Levando em conta que cada nodo servidor estaria apto a gerenciar dezenas ou centenas de jogadores, haveria muito menos servidores do que jogadores. 
+Assim, torna-se mais simples a tarefa de garantir segurança no sistema, pois pode-se assumir que cada super-nodo é confiável%um número bem mais reduzido de nodos podem ser assumidos como confiáveis
+. Outro aspecto - o da disponibilidade - seria melhor satisfeito, pois cada região do mundo virtual estaria sendo servida por um nodo que estaria dedicado a esta tarefa. %Isto é mais desejável do que designar cada região a um par controlado por jogador, como sugerido em alguns trabalhos, pois jogadores saem e entram de volta no jogo de maneira imprevisível.%, o que poderia ser um ponto fraco da abordagem destes autores.
+
+Seguindo esta última vertente, existem alguns problemas que, ou estão por resolver, ou estão sendo pesquisados atualmente, tais como:
+
+\begin{itemize}
+
+\item Encontrar uma maneira de particionar o espaço virtual, mapeando cada região a um nodo servidor, de forma que nodos com boa comunicação entre si estejam próximos na topologia lógica da rede;
+
+\item	Balancear dinamicamente a carga da simulação entre os nodos servidores, de forma que seja mantida uma qualidade mínima de serviço em cada uma das diferentes regiões do ambiente virtual;
+
+\item Manter consistente a simulação nas diferentes regiões, entre jogadores da mesma região, e de jogadores em regiões adjacentes;
+
+\item	Coordenar a entrada, a saída e a detecção de colapso de nodos do sistema;
+
+\item	Distribuir o armazenamento persistente do estado dos jogadores, de forma a poder recuperá-lo quando necessário;
+
+\item	Otimizar a comunicação entre clientes e servidores, de forma a economizar o máximo possível de largura de banda, sem que isso seja perceptível pelos jogadores;
+
+\item	Como cada nodo tem recursos mais limitados que os de um grande servidor central, deve-se buscar algoritmos adaptativos que tornem a simulação (atualizações de estado e sincronização da simulação entre os clientes) coerente com os recursos disponíveis no momento;
+
+%\item	Tornar o sistema como um todo o mais escalável possível, mesmo que para isso seja necessário relaxar algumas restrições, como consistência global, por exemplo;
+%
+%\item	Tornar esse sistema tolerante a falhas, pois ele será dinâmico (entrada e saída de nodos do sistema) e conterá diversos pontos passíveis de terem problemas.
+
+\end{itemize}
+
+Foram feitos trabalhos que buscam tratar alguns destes problemas, como balanceamento de carga \cite{lee2003sdl}, assim como foram feitas algumas propostas de arquiteturas de suporte a MMG \cite{ng2002msa} e \cite{assiotis2006dam}. No entanto, tais propostas levam em consideração que os servidores são de grande porte e ligados através de links de comunicação poderosos, havendo muito pouco atraso entre eles. Cabe, então, fazer a análise da aplicabilidade das técnicas já pesquisadas em um contexto de recursos mais escassos e propor, tendo isso em vista, aperfeiçoamento das mesmas e uma arquitetura que as integre, além de efetuar implementação e testes de um protótipo que as utilize.
+
+%
+%\begin{figure}
+% \centering
+% \includegraphics[width=0.50\textwidth]{imagens/www}
+% \caption{Troca de ligações no algoritmo WWW. Esquerda: configuração inicial; Direita: configuração após a troca}
+% \label{fig:WWW}
+%\end{figure}
+%\begin{equation}
+%	\label{equ:Hib}
+%	 Hib=\frac{1}{N}\sum_{i=1}^NC_i(N_i-N_{0_i})^2 
+%\end{equation}
+
+%\begin{equation}
+%	\label{equ:Ene}
+%	 Energ=\sum_{r_{ij}<r_{max}}[k_r(r_{ij}-r_{0_{ij}})^2+\sum_{r_{ik}<r_{max}}K_a(\theta_{ijk}-\theta_{0_i})^2] 
+%\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \chapter{Objetivo}
 
-Os principais objetivos desse trabalho são:
+O objetivo é criar um modelo arquitetural de suporte a jogos maciçamente multijogador. Seguindo este modelo, deverá ser possível formar um sistema geograficamente distribuído de nodos servidores, utilizando a Internet como meio de ligação entre os mesmos. Além de distribuir as cargas computacionais (comunicação e processamento) impostas pelo grande número de jogadores, este modelo deverá incluir técnicas com o fim de reduzir o tráfego entre os componentes deste sistema (nodos servidores e máquinas clientes dos jogadores), economizando largura de banda. Tais técnicas são o foco deste trabalho, tendo em vista que se considera um cenário com recursos voláteis e limitados, já que a ligação entre os nodos será feita através da Internet.
 
-\begin{enumerate}
-	\item Gerar uma versão paralela para o algoritmo de geração de redes aleatórias de carbono a fim de minimizar o tempo de geração de cada rede;
+Existem outros aspectos relevantes, além da distribuição do servidor e da economia de largura de banda, que poderão ser acrescentados ao modelo, dependo da disponibilidade de tempo para realizar tal tarefa.
 
-Para paralelizar, as células serão distribuídas entre vários processos. A problemática da paralelização se encontra nas linhas \ref{desloc_ini} e \ref{desloc_fim} do algoritmo \ref{alg:crn} onde a movimentação do átomo pode implicar na sua mudança para uma célula que esteja sendo calculada por um outro processo.
-	\item Testar/comparar diferentes ferramentas de paralelização, entre elas, Open-MP, MPI e MPI-2;
+%A função deste middleware será de abstrair para a camada do jogo, que ficará acima dele, o sistema geograficamente distribuído servidor. distribuir as cargas de processamento e comunicação entre 
+%
+%sistema distribuído sobre a Internet, que funcionará como um grande servidor para jogos maciçamente multijogador. Pode ser utilizado o conceito de "super-nodo", que nada mais é que um computador conectado à Internet, com capacidade de processamento e comunicação acima da média de usuários comuns, mas que, ainda assim, é bem mais limitado que os grandes servidores que costumam servir os jogos MMG mais conhecidos. A idéia é que diversos destes super-nodos, conectados à Internet, formem um sistema distribuído que aceitará e repartirá conexões oriundas de jogadores. Eles então dividirão a carga de processamento e de comunicação dos diferentes jogadores conectados, assim como a simulação do ambiente virtual do jogo.
 
-Tentar-se-á tirar o máximo de proveito de cada ferramenta verificando em cada parte da aplicação quais podem ser utilizadas.
-
-	\item Comparar diversos algoritmos de paralelização;
-
-	Como na parte inicial da simulação a temperatura do \textit{Simulated Annealing} estará elevada, muitas alterações de posições serão aceitas, causando uma grande quantidade de mudanças de células. Nessa etapa, pretende-se utilizar algoritmos genéticos, para tentar acelerar a convergência e minimizar os danos causados pelas trocas de células.
-
-	\item Comparar diversas distribuições das células entre os processos;
-
-	Para tirar maior proveito do paralelismo, tenta-se-á diferentes distribuições das células, prevendo-se a possibilidade de sobreposições (célula presente em mais de um processo) para que um maior número de processos possa ser utilizado.
-
-	\item Prover uma aplicação que possa ser utilizada para testar novos recursos criados pelo grupo \cite{Cera-06}.
-\end{enumerate}
-
-\begin{algorithm}
-\caption{Algoritmo para geração de CRN}
-\begin{algorithmic}[1]
-\label{alg:crn}
-\FOR{$i=0$ to $STEPS$}
-\STATE{at = atomos[rand(NATM)];}\COMMENT{\textit{pega um átomo aleatóriamente}}
-\STATE{E\_local = local\_energy(at);}\COMMENT{\textit{calcula a energia local da célula onde o átomo está inserido}}
-\STATE{Hibri = hibri\_cost(at);}\COMMENT{\textit{calcula o custo de hibridização local da célula onde o átomo está inserido}}
-\STATE{at$\rightarrow$x = at$\rightarrow$x + randf();}\COMMENT{\textit{desloca o átomo na direção x}}
-\label{desloc_ini}
-\STATE{at$\rightarrow$y = at$\rightarrow$y + randf();}\COMMENT{\textit{desloca o átomo na direção y}}
-\STATE{at$\rightarrow$z = at$\rightarrow$z + randf();}\COMMENT{\textit{desloca o átomo na direção z}}
-\label{desloc_fim}
-\STATE{E\_local\_new = local\_energy(at);}\COMMENT{\textit{calcula a nova energia local da célula onde o átomo está inserido}}
-\STATE{Hibri\_new = hibri\_cost(at);}\COMMENT{\textit{calcula o novo custo de hibridização local da célula onde o átomo está inserido}}
-
-\STATE{dE = E\_new - E\_old;}\COMMENT{\textit{calcula a variação de energia}}
-\STATE{dH = Hibri\_new - Hibri\_old;}\COMMENT{\textit{calcula a variação do custo de hibridização}}
-		
-		
-\STATE{dfc = (1.0f - COST\_HIBRI)*(dE) + COST\_HIBRI*(dH);}\COMMENT{\textit{calcula a variação da função custo}}
-
-\IF{aceita(dfc)}%\COMMENT{\textit{verifica a aceitação de acordo com a temperatura atual}}
-\STATE{atualiza\_posicao();}\COMMENT{\textit{atualiza a posição do átomo}}
-\ELSE
-\STATE{desfaz\_movimento();}\COMMENT{\textit{volta átomo para posição anterior}}
-\ENDIF
-
-\STATE{temperatura = temperatura * 0.98}\COMMENT{\textit{diminui a temperatura}}
+%Para atingir este objetivo, algumas metas são traçadas:
+%
+%\begin{enumerate}
+%
+%\item Revisar as técnicas utilizadas para dar suporte a jogos MMG;
+%
+%\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
+%
+%\item Propor integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
+%
+%\item Implementar um protótipo que integre as técnicas estudadas e/ou desenvolvidas no trabalho;
+%
+%\item Efetuar simulações que demonstrem o resultado obtido do trabalho e avaliar seus resultados.
+%
+%\end{enumerate}
 
 
-\ENDFOR
-\end{algorithmic}
-\end{algorithm}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \chapter{Metodologia}
 
-As etapas para o desenvolvimento desse trabalho serão:
+Para atingir o objetivo definido na seção anterior, deverão ser cumpridas algumas etapas, que são as seguintes:
 
 \begin{enumerate}
-	\item encontrar maneiras de otimizar essa implementação seqüencial. 
+
+	\item Revisar as técnicas utilizadas para dar suporte distribuído a jogos MMG;
 	
-	\item Buscar formas de paralelizar a aplicação tentando diminuir ainda mais o tempo de execução.
- Primeiramente essa paralização será feita pela adição da primitivas OpenMP \cite{Chandra-00} no programa seqüencial para tentar explorar o paralelismo nas máquinas multiprocessadas e em novas máquinas multi-core. Essas primitivas serão introduzidas na etapa de cálculo local, que é a etapa que consome mais tempo de processamento e pode facilmente ser paralalelizada através da primitiva ``\textit{parallel for}''. 
-Espera-se, com essa alteração, uma diminuição no tempo de execução, porém, como apenas pequenas partes do programa poderão ser paralelizadas e as máquinas disponíveis para simulação tem no máximo quatro processadores, acredita-se que o tempo de execução continuará ainda alto.%, necessitando assim, uma outra etapa de paralelização.
-	\item Buscar formas de paralelizar a aplicação através do uso da biblioteca de troca de mensagens MPI \cite{Pacheco-96,Snir-98} (\textit{Message Passing Interface}). Essa etapa tem duas fases previstas:
-				
-\begin{enumerate}
-	\item Na primeira, será realizada uma paralelização de forma simples, usando primitivas básicas do MPI. Nessa fase as redes serão geradas com o auxílio de algoritmos genéticos para tentar convergir mais rapidamente em um estado estável.
-	\item Na segunda, além da utilização das primitivas básicas, tentar-se-á introduzir primitivas novas, presentes na norma MPI-2 \cite{Gropp-99}. Uma dessas primitivas é a \textit{MPI\_Comm\_spawn}, que possibilita a criação dinâmica de novos processos. Esses processos serão criados para permitir uma maior concorrência na geração das redes. Com a utilização do MPI, pretende-se obter um bom desempenho, diminuindo significativamente o tempo de execução da aplicação, uma vez que um número bem maior de processadores poderá ser utilizado. 
+	Será dada continuidade à investigação bibliográfica que já foi iniciada para elaboração deste plano de estudos e pesquisa, além de buscar separá-las em categorias segundo: contexto considerado e problemas que buscam solucionar.
+
+	\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
+	
+	Técnicas utilizadas para dar suporte distribuído a jogos MMG costumam se basear em cenários onde há grande disponibilidade de recursos, com grandes servidores ligados através de rede local com capacidade de comunicação super-dimensionada. Será analisada a viabilidade de serem utilizadas em um contexto onde os nodos têm recursos mais limitados.
+
+	\item Propor integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
+	
+	Buscar-se-á fazer aperfeiçoamento de algumas destas técnicas, tendo como ênfase o contexto de super-nodos distribuídos geograficamente e, posteriormente, será proposta uma integração das mesmas% em uma arquitetura de suporte a MMG
+.
+
+	\item Implementar um protótipo que integre as técnicas estudadas e/ou desenvolvidas nas etapas anteriores;
+
+	\item Efetuar simulações que demonstrem o resultado obtido do trabalho e avaliar seus resultados.
+
 \end{enumerate}
-				
-			\end{enumerate}
+
+%
+%As etapas que esse trabalho seguirão são:
+%
+%\begin{enumerate}
+%
+%	\item Dar continuidade à investigação bibliográfica de técnicas de otimização do suporte a jogos MMG
+
+%	\item Propor uma arquitetura preliminar de suporte a jogos MMG, que dê ênfase a escalabilidade e a tolerância a falhas;
+%
+%Tal arquitetura \textbf{provavelmente (bom ou ruim?)} seguirá a vertente de sistema geograficamente distribuído de servidores, apresentada na seção anterior, para distribuir o processamento e a comunicação necessários para a execução de um MMG.
+%
+%	\item Buscar algoritmos de particionamento que dividam o mundo virtual entre os nodos de maneira que os jogadores possam ter uma experiência de jogo satisfatória;
+%
+%Pretende-se evitar o uso de algoritmos que necessitem de informações globais do sistema, de forma que o particionamento e balanceamento de carga possa ser executada com apenas um subconjunto de nodos. Dessa forma, o particionamento dificilmente será ótimo, mas seu tempo de execução estará dentro dos limites do aceitável, e espera-se que tal particionamento consiga uma divisão do mundo que possibilite uma boa experiência de jogo.
+%
+%	\item Pesquisar uma técnica de sincronização entre os servidores, de forma que o estado dos mesmos - e dos jogadores a eles conectados - tenha consistência satisfatória;
+%
+%Não se pretende garantir consistência global, pois o estado de cada jogador ou objeto presente no mundo não é necessariamente relevante para todas as outras partes integrantes do ambiente.
+%
+%	\item Pesquisar técnicas de tolerância a falhas, de forma a tornar o sistema mais robusto;
+%	
+%Como a simulação será distribuída, haverá diversos pontos suscetíveis a falha, tornando necessário o emprego de alguma técnica de tolerância a falhas que minimize este problema. \textbf{Provavelmente}, serão utilizadas réplicas para cada servidor, cuja finalidade é apenas manter-se atualizada e estar pronta para substituir o nodo servidor original no caso de falha do mesmo.
+%
+%	\item Integrar os algoritmos e técnicas pesquisados e executar simulações para medir seu desempenho.
+%\end{enumerate}
+
+%\begin{algorithm}
+%\caption{Algoritmo para geração de CRN}
+%\begin{algorithmic}[1]
+%\label{alg:crn}
+%\FOR{$i=0$ to $STEPS$}
+%\STATE{at = atomos[rand(NATM)];}\COMMENT{\textit{pega um átomo aleatóriamente}}
+%\STATE{E\_local = local\_energy(at);}\COMMENT{\textit{calcula a energia local da célula onde o átomo está inserido}}
+%\STATE{Hibri = hibri\_cost(at);}\COMMENT{\textit{calcula o custo de hibridização local da célula onde o átomo está inserido}}
+%\STATE{at$\rightarrow$x = at$\rightarrow$x + randf();}\COMMENT{\textit{desloca o átomo na direção x}}
+%\label{desloc_ini}
+%\STATE{at$\rightarrow$y = at$\rightarrow$y + randf();}\COMMENT{\textit{desloca o átomo na direção y}}
+%\STATE{at$\rightarrow$z = at$\rightarrow$z + randf();}\COMMENT{\textit{desloca o átomo na direção z}}
+%\label{desloc_fim}
+%\STATE{E\_local\_new = local\_energy(at);}\COMMENT{\textit{calcula a nova energia local da célula onde o átomo está inserido}}
+%\STATE{Hibri\_new = hibri\_cost(at);}\COMMENT{\textit{calcula o novo custo de hibridização local da célula onde o átomo está inserido}}
+%
+%\STATE{dE = E\_new - E\_old;}\COMMENT{\textit{calcula a variação de energia}}
+%\STATE{dH = Hibri\_new - Hibri\_old;}\COMMENT{\textit{calcula a variação do custo de hibridização}}
+%		
+%		
+%\STATE{dfc = (1.0f - COST\_HIBRI)*(dE) + COST\_HIBRI*(dH);}\COMMENT{\textit{calcula a variação da função custo}}
+%
+%\IF{aceita(dfc)}%\COMMENT{\textit{verifica a aceitação de acordo com a temperatura atual}}
+%\STATE{atualiza\_posicao();}\COMMENT{\textit{atualiza a posição do átomo}}
+%\ELSE
+%\STATE{desfaz\_movimento();}\COMMENT{\textit{volta átomo para posição anterior}}
+%\ENDIF
+%
+%\STATE{temperatura = temperatura * 0.98}\COMMENT{\textit{diminui a temperatura}}
+%
+%
+%\ENDFOR
+%\end{algorithmic}
+%\end{algorithm}
+
+%\chapter{Metodologia}
+%
+%As etapas para o desenvolvimento desse trabalho serão:
+%
+%\begin{enumerate}
+%	\item Pesquisar mais a fundo as técnicas utilizadas em trabalhos relacionados, buscando pontos em que possam ser melhoradas;
+%
+%	\item 
+%
+%	\item Encontrar maneiras de otimizar essa implementação seqüencial. 
+%		
+%	\item Buscar formas de paralelizar a aplicação tentando diminuir ainda mais o tempo de execução.
+% Primeiramente essa paralização será feita pela adição da primitivas OpenMP \cite{Chandra-00} no programa seqüencial para tentar explorar o paralelismo nas máquinas multiprocessadas e em novas máquinas multi-core. Essas primitivas serão introduzidas na etapa de cálculo local, que é a etapa que consome mais tempo de processamento e pode facilmente ser paralalelizada através da primitiva ``\textit{parallel for}''. 
+%Espera-se, com essa alteração, uma diminuição no tempo de execução, porém, como apenas pequenas partes do programa poderão ser paralelizadas e as máquinas disponíveis para simulação tem no máximo quatro processadores, acredita-se que o tempo de execução continuará ainda alto.%, necessitando assim, uma outra etapa de paralelização.
+%	\item Buscar formas de paralelizar a aplicação através do uso da biblioteca de troca de mensagens MPI \cite{Pacheco-96,Snir-98} (\textit{Message Passing Interface}). Essa etapa tem duas fases previstas:
+%				
+%\begin{enumerate}
+%	\item Na primeira, será realizada uma paralelização de forma simples, usando primitivas básicas do MPI. Nessa fase as redes serão geradas com o auxílio de algoritmos genéticos para tentar convergir mais rapidamente em um estado estável.
+%	\item Na segunda, além da utilização das primitivas básicas, tentar-se-á introduzir primitivas novas, presentes na norma MPI-2 \cite{Gropp-99}. Uma dessas primitivas é a \textit{MPI\_Comm\_spawn}, que possibilita a criação dinâmica de novos processos. Esses processos serão criados para permitir uma maior concorrência na geração das redes. Com a utilização do MPI, pretende-se obter um bom desempenho, diminuindo significativamente o tempo de execução da aplicação, uma vez que um número bem maior de processadores poderá ser utilizado. 
+%\end{enumerate}
+%				
+%			\end{enumerate}
+%
+%
+%
+%
+%
+%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -304,23 +516,32 @@ A Tabela \ref{tab:cronograma} apresenta o
 cronograma de atividades a serem desenvolvidas, conforme citadas abaixo
 
 \begin{enumerate}
-	\item Levantamento bibliográfico sobre Redes Aleatórias Contínuas;
-	\item Levantamento bibliográfico sobre \textit{Simulated Annealing};
-	\item Estudo sobre a versão seqüencial do algoritmo de geração das CRN;
-	\item Otimizar a implementação seqüencial;
-	\item Levantamento bibliográfico sobre técnicas de paralização;
-	\item Elaboração de artigo a ser submetido para WSCAD;
-	\item Elaboração de artigo científico relativo ao trabalho já desenvolvido na Dissertação;
-	\item Desenvolvimento do Seminário de Andamento;
-	\item Semana acadêmica;
-	\item Paralelização através do Open-MP;
-	\item Paralelização através do MPI;
-	\item Paralelização através do MPI-2;
-	\item Comparação de resultados;
-	\item Redação da dissertação;
-	\item Elaboração de artigo a ser submetido em evento da área (Alto desempenho e Física computacional);
+	\item Levantamento bibliográfico do estado-da-arte das técnicas de distribuição do suporte a MMG;
+	\item Levantamento bibliográfico de técnicas de distribuição em geral, que possam ser aplicadas a jogos MMG;
+	\item Análise e categorização destas técnicas;
+	\item Elaboração de um modelo arquitetural de suporte distribuído a jogos MMG;
+	\item Integração das técnicas no modelo proposto;
+	\item Implementação de um protótipo com o fim de testes;
+	\item Levantamento dos simuladores mais indicados para efetuar tais testes;
+	\item Execução dos testes em um dos simuladores pesquisados;
+	\item Análise dos resultados;
+	\item Apresentação do seminário de andamento na semana acadêmica;
+	\item Escrita da dissertação;
+	\item Escrita de artigos;
 	\item Entrega da dissertação;
-	\item Defesa da dissertação
+	\item Defesa da dissertação;
+%	\item Elaboração de artigo a ser submetido para WSCAD;
+%	\item Elaboração de artigo científico relativo ao trabalho já desenvolvido na Dissertação;
+%	\item Desenvolvimento do Seminário de Andamento;
+%	\item Semana acadêmica;
+%	\item Paralelização através do Open-MP;
+%	\item Paralelização através do MPI;
+%	\item Paralelização através do MPI-2;
+%	\item Comparação de resultados;
+%	\item Redação da dissertação;
+%	\item Elaboração de artigo a ser submetido em evento da área (Alto desempenho e Física computacional);
+%	\item Entrega da dissertação;
+%	\item Defesa da dissertação
 \end{enumerate}
 
 \begin{table}[!ht]
@@ -328,33 +549,51 @@ cronograma de atividades a serem desenvolvidas, conforme citadas abaixo
 \begin{center}
 \caption{Cronograma}
 \label{tab:cronograma}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
 Etapa 
-   &Jan&Fev&Mar&Abr&Mai&Jun&Jul&Ago&Set&Out&Nov&Dez\\ \hline
-1  & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
-2  & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
-3  & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
-4  &   & X &   &   &   &   &   &   &   &   &   &   \\ \hline
-5  &   & X &   &   &   &   &   &   &   &   &   &   \\ \hline
-6  &   &   & X & X &   &   &   &   &   &   &   &   \\ \hline
-7  &   &   & X & X &   &   &   &   &   &   &   &   \\ \hline
-8  &   &   &   & X &   &   &   &   &   &   &   &   \\ \hline
-9  &   &   &   &   & X &   &   &   &   &   &   &   \\ \hline
-10 &   &   &   &   & X & X &   &   &   &   &   &   \\ \hline
-11 &   &   &   &   &   & X & X &   &   &   &   &   \\ \hline
-12 &   &   &   &   &   &   & X & X &   &   &   &   \\ \hline
-13 &   &   &   &   &   & X & X & X &   &   &   &   \\ \hline
-14 &   &   &   &   & X & X & X & X & X & X & X &   \\ \hline
-15 &   &   &   &   &   &   &   &   &   & X & X &   \\ \hline
-16 &   &   &   &   &   &   &   &   &   &   & X &   \\ \hline
-17 &   &   &   &   &   &   &   &   &   &   &   & X \\ \hline
+   &Jan&Fev&Mar&Abr&Mai&Jun&Jul&Ago&Set&Out&Nov&Dez&Jan&Fev\\ \hline
+1  & X & X & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+2  & X & X & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+3  &   & X & X & X &   &   &   &   &   &   &   &   &   &   \\ \hline
+4  &   &   & X & X & X &   &   &   &   &   &   &   &   &   \\ \hline
+5  &   &   &   & X & X &   &   &   &   &   &   &   &   &   \\ \hline
+6  &   &   &   &   & X & X & X & X &   &   &   &   &   &   \\ \hline
+7  &   &   &   &   &   &   & X & X &   &   &   &   &   &   \\ \hline
+8  &   &   &   &   &   &   &   &   & X &   &   &   &   &   \\ \hline
+9  &   &   &   &   &   &   &   &   &   & X & X &   &   &   \\ \hline
+10 &   &   &   &   & X &   &   &   &   &   &   &   &   &   \\ \hline
+11 &   &   &   &   & X & X & X & X & X & X & X & X &   &   \\ \hline
+12 &   &   &   &   &   &   &   &   & X & X & X & X & X &   \\ \hline
+13 &   &   &   &   &   &   &   &   &   &   &   & X &   &   \\ \hline
+14 &   &   &   &   &   &   &   &   &   &   &   &   &   & X \\ \hline
 \end{tabular}
 \end{center}
 \end{table}
 
 \bibliography{pep}
 \bibliographystyle{abnt} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \chapter*{Assinaturas}
@@ -366,16 +605,16 @@ Etapa
 
 
 \begin{center}
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  \\
-Gustavo Romano
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  \\
+Carlos Eduardo Benevides Bezerra
 
 
 \vspace{4cm}
 
 
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  \\
-Prof.~Dr. Nicolas Maillard
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  \\
+Prof.~Dr. Cláudio Fernando Resin Geyer
 
 \end{center}
 
