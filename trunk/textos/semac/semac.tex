@@ -88,22 +88,59 @@ A primeira grande restrição no trabalho de \cite{assiotis2006dam}, no entanto, é
 Neste artigo será descrito o modelo de suporte a jogos maciçamente jogador proposto e, ao longo do texto, serão utilizados alguns termos que precisam antes ser definidos, pois alguns deles são específicos da área de jogos de computador. Define-se avatar como sendo a representação no ambiente virtual do jogador, que, através dele, interage com o mundo do jogo e com outros jogadores. Regiões são divisões do ambiente virtual, cada uma podendo conter jogadores presentes. Assumindo regiões contíguas, define-se fronteira como sendo a divisa entre duas regiões adjacentes. Será utilizado o termo cliente para referir-se ao computador utilizado por cada jogador para conectar-se a um dos servidores do jogo, assim como o termo servidor fará referência a cada nodo integrante do sistema distribuído que estará servindo o jogo.
 
 %ações
+%eventos
+%estados
+%atributos
+%falar que o mw é pra mmorpg
 
 \section{Modelo de distribuição}
 \label{model}
 
 Usualmente, o ambiente virtual onde ocorre a simulação do mundo do jogo fica inteiramente a cargo de um servidor central - ou um cluster de servidores interligados por algum tipo de rede de alta velocidade e baixa latência - que processa as ações de cada jogador e calcula o resultado das mesmas, que é difundido para todos os jogadores envolvidos com aquela ação. Neste trabalho, o ambiente virtual é particionado em regiões, cada uma gerenciada por um servidor. As regiões serão contíguas, explorando a localidade dos avatares dos jogadores. Dessa forma, jogadores próximos no jogo tenderão a estarem conectados ao mesmo servidor, fazendo com que sua interação seja beneficiada. Em situações em que jogadores interagindo entre si estivessem conectados a diferentes servidores implicaria em maior tráfego, pois seria necessário algum tipo de negociação entre os servidores aos quais os diferentes jogadores estão conectados, para que os estados da simulação em ambos fossem idênticos.
 
-%bootstrap
+%Explicar melhor, e com figura(s), como é essa distribuição.
+
+%talvez seja melhor subir o communication subsection um nível na arvore, talvez nao precise criar essa subsection
+
+Nas próximas seções serão descritos alguns mecanismos básicos do modelo de distribuição proposto. Na seção \ref{communication} é detalhado melhor a comunicação entre  Na seção \ref{bootstrap}, explica-se como é iniciado o sistema servidor, e de que forma o ambiente é reparticionado à medida em que novos nodos servidores são introduzidos.
+
+\subsection{Bootstrap}
+\label{bootstrap}
+
+\subsection{Disseminação de informações}
+\label{gossip}
+
+O objetivo deste modelo é ser o mais escalável possível, no que diz respeito à extensão do ambiente virtual e do número de nodos servidores. Sendo assim, deseja-se que um número maior de servidores não implique em um sobrecusto crescente, a ponto de inviabilizar a utilização deste modelo de suporte. Contudo, permanece a necessidade de disseminar tanto a lista de nodos servidores, quanto os estados dos diferentes avatares entre através do sistema. Caso houvesse obrigação de garantia de entrega de cada uma dessas informações a todos os nodos envolvidos, ter-se-ia uma complexidade alta, pois cada um dos $n$ nodos servidores estaria enviando continuamente informações para $n-1$ outros servidores. Assim, o número de mensagens trocadas teria uma complexidade $O(n^2)$, levando a uma saturação da banda de comunicação dos nodos à medida em que fosse aumentada a escala, tanto em número de nodos servidores, quanto de jogadores.
+
+Para evitar isso, propõe-se a utilização de difusão probabilística destas informações, de maneira que não é necessário garantir a entrega de todas elas. Segundo \cite{kermarrec2003prd}, é possível tornar esse tipo de difusão quase tão confiável quanto a difusão determinística, porém reduzindo sensivelmente o tráfego gerado pelas mensagens e confirmações.
+
+A difusão do estado dos avatares ocorre da seguinte forma: como cada cliente está conectado a um servidor, este servidor terá o estado mais recente do avatar daquele jogador, que então é difundido para os servidores vizinhos, que repassa para seus vizinhos e assim por diante. Dessa forma, em algum momento todos servidores - ou boa parte  deles - terão o estado daquele avatar. Além disso, quanto mais próximo o servidor estiver da região onde está o avatar, maior a probabilidade dele ter recebido o estado, assim como mais atualizado ele estará.
+
+%rever/consertar
+
+\subsection{Jogadores e servidores}
+\label{communication}
+
+Cada servidor terá uma lista dos endereços e portas dos outros servidores, assim como a região a que cada um está associado. Quando um jogador deseja participar do jogo, deve conectar-se a um servidor qualquer. Se o jogador entrar com um avatar novo, é escolhida alguma região para ele começar a jogar, e o servidor a que ele se conectou irá redirecioná-lo para o servidor correto. O critério de escolha pode ser o número de jogadores em cada região, como também pode ser feita simplesmente uma seleção aleatória da região. Se já tiver jogado antes, será redirecionado para o servidor responsável pela área na qual ele parou de jogar da última vez. Desta forma, aumenta-se a probabilidade do jogador recomeçar a partida com as informações mais recentes a respeito de seu estado.
+
+
+
+
+%disseminação de estados dos jogadores e 
+%gossip da divisão do ambiente virtual em áreas
+%comunicação entre clientes e servidores
+%falha de nodo / saída de nodo
 %falar da sincronização entre as regiões e a idéia bala que economiza um hop :)
 %comentar a topologically aware construction da overlay network
 %explicar a gracefull degradation e
 %... se der, falar do load balancing.
+% ??? falar sobre udp
 
 \section{Área de interesse gradual}
 \label{aoi}
 
 %explicar uma por uma, como funciona e o porquê.
+%por o algoritmo de cada uma, ou de todas e só explica o que mudou (melhor)
 
 \section{Simulação}
 \label{sim}

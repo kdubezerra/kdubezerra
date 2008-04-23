@@ -44,6 +44,12 @@ Iimura, T., Hazeyama, H., and Kadobayashi, Y. (2004).
 \newblock {\em Proceedings of ACM SIGCOMM 2004 workshops on NetGames' 04:
   Network and system support for games}, pages 116--120.
 
+\bibitem[Kermarrec et~al. 2003]{kermarrec2003prd}
+Kermarrec, A., Massouli{\'e}, L., and Ganesh, A. (2003).
+\newblock {Probabilistic Reliable Dissemination in Large-Scale Systems}.
+\newblock {\em IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS}, pages
+  248--258.
+
 \bibitem[Knuth 1984]{knuth:84}
 Knuth, D.~E. (1984).
 \newblock {\em The {\TeX} Book}.

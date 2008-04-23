@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2007.8.8)  23 APR 2008 17:16
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2007.8.8)  23 APR 2008 18:48
 entering extended mode
 **semac.tex
 (./semac.tex
@@ -218,41 +218,50 @@ tre si di-vi-dem a tarefa de
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-[3] [4] <fig1.jpg, id=29, 254.3904pt x 232.2276pt>
+[3] [4]
+Underfull \hbox (badness 3260) in paragraph at lines 115--116
+[]\OT1/ptm/m/n/12 Para evi-tar isso, prop[]oe-se a utiliza[][]ao de di-fus[]ao 
+prob-a-bil[]^^Pstica destas
+ []
+
+[5] <fig1.jpg, id=41, 254.3904pt x 232.2276pt>
 File: fig1.jpg Graphic file (type jpg)
  <use fig1.jpg>
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 173.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 214.
 
 
 (/usr/share/texmf-tetex/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 173.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 214.
 
-<fig2.jpg, id=30, 205.7286pt x 234.1548pt>
+<fig2.jpg, id=42, 205.7286pt x 234.1548pt>
 File: fig2.jpg Graphic file (type jpg)
  <use fig2.jpg>
-<table.jpg, id=31, 365.2044pt x 217.2918pt>
+<table.jpg, id=43, 365.2044pt x 217.2918pt>
 File: table.jpg Graphic file (type jpg)
- <use table.jpg> [5 <./fig1.jpg>]
-(./semac.bbl [6 <./fig2.jpg> <./table.jpg>]) [7] (./semac.aux) ) 
+ <use table.jpg> [6] (./semac.bbl
+[7 <./fig1.jpg> <./fig2.jpg>]) [8 <./table.jpg>] (./semac.aux) ) 
 Here is how much of TeX's memory you used:
- 1919 strings out of 94500
- 24768 string characters out of 1175789
- 80434 words of memory out of 1000000
- 5083 multiletter control sequences out of 10000+50000
+ 1923 strings out of 94500
+ 24820 string characters out of 1175789
+ 80489 words of memory out of 1000000
+ 5087 multiletter control sequences out of 10000+50000
  20011 words of font info for 41 fonts, out of 500000 for 2000
  581 hyphenation exceptions out of 8191
  30i,8n,28p,1992b,230s stack positions out of 1500i,500n,5000p,200000b,5000s
 PDF statistics:
- 44 PDF objects out of 300000
+ 56 PDF objects out of 300000
  0 named destinations out of 131072
  16 words of extra memory for PDF output out of 65536
 {/usr/share/tex
 mf-tetex/fonts/enc/dvips/psnfss/8r.enc}</usr/share/texmf-tetex/fonts/type1/urw/
-helvetic/uhvb8a.pfb></usr/share/texmf-tetex/fonts/type1/urw/times/utmri8a.pfb><
-/usr/share/texmf-tetex/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-tete
-x/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/
-cm/cmr8.pfb></usr/share/texmf-tetex/fonts/type1/urw/times/utmb8a.pfb>
-Output written on semac.pdf (7 pages, 210632 bytes).
+helvetic/uhvb8a.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmr12.pfb></
+usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf-tetex
+/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf-tetex/fonts/type1/urw/time
+s/utmri8a.pfb></usr/share/texmf-tetex/fonts/type1/urw/times/utmbi8a.pfb></usr/s
+hare/texmf-tetex/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-tetex/fonts
+/type1/bluesky/cm/cmr8.pfb></usr/share/texmf-tetex/fonts/type1/urw/times/utmb8a
+.pfb>
+Output written on semac.pdf (8 pages, 223197 bytes).
