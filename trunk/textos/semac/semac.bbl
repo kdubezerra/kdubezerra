@@ -16,6 +16,13 @@ Blizzard (2004).
 \newblock World of warcraft.
 \newblock http://www.worldofwarcraft.com/.
 
+\bibitem[Boulanger et~al. 2006]{boulanger2006cim}
+Boulanger, J., Kienzle, J., and Verbrugge, C. (2006).
+\newblock {Comparing interest management algorithms for massively multiplayer
+  games}.
+\newblock {\em Proceedings of 5th ACM SIGCOMM workshop on Network and system
+  support for games}.
+
 \bibitem[Boulic and Renault 1991]{boulic:91}
 Boulic, R. and Renault, O. (1991).
 \newblock 3d hierarchies for animation.
@@ -60,5 +67,11 @@ Smith, A. and Jones, B. (1999).
 \newblock On the complexity of computing.
 \newblock In Smith-Jones, A.~B., editor, {\em Advances in Computer Science},
   pages 555--566. Publishing Press.
+
+\bibitem[Yan and Randell 2005]{yan2005scc}
+Yan, J. and Randell, B. (2005).
+\newblock {A systematic classification of cheating in online games}.
+\newblock {\em Proceedings of 4th ACM SIGCOMM workshop on Network and system
+  support for games}, pages 1--9.
 
 \end{thebibliography}
