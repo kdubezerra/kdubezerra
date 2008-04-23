@@ -2,44 +2,49 @@ This is BibTeX, Version 0.99c (Web2C 7.5.4)
 The top-level auxiliary file: semac.aux
 The style file: sbc.bst
 Database file #1: semac.bib
-You've used 10 entries,
+Repeated entry---line 225 of file semac.bib
+ : @article{assiotis2006dam
+ :                         ,
+I'm skipping whatever remains of this entry
+You've used 12 entries,
             1935 wiz_defined-function locations,
-            529 strings with 5245 characters,
-and the built_in function-call counts, 4019 in all, are:
-= -- 402
-> -- 163
-< -- 11
-+ -- 55
-- -- 53
-* -- 292
-:= -- 694
-add.period$ -- 32
-call.type$ -- 10
-change.case$ -- 75
-chr.to.int$ -- 10
-cite$ -- 10
-duplicate$ -- 169
-empty$ -- 268
-format.name$ -- 69
-if$ -- 811
+            537 strings with 5557 characters,
+and the built_in function-call counts, 4774 in all, are:
+= -- 477
+> -- 194
+< -- 13
++ -- 65
+- -- 63
+* -- 349
+:= -- 826
+add.period$ -- 38
+call.type$ -- 12
+change.case$ -- 90
+chr.to.int$ -- 12
+cite$ -- 12
+duplicate$ -- 201
+empty$ -- 317
+format.name$ -- 83
+if$ -- 961
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 8
-newline$ -- 53
-num.names$ -- 34
-pop$ -- 71
+missing$ -- 10
+newline$ -- 63
+num.names$ -- 40
+pop$ -- 85
 preamble$ -- 1
-purify$ -- 75
+purify$ -- 90
 quote$ -- 0
-skip$ -- 144
+skip$ -- 171
 stack$ -- 0
-substring$ -- 242
-swap$ -- 41
-text.length$ -- 4
+substring$ -- 282
+swap$ -- 48
+text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 58
+type$ -- 70
 warning$ -- 0
-while$ -- 34
+while$ -- 41
 width$ -- 0
-write$ -- 129
+write$ -- 154
+(There was 1 error message)
