@@ -64,8 +64,7 @@ E-mail: carlos.bezerra@inf.ufrgs.br}}
 
 \begin{abstract}
 %\boldmath
-Traditionally, a central server is utilized %, to which players connect,
-to provide support to massively multiplayer games, where the number of participants is of the order of tens of thousands. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, employing techniques to minimize the necessary bandwidth to these server nodes. One of these techniques is a refinement of interest management algorithm, which obtained significant results in simulations. Other techniques still in preliminary phase of specification are: server nodes overlay network construction using knowledge of the real network topology, load balancing and hotspots dectection.
+Traditionally, a central server is utilized to provide support to massively multiplayer games, where the number of participants is of the order of tens of thousands. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, employing a novell refinement to the area of interest technique, which minimizes the necessary bandwidth to these server nodes. 
 
 %aumentar o abstract, falando da economia de banda ao usar a AOI
 
