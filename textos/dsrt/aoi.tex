@@ -6,6 +6,8 @@
 %\usepackage[brazil]{babel}   
 \usepackage[latin1]{inputenc}  
 
+%\newcommand{\malg}{A$^3$}
+\newcommand{\malg}{A3}
 
 
 % correct bad hyphenation here
@@ -206,13 +208,14 @@ A forma mais simples de executar gerenciamento de interesse consiste em definir 
 \subsection{Ângulo de visão}
 \label{angle}
 
-Outra maneira, um pouco mais refinada, de gerenciar o interesse dos avatares consiste em levar conta o que o jogador pode visualizar, ou seja, seu ângulo de visão. A área dentro de onde esse jogador perceberá mudanças relevantes pode ser definida como um setor de círculo. É similar à área em formato de círculo definida anteriormente, porém leva em consideração que o jogador só pode visualizar objetos que estão situados à frente de seu avatar.
+Outra maneira, um pouco mais refinada, de gerenciar o interesse dos avatares consiste em levar em conta o que o jogador pode visualizar, ou seja, seu ângulo de visão. A área dentro de onde esse jogador perceberá mudanças relevantes pode ser definida como um setor de círculo. É similar à área em formato de círculo definida anteriormente, porém leva em consideração que o jogador só pode visualizar objetos que estão situados à frente de seu avatar.
 
 %pegar isso pra mim!?... CLARO! fui eu que fiz!
-Uma questão a ser considerada, no entanto, é que o jogador não irá receber atualizações de estado de entidades imediatamente atrás de seu avatar, podendo compromenter o jogo. Se o avatar girar 180° em torno de seu próprio eixo rapidamente, pode ser que não veja determinada entidade que deveria estar ali, necessitando de certo tempo para receber o estado dela. Isto acontece porque, apesar desta entidade ter estado próximo do avtar, ele não recebeu suas informações ainda porque antes ela estava atrás dele, fora do seu campo de visão. Para contornar este problema, sugere-se considerar a região próxima ao avatar, que pode ser definida como um círculo menor, cuja área será unida à do setor de círculo que determina o campo de visão do jogador.
+Uma questão a ser considerada, no entanto, é que o jogador não irá receber atualizações de estado de entidades imediatamente atrás de seu avatar, podendo compromenter o jogo. Se o avatar girar 180° em torno de seu próprio eixo rapidamente, pode ser que não veja determinada entidade que deveria estar ali, necessitando de certo tempo para receber o estado dela. Isto acontece porque, apesar desta entidade ter estado próximo do avtar, ele não recebeu suas informações ainda porque antes ela estava atrás dele, fora do seu campo de visão. Na figura \ref{fangle} é ilustrado como seria uma área de interesse que levaria em consideração o campo de visão do jogador.
 
 %figura
-\label{critical}
+\label{fangle}
+
 %algoritmo
 
 \section{Graded Area of Interest}
@@ -240,8 +243,30 @@ Um exemplo simples de utilização de intervalos variados de atualização baseado e
 %figura
 \label{graded_circle} 
 
-\subsection{Nossa proposta - REVER\%}
+%           A                   A              A 
+%\subsection{Ângulo de visão com área próxima e atenuação da freqüência de atualização}
+\subsection{Algoritmo \malg}
+%View Angle with close area and update frequency atenuation
+%V    A          C     A         U      F         A
 \label{csmooth}
+
+O algoritmo de gerenciamento de interesse proposto neste artigo, denominado \malg{} (ângulo de visão com área próxima e atenuação de freqüência de atualização), leva em conta três fatores principais:
+
+\begin{itemize}
+ \item Ângulo de visão do avatar, para determinar quais entidades o jogador tem que ser capaz de perceber imediatamente, por estarem à sua frente;
+ \item Área próxima, para evitar que ocorram problemas caso o jogador faça seu avatar girar ao redor do próprio eixo muito rapidamente, além de melhorar a qualidade do jogo nessa área mais próxima. %explicar melhor
+ \item Atenuação da freqüência de atualizações.
+\end{itemize}
+
+A área de interesse resultante então toma a forma de um setor de círculo, cuja origem é o centro de um círculo menor. Este círculo menor é a área próxima do avatar, que receberá atualizações de estado com intervalo normal de entidades que nela estiverem. 
+
+
+Na figura \ref{fcsmooth}...
+
+%figura
+\label{fcsmooth}
+
+Para contornar este problema, sugere-se considerar a região próxima ao avatar, que pode ser definida como um círculo menor, cuja área será unida à do setor de círculo que determina o campo de visão do jogador.
 
 \section{Simulation}
 \label{sim}
