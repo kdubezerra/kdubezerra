@@ -255,13 +255,13 @@ O algoritmo de gerenciamento de interesse proposto neste artigo, denominado \mal
 \begin{itemize}
  \item Ângulo de visão do avatar, para determinar quais entidades o jogador tem que ser capaz de perceber imediatamente, por estarem à sua frente;
  \item Área próxima, cujo objetivo é %evitar que ocorram problemas caso o jogador faça seu avatar girar ao redor do próprio eixo muito rapidamente, além de 
- melhorar a qualidade do jogo no espaço mais perto do avatar. %explicar melhor
+ melhorar a qualidade do jogo no espaço mais perto do avatar; %explicar melhor
  \item Atenuação da freqüência de atualizações.
 \end{itemize}
 
 A área de interesse resultante então toma a forma de um setor de círculo, cuja origem é o centro de outro círculo, menor. Este círculo menor é a área próxima do avatar do jogador, que receberá atualizações de estado com intervalo normal de entidades que nela estiverem. Dessa forma, tem-se o estado mais atualizado possível do jogo na região próxima ao avatar. Isso favorece a interação com entidades que estejam perto dele. Mesmo que alguma delas esteja momentaneamente fora do campo de visão do jogador, ela estará disponível caso ele gire seu avatar repentinamente na direção oposta à que está voltado.
 
-Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângulo de visão, será verificado a relevância. Propõe-se que a relevância de cada entidade diminua gradualmente de acordo com a distância entre ela e o avatar do jogador em questão. Quanto mais longe, menos freqüentes serão as atualizações de estado. Isso é possível porque mesmo que o intervalo de atualização seja duplicado, ainda será de uma fração de segundo, o que será dificilmente perceptível por um jogador cujo avatar está situado a uma grande distância da entidade em questão. Além disso, pequenos atrasos entre a chega das atualizações de estado podem ser facilmente mascarados através de técnicas de interpolação, como dead-reckoning [cite\%]
+Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângulo de visão, será verificado a relevância. Propõe-se que a relevância de cada entidade diminua gradualmente de acordo com a distância entre ela e o avatar do jogador em questão. Quanto mais longe, menos freqüentes serão as atualizações de estado. Isso é possível porque mesmo que o intervalo de atualização seja duplicado, ainda será de uma fração de segundo, o que será dificilmente perceptível por um jogador cujo avatar está situado a uma grande distância da entidade em questão. Além disso, pequenos atrasos entre a chega das atualizações de estado podem ser facilmente mascarados através de técnicas de interpolação, como dead-reckoning \cite{smed2002rna}.
 %O que justifica esse método é o princípio de que, quanto maior a distância entre o avatar e uma entidade, menor a probabilidade de interação
 
 
