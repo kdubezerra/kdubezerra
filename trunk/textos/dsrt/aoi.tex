@@ -25,7 +25,13 @@
 \author{\IEEEauthorblockN{Carlos Eduardo Benevides Bezerra}
 \IEEEauthorblockA{Federal University of Rio Grande do Sul\\
 Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
-E-mail: carlos.bezerra@inf.ufrgs.br}}
+E-mail: carlos.bezerra@inf.ufrgs.br}
+\and
+\IEEEauthorblockN{Cláudio Fernando Resin Geyer}
+\IEEEauthorblockA{Federal University of Rio Grande do Sul\\
+Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
+E-mail: geyer@inf.ufrgs.br}
+}
 
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
@@ -187,7 +193,7 @@ Em resumo, o gerenciamento de interesse funciona da seguinte forma: para cada mu
 
 Os algoritmos descritos nas próximas seções baseiam-se, entre outras coisas, na distância euclidiana entre cada avatar e as outras entidades preseentes no ambiente virtual. Isso poderia gerar um problema de escalabilidade, porém está sendo suposta uma arquitetura distribuída, onde tal processamento poderá e deverá ser paralelizado. No modelo de distribuição definido anteriormente, cada servidor controlar uma região do mapa. Por conseguinte, cada um deles gerenciará apenas um subconjunto das entidades do jogo, verificando somente as distâncias entre cada par delas, além das entidades que estiverem em uma região vizinha, próximos à sua fronteira.
 
-Nas sessões seguintes, serão descritos algumas versões desta técnica, sendo sendo o último o algoritmo que está sendo proposto neste trabalho.
+Nas sessões seguintes, serão descritos algumas versões simples desta técnica, tais como área em círculo e área baseada no ângulo de visão do avatar. Na seção \ref{gaoi} é introduzida a abordagem de atenuação da freqüência de atualizações, onde será descrita em detalhes a abordagem proposta.
 
 \subsection{Círculo}
 \label{circle}
@@ -195,18 +201,47 @@ Nas sessões seguintes, serão descritos algumas versões desta técnica, sendo send
 A forma mais simples de executar gerenciamento de interesse consiste em definir uma área em forma de círculo, cujo centro é definido pelas coordenadas da localização do avatar no ambiente virtual. Após isso, é calculada a distância euclidiana entre cada avatar e cada uma das outras entidades presentes no mundo do jogo. Seja o avatar $A_i$, cuja área de interesse é um círculo de raio $rad_i$. Se o avatar $A_j$ estiver a uma distância menor que $rad_i$ de $A_i$, então suas atualizações de estado serão relevantes. $A_i$ não receberá atualizações de estado de entidades que estejam a uma distância maior.
 
 %figura
+%algoritmo
 
-\subsection{Ângulo de visão - REVER\%}
+\subsection{Ângulo de visão}
 \label{angle}
 
 Outra maneira, um pouco mais refinada, de gerenciar o interesse dos avatares consiste em levar conta o que o jogador pode visualizar, ou seja, seu ângulo de visão. A área dentro de onde esse jogador perceberá mudanças relevantes pode ser definida como um setor de círculo. É similar à área em formato de círculo definida anteriormente, porém leva em consideração que o jogador só pode visualizar objetos que estão situados à frente de seu avatar.
 
-%pegar isso pra mim!?...
+%pegar isso pra mim!?... CLARO! fui eu que fiz!
 Uma questão a ser considerada, no entanto, é que o jogador não irá receber atualizações de estado de entidades imediatamente atrás de seu avatar, podendo compromenter o jogo. Se o avatar girar 180° em torno de seu próprio eixo rapidamente, pode ser que não veja determinada entidade que deveria estar ali, necessitando de certo tempo para receber o estado dela. Isto acontece porque, apesar desta entidade ter estado próximo do avtar, ele não recebeu suas informações ainda porque antes ela estava atrás dele, fora do seu campo de visão. Para contornar este problema, sugere-se considerar a região próxima ao avatar, que pode ser definida como um círculo menor, cuja área será unida à do setor de círculo que determina o campo de visão do jogador.
 
 %figura
 \label{critical}
+%algoritmo
 
+\section{Graded Area of Interest}
+%\subsection{Círculo com atenuação}
+\label{gaoi}
+
+O princípio por trás da abordagem proposta aqui baseia-se no fato de que, quanto mais distante uma entidade se situar do avatar no ambiente virtual, menos forte será a exigência por rapidez nas suas atualizações para aquele avatar. Sendo assim, pode-se receber atualizações de estado de entidades que estão menos próximas com maior intervalo entre elas. Por outro lado, se uma entidade muito próxima fez qualquer movimento, é desejável que o jogador disponha de seu estado mais recente assim que possível.
+
+Para atingir este objetivo, é necessário definir alguns parâmetros:
+
+\textbf{Relevância} - valor real entre 0 e 1, inclusive, que determina o quanto o estado de determinada entidade é relevante em relação a um avatar.
+
+\textbf{Freqüência de atualização} - quantidade de atualizações que cada avatar recebe de cada uma das entidades do ambiente virtual por unidade de tempo.
+
+\textbf{Intervalo normal de atualização} - intervalo de tempo entre a chegada de duas atualizações de estado consecutivas de uma mesma entidade em um cliente, quando a relevância daquela entidade para o avatar naquele cliente é 1. Assim sendo, o intervalo normal determina a freqüência máxima de atualização.
+
+Para se enviar o estado de uma entidade para determinado cliente, verifica-se primeiro quando foi o último envio. O próximo instante de envio é então escalonado para ocorrer após um determinado intervalo de tempo. Se a relevância daquele estado for 1, será utilizado o intervalo normal de atualização. Se for menor que 1, divide-se o intervalo normal pela relevância. Por exemplo, seja um jogo em que o intervalo normal de atualização seja de 200 ms. Se o avatar $A_i$, que acabou de enviar uma atualização de estado para $A_j$, está a uma distância de $A_j$ tal que sua relevância é 0.5, o próximo envio será depois de um intervalo de 200/0.5, ou seja, de 400 ms. Apesar deste intervalo ainda ser uma fração de segundo, representa uma diminuição da freqüência de atualização do estado de $A_i$ em 50\%. Como estão a uma distância maior um do outro, espera-se que esta variação no intervalo seja imperceptível para o jogador que controla $A_j$.
+
+É importante perceber que a atenuação da freqüência de atualização das entidades é compatível com outras técnicas mais complexas de gerenciamento de interesse. Em \cite{boulanger2006cim}, são descritos diversos algoritmos de gerenciamento de interesse que poderiam ser ainda melhorados se fosse agregada a idéia de diferentes intervalos de envio baseado na relevância destas atualizações. Geralmente são considerados apenas dois extremos: é relevante ou não é relevante, ignorando-se que há uma vasta gama de valores intermediários. A questão está em como definir esse valor de relevância de determinado estado. Nas seções seguintes, serão apresentados dois exemplos de algoritmos que definem o método de se obter esse valor, assim como o tipo de área utilizado. Na seção \ref{csmooth}, é especificado um algoritmo original de gerenciamento de interesse, que, dentre outros princípios, emprega a atenuação da freqüência de atualização.
+
+\subsection{Círculo com atenuação}
+
+Um exemplo simples de utilização de intervalos variados de atualização baseado em relevância seria utilizando a área de interesse em formato de círculo. Para obter-se a relevância de uma entidade em relação a um avatar, pode-se fazer com que seu valor seja 1 quando a entidade estiver na mesma posição do avatar e ir diminuindo gradualmente à medida em que se afasta, até chegar a 0, quando para de diminuir não importa o quanto mais se afaste. Essa é uma maneira que, apesar de simples, demonstrou uma significante redução no tráfego entre clientes e servidores. Na figura \ref{graded_circle}, é ilustrado como seria a área de interesse com atenuação gradual da freqüência de atualização das entidades para um determinado avatar. A simulação e os resultados são apresentados nas seções \ref{sim} e \ref{results}, respectivamente.
+
+%figura
+\label{graded_circle} 
+
+\subsection{Nossa proposta - REVER\%}
+\label{csmooth}
 
 \section{Simulation}
 \label{sim}
