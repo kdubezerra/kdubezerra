@@ -61,6 +61,8 @@ Além do modelo par-a-par, existe também a alternativa de utilizar um servidor di
 %Alguns trabalhos [citações] têm proposto técnicas para reduzir a carga de processamento e comunicação associada a servidores de jogos maciçamente multijogador, sendo uma alternativa a distribuição desta carga entre diversos servidores, cada um com custo de aquisição e manutenção menor do que o de um grande servidor central. Ainda assim, com as atuais técnicas de distribuição e modelo de comunicação entre os servidores e os clientes, têm-se um alto custo para manter o sistema servidor distribuído como um todo.
 O presente trabalho propõe uma abordagem de servidores distribuídos, utilizando técnicas para reduzir o consumo de largura de banda causado pelo tráfego do jogo entre os servidores e os clientes, diminuindo a quantidade de recursos necessários, através de um refinamento da técnica de gerenciamento de interesse dos jogadores. [rever-repensar]Uma das propostas consiste em um refinamento da técnica de gerenciamento de interesse \cite{boulanger2006cim}, que obteve resultados significativos nas simulações realizadas. Além disso, propõe-se uma técnica que visa prover qualidade de serviço, adaptando a freqüência de atualizações enviadas pelo servidor à disponibilidade de recursos. [sure?]Outra consiste em um heurística para detecção de aglomerados de jogadores - ou hotspots - de forma a otimizar o balanceamento de carga entre os servidores.[/sure?]
 
+%melhorar esta parte de explicar como está dividido o artigo?
+
 O artigo está dividido da seguinte maneira: na seção \ref{relatedwork} são citados alguns trabalhos relacionados onde buscou-se distribuir o servidor do jogo; na seção \ref{def}, são apresentadas as definições de alguns conceitos utilizados ao longo do texto; na seção \ref{model}, é descrito o modelo de distribuição proposto; na seção \ref{aoi} é apresentada a otimização proposta para reduzir o tráfego sem comprometer a qualidade do jogo; nas seções \ref{sim} e \ref{results} é descrita a simulação realizada para validar a técnica proposta e os resultados obtidos, respectivamente e, na seção \ref{conclusions}, são apresentadas as conclusões a que se chegou neste trabalho.
 
 \section{Trabalhos relacionados}
@@ -98,11 +100,13 @@ Neste artigo será descrito o modelo de suporte a jogos maciçamente jogador propo
 
 Usualmente, o ambiente virtual onde ocorre a simulação do mundo do jogo fica inteiramente a cargo de um servidor central - ou um cluster de servidores interligados por algum tipo de rede de alta velocidade e baixa latência - que processa as ações de cada jogador e calcula o resultado das mesmas, que é difundido para todos os jogadores envolvidos com aquela ação. Neste trabalho, o ambiente virtual é particionado em regiões, cada uma gerenciada por um servidor. As regiões serão contíguas, explorando a localidade dos avatares dos jogadores. Dessa forma, jogadores próximos no jogo tenderão a estarem conectados ao mesmo servidor, fazendo com que sua interação seja beneficiada. Em situações em que jogadores interagindo entre si estivessem conectados a diferentes servidores implicaria em maior tráfego, pois seria necessário algum tipo de negociação entre os servidores aos quais os diferentes jogadores estão conectados, para que os estados da simulação em ambos fossem idênticos.
 
+%Explicar melhor, e com figura(s), como é essa distribuição.
+
 %talvez seja melhor subir o communication subsection um nível na arvore, talvez nao precise criar essa subsection
 
 Nas próximas seções serão descritos alguns mecanismos básicos do modelo de distribuição proposto. Na seção \ref{communication} é detalhado melhor a comunicação entre  Na seção \ref{bootstrap}, explica-se como é iniciado o sistema servidor, e de que forma o ambiente é reparticionado à medida em que novos nodos servidores são introduzidos.
 
-\subsection{bootstrap}
+\subsection{Bootstrap}
 \label{bootstrap}
 
 \subsection{Disseminação de informações}
@@ -112,7 +116,9 @@ O objetivo deste modelo é ser o mais escalável possível, no que diz respeito à e
 
 Para evitar isso, propõe-se a utilização de difusão probabilística destas informações, de maneira que não é necessário garantir a entrega de todas elas. Segundo \cite{kermarrec2003prd}, é possível tornar esse tipo de difusão quase tão confiável quanto a difusão determinística, porém reduzindo sensivelmente o tráfego gerado pelas mensagens e confirmações.
 
-A difusão do estado dos avatares ocorre da seguinte forma: como cada cliente está conectado a um servidor, este servidor terá o estado mais recente do avatar daquele jogador, que então é difundido para os servidores vizinhos, que repassa para seus vizinhos e assim por diante. 
+A difusão do estado dos avatares ocorre da seguinte forma: como cada cliente está conectado a um servidor, este servidor terá o estado mais recente do avatar daquele jogador, que então é difundido para os servidores vizinhos, que repassa para seus vizinhos e assim por diante. Dessa forma, em algum momento todos servidores - ou boa parte  deles - terão o estado daquele avatar. Além disso, quanto mais próximo o servidor estiver da região onde está o avatar, maior a probabilidade dele ter recebido o estado, assim como mais atualizado ele estará.
+
+%rever/consertar
 
 \subsection{Jogadores e servidores}
 \label{communication}

@@ -64,7 +64,7 @@ E-mail: carlos.bezerra@inf.ufrgs.br}}
 
 \begin{abstract}
 %\boldmath
-Traditionally, a central server is utilized to provide support to MMGs (massively multiplayer games), where the number of participants is of the order of tens of thousands. Much work has been done trying to create a fully peer-to-peer model to support this kind of application, in order to minimize the maintenance cost of the traditional infra-structure, but critical questions remain. Examples of the problems relative to peer-to-peer MMG support systems are: vulnerability to cheating, overload of the upload links of the peers and difficulty to maintain consistency of the simulation among the participants. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, working as a distributed server to the game. The distribution model and some related works are also presented. To address the communication cost imposed to the server, it is specified a novell refinement to the area of interest technique, significantly reducing the necessary bandwidth to the server nodes. In the simulations, different area of interest techniques have been compared, and the results show that our approach has the least bandwidth utilization, demonstrating a 52\% maximum traffic reduction and 63\% average traffic reduction, when compared to other area of interest algorithms.
+Traditionally, a central server is utilized to provide support to MMGs (massively multiplayer games), where the number of participants is of the order of tens of thousands. Much work has been done trying to create a fully peer-to-peer model to support this kind of application, in order to minimize the maintenance cost of the traditional infra-structure, but critical questions remain. Examples of the problems relative to peer-to-peer MMG support systems are: vulnerability to cheating, overload of the upload links of the peers and difficulty to maintain consistency of the simulation among the participants. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, working as a distributed server to the game. The distribution model and some related works are also presented. To address the communication cost imposed to the server, it is specified a novell refinement to the area of interest technique, significantly reducing the necessary bandwidth to the server nodes. Simulations have been made with ns-2, where different area of interest algorithms have been compared, and the results show that our approach has the least bandwidth utilization, demonstrating a 52\% maximum traffic reduction and 63\% average traffic reduction, when compared to other area of interest algorithms.
 
 %aumentar o abstract, falando da economia de banda ao usar a AOI
 
@@ -175,13 +175,47 @@ Desta maneira, os detalhes deste mecanismo não irão implicar em mudanças relevan
 
 %Cada servidor terá uma lista dos endereços e portas dos outros servidores, assim como a região a que cada um está associado. Quando um jogador deseja participar do jogo, deve conectar-se a um servidor qualquer. Se o jogador entrar com um avatar novo, é escolhida alguma região para ele começar a jogar, e o servidor a que ele se conectou irá redirecioná-lo para o servidor correto. O critério de escolha pode ser o número de jogadores em cada região, como também pode ser feita simplesmente uma seleção aleatória da região. Se já tiver jogado antes, será redirecionado para o servidor responsável pela área na qual ele parou de jogar da última vez. Desta forma, aumenta-se a probabilidade do jogador recomeçar a partida com as informações mais recentes a respeito de seu estado.
 
-\section{Gradual Area of Interest}
+\section{Area of Interest Algorithms}
 \label{aoi}
 
+%como há vários servidores, o processamento das áreas de interesse é paralelizado, também, então não é tãaao ruim calcular a distância entre cada par de avatares..
 %explicar uma por uma, como funciona e o porquê.
+
+Para que os diferentes jogadores interajam entre si e com as diversas entidades presentes no ambiente do jogo de maneira adequada, é necessário que disponham de réplicas locais destas entidades, cujo estado deve ser o mesmo para todos. A maneira mais simples de fazer isso seria difundir o estado de todas as entidades para todos os jogadores, mas isso geraria uma quantidade alta de tráfego, a depender do número de jogadores participando. Para economizar largura de banda, tanto dos jogadores, quanto dos servidores que os intermediam, é utilizada uma técnica conhecida como gerenciamento de interesse. Esta técnica reduz o número de atualizações que determinado jogador irá receber - e enviar, no caso de uma arquitetura par-a-par.
+
+Em resumo, o gerenciamento de interesse funciona da seguinte forma: para cada mudança de estado de cada entidade, é calculado para quem ela será relevante. Por exemplo, se um avatar situa-se a quilômetros de distância de outro, sem nenhum tipo de vínculo (como grupo, guilda etc.) entre eles, é irrelevante para cada um deles o estado mais recente do outro. Assim, não é necessário que eles troquem suas informações de estado. Este princípio, de localidade, é utilizado como critério principal no gerenciamento de interesse.
+
+Os algoritmos descritos nas próximas seções baseiam-se, entre outras coisas, na distância euclidiana entre cada avatar e as outras entidades preseentes no ambiente virtual. Isso poderia gerar um problema de escalabilidade, porém está sendo suposta uma arquitetura distribuída, onde tal processamento poderá e deverá ser paralelizado. No modelo de distribuição definido anteriormente, cada servidor controlar uma região do mapa. Por conseguinte, cada um deles gerenciará apenas um subconjunto das entidades do jogo, verificando somente as distâncias entre cada par delas, além das entidades que estiverem em uma região vizinha, próximos à sua fronteira.
+
+Nas sessões seguintes, serão descritos algumas versões desta técnica, sendo sendo o último o algoritmo que está sendo proposto neste trabalho.
+
+\subsection{Círculo}
+\label{circle}
+
+A forma mais simples de executar gerenciamento de interesse consiste em definir uma área em forma de círculo, cujo centro é definido pelas coordenadas da localização do avatar no ambiente virtual. Após isso, é calculada a distância euclidiana entre cada avatar e cada uma das outras entidades presentes no mundo do jogo. Seja o avatar $A_i$, cuja área de interesse é um círculo de raio $rad_i$. Se o avatar $A_j$ estiver a uma distância menor que $rad_i$ de $A_i$, então suas atualizações de estado serão relevantes. $A_i$ não receberá atualizações de estado de entidades que estejam a uma distância maior.
+
+%figura
+
+\subsection{Ângulo de visão - REVER\%}
+\label{angle}
+
+Outra maneira, um pouco mais refinada, de gerenciar o interesse dos avatares consiste em levar conta o que o jogador pode visualizar, ou seja, seu ângulo de visão. A área dentro de onde esse jogador perceberá mudanças relevantes pode ser definida como um setor de círculo. É similar à área em formato de círculo definida anteriormente, porém leva em consideração que o jogador só pode visualizar objetos que estão situados à frente de seu avatar.
+
+%pegar isso pra mim!?...
+Uma questão a ser considerada, no entanto, é que o jogador não irá receber atualizações de estado de entidades imediatamente atrás de seu avatar, podendo compromenter o jogo. Se o avatar girar 180° em torno de seu próprio eixo rapidamente, pode ser que não veja determinada entidade que deveria estar ali, necessitando de certo tempo para receber o estado dela. Isto acontece porque, apesar desta entidade ter estado próximo do avtar, ele não recebeu suas informações ainda porque antes ela estava atrás dele, fora do seu campo de visão. Para contornar este problema, sugere-se considerar a região próxima ao avatar, que pode ser definida como um círculo menor, cuja área será unida à do setor de círculo que determina o campo de visão do jogador.
+
+%figura
+\label{critical}
+
 
 \section{Simulation}
 \label{sim}
+
+%parâmetros
+%ns
+%programação
+%modelo
+%explicar que se um servidor suporta X, Y servidores suportarão X·Y
 
 \section{Results}
 \label{results}
