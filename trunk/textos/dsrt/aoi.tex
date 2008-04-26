@@ -12,7 +12,9 @@
 \usepackage[latin1]{inputenc}  
 
 %\newcommand{\malg}{A$^3$}
-\newcommand{\malg}{A3}
+\newcommand{\malg}{A$^3$}
+\newcommand{\cridis}{critical\_distance}
+\newcommand{\viewdis}{view\_distance}
 
 
 % correct bad hyphenation here
@@ -277,17 +279,17 @@ Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângu
 \caption{Calculate relevance of entity E to avatar A}
 \label{smalg}
 \begin{algorithmic}
- \STATE $dist \Leftarrow distance(A, E)$
- \IF{$dist \le CRITICAL\_DISTANCE$}
- \STATE $relevance \Leftarrow 1$
+ \STATE $dist \leftarrow distance(A, E)$
+ \IF{$dist \le \cridis$}
+ \STATE $relevance \leftarrow 1$
  \ELSE
  \IF{A can see E in its field of view}
- \STATE $relevance \Leftarrow 1 - \frac{dist}{VIEW\_DISTANCE}$
+ \STATE $relevance \leftarrow 1 - \frac{dist - \cridis}{\viewdis - \cridis}$
  \IF{$relevance < 0$}
- \STATE $relevance \Leftarrow 0$
+ \STATE $relevance \leftarrow 0$
  \ENDIF
  \ELSE
- \STATE $relevance \Leftarrow 0$
+ \STATE $relevance \leftarrow 0$
  \ENDIF
  \ENDIF
 \end{algorithmic}
@@ -300,7 +302,25 @@ Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângu
 \section{Simulation}
 \label{sim}
 
-Para simular a técnica proposta, foi utilizado o simulador de rede ns-2 \cite{mccanne:nsn}.
+Para efetuar a simulação do algoritmo proposto, foi necessário primeiro criar um modelo de ambiente virtual a simular, com diversos avatares presentes, pois o algoritmo é baseado nas informações de localização e ângulo de visão. O ambiente consiste em um espaço bidimensional, que corresponde à região gerenciada por um dos servidores. Há diversos avatares presentes nesta região, cujo número varia de uma simulação para outra. Cada avatar escolhe aleatoriamente um ponto de destino no ambiente e segue até lá. Ao chegar no destino, permanece parado por um tempo aleatório, que pode ser zero, e então escolhe uma nova localização para se dirigir.
+
+Para simular a técnica proposta, foi utilizado o simulador de rede ns-2 \cite{mccanne:nsn}. Este simulador permite criar código específico da aplicação que será simulada. No caso, foi simulado um servidor, que deveria enviar atualizações de estado para um cliente, responsável por um dos avatares na região. Baseado na localização dos outros avatares e no algoritmo de gerenciamento de interesse escolhido, o servidor decidia quais outros avatares tinham um estado relevante para o cliente em questão. Com isso, obtém-se a ocupação de largura de banda de envio necessária para um único cliente. Não se julgou necessário simular simultaneamente todos os clientes conectados àquele servidor, pois todos os avatares têm o mesmo perfil. Para encontrar a carga total no servidor, basta multiplicar a banda de envio necessária para um cliente pelo número de clientes presentes na região.
+
+Outra questão é que o consumo de largura de banda de envio do servidor é muito maior que o de recepção - se ele recebe $n$ ações, cada uma oriunda de um dos $n$ clientes, é necessário, no pior caso, enviar $O(n^2)$ atualizações de estado, pois cada jogador precisaria do estado de todos os outros. Assim sendo, foi necessário apenas medir a banda de transmissão utilizada.
+
+%falar do svoboda e do kim??...
+Em trabalhos como \cite{yu2007nas}, \cite{kim2005tcm} e \cite{svoboda2007taa}, é analisado o tráfego de rede gerado por jogos em larga escala. A partir destes trabalhos, foram decididos os seguinte parâmetros, que foram utilizados na simulação:
+
+\begin{itemize}
+ \item Intervalo normal de atualização: 250 ms;
+ \item Tamanho do pacote de atualização de estado de uma única entidade: 200 bytes;
+ \item Duração de cada seção de jogo simulada: 20 min;
+ \item Área do ambiente virtual: 750 x 750;
+ \item Alcance da visão: 120;
+ \item Distância crítica: 40;
+\end{itemize}
+
+Foram executadas diversas simulações, com o objetivo de comparar os algoritmos de gerenciamento de interesse apresentados. O número de avatares presentes no ambiente foi uma das variáves analisadas, para verificar a escalabilidade do jogo. Os algoritmos comparados foram os baseados em círculo, círculo com atenuação, ângulo de visão e o algoritmo proposto, \malg.
 
 %parâmetros
 %ns
