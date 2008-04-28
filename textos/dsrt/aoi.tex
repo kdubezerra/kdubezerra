@@ -1,7 +1,7 @@
 
 \documentclass[conference]{IEEEtran}
 
-\usepackage{graphics}
+\usepackage{graphicx}
 %\usepackage{listings}
 \usepackage{algorithm}
 \usepackage{algorithmic}
@@ -9,7 +9,9 @@
 \usepackage{amsmath}
 
 %\usepackage[brazil]{babel}   
-\usepackage[latin1]{inputenc}  
+\usepackage[latin1]{inputenc}
+
+%\DeclareGraphicsExtensions{eps}
 
 %\newcommand{\malg}{A$^3$}
 \newcommand{\malg}{A$^3$}
@@ -338,47 +340,84 @@ Foram executadas diversas simulações, com o objetivo de comparar os algoritmos d
 
 Os resultados foram coletados da seguinte maneira: para encontrar a largura de banda utilizada em média para envio, foram somados todos os pacotes de cada sessão e divido pelo tempo que foi simulado; para determinar a largura de banda máxima utilizada, foi verificado, segundo a segundo, quantos bytes foram enviados e foi selecionado o máximo.
 
-Na tabela \ref{tab_max}, são apresentados os dados coletados de largura de banda máxima utilizada pelas quatro técnicas simuladas - área em círculo (\circleaoi), área em círculo com atenuação (\circleat), área do campo de visão (\fov) e área do campo de visão mais área próxima mais atenuação (\malg) - além de mostrar quanto seria a largura de banda utilizada se a técnica não fosse usada (\noaoi). É verificado...
-
-
-
-% \begin{table}[ht]
-% \caption{Largura de banda máxima utilizada pelos algoritmos}
-% \centering
-%   \begin{tabular}{ | l | c | c | c | c | c |}  
-%     \hline
-%    	Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
-% 		25	&	18.8	&	17.0	&	11.4	&	14.2 &	9.4	\\ \hline
-% 		50	&	38.6	&	34.0	&	20.6	&	24.6	&	16.2	\\ \hline
-% 		75	&	58.2	&	47.2	&	33.2	&	35.6	&	22.6	\\ \hline
-% 		100	&	77.6	&	65.0	&	41.0	&	46.0	&	31.0	\\ \hline
-% 		125	&	97.2	&	74.8	&	48.6	&	59.0	&	39.4	\\ \hline
-% 		150	&	116.6	&	94.8	&	59.8	&	65.8	&	45.4	\\ \hline
-% 		175	&	135.4	&	112.2	&	68.6	&	64.8	&	43.0	\\ \hline
-% 		200	&	155.2	&	124.6	&	75.0	&	82.4	&	57.8	\\ \hline    
-%   \end{tabular}
-% \label{tab_max}
-% \end{table}
+Nas tabelas \ref{tab_max} e \ref{tab_avg}, são apresentados os dados coletados de largura de banda máxima e média, respectivamente, utilizada com os quatro algoritmos simuladas - área em círculo (\circleaoi), área em círculo com atenuação (\circleat), área do campo de visão (\fov) e área do campo de visão mais área próxima mais atenuação (\malg) - além de mostrar quanto seria a largura de banda utilizada se a técnica não fosse usada (\noaoi). Os valores estão em bytes/s. Nas figuras \ref{fig_max} e \ref{fig_avg} são mostrados os gráficos correspondentes.
 
 \begin{table}[ht]
-\caption{Largura de banda máxima utilizada pelos algoritmos}
+\caption{Largura de banda máxima utilizada}
 \centering
   \begin{tabular}{ c | c c c c c }  
     \hline
    	Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
-		25	&	18.8	&	17.0	&	11.4	&	14.2 &	9.4	\\ 
-		50	&	38.6	&	34.0	&	20.6	&	24.6	&	16.2	\\ 
-		75	&	58.2	&	47.2	&	33.2	&	35.6	&	22.6	\\ 
-		100	&	77.6	&	65.0	&	41.0	&	46.0	&	31.0	\\ 
-		125	&	97.2	&	74.8	&	48.6	&	59.0	&	39.4	\\ 
-		150	&	116.6	&	94.8	&	59.8	&	65.8	&	45.4	\\ 
-		175	&	135.4	&	112.2	&	68.6	&	64.8	&	43.0	\\ 
-		200	&	155.2	&	124.6	&	75.0	&	82.4	&	57.8	\\
+		25	&	9400	&	8500	&	5700	&	7100	&	4700 \\
+		50	&	19300	&	17000	&	10300	&	12300	&	8100 \\
+		75	&	29100	&	23600	&	16600	&	17800	&	11300 \\
+		100	&	38800	&	32500	&	20500	&	23000	&	15500 \\
+		125	&	48600	&	37400	&	24300	&	29500	&	19700 \\
+		150	&	58300	&	47400	&	29900	&	32900	&	22700 \\
+		175	&	67700	&	56100	&	34300	&	32400	&	21500 \\
+		200	&	77600	&	62300	&	37500	&	41200	&	28900 \\
 	\hline
   \end{tabular}
 \label{tab_max}
 \end{table}
 
+\begin{table}[ht]
+\caption{Largura de banda utilizada em média}
+\centering
+  \begin{tabular}{ c | c c c c c }  
+    \hline
+   	Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
+		25	&	9221	&	4715	&	2759	&	2534	&	1700 \\
+		50	&	18826	&	9350	&	5442	&	4949	&	3303 \\
+		75	&	28432	&	13963	&	8315	&	7619	&	5137 \\
+		100	&	38037	&	19324	&	11029	&	9928	&	6739 \\
+		125	&	47642	&	23138	&	13871	&	12434	&	8290 \\
+		150	&	57247	&	29031	&	16432	&	15085	&	10062 \\
+		175	&	66853	&	34697	&	19661	&	23060	&	14250 \\
+		200	&	76458	& 	38600	&	23450	&	21491	&	14413 \\
+	\hline
+  \end{tabular}
+\label{tab_avg}
+\end{table}
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{max}
+	\caption{Simulation Results: maximum bandwidth usage}
+	\label{fig_max}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+  %\includegraphics[width=2.5in]{avg}
+	\includegraphics[width=0.9\linewidth]{avg}
+	\caption{Simulation Results: average bandwidth usage}
+	\label{fig_avg}
+\end{figure}
+
+Apenas usando diferentes freqüências de atualização na gerenciamento de interesse baseado em círculo, reduziu-se em 41.59\% a largura de banda de envio utilizada em média pelo servidor por cliente. A utilização máxima de largura de banda também foi reduzida, em 36.19\%, por cliente. Estes valores representam a média de redução de uso de largura de banda para os diferentes números de clientes.
+
+No que diz respeito ao algoritmo proposto \malg, obteve-se uma redução de uso médio de largura de banda de envio de 63.51\% e 33.58\%, comparado respectivamente com o algoritmo de área de interesse circular e baseada em ângulo de visão. Reduziu-se também o pico de utilização em 52.03\% e 33.10\%, comparado com os mesmos algoritmos. Na tabela \ref{tab_summary}, são mostrados os percentuais médios de economia de largura de banda máxima e média do algoritmo \malg, em relação aos outros algoritmos apresentados.
+
+\begin{table}[ht]
+\caption{Economia de largura de banda com o algoritmo \malg}
+\centering
+  \begin{tabular}{ c | c c c c }  
+    \hline
+   	Utilização & \noaoi & \circleaoi & \circleat & \fov \\ \hline
+		Máxima	&	60.10\%	&	52.03\%	&	24.81\%	&	33.10\%	\\
+		Média	&	81.64\%	&	63.51\%	&	37.48\%	&	33.58\%	\\
+	\hline
+  \end{tabular}
+\label{tab_summary}
+\end{table}
+
+É interessante observar que os valores médio e máximo observados diferem, mesmo quando não é utilizado nenhum algoritmo de gerenciamento de interesse, ou seja, o cliente recebe atualizações de estado de todas as entidades presentes no jogo, com a freqüência normal. Além disso, com 200 avatares no ambiente, com estado de 100 bytes, cuja atualização é enviada a cada 250 ms, o servidor deveria alocar 199$\times$100$\times$4 bytes/s para cada cliente, ou seja, 79600 bytes/s. No entanto, observou-se que a utilização máxima e média, com 200 avatares presentes e nenhum gerenciamento de interesse, foi de 77600 e 76458, respectivamente. Isso acontece porque o ns-2 é um simulador de eventos discreto, e o servidor simulado foi programado para checar o schedule de envios a cada 10 ms. Em conseqüência disto, cada atualização de estado pode ter tido seu intervalo aumentado em até 10 ms, o que explica os valores encontrados.
+
+\section{Conclusion}
+\label{conclusion}
+The conclusion goes here.
 
 
 % An example of a floating figure using the graphicx package.
@@ -462,14 +501,6 @@ Na tabela \ref{tab_max}, são apresentados os dados coletados de largura de banda
 % exclusively. Note that, LaTeX2e, unlike IEEE journals/conferences, places
 % footnotes above bottom floats. This can be corrected via the \fnbelowfloat
 % command of the stfloats package.
-
-
-
-\section{Conclusion}
-\label{conclusion}
-The conclusion goes here.
-
-
 
 
 % conference papers do not normally have an appendix
