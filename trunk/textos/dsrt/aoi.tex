@@ -15,6 +15,10 @@
 \newcommand{\malg}{A$^3$}
 \newcommand{\cridis}{critical\_distance}
 \newcommand{\viewdis}{view\_distance}
+\newcommand{\circleaoi}{C}
+\newcommand{\circleat}{C \& A}
+\newcommand{\fov}{FoV}
+\newcommand{\noaoi}{None}
 
 
 % correct bad hyphenation here
@@ -309,18 +313,19 @@ Para simular a técnica proposta, foi utilizado o simulador de rede ns-2 \cite{mc
 Outra questão é que o consumo de largura de banda de envio do servidor é muito maior que o de recepção - se ele recebe $n$ ações, cada uma oriunda de um dos $n$ clientes, é necessário, no pior caso, enviar $O(n^2)$ atualizações de estado, pois cada jogador precisaria do estado de todos os outros. Assim sendo, foi necessário apenas medir a banda de transmissão utilizada.
 
 %falar do svoboda e do kim??...
-Em trabalhos como \cite{yu2007nas}, \cite{kim2005tcm} e \cite{svoboda2007taa}, é analisado o tráfego de rede gerado por jogos em larga escala. A partir destes trabalhos, foram decididos os seguinte parâmetros, que foram utilizados na simulação:
+Em trabalhos como \cite{yu2007nas}, \cite{kim2005tcm} e \cite{svoboda2007taa}, é analisado o tráfego de rede gerado por jogos em larga escala. Baseado nestes trabalhos, e adotando uma postura conservadora, foram decididos os seguinte parâmetros para serem utilizados na simulação:
 
 \begin{itemize}
  \item Intervalo normal de atualização: 250 ms;
  \item Tamanho do pacote de atualização de estado de uma única entidade: 200 bytes;
- \item Duração de cada seção de jogo simulada: 20 min;
+ \item Duração de cada sessão de jogo simulada: 20 min;
  \item Área do ambiente virtual: 750 x 750;
  \item Alcance da visão: 120;
  \item Distância crítica: 40;
+ \item Ângulo de visão: 180°.
 \end{itemize}
 
-Foram executadas diversas simulações, com o objetivo de comparar os algoritmos de gerenciamento de interesse apresentados. O número de avatares presentes no ambiente foi uma das variáves analisadas, para verificar a escalabilidade do jogo. Os algoritmos comparados foram os baseados em círculo, círculo com atenuação, ângulo de visão e o algoritmo proposto, \malg.
+Foram executadas diversas simulações, com o objetivo de comparar os algoritmos de gerenciamento de interesse apresentados. O número de avatares presentes no ambiente foi uma das variáves analisadas, para verificar a escalabilidade do jogo. Os algoritmos comparados foram os baseados em círculo, círculo com atenuação, ângulo de visão e o algoritmo proposto, \malg. Para demonstrar o quanto cada um destes reduz o tráfego, foram feitas simulações também em que não é empregado nenhum tipo de gerenciamento de interesse, e o servidor envia para cliente atualizações de estado de todas as outra entidades do jogo.
 
 %parâmetros
 %ns
@@ -330,6 +335,50 @@ Foram executadas diversas simulações, com o objetivo de comparar os algoritmos d
 
 \section{Results}
 \label{results}
+
+Os resultados foram coletados da seguinte maneira: para encontrar a largura de banda utilizada em média para envio, foram somados todos os pacotes de cada sessão e divido pelo tempo que foi simulado; para determinar a largura de banda máxima utilizada, foi verificado, segundo a segundo, quantos bytes foram enviados e foi selecionado o máximo.
+
+Na tabela \ref{tab_max}, são apresentados os dados coletados de largura de banda máxima utilizada pelas quatro técnicas simuladas - área em círculo (\circleaoi), área em círculo com atenuação (\circleat), área do campo de visão (\fov) e área do campo de visão mais área próxima mais atenuação (\malg) - além de mostrar quanto seria a largura de banda utilizada se a técnica não fosse usada (\noaoi). É verificado...
+
+
+
+% \begin{table}[ht]
+% \caption{Largura de banda máxima utilizada pelos algoritmos}
+% \centering
+%   \begin{tabular}{ | l | c | c | c | c | c |}  
+%     \hline
+%    	Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
+% 		25	&	18.8	&	17.0	&	11.4	&	14.2 &	9.4	\\ \hline
+% 		50	&	38.6	&	34.0	&	20.6	&	24.6	&	16.2	\\ \hline
+% 		75	&	58.2	&	47.2	&	33.2	&	35.6	&	22.6	\\ \hline
+% 		100	&	77.6	&	65.0	&	41.0	&	46.0	&	31.0	\\ \hline
+% 		125	&	97.2	&	74.8	&	48.6	&	59.0	&	39.4	\\ \hline
+% 		150	&	116.6	&	94.8	&	59.8	&	65.8	&	45.4	\\ \hline
+% 		175	&	135.4	&	112.2	&	68.6	&	64.8	&	43.0	\\ \hline
+% 		200	&	155.2	&	124.6	&	75.0	&	82.4	&	57.8	\\ \hline    
+%   \end{tabular}
+% \label{tab_max}
+% \end{table}
+
+\begin{table}[ht]
+\caption{Largura de banda máxima utilizada pelos algoritmos}
+\centering
+  \begin{tabular}{ c | c c c c c }  
+    \hline
+   	Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
+		25	&	18.8	&	17.0	&	11.4	&	14.2 &	9.4	\\ 
+		50	&	38.6	&	34.0	&	20.6	&	24.6	&	16.2	\\ 
+		75	&	58.2	&	47.2	&	33.2	&	35.6	&	22.6	\\ 
+		100	&	77.6	&	65.0	&	41.0	&	46.0	&	31.0	\\ 
+		125	&	97.2	&	74.8	&	48.6	&	59.0	&	39.4	\\ 
+		150	&	116.6	&	94.8	&	59.8	&	65.8	&	45.4	\\ 
+		175	&	135.4	&	112.2	&	68.6	&	64.8	&	43.0	\\ 
+		200	&	155.2	&	124.6	&	75.0	&	82.4	&	57.8	\\
+	\hline
+  \end{tabular}
+\label{tab_max}
+\end{table}
+
 
 
 % An example of a floating figure using the graphicx package.
