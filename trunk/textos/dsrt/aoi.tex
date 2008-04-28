@@ -87,8 +87,6 @@ E-mail: geyer@inf.ufrgs.br}
 %\boldmath
 Traditionally, a central server is utilized to provide support to MMGs (massively multiplayer games), where the number of participants is of the order of tens of thousands. Much work has been done trying to create a fully peer-to-peer model to support this kind of application, in order to minimize the maintenance cost of the traditional infra-structure, but critical questions remain. Examples of the problems relative to peer-to-peer MMG support systems are: vulnerability to cheating, overload of the upload links of the peers and difficulty to maintain consistency of the simulation among the participants. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, working as a distributed server to the game. The distribution model and some related works are also presented. To address the communication cost imposed to the server, it is specified a novell refinement to the area of interest technique, significantly reducing the necessary bandwidth to the server nodes. Simulations have been made with ns-2, where different area of interest algorithms have been compared, and the results show that our approach has the least bandwidth utilization, demonstrating a 33.10\% maximum traffic reduction and 33.58\% average traffic reduction, when compared to other area of interest algorithms.
 
-%aumentar o abstract, falando da economia de banda ao usar a AOI
-
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
 % This preserves the distinction between vectors and scalars. However,
@@ -134,6 +132,7 @@ O artigo está dividido da seguinte maneira: na seção \ref{relatedwork} são citad
 
 \section{Related Work}
 \label{relatedwork}
+%talvez deva reduzir esta seção.
 
 Como já foi dito, alguns trabalhos já foram feitos nos últimos anos visando distribuir o suporte a jogos maciçamente multijogador. Uma das abordagens é o modelo par-a-par, que tem algumas dificuldades, no que se refere a consistência do estado do jogo nos diferentes pares participantes, vulnerabilidade a trapaça e uso eficiente de largura de banda. Alguns autores propõem abordagens cujo objetivo é minimizar estes problemas. Um destes trabalhos \cite{schiele2007rpp} propõe a divisão do ambiente virtual simulado no jogo em regiões, e dentro de cada região é escolhido um par que será eleito coordenador daquela região. Sua função será a de gerenciar o interesse dos jogadores, verificando para quais pares cada atualização realmente precisa ser enviada. Dessa forma, reduz-se o uso de largura de banda de envio dos pares. No entanto, o uso de largura de banda de envio de cada participante ainda tende a ser significativamente superior àquele necessário quando utilizado o modelo cliente-servidor, pois neste é necessário apenas que cada jogador envie suas ações para um único destino. No modelo par-a-par, cada jogador deve atualizar, normalmente, mais de um outro jogador. Além disso, é necessário que o par escolhido para gerenciar o interesse naquela região seja confiável.
 
@@ -171,19 +170,6 @@ Os jogadores interagem com o mundo do jogo através de \textbf{ações}. Uma ação é
  
 A \textbf{fronteira} entre duas regiões é a divisa entre as áreas que essas regiões ocupam. Quando um avatar está localizado próximo a uma fronteira, o servidor responsável pela região além desta fronteria é avisado a respeito da presença daquele avatar pelo servidor onde ele se encontra.
 
-
-%R_i's, S_i's, C_i's, A_i's etc......;;;;
-%ações
-%eventos
-%estados
-%entidades
-%atributos
-%falar que o mw é pra mmorpg
-%fronteiras
-%fazer mais definições ao longo da escrita do artigo.
-%Explicar melhor, e com figura(s), como é essa distribuição.
-%talvez seja melhor subir o communication subsection um nível na arvore, talvez nao precise criar essa subsection
-
 \section{Distribution Model}
 \label{model}
 
@@ -194,6 +180,8 @@ Uma questão que diz respeito a esse modelo de particionamento do ambiente virtua
 No que diz respeito à simulação das ações executadas por jogadores cujos avatares estão situados em regiões diferentes, deve-se decidir como será feita a simulação. Como o foco deste trabalho não é a simulação em si, mas sim a otimização do uso de largura de banda através de um novo algoritmo de gerenciamento de interesse, decidiu-se que a simulação será realizada pelo servidor ao qual o cliente daquele jogador está conectado. Dessa forma, se o jogador cujo avatar está em $R_i$ executar uma ação próximo à fronteira, envolvendo entidades em $R_j$, será o servidor $S_i$ quem decidirá o resultado destas ações, repassando a $S_j$ apenas o novo estado já calculado.
 
 Desta maneira, os detalhes deste mecanismo não irão implicar em mudanças relevantes para o gerenciamento de interesse. Quando um jogador $J$ com o avatar próximo à fronteira de determinada região executa ações cujo resultado precisa ser difundido para jogadores com os avatares em outras regiões, o servidor $S$ responsável por $J$ simula suas ações, calcula o estado resultante e simplesmente o envia para o servidor vizinho, como se estivesse enviando para seus próprios clientes. Isso acontece da mesma forma que aconteceria se os outros jogadores também estivessem conectados a $S$. Analogamente, quando $S$ receber o estado resultante de uma ação de um jogador que está na região vizinha à sua, difunde-o para os jogadores a ele conectados como se um jogador dentro de sua própria região tivesse executado a ação.
+
+%figura
 
 %Cada servidor terá uma lista dos endereços e portas dos outros servidores, assim como a região a que cada um está associado. Quando um jogador deseja participar do jogo, deve conectar-se a um servidor qualquer. Se o jogador entrar com um avatar novo, é escolhida alguma região para ele começar a jogar, e o servidor a que ele se conectou irá redirecioná-lo para o servidor correto. O critério de escolha pode ser o número de jogadores em cada região, como também pode ser feita simplesmente uma seleção aleatória da região. Se já tiver jogado antes, será redirecionado para o servidor responsável pela área na qual ele parou de jogar da última vez. Desta forma, aumenta-se a probabilidade do jogador recomeçar a partida com as informações mais recentes a respeito de seu estado.
 
@@ -281,7 +269,6 @@ O algoritmo de gerenciamento de interesse proposto neste artigo, denominado \mal
 A área de interesse resultante então toma a forma de um setor de círculo, cuja origem é o centro de outro círculo, menor. Este círculo menor é a área próxima do avatar do jogador, que receberá atualizações de estado com intervalo normal de entidades que nela estiverem. Dessa forma, tem-se o estado mais atualizado possível do jogo na região próxima ao avatar. Isso favorece a interação com entidades que estejam perto dele. Mesmo que alguma delas esteja momentaneamente fora do campo de visão do jogador, ela estará disponível caso ele gire seu avatar repentinamente na direção oposta à que está voltado. Na figura \ref{fcsmooth}, é ilustrada a área de interesse que acaba de ser definida.
 
 Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângulo de visão, será calculada sua relevância. Propõe-se que a relevância de cada entidade diminua gradualmente de acordo com a distância entre ela e o avatar do jogador em questão. Quanto mais longe, menos freqüentes serão as atualizações de estado. Isso é possível porque mesmo que o intervalo de atualização seja duplicado, ainda será de uma fração de segundo, o que será dificilmente perceptível por um jogador cujo avatar está situado a uma grande distância da entidade em questão. Além disso, pequenos atrasos entre a chegada das atualizações de estado podem ser facilmente mascarados através de técnicas de interpolação, como dead-reckoning \cite{smed2002rna}. O algoritmo \ref{smalg} define o funcionamento deste gerenciamento de interesse.
-%O que justifica esse método é o princípio de que, quanto maior a distância entre o avatar e uma entidade, menor a probabilidade de interação
 
 \begin{algorithm}
 \caption{Calculate relevance of entity E to avatar A}
@@ -330,12 +317,6 @@ Em trabalhos como \cite{yu2007nas}, \cite{kim2005tcm} e \cite{svoboda2007taa}, é
 \end{itemize}
 
 Foram executadas diversas simulações, com o objetivo de comparar os algoritmos de gerenciamento de interesse apresentados. O número de avatares presentes no ambiente foi uma das variáves analisadas, para verificar a escalabilidade. Os algoritmos comparados foram os baseados em círculo, círculo com atenuação, ângulo de visão e o algoritmo proposto, \malg. Para demonstrar o quanto cada um destes reduz o tráfego, foram feitas simulações também em que não é empregado nenhum tipo de gerenciamento de interesse, e o servidor envia para o cliente atualizações de estado de todas as outras entidades do jogo.
-
-%parâmetros
-%ns
-%programação
-%modelo
-%explicar que se um servidor suporta X, Y servidores suportarão X·Y
 
 \section{Results}
 \label{results}
