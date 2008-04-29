@@ -31,7 +31,7 @@
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{A novell refinement of the area of interest technique in distributed simulations of MMGs}
+\title{A novell interest management algorithm for distributed simulations of MMGs}
 
 
 % author names and affiliations
@@ -85,7 +85,7 @@ E-mail: geyer@inf.ufrgs.br}
 
 \begin{abstract}
 %\boldmath
-Traditionally, a central server is utilized to provide support to MMGs (massively multiplayer games), where the number of participants is of the order of tens of thousands. Much work has been done trying to create a fully peer-to-peer model to support this kind of application, in order to minimize the maintenance cost of the traditional infra-structure, but critical questions remain. Examples of the problems relative to peer-to-peer MMG support systems are: vulnerability to cheating, overload of the upload links of the peers and difficulty to maintain consistency of the simulation among the participants. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, working as a distributed server to the game. The distribution model and some related works are also presented. To address the communication cost imposed to the server, it is specified a novell refinement to the area of interest technique, significantly reducing the necessary bandwidth to the server nodes. Simulations have been made with ns-2, where different area of interest algorithms have been compared, and the results show that our approach has the least bandwidth utilization, demonstrating a 33.10\% maximum traffic reduction and 33.58\% average traffic reduction, when compared to other area of interest algorithms.
+Traditionally, a central server is used to provide support to MMGs (massively multiplayer games), where the number of participants is in the order of tens of thousands. Much work has been done trying to create a fully peer-to-peer model to support this kind of application, in order to minimize the maintenance cost of its infra-structure, but critical questions remain. Examples of the problems relative to peer-to-peer MMG support systems are: vulnerability to cheating, overload of the upload links of the peers and difficulty to maintain consistency of the simulation among the participants. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, working as a distributed server to the game. The distribution model and some related works are also presented. To address the server communication cost, we specify a novell refinement to the area of interest technique, significantly reducing the necessary bandwidth to the server nodes. Simulations have been made with ns-2, where different area of interest algorithms have been compared, and the results show that our approach has the least bandwidth utilization, demonstrating a 33.10\% maximum traffic reduction and 33.58\% average traffic reduction, when compared to other area of interest algorithms.
 
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
@@ -178,7 +178,7 @@ Este trabalho baseia-se em um ambiente virtual particionado em regiões, cada uma
 \begin{figure}[!t]
 	\centering
 	%\includegraphics[width=2.5in]{max}
-	\includegraphics[width=0.9\linewidth]{partitionsmc}
+	\includegraphics[width=0.9\linewidth]{part}
 	\caption{Distribution model}
 	\label{partitions}
 \end{figure}
