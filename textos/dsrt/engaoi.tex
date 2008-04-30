@@ -37,16 +37,21 @@
 % author names and affiliations
 % use a multiple column layout for up to three different
 % affiliations
-\author{\IEEEauthorblockN{Carlos Eduardo Benevides Bezerra}
-\IEEEauthorblockA{Federal University of Rio Grande do Sul\\
-Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
-E-mail: carlos.bezerra@inf.ufrgs.br}
-\and
-\IEEEauthorblockN{Cláudio Fernando Resin Geyer}
-\IEEEauthorblockA{Federal University of Rio Grande do Sul\\
-Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
-E-mail: geyer@inf.ufrgs.br}
-}
+% \author{\IEEEauthorblockN{Carlos Eduardo Benevides Bezerra}
+% \IEEEauthorblockA{Federal University of Rio Grande do Sul\\
+% Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
+% E-mail: carlos.bezerra@inf.ufrgs.br}
+% \and
+% \IEEEauthorblockN{Fábio Reis Cecin}
+% \IEEEauthorblockA{Federal University of Rio Grande do Sul\\
+% Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
+% E-mail: frcecin@inf.ufrgs.br}
+% \and
+% \IEEEauthorblockN{Cláudio Fernando Resin Geyer}
+% \IEEEauthorblockA{Federal University of Rio Grande do Sul\\
+% Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
+% E-mail: geyer@inf.ufrgs.br}
+% }
 
 % conference papers do not typically use \thanks and this command
 % is locked out in conference mode. If really needed, such as for
@@ -56,19 +61,12 @@ E-mail: geyer@inf.ufrgs.br}
 % for over three affiliations, or if they all won't fit within the width
 % of the page, use this alternative format:
 % 
-%\author{\IEEEauthorblockN{Michael Shell\IEEEauthorrefmark{1},
-%Homer Simpson\IEEEauthorrefmark{2},
-%James Kirk\IEEEauthorrefmark{3}, 
-%Montgomery Scott\IEEEauthorrefmark{3} and
-%Eldon Tyrell\IEEEauthorrefmark{4}}
-%\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Electrical and Computer Engineering\\
-%Georgia Institute of Technology,
-%Atlanta, Georgia 30332--0250\\ Email: see http://www.michaelshell.org/contact.html}
-%\IEEEauthorblockA{\IEEEauthorrefmark{2}Twentieth Century Fox, Springfield, USA\\
-%Email: homer@thesimpsons.com}
-%\IEEEauthorblockA{\IEEEauthorrefmark{3}Starfleet Academy, San Francisco, California 96678-2391\\
-%Telephone: (800) 555--1212, Fax: (888) 555--1212}
-%\IEEEauthorblockA{\IEEEauthorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
+\author{\IEEEauthorblockN{Carlos Eduardo B. Bezerra,
+	Fábio R. Cecin,
+	Cláudio F. R. Geyer}
+\IEEEauthorblockA{Federal University of Rio Grande do Sul\\
+	Bento Gonçalves, 9500, Porto Alegre, RS, Brazil,\\
+	Email: \{carlos.bezerra, frcecin, geyer\}@inf.ufrgs.br}}
 
 
 
@@ -114,9 +112,9 @@ Traditionally, a central server is used to provide support to MMGs (massively mu
 
 \section{Introduction}
 % no \IEEEPARstart
-Atualmente, jogos eletrônicos têm se tornado bastante populares, especialmente os jogos maciçamente multijogador, onde há um número de participantes simultâneos da ordem de dezenas de milhares \cite{cecin2004fsa}. Como exemplos, podemos citar World of Warcraft \cite{worldofwarcraft}, Lineage II \cite{lineage2} e Guild Wars \cite{guildwars}.
+In the last years, electronic games have become very popular, specially massively multiplayer games, where the number of simultaneous players is in the order tens of thousands \cite{cecin2004fsa}. Worlf of Warcraft \cite{worldofwarcraft}, Lineage II \cite{lineage2} and Guild Wars \cite{guildwars} are successful examples.
 
-Usualmente, o suporte de rede para este tipo de aplicação consiste em um servidor central com recursos - capacidade de processamento e largura de banda para comunicação com os jogadores - super-dimensionados, ao qual se conectam as máquinas clientes. Cada jogador interage através de um destes clientes, que envia suas ações para o servidor, que as processa, verificando que alterações no jogo elas causam, e difunde o resultado para todos os clientes envolvidos. Em virtude do número de participantes simultâneos que este tipo de jogo costuma ter, percebe-se que tais tarefas demandam por uma quantidade de recursos significativa, no que tange a poder de processamento e, principalmente, largura de banda disponível para que sejam recebidas as ações dos jogadores e enviadas as atualizações de estado.
+Usually, the network support for this kind of application consists in a central server with plenty of resources (processing power and available bandwidth), which accepts connections from the clients. Each player interacts through one of these clients, which sends his actions to the server, that processes them, calculating their influence over the game, and broadcasts the action's result to every client. Due to the number of simultaneous participants that this kind of game usually has, these tasks demand for a significant amount of resources from the server, which receives and processes the actions from all the players and broadcast state updates to every one of them.
 
 Nos últimos anos, têm-se pesquisado alternativas à abordagem com servidor centralizado. Uma delas é a distribuição, entre os próprios participantes, tanto da simulação do jogo quanto da responsabilidade de atualizarem-se entre si quando realizam ações. A comunicação entre eles ocorre par-a-par, formando uma rede descentralizada \cite{schiele2007rpp}. Esta abordagem seria o ideal, não fossem alguns problemas que lhe são inerentes. Por exemplo, como os jogadores participam do processamento da simulação, é necessário que eles entrem em acordo no que diz respeito ao estado da partida, sob pena de haver inconsistências caso isto não seja feito.
 
