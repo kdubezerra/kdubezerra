@@ -229,9 +229,7 @@ A more refined method to manage the interests of the avatars is to take into acc
 
 %pegar isso pra mim!?... CLARO! fui eu que fiz!
 	
-One issue to be considered, however, is that the player will not receive state updates from entities entities which are close to his avatar, but behind it. This could cause some problems. For example, if the avatar turns 180 degrees, the player might not see a particular entity that should be there, needing some time to receive its state information. This happens because, despite this entity have been near the avatar, he did not receive its information yet because it was behind him, outside his field of view. In figure \ref{fangle} it is illustrated an area of interest that takes into account the player's view angle.
-
-Uma questão a ser considerada, no entanto, é que o jogador não irá receber atualizações de estado de entidades imediatamente atrás de seu avatar, podendo compromenter o jogo. Se o avatar girar 180° em torno de seu próprio eixo rapidamente, pode ser que não veja determinada entidade que deveria estar ali, necessitando de certo tempo para receber o estado dela. Isto acontece porque, apesar desta entidade ter estado próximo do avatar, ele não recebeu suas informações ainda pois antes ela estava atrás dele, fora do seu campo de visão. Na figura \ref{fangle} é ilustrado como seria uma área de interesse que levaria em consideração o campo de visão do jogador.
+One issue to be considered, however, is that the player will not receive state updates from entities entities which are close to his avatar, but behind it. This could cause some problems. For example, if the avatar turns 180 degrees, the player might not be able to see a particular entity that should be there, needing some time to receive its state information. This happens because, despite this entity have been near the avatar, the player did not receive its information yet because it was behind him, outside his field of view. In Figure \ref{fangle} it is illustrated an area of interest that takes into account the player's view angle.
 
 \begin{figure}[!t]
 	\centering
@@ -247,11 +245,12 @@ Uma questão a ser considerada, no entanto, é que o jogador não irá receber atual
 %\subsection{Círculo com atenuação}
 \label{gaoi}
 
-O princípio por trás da abordagem proposta aqui baseia-se no fato de que, quanto mais distante uma entidade se situar do avatar no ambiente virtual, menor será a exigência por rapidez nas suas atualizações, para aquele avatar. Sendo assim, pode-se receber atualizações de estado de entidades que estão mais distantes com maior intervalo entre elas. Por outro lado, se uma entidade está muito próxima, é desejável que o jogador disponha de seu estado mais recente assim que possível, para poder visualizar quaisquer mudanças rapidamente.
+ 	
+The principle behind the approach proposed here is based on the fact that the more distant an entity is from the avatar in the virtual environment, the lower its update frequency for that avatar may be. Therefore, the state updates from entities which are more distant may be received with a longer interval between them. On the other hand, if an entity is very close, it is desirable that the player receives its most recent state change information as soon as possible, to view any alterations quickly.
 
-Para atingir este objetivo, é necessário definir alguns parâmetros:
+To achieve this objective, it is necessary to define some parameters:
 
-\textbf{Relevância} - valor real entre 0 e 1, inclusive, que determina o quanto o estado de determinada entidade é relevante para um avatar.
+\textbf{Relevance} - real value ranging from 0 to 1 inclusive, which determines how much an entity's state is relevant to an avatar.
 
 \textbf{Freqüência de atualização} - quantidade de atualizações que cada avatar recebe de cada uma das entidades do ambiente virtual por unidade de tempo.
 
