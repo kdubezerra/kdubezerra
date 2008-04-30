@@ -252,13 +252,13 @@ To achieve this objective, it is necessary to define some parameters:
 
 \textbf{Relevance} - real value ranging from 0 to 1 inclusive, which determines how much an entity's state is relevant to an avatar.
 
-\textbf{Freqüência de atualização} - quantidade de atualizações que cada avatar recebe de cada uma das entidades do ambiente virtual por unidade de tempo.
+\textbf{Update frequency} - number of state updates, received by a player from each one of the entities in the virtual environment, divided by time.
 
-\textbf{Intervalo normal de atualização} - menor intervalo de tempo entre a chegada de duas atualizações de estado consecutivas de uma mesma entidade em um cliente, ou seja, quando a relevância daquela entidade para o avatar daquele cliente é 1. Assim sendo, o intervalo normal determina a freqüência máxima de atualização.
+\textbf{Normal update interval} - lowest time interval between the arrival of two consecutive state updates of the same entity to a client. The normal update interval is used when the state has a relevance value of 1. Thus, it determines the maximum update frequency.
 
-\textbf{Alcance de visão} - determina a que distância as entidades podem estar do avatar, no máximo, para que o jogador possa visualizá-las.
+\textbf{View distance} - determines the maximum distance from which an avatar may be from the entities so its player may see them.
 
-\textbf{Distância crítica} - é o raio do círculo, em torno do avatar, onde todas as entidades têm relevância igual a 1.
+\textbf{Critical distance} - it is the radius of the circle around the avatar, inside which all entities have a relevance value of 1.
 
 Para se enviar o estado de uma entidade para determinado cliente, verifica-se primeiro quando foi o último envio. O próximo instante de envio é então escalonado para ocorrer após um determinado intervalo de tempo. Se a relevância daquele estado for 1, será utilizado o intervalo normal de atualização. Se for menor que 1, divide-se o intervalo normal pela relevância. Por exemplo, seja um jogo em que o intervalo normal de atualização seja de 200 ms. Se o avatar $A_i$, que acabou de enviar uma atualização de estado para $A_j$, está a uma distância de $A_j$ tal que sua relevância é 0.5, o próximo envio será depois de um intervalo de 200/0.5, ou seja, 400 ms. Apesar deste intervalo ainda ser uma fração de segundo, representa uma diminuição da freqüência de atualização do estado de $A_i$ em 50\%. Como estão a uma distância maior um do outro, e o intervalo foi aumentado de apenas 200 ms, esta variação deverá ser imperceptível para o jogador que controla $A_j$.
 
