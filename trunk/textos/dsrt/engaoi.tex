@@ -261,38 +261,40 @@ To achieve this objective, it is necessary to define some parameters:
 \textbf{Critical distance} - it is the radius of the circle around the avatar, inside which all entities have a relevance value of 1.
 
 Before sending the state of an entity to a client, the last transmission time is checked. The next transmission is then scheduled to occur after a certain interval. If the relevance of that state is 1, the normal update interval will be used. If it is less than 1, the normal interval is divided by the relevance. For example, let the normal update interval of a game be 200 ms. If the avatar $A_i$, which just sent a state update packet to $A_j$, is at a distance from $A_i$ such that its relevance is 0.5, the next transmission will only happen after an interval of 200/0.5. So, the player controlling $A_j$ will only receive an update of $A_i$ within 400 ms. Despite this interval is still less than a half second, it represents a reduction of the state update frequecy of $A_i$ in 50\%. As they are at a greater distance from one another, and the interval was increased only by 200 ms, this variation will probably be imperceptible by the player who controls $A_j$.
+  
+It is important to note that the reduction of the entities' update frequency may be combined with other interest management techniques. In \cite{boulanger2006cim}, various interest management algorithms are described, and they can be further improved if the idea of different transmission intervals based on the relevance of the updates is used. 
+Generally the state of each entity is classified into one of only two extremes: it is relevant or it is not relevant, ignoring the fact that there is a wide range of intermediate values. The question is how to define the relevance value for each state update. In the next sections, it will be presented two examples of algorithms which define a method to determine this value, as well as the area of interest used by each one. In section \ref{csmooth}, it is specified the proposed \malg\ algorithm, which employs, besides other principles, the update frequency attenuation. The simulations and their results are shown in sections \ref{sim} and \ref{results}, respectively.
 
-É importante perceber que a atenuação da freqüência de atualização das entidades é compatível com outras técnicas mais complexas de gerenciamento de interesse. Em \cite{boulanger2006cim}, são descritos diversos algoritmos de gerenciamento de interesse que poderiam ser ainda melhorados se fosse agregada a idéia de diferentes intervalos de envio baseado na relevância destas atualizações. Geralmente o estado de cada entidade é classificado em um de apenas dois extremos: é relevante ou não é relevante, ignorando-se que há uma vasta gama de valores intermediários. A questão está em como definir esse valor de relevância para cada estado. Nas seções seguintes, serão apresentados dois exemplos de algoritmos que definem o método de se obter esse valor, assim como o tipo de área utilizado. Na seção \ref{csmooth}, é especificado o \malg, que é um algoritmo original de gerenciamento de interesse, que, dentre outros princípios, emprega a atenuação da freqüência de atualização. As simulações e seus resultados são apresentados nas seções \ref{sim} e \ref{results}, respectivamente.
-
-\subsection{Círculo com atenuação}
-
-Um exemplo simples de utilização de intervalos variados de atualização baseado em relevância seria utilizando a área de interesse em formato de círculo. Para obter-se a relevância de uma entidade em relação a um avatar, pode-se fazer com que seu valor seja 1 quando a entidade estiver na mesma posição do avatar e ir diminuindo gradualmente à medida em que se afasta, até chegar a 0, quando para de diminuir não importa o quanto mais se afaste. Essa é uma maneira que, apesar de simples, demonstrou uma significante redução no tráfego entre clientes e servidores. Na figura \ref{graded_circle}, é ilustrado como seria a área de interesse com atenuação gradual da freqüência de atualização das entidades para um determinado avatar.
+\subsection{Circle with attenuation}
+  
+A simple form of using various update intervals based on the relevance value would be utilizing the circular area of interest. To obtain the relevance of an entity relative to an avatar, the value may be set to 1 when the entity is in the same position of the avatar and gradually reduce as it gets more distant, until it reaches 0 and stops decreasing no matter how more distant it gets. This is a way that, although simple, has shown a significant reduction in traffic between clients and servers. In Figure \ref{graded_circle}, it is illustrated how the area of interest would be, with entities' state update frequency attenuation for a given avatar.
 
 \begin{figure}[!t]
 	\centering
 	%\includegraphics[width=2.5in]{max}
 	\includegraphics[width=0.9\linewidth]{gcircle}
-	\caption{Circular area of interest with update frequency atenuation}
+	\caption{Circular area of interest with update frequency attenuation}
 	\label{graded_circle}
 \end{figure}
 
 %           A                   A              A 
 %\subsection{Ângulo de visão com área próxima e atenuação da freqüência de atualização}
-\subsection{Algoritmo \malg}
-%View Angle with close area and update frequency atenuation
+\subsection{\malg\ algorithm}
+%View Angle with close area and update frequency attenuation
 %V    A          C     A         U      F         A
 \label{csmooth}
 
-O algoritmo de gerenciamento de interesse proposto neste artigo, denominado \malg{} (ângulo de visão com área próxima e atenuação de freqüência de atualização), leva em conta três fatores principais:
+The interest management algorithm proposed in this article, \malg\ (view angle with close area and update frequency attenuation), takes into account three main factors:
 
 \begin{itemize}
- \item Ângulo de visão do avatar, para determinar quais entidades o jogador tem que ser capaz de perceber imediatamente, por estarem à sua frente, até a distância que seu alcance de visão permita;
- \item Área próxima, cujo objetivo é %evitar que ocorram problemas caso o jogador faça seu avatar girar ao redor do próprio eixo muito rapidamente, além de 
- melhorar a qualidade do jogo no espaço mais perto do avatar. Seu raio é a distância crítica, definido anteriormente; %explicar melhor
- \item Atenuação da freqüência de atualizações.
+ \item Avatar's view angle, to determine which entities the player must be able to see because they are in front of his avatar and within the maximum view distance; 
+ 
+ \item Close area, whose purpose is %evitar que ocorram problemas caso o jogador faça seu avatar girar ao redor do próprio eixo muito rapidamente, além de 
+ improve the game quality in the space near the avatar. Its radius is the critical distance, defined previously;
+ \item Update frequency attenuation.
 \end{itemize}
 
-A área de interesse resultante então toma a forma de um setor de círculo, cuja origem é o centro de outro círculo, menor. Este círculo menor é a área próxima do avatar do jogador, que receberá atualizações de estado com intervalo normal de entidades que nela estiverem. Dessa forma, tem-se o estado mais atualizado possível do jogo na região próxima ao avatar. Isso favorece a interação com entidades que estejam perto dele. Mesmo que alguma delas esteja momentaneamente fora do campo de visão do jogador, ela estará disponível caso ele gire seu avatar repentinamente na direção oposta à que está voltado. Na figura \ref{fcsmooth}, é ilustrada a área de interesse que acaba de ser definida.
+The resulting area of interest takes then the shape of a circular sector, which represents the player's field of view. The origin of this circular sector is also the center of a smaller circle, which defines the close area of the avatar. In the close area, all entities have a relevance value of 1, so their update frequency to that avatar is set to the maximum value. This way, the most updated game state becomes available to the player in the area around his avatar, improving the interaction with entities next to it. Even if some of them are outside the player's field of view, he will be able to see them if his avatar turns rapidly to their direction. Figure \ref{fcsmooth} illustrates the area of interest which has just been defined.
 
 Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângulo de visão, será calculada sua relevância. Propõe-se que a relevância de cada entidade diminua gradualmente de acordo com a distância entre ela e o avatar do jogador em questão. Quanto mais longe, menos freqüentes serão as atualizações de estado. Isso é possível porque mesmo que o intervalo de atualização seja duplicado, ainda será de uma fração de segundo, o que será dificilmente perceptível por um jogador cujo avatar está situado a uma grande distância da entidade em questão. Além disso, pequenos atrasos entre a chegada das atualizações de estado podem ser facilmente mascarados através de técnicas de interpolação, como dead-reckoning \cite{smed2002rna}. O algoritmo \ref{smalg} define o funcionamento deste gerenciamento de interesse.
 
