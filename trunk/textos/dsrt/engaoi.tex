@@ -158,7 +158,7 @@ It is necessary to describe the network support model on which the proposed inte
 %É necessário descrever o modelo de suporte a jogos maciçamente jogador sobre o qual pretende-se utilizar o algoritmo de gerenciamente de interesse proposto. Ao longo do texto, serão utilizados alguns termos que precisam antes ser definidos: %Define-se avatar como sendo a representação no ambiente virtual do jogador, que, através dele, interage com o mundo do jogo e com outros jogadores. Regiões são divisões do ambiente virtual, cada uma podendo conter jogadores presentes. Assumindo regiões contíguas, define-se fronteira como sendo a divisa entre duas regiões adjacentes.
 
 
-\textbf{Avatar} is the player representation in the virtual environment. Through his avatar, the player interacts with the game world and with the other players. Examples of avatars are the characters in MMORPG games like World of Warcraft.
+\textbf{Avatar} is the player representation in the virtual environment. Through his avatar, the player interacts with the game world and with the other players. Examples of avatars are the characters in MMORPG (massively multiplayer online role-playing games) games like World of Warcraft.
 
 \textbf{Entities} are the constituent parts of the virtual world. Examples of entities are the avatars of the players as well as avatars controlled by artificial intelligence of the server - monsters of MMORPGs, for example - and objects in the environment, such as doors, weapons and items with which avatars can interact.
 
@@ -174,7 +174,7 @@ The \textbf{border} between two regions is the line that divides the areas that 
 \label{model}
 
 	
-This work is based on a virtual environment partitioned into regions, each managed by a server. The regions are contiguous, exploring the locality of the players' avatars. Thus, avatars next to each other will probably be located in the same region and, therefore, their clients will tend to be connected to the same server, so that their interaction is faster (Fig. \ref{partitions}). Situations in which players interacting with each other are connected to different servers imply a higher bandwidth usage, as it is required some sort of negotiation between the servers to which the different players are connected, in order to maintain the states of simulation in both servers identical. Also, the hop count of each message between these clients is increased, since there is one more intermediary.
+This work is based on a virtual environment partitioned into regions, each managed by a server. The regions are contiguous, exploring the locality of the players' avatars. Thus, avatars next to each other will probably be located in the same region and, therefore, their clients will tend to be connected to the same server, so that their interaction is faster (Fig. \ref{partitions}). Situations in which two players interacting with each other are connected to different servers imply a higher bandwidth usage, as it is required some sort of negotiation between the servers to which the different players are connected, in order to maintain the states of simulation in both servers identical. Also, the hop count of each message between the clients of these players is increased, since there is one more intermediary.
 
 \begin{figure}[!t]
 	\centering
@@ -194,24 +194,25 @@ This way, the details of this mechanism will not result in relevant changes to t
 
 %Cada servidor terá uma lista dos endereços e portas dos outros servidores, assim como a região a que cada um está associado. Quando um jogador deseja participar do jogo, deve conectar-se a um servidor qualquer. Se o jogador entrar com um avatar novo, é escolhida alguma região para ele começar a jogar, e o servidor a que ele se conectou irá redirecioná-lo para o servidor correto. O critério de escolha pode ser o número de jogadores em cada região, como também pode ser feita simplesmente uma seleção aleatória da região. Se já tiver jogado antes, será redirecionado para o servidor responsável pela área na qual ele parou de jogar da última vez. Desta forma, aumenta-se a probabilidade do jogador recomeçar a partida com as informações mais recentes a respeito de seu estado.
 
-\section{Area of Interest Algorithms}
+\section{Interest Management Algorithms}
 \label{aoi}
 
 %como há vários servidores, o processamento das áreas de interesse é paralelizado, também, então não é tãaao ruim calcular a distância entre cada par de avatares..
 %explicar uma por uma, como funciona e o porquê.
 
-Para que os diferentes jogadores interajam entre si e com as diversas entidades presentes no ambiente do jogo de maneira adequada, é necessário que disponham de réplicas locais destas entidades, cujo estado deve ser o mesmo para todos. A maneira mais simples de fazer isso seria difundir o estado de todas as entidades para todos os jogadores, mas isso geraria uma quantidade alta de tráfego, a depender do número de jogadores participando. Para economizar largura de banda, tanto dos jogadores, quanto dos servidores que os intermediam, é utilizada uma técnica conhecida como gerenciamento de interesse. Esta técnica reduz o número de atualizações que determinado jogador irá receber - e enviar, no caso de uma arquitetura par-a-par.
+In order to provide an identical sense of the environment among the players, each one of them must maintain a copy of the entities' states, which must be the same for everyone. The simplest way to do this is to broadcast the states of all entities to all clients. The problem of this approach is that it generates a heavy traffic between the servers and clients, preventing the game to well, as the number of participants increase. To save bandwidth, both of the players, as the servers that intermediate them, a technique known as interest management is employed. This technique reduces the number of updates that the players will receive - and send, in the case of a peer-to-peer architecture.
 
-Em resumo, o gerenciamento de interesse funciona da seguinte forma: para cada mudança de estado de cada entidade, é calculado para quem ela será relevante. Por exemplo, se um avatar situa-se a quilômetros de distância de outro, sem nenhum tipo de vínculo (como grupo, guilda etc.) entre eles, é irrelevante para cada um deles o estado mais recente do outro. Assim, não é necessário que eles troquem suas informações de estado. Este princípio, de localidade, é utilizado como critério principal no gerenciamento de interesse.
+	
+In short, the interest management technique works as follows: for every state change of each entity, it is calculated for whom it will be important. For example, if an avatar is miles away from another in the virtual environment, it is most likely that their state changes is irrelevant to each other. Thus, it is not necessary for them to exchange information on their state. This principle - locality - is used as the main criterion in the interest management algorithms.
 
-Os algoritmos descritos nas próximas seções baseiam-se, entre outras coisas, na distância euclidiana entre cada avatar e todas as outras entidades presentes no ambiente virtual. Isso poderia gerar um problema de escalabilidade, porém está sendo suposta uma arquitetura distribuída, onde tal processamento poderá e deverá ser paralelizado. No modelo de distribuição definido anteriormente, cada servidor controla uma região do mapa. Por conseguinte, cada um deles gerencia apenas um subconjunto das entidades do jogo, verificando somente as distâncias entre cada par delas, além das entidades que estiverem em uma região vizinha, próximos à sua fronteira.
+The algorithms described in the following sections are mainly based on the euclidian distance between each avatar and all other entities in the virtual environment. This could create a scalability problem due to the processing of the distances, but a distributed architecture is assumed, where the processing can and should be parallelized. In the distribution model defined previously, each server controls a region of the map. Therefore, each one of them manages only a subset of the entities of the game, checking only the distances between each pair of them, in addition to the entities that are in a neighbouring region, close to its border.
+	
+In the next sections, some versions of this technique, such as circular area based and avatar's field of view based interest management, will be presented. In the section \ref{gaoi}, it is introduced the approach of attenuating the frequency of updates, and a proposed algorithm will be described in detail.
 
-Nas sessões seguintes, serão descritos algumas versões desta técnica, tais como gerenciamento de interesse baseado em área circular e em ângulo de visão do avatar. Na seção \ref{gaoi} é introduzida a abordagem de atenuação da freqüência de atualizações, onde será descrita em detalhes o algoritmo proposto.
-
-\subsection{Área circular}
+\subsection{Circular area of interest}
 \label{circle}
 
-A forma mais simples de executar gerenciamento de interesse consiste em definir uma área em forma de círculo, cujo centro é definido pelas coordenadas da localização do avatar no ambiente virtual. Após isso, é calculada a distância euclidiana entre cada avatar e cada uma das outras entidades presentes no mundo do jogo. Seja o avatar $A_i$, cuja área de interesse é um círculo de raio $rad_i$. Se o avatar $A_j$ estiver a uma distância menor que $rad_i$ de $A_i$, então suas atualizações de estado serão relevantes. $A_i$ não receberá atualizações de estado de entidades que estejam a uma distância maior. A figura \ref{fcirc} ilustra este tipo de área de interesse.
+The simplest way to execute interest management is to define a circular area, whose center is determined by the coordinates of the avatar's location in the virtual environment. After that, the euclidian distance between the avatar and every other other entity in the game world is calculated. Let $A$ be an avatar, whose area of interest is a circle of radius $rad$. If an entity $E$ is at a distance less than $rad$ from $A$, then its state updates will be relevant to $A$. $A$ will not receive state updates from entities which are at a distance greater than $rad$. Figure \ref{fcirc} illustrates this type of area of interest.
 
 \begin{figure}[!t]
 	\centering
@@ -221,7 +222,7 @@ A forma mais simples de executar gerenciamento de interesse consiste em definir 
 	\label{fcirc}
 \end{figure}
 
-\subsection{Ângulo de visão}
+\subsection{Field of view}
 \label{angle}
 
 Outra maneira, um pouco mais refinada, de gerenciar o interesse dos avatares consiste em levar em conta o que o jogador pode visualizar, ou seja, seu ângulo de visão. A área dentro de onde esse jogador perceberá mudanças relevantes pode ser definida como um setor de círculo. É similar à área em formato de círculo definida anteriormente, porém leva em consideração que o jogador só pode visualizar objetos que estão situados à frente de seu avatar.
