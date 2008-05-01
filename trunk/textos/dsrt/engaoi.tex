@@ -382,10 +382,11 @@ Several simulations were executed, in order to compare the described interest ma
 
 The results were collected as follows: to measure the average upload bandwidth usage by the server, the sizes of all packets sent in the session were summed up and then divided by the session duration; to determine the maximum usage, it was measured how many bytes had been sent each second and the highest value was selected.
 
-In tables \ref{tab_max} and \ref{tab_avg}, the collected maximum and average upload bandwidth usage data are presented for each number of simulated avatars and interest management algorithm - circular area based (\circleaoi), circular area based with attenuated update frequency (\circleat), field of view based (\fov) and \malg\ algorithm - and it is also show how much would be the upload bandwidth usage if no technique at all was employed (\noaoi). The values presented are in bytes per second. In Figure \ref{fig_max} and Figure \ref{fig_avg}, the corresponding graphics are given.
+In tables \ref{tab_max} and \ref{tab_avg}, the collected maximum and average upload bandwidth usage data are presented for each number of simulated avatars and interest management algorithm - circular area based (\circleaoi), circular area based with attenuated update frequency (\circleat), field of view based (\fov) and \malg\ algorithm - and it is also show how much would be the upload bandwidth usage if no technique at all was employed (\noaoi). %The values presented are in bytes per second. 
+In Figure \ref{fig_max} and Figure \ref{fig_avg}, the corresponding graphics are given.
 
 \begin{table}[ht]
-\caption{Maximum bandwidth utilization}
+\caption{Maximum bandwidth utilization (bytes/s)}
 \centering
   \begin{tabular}{ c | c c c c c }  
     \hline
@@ -404,7 +405,7 @@ In tables \ref{tab_max} and \ref{tab_avg}, the collected maximum and average upl
 \end{table}
 
 \begin{table}[ht]
-\caption{Average bandwidth utilization}
+\caption{Average bandwidth utilization (bytes/s)}
 \centering
   \begin{tabular}{ c | c c c c c }  
     \hline
