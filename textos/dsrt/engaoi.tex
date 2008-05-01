@@ -261,7 +261,7 @@ To achieve this objective, it is necessary to define some parameters:
 
 \textbf{Critical distance} - it is the radius of the circle around the avatar, inside which all entities have a relevance value of 1.
 
-Before sending the state of an entity to a client, the last transmission time is checked. The next transmission is then scheduled to occur after a certain interval. If the relevance of that state is 1, the normal update interval will be used. If it is less than 1, the normal interval is divided by the relevance. For example, let the normal update interval of a game be 200 ms. If the avatar $A_i$, which just sent a state update packet to $A_j$, is at a distance from $A_i$ such that its relevance is 0.5, the next transmission will only happen after an interval of 200 divided by 0.5. So, the player controlling $A_j$ will only receive an update of $A_i$ after 400 ms. Despite this interval is still less than a half second, it represents a reduction of the state update frequecy of $A_i$ in 50\%. As they are at a greater distance from one another, and the interval was increased only by 200 ms, this variation will probably be imperceptible by the player who controls $A_j$.
+Before sending the state of an entity to a client, the last transmission time is checked. The next transmission is then scheduled to occur after a certain interval. If the relevance of that state is 1, the normal update interval will be used. If it is less than 1, the normal interval is divided by the relevance. For example, let the normal update interval of a game be \mbox{200 ms}. If the avatar $A_i$, which just sent a state update packet to $A_j$, is at a distance from $A_i$ such that its relevance is 0.5, the next transmission will only happen after an interval of 200 divided by 0.5. So, the player controlling $A_j$ will only receive an update of $A_i$ after 400 ms. Despite this interval is still less than a half second, it represents a reduction of the state update frequecy of $A_i$ in 50\%. As they are at a greater distance from one another, and the interval was increased only by 200 ms, this variation will probably be imperceptible by the player who controls $A_j$.
   
 It is important to note that the reduction of the entities' update frequency may be combined with other interest management techniques. In \cite{boulanger2006cim}, various interest management algorithms are described, and they can be further improved if the idea of different transmission intervals based on the relevance of the updates is used. 
 Generally the state of each entity is classified into one of only two extremes: it is relevant or it is not relevant, ignoring the fact that there is a wide range of intermediate values. The question is how to define the relevance value for each state update. In the next sections, it will be presented two examples of algorithms which define a method to determine this value, as well as the area of interest used by each one. In section \ref{csmooth}, it is specified the proposed \malg\ algorithm, which employs, besides other principles, the update frequency attenuation. The simulations and their results are shown in sections \ref{sim} and \ref{results}, respectively.
@@ -346,7 +346,7 @@ Some works, such as \cite{yu2007nas}, \cite{kim2005tcm} and \cite{svoboda2007taa
 
 \begin{itemize}
  \item Normal update interval: 250 ms;
- \item State update packet size for one entity: 100 bytes;
+ \item State update for one entity: 100 bytes UDP packet;
  \item Duration of each simulated game session: 20 min;
  \item Virtual environment area: 750 x 750;
  \item View distance: 120;
@@ -354,17 +354,17 @@ Some works, such as \cite{yu2007nas}, \cite{kim2005tcm} and \cite{svoboda2007taa
  \item View angle: 180°.
 \end{itemize}
 
-Several simulations were executed, in order to compare the described interest management algorithms. The number of avatars in the environment was one of the variables analyzed, to verify the scalability. The algorithms compared were the ones with circle, circle with attenuation and field of view based area of interest and the proposed algorithm, \malg. To demonstrate how much traffic reduction each one of these achieve, simulations in which no type of interest management was used - and the server sent to the client state updates of all entities in the environment - were also performed.
+Several simulations were executed, in order to compare the described interest management algorithms. The number of avatars in the environment was varied in order to measure the scalability. The algorithms compared were the ones with circle, circle with attenuation and field of view based area of interest and the proposed algorithm, \malg. To demonstrate how much traffic reduction each one of these achieve, simulations in which no type of interest management was used - and the server sent to the client state updates of all entities in the environment - were also performed.
 
 \section{Results}
 \label{results}
 
-The results were collected as follows: to measure the average upload bandwidth usage by the server, the sizes of all packets sent in the session were summed up and then divided by the session duration; to determine the maximum bandwidth usage by the server, it was measured, second by second, how many bytes had been sent and the highest value was selected.
+The results were collected as follows: to measure the average upload bandwidth usage by the server, the sizes of all packets sent in the session were summed up and then divided by the session duration; to determine the maximum usage, it was measured how many bytes had been sent each second and the highest value was selected.
 
 In tables \ref{tab_max} and \ref{tab_avg}, the collected maximum and average upload bandwidth usage data are presented for each number of simulated avatars and interest management algorithm - circular area based (\circleaoi), circular area based with attenuated update frequency (\circleat), field of view based (\fov) and \malg\ algorithm - and it is also show how much would be the upload bandwidth usage if no technique at all was employed (\noaoi). The values presented are in bytes per second. In Figure \ref{fig_max} and Figure \ref{fig_avg}, the corresponding graphics are given.
 
 \begin{table}[ht]
-\caption{Largura de banda máxima utilizada}
+\caption{Maximum bandwidth utilization}
 \centering
   \begin{tabular}{ c | c c c c c }  
     \hline
@@ -383,7 +383,7 @@ In tables \ref{tab_max} and \ref{tab_avg}, the collected maximum and average upl
 \end{table}
 
 \begin{table}[ht]
-\caption{Largura de banda utilizada em média}
+\caption{Average bandwidth utilization}
 \centering
   \begin{tabular}{ c | c c c c c }  
     \hline
@@ -419,7 +419,7 @@ In tables \ref{tab_max} and \ref{tab_avg}, the collected maximum and average upl
 
 Just by using different update frequencies with circular area based interest management, the average upload bandwidth usage by the server decreased 41.59\%. The maximum upload bandwidth usage was also reduced, decreasing 36.19\%. These values represent the average usage reduction among all different numbers of avatars, compared to the circular area of interest algorithm with no frequency update attenuation.
   
-Regarding the proposed algorithm, \malg, it has been obtained an upload bandwidth usage reduction of 63.51\% and 33.58\%, compared to the circular area of interest and the field of view based algorithms, respectively. The maximum upload bandwidth usage was also reduced, decreasing 52.03\% and 33.10\%, compared to the same algorithms. Table \ref{tab_summary} shows the maximum and average bandwidth saving percentage of the \malg\ algorithm compared to the other techniques. For example, the maximum bandwidth utilization with \malg\ is 24.81\% less than with a circular area of interest based algorithm with update frequency attenuation.
+Regarding the proposed algorithm, \malg, it has been obtained an average upload bandwidth usage reduction of 63.51\% and 33.58\%, compared to the circular area of interest and the field of view based algorithms, respectively. The maximum upload bandwidth usage was also reduced, decreasing 52.03\% and 33.10\%, compared to the same algorithms. Table \ref{tab_summary} shows the maximum and average bandwidth saving percentage of the \malg\ algorithm compared to the other techniques, for average and maximum usage. For example, the maximum bandwidth utilization with \malg\ is 24.81\% less than with a circular area of interest based algorithm with update frequency attenuation.
 
 \begin{table}[ht]
 \caption{Bandwidth saving with \malg\ algorithm}
@@ -434,11 +434,11 @@ Regarding the proposed algorithm, \malg, it has been obtained an upload bandwidt
 \label{tab_summary}
 \end{table}
 
-It was also observed that the average and maximum observed values differ, even when there is no algorithm used to manage interest, that is, the client receives state updates of all entities in the game, with maximum frequency. With 200 avatars in the environment, 100 bytes state update packet size and 250 ms normal update interval, the server should be using 80000 bytes per second - 200 $ \ times $ 100 $ \ times $ 4 - for each client. However, it was observed that the maximum and average usage, with 200 avatars present and no interest management, was 77600 and 76458, respectively. This happens because ns-2 is a discrete event simulator, and the simulated server was programmed to check the update schedule every 10 ms. As a result of this, each state update may have had its interval increased by up to 10 ms, which explains the values found.
+It was also observed that the average and maximum usage values differ, even when no algorithm is used to manage interest, that is, the client receives state updates of all entities in the game, with maximum frequency. With 200 avatars in the environment, 100 bytes state update packet size and 250 ms normal update interval, the server should send 80000 bytes per second - 200$\times$100$\times$4 - to each client. However, it was observed that the maximum and average usage, with 200 avatars present and no interest management, was 77600 and 76458, respectively. It happens because \mbox{ns-2} is a discrete event simulator, and the simulated server was programmed to check the update schedule every 10 ms. As a result of this, each state update may have had its interval increased by up to 10 ms, which explains the values found.
 
 \section{Conclusion}
 \label{conclusion}
-In this work, we presented the \malg\ interest management algorithm, whose main idea is to adapt the state update frequency of the game entities according to their relevance to each client that will receive the updates. The \malg\ area of interest consists of a circular sector, corresponding to the player field of view, plus a smaller circle, which represents the area close to that player's avatar. The goal of this close area is to maintain the game state inside it the most up-to-date possible, in order to improve the game near the avatar. Joining these characteristics, we obtained an algorithm that achieved a significant reduction of the maximum upload bandwidth utilization by the server, which decreased 52.03\% and 33.10\%, compared to circle and field of view based interest management algorithms, respectively. The average upload bandwidth utilization by the server also decreased 63.51\% and 33.58\%, compared to the same algorithms.
+In this work, we presented the \malg\ interest management algorithm, whose main idea is to vary the state update frequency of the game entities according to their relevance to each client that will receive the updates. The \malg\ area of interest consists of a circular sector, corresponding to the player field of view, plus a smaller circle, which represents the area close to that player's avatar. The goal of this close area is to maintain the game state inside it the most up-to-date possible, in order to improve the game near the avatar. Joining these characteristics, we obtained an algorithm that achieved a significant reduction of the maximum upload bandwidth utilization by the server, which decreased 52.03\% and 33.10\%, compared to circle and field of view based interest management algorithms, respectively. The average upload bandwidth utilization by the server also decreased 63.51\% and 33.58\%, compared to the same algorithms.
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
