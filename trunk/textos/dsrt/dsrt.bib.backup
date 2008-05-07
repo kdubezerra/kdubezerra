@@ -1,4 +1,3 @@
-
 @Book{knuth:84,
   author = 	 {Donald E. Knuth},
   title = 	 {The {\TeX} Book},
@@ -139,9 +138,6 @@
   year={2002}
 }
 
-<<<<<<< .mine
-%---------------------------------------------------------------------------
-=======
 %---------------------------------------------------------------------------
 
 @article{mccanne:nsn,
@@ -166,4 +162,14 @@
 
 %---------------------------------------------------------------------------
 
-@article{kim2005tcm, title={{Traffic characteristics of a massively multi-player online role playing game}}, author={Kim, J. and Choi, J. and Chang, D. and Kwon, T. and Choi, Y. and Yuk, E.}, journal={Proceedings of 4th ACM SIGCOMM workshop on Network and system support for games}, pages={1--8}, year={2005}, publisher={ACM Press New York, NY, USA} }>>>>>>> .r166
+@article{kim2005tcm, title={{Traffic characteristics of a massively multi-player online role playing game}}, author={Kim, J. and Choi, J. and Chang, D. and Kwon, T. and Choi, Y. and Yuk, E.}, journal={Proceedings of 4th ACM SIGCOMM workshop on Network and system support for games}, pages={1--8}, year={2005}, publisher={ACM Press New York, NY, USA} }
+
+%---------------------------------------------------------------------------
+
+@article{morse1996iml,
+  title={{Interest management in large-scale distributed simulations}},
+  author={Morse, K.L. and others},
+  journal={University of California, Irvine Technical Report TR},
+  pages={96--27},
+  year={1996}
+}
