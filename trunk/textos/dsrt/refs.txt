@@ -1,10 +1,10 @@
 AOI
 
-morse 96 <-- citar e falar da filtragem extrinseca etc..
+XX morse 96 <-- citar e falar da filtragem extrinseca etc..
 
-morse 2000 (?) <-- ver o q eh isso
+	morse 2000 (?) <-- ver o q eh isso
 
-rak hook grid-based relevance filtering multicast
+XX rak hook grid-based relevance filtering multicast
 
 zou ammar diot. grouping techniques state dissemination
 
