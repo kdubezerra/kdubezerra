@@ -166,16 +166,6 @@
 
 %---------------------------------------------------------------------------
 
-@article{morse1996iml,
-  title={{Interest management in large-scale distributed simulations}},
-  author={Morse, K.L. and others},
-  journal={University of California, Irvine Technical Report TR},
-  pages={96--27},
-  year={1996}
-}
-
-%---------------------------------------------------------------------------
-
 @article{endo2005dam, title={{A distributed architecture for massively multiplayer online services with peer-to-peer support}}, author={Endo, K. and Kawahara, M. and Takahashi, Y.}, journal={Proceedings of NetCon?'05}, year={2005}, publisher={Springer} }
 
 %---------------------------------------------------------------------------
@@ -213,6 +203,16 @@
 
 %---------------------------------------------------------------------------
 
+@article{morse1996iml,
+  title={{Interest management in large-scale distributed simulations}},
+  author={Morse, K.L. and others},
+  journal={University of California, Irvine Technical Report TR},
+  pages={96--27},
+  year={1996}
+}
+
+%---------------------------------------------------------------------------
+
 @article{morgan2005imm,
   title={{Interest management middleware for networked games}},
   author={Morgan, G. and Lu, F. and Storey, K.},
@@ -221,4 +221,14 @@
   number={06},
   pages={57--64},
   year={2005}
+}
+
+%---------------------------------------------------------------------------
+
+@article{rak1996egb,
+  title={{Evaluation of grid-based relevance filtering for multicast group assignment}},
+  author={Rak, S.J. and Van Hook, D.J.},
+  journal={Proc. of 14th DIS workshop},
+  pages={739--747},
+  year={1996}
 }
