@@ -138,7 +138,7 @@ This paper is organized as follows: in section \ref{relatedwork}, some related w
 \label{relatedwork}
 %talvez deva reduzir esta seção.
 
-In the past few years, many works have been done trying to distribute the network support for massively multiplayer online games. One approach is the peer-to-peer model \cite{endo2005dam, hampel2006ppa, knutsson2004pps}, which has some issues concerning game state consistency among the participating peers, vulnerability to cheating, and increased bandwidth usage by each peer. There are some proposals that try to minimize these problems. One of them is presented in \cite{schiele2007rpp}, where it is suggested the division of the virtual simulated game environment into regions, and for each region, a peer is chosen to be its coordinator. The function of this peer will be manage the players' interest. It will check who really needs each state update, so each player does not receive every update packet. This way, the peers' bandwidth usage is reduced. However, it will be still higher than with a server performing all the broadcasts. In the peer-to-peer model, each player usually must send updates to more than one other player. Besides, the chosen peer must be trustable to be the region coordinator.
+In the past few years, many works have been done trying to distribute the network support for massively multiplayer online games. One approach is the peer-to-peer model \cite{crippa2007pps, hampel2006ppa, knutsson2004pps}, which has some issues concerning game state consistency among the participating peers, vulnerability to cheating, and increased bandwidth usage by each peer. There are some proposals that try to minimize these problems. One of them is presented in \cite{schiele2007rpp}, where it is suggested the division of the virtual simulated game environment into regions, and for each region, a peer is chosen to be its coordinator. The function of this peer will be manage the players' interest. It will check who really needs each state update, so each player does not receive every update packet. This way, the peers' bandwidth usage is reduced. However, it will be still higher than with a server performing all the broadcasts. In the peer-to-peer model, each player usually must send updates to more than one other player. Besides, the chosen peer must be trustable to be the region coordinator.
 
 %figura
 
@@ -207,7 +207,7 @@ The \textbf{border} between two regions is the line that divides the areas that 
 \label{model}
 
 	
-This work is based on a virtual environment partitioned into regions, each managed by a different server. The regions are contiguous, exploring the locality of the players' avatars. Thus, avatars next to each other will probably be located in the same region and, therefore, their clients will tend to be connected to the same server, so that their interaction is faster (Figure \ref{partitions}). Situations in which two players interacting with each other are connected to different servers imply a higher bandwidth usage, as it is required some sort of negotiation between the servers to which the different players are connected, in order to maintain the states of the simulation identical in both servers. Also, the hop count of each message between the clients of these players is increased, since there is one more intermediary.
+This work is part of the P2PSE \cite{crippa2007pps} project, which is currently based on a peer-to-peer distribution, but still looking for an ideal model. Hence, we propose here an alternative that consists of a virtual environment partitioned into regions - each managed by a different server - on which the \malg\ algorithm is based. The regions are contiguous, exploring the locality of the players' avatars. Thus, avatars next to each other will probably be located in the same region and, therefore, their clients will tend to be connected to the same server, so that their interaction is faster (Figure \ref{partitions}). Situations in which two players interacting with each other are connected to different servers imply a higher bandwidth usage, as it is required some sort of negotiation between the servers to which the different players are connected, in order to maintain the states of the simulation identical in both servers. Also, the hop count of each message between the clients of these players is increased, since there is one more intermediary.
 
 \begin{figure}[!t]
 	\centering
@@ -575,13 +575,9 @@ In this work, we presented the \malg\ interest management algorithm, whose main 
 
 
 % use section* for acknowledgement
-%\section*{Acknowledgment}
+\section*{Acknowledgment}
 
-%The authors would like to thank...
-
-
-
-
+The development of this work was supported by the Funding for Studies and Projects (FINEP), a brazilian research agency, through the P2PSE project (P2PSE-5849-1).
 
 % trigger a \newpage just before the given reference
 % number - used to balance the columns on the last page
