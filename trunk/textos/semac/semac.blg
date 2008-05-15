@@ -6,45 +6,48 @@ Repeated entry---line 225 of file semac.bib
  : @article{assiotis2006dam
  :                         ,
 I'm skipping whatever remains of this entry
-You've used 13 entries,
+Warning--empty year in crippa2007pps
+Warning--empty journal in crippa2007pps
+Warning--empty year in mccanne:nsn
+You've used 26 entries,
             1935 wiz_defined-function locations,
-            543 strings with 5770 characters,
-and the built_in function-call counts, 5294 in all, are:
-= -- 532
-> -- 212
-< -- 14
-+ -- 71
-- -- 69
-* -- 387
-:= -- 906
-add.period$ -- 41
-call.type$ -- 13
-change.case$ -- 98
-chr.to.int$ -- 13
-cite$ -- 13
-duplicate$ -- 224
-empty$ -- 352
-format.name$ -- 90
-if$ -- 1072
+            599 strings with 8422 characters,
+and the built_in function-call counts, 11199 in all, are:
+= -- 1129
+> -- 479
+< -- 23
++ -- 162
+- -- 162
+* -- 848
+:= -- 1892
+add.period$ -- 78
+call.type$ -- 26
+change.case$ -- 209
+chr.to.int$ -- 26
+cite$ -- 29
+duplicate$ -- 458
+empty$ -- 706
+format.name$ -- 197
+if$ -- 2258
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 11
-newline$ -- 68
-num.names$ -- 43
-pop$ -- 93
+missing$ -- 23
+newline$ -- 133
+num.names$ -- 78
+pop$ -- 197
 preamble$ -- 1
-purify$ -- 98
+purify$ -- 209
 quote$ -- 0
-skip$ -- 193
+skip$ -- 412
 stack$ -- 0
-substring$ -- 326
-swap$ -- 58
-text.length$ -- 6
+substring$ -- 731
+swap$ -- 136
+text.length$ -- 14
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 76
-warning$ -- 0
-while$ -- 46
+type$ -- 156
+warning$ -- 3
+while$ -- 96
 width$ -- 0
-write$ -- 167
+write$ -- 327
 (There was 1 error message)

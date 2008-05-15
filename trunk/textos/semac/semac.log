@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2007.8.8)  8 MAY 2008 15:18
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2008.5.12)  15 MAY 2008 19:49
 entering extended mode
 **semac.tex
 (./semac.tex
@@ -68,6 +68,45 @@ Package: titlesec 2005/01/22 v2.6 Sectioning titles
 \titlewidthlast=\dimen114
 \titlewidthfirst=\dimen115
 ))
+(/usr/share/texmf-tetex/tex/latex/algorithms/algorithm.sty
+Package: algorithm 
+
+Document Style `algorithm' - floating environment
+(/usr/share/texmf-tetex/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count91
+\float@exts=\toks16
+\float@box=\box27
+\@float@everytoks=\toks17
+\@floatcapt=\box28
+)
+(/usr/share/texmf-tetex/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\@float@every@algorithm=\toks18
+\c@algorithm=\count92
+)
+(/usr/share/texmf-tetex/tex/latex/algorithms/algorithmic.sty
+Package: algorithmic 
+
+Document Style `algorithmic' - environment
+(/usr/share/texmf-tetex/tex/latex/tools/calc.sty
+Package: calc 1998/07/07 v4.1b Infix arithmetic (KKT,FJ)
+\calc@Acount=\count93
+\calc@Bcount=\count94
+\calc@Adimen=\dimen116
+\calc@Bdimen=\dimen117
+\calc@Askip=\skip45
+\calc@Bskip=\skip46
+LaTeX Info: Redefining \setlength on input line 59.
+LaTeX Info: Redefining \addtolength on input line 60.
+\calc@denominator=\count95
+)
+\c@ALC@line=\count96
+\c@ALC@rem=\count97
+\c@ALC@depth=\count98
+\ALC@tlm=\skip47
+)
 (/usr/share/texmf-tetex/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
@@ -84,10 +123,10 @@ Package graphics Info: Driver file: pdftex.def on input line 80.
 
 (/usr/share/texmf-tetex/tex/latex/graphics/pdftex.def
 File: pdftex.def 2002/06/19 v0.03k graphics/color for pdftex
-\Gread@gobject=\count91
+\Gread@gobject=\count99
 ))
-\Gin@req@height=\dimen116
-\Gin@req@width=\dimen117
+\Gin@req@height=\dimen118
+\Gin@req@width=\dimen119
 )
 (/usr/share/texmf-tetex/tex/latex/url/url.sty
 \Urlmuskip=\muskip10
@@ -101,19 +140,19 @@ File: latin1.def 2004/02/05 v1.0d Input encoding file
 )) (./semac.aux)
 \openout1 = `semac.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 31.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 42.
 
 (/usr/share/texmf-tetex/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
@@ -161,107 +200,151 @@ driver: pdftex
 (/usr/share/texmf-tetex/tex/context/base/supp-pdf.tex
 (/usr/share/texmf-tetex/tex/context/base/supp-mis.tex
 loading : Context Support Macros / Miscellaneous (2004.10.26)
-\protectiondepth=\count92
-\scratchcounter=\count93
-\scratchtoks=\toks16
-\scratchdimen=\dimen118
-\scratchskip=\skip45
+\protectiondepth=\count100
+\scratchcounter=\count101
+\scratchtoks=\toks19
+\scratchdimen=\dimen120
+\scratchskip=\skip48
 \scratchmuskip=\muskip11
-\scratchbox=\box27
+\scratchbox=\box29
 \scratchread=\read1
 \scratchwrite=\write3
-\zeropoint=\dimen119
-\onepoint=\dimen120
-\onebasepoint=\dimen121
-\minusone=\count94
-\thousandpoint=\dimen122
-\onerealpoint=\dimen123
-\emptytoks=\toks17
-\nextbox=\box28
-\nextdepth=\dimen124
-\everyline=\toks18
-\!!counta=\count95
-\!!countb=\count96
-\recursecounter=\count97
+\zeropoint=\dimen121
+\onepoint=\dimen122
+\onebasepoint=\dimen123
+\minusone=\count102
+\thousandpoint=\dimen124
+\onerealpoint=\dimen125
+\emptytoks=\toks20
+\nextbox=\box30
+\nextdepth=\dimen126
+\everyline=\toks21
+\!!counta=\count103
+\!!countb=\count104
+\recursecounter=\count105
 )
 loading : Context Support Macros / PDF (2004.03.26)
-\nofMPsegments=\count98
-\nofMParguments=\count99
-\MPscratchCnt=\count100
-\MPscratchDim=\dimen125
-\MPnumerator=\count101
-\everyMPtoPDFconversion=\toks19
+\nofMPsegments=\count106
+\nofMParguments=\count107
+\MPscratchCnt=\count108
+\MPscratchDim=\dimen127
+\MPnumerator=\count109
+\everyMPtoPDFconversion=\toks22
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <16> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 33.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 44.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 33.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 44.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 33.
+(Font)              <12> on input line 44.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 33.
+(Font)              <8> on input line 44.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 33.
+(Font)              <6> on input line 44.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 35.
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 46.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <13> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 47.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 58.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 1281) in paragraph at lines 57--59
+Underfull \hbox (badness 1281) in paragraph at lines 69--71
 \OT1/ptm/m/n/12 dor dis-tribu[]^^Pdo, em que di-ver-sos no-dos conec-ta-dos en-
 tre si di-vi-dem a tarefa de
  []
 
 
+LaTeX Warning: Reference `futurework' on page 2 undefined on input line 82.
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
-[3] [4]
-Underfull \hbox (badness 3260) in paragraph at lines 116--117
-[]\OT1/ptm/m/n/12 Para evi-tar isso, prop[]oe-se a utiliza[][]ao de di-fus[]ao 
-prob-a-bil[]^^Pstica destas
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 105--106
+[]\OT1/ptm/m/n/12 No que se ref-ere a geren-ci-a-mento de in-ter-esse, tra-bal-
+hos como
  []
 
-[5] <fig1.jpg, id=41, 254.3904pt x 232.2276pt>
-File: fig1.jpg Graphic file (type jpg)
- <use fig1.jpg>
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 215.
+
+Underfull \hbox (badness 4001) in paragraph at lines 105--106
+\OT1/ptm/m/n/12 [[], [], [], []] e
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4]
+[5] <part.pdf, id=32, 461.725pt x 461.725pt>
+File: part.pdf Graphic file (type pdf)
+ <use part.pdf>
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 154.
 
 
 (/usr/share/texmf-tetex/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 215.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 154.
+ [6 <./part.pdf>] [7]
+Underfull \hbox (badness 3260) in paragraph at lines 177--178
+[]\OT1/ptm/m/n/12 Para evi-tar isso, prop[]oe-se a utiliza[][]ao de di-fus[]ao 
+prob-a-bil[]^^Pstica destas
+ []
 
-<fig2.jpg, id=42, 205.7286pt x 234.1548pt>
-File: fig2.jpg Graphic file (type jpg)
- <use fig2.jpg>
-<table.jpg, id=43, 365.2044pt x 217.2918pt>
-File: table.jpg Graphic file (type jpg)
- <use table.jpg> [6] (./semac.bbl
-[7 <./fig1.jpg> <./fig2.jpg>]) [8 <./table.jpg>] (./semac.aux) ) 
+[8]
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 229.
+
+ (/usr/share/texmf-tetex/tex/latex/psnfss/omsptm.fd
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 229.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [9]
+<a3.pdf, id=283, 279.0425pt x 204.765pt>
+File: a3.pdf Graphic file (type pdf)
+ <use a3.pdf>
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 241.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 241.
+ [10 <./a3.pdf>] [11]
+<max.pdf, id=314, 361.35pt x 252.945pt>
+File: max.pdf Graphic file (type pdf)
+ <use max.pdf>
+<avg.pdf, id=315, 361.35pt x 252.945pt>
+File: avg.pdf Graphic file (type pdf)
+ <use avg.pdf> [12]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [13 <./max.pdf> <./avg.pdf>] (./semac.bbl [14] [15]) [16] (./semac.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 1923 strings out of 94500
- 24820 string characters out of 1175789
- 80492 words of memory out of 1000000
- 5087 multiletter control sequences out of 10000+50000
+ 2260 strings out of 94500
+ 29087 string characters out of 1175788
+ 87206 words of memory out of 1000000
+ 5403 multiletter control sequences out of 10000+50000
  20011 words of font info for 41 fonts, out of 500000 for 2000
  581 hyphenation exceptions out of 8191
- 30i,8n,28p,1992b,230s stack positions out of 1500i,500n,5000p,200000b,5000s
+ 30i,11n,28p,1992b,514s stack positions out of 1500i,500n,5000p,200000b,5000s
 PDF statistics:
- 56 PDF objects out of 300000
+ 339 PDF objects out of 300000
  0 named destinations out of 131072
- 16 words of extra memory for PDF output out of 65536
-{/usr/share/tex
-mf-tetex/fonts/enc/dvips/psnfss/8r.enc}</usr/share/texmf-tetex/fonts/type1/urw/
-helvetic/uhvb8a.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmr12.pfb></
-usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf-tetex
-/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf-tetex/fonts/type1/urw/time
-s/utmri8a.pfb></usr/share/texmf-tetex/fonts/type1/urw/times/utmbi8a.pfb></usr/s
-hare/texmf-tetex/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-tetex/fonts
-/type1/bluesky/cm/cmr8.pfb></usr/share/texmf-tetex/fonts/type1/urw/times/utmb8a
-.pfb>
-Output written on semac.pdf (8 pages, 222759 bytes).
+ 21 words of extra memory for PDF output out of 65536
+</usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf-te
+tex/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf-tetex/fonts/type1/bluesky
+/cm/cmr12.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy10.pfb></usr/s
+hare/texmf-tetex/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texmf-tetex/fonts
+/type1/bluesky/cm/cmmi12.pfb>{/usr/share/texmf-tetex/fonts/enc/dvips/psnfss/8r.
+enc}</usr/share/texmf-tetex/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/tex
+mf-tetex/fonts/type1/urw/times/utmri8a.pfb></usr/share/texmf-tetex/fonts/type1/
+urw/times/utmbi8a.pfb></usr/share/texmf-tetex/fonts/type1/urw/times/utmr8a.pfb>
+</usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf-tetex
+/fonts/type1/urw/times/utmb8a.pfb>
+Output written on semac.pdf (16 pages, 243208 bytes).
