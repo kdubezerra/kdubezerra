@@ -23,12 +23,6 @@ Boulanger, J., Kienzle, J., and Verbrugge, C. (2006).
 \newblock {\em Proceedings of 5th ACM SIGCOMM workshop on Network and system
   support for games}.
 
-\bibitem[Boulic and Renault 1991]{boulic:91}
-Boulic, R. and Renault, O. (1991).
-\newblock 3d hierarchies for animation.
-\newblock In Magnenat-Thalmann, N. and Thalmann, D., editors, {\em New Trends
-  in Animation and Visualization}. John Wiley {\&} Sons ltd.
-
 \bibitem[Cecin et~al. 2004]{cecin2004fsa}
 Cecin, F., Real, R., de~Oliveira~Jannone, R., Geyer, C., Martins, M., and
   Barbosa, J. (2004).
@@ -36,6 +30,31 @@ Cecin, F., Real, R., de~Oliveira~Jannone, R., Geyer, C., Martins, M., and
   Internet Games}.
 \newblock {\em IEEE Int. Sym. on Distributed Simulation and Real-Time
   Applications}, pages 83--90.
+
+\bibitem[Crippa et~al. ]{crippa2007pps}
+Crippa, M., Cecin, F., and Geyer, C.
+\newblock {Peer-to-peer support for instance-based massively multiplayer
+  games}.
+\newblock Presented at 6th Brazilian Symposium on Computer Games and Digital
+  Entertainment, São Leopoldo, Brazil, 2007.
+
+\bibitem[El-Sayed 2004]{elsayed2004alm}
+El-Sayed, A. (2004).
+\newblock {Application-Level Multicast Transmission Techniques over the
+  Internet}.
+\newblock {\em University of Paris}.
+
+\bibitem[Fiedler et~al. 2002]{fiedler2002cam}
+Fiedler, S., Wallner, M., and Weber, M. (2002).
+\newblock {A communication architecture for massive multiplayer games}.
+\newblock {\em Proceedings of the 1st workshop on Network and system support
+  for games}, pages 14--22.
+
+\bibitem[Hampel et~al. 2006]{hampel2006ppa}
+Hampel, T., Bopp, T., and Hinn, R. (2006).
+\newblock {A peer-to-peer architecture for massive multiplayer online games}.
+\newblock {\em Proceedings of 5th ACM SIGCOMM workshop on Network and system
+  support for games}.
 
 \bibitem[Iimura et~al. 2004]{iimura2004zfg}
 Iimura, T., Hazeyama, H., and Kadobayashi, Y. (2004).
@@ -50,15 +69,67 @@ Kermarrec, A., Massouli{\'e}, L., and Ganesh, A. (2003).
 \newblock {\em IEEE TRANSACTIONS ON PARALLEL AND DISTRIBUTED SYSTEMS}, pages
   248--258.
 
-\bibitem[Knuth 1984]{knuth:84}
-Knuth, D.~E. (1984).
-\newblock {\em The {\TeX} Book}.
-\newblock Addison-Wesley, 15th edition.
+\bibitem[Kim et~al. 2005]{kim2005tcm}
+Kim, J., Choi, J., Chang, D., Kwon, T., Choi, Y., and Yuk, E. (2005).
+\newblock {Traffic characteristics of a massively multi-player online role
+  playing game}.
+\newblock {\em Proceedings of 4th ACM SIGCOMM workshop on Network and system
+  support for games}, pages 1--8.
+
+\bibitem[Knutsson et~al. 2004]{knutsson2004pps}
+Knutsson, B., Lu, H., Xu, W., and Hopkins, B. (2004).
+\newblock {Peer-to-peer support for massively multiplayer games}.
+\newblock {\em IEEE Infocom}.
+
+\bibitem[McCanne et~al. ]{mccanne:nsn}
+McCanne, S., Floyd, S., et~al.
+\newblock {Network simulator ns-2}.
+\newblock {\em The Vint project, available for download at
+  http://www.isi.edu/nsnam/ns}.
+
+\bibitem[Minson and Theodoropoulos 2005]{minson2005aim}
+Minson, R. and Theodoropoulos, G. (2005).
+\newblock {An adaptive interest management scheme for distributed virtual
+  environments}.
+\newblock {\em Principles of Advanced and Distributed Simulation, 2005. PADS
+  2005. Workshop on}, pages 273--281.
+
+\bibitem[Morgan et~al. 2005]{morgan2005imm}
+Morgan, G., Lu, F., and Storey, K. (2005).
+\newblock {Interest management middleware for networked games}.
+\newblock {\em Symposium on Interactive 3D Graphics: Proceedings of the 2005
+  symposium on Interactive 3D graphics and games}, 3(06):57--64.
+
+\bibitem[Morse et~al. 1996]{morse1996iml}
+Morse, K. et~al. (1996).
+\newblock {Interest management in large-scale distributed simulations}.
+\newblock {\em Technical Report ICS-TR-96-27, University of California,
+  Irvine}.
 
 \bibitem[NCsoft 2003]{lineage2}
 NCsoft (2003).
-\newblock Lineage ii.
+\newblock Lineage \mbox{II}.
 \newblock http://www.lineage2.com/.
+
+\bibitem[Ng et~al. 2002]{ng2002msa}
+Ng, B., Si, A., Lau, R., and Li, F. (2002).
+\newblock {A multi-server architecture for distributed virtual walkthrough}.
+\newblock {\em Proceedings of the ACM symposium on Virtual reality software and
+  technology}, pages 163--170.
+
+\bibitem[Rak and Van~Hook 1996]{rak1996egb}
+Rak, S. and Van~Hook, D. (1996).
+\newblock {Evaluation of grid-based relevance filtering for multicast group
+  assignment}.
+\newblock {\em Proc. of 14th DIS workshop}, pages 739--747.
+
+\bibitem[Rieche et~al. 2007]{rieche2007ppb}
+Rieche, S., Fouquet, M., Niedermayer, H., Petrak, L., Wehrle, K., and Carle, G.
+  (2007).
+\newblock {Peer-to-Peer-based Infrastructure Support for Massively Multiplayer
+  Online Games}.
+\newblock {\em Consumer Communications and Networking Conference, 2007. CCNC
+  2007. 2007 4th IEEE}, pages 763--767.
 
 \bibitem[Schiele et~al. 2007]{schiele2007rpp}
 Schiele, G., Suselbeck, R., Wacker, A., Hahner, J., Becker, C., and Weis, T.
@@ -68,16 +139,30 @@ Schiele, G., Suselbeck, R., Wacker, A., Hahner, J., Becker, C., and Weis, T.
 \newblock {\em Proceedings of the Seventh IEEE International Symposium on
   Cluster Computing and the Grid}, pages 773--782.
 
-\bibitem[Smith and Jones 1999]{smith:99}
-Smith, A. and Jones, B. (1999).
-\newblock On the complexity of computing.
-\newblock In Smith-Jones, A.~B., editor, {\em Advances in Computer Science},
-  pages 555--566. Publishing Press.
+\bibitem[Svoboda et~al. 2007]{svoboda2007taa}
+Svoboda, P., Karner, W., and Rupp, M. (2007).
+\newblock {Traffic Analysis and Modeling for World of Warcraft}.
+\newblock {\em Communications, 2007. ICC'07. IEEE International Conference on},
+  pages 1612--1617.
 
 \bibitem[Yan and Randell 2005]{yan2005scc}
 Yan, J. and Randell, B. (2005).
 \newblock {A systematic classification of cheating in online games}.
 \newblock {\em Proceedings of 4th ACM SIGCOMM workshop on Network and system
   support for games}, pages 1--9.
+
+\bibitem[Yu et~al. 2007]{yu2007nas}
+Yu, Y., Li, Z., Shi, L., Chen, Y., and Xu, H. (2007).
+\newblock {Network-Aware State Update For Large Scale Mobile Games}.
+\newblock {\em Computer Communications and Networks, 2007. ICCCN 2007.
+  Proceedings of 16th International Conference on}, pages 563--568.
+
+\bibitem[Zou et~al. 2001]{zou2001egt}
+Zou, L., Ammar, M., and Diot, C. (2001).
+\newblock {An evaluation of grouping techniques for state dissemination in
+  networked multi-user games}.
+\newblock {\em Modeling, Analysis and Simulation of Computer and
+  Telecommunication Systems, 2001. Proceedings. Ninth International Symposium
+  on}, pages 33--40.
 
 \end{thebibliography}
