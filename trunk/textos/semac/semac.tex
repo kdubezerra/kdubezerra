@@ -11,8 +11,11 @@
 % \usepackage{subfig}
 
 \usepackage{graphics}
+%\usepackage{math}
+%\usepackage{mathaccent}
 
-%\usepackage[brazil]{babel}   
+
+\usepackage[brazil]{babel}   
 \usepackage[latin1]{inputenc}  
 
 \hyphenation{ba-lan-ce-a-men-to}
@@ -20,8 +23,8 @@
 \sloppy
 
 \newcommand{\malg}{A$^3$}
-\newcommand{\cridis}{critical\_distance}
-\newcommand{\viewdis}{view\_distance}
+\newcommand{\cridis}{dist\hat{a}ncia\_cr\acute{\imath}tica}
+\newcommand{\viewdis}{alcance\_da\_vis\tilde{a}o}
 \newcommand{\circleaoi}{C}
 \newcommand{\circleat}{C \& A}
 \newcommand{\fov}{FoV}
@@ -31,11 +34,8 @@
 %\title{A novell area of interest refinement for bandwidth usage optimization in distributed simulations}
 %\title{gow 2 no}
 
-\author{Carlos Eduardo Benevides Bezerra\inst{1}}
-
-
-\address{Instituto de Informática -- Universidade Federal do Rio Grande do Sul
-  (UFRGS)\\
+\author{Carlos Eduardo Benevides Bezerra\inst{1}, Cláudio Fernando Resin Geyer\inst{1}}
+\address{Instituto de Informática -- Universidade Federal do Rio Grande do Sul\\
   Caixa Postal 15.064 -- 91.501-970 -- Porto Alegre -- RS -- Brasil
 }
 
@@ -79,7 +79,7 @@ No entanto, para evitar que o custo de manutenção do sistema distribuído servido
 
 %melhorar esta parte de explicar como está dividido o artigo?
 
-O artigo está dividido da seguinte maneira: na seção \ref{relatedwork} são citados alguns trabalhos relacionados; na seção \ref{def}, são apresentadas as definições de alguns conceitos utilizados ao longo do texto; na seção \ref{model}, é descrito o modelo de distribuição proposto; na seção \ref{aoi} é apresentada a otimização proposta para reduzir o tráfego sem comprometer a qualidade do jogo; nas seções \ref{sim} e \ref{results} é descrita a simulação realizada para validar a técnica proposta e os resultados obtidos, respectivamente e, na seção \ref{conclusions}, são apresentadas as conclusões a que se chegou neste trabalho. As idéias preliminares para trabalhos futuros são apresentadas na seção \ref{futurework}.
+O artigo está dividido da seguinte maneira: na seção \ref{relatedwork} são citados alguns trabalhos relacionados; na seção \ref{def}, são apresentadas as definições de alguns conceitos utilizados ao longo do texto; na seção \ref{model}, é descrito o modelo de distribuição proposto, assim como algumas técnicas que se pretende implementar; na seção \ref{aoi} é apresentada uma otimização proposta para reduzir o tráfego sem comprometer a qualidade do jogo; nas seções \ref{sim} e \ref{results} é descrita a simulação realizada para validar a técnica proposta e os resultados obtidos, respectivamente e, na seção \ref{conclusions}, são apresentadas as conclusões a que se chegou até então neste trabalho. O andamento desta pesquisa é descrito na seção \ref{progress}.
 
 \section{Trabalhos relacionados}
 \label{relatedwork}
@@ -102,7 +102,7 @@ A primeira grande restrição no trabalho de \cite{assiotis2006dam}, no entanto, é
 
 %falo de ng?
 
-No que se refere a gerenciamento de interesse, trabalhos como \cite{morse1996iml, rak1996egb, zou2001egt, morgan2005imm} e \cite{minson2005aim} podem ser citados. Em \cite{rak1996egb}, é proposto um esquema de gerenciamento de interesse baseado em um ambiente virtual divido em células de uma grade. A cada célula está associado um grupo de multicast. Cada participante da simulação se subscreve então no grupo de multicast da célula onde ele se encontra, assim como de células vizinhas se estiverem ao alcance de sua visão. Cada participante envia então suas atualizações de estado ao grupo de multicast da região onde se encontra. %O problema desta abordagem é que não se pode assumir que haverá suporte a multicast sobre a Internet, já que não é amplamente estabelecido. Além disso, uma área de interesse formada por células fixas envolverá um número maior de objetos do que seria realmente necessário do que ocorreria se fosse utilizada uma área completamente dinâmica.
+No que se refere a gerenciamento de interesse, trabalhos como \cite{morse1996iml, rak1996egb, zou2001egt, morgan2005imm} podem ser citados. Em \cite{rak1996egb}, é proposto um esquema de gerenciamento de interesse baseado em um ambiente virtual divido em células de uma grade. A cada célula está associado um grupo de multicast. Cada participante da simulação se subscreve então no grupo de multicast da célula onde ele se encontra, assim como de células vizinhas se estiverem ao alcance de sua visão. Cada participante envia então suas atualizações de estado ao grupo de multicast da região onde se encontra. %O problema desta abordagem é que não se pode assumir que haverá suporte a multicast sobre a Internet, já que não é amplamente estabelecido. Além disso, uma área de interesse formada por células fixas envolverá um número maior de objetos do que seria realmente necessário do que ocorreria se fosse utilizada uma área completamente dinâmica.
 
 Em \cite{zou2001egt}, também  são considerados esquemas de gerenciamento de interesse baseados em grupos de multicast. É feita uma comparação entre a formação de grupos baseado em célula, onde cada um está associado a uma célula de uma grade que compõe o ambiente virtual, e agrupamento baseado em objetos, onde para cada objeto existe um grupo multicast associado. Verificou-se que há uma compensação (tradeoff) entre o custo das mensagens de controle dos grupos de multicast e o custo das mensagens de atualização de estado propriamente ditas.
 
@@ -145,7 +145,7 @@ A \textbf{fronteira} entre duas regiões é a divisa entre as áreas que essas regi
 \section{Modelo de distribuição}
 \label{model}
 
-Este trabalho propõe um ambiente virtual particionado em regiões, cada uma gerenciada por um servidor. As regiões são contíguas, explorando a localidade dos avatares dos jogadores. Dessa forma, avatares próximos no jogo provavelmente estarão localizados na mesma região e, por conseguinte, os clientes dos jogadores a eles associados tenderão a estar conectados ao mesmo servidor, fazendo com que sua interação seja mais rápida (Fig. \ref{partitions}). Em situações em que jogadores interagindo entre si estivessem conectados a diferentes servidores implicaria em maior tráfego, pois seria necessário algum tipo de negociação entre os servidores aos quais os diferentes jogadores estão conectados, para que os estados da simulação em ambos fossem idênticos. Além disso seria necessário que cada mensagem entre estes clientes desse mais saltos, passando por mais de um intermediário.
+Este trabalho propõe um ambiente virtual particionado em regiões, cada uma gerenciada por um servidor. As regiões são contíguas, explorando a localidade dos avatares dos jogadores. Dessa forma, avatares próximos no jogo provavelmente estarão localizados na mesma região e, por conseguinte, os clientes dos jogadores a eles associados tenderão a estar conectados ao mesmo servidor, fazendo com que sua interação seja mais rápida (Figura \ref{partitions}). Em situações em que jogadores interagindo entre si estivessem conectados a diferentes servidores implicaria em maior tráfego, pois seria necessário algum tipo de negociação entre os servidores aos quais os diferentes jogadores estão conectados, para que os estados da simulação em ambos fossem idênticos. Além disso seria necessário que cada mensagem entre estes clientes desse mais saltos, passando por mais de um intermediário.
 
 \begin{figure}[!t]
   \centering
@@ -232,31 +232,31 @@ O algoritmo de gerenciamento de interesse proposto neste artigo, denominado \mal
  \item Atenuação da freqüência de atualizações.
 \end{itemize}
 
-A área de interesse resultante então toma a forma de um setor de círculo, cuja origem é o centro de outro círculo, menor. Este círculo menor é a área próxima do avatar do jogador, que receberá atualizações de estado com intervalo normal de entidades que nela estiverem. Dessa forma, tem-se o estado mais atualizado possível do jogo na região próxima ao avatar. Isso favorece a interação com entidades que estejam perto dele. Mesmo que alguma delas esteja momentaneamente fora do campo de visão do jogador, ela estará disponível caso ele gire seu avatar repentinamente na direção oposta à que está voltado. Na figura \ref{fcsmooth}, é ilustrada a área de interesse que acaba de ser definida. O algoritmo \ref{smalg} define o funcionamento deste gerenciamento de interesse.
+A área de interesse resultante então toma a forma de um setor de círculo, cuja origem é o centro de outro círculo, menor. Este círculo menor é a área próxima do avatar do jogador, que receberá atualizações de estado com intervalo normal de entidades que nela estiverem. Dessa forma, tem-se o estado mais atualizado possível do jogo na região próxima ao avatar. Isso favorece a interação com entidades que estejam perto dele. Mesmo que alguma delas esteja momentaneamente fora do campo de visão do jogador, ela estará disponível caso ele gire seu avatar repentinamente na direção oposta à que está voltado. Na Figura \ref{fcsmooth}, é ilustrada a área de interesse que acaba de ser definida. O Algoritmo \ref{smalg} define o funcionamento deste gerenciamento de interesse.
 
 \begin{figure}[!t]
   \centering
   %\includegraphics[width=2.5in]{max}
   \includegraphics[width=0.5\linewidth]{a3}
-  \caption{\malg\ area of interest}
+  \caption{\malg\ - área de interesse}
   \label{fcsmooth}
 \end{figure}
 
 \begin{algorithm}
-\caption{Calculate relevance of entity E to avatar A}
+\caption{Calcular relevância da entidade E para o avatar A}
 \label{smalg}
 \begin{algorithmic}
- \STATE $dist \leftarrow distance(A, E)$
+ \STATE $dist \leftarrow dist\hat{a}ncia(A, E)$
  \IF{$dist \le \cridis$}
- \STATE $relevance \leftarrow 1$
+ \STATE $relev\hat{a}ncia \leftarrow 1$
  \ELSE
- \IF{A can see E in its field of view}
- \STATE $relevance \leftarrow 1 - \frac{dist - \cridis}{\viewdis - \cridis}$
- \IF{$relevance < 0$}
- \STATE $relevance \leftarrow 0$
+ \IF{A tem E em seu campo de visão}
+ \STATE $relev\hat{a}ncia \leftarrow 1 - \frac{dist - \cridis}{\viewdis - \cridis}$
+ \IF{$relev\hat{a}ncia < 0$}
+ \STATE $relev\hat{a}ncia \leftarrow 0$
  \ENDIF
  \ELSE
- \STATE $relevance \leftarrow 0$
+ \STATE $relev\hat{a}ncia \leftarrow 0$
  \ENDIF
  \ENDIF
 \end{algorithmic}
@@ -296,51 +296,13 @@ Foram executadas diversas simulações, com o objetivo de comparar os algoritmos d
 
 Os resultados foram coletados da seguinte maneira: para encontrar a largura de banda utilizada em média para envio, foram somados todos os pacotes de cada sessão e dividido pelo tempo que foi simulado; para determinar a largura de banda máxima utilizada, foi verificado, segundo a segundo, quantos bytes foram enviados e foi selecionado o máximo.
 
-Nas tabelas \ref{tab_max} e \ref{tab_avg}, são apresentados os dados coletados de largura de banda máxima e média, respectivamente, utilizada com os quatro algoritmos simuladas - área em círculo (\circleaoi), área em círculo com atenuação (\circleat), área do campo de visão (\fov) e área do campo de visão mais área próxima mais atenuação (\malg) - além de mostrar quanto seria a largura de banda utilizada se nenhuma técnica fosse empregada (\noaoi). Os valores estão em bytes/s. Nas figuras \ref{fig_max} e \ref{fig_avg} são mostrados os gráficos correspondentes.
-
-\begin{table}[ht]
-\caption{Largura de banda máxima utilizada}
-\centering
-  \begin{tabular}{ c | c c c c c }  
-    \hline
-    Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
-    25  & 9400  & 8500  & 5700  & 7100  & 4700 \\
-    50  & 19300 & 17000 & 10300 & 12300 & 8100 \\
-    75  & 29100 & 23600 & 16600 & 17800 & 11300 \\
-    100 & 38800 & 32500 & 20500 & 23000 & 15500 \\
-    125 & 48600 & 37400 & 24300 & 29500 & 19700 \\
-    150 & 58300 & 47400 & 29900 & 32900 & 22700 \\
-    175 & 67700 & 56100 & 34300 & 32400 & 21500 \\
-    200 & 77600 & 62300 & 37500 & 41200 & 28900 \\
-  \hline
-  \end{tabular}
-\label{tab_max}
-\end{table}
-
-\begin{table}[ht]
-\caption{Largura de banda utilizada em média}
-\centering
-  \begin{tabular}{ c | c c c c c }  
-    \hline
-    Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
-    25  & 9221  & 4715  & 2759  & 2534  & 1700 \\
-    50  & 18826 & 9350  & 5442  & 4949  & 3303 \\
-    75  & 28432 & 13963 & 8315  & 7619  & 5137 \\
-    100 & 38037 & 19324 & 11029 & 9928  & 6739 \\
-    125 & 47642 & 23138 & 13871 & 12434 & 8290 \\
-    150 & 57247 & 29031 & 16432 & 15085 & 10062 \\
-    175 & 66853 & 34697 & 19661 & 23060 & 14250 \\
-    200 & 76458 &   38600 & 23450 & 21491 & 14413 \\
-  \hline
-  \end{tabular}
-\label{tab_avg}
-\end{table}
+Nos gráficos das Figuras \ref{fig_max} e \ref{fig_avg}, são apresentados os resultados obtidos de largura de banda máxima e média, respectivamente, utilizada com os quatro algoritmos simuladas - área em círculo (\circleaoi), área em círculo com atenuação (\circleat), área do campo de visão (\fov) e área do campo de visão mais área próxima mais atenuação (\malg) - além de mostrar quanto seria a largura de banda utilizada se nenhuma técnica fosse empregada (\noaoi). Os valores estão em bytes/s.
 
 \begin{figure}[!t]
   \centering
   %\includegraphics[width=2.5in]{max}
   \includegraphics[width=0.65\linewidth]{max}
-  \caption{Simulation Results: maximum bandwidth usage}
+  \caption{Resultados da simulação: uso máximo de largura de banda}
   \label{fig_max}
 \end{figure}
 
@@ -348,7 +310,7 @@ Nas tabelas \ref{tab_max} e \ref{tab_avg}, são apresentados os dados coletados d
   \centering
   %\includegraphics[width=2.5in]{avg}
   \includegraphics[width=0.65\linewidth]{avg}
-  \caption{Simulation Results: average bandwidth usage}
+  \caption{Resultados da simulação: uso médio de largura de banda}
   \label{fig_avg}
 \end{figure}
 
@@ -364,7 +326,7 @@ Nas tabelas \ref{tab_max} e \ref{tab_avg}, são apresentados os dados coletados d
 
 Apenas usando diferentes freqüências de atualização no gerenciamento de interesse baseado em círculo, reduziu-se em 41.59\% a largura de banda de envio utilizada em média pelo servidor por cliente. A utilização máxima de largura de banda também foi reduzida, em 36.19\%. Estes valores representam a média de redução de uso de largura de banda para os diferentes números de clientes.
 
-No que diz respeito ao algoritmo proposto \malg, obteve-se uma redução de uso médio de largura de banda de envio de 63.51\% e 33.58\%, comparado respectivamente com o algoritmo de área de interesse circular e baseado em ângulo de visão. Reduziu-se também o pico de utilização em 52.03\% e 33.10\%, comparado com os mesmos algoritmos. Na tabela \ref{tab_summary}, são mostrados os percentuais médios de economia de largura de banda máxima e média com o algoritmo \malg, em relação aos outros algoritmos apresentados.
+No que diz respeito ao algoritmo proposto \malg, obteve-se uma redução de uso médio de largura de banda de envio de 63.51\% e 33.58\%, comparado respectivamente com o algoritmo de área de interesse circular e baseado em ângulo de visão. Reduziu-se também o pico de utilização em 52.03\% e 33.10\%, comparado com os mesmos algoritmos. Na Tabela \ref{tab_summary}, são mostrados os percentuais médios de economia de largura de banda máxima e média com o algoritmo \malg, em relação aos outros algoritmos apresentados.
 
 \begin{table}[ht]
 \caption{Economia de largura de banda com o algoritmo \malg}
@@ -384,7 +346,56 @@ Observou-se também que os valores médio e máximo observados diferem, mesmo quand
 \section{Conclusões}
 \label{conclusions}
 
-Foi apresentado um algoritmo de gerenciamento de interesse, o \malg, cuja idéia principal é adaptar a freqüência de atualização de estado das entidades do jogo de acordo com sua relevância para o cliente que receberá as atualizações. O formato da área de interesse utilizada pelo algoritmo \malg{} consiste em um setor de círculo, correspondente ao campo de visão do jogador, mais um círculo de raio menor, que corresponde à área próxima ao avatar daquele jogador. O objetivo deste círculo menor é o de manter o estado naquela região, que é considerada crítica, o mais atualizado possível. Somando-se essas características, chegamos a um algoritmo que obteve redução da utilização máxima da banda de envio do servidor de 52.03\% e 33.10\%, comparados com o gerenciamento de interesse baseado em círculo e em campo de visão, respectivamente, e de 63.51\% e 33.58\% de utilização média, comparados com os mesmos algoritmos.
+Foi proposto um modelo preliminar de distribuição do servidor para jogos maciçamente multijogador. Foram apresentadas também algumas técnicas que se pretende utilizar para economizar largura de banda dos nodos que fariam deste sistema servidor, assim como foi descrito um algoritmo desenvolvido para gerenciamento de interesse, o \malg, cuja idéia principal é adaptar a freqüência de atualização de estado das entidades do jogo de acordo com sua relevância para o cliente que as receberá. O formato da área de interesse utilizada pelo algoritmo \malg{} consiste em um setor de círculo, correspondente ao campo de visão do jogador, mais um círculo de raio menor, que corresponde à área próxima ao avatar daquele jogador. O objetivo deste círculo menor é o de manter o estado naquela região, que é considerada crítica, o mais atualizado possível. Somando-se essas características, chegamos a um algoritmo que obteve redução da utilização máxima da banda de envio do servidor de 52.03\% e 33.10\%, comparados com o gerenciamento de interesse baseado em círculo e em campo de visão, respectivamente, e de 63.51\% e 33.58\% de utilização média, comparados com os mesmos algoritmos.
+
+\section{Andamento}
+\label{progress}
+
+No plano de estudos e pesquisa (PEP), foi apresentado um cronograma com as tarefas que se pretende realizar com o fim de concluir este trabalho. Daquelas tarefas, as seguintes foram concluídas:%Na Tabela \ref{tab_progress} é mostrado o andamento deste trabalho. Um ``X'' corresponde a uma atividade por fazer e um ``V'' corresponde a uma atividade já feita. Tais atividades são:
+
+\begin{enumerate}
+	\item Levantamento bibliográfico do estado-da-arte das técnicas de distribuição do suporte a MMG;
+	\item Levantamento bibliográfico de técnicas de distribuição em geral, que possam ser aplicadas a jogos MMG;
+	\item Análise e categorização destas técnicas;
+	\item Elaboração de um modelo arquitetural de suporte distribuído a jogos MMG;
+% 	\item Integração das técnicas no modelo proposto;
+	\item (em parte) Implementação de um protótipo com o fim de testes;
+	\item (em parte) Levantamento dos simuladores mais indicados para efetuar tais testes;
+	\item (em parte) Execução dos testes em um dos simuladores pesquisados;
+	\item (em parte) Análise dos resultados;
+% 	\item Apresentação do seminário de andamento na semana acadêmica;
+	\item (iniciada) Escrita da dissertação;
+	\item (iniciada, alguns já submetidos) Escrita de artigos;
+% 	\item Entrega da dissertação;
+% 	\item Defesa da dissertação;
+\end{enumerate}
+
+% \begin{table}[!ht]
+% 
+% \begin{center}
+% \caption{Cronograma}
+% \label{tab_progress}
+% \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+% \hline
+% Etapa 
+%    &Jan&Fev&Mar&Abr&Mai&Jun&Jul&Ago&Set&Out&Nov&Dez&Jan&Fev\\ \hline
+% 1  & V & V & V &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+% 2  & V & V & V &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+% 3  &   & V & V & V &   &   &   &   &   &   &   &   &   &   \\ \hline
+% 4  &   &   & V & V & V &   &   &   &   &   &   &   &   &   \\ \hline
+% 5  &   &   &   &   & X &   &   &   &   &   &   &   &   &   \\ \hline
+% 6  &   &   &   & V & X & X & X & X &   &   &   &   &   &   \\ \hline
+% 7  &   &   &   & V &   &   & X & X &   &   &   &   &   &   \\ \hline
+% 8  &   &   &   & V &   &   &   &   & X &   &   &   &   &   \\ \hline
+% 9  &   &   &   &   &   &   &   &   &   & X & X &   &   &   \\ \hline
+% 10 &   &   &   &   & V &   &   &   &   &   &   &   &   &   \\ \hline
+% 11 &   &   &   &   & V & X & X & X & X & X & X & X &   &   \\ \hline
+% 12 &   &   &   & V & V &   &   &   & X & X & X & X & X &   \\ \hline
+% 13 &   &   &   &   &   &   &   &   &   &   &   & X &   &   \\ \hline
+% 14 &   &   &   &   &   &   &   &   &   &   &   &   &   & X \\ \hline
+% \end{tabular}
+% \end{center}
+% \end{table}
 
 \bibliographystyle{sbc}
 \bibliography{semac}
