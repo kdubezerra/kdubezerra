@@ -9,7 +9,7 @@ set is_cs [lindex $argv 7]
 set uses_aoi [lindex $argv 8]
 
 puts "$num_players $aoi_type $out_file $graph_in_file $graph_out_file $exec_time $group_pkt $is_cs $uses_aoi"
-#ns ppapp.tcl 20 3 out.nam gri.tr gro.tr 100 0 0 1
+#ns ppapp.tcl 20 6 out.nam gri.tr gro.tr 100 0 0 1
 set bi_total 0.0
 set bwi_max 0.0
 set bo_total 0.0
@@ -99,7 +99,7 @@ set s_node [$ns node]
 set c_node [$ns node]
 
 #Create links between the nodes
-$ns duplex-link $s_node $c_node 100Mb 250ms SFQ
+$ns duplex-link $s_node $c_node 1000Mb 250ms SFQ
 
 $ns duplex-link-op $s_node $c_node orient right
 
@@ -157,6 +157,7 @@ $ns connect $so_socket $ci_socket
 $ns connect $co_socket $si_socket
 
 
+puts "Setup complete. Initializing simulation..."
 
 
 #Schedule events for the CBR agents

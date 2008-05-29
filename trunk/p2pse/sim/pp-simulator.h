@@ -31,6 +31,7 @@ class PPSim : public TclObject {
 		void worldStep();
 		double relevanceRelation(int playerA, int playerB);
 		long unsigned step_interval;
+      double md_step_interval;
 		bool isRunning;
 		long unsigned get_num_players() {
 			return nPlayers;
@@ -56,11 +57,12 @@ class PPSim : public TclObject {
 		
 		int    my_var1;
 		double my_var2;
-		bool isCS, usesAOI;
+		bool isCS;
+      bool usesAOI;
 		
 		void	sayName(void);
 		int 	myName;				
-		long unsigned nPlayers, ww;
+		int   nPlayers, ww;
 		
 		PPAvatar* playerList;
 		PPApp* pp_server_app;

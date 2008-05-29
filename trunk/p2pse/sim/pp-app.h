@@ -70,6 +70,8 @@ private:
 	bool **isPending;	
 	double **last_snd_time;
 	double **next_snd_time;
+   
+   double* last_client_packet_time;
 	
 	bool server;
 	pp_state *mv_pstate;
