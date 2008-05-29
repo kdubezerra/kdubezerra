@@ -13,7 +13,6 @@ class Avatar {
 		Avatar() {
 			init();
 			isDrawable = false;
-			usesAOI = true;
 			player_id = 555;
 		}
 		

@@ -96,6 +96,9 @@ class Avatar {
 		
 		
 		
+      void setPlayerId (int i) {
+        player_id = i;
+      }
 		
 		
 		
