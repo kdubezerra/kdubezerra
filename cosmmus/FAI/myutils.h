@@ -26,8 +26,8 @@
 	3 simulações => c/s, p2pse s/ aoi, p2pse c/ aoi
  **/
 
-#define MAX_SOCIAL_TIME 600
-#define MAX_ACTION_TIME 600
+#define MAX_SOCIAL_TIME 600000
+#define MAX_ACTION_TIME 600000
 
 using namespace std;
 

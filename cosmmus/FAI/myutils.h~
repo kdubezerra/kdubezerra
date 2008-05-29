@@ -40,4 +40,3 @@ float distance (float xo, float yo, float xf, float yf);
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination );
 SDL_Surface* load_image( string filename );
 bool belongsToVisibility (float px, float py, float dx, float dy, float ox, float oy); //visibility is defined as a semicircle with the observer in the center
-s
