@@ -1,4 +1,4 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2008.5.12)  15 MAY 2008 19:49
+This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2008.5.12)  3 JUN 2008 13:36
 entering extended mode
 **semac.tex
 (./semac.tex
@@ -132,6 +132,20 @@ File: pdftex.def 2002/06/19 v0.03k graphics/color for pdftex
 \Urlmuskip=\muskip10
 Package: url 2004/03/15  ver 3.1  Verb mode for urls, etc.
 )
+(/usr/share/texmf-tetex/tex/generic/babel/babel.sty
+Package: babel 2004/11/20 v3.8d The Babel package
+
+(/usr/share/texmf-tetex/tex/generic/babel/portuges.ldf
+Language: portuges 2004/02/19 v1.2p Portuguese support from the babel system
+
+(/usr/share/texmf-tetex/tex/generic/babel/babel.def
+File: babel.def 2004/11/20 v3.8d Babel common definitions
+\babel@savecnt=\count100
+\U@D=\dimen120
+)
+\l@brazil = a dialect from \language\l@portuges 
+Package babel Info: Making " an active character on input line 145.
+))
 (/usr/share/texmf-tetex/tex/latex/base/inputenc.sty
 Package: inputenc 2004/02/05 v1.0d Input encoding file
 
@@ -200,35 +214,35 @@ driver: pdftex
 (/usr/share/texmf-tetex/tex/context/base/supp-pdf.tex
 (/usr/share/texmf-tetex/tex/context/base/supp-mis.tex
 loading : Context Support Macros / Miscellaneous (2004.10.26)
-\protectiondepth=\count100
-\scratchcounter=\count101
+\protectiondepth=\count101
+\scratchcounter=\count102
 \scratchtoks=\toks19
-\scratchdimen=\dimen120
+\scratchdimen=\dimen121
 \scratchskip=\skip48
 \scratchmuskip=\muskip11
 \scratchbox=\box29
 \scratchread=\read1
 \scratchwrite=\write3
-\zeropoint=\dimen121
-\onepoint=\dimen122
-\onebasepoint=\dimen123
-\minusone=\count102
-\thousandpoint=\dimen124
-\onerealpoint=\dimen125
+\zeropoint=\dimen122
+\onepoint=\dimen123
+\onebasepoint=\dimen124
+\minusone=\count103
+\thousandpoint=\dimen125
+\onerealpoint=\dimen126
 \emptytoks=\toks20
 \nextbox=\box30
-\nextdepth=\dimen126
+\nextdepth=\dimen127
 \everyline=\toks21
-\!!counta=\count103
-\!!countb=\count104
-\recursecounter=\count105
+\!!counta=\count104
+\!!countb=\count105
+\recursecounter=\count106
 )
 loading : Context Support Macros / PDF (2004.03.26)
-\nofMPsegments=\count106
-\nofMParguments=\count107
-\MPscratchCnt=\count108
-\MPscratchDim=\dimen127
-\MPnumerator=\count109
+\nofMPsegments=\count107
+\nofMParguments=\count108
+\MPscratchCnt=\count109
+\MPscratchDim=\dimen128
+\MPnumerator=\count110
 \everyMPtoPDFconversion=\toks22
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <16> not available
@@ -248,30 +262,10 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <13> not available
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 1281) in paragraph at lines 69--71
-\OT1/ptm/m/n/12 dor dis-tribu[]^^Pdo, em que di-ver-sos no-dos conec-ta-dos en-
-tre si di-vi-dem a tarefa de
- []
-
-
-LaTeX Warning: Reference `futurework' on page 2 undefined on input line 82.
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 105--106
-[]\OT1/ptm/m/n/12 No que se ref-ere a geren-ci-a-mento de in-ter-esse, tra-bal-
-hos como
- []
-
-
-Underfull \hbox (badness 4001) in paragraph at lines 105--106
-\OT1/ptm/m/n/12 [[], [], [], []] e
- []
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [4]
@@ -289,7 +283,7 @@ LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
  [6 <./part.pdf>] [7]
 Underfull \hbox (badness 3260) in paragraph at lines 177--178
 []\OT1/ptm/m/n/12 Para evi-tar isso, prop[]oe-se a utiliza[][]ao de di-fus[]ao 
-prob-a-bil[]^^Pstica destas
+pro-ba-bil[]^^Pstica des-tas
  []
 
 [8]
@@ -300,9 +294,6 @@ File: omsptm.fd
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 229.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
  [9]
 <a3.pdf, id=283, 279.0425pt x 204.765pt>
 File: a3.pdf Graphic file (type pdf)
@@ -317,34 +308,28 @@ File: max.pdf Graphic file (type pdf)
  <use max.pdf>
 <avg.pdf, id=315, 361.35pt x 252.945pt>
 File: avg.pdf Graphic file (type pdf)
- <use avg.pdf> [12]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [13 <./max.pdf> <./avg.pdf>] (./semac.bbl [14] [15]) [16] (./semac.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+ <use avg.pdf> [12 <./max.pdf> <./avg.pdf>] [13] (./semac.bbl [14] [15]) [16] (
+./semac.aux) ) 
 Here is how much of TeX's memory you used:
- 2260 strings out of 94500
- 29087 string characters out of 1175788
- 87206 words of memory out of 1000000
- 5403 multiletter control sequences out of 10000+50000
+ 2583 strings out of 94500
+ 32893 string characters out of 1175788
+ 93430 words of memory out of 1000000
+ 5715 multiletter control sequences out of 10000+50000
  20011 words of font info for 41 fonts, out of 500000 for 2000
  581 hyphenation exceptions out of 8191
- 30i,11n,28p,1992b,514s stack positions out of 1500i,500n,5000p,200000b,5000s
+ 30i,11n,28p,1992b,542s stack positions out of 1500i,500n,5000p,200000b,5000s
 PDF statistics:
  339 PDF objects out of 300000
  0 named destinations out of 131072
  21 words of extra memory for PDF output out of 65536
-</usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf-te
-tex/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf-tetex/fonts/type1/bluesky
-/cm/cmr12.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy10.pfb></usr/s
-hare/texmf-tetex/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texmf-tetex/fonts
-/type1/bluesky/cm/cmmi12.pfb>{/usr/share/texmf-tetex/fonts/enc/dvips/psnfss/8r.
-enc}</usr/share/texmf-tetex/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/tex
-mf-tetex/fonts/type1/urw/times/utmri8a.pfb></usr/share/texmf-tetex/fonts/type1/
-urw/times/utmbi8a.pfb></usr/share/texmf-tetex/fonts/type1/urw/times/utmr8a.pfb>
-</usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf-tetex
-/fonts/type1/urw/times/utmb8a.pfb>
-Output written on semac.pdf (16 pages, 243208 bytes).
+</usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy8.pfb></usr/sh
+are/texmf-tetex/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf-tetex/fonts/t
+ype1/bluesky/cm/cmr12.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy10
+.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texmf
+-tetex/fonts/type1/bluesky/cm/cmmi12.pfb>{/usr/share/texmf-tetex/fonts/enc/dvip
+s/psnfss/8r.enc}</usr/share/texmf-tetex/fonts/type1/urw/helvetic/uhvb8a.pfb></u
+sr/share/texmf-tetex/fonts/type1/urw/times/utmri8a.pfb></usr/share/texmf-tetex/
+fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-tetex/fonts/type1/urw/times
+/utmr8a.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmr8.pfb></usr/share
+/texmf-tetex/fonts/type1/urw/times/utmb8a.pfb>
+Output written on semac.pdf (16 pages, 244237 bytes).

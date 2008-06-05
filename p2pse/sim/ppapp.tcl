@@ -162,7 +162,7 @@ puts "Setup complete. Initializing simulation..."
 
 #Schedule events for the CBR agents
 #Simulator utilizes round AOI
-$ns at 0.0 "record"
+$ns at 0.1 "record"
 
 $ns at 0.1 "$ppsim start 50 $aoi_type"
 $ns at 0.1 "$ppserver start"
