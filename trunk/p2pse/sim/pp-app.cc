@@ -162,7 +162,7 @@ void PPApp::send_pp_pkt(int n_players_updates)
     if(!packetGrouping) {			
       agent_->sendmsg(new_packet_size);
       if (n_players_updates) 
-        cout << new_packet_size  << " bytes transferidos no instante " << now << endl;
+        cout << new_packet_size  << " bytes transferidos no instante " << now << " com \t" << n_players_updates << " atualizações contidas" << endl;
     }		
 //  else if (now - last >= pack_aggr_time || (acc + 2) * pktsize_ > agent_->size()) {
     else if (now - last >= pack_aggr_time || (acc + new_packet_size) > agent_->size()) {
