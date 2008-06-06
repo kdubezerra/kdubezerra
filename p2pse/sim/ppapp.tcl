@@ -99,7 +99,7 @@ set s_node [$ns node]
 set c_node [$ns node]
 
 #Create links between the nodes
-$ns duplex-link $s_node $c_node 1000Mb 250ms SFQ
+$ns duplex-link $s_node $c_node 1000Mb 100ms SFQ
 
 $ns duplex-link-op $s_node $c_node orient right
 
@@ -135,20 +135,21 @@ $ppsim set_uses_aoi $uses_aoi
 
 
 set ppserver [new Application/P2pseApp]
-$ppserver set interval_ 0.25
+$ppserver set interval_ 0.1
 $ppserver set packetGrouping_ $group_pkt
 $ppserver set pack_aggr_time_ 0.05
 #update packet size gotten from yang-yu, 2007
-$ppserver set_packet_size 100
+$ppserver set_packet_size 75
+$ppserver set_additional_player_overhead 15
 $ppserver attach-simulator $ppsim 1 serverapp
 $ppserver attach-agent $so_socket
 
 set ppclient [new Application/P2pseApp]
-$ppclient set interval_ 0.25
+$ppclient set interval_ 0.16
 $ppclient set packetGrouping_ $group_pkt
-$ppclient set pack_aggr_time_ 0.01
+$ppclient set pack_aggr_time_ 0.05
 #update packet size gotten from yang-yu, 2007
-$ppclient set_packet_size 100
+$ppclient set_packet_size 75
 $ppclient attach-simulator $ppsim 1 clientapp
 $ppclient attach-agent $co_socket
 
@@ -162,7 +163,7 @@ puts "Setup complete. Initializing simulation..."
 
 #Schedule events for the CBR agents
 #Simulator utilizes round AOI
-$ns at 0.1 "record"
+$ns at 0.0 "record"
 
 $ns at 0.1 "$ppsim start 50 $aoi_type"
 $ns at 0.1 "$ppserver start"
