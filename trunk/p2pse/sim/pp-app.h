@@ -35,11 +35,11 @@ protected:
 class PPApp : public Application {
 public:
 	PPApp();
-	void send_pp_pkt();  // called by SendTimer:expire (Sender)
+	void send_pp_pkt(int n_players_updates = 0);  // called by SendTimer:expire (Sender)
 	bool isIdle(); // unused... (yet)	
 	double relevance(long unsigned int player, long unsigned int client);
 	void check_send_sched();
-	void check_player_update_schedule(long unsigned player, long unsigned client);
+	bool check_player_update_schedule(long unsigned player, long unsigned client);
 	void appChangeCB (pp_state from_state, pp_state to_state, long unsigned pl_id);
 protected:	
 	int command(int argc, const char*const* argv);
@@ -65,6 +65,8 @@ private:
 	int packetGrouping;
 	int acc;
 	double last;
+   
+   int additional_player_overhead_;
 	
 	long unsigned num_players;
 	bool **isPending;	
