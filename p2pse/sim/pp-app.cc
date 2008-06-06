@@ -153,7 +153,7 @@ void PPApp::stop()
 void PPApp::send_pp_pkt(int n_players_updates)
 {
   
-  int new_packet_size = pktsize_ + n_players_updates * additional_player_overhead_ ;
+  int new_packet_size = pktsize_ + (n_players_updates * additional_player_overhead_) ;
 
   double now = Scheduler::instance().clock();
 	
@@ -161,11 +161,9 @@ void PPApp::send_pp_pkt(int n_players_updates)
 	  
     if(!packetGrouping) {			
       agent_->sendmsg(new_packet_size);
-    }
-    
-    if (!n_players_updates) 
-      cout << new_packet_size  << " bytes transferidos no instante " << now << endl;
-		
+      if (n_players_updates) 
+        cout << new_packet_size  << " bytes transferidos no instante " << now << endl;
+    }		
 //  else if (now - last >= pack_aggr_time || (acc + 2) * pktsize_ > agent_->size()) {
     else if (now - last >= pack_aggr_time || (acc + new_packet_size) > agent_->size()) {
       agent_->sendmsg(acc + new_packet_size);
@@ -249,7 +247,7 @@ void PPApp::check_server_send_schedule() {
 //    if (src_player == dest_player) continue; //Theoretically, the player receives his own updated information      
       if (pp_simulator->getStatus(dest_player) == action) continue;
       if (check_player_update_schedule(dest_player, src_player))
-        n_updates++;    
+        n_updates++;
     }
     
     if (n_updates) send_pp_pkt(n_updates);

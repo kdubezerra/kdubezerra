@@ -99,7 +99,7 @@ set s_node [$ns node]
 set c_node [$ns node]
 
 #Create links between the nodes
-$ns duplex-link $s_node $c_node 1000Mb 100ms SFQ
+$ns duplex-link $s_node $c_node 1Mb 100ms SFQ
 
 $ns duplex-link-op $s_node $c_node orient right
 
