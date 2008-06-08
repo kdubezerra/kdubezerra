@@ -122,7 +122,7 @@ int PPApp::command(int argc, const char*const* argv)
 			  					  
         for (int player_j = 0 ; player_j < num_players ; player_j++) {
           isPending[player_i][player_j] = false;				  
-          last_snd_time[player_i][player_j] = ((double)(rand() % (int)(normal_interval*1000.0f))) / 1000.0f;
+          last_snd_time[player_i][player_j] = 0.0f;//((double)(rand() % (int)(normal_interval*1000.0f))) / 1000.0f;
         }
 			  
       }
@@ -246,8 +246,10 @@ void PPApp::check_server_send_schedule() {
     for (int dest_player = 0 ; dest_player < num_players ; dest_player++)    {
 //    if (src_player == dest_player) continue; //Theoretically, the player receives his own updated information      
       if (pp_simulator->getStatus(dest_player) == action) continue;
-      if (check_player_update_schedule(dest_player, src_player))
+      if (check_player_update_schedule(dest_player, src_player)) {
         n_updates++;
+        cout << "ret_value for pair [" << src_player << ", " << dest_player << "] is true. n_updates = " << n_updates << endl;
+      }
     }
     
     if (n_updates) send_pp_pkt(n_updates);
@@ -270,6 +272,7 @@ bool PPApp::check_player_update_schedule(long unsigned dest_player, long unsigne
 
   if (now > next_snd_time[src_player][dest_player] && isPending[src_player][dest_player]) {
     ret_value = true;
+//     cout << "ret_value for pair [" << src_player << ", " << dest_player << "] is " << ret_value << endl;
 //    send_pp_pkt();
 //    last_snd_time[src_player][dest_player] = now;
 //    to avoid a propagation of the interval error due to the discrete event simulator:
