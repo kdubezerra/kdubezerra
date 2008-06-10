@@ -101,7 +101,7 @@ proc showprogress {} {
 	set now [$ns now]
 	set percentage [expr [expr $now/$exec_time]*100]
 	puts "$percentage"
-	set intervalo 5.0
+	set intervalo 100.0
 	
 	$ns at [expr $now+$intervalo] "showprogress"
 }
