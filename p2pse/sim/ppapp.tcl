@@ -9,11 +9,14 @@ set is_cs [lindex $argv 7]
 set uses_aoi [lindex $argv 8]
 
 puts "$num_players $aoi_type $out_file $graph_in_file $graph_out_file $exec_time $group_pkt $is_cs $uses_aoi"
-#ns ppapp.tcl 20 6 out.nam gri.tr gro.tr 100 0 0 1
+#ns ppapp.tcl 1 6 out.nam gri.tr gro.tr 10 0 1 0
 set bi_total 0.0
 set bwi_max 0.0
 set bo_total 0.0
 set bwo_max 0.0
+
+#controle do progresso
+
 
 #Create a simulator object
 set ns [new Simulator]
@@ -92,6 +95,17 @@ proc finish {} {
    exit 0
 }
 
+proc showprogress {} {
+	global exec_time
+	set ns [Simulator instance]
+	set now [$ns now]
+	set percentage [expr [expr $now/$exec_time]*100]
+	puts "$percentage"
+	set intervalo 5.0
+	
+	$ns at [expr $now+$intervalo] "showprogress"
+}
+
 
 
 #Create four nodes
@@ -99,7 +113,7 @@ set s_node [$ns node]
 set c_node [$ns node]
 
 #Create links between the nodes
-$ns duplex-link $s_node $c_node 1Mb 100ms SFQ
+$ns duplex-link $s_node $c_node 1000Mb 100ms SFQ
 
 $ns duplex-link-op $s_node $c_node orient right
 
@@ -137,19 +151,18 @@ $ppsim set_uses_aoi $uses_aoi
 set ppserver [new Application/P2pseApp]
 $ppserver set interval_ 0.1
 $ppserver set packetGrouping_ $group_pkt
-$ppserver set pack_aggr_time_ 0.05
+$ppserver set pack_aggr_time_ 0.001
 #update packet size gotten from yang-yu, 2007
-$ppserver set_packet_size 75
-$ppserver set_additional_player_overhead 15
+$ppserver set_packet_size 100
 $ppserver attach-simulator $ppsim 1 serverapp
 $ppserver attach-agent $so_socket
 
 set ppclient [new Application/P2pseApp]
 $ppclient set interval_ 0.16
 $ppclient set packetGrouping_ $group_pkt
-$ppclient set pack_aggr_time_ 0.05
+$ppclient set pack_aggr_time_ 0.01
 #update packet size gotten from yang-yu, 2007
-$ppclient set_packet_size 75
+$ppclient set_packet_size 100
 $ppclient attach-simulator $ppsim 1 clientapp
 $ppclient attach-agent $co_socket
 
@@ -163,7 +176,8 @@ puts "Setup complete. Initializing simulation..."
 
 #Schedule events for the CBR agents
 #Simulator utilizes round AOI
-$ns at 0.0 "record"
+$ns at 0.1 "record"
+$ns at 0.1 "showprogress"
 
 $ns at 0.1 "$ppsim start 50 $aoi_type"
 $ns at 0.1 "$ppserver start"
