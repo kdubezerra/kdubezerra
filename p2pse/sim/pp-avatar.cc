@@ -10,8 +10,6 @@ void PPAvatar::step(unsigned long delay)  {
   m_elapsed_time += delay;
 
   if (m_elapsed_time >= m_state_time) {
-
-//     cout << "Changing state" << endl;
     
     if (m_state == social) {
       mp_simulator->spaceChangeCB(social, action, player_id);

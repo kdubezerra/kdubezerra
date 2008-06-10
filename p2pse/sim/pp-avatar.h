@@ -3,7 +3,7 @@
 #include "state_enum.h"
 #include "CosmmusSmoothAvatar.h"
 
-#define PROB_TO_SOCIAL 80
+#define PROB_TO_SOCIAL 100
 
 class PPSim;
 
