@@ -197,7 +197,7 @@ void PPApp::check_send_sched() {
     check_player_send_schedule();
   }
 	
-  if (running_) snd_timer_.resched(0.001f);
+  if (running_) snd_timer_.resched(0.05f);
 
 }
 

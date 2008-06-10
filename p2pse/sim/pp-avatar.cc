@@ -34,6 +34,20 @@ void PPAvatar::step(unsigned long delay)  {
 }
 
 
+void PPAvatar::setSimulator (PPSim* ps) {
+  mp_simulator = ps;  
+  
+  if (mp_simulator->isClientServer()) return;
+  
+  if (rand() % 2) {
+    m_state = action;
+  }
+  
+  m_state_time = rand() % MAX_ACTION_TIME;
+  m_elapsed_time = 0;
+}
+
+
 pp_state PPAvatar::getStatus() {
   return m_state;
 }
