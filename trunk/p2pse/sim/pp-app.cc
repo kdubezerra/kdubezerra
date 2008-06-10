@@ -34,7 +34,7 @@ void PPSendTimer::expire(Event*)
 
 
 // Constructor (also initialize instances of timers)
-PPApp::PPApp() : running_(0), snd_timer_(this), last_snd_time(0), next_snd_time(0), isPending(0), packetGrouping(0), acc(0), last(0.0f), server(true), last_client_packet_time(0), additional_player_overhead_(0)
+PPApp::PPApp() : running_(0), snd_timer_(this), last_snd_time(0), next_snd_time(0), isPending(0), packetGrouping(0), acc(0), last(0.0f), server(true), last_client_packet_time(0)
 {
   bind("pktsize_", &pktsize_);  
   bind("interval_", &normal_interval);
@@ -79,11 +79,6 @@ int PPApp::command(int argc, const char*const* argv)
       pktsize_ = atoi(argv[2]);
       return(TCL_OK);
     }
-    
-    if (strcmp(argv[1], "set_additional_player_overhead") == 0) {
-      additional_player_overhead_ = atoi(argv[2]);
-      return(TCL_OK);
-    }
   }
 
   if (argc == 5) {
@@ -122,7 +117,7 @@ int PPApp::command(int argc, const char*const* argv)
 			  					  
         for (int player_j = 0 ; player_j < num_players ; player_j++) {
           isPending[player_i][player_j] = false;				  
-          last_snd_time[player_i][player_j] = 0.0f;//((double)(rand() % (int)(normal_interval*1000.0f))) / 1000.0f;
+          last_snd_time[player_i][player_j] = ((double)(rand() % (int)(normal_interval*1000.0f))) / 1000.0f;
         }
 			  
       }
@@ -150,29 +145,25 @@ void PPApp::stop()
 
 
 // Send application data packet
-void PPApp::send_pp_pkt(int n_players_updates)
+void PPApp::send_pp_pkt()
 {
-  
-  int new_packet_size = pktsize_ + (n_players_updates * additional_player_overhead_) ;
 
   double now = Scheduler::instance().clock();
 	
   if (running_) { 
 	  
     if(!packetGrouping) {			
-      agent_->sendmsg(new_packet_size);
-      if (n_players_updates) 
-        cout << new_packet_size  << " bytes transferidos no instante " << now << " com \t" << n_players_updates << " atualizações contidas" << endl;
-    }		
-//  else if (now - last >= pack_aggr_time || (acc + 2) * pktsize_ > agent_->size()) {
-    else if (now - last >= pack_aggr_time || (acc + new_packet_size) > agent_->size()) {
-      agent_->sendmsg(acc + new_packet_size);
+      agent_->sendmsg(pktsize_);		
+    }
+		
+    else if (now - last >= pack_aggr_time || (acc + 2) * pktsize_ > agent_->size()) {
+      agent_->sendmsg(pktsize_ * ++acc);
       acc = 0;
       last = now;
     }
 		
     else {
-      acc += new_packet_size ;
+      acc++;
     }
 
   }		
@@ -218,7 +209,7 @@ void PPApp::check_player_send_schedule() {
     last_client_packet_time = (double*)malloc(num_players * sizeof(double));
     for ( int i = 0 ; i < num_players ; i++) {
       last_client_packet_time[i] = ((double)(rand() % (int)(normal_interval*1000.0f))) / 1000.0f;
-      cout << "last_client_packet_time[" << i << "] = " << last_client_packet_time[i] << endl;
+//       cout << "last_client_packet_time[" << i << "] = " << last_client_packet_time[i] << endl;
     }
   }
 	
@@ -227,7 +218,7 @@ void PPApp::check_player_send_schedule() {
     if (now - last_client_packet_time[player]  >= normal_interval) {
       send_pp_pkt();
 		last_client_packet_time[player] = now;
-//    last_client_packet_time[player] += normal_interval; //to avoid a propagation of the interval error due to the discrete event simulator
+//       last_client_packet_time[player] += normal_interval; //to avoid a propagation of the interval error due to the discrete event simulator
     }		
   }
 	
@@ -235,33 +226,20 @@ void PPApp::check_player_send_schedule() {
 
 
 void PPApp::check_server_send_schedule() {
-  int n_updates;
-  
   for (int src_player = 0 ; src_player < num_players ; src_player++) {
-    
     if (pp_simulator->getStatus(src_player) == action) continue;
-        
-    n_updates = 0;
-    
     for (int dest_player = 0 ; dest_player < num_players ; dest_player++)    {
-//    if (src_player == dest_player) continue; //Theoretically, the player receives his own updated information      
+//    if (src_player == dest_player) continue;      
       if (pp_simulator->getStatus(dest_player) == action) continue;
-      if (check_player_update_schedule(dest_player, src_player)) {
-        n_updates++;
-        cout << "ret_value for pair [" << src_player << ", " << dest_player << "] is true. n_updates = " << n_updates << endl;
-      }
+      check_player_update_schedule(dest_player, src_player);
     }
-    
-    if (n_updates) send_pp_pkt(n_updates);
-    
   }
 }
 
 
-bool PPApp::check_player_update_schedule(long unsigned dest_player, long unsigned src_player) {
+void PPApp::check_player_update_schedule(long unsigned dest_player, long unsigned src_player) {
   double rel_ = relevance(dest_player, src_player);
   double now = Scheduler::instance().clock();
-  bool ret_value = false;
 	
   if (rel_ > 0.001) {
     double new_snd_time = last_snd_time[src_player][dest_player] + normal_interval / rel_;
@@ -271,17 +249,13 @@ bool PPApp::check_player_update_schedule(long unsigned dest_player, long unsigne
   }
 
   if (now > next_snd_time[src_player][dest_player] && isPending[src_player][dest_player]) {
-    ret_value = true;
-//     cout << "ret_value for pair [" << src_player << ", " << dest_player << "] is " << ret_value << endl;
-//    send_pp_pkt();
+    send_pp_pkt();
 //    last_snd_time[src_player][dest_player] = now;
 //    to avoid a propagation of the interval error due to the discrete event simulator:
     last_snd_time[src_player][dest_player] = now;
     isPending[src_player][dest_player] = false;
   }
 
-  return ret_value;
-  
 }
 
 
