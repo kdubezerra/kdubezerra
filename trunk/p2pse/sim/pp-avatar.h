@@ -13,14 +13,11 @@ class PPAvatar : public CosmmusSmoothAvatar {
 
     PPAvatar() {
       CosmmusSmoothAvatar();
-      m_state = social;			
-      m_state_time = rand() % MAX_SOCIAL_TIME;
-      m_elapsed_time = 0;      
+      m_state = social;
+      m_elapsed_time = 0;
     }
 		
-    void setSimulator (PPSim* ps) {
-      mp_simulator = ps;
-    }
+    void setSimulator (PPSim* ps);
 
     void step(unsigned long delay);
 						

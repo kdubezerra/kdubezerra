@@ -46,7 +46,7 @@ int PPSim::command(int argc, const char*const* argv) {
       md_step_interval = ((double)(step_interval))/1000.0f;
 // 			cout << "OK til here: " << step_interval << "ms interval." << endl;		
       startSimulation(step_interval);
-      Tcl::instance().evalf("puts \"Simulation started with %.5lf ms step interval\"", md_step_interval);
+      Tcl::instance().evalf("puts \"Simulation started with %.2lf ms step interval\"", md_step_interval);
       return(TCL_OK);
     }
     if(strcmp(argv[1], "set_num_players") == 0) {

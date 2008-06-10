@@ -30,12 +30,13 @@ $ns color 2 Red
 set nf [open $out_file w]
 $ns namtrace-all $nf
 
-set graph_in [open $graph_in_file w]
-set graph_out [open $graph_out_file w]
+#set graph_in [open $graph_in_file w]
+#set graph_out [open $graph_out_file w]
 
 
 proc record {} {
-		global si_socket ci_socket graph_in graph_out bi_total bwi_max bo_total bwo_max
+		#global si_socket ci_socket graph_in graph_out bi_total bwi_max bo_total bwo_max
+		global si_socket ci_socket bi_total bwi_max bo_total bwo_max
 		#Get an instance of the simulator
 		set ns [Simulator instance]
 		#Set the time after which the procedure should be called again
@@ -60,8 +61,8 @@ proc record {} {
 		set now [$ns now]
 		#Calculate the bandwidth (in MBit/s) and write it to the files
 		#puts $graph "$now [expr $bw0/$time*8/1000000]"
-		puts $graph_in "$now [expr $bi/$time]"
-		puts $graph_out "$now [expr $bo/$time]"
+		#puts $graph_in "$now [expr $bi/$time]"
+		#puts $graph_out "$now [expr $bo/$time]"
 		#Reset the bytes_ values on the traffic sinks
 		
 		#Re-schedule the procedure
@@ -70,12 +71,12 @@ proc record {} {
 
 #Define a 'finish' procedure
 proc finish {} {
-   global ns nf graph_in graph_out graph_in_file graph_out_file bi_total bwi_max bo_total bwo_max exec_time num_players si_socket ci_socket
+   global ns nf graph_in_file graph_out_file bi_total bwi_max bo_total bwo_max exec_time num_players si_socket ci_socket
    $ns flush-trace
 	#Close the trace file
    close $nf
-   close $graph_in
-   close $graph_out
+   #close $graph_in
+   #close $graph_out
 	#Execute nam on the trace file
 	#exec nam out.nam &
 	
@@ -101,7 +102,7 @@ proc showprogress {} {
 	set now [$ns now]
 	set percentage [expr [expr $now/$exec_time]*100]
 	puts "$percentage"
-	set intervalo 100.0
+	set intervalo 5.0
 	
 	$ns at [expr $now+$intervalo] "showprogress"
 }
@@ -143,22 +144,22 @@ $ns attach-agent $c_node $ci_socket
 
 
 set ppsim [new P2pseSimulator]
-$ppsim set_num_players $num_players
 $ppsim set_client_server $is_cs
 $ppsim set_uses_aoi $uses_aoi
+$ppsim set_num_players $num_players
 
 
 set ppserver [new Application/P2pseApp]
 $ppserver set interval_ 0.1
 $ppserver set packetGrouping_ $group_pkt
-$ppserver set pack_aggr_time_ 0.001
+$ppserver set pack_aggr_time_ 0.01
 #update packet size gotten from yang-yu, 2007
 $ppserver set_packet_size 100
 $ppserver attach-simulator $ppsim 1 serverapp
 $ppserver attach-agent $so_socket
 
 set ppclient [new Application/P2pseApp]
-$ppclient set interval_ 0.16
+$ppclient set interval_ 0.15
 $ppclient set packetGrouping_ $group_pkt
 $ppclient set pack_aggr_time_ 0.01
 #update packet size gotten from yang-yu, 2007
