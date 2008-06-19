@@ -197,7 +197,8 @@ void PPApp::check_send_sched() {
     check_player_send_schedule();
   }
 	
-  if (running_) snd_timer_.resched(0.05f);
+//   if (running_) snd_timer_.resched(0.05f);
+  if (running_) snd_timer_.resched(2.0f);
 
 }
 
@@ -296,22 +297,22 @@ void PPApp::fireATAEvent(long unsigned pl_id) {
 
 void PPApp::fireATSEvent(long unsigned pl_id) {
   if (server) {
-    if (pl_id == 0) cout << "Server app received an ATS event from player 0 in time " << Scheduler::instance().clock() << endl;
+//     if (pl_id == 0) cout << "Server app received an ATS event from player 0 in time " << Scheduler::instance().clock() << endl;
 		//... generate and send s->c messages related to this event
   }
   else {
-    if (pl_id == 0) cout << "Client app received an ATS event from player 0 in time " << Scheduler::instance().clock() << endl;
+//     if (pl_id == 0) cout << "Client app received an ATS event from player 0 in time " << Scheduler::instance().clock() << endl;
 		//... generate and send c->s messages related to this event
   }
 }
 
 void PPApp::fireSTAEvent(long unsigned pl_id) {
   if (server) {
-    if (pl_id == 0) cout << "Server app received an STA event from player 0 in time " << Scheduler::instance().clock() << endl;
+//     if (pl_id == 0) cout << "Server app received an STA event from player 0 in time " << Scheduler::instance().clock() << endl;
 		//... generate and send s->c messages related to this event
   }
   else {
-    if (pl_id == 0) cout << "Client app received an STA event from player 0 in time " << Scheduler::instance().clock() << endl;
+//     if (pl_id == 0) cout << "Client app received an STA event from player 0 in time " << Scheduler::instance().clock() << endl;
 		//... generate and send c->s messages related to this event
   }
 }
