@@ -15,6 +15,8 @@ set bwi_max 0.0
 set bo_total 0.0
 set bwo_max 0.0
 
+set interval [expr $exec_time/20.0]
+
 #controle do progresso
 
 
@@ -27,8 +29,8 @@ $ns color 1 Blue
 $ns color 2 Red
 
 #Open the nam trace file
-set nf [open $out_file w]
-$ns namtrace-all $nf
+#set nf [open $out_file w]
+#$ns namtrace-all $nf
 
 #set graph_in [open $graph_in_file w]
 #set graph_out [open $graph_out_file w]
@@ -72,9 +74,9 @@ proc record {} {
 #Define a 'finish' procedure
 proc finish {} {
    global ns nf graph_in_file graph_out_file bi_total bwi_max bo_total bwo_max exec_time num_players si_socket ci_socket
-   $ns flush-trace
+   #$ns flush-trace
 	#Close the trace file
-   close $nf
+   #close $nf
    #close $graph_in
    #close $graph_out
 	#Execute nam on the trace file
@@ -97,14 +99,13 @@ proc finish {} {
 }
 
 proc showprogress {} {
-	global exec_time
+	global exec_time interval
 	set ns [Simulator instance]
 	set now [$ns now]
 	set percentage [expr [expr $now/$exec_time]*100]
-	puts "$percentage"
-	set intervalo 5.0
+	puts "$percentage"	
 	
-	$ns at [expr $now+$intervalo] "showprogress"
+	$ns at [expr $now+$interval] "showprogress"
 }
 
 
@@ -124,14 +125,14 @@ $ns duplex-link-op $s_node $c_node queuePos 0.5
 
 #Create agents for the client and server's in and out sockets
 set so_socket [new Agent/UDP]
-$so_socket set packetSize_ 65507
+$so_socket set packetSize_ 655070
 $so_socket set class_ 1
 
 set si_socket [new Agent/LossMonitor]
 #$si_socket set class_ 1
 
 set co_socket [new Agent/UDP]
-$co_socket set packetSize_ 65507
+$co_socket set packetSize_ 655070
 $co_socket set class_ 2
 
 set ci_socket [new Agent/LossMonitor]

@@ -18,16 +18,20 @@
 
 #define W_CAPTION "Mapa do Cosmmus"
 
-#define MAX_RESTING_TIME 15000
-
 /**
    rever esses tempos posteriormente. tem que ser simulável (serão x * 3 simulações).
 	x = numero de pontos do eixo x (jogadores). provavelmente x = 8, mas deveria ser menos...(?)
 	3 simulações => c/s, p2pse s/ aoi, p2pse c/ aoi
  **/
 
+//média de 10 minutos, tanto pra social quanto pra action
+#define MAX_RESTING_TIME 15000
 #define MAX_SOCIAL_TIME 600000
 #define MAX_ACTION_TIME 600000
+
+// #define MAX_RESTING_TIME 150
+// #define MAX_SOCIAL_TIME 6000
+// #define MAX_ACTION_TIME 6000
 
 using namespace std;
 
