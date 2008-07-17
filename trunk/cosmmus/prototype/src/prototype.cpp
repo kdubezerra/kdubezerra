@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     /* Trying to read number of CD devices on system */
 	cout << "Drives available :" << SDL_CDNumDrives() << endl;
     for(int i=0; i < SDL_CDNumDrives(); ++i) {
-      cout << "Drive " << i << "\"" << SDL_CDName(i) << "\"";
+      cout << "Drive " << i << " : \"" << SDL_CDName(i) << "\"\n";
     }
   }
   SDL_Quit();
