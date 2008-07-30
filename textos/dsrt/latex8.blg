@@ -2,51 +2,44 @@ This is BibTeX, Version 0.99c (Web2C 7.5.6)
 The top-level auxiliary file: latex8.aux
 The style file: latex8.bst
 Database file #1: dsrt.bib
-Repeated entry---line 225 of file dsrt.bib
- : @article{assiotis2006dam
- :                         ,
-I'm skipping whatever remains of this entry
-Warning--empty journal in crippa2007pps
-Warning--empty year in mccanne:nsn
-You've used 26 entries,
+You've used 2 entries,
             2118 wiz_defined-function locations,
-            624 strings with 8420 characters,
-and the built_in function-call counts, 9389 in all, are:
-= -- 941
-> -- 479
-< -- 13
-+ -- 188
-- -- 162
-* -- 584
-:= -- 1538
-add.period$ -- 79
-call.type$ -- 26
-change.case$ -- 157
+            507 strings with 4080 characters,
+and the built_in function-call counts, 736 in all, are:
+= -- 69
+> -- 40
+< -- 1
++ -- 16
+- -- 14
+* -- 46
+:= -- 125
+add.period$ -- 6
+call.type$ -- 2
+change.case$ -- 13
 chr.to.int$ -- 0
-cite$ -- 28
-duplicate$ -- 370
-empty$ -- 643
-format.name$ -- 162
-if$ -- 1991
+cite$ -- 2
+duplicate$ -- 25
+empty$ -- 52
+format.name$ -- 14
+if$ -- 153
 int.to.chr$ -- 0
-int.to.str$ -- 26
-missing$ -- 23
-newline$ -- 134
-num.names$ -- 52
-pop$ -- 173
+int.to.str$ -- 2
+missing$ -- 1
+newline$ -- 13
+num.names$ -- 4
+pop$ -- 18
 preamble$ -- 1
-purify$ -- 131
+purify$ -- 11
 quote$ -- 0
-skip$ -- 325
+skip$ -- 23
 stack$ -- 0
-substring$ -- 517
-swap$ -- 130
-text.length$ -- 13
+substring$ -- 34
+swap$ -- 9
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 104
-warning$ -- 2
-while$ -- 93
-width$ -- 28
-write$ -- 276
-(There was 1 error message)
+type$ -- 8
+warning$ -- 0
+while$ -- 7
+width$ -- 3
+write$ -- 23
