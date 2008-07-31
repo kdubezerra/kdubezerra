@@ -7,6 +7,23 @@
 %  $Revision: 1.4 $
 %
 
+\newcommand{\squishlist}{
+   \begin{list}{$\bullet$}
+    { \setlength{\itemsep}{0pt}      \setlength{\parsep}{3pt}
+      \setlength{\topsep}{3pt}       \setlength{\partopsep}{0pt}
+      \setlength{\leftmargin}{1.5em} \setlength{\labelwidth}{1em}
+      \setlength{\labelsep}{0.5em} } }
+
+\newcommand{\squishlisttwo}{
+   \begin{list}{$\bullet$}
+    { \setlength{\itemsep}{0pt}    \setlength{\parsep}{0pt}
+      \setlength{\topsep}{0pt}     \setlength{\partopsep}{0pt}
+      \setlength{\leftmargin}{2em} \setlength{\labelwidth}{1.5em}
+      \setlength{\labelsep}{0.5em} } }
+
+\newcommand{\squishend}{
+    \end{list}  }
+
 \documentclass[times, 10pt,twocolumn]{article} 
 \usepackage{latex8}
 \usepackage{times}
@@ -159,9 +176,9 @@ It is necessary to describe the network support model on which the proposed inte
 %É necessário descrever o modelo de suporte a jogos maciçamente jogador sobre o qual pretende-se utilizar o algoritmo de gerenciamente de interesse proposto. Ao longo do texto, serão utilizados alguns termos que precisam antes ser definidos: %Define-se avatar como sendo a representação no ambiente virtual do jogador, que, através dele, interage com o mundo do jogo e com outros jogadores. Regiões são divisões do ambiente virtual, cada uma podendo conter jogadores presentes. Assumindo regiões contíguas, define-se fronteira como sendo a divisa entre duas regiões adjacentes.
 
 %CAPABLE !!!!
-\textbf{Avatar} is the player's representation in the virtual environment. Through his avatar, a player interacts with the game world and with the other players. Examples of avatars are the characters in MMORPGs (massively multiplayer online role-playing games), like World of Warcraft \cite{worldofwarcraft}.
+\textbf{Avatar} is the player's representation in the virtual environment. Through his avatar, a player interacts with the game world and with the other players.
 
-\textbf{Entities} are the constituent parts of the virtual world. Examples of entities are the avatars of the players as well as avatars controlled by artificial intelligence of the server - monsters of MMORPGs, for example - and objects in the environment, such as doors, weapons and items with which avatars can interact.
+\textbf{Entities} are the constituent parts of the virtual world. Examples of entities are the avatars of the players as well as avatars controlled by artificial intelligence of the server - monsters, for example - and objects in the environment, such as doors, weapons and items with which avatars can interact.
 
 \textbf{State} is the set of properties that can be observed in the various entities of the game. The overall state of the simulated world is composed of the individual states of all the entities present in it.
 	
@@ -302,12 +319,12 @@ This addresses the field of view blind spot because, even if the game allows pla
 
 Therefore, the interest management algorithm proposed in this work, \malg\ (view angle with close area and update frequency attenuation), takes into account three main factors:
 
-\begin{itemize}
- \item Avatar's view angle, to determine which entities the player must be able to see because they are in front of his avatar and within the maximum view distance;  
- \item Close area, whose purpose is %evitar que ocorram problemas caso o jogador faça seu avatar girar ao redor do próprio eixo muito rapidamente, além de 
+\squishlist   %% \begin{itemize}
+  \item Avatar's view angle, to determine which entities the player must be able to see because they are in front of his avatar and within the maximum view distance;  
+  \item Close area, whose purpose is %evitar que ocorram problemas caso o jogador faça seu avatar girar ao redor do próprio eixo muito rapidamente, além de 
  to improve the game quality in the space near the avatar. Its radius is the critical distance;
- \item Update frequency attenuation.
-\end{itemize}
+  \item Update frequency attenuation.
+\squishend    %% \end{itemize}
 
 The resulting area of interest then takes the shape of a circular sector, which represents the player's field of view. The origin of this circular sector is also the center of a smaller circle, which defines the area close to the avatar. In the close area, all entities have a relevance value of 1, so their update frequency to that avatar is set to the maximum value. This way, the most up-to-date game state becomes available to the player in the area around his avatar, improving the interaction with entities next to it. Even if some of them are outside the player's field of view, he will be able to see them if his avatar turns rapidly in their direction. Figure \ref{fcsmooth} illustrates the area of interest which has just been described.
 
