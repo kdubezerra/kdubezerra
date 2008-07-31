@@ -27,6 +27,7 @@
 \documentclass[times, 10pt,twocolumn]{article} 
 \usepackage{latex8}
 \usepackage{times}
+\usepackage{cite}
 
 \usepackage[compact]{titlesec}
 
@@ -130,7 +131,7 @@ Another work focused on the peer-to-peer model \cite{iimura2004zfg} uses an appr
 
 %figura
 
-A key problem in the peer-to-peer architectures, in what concerns the use of interest management, is that some peers are responsible for part of the simulation and for deciding to whom each state update interests. Assuming that there are only trustable players, the interest management technique may be useful. However, supposing that a player is malicious, he could hack his client software and avoid sending state updates to certain players, who would be in disadvantage. Consequently, the distributed server model \cite{assiotis2006dam, ng2002msa, fiedler2002cam, rieche2007ppb} is considered more suitable to use the interest management technique.
+A key problem in the peer-to-peer architectures, in what concerns the use of interest management, is that some peers are responsible for part of the simulation and for deciding to whom each state update interests. Assuming that there are only trustable players, the interest management technique may be useful. However, supposing that a player is malicious, he could hack his client software and avoid sending state updates to certain players, who would be in disadvantage. Consequently, the distributed server model \cite{assiotis2006dam, ng2002msa, rieche2007ppb} is considered more suitable to use the interest management technique.
 
 An example of this kind of model is described in \cite{assiotis2006dam}, where a distributed architecture for MMOGs is proposed. It is also based on the division of the virtual environment into regions, but each one with a server node assigned to it. The player whose avatar is situated in a particular region of the game world should connect to the server responsible for that region. This way, each server would group different players, based on their locality on the virtual space. To achieve consistency between the different server nodes performing the simulation, it is used the concept of locks. When a server node needs to alter the state of some entity of the game, it first needs to obtain exclusive access to that entity. To do that, it negotiates with the other server nodes which might also need to make some change in the same object, and then obtains the lock. When it finishes changing the state, it releases the lock and notifies the other servers
 
@@ -200,7 +201,7 @@ One issue related to that type of partitioning of the virtual environment concer
 \begin{figure}[!t]
 	\centering
 	%\includegraphics[width=2.5in]{max}
-	\includegraphics[width=0.9\linewidth]{part}
+	\includegraphics[width=0.85\linewidth]{part}
 	\caption{Distribution model}
 	\label{partitions}
 \end{figure}
@@ -237,7 +238,7 @@ A simple way to execute interest management is to define a circular area, whose 
 \begin{figure}[!t]
 	\centering
 	%\includegraphics[width=2.5in]{max}
-	\includegraphics[width=0.9\linewidth]{circle}
+	\includegraphics[width=0.87\linewidth]{circle}
 	\caption{Circular area of interest}
 	\label{fcirc}
 \end{figure}
@@ -254,7 +255,7 @@ One issue to be observed, however, is that the player will not receive state upd
 \begin{figure}[!t]
 	\centering
 	%\includegraphics[width=2.5in]{max}
-	\includegraphics[width=0.9\linewidth]{fov}
+	\includegraphics[width=0.86\linewidth]{fov}
 	\caption{Field of view based area of interest}
 	\label{fangle}
 \end{figure}
@@ -294,7 +295,7 @@ A simple form of using various update intervals based on the relevance value wou
 \begin{figure}[!t]
 	\centering
 	%\includegraphics[width=2.5in]{max}
-	\includegraphics[width=0.9\linewidth]{gcircle}
+	\includegraphics[width=0.86\linewidth]{gcircle}
 	\caption{Circular area of interest with update frequency attenuation}
 	\label{graded_circle}
 \end{figure}
@@ -331,7 +332,7 @@ The resulting area of interest then takes the shape of a circular sector, which 
 \begin{figure}[!t]
 	\centering
 	%\includegraphics[width=2.5in]{max}
-	\includegraphics[width=0.9\linewidth]{a3}
+	\includegraphics[width=0.86\linewidth]{a3}
 	\caption{\malg\ area of interest}
 	\label{fcsmooth}
 \end{figure}
@@ -406,7 +407,7 @@ In Figure \ref{fig_max} and Figure \ref{fig_avg}, the results are presented for 
 \begin{figure}[!t]
 	\centering
 	%\includegraphics[width=2.5in]{max}
-	\includegraphics[width=0.9\linewidth]{max}
+	\includegraphics[width=0.87\linewidth]{max}
 	\caption{Maximum bandwidth usage}
 	\label{fig_max}
 \end{figure}
@@ -414,7 +415,7 @@ In Figure \ref{fig_max} and Figure \ref{fig_avg}, the results are presented for 
 \begin{figure}[!t]
 	\centering
   %\includegraphics[width=2.5in]{avg}
-	\includegraphics[width=0.9\linewidth]{avg}
+	\includegraphics[width=0.87\linewidth]{avg}
 	\caption{Average bandwidth usage}
 	\label{fig_avg}
 \end{figure}
