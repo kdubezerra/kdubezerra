@@ -36,8 +36,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="334.44787"
-     inkscape:cy="699.48898"
+     inkscape:cx="317.44787"
+     inkscape:cy="626.48898"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -86,11 +86,11 @@
          id="tspan3190"
          x="282.40915"
          y="345.47488"
-         style="font-size:40px;text-align:center;text-anchor:middle">Security</tspan><tspan
+         style="font-size:40px;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1">Security</tspan><tspan
          sodipodi:role="line"
          x="282.40915"
          y="395.47488"
-         style="font-size:40px;text-align:center;text-anchor:middle"
+         style="font-size:40px;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
          id="tspan3272">Module</tspan></text>
     <g
        id="g3278">
