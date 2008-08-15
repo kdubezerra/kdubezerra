@@ -35,9 +35,9 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4"
-     inkscape:cx="247.08696"
-     inkscape:cy="426.07217"
+     inkscape:zoom="0.7"
+     inkscape:cx="327.95527"
+     inkscape:cy="547.02728"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -212,25 +212,25 @@
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;text-align:end;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="41.231728"
-       y="971.85382"
+       x="35.57489"
+       y="966.1972"
        id="text5659"
        transform="matrix(0.7071068,-0.7071068,0.7071068,0.7071068,0,0)"><tspan
          sodipodi:role="line"
          id="tspan5661"
-         x="41.231728"
-         y="971.85382"
-         style="font-size:30px;text-align:end;text-anchor:end">HMAC-SHA-256</tspan></text>
+         x="35.57489"
+         y="966.1972"
+         style="font-size:20px;text-align:end;text-anchor:end">HMAC-SHA-256</tspan></text>
     <text
        transform="matrix(0.7071068,-0.7071068,0.7071068,0.7071068,0,0)"
        id="text5667"
-       y="906.80133"
-       x="-23.822077"
+       y="901.14471"
+       x="-29.478941"
        style="font-size:40px;font-style:normal;font-weight:normal;text-align:end;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
        xml:space="preserve"><tspan
-         style="font-size:30px;text-align:end;text-anchor:end"
-         y="906.80133"
-         x="-23.822077"
+         style="font-size:20px;text-align:end;text-anchor:end"
+         y="901.14471"
+         x="-29.478941"
          id="tspan5669"
          sodipodi:role="line">AES</tspan></text>
     <text
@@ -244,7 +244,7 @@
          id="tspan5673"
          x="-289.76624"
          y="640.86053"
-         style="font-size:30px;text-align:end;text-anchor:end">requires certificate</tspan></text>
+         style="font-size:20;text-align:end;text-anchor:end">requires certificate</tspan></text>
     <text
        transform="matrix(0.7071068,-0.7071068,0.7071068,0.7071068,0,0)"
        id="text5675"
@@ -252,7 +252,7 @@
        x="-356.23434"
        style="font-size:40px;font-style:normal;font-weight:normal;text-align:end;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
        xml:space="preserve"><tspan
-         style="font-size:30px;text-align:end;text-anchor:end"
+         style="font-size:20;text-align:end;text-anchor:end"
          y="574.39386"
          x="-356.23434"
          id="tspan5677"
@@ -268,6 +268,6 @@
          id="tspan5681"
          x="-419.87402"
          y="510.75552"
-         style="font-size:30px;text-align:end;text-anchor:end">certificate attached</tspan></text>
+         style="font-size:20;text-align:end;text-anchor:end">certificate attached</tspan></text>
   </g>
 </svg>
