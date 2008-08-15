@@ -68,7 +68,8 @@
        x="-30.714285"
        y="760.93359" />
     <g
-       id="g5773">
+       id="g5773"
+       transform="matrix(1,0,0,0.9977308,0,1.3455604)">
       <rect
          style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5.11481714;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect5059"
