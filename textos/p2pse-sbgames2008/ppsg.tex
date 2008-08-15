@@ -109,7 +109,7 @@ The \ppse{} project is a distributed simulation model, and also a library (in re
 
 Several MMOGs, like PlanetSide and World of Warcraft, offer to the player the illusion of one or several large and contiguous virtual spaces where all the gaming takes place. Those spaces are divided in segments, and each server machine or group of server machines is responsible for one segment. A warping system is necessary to tie all segments together, allowing the player to move from one space to the other transparently.
 
-\begin{figure} 
+\begin{figure}[h] 
   \centering 
   \includegraphics[width=1.0\linewidth]{images/instanced.pdf}
  \caption{The instanced `social vs. action' MMOG} 
@@ -125,7 +125,7 @@ Guild Wars, as far as we can tell, follows the client-server model. Our proposal
 \subsection{\ppse{} architecture}
 \label{sec:p2pse:arch}
 
-\begin{figure} 
+\begin{figure}[h]
   \centering 
   \includegraphics[width=1.0\linewidth]{images/p2pse.pdf}
  \caption{\ppse{} Architecture} 
@@ -141,9 +141,25 @@ The first layer in the \ppse{} architecture is responsible for forming the mesh 
 
 The Layer 0 server is responsible for managing connections with all clients. Naturally, it maintains a list of all clients that are connected to it along with a logical communication endpoint object for each client. When started, the server spawns a socialization space called the social space object. All clients that are not in an action space are bound to the social space. All communication between clients that are in the social space is intermediated by the server.
 
-The server can create new groups called action spaces, and it can destroy such existing groups. In the action spaces, clients communicate directly, and this requires all clients to already have the ability to send UDP packets to each other. The group object also allows clients of that group to broadcast messages to the whole group. Connection between group members is carried out through Peer objects. The clients, when in groups, maintain a list of Peer objects which is pretty much the same as the list of Client objects in the server, allowing peers to manage their connection with each other group member.
+The server can create new empty groups in order to instantiate new action spaces, or destroy such existing groups and their corresponding spaces. In the action spaces all the clients communicate directly, which requires them to already have the ability to send UDP packets to one another. The entry of a client into a group is managed by the server in the following manner:
 
-Layer 0 is also responsible for detecting connection timeouts. If a communication channel (client-server or peer-to-peer) has been without traffic for a specific amount of time, it is assumed to be dead and is terminated, generating a callback for the upper layer. To prevent alive links from dying, Layer 0 employs keep-alive messages.
+\begin{itemize}
+\item The server sends a syn message to the new member and to all the other members informing them to which clients they must be connected in order to enter (or stay) in the group. The server sends a list with all the members of the group;
+\item All members then try to establish connections to every other member in the recently received member list, or just keep the connection, if it was already established (the ZIG library supports simultaneous bidirectional connections through the same socket);
+\item When a client is entering a group, but still has not finished the process, it belongs to the ``limbo'';
+\item As soon as the new member establishes connections to the other clients, the server excludes it from the limbo and inserts in the member list of the group;
+\item When a client is removed from the group, all connections to the other clients are interrupted and it returns to the social space;
+\item If a client, for any reason, loses its connection to the server, it is removed from the group;
+\item When a client enters or leaves a group, the server sends to the others  an up-to-date member list.
+\end{itemize}
+
+The groups provide to the clients message exchanging functionalities, such as broadcast and unicast. The connections between the group members are represented by peers. The clients, when in groups, will keep a list of peers, what is equivalent to the client list of the server. With this list, the clients in that group manage their connections between one another.
+
+
+Layer 0 is also responsible for the timeout control of the connections. Keep-alive dummy messages are sent regularly in order to maintain all connections active. If, after an interval of time specified by the application, no messages from a host have arrived, the connection is closed.
+
+The communication between the layer 0 and the ZIG library is done with a listener. This listener is implemented in layer 0 and receives ZIG callbacks to indicate the occurrence of events such as connections, disconnections and receiving of messages. The communication between the upper layers of the \ppse{} library and layer 0 is made through service calls. Layer 0 returns callbacks to the upper layers in response to these service calls.
+
 
 \subsubsection{Layer 1}
 \label{sec:p2pse:arch:l1}
@@ -165,7 +181,7 @@ Besides ordering and distributing some of the events, the super-peer is responsi
 
 Layer 2 also introduces support for multiple game servers (Figure \ref{fig:multiserver}) in the API. The idea is that players can choose their server from a list of servers. Each server will typically host a single social space and when that is full (server capacity is reached) players can connect to other social spaces in other servers. To tie all of the players scattered on different servers together, there is a master server to which all servers are connected. Whenever a player connects to a server and authenticates, his player account is downloaded from the master server to that game server. When the client drops from the game server, his account is uploaded back to the master server. There is a simple Yellow Pages Server proxy that can be used by clients to query the master server for the currently available game servers.
 
-\begin{figure} 
+\begin{figure}[h]
   \centering 
   \includegraphics[width=1.0\linewidth]{images/multiserver.pdf}
  \caption{Multiple Servers Support} 
@@ -177,19 +193,60 @@ The social space support provided by Layer 2 is a simple client-server API. Any 
 \subsubsection{Artificial Intelligence Module}
 \label{sec:p2pse:arch:ai}
 
-In the previous section, we revealed that we encourage peers in an action space to send authoritative position updates, among other events that might have low-latency requirements and a low probability of having their order of execution affecting the resulting game states too much (weakly-consistent events). This opens up the possibility of cheating.
+In the previous section, we revealed that we encourage peers in an action space to send authoritative position updates, among other events that migh! have low-latency requirements and a low probability of having their order of execution affecting the resulting game states too much (weakly-consistent events). This opens up the possibility of cheating.
 
-In this project we tried a somewhat unique approach. Since most events would be still centralized at the super-peer and most action games have one-per-client avatar position updates as their consistency, bandwidth and latency bottlenecks, we just left peers with total control over their positions and with the responsibility for sending them directly to other peers in a broadcast fashion. This optimizes for consistency and latency, and doesn't create a bandwidth bottleneck at the super-peer. On top of that, we tried AI-based detection of unusual patterns over streams of position updates coming from each peer. The main motivation was to detect blatant speed-cheating being performed by players while other players (without admin powers, nevertheless) quit the game in frustration. It was not our goal to prevent subtle position manipulation, since we wanted to avoid false positives more than we wanted to prevent any form of position cheating.
+In this project we tried a somewhat unique approach [reference blinded]%\cite{gaspareto2008nna}
+. Since most events would be still centralized at the super-peer and most action games have one-per-client avatar position updates as their consistency, bandwidth and latency bottlenecks, we just left peers with total control over their positions and with the responsibility for sending them directly to other peers in a broadcast fashion. This optimizes for consistency and latency, and doesn't create a bandwidth bottleneck at the super-peer. On top of that, we tried AI-based detection of unusual patterns over streams of position updates coming from each peer. The approach used for cheat detection was focused on the data packets being transferred during the game sessions - both in the transmitters and receptors - and how they are used during the functioning of the system. Only packets relevant to the cheat being investigated are considered.
 
-We have trained, using back-propagation, an Artificial Neural Network (ANN) over traces of gameplay generated from \hoverkill\ play sessions, which is our actual game prototype. We obtained some positive initial results [reference blinded]%\cite{gaspareto2008nna}
-,  but we also found that a successful ANN detection engine is tied to many dynamic parameters, including specific game rules and maps, general behavior of game players (if it changes over time, the network must be re-trained), quality of the traces (they must cover all the detectable patterns and with enough variation), and others. The results put some merit on the general idea that using an automatic detection engine, instead of human attention, to discourage illegal position manipulation during gameplay could enable more simple and efficient but vulnerable protocols such as ours to still succeed in a real MMOG deployment scenario.
+In this manner, the cheat detection module is implemented in an independent way and works as an attachment to \ppse{}, which, with a parameter passage protocol, informs the set of data received from a player and returns a correspondent ``fraud index'', that tries to quantify the cheating that the player is assumed to have performed in the analyzed period.
+
+The adopted approach was to consider only movement data as input to the cheat detection module. Although this might seem to be too few information, it is based on movement that  malicious players perform great part of their cheating. For example, one could try to move at a speed higher than the maximum speed allowed in the game (most common kind of cheating in MMOGs) or teleport instantaneously to strategic spots, also known as speed-cheating.
+
+This way, the point is to analyze a set of movements of the player, in order to detect anomalies in his moves. Each player will be evaluated individually, based on his position history, using Artificial Neural Networks (ANN). ANNs, because of their great generalization and pattern recognition capacity, present satisfactory results in tasks similar to the speed-cheating problem. The idea is to identify, in the set of analyzed data, at least one movement that could be considered a fraud, which characterizes the player where this set of data came from as a cheater. The ANN then identifies and classifies the movement patterns as acceptable and non-acceptable.
+
+During the modeling and design of the cheat detection module, the architectures of the ANNs, the set of training data and tests have been defined in order to allows them to solve this kind of problem. Considering that the task consists of the classification of behavior patterns, it has been decided to use the full-connected multilayer perceptron ANN with supervised learning based on back-propagation. The reason to choose it was that it is the ANN model most commonly used in many classification applications, due to it simplicity of understanding and implementation.
+
+The projected ANN was simulated using MatLab, to evaluate its efficiency. MatLab allows the creation of complex ANN structures only by informing the neural network parameters, such as the number of neurons in each layer, training algorithm, rates, values that configure this training etc. MatLab was also used to train the ANN to be integrated to the game. This way, the implemented module only performs propagation, but not training of the ANN.
+
+After the efficiency has been proven, the module was implemented and tested in \hoverkill{}, obtaining a 21.14\% cheat detection, and 0.98\% false positives. The results were satisfactory because, even though the cheat detection percentage was only 21.14\%, the rate of false positives was less than 1\%. It is preferable not to detect a cheat than considering a fair player as a cheater. Other parameters, besides movement data, may be added in the future, in order to detect other kinds of cheating.
+
 
 \subsubsection{Security Module}
 \label{sec:p2pse:arch:sec}
 
-The main purpose of the security module is to provide secure communications between server and clients, and between peer clients. Our security module is almost completely transparent to the application, both in terms of API and in network and CPU overhead. The module does many tasks behind the scenes, such as crypto key distribution and secure channel handshakes, tending to each application's individual needs for message confidentiality, integrity and authenticity. 
+The main purpose of the security module is to provide secure communications between server and clients, and between peer clients. Our security module is almost completely transparent to the application, both in terms of API and in network and CPU overhead. The module does many tasks behind the scenes, such as cryptographic key distribution and secure channel handshakes, tending to each application's individual needs for message confidentiality, integrity and authenticity. 
 
-The implementation works mainly by intercepting any engine UDP packets before they are written to the UDP socket for sending. In each packet, a small header is inserted with control information and, upon first contact between two parties (being them clients, servers or both), that message is delayed while another quick message exchange is performed for setting up the secure channel on-the-fly. The root Certificate Authority (CA) of the crypto system is the operator of the master server.
+The implementation works mainly by intercepting any engine UDP packets before they are written to the UDP socket for sending. In each packet, a small header is inserted with control information and, upon first contact between two parties (being them clients, servers or both), that message is delayed while another quick message exchange is performed for setting up the secure channel on-the-fly. The root Certificate Authority (CA) of the cryptographic system is the operator of the master server.
+
+\begin{figure}[h]
+  \centering 
+  \includegraphics[width=0.7\linewidth]{images/security.pdf}
+ \caption{Security module architecture} 
+ \label{fig:security} 
+\end{figure}
+
+The module has been implemented by extending the ZIG library functionalities, providing secure communication, transparently to the application, being responsible for distributing cryptogaphic keys. It runs over HawkNL \cite{hawknl} and over SEC\ppse{}. HawkNL is a library that, among other functionalities, provides a simpler and portable API for sockets. SEC\ppse{} is our library that provides C++ abstractions for cryptographic algorithms available in Nettle \cite{nettle} and CyoEncode \cite{cyotec}. SEC\ppse{} also implements certification and serialization functionalities meant for security related transmissions. Figure \ref{fig:security} illustrates the security module architecture.%Nettle is a low-level cryptographic library written in C, which offers algorithms for hashing (MD5, SHA1, SHA256 etc.), symmetric (AES, ARCFOUR, 3DES etc.) and assymetric (HMAC-MD5, HMAC-SHA-1 and HMAC-SHA-256) cryptography and generation of pseudo-random data (Yarrow). CyoEncode \cite{cyotec} is a small library which provides coding and decoding in Base64, Base32 and Base16.
+
+In our secure communication protocol, all packets sent, both by clients and by servers, are intercepted right before being transmitted through the network (packets generated by ZIG). In each one of them, a small header is introduced with control information used to guarantee confidentiality, integrity and authenticity of data when such attributes are required. The size of this header is variable, for it depends on what characteristics are desired by the application, and on the intended level of security (key length). For a real-time application, such as distributed games, usually there is no need for a very long key, because the hacker would have too little time to break the algorithm by brute force. For example, using AES and HMAC-MD5, it would be necessary only 21 bytes. In general, the overhead size of each packet is somewhere between 1 and 37 bytes. These packets containing user data and control header are then called \textbf{data packets}.
+
+There is also another type of packet, called \textbf{control packet}, which is utilized to negotiate keys between peers who intend to communicate with each other. They are usually longer, for they need to attach a copy of the users certificates. However, these packets are sent only once in the beginning of the communication with a peer which has been unknown until that moment. Once they have negotiated a key, they only need to negotiate a new one when one of the peers loses it or if the key is already being used for a time long enough for the key to become breakable by brute force.
+
+\begin{figure}[h]
+  \centering 
+  \includegraphics[width=1.0\linewidth]{images/header.pdf}
+ \caption{Control header} 
+ \label{fig:controlheader} 
+\end{figure}
+
+The control header consists of the packet descriptor (1 byte). As shown in Figure \ref{fig:controlheader}, the bit 0 indicates whether the data are protected by HMAC-SHA-256. The bit 1 indicates whether the data are encrypted with AES. Bit 5 indicates that the message source needs the destination host certificate. Bit 6 indicates that a key has been generated and attached to the packet in control data and bit 7 indicates that the certificate of the origin has been attached to the packet in control data. Bits 2, 3 and 4 are not used.
+
+When the application requires the secure transmission of a packet to the security library, it must inform: data being transmitted, socket used for sending, address and port of the destination, type of desired security (confidentiality, authenticity and integrity) and the identification of the user which will receive the message at the provided address.
+
+To guarantee confidentiality of the messages, it can be used both symmetric and asymmetric cryptographic algorithms. Both are considered secure, depending on the length of the key used. The secure communication protocol adopts the strategy of initially using an asymmetric cryptography algorithm to negotiate a key to be used then by each pair of computers to communicate securely with symmetric cryptography. This approach allows to reduce the processing time of encrypting and decrypting data, for symmetric cryptography requires less CPU time. Along with the confidentiality provided by this mechanism, authenticity may also be achieved by using hash functions with keys, also known as Message Authentication Code (MAC), to verify the authenticity and integrity of the messages.
+
+Every time that a peer needs to communicate with another which was unknown until that time, they first need to negotiate a key. Therefore, instead of sending the data packet required by the application, the library sends a requisition for the certificate of the destination through a control packet, which already attaches the source's own certificate. When the packet arrives in the destination peer, the security library reads the attached certificate and verifies its authenticity with  the specified certification authority responsible for the game. If the verification fails, the packet is discarded. If it succeeds, the process continues: the peer who received the packet allocates a reply packet, where it attaches its own certificate, as required, and a randomly generated key, which is encrypted using the public key present in the certificate of the peer that initiated the whole process. This way, it can be assured that only the receiver of this reply packet will be able to decrypt it and then obtain the key. To guarantee that the sender of this packet is not an attacker who intercepted the communication, the already encrypted key is re-encrypted, this time with the private key of the sender. This way, both authenticity and integrity are provided.
+
+After receiving the reply packet containing the double-encrypted key, the first peer decrypts it using its private key and then decrypts again, using the public key of the other peer, verifying its authenticity. When this whole process is successfully completed, the peers will be able to securely communicate with a fast symmetric cryptographic algorithm using the generated key.
 
 \section{Simulations}
 \label{sec:simulations}
@@ -200,21 +257,51 @@ The ns-2 simulator \cite{mccanne:nsn} was used to create the simulated environme
 
 We based our simulation on some works, such as \cite{breu2007ogt}, \cite{park2005nta} and \cite{feng2005tcp}, which analyse the network traffic generated by action games, since this is the genre targeted by the \ppse{} engine. As in most first-person shooters, the transport layer protocol used was UDP. Each packet received by the server from the clients is 100 bytes long. The update sent to each client, containing information about all the players, is proportional to the number of players present in the game, for the traditional server. For the \ppse{} server, the update length is based only on the number of players in the social space. In both cases, the length of this update is 100 bytes multiplied by the number of players who will be updated. The interval between two consecutive packets received from each client is 150 ms, while the interval between two consecutive updates from the server to each client is 100 ms. Each player keeps alternating between the social space and the action space. The time he stays in each one of them is chosen randomly, ranging from 0 to 20 minutes, for each space change. The whole game session lasts for 1 hour.
 
-\begin{figure} 
+\begin{figure}[h]
   \centering 
-  \includegraphics[width=1.0\linewidth]{images/upload.pdf}
+  \includegraphics[width=1.0\linewidth]{images/upload_blinded.pdf}
  \caption{Upload bandwidth utilization by the server} 
  \label{fig:upload} 
 \end{figure}
 
-\begin{figure} 
+\begin{figure}[h] 
   \centering 
-  \includegraphics[width=1.0\linewidth]{images/download.pdf}
+  \includegraphics[width=1.0\linewidth]{images/download_blinded.pdf}
  \caption{Download bandwidth utilization by the server} 
  \label{fig:download} 
 \end{figure}
 
-The results were collected as follows: to measure the average upload bandwidth usage by the server, the sizes of all packets sent during the whole session were added up and then divided by the session time; to determine the maximum usage, it was measured how many bytes had been sent each second and the highest value was selected. In Figure \ref{fig:upload}, it is shown the maximum and average upload bandwidth utilization results found for a traditional server and a \ppse{} server. In Figure \ref{fig:download}, the download bandwidth usage is also depicted. Table 1 and Table 2 show the numerical values of the average bandwidth utilization found in the simulation.
+The results were collected as follows: to measure the average upload bandwidth usage by the server, the sizes of all packets sent during the whole session were added up and then divided by the session time; to determine the maximum usage, it was measured how many bytes had been sent each second and the highest value was selected. In Figure \ref{fig:upload}, it is shown the maximum and average upload bandwidth utilization results found for a traditional server and a \ppse{} server. In Figure \ref{fig:download}, the download bandwidth usage is also depicted. Table \ref{tab:upload} and Table \ref{tab:download} show the numerical values of the average bandwidth utilization found in the simulation.
+
+\begin{table}[h]
+\caption{Average upload bandwidth utilization (kB/s)}
+\centering
+  \begin{tabular}{ c | c c }  
+    \hline
+    Clients & Traditional Server  & \ppse{} Server  \\ \hline
+    40      & 1562.50             & 400.76          \\
+    80      & 6250.00             & 1581.38         \\
+    120     & 14062.49            & 3533.67         \\
+    160     & 24999.98            & 6290.14         \\
+  \hline
+  \end{tabular}
+\label{tab:upload}
+\end{table}
+
+\begin{table}[h]
+\caption{Average download bandwidth utilization (kB/s)}
+\centering
+  \begin{tabular}{ c | c c }  
+    \hline
+    Clients & Traditional Server  & \ppse{} Server  \\ \hline
+    40      & 26.04            & 13.02          \\
+    80      & 52.08             & 26.04         \\
+    120     & 78.12            & 39.00         \\
+    160     & 104.17            & 52.09         \\
+  \hline
+  \end{tabular}
+\label{tab:download}
+\end{table}
 
 As we can see, the average download bandwidth utilization is decreased by, approximately, one half, and the average upload bandwidth utilization is reduced to one quarter. This happens because the periods during which a client stays on the social and action spaces have approximately the same duration. In consequence of that, there are roughly half the clients exchanging packets with the server for each instant, in the average. As each client sends fixed size packets periodically to the server, the bandwidth occupation grows linearly, and so, as the number of players halves, so does the server's download bandwidth utilization. However, as the update sent by the server to each client is proportional to the number of clients being updated, the upload bandwidth utilization by the server grows quadratically. Therefore, when the number of players is divided by two, the upload bandwidth utilization of the server is divided by the square of two, that is, four.
 
@@ -230,7 +317,8 @@ We are currently integrating the \ppse{} architecture with our game prototype, \
 \section*{Acknowledgements}
 \label{sec:ack}
 
-This work was supported by the Funding for Studies and Projects (FINEP), through the \ppse{} project (\ppse{}-5849-1), and by the National Research Council (CNPq).
+This work was supported by the Funding for Studies and Projects (FINEP), %through the \ppse{} project (\ppse{}-5849-1),
+and by the National Research Council (CNPq).
 
 % \begin{figure} 
 %   \centering 
