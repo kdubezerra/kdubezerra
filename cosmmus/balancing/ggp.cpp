@@ -9,10 +9,10 @@ int main () {
         
   bg = load_image ("bg.bmp");
         
-  EveryoneAvatar* player[nplayers];
+  Avatar* player[nplayers];
         
   for (int i = 0 ; i < nplayers ; i++) {
-    player[i] = new EveryoneAvatar();
+    player[i] = new Avatar();
     player[i]->setDrawable("player.bmp", "seen.bmp");
   }       
         
@@ -34,5 +34,3 @@ int main () {
   }
 
 }
-
-
