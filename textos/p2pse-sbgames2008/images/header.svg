@@ -36,7 +36,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="327.95527"
+     inkscape:cx="140.09813"
      inkscape:cy="547.02728"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -69,7 +69,7 @@
        y="760.93359" />
     <g
        id="g5773"
-       transform="matrix(1,0,0,0.9977308,0,1.3455604)">
+       transform="matrix(1,0,0,0.9977308,-0.5015374,1.3455604)">
       <rect
          style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5.11481714;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect5059"
@@ -102,7 +102,7 @@
     </g>
     <g
        id="g5768"
-       transform="translate(-3.4285714,0)">
+       transform="translate(-3.5081911,0)">
       <rect
          style="fill:#e5e5e5;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect5015"
@@ -124,7 +124,7 @@
     </g>
     <g
        id="g5763"
-       transform="translate(-8,0)">
+       transform="translate(-8.0000734,0)">
       <rect
          y="552.54364"
          x="653.02032"
@@ -146,7 +146,7 @@
     </g>
     <g
        id="g5780"
-       transform="translate(3.2857143,0)">
+       transform="translate(2.5050077,0)">
       <rect
          y="552.54364"
          x="190.4442"
@@ -168,7 +168,7 @@
     </g>
     <g
        id="g5785"
-       transform="translate(7.2857143,0)">
+       transform="translate(6.7938261,0)">
       <rect
          style="fill:#e5e5e5;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect5133"
