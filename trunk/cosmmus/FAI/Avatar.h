@@ -1,9 +1,11 @@
 #pragma once
 
 #include "myutils.h"
+#include <vector>
 
 #define VIEW_DISTANCE 120
 #define THRESHOLD_DISTANCE 40
+
 
 class Avatar {
 
@@ -42,6 +44,14 @@ class Avatar {
 			G = rand() % 255;
 			B = rand() % 255;
 	
+                        m_numofhotspots = rand() % 20;
+                        for (int index = 0 ; index < m_numofhotspots ; index++) {
+                          coord newspot;
+                          newspot.X = (float) (rand() % WW);
+                          newspot.Y = (float) (rand() % WW);
+                          mv_hotspotlist.push_back(newspot);
+                        }
+                        
 // 			my_surface = load_image("player.bmp");
 // 			seen_surface = load_image("seen.bmp");
 	
@@ -86,9 +96,16 @@ class Avatar {
 				stopped_time += delay;
 	
 				if (stopped_time < resting_time) return; //only chooses a new destination with a 0.05 probability
-				destx = rand() % WW;
-				desty = rand() % WW;
-				last_move = SDL_GetTicks();
+                                if (rand() % 100 < 50) { //selects a random spot
+				  destx = rand() % WW;
+				  desty = rand() % WW;
+				  last_move = SDL_GetTicks();
+                                } 
+                                else { //selects a hotspot to go to 
+                                  int spot = rand % m_numofhotspots;
+                                  destx = mv_hotspotlist[spot].X;
+                                  desty = mv_hotspotlist[spot].Y;
+                                }
 
 			}
 
@@ -165,6 +182,8 @@ class Avatar {
 		unsigned long stopped_time;
 		bool isDrawable;		
 		unsigned long player_id;
+                int m_numofhotspots;
+                vector<coord> mv_hotspostvector;
 		
 #ifdef _SDL_H
 		SDL_Surface* screen;		
