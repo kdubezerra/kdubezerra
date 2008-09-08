@@ -20,6 +20,10 @@
 
 #define MAX_RESTING_TIME 15000
 
+typedef struct {
+  float X,Y;
+} coord;
+
 using namespace std;
 
 void setSdl(SDL_Surface** screen);

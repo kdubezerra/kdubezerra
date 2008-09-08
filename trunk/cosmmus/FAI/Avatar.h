@@ -102,7 +102,7 @@ class Avatar {
 				  last_move = SDL_GetTicks();
                                 } 
                                 else { //selects a hotspot to go to 
-                                  int spot = rand % m_numofhotspots;
+                                  int spot = rand() % m_numofhotspots;
                                   destx = mv_hotspotlist[spot].X;
                                   desty = mv_hotspotlist[spot].Y;
                                 }
@@ -129,7 +129,7 @@ class Avatar {
 		
 		
 		
-		virtual double OtherRelevance(Avatar* other) = 0;
+		virtual double OtherRelevance(Avatar* other);
 	
 		float GetX() { return posx; }
 		float GetY() { return posy; }
@@ -183,7 +183,7 @@ class Avatar {
 		bool isDrawable;		
 		unsigned long player_id;
                 int m_numofhotspots;
-                vector<coord> mv_hotspostvector;
+                vector<coord> mv_hotspotlist;
 		
 #ifdef _SDL_H
 		SDL_Surface* screen;		
