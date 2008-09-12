@@ -17,50 +17,35 @@ SDL_Thread* thread[CORE_COUNT];
 void checkInput();
 int weighter (void* data);
 
-
-
+//AQUI COMECA O PROGRAMA
 
 int main () {
-
+  srand(time(NULL));
   
-  
-#ifdef _SDL_H   
-  setSdl(&screen);        
-#endif  
-  srand(time(NULL));  
-       
+  setSdl(&screen);
   SDL_Surface* bg = load_image ("bg.bmp");
-  
   tsem = SDL_CreateSemaphore(0);
   msem = SDL_CreateSemaphore(0);
-   
-         
+
   for (int i = 0 ; i < nplayers ; i++) {
     player[i] = new Avatar();
     player[i]->setDrawable("player.bmp", "seen.bmp", screen);
-  }       
+  }
         
   if (!player[0]->setImage("player0.bmp")) cerr << "\nErro setando a imagem do player 0\n" << endl;
-        
-//      for (int i = 0 ; i < WW ; i ++) player[i] = new Avatar();
-        
+
   for (int i = 0 ; i < CORE_COUNT ; i++) {
     thread[i] = SDL_CreateThread( weighter , (void*)(i) );
   }
-  
+
   Uint32 time = SDL_GetTicks();
-  
+
   while (1) {
     apply_surface(0,0,bg,screen);
-
     Avatar::resetCells();
     
-//     for (int i = 1 ; i < nplayers ; i ++) player[0]->OtherRelevance(player[i]);
-    for (int i = 0 ; i < nplayers ; i ++) player[i]->step(10*(SDL_GetTicks() - time));
+    for (int i = 0 ; i < nplayers ; i ++) player[i]->step((SDL_GetTicks() - time));
     time = SDL_GetTicks();
-//     for (int i = 0 ; i < nplayers ; i ++) 
-//       for (int j = 0 ; j < nplayers ; j ++)
-//         player[i]->checkCellWeight(player[j]);
     
     for (int i = 0 ; i < CORE_COUNT ; i++)
       SDL_SemPost(tsem);    
@@ -69,7 +54,7 @@ int main () {
     
     
 //     for (int i = 0 ; i < nplayers ; i ++) player[i]->checkEdgeWeight();
-    Avatar::drawCells(screen);    
+    Avatar::drawCells(screen);
     for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
     
 //              while (1);
@@ -94,6 +79,8 @@ void checkInput() {
         case SDLK_e:
           Avatar::toggleEdge();
           break;
+        case SDLK_q:
+          exit(0);
       }
     } 
   }    

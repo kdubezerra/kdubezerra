@@ -6,14 +6,19 @@
 //NEIGHBORS
 #define UP 0
 #define UP_RIGHT 1
-#define RIGHT 2
-#define DOWN_RIGHT 3
-#define DOWN 4
-#define DOWN_LEFT 5
-#define LEFT 6
-#define UP_LEFT 7
+#define DOWN_RIGHT 2
+#define DOWN 3
+#define DOWN_LEFT 4
+#define UP_LEFT 5
+//when using hexagons, or shifted squares, there is no need for right and left neighbors
+#define RIGHT 6
+#define LEFT 7
 
-Class Avatar;
+//parameters for the cells
+#define CELLS_ON_A_ROW 15
+#define CELL_LENGTH int(WW/CELLS_ON_A_ROW)
+
+class Avatar;
 
 class Cell {
     
@@ -28,20 +33,23 @@ class Cell {
     
     void unsubscribe(Avatar* av);
     
-    list<Avatar*> getAvatars();
+    map<Avatar*, Avatar*> &getAvatars();
     
     float getVWeight();
-    float getEWeight(Cell* neighbor);
+    float getEWeight(short neighbor);
+    int updateEWeight(Cell* neighbor);
+    void udpdateAllEdges();
     
     Cell* getNeighbor(short neigh);
     
     static void allocCellMatrix(int cells_on_a_row);
+    static void drawCells();
     
   protected:
     
     coord cellposition;
+    float edgeWeight[NUM_NEIGH];
     map<Avatar*, Avatar*> avatars;
     static Cell*** cellMatrix;
-    static int cells_on_a_row;
-  
+    static int cells_on_a_row;    
 };
