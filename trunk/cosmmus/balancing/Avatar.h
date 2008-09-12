@@ -1,15 +1,17 @@
 #pragma once
 
 #include "myutils.h"
+#include "Cell.h"
 #include <vector>
+#include <map>
 
 #define VIEW_DISTANCE 50
 #define THRESHOLD_DISTANCE 10
-#define CELLS_ON_A_ROW 15
-#define CELL_LENGTH int(WW/CELLS_ON_A_ROW)
 
 SDL_sem* vsem = NULL;
 SDL_sem* esem = NULL;
+
+class Avatar;
 
 class Avatar {
 
@@ -232,7 +234,7 @@ class Avatar {
       coord otherCell = other->getCell();
 //       float rel = OtherRelevance(other);
       
-      if (otherCell = myCell) {
+      if (otherCell == myCell) {
         SDL_SemWait(vsem);
         vweight_matrix[myCell.X][myCell.Y] += 1;
         SDL_SemPost(vsem);
@@ -243,8 +245,14 @@ class Avatar {
 //       }
     }
     
-    float getWeightE(short praqualcelular) { //mudar pra usar cada celula diferente: getWeightE(UP_LEFT), por exemplo.
-      list       
+    float getInteraction(Cell* _cell) { //mudar pra usar cada celula diferente: getWeightE(UP_LEFT), por exemplo.
+      map<Avatar*,Avatar*>::iterator it;
+      float _interaction;      
+      
+      for (it = _cell->getAvatars().begin() ; it != _cell->getAvatars().end() ; it++)
+        _interaction += this->OtherRelevance(it->second);
+      
+      return _interaction;
     }
 		
   protected:

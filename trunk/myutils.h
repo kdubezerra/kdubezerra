@@ -29,16 +29,22 @@ class coord {
   public:
     int X,Y;
 
-//     bool operator==(const coord &other) const {
-//       if ((other->X == this->X) and (other->Y == this->Y))
-//         return true;
-//       else
-//         return false;
-//     }
-//       
-//     bool operator!=(const coord &other) const {
-//       return !(*this == other);
-//     }
+    bool operator==(const coord &other) const {
+      if ((other.X == this->X) and (other.Y == this->Y))
+        return true;
+      else
+        return false;
+    }
+      
+    bool operator!=(const coord &other) const {
+      return !(*this == other);
+    }
+    
+    coord& operator=(const coord& c) {
+      X = c.X;
+      Y = c.Y;
+      return *this;
+    } 
 };
 
 
