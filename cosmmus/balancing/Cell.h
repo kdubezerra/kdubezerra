@@ -1,7 +1,6 @@
 #pragma once
 
 #include <list>
-#include <map>
 #include <string>
 #include <SDL/SDL.h>
 
@@ -41,7 +40,7 @@ class Cell {
     
     void unsubscribe(Avatar* av);
     
-    map<Avatar*, Avatar*> &getAvatars();
+    list<Avatar*> &getAvatars();
     
     float getVWeight();
     float getEWeight(short neighbor);
@@ -56,12 +55,13 @@ class Cell {
     static void toggleShowVertexWeight();
     static void toggleShowEdgeWeight();
     static void setCellSurfaces (string vertex_weight_imgfile, string edge_weight_imgfile);
+    static int getRowLength();
     
   protected:
     
     coord* cellposition;
     float edgeWeight[NUM_NEIGH];
-    map<Avatar*, Avatar*> avatars;
+    list<Avatar*> avatars;
     static Cell*** cellMatrix;
     static int cells_on_a_row;
     static bool showv, showe;

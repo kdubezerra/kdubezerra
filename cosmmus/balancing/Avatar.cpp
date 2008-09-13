@@ -59,7 +59,7 @@ void Avatar::init() {
 void Avatar::step(unsigned long delay) { // delay in microseconds  
   Uint32 elapsed_time = SDL_GetTicks() - last_move;      
   float distance_ = distance(posx, posy, destx, desty);  
-  if (distance_ > 20) {
+  if (distance_ > 20) {    
     coord new_cell_coord;
     Cell* new_cell;        
     int speed = rand() % 5 + 1;   
@@ -77,14 +77,17 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
     new_cell_coord.Y = int (simpleScale(posy, WW, CELLS_ON_A_ROW));        
     new_cell = Cell::getCell(new_cell_coord.X, new_cell_coord.Y);
     if (new_cell != my_cell) {
+      cout << "dará pau ? my_cell = " << my_cell << " & new_cell = " << new_cell << endl;
       my_cell->unsubscribe(this);
+      cout << "dará pau?" << endl;
       new_cell->subscribe(this);
+      cout << "dará pau?" << endl;
       my_cell = new_cell;
     }
     stopped_time = 0;
     last_move = SDL_GetTicks();
     resting_time = rand () % MAX_RESTING_TIME; //just for the case in which this is its last move towards its destination...            
-  } else {        
+  } else {
     stopped_time += delay;  
     if (stopped_time < resting_time) return; //only chooses a new destination with a 0.05 probability
     if (rand() % 100 < 15) { //selects a random spot
@@ -168,10 +171,10 @@ void Avatar::checkCellWeight (Avatar* other) { //por hora é mto simples, apenas
 }
 
 float Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferente: getWeightE(UP_LEFT), por exemplo.
-  map<Avatar*,Avatar*>::iterator it;
+  list<Avatar*>::iterator it;
   float _interaction;
   for (it = _cell->getAvatars().begin() ; it != _cell->getAvatars().end() ; it++)
-    _interaction += this->OtherRelevance(it->second);
+    _interaction += this->OtherRelevance(*it);
   return _interaction;
 }
 
@@ -194,8 +197,8 @@ void Avatar::resetCells () {
 void Avatar::drawCells (SDL_Surface* output) {  
   coord cell;
   float alpha;  
-  for (int i = 0 ; i < CELLS_ON_A_ROW ; i++) {
-    for (int j = 0 ; j < CELLS_ON_A_ROW ; j++) {       
+  for (int i = 0 ; i < Cell::getRowLength() ; i++) {
+    for (int j = 0 ; j < Cell::getRowLength() ; j++) {       
       if (showv) {        
         alpha = alpha>255?255:alpha;
         SDL_SetAlpha( surface_vertex_weight , SDL_SRCALPHA, approx(alpha) );
