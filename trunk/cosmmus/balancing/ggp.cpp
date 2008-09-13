@@ -1,4 +1,6 @@
 #include "Avatar.h"
+#include "Cell.h"
+#include "myutils.h"
 #define CORE_COUNT 4
 
 // typedef struct {
@@ -27,6 +29,8 @@ int main () {
   tsem = SDL_CreateSemaphore(0);
   msem = SDL_CreateSemaphore(0);
 
+  //TODO instanciar as células
+  
   for (int i = 0 ; i < nplayers ; i++) {
     player[i] = new Avatar();
     player[i]->setDrawable("player.bmp", "seen.bmp", screen);
