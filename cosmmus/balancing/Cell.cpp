@@ -1,10 +1,15 @@
 #include "Cell.h"
 #include "Avatar.h"
+#include "myutils.h"
 
 //===========================================static members
 
 Cell*** Cell::cellMatrix = NULL;
 int Cell::cells_on_a_row = 0;
+bool Cell::showv = false;
+bool Cell::showe = false;
+SDL_Surface* Cell::surface_vertex_weight = NULL;
+SDL_Surface* Cell::surface_edge_weight = NULL;
 
 //================================cons/des-truction methods
 
@@ -12,11 +17,13 @@ Cell::Cell(){
 }
 
 Cell::Cell(int coord_x, int coord_y) {
-  cellposition.X = coord_x;
-  cellposition.Y = coord_y;
+  cellposition = new coord();
+  cellposition->X = coord_x;
+  cellposition->Y = coord_y;
 }
     
 Cell::~Cell() {
+  delete cellposition;
 }    
     
 //============================================other methods
@@ -44,8 +51,8 @@ float Cell::getEWeight(short neighbor) {
 int Cell::updateEWeight(short neighbor) {
   float totalw = 0.0f;
   Cell* neighborCell;
-  int nX = cellposition.X;
-  int nY = cellposition.Y;
+  int nX = cellposition->X;
+  int nY = cellposition->Y;
   switch (neighbor) {
     case UP :
       nY--;
@@ -91,6 +98,10 @@ void Cell::udpdateAllEdges() {
     updateEWeight(edge);
 }
 
+Cell* Cell::getCell(int X, int Y) {
+  return cellMatrix[X][Y];
+}
+
 void Cell::allocCellMatrix(int row) {
   if (cellMatrix) {
     for (int i = 0 ; i < cells_on_a_row ; i++)
@@ -103,7 +114,7 @@ void Cell::allocCellMatrix(int row) {
     cellMatrix[i] = new Cell* [row];
 }
 
-void Cell::drawCells() {
+void Cell::drawCells(SDL_Surface* output) {
   coord cell;
   float alpha;
   
@@ -118,11 +129,24 @@ void Cell::drawCells() {
       }
 
       if (showe) {
-        alpha = convertToScale(cellMatrix[i][j], 0, WW/10, 0, 255);
+        alpha = convertToScale(cellMatrix[i][j]->getEWeight(UP), 0, WW/10, 0, 255);
         alpha = alpha>255?255:alpha;
         SDL_SetAlpha( surface_edge_weight , SDL_SRCALPHA, approx(alpha) );
         apply_surface( i*CELL_LENGTH, j*CELL_LENGTH , surface_edge_weight, output );
       }
     }
   }
+}
+
+void Cell::toggleShowVertexWeight() {
+  showv = !showv;
+}
+
+void Cell::toggleShowEdgeWeight() {
+  showe = !showe;
+}
+
+void Cell::setCellSurfaces (string vertex_weight_file, string edge_weight_file) {
+  surface_vertex_weight = load_image (vertex_weight_file);
+  surface_edge_weight = load_image (edge_weight_file);
 }

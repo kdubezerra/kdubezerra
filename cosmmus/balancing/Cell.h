@@ -1,5 +1,9 @@
+#pragma once
+
 #include <list>
 #include <map>
+#include <string>
+#include <SDL/SDL.h>
 
 #define NUM_NEIGH 8
 
@@ -18,7 +22,11 @@
 #define CELLS_ON_A_ROW 15
 #define CELL_LENGTH int(WW/CELLS_ON_A_ROW)
 
+using namespace std;
+
 class Avatar;
+
+class coord;
 
 class Cell {
     
@@ -37,19 +45,26 @@ class Cell {
     
     float getVWeight();
     float getEWeight(short neighbor);
-    int updateEWeight(Cell* neighbor);
+    int updateEWeight(short neighbor);
     void udpdateAllEdges();
     
+    static Cell* getCell(int cell_X, int cell_Y);
     Cell* getNeighbor(short neigh);
     
     static void allocCellMatrix(int cells_on_a_row);
-    static void drawCells();
+    static void drawCells(SDL_Surface* output);
+    static void toggleShowVertexWeight();
+    static void toggleShowEdgeWeight();
+    static void setCellSurfaces (string vertex_weight_imgfile, string edge_weight_imgfile);
     
   protected:
     
-    coord cellposition;
+    coord* cellposition;
     float edgeWeight[NUM_NEIGH];
     map<Avatar*, Avatar*> avatars;
     static Cell*** cellMatrix;
-    static int cells_on_a_row;    
+    static int cells_on_a_row;
+    static bool showv, showe;
+    static SDL_Surface* surface_vertex_weight;
+    static SDL_Surface* surface_edge_weight;
 };
