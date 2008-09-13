@@ -30,6 +30,7 @@ int main () {
   msem = SDL_CreateSemaphore(0);
 
   //TODO instanciar as células
+  Cell::allocCellMatrix(15);
   
   for (int i = 0 ; i < nplayers ; i++) {
     player[i] = new Avatar();
@@ -38,28 +39,27 @@ int main () {
         
   if (!player[0]->setImage("player0.bmp")) cerr << "\nErro setando a imagem do player 0\n" << endl;
 
-  for (int i = 0 ; i < CORE_COUNT ; i++) {
-    thread[i] = SDL_CreateThread( weighter , (void*)(i) );
-  }
+//   for (int i = 0 ; i < CORE_COUNT ; i++) {
+//     thread[i] = SDL_CreateThread( weighter , (void*)(i) );
+//   }
 
   Uint32 time = SDL_GetTicks();
 
-  while (1) {
+  while (1) {    
     apply_surface(0,0,bg,screen);
-    Avatar::resetCells();
     
     for (int i = 0 ; i < nplayers ; i ++) player[i]->step((SDL_GetTicks() - time));
     time = SDL_GetTicks();
     
-    for (int i = 0 ; i < CORE_COUNT ; i++)
-      SDL_SemPost(tsem);    
-    for (int i = 0 ; i < CORE_COUNT ; i++)
-      SDL_SemWait(msem);
+//     for (int i = 0 ; i < CORE_COUNT ; i++)
+//       SDL_SemPost(tsem);    
+//     for (int i = 0 ; i < CORE_COUNT ; i++)
+//       SDL_SemWait(msem);
     
     
 //     for (int i = 0 ; i < nplayers ; i ++) player[i]->checkEdgeWeight();
-    Avatar::drawCells(screen);
-    for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
+//     Avatar::drawCells(screen);
+//     for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
     
 //              while (1);
                 

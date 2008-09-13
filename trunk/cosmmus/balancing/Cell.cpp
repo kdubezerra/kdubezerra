@@ -29,14 +29,14 @@ Cell::~Cell() {
 //============================================other methods
 
 void Cell::subscribe(Avatar* av) {
-  avatars[av] = av;
+  avatars.push_back(av);
 }
 
 void Cell::unsubscribe(Avatar* av) {
-  avatars.erase(av);
+  avatars.remove(av);
 }
 
-map<Avatar*, Avatar*> &Cell::getAvatars() {
+list<Avatar*> &Cell::getAvatars() {
   return avatars;
 }
 
@@ -86,8 +86,8 @@ int Cell::updateEWeight(short neighbor) {
   if (nX < 0 || nY < 0 || nX >= cells_on_a_row || nY >= cells_on_a_row)
     return 1;
   neighborCell = cellMatrix[nX][nY];      
-  for (map<Avatar*,Avatar*>::iterator it = avatars.begin() ; it != avatars.end() ; it++) {
-    totalw += it->second->getInteraction(neighborCell);
+  for (list<Avatar*>::iterator it = avatars.begin() ; it != avatars.end() ; it++) {
+    totalw += (*it)->getInteraction(neighborCell);
   }
   edgeWeight[neighbor]=totalw;
   return 0;
@@ -149,4 +149,8 @@ void Cell::toggleShowEdgeWeight() {
 void Cell::setCellSurfaces (string vertex_weight_file, string edge_weight_file) {
   surface_vertex_weight = load_image (vertex_weight_file);
   surface_edge_weight = load_image (edge_weight_file);
+}
+
+int Cell::getRowLength(void) {
+  return cells_on_a_row;
 }
