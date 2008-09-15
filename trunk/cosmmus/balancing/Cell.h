@@ -50,12 +50,13 @@ class Cell {
     static Cell* getCell(int cell_X, int cell_Y);
     Cell* getNeighbor(short neigh);
     
+    static int getRowLength();
     static void allocCellMatrix(int cells_on_a_row);
     static void drawCells(SDL_Surface* output);
+    void drawEdge(short neighbor, SDL_Surface* output);
     static void toggleShowVertexWeight();
     static void toggleShowEdgeWeight();
-    static void setCellSurfaces (string vertex_weight_imgfile, string edge_weight_imgfile);
-    static int getRowLength();
+    static void setCellSurfaces (string vertex_weight_imgfile, string edge_weight_imgfile);    
     
   protected:
     

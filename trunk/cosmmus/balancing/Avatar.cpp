@@ -30,6 +30,7 @@ void Avatar::init() {
     desty = rand() % WW;
     coord my_location = getCell();
     my_cell = Cell::getCell(my_location.X, my_location.Y);
+    my_cell->subscribe(this);
   } while (distance(posx, posy, destx, desty) <= 20);      
   R = rand() % 255;
   G = rand() % 255;
@@ -76,12 +77,9 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
     new_cell_coord.X = int (simpleScale(posx, WW, CELLS_ON_A_ROW));
     new_cell_coord.Y = int (simpleScale(posy, WW, CELLS_ON_A_ROW));        
     new_cell = Cell::getCell(new_cell_coord.X, new_cell_coord.Y);
-    if (new_cell != my_cell) {
-      cout << "dará pau ? my_cell = " << my_cell << " & new_cell = " << new_cell << endl;
+    if (new_cell != my_cell) {//TODO o problema está aqui!
       my_cell->unsubscribe(this);
-      cout << "dará pau?" << endl;
       new_cell->subscribe(this);
-      cout << "dará pau?" << endl;
       my_cell = new_cell;
     }
     stopped_time = 0;
@@ -172,7 +170,7 @@ void Avatar::checkCellWeight (Avatar* other) { //por hora é mto simples, apenas
 
 float Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferente: getWeightE(UP_LEFT), por exemplo.
   list<Avatar*>::iterator it;
-  float _interaction;
+  float _interaction = 0.0f;
   for (it = _cell->getAvatars().begin() ; it != _cell->getAvatars().end() ; it++)
     _interaction += this->OtherRelevance(*it);
   return _interaction;
