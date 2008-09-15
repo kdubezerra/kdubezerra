@@ -2,6 +2,12 @@
 #include "Avatar.h"
 #include "myutils.h"
 
+//EDGE_POS_MIDDLE = x + CELL_LENGTH/2 - EDGE_SIZE/2
+//EDGE_POS_CORNER = x + CELL_LENGTH/2 - EDGE_SIZE
+#define EDGE_SIZE 6
+#define EDGE_POS_MIDDLE 22
+#define EDGE_POS_CORNER 44
+
 //===========================================static members
 
 Cell*** Cell::cellMatrix = NULL;
@@ -112,6 +118,13 @@ void Cell::allocCellMatrix(int row) {
   cellMatrix = new Cell** [row];
   for (int i = 0 ; i < row ; i++)
     cellMatrix[i] = new Cell* [row];
+  
+  for (int x = 0 ; x < cells_on_a_row ; x++) {
+    for (int y = 0 ; y < cells_on_a_row ; y++) {
+      cellMatrix[x][y] = new Cell(x,y);
+    }
+  }
+  
 }
 
 void Cell::drawCells(SDL_Surface* output) {
@@ -119,8 +132,7 @@ void Cell::drawCells(SDL_Surface* output) {
   float alpha;
   
   for (int i = 0 ; i < cells_on_a_row ; i++) {
-    for (int j = 0 ; j < cells_on_a_row ; j++) {       
-//       alpha = 255 * vweight_matrix[i][j] / total_weight;
+    for (int j = 0 ; j < cells_on_a_row ; j++) {
       if (showv) {
         alpha = convertToScale(cellMatrix[i][j]->getVWeight(), 0, WW/10, 0, 255);
         alpha = alpha>255?255:alpha;
@@ -129,13 +141,50 @@ void Cell::drawCells(SDL_Surface* output) {
       }
 
       if (showe) {
-        alpha = convertToScale(cellMatrix[i][j]->getEWeight(UP), 0, WW/10, 0, 255);
-        alpha = alpha>255?255:alpha;
-        SDL_SetAlpha( surface_edge_weight , SDL_SRCALPHA, approx(alpha) );
-        apply_surface( i*CELL_LENGTH, j*CELL_LENGTH , surface_edge_weight, output );
+        for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
+          cellMatrix[i][j]->drawEdge(neigh, output);
       }
     }
   }
+}
+
+void Cell::drawEdge(short neighbor, SDL_Surface* output) {
+  int x = cellposition->X;
+  int y = cellposition->Y;
+  
+  switch (neighbor) {
+    case UP :
+      x += EDGE_POS_MIDDLE; //imagem de 6x6
+      break;
+    case UP_RIGHT :
+      x += EDGE_POS_CORNER;
+      break;
+    case RIGHT :
+      x += EDGE_POS_CORNER;
+      y += EDGE_POS_MIDDLE;
+      break;
+    case DOWN_RIGHT :
+      x += EDGE_POS_CORNER;
+      y += EDGE_POS_CORNER;
+      break;
+    case DOWN :
+      x += EDGE_POS_MIDDLE;
+      y += EDGE_POS_CORNER;
+      break;
+    case DOWN_LEFT :
+      y += EDGE_POS_CORNER;
+      break;
+    case LEFT :
+      y += EDGE_POS_MIDDLE;
+      break;
+    case UP_LEFT:
+      //do nothing. x and y are the same of the cell's
+      break;
+  }  
+  float alpha = convertToScale(getEWeight(neighbor), 0, WW/10, 0, 255);
+  alpha = alpha>255?255:alpha;
+  SDL_SetAlpha( surface_edge_weight , SDL_SRCALPHA, approx(alpha) );
+  apply_surface( x, y, surface_vertex_weight, output );
 }
 
 void Cell::toggleShowVertexWeight() {

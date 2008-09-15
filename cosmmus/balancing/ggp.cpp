@@ -31,6 +31,7 @@ int main () {
 
   //TODO instanciar as células
   Cell::allocCellMatrix(15);
+  Cell::setCellSurfaces("vweight.bmp", "eweight.bmp");
   
   for (int i = 0 ; i < nplayers ; i++) {
     player[i] = new Avatar();
@@ -48,7 +49,7 @@ int main () {
   while (1) {    
     apply_surface(0,0,bg,screen);
     
-    for (int i = 0 ; i < nplayers ; i ++) player[i]->step((SDL_GetTicks() - time));
+    for (int i = 0 ; i < nplayers ; i ++) player[i]->step(10*(SDL_GetTicks() - time));
     time = SDL_GetTicks();
     
 //     for (int i = 0 ; i < CORE_COUNT ; i++)
@@ -59,7 +60,9 @@ int main () {
     
 //     for (int i = 0 ; i < nplayers ; i ++) player[i]->checkEdgeWeight();
 //     Avatar::drawCells(screen);
-//     for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
+    Cell::drawCells(screen);
+    for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
+    
     
 //              while (1);
                 
@@ -78,10 +81,10 @@ void checkInput() {
     if( event.type == SDL_KEYDOWN ) { 
       switch( event.key.keysym.sym ) {
         case SDLK_v:
-          Avatar::toggleVertex();
+          Cell::toggleShowVertexWeight();
           break;
         case SDLK_e:
-          Avatar::toggleEdge();
+          Cell::toggleShowEdgeWeight();
           break;
         case SDLK_q:
           exit(0);
