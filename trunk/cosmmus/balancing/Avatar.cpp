@@ -5,6 +5,14 @@
 SDL_sem* vsem = NULL;
 SDL_sem* esem = NULL;
     
+int Avatar::m_numofhotspots = 0;
+vector<coord> Avatar::mv_hotspotlist;
+SDL_Surface* Avatar::surface_vertex_weight;
+SDL_Surface* Avatar::surface_edge_weight;
+bool Avatar::showv = false;
+bool Avatar::showe = false;
+float Avatar::total_weight = 0.0f;
+
 Avatar::Avatar() {
   init();
   isDrawable = false;
@@ -175,14 +183,6 @@ float Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferen
     _interaction += this->OtherRelevance(*it);
   return _interaction;
 }
-
-int Avatar::m_numofhotspots = 0;
-vector<coord> Avatar::mv_hotspotlist;
-SDL_Surface* Avatar::surface_vertex_weight;
-SDL_Surface* Avatar::surface_edge_weight;
-bool Avatar::showv = false;
-bool Avatar::showe = false;
-float Avatar::total_weight = 0.0f;
 
 void Avatar::resetCells () {
   for (int i = 0 ; i < CELLS_ON_A_ROW ; i++) {
