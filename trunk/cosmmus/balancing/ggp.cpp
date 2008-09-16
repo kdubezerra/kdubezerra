@@ -1,7 +1,10 @@
 #include "Avatar.h"
 #include "Cell.h"
+#include "Region.h"
 #include "myutils.h"
+
 #define CORE_COUNT 4
+
 
 // typedef struct {
 //   Avatar** avlist;
@@ -85,6 +88,12 @@ void checkInput() {
           break;
         case SDLK_e:
           Cell::toggleShowEdgeWeight();
+          break;
+        case SDLK_r:
+          Region::toggleShowRegions();
+          break;
+        case SDLK_d:
+          Region::divideWorld(3);
           break;
         case SDLK_q:
           exit(0);

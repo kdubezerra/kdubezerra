@@ -1,15 +1,21 @@
 #include "Region.h"
-#include "Region.h"
+#include "Cell.h"
 #include "myutils.h"
 
 //===========================================static members
 
 list<Region*> Region::regionList;
-bool Region::showr, showe;
+bool Region::showr;
+bool Region::showe;
+int Region::numRegions;
 
 //================================cons/des-truction methods
 
-Region::Region(){  
+Region::Region(){
+  borderColor.R = 128 + rand()%128;
+  borderColor.G = 128 + rand()%128;
+  borderColor.B = 128 + rand()%128;
+  showr = showe = false;
 }
 
 Region::~Region() {
@@ -29,12 +35,19 @@ list<Cell*> &Region::getCells() {
   return cells;
 }
 
-list<Cell*> &Region::getNeighbors() {
+list<Region*> &Region::getNeighbors() {
   return neighbors;
 }
 
 int Region::getNumberOfNeighbors() {
   return neighbors.size();
+}
+
+bool Region::hasCell(Cell* c) {
+  for (list<Cell*>::iterator it = cells.begin() ; it != cells.end() ; it++)
+    if (*it == c)
+      return true;
+  return false;
 }
 
 float Region::getRWeight() {
@@ -47,160 +60,81 @@ float Region::getRWeight() {
 
 float Region::getEWeight(int neighbor) {
   if (neighbor >= getNumberOfNeighbors())
-    return 0.0f;  
-  float edgew = 0.0f;
-  for (list<Cell*>::iterator it = cells.begin() ; it != cell.end() ; it++)
-    
-  
+    return 0.0f;
+  list<float>::iterator it = edgeWeight.begin();
+  for (int i = 0 ; i < neighbor ; i++) it++;
+  return *it;
 }
 
-int Region::updateEWeight(short neighbor) {
-  float totalw = 0.0f;
-  Region* neighborRegion;
-  int nX = cellposition->X;
-  int nY = cellposition->Y;
-  switch (neighbor) {
-    case UP :
-      nY--;
-      break;
-    case UP_RIGHT :
-      nX++;
-      nY--;
-      break;
-    case RIGHT :
-      nX++;
-      break;
-    case DOWN_RIGHT :
-      nX++;
-      nY++;
-      break;
-    case DOWN :
-      nY++;
-      break;
-    case DOWN_LEFT :
-      nX--;
-      nY++;      
-      break;
-    case LEFT :
-      nX--;
-      break;
-    case UP_LEFT :
-      nX--;
-      nY--;
-      break;
-  }  
-  if (nX < 0 || nY < 0 || nX >= cells_on_a_row || nY >= cells_on_a_row)
-    return 1;
-  neighborRegion = cellMatrix[nX][nY];      
-  for (list<Cell*>::iterator it = cells.begin() ; it != cells.end() ; it++) {
-    totalw += (*it)->getInteraction(neighborRegion);
+void Region::updateEWeight(int neighbor) {
+
+  float edgew = 0.0f;
+  Region* neighRegion = getNeighbor(neighbor);
+  for (list<Cell*>::iterator itrc = cells.begin() ; itrc != cells.end() ; itrc++) {
+    list<Cell*> neighCells = (*itrc)->getAllNeighbors();
+    for (list<Cell*>::iterator itnc = neighCells.begin() ; itnc != neighCells.end() ; itnc++)
+      if (!this->hasCell(*itnc) && neighRegion->hasCell(*itnc))
+        edgew += (*itrc)->getEWeight(*itnc);    
   }
-  edgeWeight[neighbor] = totalw;
-  return 0;
+  list<float>::iterator it = edgeWeight.begin();
+  for (int i = 0 ; i < neighbor ; i++) it++;
+  *it = edgew;
 }
 
 void Region::updateAllEdges() {
-  for (int edge = 0 ; edge < NUM_NEIGH ; edge++)
+  for (int edge = 0 ; edge < getNumberOfNeighbors() ; edge++)
     updateEWeight(edge);
 }
 
-Region* Region::getRegion(int X, int Y) {
-  return cellMatrix[X][Y];
+Region* Region::getNeighbor(int neighbor) {
+  list<Region*>::iterator it = neighbors.begin();
+  for (int i = 0 ; i < neighbor ; i++) it++;
+  return *it;
 }
 
-void Region::allocRegionMatrix(int row) {
-  if (cellMatrix) {
-    for (int i = 0 ; i < cells_on_a_row ; i++)
-      delete [] cellMatrix[i];
-  }
-  delete [] cellMatrix;  
-  cells_on_a_row = row;  
-  cellMatrix = new Region** [row];
-  for (int i = 0 ; i < row ; i++)
-    cellMatrix[i] = new Region* [row];
-  
-  for (int x = 0 ; x < cells_on_a_row ; x++) {
-    for (int y = 0 ; y < cells_on_a_row ; y++) {
-      cellMatrix[x][y] = new Region(x,y);
-    }
-  }
-  
-}
-
-void Region::drawRegions(SDL_Surface* output) {
-  coord cell;
-  float alpha;
-  
-  for (int i = 0 ; i < cells_on_a_row ; i++) {
-    for (int j = 0 ; j < cells_on_a_row ; j++) {
-      if (showv) {
-        alpha = convertToScale(cellMatrix[i][j]->getVWeight(), 0, WW/20, 0, 255);
-        alpha = alpha>255?255:alpha;
-        SDL_SetAlpha( surface_vertex_weight , SDL_SRCALPHA, approx(alpha) );
-        apply_surface( i*CELL_LENGTH, j*CELL_LENGTH , surface_vertex_weight, output );
-      }
-
-      if (showe) {
-        cellMatrix[i][j]->updateAllEdges();
-        for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
-          cellMatrix[i][j]->drawEdge(neigh, output);
-      }
-    }
+void Region::drawRegion(SDL_Surface* output) {
+  for (list<Cell*>::iterator itrc = cells.begin() ; itrc != cells.end() ; itrc++) {
+    list<Cell*> neighCells = (*itrc)->getAllNeighbors();
+    for (list<Cell*>::iterator itnc = neighCells.begin() ; itnc != neighCells.end() ; itnc++)
+      if (!this->hasCell(*itnc))
+        (*itrc)->drawCellBorder(output, *itnc, borderColor);
   }
 }
 
-void Region::drawEdge(short neighbor, SDL_Surface* output) {
-  int x = cellposition->X * CELL_LENGTH;
-  int y = cellposition->Y * CELL_LENGTH;
-  
-  switch (neighbor) {
-    case UP :
-      x += EDGE_POS_MIDDLE; //imagem de 6x6
-      break;
-    case UP_RIGHT :
-      x += EDGE_POS_CORNER;
-      break;
-    case RIGHT :
-      x += EDGE_POS_CORNER;
-      y += EDGE_POS_MIDDLE;
-      break;
-    case DOWN_RIGHT :
-      x += EDGE_POS_CORNER;
-      y += EDGE_POS_CORNER;
-      break;
-    case DOWN :
-      x += EDGE_POS_MIDDLE;
-      y += EDGE_POS_CORNER;
-      break;
-    case DOWN_LEFT :
-      y += EDGE_POS_CORNER;
-      break;
-    case LEFT :
-      y += EDGE_POS_MIDDLE;
-      break;
-    case UP_LEFT:
-      //do nothing. x and y are the same of the cell's
-      break;
-  }  
-  float alpha = convertToScale(getEWeight(neighbor), 0, WW/20, 0, 255);
-  alpha = alpha>255?255:alpha;
-  SDL_SetAlpha( surface_edge_weight , SDL_SRCALPHA, approx(alpha) );
-  apply_surface( x, y, surface_edge_weight, output );
+void Region::drawAllRegions(SDL_Surface* output) {
+  for (list<Region*>::iterator itr = regionList.begin() ; itr != regionList.end() ; itr++)
+    (*itr)->drawRegion(output);
 }
 
-void Region::toggleShowVertexWeight() {
-  showv = !showv;
+void Region::drawEdge(SDL_Surface* output, int neighbor) {
+  //TODO
 }
 
-void Region::toggleShowEdgeWeight() {
+void Region::drawAllEdges(SDL_Surface* output) {
+  //TODO
+}
+
+void Region::drawAllRegionsEdges(SDL_Surface* output) {
+  //TODO
+}
+
+void Region::toggleShowRegions() {
+  showr = !showr;
+}
+
+void Region::toggleShowEdges() {
   showe = !showe;
 }
 
-void Region::setRegionSurfaces (string vertex_weight_file, string edge_weight_file) {
-  surface_vertex_weight = load_image (vertex_weight_file);
-  surface_edge_weight = load_image (edge_weight_file);
+void Region::divideWorld(int num_reg) {
+  numRegions = num_reg;
+  for (int r = 0 ; r < num_reg ; r++)
+    regionList.push_back(new Region());
 }
 
-int Region::getRowLength(void) {
-  return cells_on_a_row;
+void Region::balanceRegions() {
+  //TODO - não sempre fazer do zero, mas aproveitar as partições que já existem
+  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
+    (*it)->getWorldPartition();
+  }
 }

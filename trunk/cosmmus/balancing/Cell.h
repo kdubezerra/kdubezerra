@@ -3,6 +3,7 @@
 #include <list>
 #include <string>
 #include <SDL/SDL.h>
+#include "myutils.h"
 
 #define NUM_NEIGH 8
 
@@ -19,7 +20,8 @@
 
 //parameters for the cells
 #define CELLS_ON_A_ROW 15
-#define CELL_LENGTH int(WW/CELLS_ON_A_ROW)
+// #define CELL_LENGTH int(WW/CELLS_ON_A_ROW)
+#define CELL_LENGTH 50
 
 //edge-drawing calculations
 //EDGE_POS_MIDDLE = x + CELL_LENGTH/2 - EDGE_SIZE/2
@@ -33,6 +35,8 @@ using namespace std;
 class Avatar;
 
 class coord;
+
+// typedef struct Color;
 
 class Cell {
     
@@ -51,16 +55,20 @@ class Cell {
     
     float getVWeight();
     float getEWeight(short neighbor);
+    float getEWeight(Cell* neighbor);
     int updateEWeight(short neighbor);
     void updateAllEdges();
     
     static Cell* getCell(int cell_X, int cell_Y);
     Cell* getNeighbor(short neigh);
+    short getNeighbor(Cell* neigh);
+    list<Cell*> getAllNeighbors();
     
     static int getRowLength();
     static void allocCellMatrix(int cells_on_a_row);
     static void drawCells(SDL_Surface* output);
     void drawEdge(short neighbor, SDL_Surface* output);
+    void drawCellBorder(SDL_Surface* output, Cell* neighbor, Color bordercolor);
     static void toggleShowVertexWeight();
     static void toggleShowEdgeWeight();
     static void setCellSurfaces (string vertex_weight_imgfile, string edge_weight_imgfile);    

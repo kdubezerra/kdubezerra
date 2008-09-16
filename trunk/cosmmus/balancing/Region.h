@@ -1,7 +1,9 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 #include <list>
+#include "myutils.h"
 
 using namespace std;
 
@@ -12,7 +14,6 @@ class Region {
   public:
 
     Region();
-
     ~Region();
 
     void subscribe(Cell* c);
@@ -21,17 +22,20 @@ class Region {
     list<Cell*> &getCells();
     list<Region*> &getNeighbors();
     int getNumberOfNeighbors();
+    bool hasCell(Cell* c);
 
     float getRWeight();
     float getEWeight(int neighbor);
-    int updateEWeight(int neighbor);
+    void updateEWeight(int neighbor);
     void updateAllEdges();
 
     Region* getNeighbor(int neighbor);
-
+    
     void drawRegion(SDL_Surface* output);
     static void drawAllRegions(SDL_Surface* output);
-    void drawEdge(int neighbor, SDL_Surface* output);
+    void drawEdge(SDL_Surface* output, int neighbor);
+    void drawAllEdges(SDL_Surface* output);
+    static void drawAllRegionsEdges(SDL_Surface* output);
     static void toggleShowRegions();
     static void toggleShowEdges();
     
@@ -40,9 +44,11 @@ class Region {
 
   protected:
     
-    list<float> edgeWeight;
+    Color borderColor;
     list<Cell*> cells;
     list<Region*> neighbors;
+    list<float> edgeWeight;
     static list<Region*> regionList;
     static bool showr, showe;
+    static int numRegions;
 };
