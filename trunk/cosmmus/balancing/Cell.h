@@ -21,6 +21,13 @@
 #define CELLS_ON_A_ROW 15
 #define CELL_LENGTH int(WW/CELLS_ON_A_ROW)
 
+//edge-drawing calculations
+//EDGE_POS_MIDDLE = x + CELL_LENGTH/2 - EDGE_SIZE/2
+//EDGE_POS_CORNER = x + CELL_LENGTH/2 - EDGE_SIZE
+#define EDGE_SIZE 6
+#define EDGE_POS_MIDDLE 22
+#define EDGE_POS_CORNER 44
+
 using namespace std;
 
 class Avatar;
