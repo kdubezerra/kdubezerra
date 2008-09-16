@@ -52,15 +52,39 @@ float Cell::getVWeight() {//TODO mudar para ser a soma dos pesos individuais de 
     }
       
     return weight;
-//   return avatars.size();
 }
 
 float Cell::getEWeight(short neighbor) {
   return edgeWeight[neighbor];
 }
 
+float Cell::getEWeight(Cell* neighbor) {
+  short neigh_code = getNeighbor(neighbor);
+  return getEWeight(neigh_code);
+}
+
 int Cell::updateEWeight(short neighbor) {
   float totalw = 0.0f;
+  Cell* neighborCell = getNeighbor(neighbor);
+  if (!neighborCell)
+    return -1;
+  for (list<Avatar*>::iterator it = avatars.begin() ; it != avatars.end() ; it++) {
+    totalw += (*it)->getInteraction(neighborCell);
+  }
+  edgeWeight[neighbor] = totalw;
+  return 0;
+}
+
+void Cell::updateAllEdges() {
+  for (int edge = 0 ; edge < NUM_NEIGH ; edge++)
+    updateEWeight(edge);
+}
+
+Cell* Cell::getCell(int X, int Y) {
+  return cellMatrix[X][Y];
+}
+
+Cell* Cell::getNeighbor(short neighbor) {
   Cell* neighborCell;
   int nX = cellposition->X;
   int nY = cellposition->Y;
@@ -93,24 +117,25 @@ int Cell::updateEWeight(short neighbor) {
       nX--;
       nY--;
       break;
-  }  
-  if (nX < 0 || nY < 0 || nX >= cells_on_a_row || nY >= cells_on_a_row)
-    return 1;
-  neighborCell = cellMatrix[nX][nY];      
-  for (list<Avatar*>::iterator it = avatars.begin() ; it != avatars.end() ; it++) {
-    totalw += (*it)->getInteraction(neighborCell);
   }
-  edgeWeight[neighbor] = totalw;
-  return 0;
+  if (nX < 0 || nY < 0 || nX >= cells_on_a_row || nY >= cells_on_a_row)
+    return NULL;
+  neighborCell = cellMatrix[nX][nY];
+  return neighborCell;
 }
 
-void Cell::updateAllEdges() {
-  for (int edge = 0 ; edge < NUM_NEIGH ; edge++)
-    updateEWeight(edge);
+short Cell::getNeighbor(Cell* neigh) {
+  for (short ncode = 0 ; ncode < NUM_NEIGH ; ncode++)
+    if (getNeighbor(ncode) == neigh)
+      return ncode;
+  return -1;  
 }
 
-Cell* Cell::getCell(int X, int Y) {
-  return cellMatrix[X][Y];
+list<Cell*> Cell::getAllNeighbors() {
+  list<Cell*> neighlist;
+  for (short i = 0 ; i < NUM_NEIGH ; i++)
+    neighlist.push_back(getNeighbor(i));
+  return neighlist;
 }
 
 void Cell::allocCellMatrix(int row) {
@@ -122,14 +147,12 @@ void Cell::allocCellMatrix(int row) {
   cells_on_a_row = row;  
   cellMatrix = new Cell** [row];
   for (int i = 0 ; i < row ; i++)
-    cellMatrix[i] = new Cell* [row];
-  
+    cellMatrix[i] = new Cell* [row];  
   for (int x = 0 ; x < cells_on_a_row ; x++) {
     for (int y = 0 ; y < cells_on_a_row ; y++) {
       cellMatrix[x][y] = new Cell(x,y);
     }
-  }
-  
+  }  
 }
 
 void Cell::drawCells(SDL_Surface* output) {
@@ -146,7 +169,7 @@ void Cell::drawCells(SDL_Surface* output) {
       }
 
       if (showe) {
-        cellMatrix[i][j]->updateAllEdges();
+       cellMatrix[i][j]->updateAllEdges();
         for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
           cellMatrix[i][j]->drawEdge(neigh, output);
       }
@@ -191,6 +214,32 @@ void Cell::drawEdge(short neighbor, SDL_Surface* output) {
   alpha = alpha>255?255:alpha;
   SDL_SetAlpha( surface_edge_weight , SDL_SRCALPHA, approx(alpha) );
   apply_surface( x, y, surface_edge_weight, output );
+}
+
+void Cell::drawCellBorder(SDL_Surface* output, Cell* neighbor, Color bordercolor) {
+  int x1 = cellposition->X * CELL_LENGTH;
+  int y1 = cellposition->Y * CELL_LENGTH;
+  int x2,y2;
+  short neigh = getNeighbor(neighbor);
+  switch (neigh) {
+    case UP :
+      x2 = x1 + CELL_LENGTH - 1;
+      y2 = y1;
+      break;
+    case RIGHT :
+      x2 = x1 = x1 + CELL_LENGTH - 1;
+      y2 = y1 + CELL_LENGTH - 1;
+      break;
+    case DOWN :
+      y2 = y1 = y1 + CELL_LENGTH - 1;
+      x2 = x1 + CELL_LENGTH - 1;
+      break;
+    case LEFT :
+      x2 = x1;
+      y2 = y1 + CELL_LENGTH - 1;
+      break;
+  }
+  drawLine(output, x1, x2, y1, y2, bordercolor);
 }
 
 void Cell::toggleShowVertexWeight() {
