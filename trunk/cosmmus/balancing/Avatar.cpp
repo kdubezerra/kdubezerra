@@ -96,7 +96,7 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
   } else {
     stopped_time += delay;  
     if (stopped_time < resting_time) return; //only chooses a new destination with a 0.05 probability
-    if (rand() % 100 < 15) { //selects a random spot
+    if (rand() % 100 < 30) { //selects a random spot
       destx = rand() % WW;
       desty = rand() % WW;
       last_move = SDL_GetTicks();
