@@ -1,67 +1,62 @@
-#include "Cell.h"
-#include "Avatar.h"
+#include "Region.h"
+#include "Region.h"
 #include "myutils.h"
 
 //===========================================static members
 
-Cell*** Cell::cellMatrix = NULL;
-int Cell::cells_on_a_row = 0;
-bool Cell::showv = false;
-bool Cell::showe = false;
-SDL_Surface* Cell::surface_vertex_weight = NULL;
-SDL_Surface* Cell::surface_edge_weight = NULL;
+list<Region*> Region::regionList;
+bool Region::showr, showe;
 
 //================================cons/des-truction methods
 
-Cell::Cell(){
+Region::Region(){  
 }
 
-Cell::Cell(int coord_x, int coord_y) {
-  cellposition = new coord();
-  cellposition->X = coord_x;
-  cellposition->Y = coord_y;
-  for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
-    edgeWeight[neigh] = 0.0f;
-}
-    
-Cell::~Cell() {
-  delete cellposition;
+Region::~Region() {
 }    
     
 //============================================other methods
 
-void Cell::subscribe(Avatar* av) {
-  avatars.push_back(av);
+void Region::subscribe(Cell* c) {
+  cells.push_back(c);
 }
 
-void Cell::unsubscribe(Avatar* av) {
-  avatars.remove(av);
+void Region::unsubscribe(Cell* c) {
+  cells.remove(c);
 }
 
-list<Avatar*> &Cell::getAvatars() {
-  return avatars;
+list<Cell*> &Region::getCells() {
+  return cells;
 }
 
-float Cell::getVWeight() {//TODO mudar para ser a soma dos pesos individuais de cada avatar, interagindo DENTRO da celula
-  list<Avatar*>::iterator it1, it2;
+list<Cell*> &Region::getNeighbors() {
+  return neighbors;
+}
+
+int Region::getNumberOfNeighbors() {
+  return neighbors.size();
+}
+
+float Region::getRWeight() {
+  list<Cell*>::iterator it;
   float weight = 0.0f;
-  for (it1 = avatars.begin() ; it1 != avatars.end() ; it1++)
-    for (it2 = avatars.begin() ; it2 != avatars.end() ; it2++) {
-      if (*it1 == *it2) continue;
-      weight += (*it1)->OtherRelevance(*it2);    
-    }
-      
-    return weight;
-//   return avatars.size();
+  for (it = cells.begin() ; it != cells.end() ; it++)
+    weight += (*it)->getVWeight();      
+  return weight;
 }
 
-float Cell::getEWeight(short neighbor) {
-  return edgeWeight[neighbor];
+float Region::getEWeight(int neighbor) {
+  if (neighbor >= getNumberOfNeighbors())
+    return 0.0f;  
+  float edgew = 0.0f;
+  for (list<Cell*>::iterator it = cells.begin() ; it != cell.end() ; it++)
+    
+  
 }
 
-int Cell::updateEWeight(short neighbor) {
+int Region::updateEWeight(short neighbor) {
   float totalw = 0.0f;
-  Cell* neighborCell;
+  Region* neighborRegion;
   int nX = cellposition->X;
   int nY = cellposition->Y;
   switch (neighbor) {
@@ -96,43 +91,43 @@ int Cell::updateEWeight(short neighbor) {
   }  
   if (nX < 0 || nY < 0 || nX >= cells_on_a_row || nY >= cells_on_a_row)
     return 1;
-  neighborCell = cellMatrix[nX][nY];      
-  for (list<Avatar*>::iterator it = avatars.begin() ; it != avatars.end() ; it++) {
-    totalw += (*it)->getInteraction(neighborCell);
+  neighborRegion = cellMatrix[nX][nY];      
+  for (list<Cell*>::iterator it = cells.begin() ; it != cells.end() ; it++) {
+    totalw += (*it)->getInteraction(neighborRegion);
   }
   edgeWeight[neighbor] = totalw;
   return 0;
 }
 
-void Cell::updateAllEdges() {
+void Region::updateAllEdges() {
   for (int edge = 0 ; edge < NUM_NEIGH ; edge++)
     updateEWeight(edge);
 }
 
-Cell* Cell::getCell(int X, int Y) {
+Region* Region::getRegion(int X, int Y) {
   return cellMatrix[X][Y];
 }
 
-void Cell::allocCellMatrix(int row) {
+void Region::allocRegionMatrix(int row) {
   if (cellMatrix) {
     for (int i = 0 ; i < cells_on_a_row ; i++)
       delete [] cellMatrix[i];
   }
   delete [] cellMatrix;  
   cells_on_a_row = row;  
-  cellMatrix = new Cell** [row];
+  cellMatrix = new Region** [row];
   for (int i = 0 ; i < row ; i++)
-    cellMatrix[i] = new Cell* [row];
+    cellMatrix[i] = new Region* [row];
   
   for (int x = 0 ; x < cells_on_a_row ; x++) {
     for (int y = 0 ; y < cells_on_a_row ; y++) {
-      cellMatrix[x][y] = new Cell(x,y);
+      cellMatrix[x][y] = new Region(x,y);
     }
   }
   
 }
 
-void Cell::drawCells(SDL_Surface* output) {
+void Region::drawRegions(SDL_Surface* output) {
   coord cell;
   float alpha;
   
@@ -154,7 +149,7 @@ void Cell::drawCells(SDL_Surface* output) {
   }
 }
 
-void Cell::drawEdge(short neighbor, SDL_Surface* output) {
+void Region::drawEdge(short neighbor, SDL_Surface* output) {
   int x = cellposition->X * CELL_LENGTH;
   int y = cellposition->Y * CELL_LENGTH;
   
@@ -193,19 +188,19 @@ void Cell::drawEdge(short neighbor, SDL_Surface* output) {
   apply_surface( x, y, surface_edge_weight, output );
 }
 
-void Cell::toggleShowVertexWeight() {
+void Region::toggleShowVertexWeight() {
   showv = !showv;
 }
 
-void Cell::toggleShowEdgeWeight() {
+void Region::toggleShowEdgeWeight() {
   showe = !showe;
 }
 
-void Cell::setCellSurfaces (string vertex_weight_file, string edge_weight_file) {
+void Region::setRegionSurfaces (string vertex_weight_file, string edge_weight_file) {
   surface_vertex_weight = load_image (vertex_weight_file);
   surface_edge_weight = load_image (edge_weight_file);
 }
 
-int Cell::getRowLength(void) {
+int Region::getRowLength(void) {
   return cells_on_a_row;
 }
