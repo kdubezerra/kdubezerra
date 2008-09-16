@@ -26,6 +26,8 @@ Cell::Cell(int coord_x, int coord_y) {
   cellposition = new coord();
   cellposition->X = coord_x;
   cellposition->Y = coord_y;
+  for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
+    edgeWeight[neigh] = 0.0f;
 }
     
 Cell::~Cell() {
@@ -47,7 +49,16 @@ list<Avatar*> &Cell::getAvatars() {
 }
 
 float Cell::getVWeight() {//TODO mudar para ser a soma dos pesos individuais de cada avatar, interagindo DENTRO da celula
-  return avatars.size();
+  list<Avatar*>::iterator it1, it2;
+  float weight = 0.0f;
+  for (it1 = avatars.begin() ; it1 != avatars.end() ; it1++)
+    for (it2 = avatars.begin() ; it2 != avatars.end() ; it2++) {
+      if (*it1 == *it2) continue;
+      weight += (*it1)->OtherRelevance(*it2);    
+    }
+      
+    return weight;
+//   return avatars.size();
 }
 
 float Cell::getEWeight(short neighbor) {
@@ -95,11 +106,11 @@ int Cell::updateEWeight(short neighbor) {
   for (list<Avatar*>::iterator it = avatars.begin() ; it != avatars.end() ; it++) {
     totalw += (*it)->getInteraction(neighborCell);
   }
-  edgeWeight[neighbor]=totalw;
+  edgeWeight[neighbor] = totalw;
   return 0;
 }
 
-void Cell::udpdateAllEdges() {
+void Cell::updateAllEdges() {
   for (int edge = 0 ; edge < NUM_NEIGH ; edge++)
     updateEWeight(edge);
 }
@@ -134,13 +145,14 @@ void Cell::drawCells(SDL_Surface* output) {
   for (int i = 0 ; i < cells_on_a_row ; i++) {
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       if (showv) {
-        alpha = convertToScale(cellMatrix[i][j]->getVWeight(), 0, WW/10, 0, 255);
+        alpha = convertToScale(cellMatrix[i][j]->getVWeight(), 0, WW/20, 0, 255);
         alpha = alpha>255?255:alpha;
         SDL_SetAlpha( surface_vertex_weight , SDL_SRCALPHA, approx(alpha) );
         apply_surface( i*CELL_LENGTH, j*CELL_LENGTH , surface_vertex_weight, output );
       }
 
       if (showe) {
+        cellMatrix[i][j]->updateAllEdges();
         for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
           cellMatrix[i][j]->drawEdge(neigh, output);
       }
@@ -149,8 +161,8 @@ void Cell::drawCells(SDL_Surface* output) {
 }
 
 void Cell::drawEdge(short neighbor, SDL_Surface* output) {
-  int x = cellposition->X;
-  int y = cellposition->Y;
+  int x = cellposition->X * CELL_LENGTH;
+  int y = cellposition->Y * CELL_LENGTH;
   
   switch (neighbor) {
     case UP :
@@ -181,10 +193,10 @@ void Cell::drawEdge(short neighbor, SDL_Surface* output) {
       //do nothing. x and y are the same of the cell's
       break;
   }  
-  float alpha = convertToScale(getEWeight(neighbor), 0, WW/10, 0, 255);
+  float alpha = convertToScale(getEWeight(neighbor), 0, WW/20, 0, 255);
   alpha = alpha>255?255:alpha;
   SDL_SetAlpha( surface_edge_weight , SDL_SRCALPHA, approx(alpha) );
-  apply_surface( x, y, surface_vertex_weight, output );
+  apply_surface( x, y, surface_edge_weight, output );
 }
 
 void Cell::toggleShowVertexWeight() {

@@ -45,7 +45,7 @@ class Cell {
     float getVWeight();
     float getEWeight(short neighbor);
     int updateEWeight(short neighbor);
-    void udpdateAllEdges();
+    void updateAllEdges();
     
     static Cell* getCell(int cell_X, int cell_Y);
     Cell* getNeighbor(short neigh);
