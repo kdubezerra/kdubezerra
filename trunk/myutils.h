@@ -29,12 +29,17 @@ class coord {
     coord& operator=(const coord& c);
 };
 
+typedef struct {
+  unsigned char R, G, B, A;
+} Color;
+
 
 using namespace std;
 
 
 void setSdl(SDL_Surface** screen);
 void drawOnScreen(SDL_Surface* screen, int x, int y, unsigned char R, unsigned char G, unsigned char B);
+void drawLine(SDL_Surface *screen, int x1, int y1, int x2, int y2, Color linecolor);
 void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 int approx(float number);
 float apow(float a, int b);

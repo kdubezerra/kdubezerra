@@ -138,3 +138,7 @@ void Region::balanceRegions() {
     (*it)->getWorldPartition();
   }
 }
+
+void Region::getWorldPartition() {
+  
+}

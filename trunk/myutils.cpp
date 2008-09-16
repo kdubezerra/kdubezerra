@@ -45,25 +45,40 @@ void drawOnScreen(SDL_Surface* screen, int x, int y, unsigned char R, unsigned c
   Uint32 color;
   color = SDL_MapRGB(screen->format, R, G, B);
   static SDL_Rect player_rect;  
-  //x -= P_SIZE/2;
-  //y -= P_SIZE/2;  
   player_rect.w = player_rect.h = P_SIZE;
   player_rect.x = x;
   player_rect.y = y;    
+  if ( SDL_LockSurface(screen) < 0 ) {
+    cerr << "Can’t lock screen: " << SDL_GetError() << endl;
+    return;
+  }
+  SDL_FillRect (screen, &player_rect, SDL_MapRGB(screen->format, R, G, B));
+  SDL_UpdateRect (screen, 0, 0, WW, WW);
+  SDL_UnlockSurface(screen);
+  return;
+}
+
+
+
+void drawLine(SDL_Surface *screen, int x1, int y1, int x2, int y2, Color linecolor) {
+  Uint32 color;
+  color = SDL_MapRGB(screen->format, linecolor.R, linecolor.G, linecolor.B);
+  static SDL_Rect player_rect;
+  player_rect.w = x2 - x1;
+  if (player_rect.w == 0) player_rect.w = 1;
+  player_rect.h = y2 - y1;
+  if (player_rect.h == 0) player_rect.h = 1;
+  player_rect.x = x1;
+  player_rect.y = y1;
   /* Lock the screen for direct access to the pixels */
   if ( SDL_LockSurface(screen) < 0 ) {
     cerr << "Can’t lock screen: " << SDL_GetError() << endl;
     return;
   }
-  //putpixel(screen, x, y, color);
-  SDL_FillRect (screen, &player_rect, SDL_MapRGB(screen->format, R, G, B));
-  //SDL_UpdateRect (screen, x, y, P_SIZE, P_SIZE);
+  SDL_FillRect (screen, &player_rect, SDL_MapRGB(screen->format, linecolor.R, linecolor.G, linecolor.B));
   SDL_UpdateRect (screen, 0, 0, WW, WW);
-  //SDL_UpdateRect(screen, x, y, 1, 1);
-  //return;
   SDL_UnlockSurface(screen);
   return;
-  /* Update just the part of the display that we’ve changed */
 }
 
 

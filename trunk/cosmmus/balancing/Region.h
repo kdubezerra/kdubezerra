@@ -30,7 +30,7 @@ class Region {
     void updateAllEdges();
 
     Region* getNeighbor(int neighbor);
-    
+       
     void drawRegion(SDL_Surface* output);
     static void drawAllRegions(SDL_Surface* output);
     void drawEdge(SDL_Surface* output, int neighbor);
@@ -41,6 +41,7 @@ class Region {
     
     static void divideWorld(int num_reg);
     static void balanceRegions();
+    void getWorldPartition();
 
   protected:
     
