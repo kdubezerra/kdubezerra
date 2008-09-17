@@ -102,8 +102,14 @@ void Region::drawRegion(SDL_Surface* output) {
 }
 
 void Region::drawAllRegions(SDL_Surface* output) {
-  for (list<Region*>::iterator itr = regionList.begin() ; itr != regionList.end() ; itr++)
-    (*itr)->drawRegion(output);
+  Color bli;
+  bli.R = 0Xff;
+  bli.G = 0x99;
+  bli.B = 0x00;
+  if (showr)
+//     for (list<Region*>::iterator itr = regionList.begin() ; itr != regionList.end() ; itr++)
+//       (*itr)->drawRegion(output);          
+    drawLineBresenham(output, 100, 100, 100, 300, bli);
 }
 
 void Region::drawEdge(SDL_Surface* output, int neighbor) {
@@ -130,6 +136,7 @@ void Region::divideWorld(int num_reg) {
   numRegions = num_reg;
   for (int r = 0 ; r < num_reg ; r++)
     regionList.push_back(new Region());
+  balanceRegions(); //TODO talvez o divideWorld nao devesse chamar balanceRegions, já que este tem em vista ajustar um balanceamento que foi feito antes
 }
 
 void Region::balanceRegions() {
@@ -140,5 +147,25 @@ void Region::balanceRegions() {
 }
 
 void Region::getWorldPartition() {
-  
+  list<Region*>::iterator it;
+  int regCode = 0;
+  int sX = 0;
+  int sY = 0;
+  for (it = regionList.begin() ; it != regionList.end() && *it != this ; it++) regCode++;
+  cout << "My regCode (Region Code) is " << regCode << endl;
+  switch(regCode) {
+    case 1 :
+      sX += Cell::getRowLength()/2;
+      break;
+    case 2 :
+      sY += Cell::getRowLength()/2;
+      break;
+    case 3 :
+      sX += Cell::getRowLength()/2;
+      sY += Cell::getRowLength()/2;
+      break;
+  }
+  for (int i = sX ; i < sX + Cell::getRowLength()/2 ; i++)
+    for (int j = sY ; j < sY + Cell::getRowLength()/2 ; j++)
+      subscribe(Cell::getCell(i,j));
 }

@@ -22,6 +22,8 @@ Cell::Cell(int coord_x, int coord_y) {
   cellposition->Y = coord_y;
   for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
     edgeWeight[neigh] = 0.0f;
+  vertexWeight = 0.0f;
+  parentRegion = NULL;
 }
     
 Cell::~Cell() {
@@ -42,16 +44,20 @@ list<Avatar*> &Cell::getAvatars() {
   return avatars;
 }
 
-float Cell::getVWeight() {//TODO mudar para ser a soma dos pesos individuais de cada avatar, interagindo DENTRO da celula
+float Cell::getVWeight() {
+  return vertexWeight;
+}
+
+void Cell::updateVWeight() {
   list<Avatar*>::iterator it1, it2;
   float weight = 0.0f;
   for (it1 = avatars.begin() ; it1 != avatars.end() ; it1++)
     for (it2 = avatars.begin() ; it2 != avatars.end() ; it2++) {
-      if (*it1 == *it2) continue;
-      weight += (*it1)->OtherRelevance(*it2);    
+    if (*it1 == *it2) continue;
+    weight += (*it1)->OtherRelevance(*it2);    
     }
       
-    return weight;
+    vertexWeight = weight;  
 }
 
 float Cell::getEWeight(short neighbor) {
@@ -78,6 +84,14 @@ int Cell::updateEWeight(short neighbor) {
 void Cell::updateAllEdges() {
   for (int edge = 0 ; edge < NUM_NEIGH ; edge++)
     updateEWeight(edge);
+}
+
+void Cell::updateAllEdgesAndVertexWeights() {
+  for (int i = 0 ; i < cells_on_a_row ; i++)
+    for (int j = 0 ; j < cells_on_a_row ; j++) {
+      cellMatrix[i][j]->updateVWeight();
+      cellMatrix[i][j]->updateAllEdges();
+    }
 }
 
 Cell* Cell::getCell(int X, int Y) {
@@ -162,6 +176,7 @@ void Cell::drawCells(SDL_Surface* output) {
   for (int i = 0 ; i < cells_on_a_row ; i++) {
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       if (showv) {
+//         cellMatrix[i][j]->updateVWeight();
         alpha = convertToScale(cellMatrix[i][j]->getVWeight(), 0, WW/20, 0, 255);
         alpha = alpha>255?255:alpha;
         SDL_SetAlpha( surface_vertex_weight , SDL_SRCALPHA, approx(alpha) );
@@ -169,7 +184,7 @@ void Cell::drawCells(SDL_Surface* output) {
       }
 
       if (showe) {
-       cellMatrix[i][j]->updateAllEdges();
+//        cellMatrix[i][j]->updateAllEdges();
         for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
           cellMatrix[i][j]->drawEdge(neigh, output);
       }
@@ -239,7 +254,7 @@ void Cell::drawCellBorder(SDL_Surface* output, Cell* neighbor, Color bordercolor
       y2 = y1 + CELL_LENGTH - 1;
       break;
   }
-  drawLine(output, x1, x2, y1, y2, bordercolor);
+  drawLine(output, x1, y1, x2, y2, bordercolor);
 }
 
 void Cell::toggleShowVertexWeight() {

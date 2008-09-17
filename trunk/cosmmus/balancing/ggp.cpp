@@ -48,32 +48,46 @@ int main () {
 //   }
 
   Uint32 time = SDL_GetTicks();
+  Uint32 dtime = time;
+  long unsigned count = 0;
+  Color bli;
+  bli.R = 255;
+  bli.G = 155;
+  bli.B = 100;
 
-  while (1) {    
+  while (1) {
     apply_surface(0,0,bg,screen);
     
     for (int i = 0 ; i < nplayers ; i ++) player[i]->step(10*(SDL_GetTicks() - time));
-    time = SDL_GetTicks();
+    
+    time = SDL_GetTicks(); 
     
 //     for (int i = 0 ; i < CORE_COUNT ; i++)
 //       SDL_SemPost(tsem);    
 //     for (int i = 0 ; i < CORE_COUNT ; i++)
 //       SDL_SemWait(msem);
-    
-    
+
+
 //     for (int i = 0 ; i < nplayers ; i ++) player[i]->checkEdgeWeight();
 //     Avatar::drawCells(screen);
+    if (SDL_GetTicks() - dtime >= 25) {
+      Cell::updateAllEdgesAndVertexWeights();
+      dtime = SDL_GetTicks();
+    }
+    Region::drawAllRegions(screen);   
+//     drawLine(screen, 100, 100, 100, 300, bli);
     Cell::drawCells(screen);
     for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
     
     
 //              while (1);
-                
+    time = SDL_GetTicks();            
     checkInput();
     
     SDL_Flip( screen );
                 
-//     SDL_Delay(1500);
+//     SDL_Delay(5);
+    count++;
     
   }
 
@@ -93,7 +107,7 @@ void checkInput() {
           Region::toggleShowRegions();
           break;
         case SDLK_d:
-          Region::divideWorld(3);
+          Region::divideWorld(4);
           break;
         case SDLK_q:
           exit(0);
