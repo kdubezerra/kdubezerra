@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <map>
 
 #include <SDL/SDL.h>
 // #include <SDL.h>
@@ -15,15 +16,14 @@
 #define WW 750
 // ww = world width
 #define P_SIZE 5
-
 #define W_CAPTION "Mapa do Cosmmus"
-
 #define MAX_RESTING_TIME 15000
+#define NUM_COLORS 10
 
 #define SWAP(A,B) \
-    swapper = A; A = B; B = swapper;
+          swapper = A; A = B; B = swapper
 #define ABS(X) \
-    X > 0?X:-(X)
+          ((X) > 0)?(X):(-(X))
 
 class coord {
   public:
@@ -38,15 +38,14 @@ typedef struct {
   Uint8 R, G, B, A;
 } Color;
 
-
 using namespace std;
 
-
 void setSdl(SDL_Surface** screen);
+Uint32 colorTable(int col_index);
 void drawOnScreen(SDL_Surface* screen, int x, int y, unsigned char R, unsigned char G, unsigned char B);
 void drawLine(SDL_Surface *screen, int x1, int y1, int x2, int y2, Color linecolor);
-void drawLineBresenham(SDL_Surface *screen, int x0, int y0, int x1, int y1, Color &linecolor);
-void putPixel32(SDL_Surface *surface, int x, int y, Color &pixelcolor);
+void drawLineBresenham(SDL_Surface *screen, int x0, int y0, int x1, int y1, Uint32 linecolor);
+void putPixel32(SDL_Surface *surface, int x, int y, Uint32 pixelcolor);
 void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 int approx(float number);
 float apow(float a, int b);

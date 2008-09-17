@@ -231,10 +231,11 @@ void Cell::drawEdge(short neighbor, SDL_Surface* output) {
   apply_surface( x, y, surface_edge_weight, output );
 }
 
-void Cell::drawCellBorder(SDL_Surface* output, Cell* neighbor, Color bordercolor) {
+void Cell::drawCellBorder(SDL_Surface* output, Cell* neighbor, Uint32 bordercolor) {
   int x1 = cellposition->X * CELL_LENGTH;
   int y1 = cellposition->Y * CELL_LENGTH;
   int x2,y2;
+  bool shouldDraw = true;
   short neigh = getNeighbor(neighbor);
   switch (neigh) {
     case UP :
@@ -253,8 +254,11 @@ void Cell::drawCellBorder(SDL_Surface* output, Cell* neighbor, Color bordercolor
       x2 = x1;
       y2 = y1 + CELL_LENGTH - 1;
       break;
+    default :
+      shouldDraw = false;
+      break;      
   }
-  drawLine(output, x1, y1, x2, y2, bordercolor);
+  if (shouldDraw) drawLineBresenham(output, x1, y1, x2, y2, bordercolor);
 }
 
 void Cell::toggleShowVertexWeight() {
@@ -268,6 +272,18 @@ void Cell::toggleShowEdgeWeight() {
 void Cell::setCellSurfaces (string vertex_weight_file, string edge_weight_file) {
   surface_vertex_weight = load_image (vertex_weight_file);
   surface_edge_weight = load_image (edge_weight_file);
+}
+
+Region* Cell::getParentRegion() {
+  return parentRegion;
+}
+
+void Cell::setParentRegion(Region* region) {
+  parentRegion = region;
+}
+
+void Cell::releaseCellFromRegion() {
+  parentRegion = NULL;
 }
 
 int Cell::getRowLength(void) {

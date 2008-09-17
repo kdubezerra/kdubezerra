@@ -49,8 +49,7 @@ class Cell {
     
     ~Cell();
     
-    void subscribe(Avatar* av);
-    
+    void subscribe(Avatar* av);    
     void unsubscribe(Avatar* av);
     
     list<Avatar*> &getAvatars();
@@ -69,11 +68,15 @@ class Cell {
     short getNeighbor(Cell* neigh);
     list<Cell*> getAllNeighbors();
     
+    Region* getParentRegion();
+    void setParentRegion(Region* region);
+    void releaseCellFromRegion();
+    
     static int getRowLength();
     static void allocCellMatrix(int cells_on_a_row);
     static void drawCells(SDL_Surface* output);
     void drawEdge(short neighbor, SDL_Surface* output);
-    void drawCellBorder(SDL_Surface* output, Cell* neighbor, Color bordercolor);
+    void drawCellBorder(SDL_Surface* output, Cell* neighbor, Uint32 bordercolor);
     static void toggleShowVertexWeight();
     static void toggleShowEdgeWeight();
     static void setCellSurfaces (string vertex_weight_imgfile, string edge_weight_imgfile);    
