@@ -20,6 +20,11 @@
 
 #define MAX_RESTING_TIME 15000
 
+#define SWAP(A,B) \
+    swapper = A; A = B; B = swapper;
+#define ABS(X) \
+    X > 0?X:-(X)
+
 class coord {
   public:
     int X,Y;
@@ -30,7 +35,7 @@ class coord {
 };
 
 typedef struct {
-  unsigned char R, G, B, A;
+  Uint8 R, G, B, A;
 } Color;
 
 
@@ -40,6 +45,8 @@ using namespace std;
 void setSdl(SDL_Surface** screen);
 void drawOnScreen(SDL_Surface* screen, int x, int y, unsigned char R, unsigned char G, unsigned char B);
 void drawLine(SDL_Surface *screen, int x1, int y1, int x2, int y2, Color linecolor);
+void drawLineBresenham(SDL_Surface *screen, int x0, int y0, int x1, int y1, Color &linecolor);
+void putPixel32(SDL_Surface *surface, int x, int y, Color &pixelcolor);
 void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 int approx(float number);
 float apow(float a, int b);

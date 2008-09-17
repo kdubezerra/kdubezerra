@@ -81,13 +81,52 @@ void drawLine(SDL_Surface *screen, int x1, int y1, int x2, int y2, Color linecol
   return;
 }
 
+void drawLineBresenham(SDL_Surface *output, int x0, int y0, int x1, int y1, Color &linecolor) {
+    static bool steep;
+    static int swapper, deltax, deltay, error, ystep, x, y;
+    steep = (y1 - y0) > (x1 - x0);    
+    if (steep) {
+//       SWAP(x0,y0);
+      swapper = x0; x0 = y0; y0 = swapper;
+//       SWAP(x1,y1);
+      swapper = x1; x1 = y1; y1 = swapper;
+    }
+    if (x0 > x1) {
+//       SWAP(x0,x1);
+      swapper = x0; x0 = x1; x1 = swapper;
+//       SWAP(y0,y1);
+      swapper = y0; y0 = y1; y1 = swapper;
+    }
+    deltax = x1 - x0;
+//     deltay = ABS(y1 - y0);
+    deltay = (y1 > y0)?(y1-y0):(y0-y1);
+    error = deltax / 2;
+    y = y0;
+    if (y0 < y1)
+      ystep = 1;
+    else
+      ystep = -1;
+    for (x = x0 ; x <= x1 ; x++) { //for x from x0 to x1
+      if (steep)
+        putPixel32(output, y, x, linecolor);//TODO otimizar isto!
+//         then plot(y,x);
+      else 
+        putPixel32(output, x, y, linecolor);//TODO otimizar isto! também!
+//         plot(x,y);
+      error = error - deltay;
+      if (error < 0) {
+        y = y + ystep;
+        error = error + deltax;
+      }
+    }
+}
 
 
-void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
+void putpixel(SDL_Surface *output, int x, int y, Uint32 pixel)
 {
-  int bpp = surface->format->BytesPerPixel;
+  int bpp = output->format->BytesPerPixel;
   /* Here p is the address to the pixel we want to set */
-  Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+  Uint8 *p = (Uint8 *)output->pixels + y * output->pitch + x * bpp;
   switch(bpp) {
     case 1:
       *p = pixel;
@@ -110,6 +149,19 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
       *(Uint32 *)p = pixel;
       break;
   }
+}
+
+
+void putPixel32(SDL_Surface *output, int x, int y, Color &pixelcolor)
+{
+  Uint32 colorcode = 0;
+  colorcode |= (Uint32) pixelcolor.R;
+  colorcode <<= 8;
+  colorcode |= (Uint32) pixelcolor.G;
+  colorcode <<= 8;
+  colorcode |= (Uint32) pixelcolor.B;
+  Uint32 *ptr = static_cast<Uint32 *>(output->pixels);
+  *(ptr + (output->pitch * y) + x*sizeof(Uint32) ) = colorcode;
 }
 
 
