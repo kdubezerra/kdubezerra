@@ -1,5 +1,7 @@
 #include "myutils.h"
 
+// Uint32 Color::colorTable[NUM_COLORS] = {0xffffff, 0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff, 0xcccccc, 0xff9900, 0x9999ff};
+
 bool coord::operator==(const coord &other) const {
   if ((other.X == this->X) and (other.Y == this->Y))
     return true;
@@ -16,8 +18,6 @@ coord& coord::operator=(const coord& c) {
   Y = c.Y;
   return *this;
 } 
-
-
 
 void setSdl(SDL_Surface** screen) {
   if( SDL_Init(SDL_INIT_EVERYTHING) < 0 ) {
@@ -37,6 +37,23 @@ void setSdl(SDL_Surface** screen) {
   cout << "Set "<< WW << "x" << WW << " at " << (unsigned short) (*screen)->format->BitsPerPixel << " bits-per-pixel mode" << endl;
   SDL_FillRect (*screen, 0, SDL_MapRGB((*screen)->format, 0, 0, 0));
   SDL_UpdateRect(*screen, 0, 0, 0, 0);
+}
+
+
+
+Uint32 colorTable(int col_index) {
+  switch (col_index) {
+    case 0 : return 0xffffff;
+    case 1 : return 0xff0000;
+    case 2 : return 0x00ff00;
+    case 3 : return 0x0000ff;
+    case 4 : return 0xffff00;
+    case 5 : return 0xff00ff;
+    case 6 : return 0x00ffff;
+    case 7 : return 0xcccccc;
+    case 8 : return 0xff9900;
+    case 9 : return 0x9999ff;
+  }
 }
 
 
@@ -81,25 +98,20 @@ void drawLine(SDL_Surface *screen, int x1, int y1, int x2, int y2, Color linecol
   return;
 }
 
-void drawLineBresenham(SDL_Surface *output, int x0, int y0, int x1, int y1, Color &linecolor) {
+void drawLineBresenham(SDL_Surface *output, int x0, int y0, int x1, int y1, Uint32 linecolor) {
     static bool steep;
     static int swapper, deltax, deltay, error, ystep, x, y;
     steep = (y1 - y0) > (x1 - x0);    
     if (steep) {
-//       SWAP(x0,y0);
-      swapper = x0; x0 = y0; y0 = swapper;
-//       SWAP(x1,y1);
-      swapper = x1; x1 = y1; y1 = swapper;
+      SWAP(x0,y0);      
+      SWAP(x1,y1);      
     }
     if (x0 > x1) {
-//       SWAP(x0,x1);
-      swapper = x0; x0 = x1; x1 = swapper;
-//       SWAP(y0,y1);
-      swapper = y0; y0 = y1; y1 = swapper;
+      SWAP(x0,x1);      
+      SWAP(y0,y1);      
     }
     deltax = x1 - x0;
-//     deltay = ABS(y1 - y0);
-    deltay = (y1 > y0)?(y1-y0):(y0-y1);
+    deltay = ABS(y1 - y0);    
     error = deltax / 2;
     y = y0;
     if (y0 < y1)
@@ -152,16 +164,10 @@ void putpixel(SDL_Surface *output, int x, int y, Uint32 pixel)
 }
 
 
-void putPixel32(SDL_Surface *output, int x, int y, Color &pixelcolor)
+void putPixel32(SDL_Surface *output, int x, int y, Uint32 pixelcolor)
 {
-  Uint32 colorcode = 0;
-  colorcode |= (Uint32) pixelcolor.R;
-  colorcode <<= 8;
-  colorcode |= (Uint32) pixelcolor.G;
-  colorcode <<= 8;
-  colorcode |= (Uint32) pixelcolor.B;
-  Uint32 *ptr = static_cast<Uint32 *>(output->pixels);
-  *(ptr + (output->pitch * y) + x*sizeof(Uint32) ) = colorcode;
+  Uint8 *p = (Uint8 *)output->pixels + y * output->pitch + x * 4;
+  *(Uint32 *)p = pixelcolor;
 }
 
 

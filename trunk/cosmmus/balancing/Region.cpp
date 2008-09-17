@@ -1,6 +1,5 @@
 #include "Region.h"
 #include "Cell.h"
-#include "myutils.h"
 
 //===========================================static members
 
@@ -11,11 +10,13 @@ int Region::numRegions;
 
 //================================cons/des-truction methods
 
-Region::Region(){
-  borderColor.R = 128 + rand()%128;
-  borderColor.G = 128 + rand()%128;
-  borderColor.B = 128 + rand()%128;
+Region::Region(){  
   showr = showe = false;
+}
+
+Region::Region(Uint32 borderColor){  
+  Region();
+  setBorderColor(borderColor);
 }
 
 Region::~Region() {
@@ -25,10 +26,18 @@ Region::~Region() {
 
 void Region::subscribe(Cell* c) {
   cells.push_back(c);
+  c->setParentRegion(this);
 }
 
 void Region::unsubscribe(Cell* c) {
   cells.remove(c);
+  c->releaseCellFromRegion();
+}
+
+void Region::unsubscribeAllCells() {
+  list<Cell*>::iterator it;
+  for (it = cells.begin() ; it != cells.end() ; it++)
+    unsubscribe(*it);
 }
 
 list<Cell*> &Region::getCells() {
@@ -92,6 +101,10 @@ Region* Region::getNeighbor(int neighbor) {
   return *it;
 }
 
+void Region::setBorderColor(Uint32 bc) {
+  borderColor = bc;
+}
+
 void Region::drawRegion(SDL_Surface* output) {
   for (list<Cell*>::iterator itrc = cells.begin() ; itrc != cells.end() ; itrc++) {
     list<Cell*> neighCells = (*itrc)->getAllNeighbors();
@@ -101,15 +114,10 @@ void Region::drawRegion(SDL_Surface* output) {
   }
 }
 
-void Region::drawAllRegions(SDL_Surface* output) {
-  Color bli;
-  bli.R = 0Xff;
-  bli.G = 0x99;
-  bli.B = 0x00;
+void Region::drawAllRegions(SDL_Surface* output) {  
   if (showr)
-//     for (list<Region*>::iterator itr = regionList.begin() ; itr != regionList.end() ; itr++)
-//       (*itr)->drawRegion(output);          
-    drawLineBresenham(output, 100, 100, 100, 300, bli);
+    for (list<Region*>::iterator itr = regionList.begin() ; itr != regionList.end() ; itr++)
+      (*itr)->drawRegion(output);
 }
 
 void Region::drawEdge(SDL_Surface* output, int neighbor) {
@@ -134,8 +142,20 @@ void Region::toggleShowEdges() {
 
 void Region::divideWorld(int num_reg) {
   numRegions = num_reg;
-  for (int r = 0 ; r < num_reg ; r++)
-    regionList.push_back(new Region());
+  Uint32 color;
+  list<Region*>::iterator it;
+  for (it = regionList.begin() ; it != regionList.end() ; it++) {
+    (*it)->unsubscribeAllCells();
+    delete *it;
+  }
+  regionList.clear();
+  for (int r = 0 ; r < num_reg ; r++) {
+    if (r < NUM_COLORS)
+      color = colorTable(r);
+    else
+      color = rand() % (255*255*255);      
+    regionList.push_back(new Region(color));
+  }
   balanceRegions(); //TODO talvez o divideWorld nao devesse chamar balanceRegions, já que este tem em vista ajustar um balanceamento que foi feito antes
 }
 
@@ -164,8 +184,13 @@ void Region::getWorldPartition() {
       sX += Cell::getRowLength()/2;
       sY += Cell::getRowLength()/2;
       break;
-  }
+  }  
+  cout << "vai dar pau" << endl;
+  Cell* c;
   for (int i = sX ; i < sX + Cell::getRowLength()/2 ; i++)
-    for (int j = sY ; j < sY + Cell::getRowLength()/2 ; j++)
-      subscribe(Cell::getCell(i,j));
+    for (int j = sY ; j < sY + Cell::getRowLength()/2 ; j++) {
+      c = Cell::getCell(i,j);
+      if (c) subscribe(c);
+      else cout << "cell NULL" << endl;
+    }
 }

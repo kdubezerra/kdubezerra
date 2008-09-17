@@ -14,10 +14,12 @@ class Region {
   public:
 
     Region();
+    Region(Uint32 borderColor);
     ~Region();
 
     void subscribe(Cell* c);
     void unsubscribe(Cell* c);
+    void unsubscribeAllCells();
 
     list<Cell*> &getCells();
     list<Region*> &getNeighbors();
@@ -31,6 +33,7 @@ class Region {
 
     Region* getNeighbor(int neighbor);
        
+    void setBorderColor(Uint32 bc);
     void drawRegion(SDL_Surface* output);
     static void drawAllRegions(SDL_Surface* output);
     void drawEdge(SDL_Surface* output, int neighbor);
@@ -45,7 +48,7 @@ class Region {
 
   protected:
     
-    Color borderColor;
+    Uint32 borderColor;
     list<Cell*> cells;
     list<Region*> neighbors;
     list<float> edgeWeight;

@@ -57,40 +57,42 @@ int main () {
 
   while (1) {
     apply_surface(0,0,bg,screen);
-    
+
     for (int i = 0 ; i < nplayers ; i ++) player[i]->step(10*(SDL_GetTicks() - time));
+    time = SDL_GetTicks();
     
-    time = SDL_GetTicks(); 
-    
+    if (SDL_GetTicks() - dtime >= 25) {
+      Cell::updateAllEdgesAndVertexWeights();
+      dtime = SDL_GetTicks();
+    }    
+    Cell::drawCells(screen);
+    Region::drawAllRegions(screen);
+
 //     for (int i = 0 ; i < CORE_COUNT ; i++)
-//       SDL_SemPost(tsem);    
+//       SDL_SemPost(tsem);
 //     for (int i = 0 ; i < CORE_COUNT ; i++)
 //       SDL_SemWait(msem);
 
 
 //     for (int i = 0 ; i < nplayers ; i ++) player[i]->checkEdgeWeight();
 //     Avatar::drawCells(screen);
-    if (SDL_GetTicks() - dtime >= 25) {
-      Cell::updateAllEdgesAndVertexWeights();
-      dtime = SDL_GetTicks();
-    }
-    Region::drawAllRegions(screen);   
+
+    
 //     drawLine(screen, 100, 100, 100, 300, bli);
-    Cell::drawCells(screen);
+    
     for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
-    
-    
+
+
 //              while (1);
-    time = SDL_GetTicks();            
+    time = SDL_GetTicks();
     checkInput();
-    
+
     SDL_Flip( screen );
-                
+
 //     SDL_Delay(5);
     count++;
-    
-  }
 
+  }
 }
 
 void checkInput() {
