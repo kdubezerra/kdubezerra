@@ -32,6 +32,8 @@
 
 using namespace std;
 
+class Region;
+
 class Avatar;
 
 class coord;
@@ -56,8 +58,11 @@ class Cell {
     float getVWeight();
     float getEWeight(short neighbor);
     float getEWeight(Cell* neighbor);
+    
+    void updateVWeight();
     int updateEWeight(short neighbor);
     void updateAllEdges();
+    static void updateAllEdgesAndVertexWeights();
     
     static Cell* getCell(int cell_X, int cell_Y);
     Cell* getNeighbor(short neigh);
@@ -75,7 +80,9 @@ class Cell {
     
   protected:
     
+    Region* parentRegion;
     coord* cellposition;
+    float vertexWeight;
     float edgeWeight[NUM_NEIGH];
     list<Avatar*> avatars;
     static Cell*** cellMatrix;
