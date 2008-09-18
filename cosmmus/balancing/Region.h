@@ -49,9 +49,10 @@ class Region {
     
     static int getNumRegions();
     static void divideWorld(int num_reg);
-    static void balanceRegions();
-    void getWorldPartition();
+    static void balanceRegions();    
     void getWorldPartitionEXAMPLE();
+    void getWorldPartitionRandomStart();
+    void getWorldPartition();
 
   protected:
     

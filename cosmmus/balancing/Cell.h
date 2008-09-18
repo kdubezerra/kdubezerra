@@ -74,9 +74,14 @@ class Cell {
     Cell* getNeighbor(short neigh);
     short getNeighbor(Cell* neigh);
     Cell* getHighestEdgeFreeNeighbor();
-    static Cell* getHighestEdgeFreeNeighbor(list<Cell*> &cellList);
     list<Cell*> getAllNeighbors();
+    static Cell* getHighestEdgeFreeNeighbor(list<Cell*> &cellList);
     
+    static list<Cell*> getAllCells(bool mustBeFree=false);    
+    static Cell* getHeaviestCell(bool mustBeFree=false);
+    static list<Cell*> getAllFreeCells();
+    static Cell* getHeaviestFreeCell();
+
     Region* getParentRegion();
     void setParentRegion(Region* region);
     void releaseCellFromRegion();    
