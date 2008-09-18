@@ -35,7 +35,7 @@ class Avatar {
 					
     void setPlayerId (int i);
     
-    void markAsSeen(double relevance_);
+    void markAsSeen(float relevance_);
 		
     float OtherRelevance(Avatar* other);
 	
@@ -68,9 +68,9 @@ class Avatar {
     unsigned char R,G,B;
     Uint32 last_move, resting_time;
     bool isSeen;
-    double incr_y;
-    double incr_x;
-    double relevance;
+    float incr_y;
+    float incr_x;
+    float relevance;
     unsigned long stopped_time;
     bool isDrawable;		
     unsigned long player_id;

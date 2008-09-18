@@ -2,13 +2,14 @@
 
 #ifdef _WIN32
 #include <SDL.h>
+#include "../../myutils.h"
 #else
 #include <SDL/SDL.h>
+#include "myutils.h"
 #endif
 
 #include <list>
 #include <string>
-#include "myutils.h"
 
 #define NUM_NEIGH 8
 

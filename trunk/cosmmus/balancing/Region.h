@@ -1,9 +1,14 @@
 #pragma once
 
+#ifdef _WIN32
+#include "../../myutils.h"
+#else
+#include "myutils.h"
+#endif
+
 #include <iostream>
 #include <vector>
 #include <list>
-#include "myutils.h"
 
 using namespace std;
 
