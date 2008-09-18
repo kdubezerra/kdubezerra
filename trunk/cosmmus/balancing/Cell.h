@@ -91,8 +91,9 @@ class Cell {
     
     static void allocCellMatrix(int cells_on_a_row);
     static void drawCells(SDL_Surface* output);
-    void drawEdge(short neighbor, SDL_Surface* output);
-    void drawCellBorder(SDL_Surface* output, Cell* neighbor, Uint32 bordercolor);
+    void drawEdge(short neighbor, SDL_Surface* output);    
+    void drawBorder(SDL_Surface* output, short border, Uint32 bordercolor);
+    void drawAllBorders(SDL_Surface* output, Uint32 bordercolor);
     static void toggleShowVertexWeight();
     static void toggleShowEdgeWeight();
     static void setCellSurfaces (string vertex_weight_imgfile, string edge_weight_imgfile);    

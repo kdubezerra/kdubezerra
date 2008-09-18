@@ -298,34 +298,58 @@ void Cell::drawEdge(short neighbor, SDL_Surface* output) {
   apply_surface( x, y, surface_edge_weight, output );
 }
 
-void Cell::drawCellBorder(SDL_Surface* output, Cell* neighbor, Uint32 bordercolor) {
+void Cell::drawBorder(SDL_Surface* output, short border, Uint32 bordercolor) {
   int x1 = cellposition->X * CELL_LENGTH;
   int y1 = cellposition->Y * CELL_LENGTH;
-  int x2,y2;
-  bool shouldDraw = true;
-  short neigh = getNeighbor(neighbor);
-  switch (neigh) {
+  int x2,y2,x3,y3,x4,y4;
+  bool shouldDraw = true;  
+  switch (border) {
     case UP :
       x2 = x1 + CELL_LENGTH - 1;
       y2 = y1;
+      x3 = x1 + 1;
+      y3 = y1 + 1;
+      x4 = x2 - 1;
+      y4 = y2 + 1;
       break;
     case RIGHT :
       x2 = x1 = x1 + CELL_LENGTH - 1;
       y2 = y1 + CELL_LENGTH - 1;
+      x3 = x1 - 1;
+      y3 = y1 + 1;
+      x4 = x2 - 1;
+      y4 = y2 - 1;
       break;
     case DOWN :
       y2 = y1 = y1 + CELL_LENGTH - 1;
       x2 = x1 + CELL_LENGTH - 1;
+      x3 = x1 + 1;
+      y3 = y1 - 1;
+      x4 = x2 - 1;
+      y4 = y2 - 1;
       break;
     case LEFT :
       x2 = x1;
       y2 = y1 + CELL_LENGTH - 1;
+      x3 = x1 + 1;
+      y3 = y1 + 1;
+      x4 = x2 + 1;
+      y4 = y2 - 1;
       break;
     default :
       shouldDraw = false;
       break;      
   }
   if (shouldDraw) drawLineBresenham(output, x1, y1, x2, y2, bordercolor);
+  if (shouldDraw) drawLineBresenham(output, x3, y3, x4, y4, bordercolor);
+}
+
+
+void Cell::drawAllBorders(SDL_Surface* output, Uint32 bordercolor) {
+  for (short n = 0 ; n < getNumNeigh() ; n++) {
+    if (!this->getNeighbor(n) || this->getParentRegion() != getNeighbor(n)->getParentRegion())
+      this->drawBorder(output, n, bordercolor);
+  }
 }
 
 void Cell::toggleShowVertexWeight() {
