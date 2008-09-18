@@ -1,7 +1,7 @@
 #include "myutils.h"
 
 bool coord::operator==(const coord &other) const {
-  if ((other.X == this->X) and (other.Y == this->Y))
+  if ((other.X == this->X) && (other.Y == this->Y))
     return true;
   else
     return false;
@@ -23,10 +23,10 @@ void setSdl(SDL_Surface** screen) {
     exit(1);
   }
   //poder fechar a janela da SDL
-  signal(SIGINT, SIG_DFL);
-  signal(SIGQUIT, SIG_DFL);
+  //signal(SIGINT, SIG_DFL);
+  //signal(SIGQUIT, SIG_DFL);
   atexit(SDL_Quit);
-  *screen = SDL_SetVideoMode(WW, WW, 8, SDL_SWSURFACE|SDL_ANYFORMAT);
+  *screen = SDL_SetVideoMode(WW, WW, 32, SDL_SWSURFACE|SDL_ANYFORMAT);
   if ( screen == NULL ) {
     cerr << "Couldn't set "<< WW << "x" << WW << "x8 video mode: " << SDL_GetError() << endl;
     exit(1);
@@ -52,6 +52,7 @@ Uint32 colorTable(int col_index) {
     case 8 : return 0xff9900;
     case 9 : return 0x9999ff;
   }
+  return 0x000000;
 }
 
 

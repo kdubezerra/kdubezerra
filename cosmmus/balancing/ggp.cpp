@@ -1,9 +1,22 @@
+#ifdef _WIN32
+#include "../../myutils.h"
+#else
+#include "myutils.h"
+#endif
+
+#define CORE_COUNT 4
+
+#define BG_IMAGE "bg.bmp"
+#define VERTEX_IMAGE "vweight.bmp"
+#define EDGE_IMAGE "eweight.bmp"
+#define PLAYER_IMAGE "player.bmp"
+#define PLAYER_ZERO_IMAGE "player0.bmp"
+#define PLAYER_SEEN_IMAGE "seen.bmp"
+
 #include "Avatar.h"
 #include "Cell.h"
 #include "Region.h"
-#include "myutils.h"
 
-#define CORE_COUNT 4
 
 
 // typedef struct {
@@ -24,24 +37,28 @@ int weighter (void* data);
 
 //AQUI COMECA O PROGRAMA
 
-int main () {
+int main (int argc, char* argv[]) {
   srand(time(NULL));
+
+  cout << BG_IMAGE << endl;
   
   setSdl(&screen);
-  SDL_Surface* bg = load_image ("bg.bmp");
+  SDL_Surface* bg = NULL;
+  bg = load_image (BG_IMAGE);
+  if (!bg) cerr << "\nErro setando a imagem de plano de fundo: " << BG_IMAGE << endl;
   tsem = SDL_CreateSemaphore(0);
   msem = SDL_CreateSemaphore(0);
 
   //TODO instanciar as células
   Cell::allocCellMatrix(15);
-  Cell::setCellSurfaces("vweight.bmp", "eweight.bmp");
-  
+  Cell::setCellSurfaces(VERTEX_IMAGE, EDGE_IMAGE);
+
   for (int i = 0 ; i < nplayers ; i++) {
     player[i] = new Avatar();
-    player[i]->setDrawable("player.bmp", "seen.bmp", screen);
+    player[i]->setDrawable(PLAYER_IMAGE, PLAYER_SEEN_IMAGE, screen);
   }
         
-  if (!player[0]->setImage("player0.bmp")) cerr << "\nErro setando a imagem do player 0\n" << endl;
+  if (!player[0]->setImage(PLAYER_ZERO_IMAGE)) cerr << "\nErro setando a imagem do player 0: " << PLAYER_ZERO_IMAGE << endl;
 
 //   for (int i = 0 ; i < CORE_COUNT ; i++) {
 //     thread[i] = SDL_CreateThread( weighter , (void*)(i) );

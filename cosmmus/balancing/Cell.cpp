@@ -1,6 +1,11 @@
+#ifdef _WIN32
+#include "../../myutils.h"
+#else
+#include "myutils.h"
+#endif
+
 #include "Cell.h"
 #include "Avatar.h"
-#include "myutils.h"
 
 //===========================================static members
 
@@ -210,7 +215,6 @@ void Cell::drawCells(SDL_Surface* output) {
   for (int i = 0 ; i < cells_on_a_row ; i++) {
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       if (showv) {
-//         cellMatrix[i][j]->updateVWeight();
         alpha = convertToScale(cellMatrix[i][j]->getVWeight(), 0, WW/20, 0, 255);
         alpha = alpha>255?255:alpha;
         SDL_SetAlpha( surface_vertex_weight , SDL_SRCALPHA, approx(alpha) );
@@ -218,7 +222,6 @@ void Cell::drawCells(SDL_Surface* output) {
       }
 
       if (showe) {
-//        cellMatrix[i][j]->updateAllEdges();
         for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
           cellMatrix[i][j]->drawEdge(neigh, output);
       }

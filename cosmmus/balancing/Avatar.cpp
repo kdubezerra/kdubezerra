@@ -1,5 +1,10 @@
-#include "Avatar.h"
+#ifdef _WIN32
+#include "../../myutils.h"
+#else
 #include "myutils.h"
+#endif
+
+#include "Avatar.h"
 #include "Cell.h"
 
 SDL_sem* vsem = NULL;
@@ -58,9 +63,9 @@ void Avatar::init() {
   last_move = 0;
   isSeen = false;      
   surface_vertex_weight = load_image("vweight.bmp");
-  surface_edge_weight = load_image("eweight.bmp");      
+  surface_edge_weight = load_image("eweight.bmp");
   vsem = SDL_CreateSemaphore(1);
-  vsem = SDL_CreateSemaphore(1);      
+  vsem = SDL_CreateSemaphore(1);
 }
 
 
@@ -74,8 +79,8 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
     int speed = rand() % 5 + 1;   
     incr_y =  speed * (desty - posy) / distance(posx, posy, destx, desty); // sin of the direction angle
     incr_x =  speed * (destx - posx) / distance(posx, posy, destx, desty); // cossin of the direction angle               
-    incr_y *= (double)delay/250.0f;
-    incr_x *= (double)delay/250.0f;
+    incr_y *= (float)delay/250.0f;
+    incr_x *= (float)delay/250.0f;
     posy += incr_y;
     posx += incr_x;
     if (posx < 3) posx = 3;
@@ -113,7 +118,7 @@ void Avatar::setPlayerId (int i) {
   player_id = i;
 }
 
-void Avatar::markAsSeen(double relevance_) {
+void Avatar::markAsSeen(float relevance_) {
   relevance = relevance_;
   isSeen = true;      
 }
@@ -148,12 +153,12 @@ void* Avatar::setImage(string filename) {
 
 void Avatar::draw() {
   if (isSeen) {
-    SDL_SetAlpha( seen_surface, SDL_SRCALPHA, approx(255*relevance) );
+    //SDL_SetAlpha( seen_surface, SDL_SRCALPHA, approx(255*relevance) );
     apply_surface( approx(posx), approx(posy), my_surface, screen );
     apply_surface( approx(posx), approx(posy), seen_surface, screen );
   }
   else {
-    SDL_SetAlpha( my_surface, SDL_SRCALPHA, 255 );
+    //SDL_SetAlpha( my_surface, SDL_SRCALPHA, 255 );
     apply_surface( approx(posx), approx(posy), my_surface, screen );
   }
   isSeen = false;
