@@ -1,7 +1,5 @@
 #include "myutils.h"
 
-// Uint32 Color::colorTable[NUM_COLORS] = {0xffffff, 0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff, 0xcccccc, 0xff9900, 0x9999ff};
-
 bool coord::operator==(const coord &other) const {
   if ((other.X == this->X) and (other.Y == this->Y))
     return true;
