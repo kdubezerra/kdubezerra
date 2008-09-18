@@ -42,9 +42,11 @@ class Region {
     static void toggleShowRegions();
     static void toggleShowEdges();
     
+    static int getNumRegions();
     static void divideWorld(int num_reg);
     static void balanceRegions();
     void getWorldPartition();
+    void getWorldPartitionEXAMPLE();
 
   protected:
     

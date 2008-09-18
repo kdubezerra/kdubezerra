@@ -6,6 +6,7 @@
 
 Cell*** Cell::cellMatrix = NULL;
 int Cell::cells_on_a_row = 0;
+float Cell::totalWeight = 0.0f;
 bool Cell::showv = false;
 bool Cell::showe = false;
 SDL_Surface* Cell::surface_vertex_weight = NULL;
@@ -53,11 +54,10 @@ void Cell::updateVWeight() {
   float weight = 0.0f;
   for (it1 = avatars.begin() ; it1 != avatars.end() ; it1++)
     for (it2 = avatars.begin() ; it2 != avatars.end() ; it2++) {
-    if (*it1 == *it2) continue;
-    weight += (*it1)->OtherRelevance(*it2);    
-    }
-      
-    vertexWeight = weight;  
+      if (*it1 == *it2) continue;
+      weight += (*it1)->OtherRelevance(*it2);    
+    }    
+  vertexWeight = weight;
 }
 
 float Cell::getEWeight(short neighbor) {
@@ -67,6 +67,10 @@ float Cell::getEWeight(short neighbor) {
 float Cell::getEWeight(Cell* neighbor) {
   short neigh_code = getNeighbor(neighbor);
   return getEWeight(neigh_code);
+}
+
+float Cell::getTotalWeight() {
+  return totalWeight;
 }
 
 int Cell::updateEWeight(short neighbor) {
@@ -87,10 +91,12 @@ void Cell::updateAllEdges() {
 }
 
 void Cell::updateAllEdgesAndVertexWeights() {
+  totalWeight = 0.0f;
   for (int i = 0 ; i < cells_on_a_row ; i++)
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       cellMatrix[i][j]->updateVWeight();
       cellMatrix[i][j]->updateAllEdges();
+      totalWeight += cellMatrix[i][j]->getVWeight();
     }
 }
 
@@ -143,6 +149,34 @@ short Cell::getNeighbor(Cell* neigh) {
     if (getNeighbor(ncode) == neigh)
       return ncode;
   return -1;  
+}
+
+Cell* Cell::getHighestEdgeFreeNeighbor() {
+  Cell* highest_cell = NULL;
+  Cell* c;
+  float highest_edge = 0.0f;
+  for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++) {
+    c = getNeighbor(neigh);
+    if (c && !c->getParentRegion() && getEWeight(c) >= highest_edge) {
+      highest_cell = c;
+      highest_edge = getEWeight(c);
+    }
+  }
+  return highest_cell;    
+}
+
+Cell* Cell::getHighestEdgeFreeNeighbor(list<Cell*> &cellList) {
+  Cell* highest_cell = NULL;
+  Cell* c;
+  float highest_edge = 0.0f;
+  for (list<Cell*>::iterator it = cellList.begin() ; it != cellList.end() ; it++) {
+    c = (*it)->getHighestEdgeFreeNeighbor();
+    if (c && (*it)->getEWeight(c) >= highest_edge) {
+      highest_cell = c;
+      highest_edge = (*it)->getEWeight(c);
+    }
+  }
+  return highest_cell;
 }
 
 list<Cell*> Cell::getAllNeighbors() {
@@ -288,4 +322,8 @@ void Cell::releaseCellFromRegion() {
 
 int Cell::getRowLength(void) {
   return cells_on_a_row;
+}
+
+int Cell::getNumNeigh() {
+  return NUM_NEIGH;
 }

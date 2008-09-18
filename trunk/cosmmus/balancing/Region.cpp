@@ -25,11 +25,13 @@ Region::~Region() {
 //============================================other methods
 
 void Region::subscribe(Cell* c) {
+  if (hasCell(c)) return;
   cells.push_back(c);
   c->setParentRegion(this);
 }
 
 void Region::unsubscribe(Cell* c) {
+  if (!hasCell(c)) return;
   cells.remove(c);
   c->releaseCellFromRegion();
 }
@@ -37,7 +39,8 @@ void Region::unsubscribe(Cell* c) {
 void Region::unsubscribeAllCells() {
   list<Cell*>::iterator it;
   for (it = cells.begin() ; it != cells.end() ; it++)
-    unsubscribe(*it);
+    (*it)->releaseCellFromRegion();
+  cells.clear();
 }
 
 list<Cell*> &Region::getCells() {
@@ -140,6 +143,10 @@ void Region::toggleShowEdges() {
   showe = !showe;
 }
 
+int Region::getNumRegions() {
+  return numRegions;
+}
+
 void Region::divideWorld(int num_reg) {
   numRegions = num_reg;
   Uint32 color;
@@ -166,7 +173,7 @@ void Region::balanceRegions() {
   }
 }
 
-void Region::getWorldPartition() {
+void Region::getWorldPartitionEXAMPLE() {
   list<Region*>::iterator it;
   int regCode = 0;
   int sX = 0;
@@ -184,13 +191,22 @@ void Region::getWorldPartition() {
       sX += Cell::getRowLength()/2;
       sY += Cell::getRowLength()/2;
       break;
-  }  
-  cout << "vai dar pau" << endl;
+  }
   Cell* c;
   for (int i = sX ; i < sX + Cell::getRowLength()/2 ; i++)
     for (int j = sY ; j < sY + Cell::getRowLength()/2 ; j++) {
       c = Cell::getCell(i,j);
-      if (c) subscribe(c);
-      else cout << "cell NULL" << endl;
+      subscribe(c);      
     }
+}
+
+void Region::getWorldPartition() {  
+  int cX = rand() % Cell::getRowLength();
+  int cY = rand() % Cell::getRowLength();
+  Cell* c = Cell::getCell(cX, cY);  
+  //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
+  while (c && getRWeight() < Cell::getTotalWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+    subscribe(c);
+    c = Cell::getHighestEdgeFreeNeighbor(getCells());
+  }
 }
