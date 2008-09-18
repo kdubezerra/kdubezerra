@@ -1,8 +1,13 @@
 #pragma once
 
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL/SDL.h>
+#endif
+
 #include <list>
 #include <string>
-#include <SDL/SDL.h>
 #include "myutils.h"
 
 #define NUM_NEIGH 8

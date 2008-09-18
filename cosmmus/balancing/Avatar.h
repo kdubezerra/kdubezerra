@@ -1,8 +1,13 @@
 #pragma once
 
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL/SDL.h>
+#endif
+
 #include <vector>
 #include <string>
-#include <SDL/SDL.h>
 
 using namespace std;
 

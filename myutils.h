@@ -1,14 +1,16 @@
 #pragma once
 
+#ifdef _WIN32
+#include <SDL.h>
+#else
+#include <SDL/SDL.h>
+#endif
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 #include <map>
-
-#include <SDL/SDL.h>
-// #include <SDL.h>
 #include <signal.h>
-
 #include <math.h>
 
 #define uint64 unsigned long
