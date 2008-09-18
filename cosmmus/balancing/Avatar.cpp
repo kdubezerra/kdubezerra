@@ -49,7 +49,7 @@ void Avatar::init() {
   G = rand() % 255;
   B = rand() % 255;      
   if (m_numofhotspots) return;  
-  m_numofhotspots = 3 + rand() % 7;
+  m_numofhotspots = 3;// + rand() % 7;//TODO mudar para ser aleatorio novamente
   cout << "Number of hot spots: " << m_numofhotspots << endl;
   for (int index = 0 ; index < m_numofhotspots ; index++) {
     coord newspot;

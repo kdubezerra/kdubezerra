@@ -25,7 +25,8 @@
 // } thread_data;
 
 Avatar* player[nplayers];
-SDL_Surface* screen;
+SDL_Surface* screen = NULL;
+//TTF_Font *font = NULL;
 SDL_Event event;
 SDL_sem* msem = NULL;
 SDL_sem* tsem = NULL;
@@ -38,16 +39,17 @@ int weighter (void* data);
 //AQUI COMECA O PROGRAMA
 
 int main (int argc, char* argv[]) {
+  setSdl(&screen);
+  SDL_EnableKeyRepeat(400, 10);
+  
   srand(time(NULL));
 
-  cout << BG_IMAGE << endl;
-  
-  setSdl(&screen);
   SDL_Surface* bg = NULL;
   bg = load_image (BG_IMAGE);
   if (!bg) cerr << "\nErro setando a imagem de plano de fundo: " << BG_IMAGE << endl;
   tsem = SDL_CreateSemaphore(0);
   msem = SDL_CreateSemaphore(0);
+  //font = TTF_OpenFont( "FreeSansBold.ttf", 8 );
 
   //TODO instanciar as células
   Cell::allocCellMatrix(15);
@@ -126,12 +128,15 @@ void checkInput() {
           Region::toggleShowRegions();
           break;
         case SDLK_d:
-          Region::divideWorld(4);
+          Region::divideWorld(8);
           break;
         case SDLK_q:
           exit(0);
       }
-    } 
+    }
+    if( event.type == SDL_QUIT ) {
+      exit(0);
+    }
   }    
 }
 
@@ -147,7 +152,6 @@ int weighter (void* data) {
         player[i]->checkCellWeight(player[j]);
       }
     }
-    
     SDL_SemPost(msem);
   }
   

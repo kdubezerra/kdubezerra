@@ -108,11 +108,8 @@ void Region::setBorderColor(Uint32 bc) {
 }
 
 void Region::drawRegion(SDL_Surface* output) {
-  for (list<Cell*>::iterator itrc = cells.begin() ; itrc != cells.end() ; itrc++) {
-    list<Cell*> neighCells = (*itrc)->getAllNeighbors();
-    for (list<Cell*>::iterator itnc = neighCells.begin() ; itnc != neighCells.end() ; itnc++)
-      if (!this->hasCell(*itnc))
-        (*itrc)->drawCellBorder(output, *itnc, borderColor);
+  for (list<Cell*>::iterator it = cells.begin() ; it != cells.end() ; it++) {        
+    (*it)->drawAllBorders(output, borderColor);
   }
 }
 

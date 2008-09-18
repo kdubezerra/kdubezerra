@@ -133,7 +133,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLmain.lib"
+				AdditionalDependencies="SDL.lib SDLmain.lib SDL_ttf.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -230,6 +230,10 @@
 			</File>
 			<File
 				RelativePath=".\eweight.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\FreeSansBold.ttf"
 				>
 			</File>
 			<File
