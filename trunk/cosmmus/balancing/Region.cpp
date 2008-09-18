@@ -4,14 +4,13 @@
 //===========================================static members
 
 list<Region*> Region::regionList;
-bool Region::showr;
-bool Region::showe;
+bool Region::showr = false;
+bool Region::showe = false;
 int Region::numRegions;
 
 //================================cons/des-truction methods
 
-Region::Region(){  
-  showr = showe = false;
+Region::Region(){
 }
 
 Region::Region(Uint32 borderColor){  
@@ -200,10 +199,19 @@ void Region::getWorldPartitionEXAMPLE() {
     }
 }
 
-void Region::getWorldPartition() {  
+void Region::getWorldPartitionRandomStart() {
   int cX = rand() % Cell::getRowLength();
   int cY = rand() % Cell::getRowLength();
   Cell* c = Cell::getCell(cX, cY);  
+  //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
+  while (c && getRWeight() < Cell::getTotalWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+    subscribe(c);
+    c = Cell::getHighestEdgeFreeNeighbor(getCells());
+  }
+}
+
+void Region::getWorldPartition() {
+  Cell* c = Cell::getHeaviestFreeCell();
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
   while (c && getRWeight() < Cell::getTotalWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
     subscribe(c);

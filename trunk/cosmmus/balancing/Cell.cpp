@@ -184,6 +184,36 @@ Cell* Cell::getHighestEdgeFreeNeighbor(list<Cell*> &cellList) {
   return highest_cell;
 }
 
+list<Cell*> Cell::getAllCells(bool mustBeFree) {
+  list<Cell*> cell_list;
+  for (int i = 0 ; i < getRowLength() ; i++)
+    for (int j = 0 ; j < getRowLength() ; j++) {
+      if (mustBeFree && cellMatrix[i][j]->getParentRegion()) continue;
+      cell_list.push_back(cellMatrix[i][j]);
+    }
+  return cell_list;
+}
+
+Cell* Cell::getHeaviestCell(bool mustBeFree) {
+  list<Cell*> cell_list = getAllCells(mustBeFree);
+  float highest_weight = 0.0f;
+  Cell* heaviest_cell = NULL;
+  for (list<Cell*>::iterator it = cell_list.begin() ; it != cell_list.end() ; it++)
+    if ((*it)->getVWeight() > highest_weight) {
+      heaviest_cell = *it;
+      highest_weight = (*it)->getVWeight();
+    }
+  return heaviest_cell;    
+}
+
+list<Cell*> Cell::getAllFreeCells() {
+  return getAllCells(true);
+}
+
+Cell* Cell::getHeaviestFreeCell() {
+  return getHeaviestCell(true);
+}
+
 list<Cell*> Cell::getAllNeighbors() {
   list<Cell*> neighlist;
   for (short i = 0 ; i < NUM_NEIGH ; i++)
