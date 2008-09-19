@@ -35,10 +35,10 @@ void setSdl(SDL_Surface** screen) {
   cout << "Set "<< WW << "x" << WW << " at " << (unsigned short) (*screen)->format->BitsPerPixel << " bits-per-pixel mode" << endl;
   SDL_FillRect (*screen, 0, SDL_MapRGB((*screen)->format, 0, 0, 0));
   SDL_UpdateRect(*screen, 0, 0, 0, 0);
-  //if( TTF_Init() == -1 ){
-  //  cerr << "Erro inicializando SDL_ttf" << endl;
-  //} else 
-  //  cout << "SDL_ttf inicializado com sucesso" << endl;
+  if( TTF_Init() == -1 ){
+    cerr << "Erro inicializando SDL_ttf" << endl;
+  } else 
+    cout << "SDL_ttf inicializado com sucesso" << endl;
 }
 
 
