@@ -12,6 +12,7 @@ int Region::numRegions;
 //================================cons/des-truction methods
 
 Region::Region(){
+  parentServer = NULL;
 }
 
 Region::Region(Uint32 borderColor){  
@@ -41,6 +42,24 @@ void Region::unsubscribeAllCells() {
   for (it = cells.begin() ; it != cells.end() ; it++)
     (*it)->releaseCellFromRegion();
   cells.clear();
+}
+
+bool Region::setServer(Server* s) {
+  if (parentServer || !s) return false;  
+  parentServer = s;
+  parentServer->assignRegion(this);  
+  return true;
+}
+
+void Region::unsetServer() {
+  if (!parentServer) return;
+  Server* s = parentServer;
+  parentServer = NULL;
+  s->releaseRegion();
+}
+
+Server* Region::getServer() {
+  return parentServer;
 }
 
 list<Cell*> &Region::getCells() {
@@ -136,6 +155,11 @@ void Region::drawWeight(SDL_Surface* output, TTF_Font* font) {
   static SDL_Surface* wgSurf = NULL;
   SDL_Color txtColor;
   coord wgPos;
+  stringstream buf;
+  string wgTxt;
+  buf.precision(2);
+  buf << fixed << getRWeight();
+  buf >> wgTxt;  
   if (cells.empty()) return;
   wgPos = cells.front()->getAbsolutePosition();
   wgPos.X += 3;
@@ -144,7 +168,7 @@ void Region::drawWeight(SDL_Surface* output, TTF_Font* font) {
   txtColor.r = (Uint8) ((borderColor & 0xFF0000) >> 16);
   txtColor.g = (Uint8) ((borderColor & 0x00FF00) >> 8);
   txtColor.b = (Uint8) (borderColor & 0x0000FF);
-  wgSurf = TTF_RenderText_Blended(font, "777", txtColor);
+  wgSurf = TTF_RenderText_Blended(font, wgTxt.c_str(), txtColor);
 
   apply_surface(wgPos.X, wgPos.Y, wgSurf, output);
 }

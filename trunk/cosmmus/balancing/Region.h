@@ -7,12 +7,14 @@
 #endif
 
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <list>
 
 using namespace std;
 
 class Cell;
+class Server;
 
 class Region {
 
@@ -25,6 +27,10 @@ class Region {
     void subscribe(Cell* c);
     void unsubscribe(Cell* c);
     void unsubscribeAllCells();
+    
+    bool setServer(Server* s);
+    void unsetServer();
+    Server* getServer();
 
     list<Cell*> &getCells();
     list<Region*> &getNeighbors();
@@ -64,6 +70,7 @@ class Region {
     list<Cell*> cells;
     list<Region*> neighbors;
     list<float> edgeWeight;
+    Server* parentServer;
     static list<Region*> regionList;
     static bool showr, showe, showw;
     static int numRegions;

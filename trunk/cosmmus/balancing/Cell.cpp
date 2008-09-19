@@ -385,9 +385,13 @@ coord Cell::getCellMatrixPosition() {
 
 coord Cell::getAbsolutePosition() {
   coord abspos = *cellposition;
-  abspos.X *= getRowLength();
-  abspos.Y *= getRowLength();
+  abspos.X *= getCellLength();
+  abspos.Y *= getCellLength();
   return abspos;
+}
+
+int Cell::getCellLength() {
+  return CELL_LENGTH;
 }
 
 int Cell::getRowLength(void) {

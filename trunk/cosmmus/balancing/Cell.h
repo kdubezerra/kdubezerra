@@ -88,6 +88,7 @@ class Cell {
     
     coord getCellMatrixPosition();
     coord getAbsolutePosition();
+    static int getCellLength();
     static int getRowLength();
     static int getNumNeigh();
     

@@ -53,6 +53,7 @@ int main (int argc, char* argv[]) {
   tsem = SDL_CreateSemaphore(0);
   msem = SDL_CreateSemaphore(0);
   font = TTF_OpenFont( "FreeSansBold.ttf", 10 );
+  //font = TTF_OpenFont( "lazy.ttf", 10 );
   if (!font)
 	  cerr << "Erro carregando a fonte" << endl;
 
@@ -78,7 +79,7 @@ int main (int argc, char* argv[]) {
   bli.R = 255;
   bli.G = 155;
   bli.B = 100;
-  message = TTF_RenderText_Blended( font, "The quick brown fox jumps over the lazy hound", textColor );
+  //message = TTF_RenderText_Blended( font, "The quick brown fox jumps over the lazy hound", textColor );
   if (!message)
 	  cerr << "Erro renderizando o texto" << endl;
   while (1) {
@@ -136,7 +137,7 @@ void checkInput() {
         case SDLK_r:
           Region::toggleShowRegions();
           break;
-		case SDLK_w:
+        case SDLK_w:
           Region::toggleShowRegionWeight();
           break;
         case SDLK_d:

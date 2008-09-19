@@ -192,6 +192,10 @@
 				RelativePath="..\..\Region.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\Server.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -212,6 +216,10 @@
 			</File>
 			<File
 				RelativePath="..\..\Region.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Server.h"
 				>
 			</File>
 		</Filter>
