@@ -377,6 +377,19 @@ void Cell::releaseCellFromRegion() {
   parentRegion = NULL;
 }
 
+coord Cell::getCellMatrixPosition() {
+  coord position;
+  position = *cellposition;
+  return position;
+}
+
+coord Cell::getAbsolutePosition() {
+  coord abspos = *cellposition;
+  abspos.X *= getRowLength();
+  abspos.Y *= getRowLength();
+  return abspos;
+}
+
 int Cell::getRowLength(void) {
   return cells_on_a_row;
 }

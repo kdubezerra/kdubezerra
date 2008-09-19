@@ -44,8 +44,12 @@ class Region {
     void drawEdge(SDL_Surface* output, int neighbor);
     void drawAllEdges(SDL_Surface* output);
     static void drawAllRegionsEdges(SDL_Surface* output);
+    void drawWeight(SDL_Surface* output, TTF_Font* font);
+    static void drawAllRegionsWeights(SDL_Surface* output, TTF_Font* font);
+
     static void toggleShowRegions();
     static void toggleShowEdges();
+    static void toggleShowRegionWeight();
     
     static int getNumRegions();
     static void divideWorld(int num_reg);
@@ -61,6 +65,6 @@ class Region {
     list<Region*> neighbors;
     list<float> edgeWeight;
     static list<Region*> regionList;
-    static bool showr, showe;
+    static bool showr, showe, showw;
     static int numRegions;
 };

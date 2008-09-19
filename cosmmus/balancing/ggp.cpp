@@ -26,12 +26,15 @@
 
 Avatar* player[nplayers];
 SDL_Surface* screen = NULL;
-//TTF_Font *font = NULL;
 SDL_Event event;
 SDL_sem* msem = NULL;
 SDL_sem* tsem = NULL;
 SDL_Thread* thread[CORE_COUNT];
-// thread_data dt[CORE_COUNT];
+ //thread_data dt[CORE_COUNT];
+
+SDL_Surface* message = NULL;
+TTF_Font *font = NULL;
+SDL_Color textColor = { 255, 255, 255 };
 
 void checkInput();
 int weighter (void* data);
@@ -49,7 +52,9 @@ int main (int argc, char* argv[]) {
   if (!bg) cerr << "\nErro setando a imagem de plano de fundo: " << BG_IMAGE << endl;
   tsem = SDL_CreateSemaphore(0);
   msem = SDL_CreateSemaphore(0);
-  //font = TTF_OpenFont( "FreeSansBold.ttf", 8 );
+  font = TTF_OpenFont( "FreeSansBold.ttf", 10 );
+  if (!font)
+	  cerr << "Erro carregando a fonte" << endl;
 
   //TODO instanciar as células
   Cell::allocCellMatrix(15);
@@ -73,7 +78,9 @@ int main (int argc, char* argv[]) {
   bli.R = 255;
   bli.G = 155;
   bli.B = 100;
-
+  message = TTF_RenderText_Blended( font, "The quick brown fox jumps over the lazy hound", textColor );
+  if (!message)
+	  cerr << "Erro renderizando o texto" << endl;
   while (1) {
     apply_surface(0,0,bg,screen);
 
@@ -86,6 +93,7 @@ int main (int argc, char* argv[]) {
     }    
     Cell::drawCells(screen);
     Region::drawAllRegions(screen);
+    Region::drawAllRegionsWeights(screen, font);
 
 //     for (int i = 0 ; i < CORE_COUNT ; i++)
 //       SDL_SemPost(tsem);
@@ -105,6 +113,7 @@ int main (int argc, char* argv[]) {
 //              while (1);
     time = SDL_GetTicks();
     checkInput();
+    apply_surface( 200, 200, message, screen ); 
 
     SDL_Flip( screen );
 
@@ -126,6 +135,9 @@ void checkInput() {
           break;
         case SDLK_r:
           Region::toggleShowRegions();
+          break;
+		case SDLK_w:
+          Region::toggleShowRegionWeight();
           break;
         case SDLK_d:
           Region::divideWorld(8);

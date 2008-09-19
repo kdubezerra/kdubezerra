@@ -4,8 +4,9 @@
 //===========================================static members
 
 list<Region*> Region::regionList;
-bool Region::showr = false;
+bool Region::showw = false;
 bool Region::showe = false;
+bool Region::showr = false;
 int Region::numRegions;
 
 //================================cons/des-truction methods
@@ -131,12 +132,40 @@ void Region::drawAllRegionsEdges(SDL_Surface* output) {
   //TODO
 }
 
+void Region::drawWeight(SDL_Surface* output, TTF_Font* font) {
+  static SDL_Surface* wgSurf = NULL;
+  SDL_Color txtColor;
+  coord wgPos;
+  if (cells.empty()) return;
+  wgPos = cells.front()->getAbsolutePosition();
+  wgPos.X += 3;
+  wgPos.Y += 3;
+  if (wgSurf) SDL_FreeSurface(wgSurf);
+  txtColor.r = (Uint8) ((borderColor & 0xFF0000) >> 16);
+  txtColor.g = (Uint8) ((borderColor & 0x00FF00) >> 8);
+  txtColor.b = (Uint8) (borderColor & 0x0000FF);
+  wgSurf = TTF_RenderText_Blended(font, "777", txtColor);
+
+  apply_surface(wgPos.X, wgPos.Y, wgSurf, output);
+}
+
+void Region::drawAllRegionsWeights(SDL_Surface* output, TTF_Font* font) {
+  if (!showw) return;
+  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
+    (*it)->drawWeight(output, font);
+  }
+}
+
 void Region::toggleShowRegions() {
   showr = !showr;
 }
 
 void Region::toggleShowEdges() {
   showe = !showe;
+}
+
+void Region::toggleShowRegionWeight() {
+  showw = !showw;
 }
 
 int Region::getNumRegions() {
