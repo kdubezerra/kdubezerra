@@ -7,65 +7,33 @@
 #endif
 
 #include <iostream>
-#include <sstream>
-#include <vector>
-#include <list>
 
 using namespace std;
 
-class Cell;
+class Region;
 
-class Region {
+class Server {
 
   public:
 
-    Region();
-    Region(Uint32 borderColor);
-    ~Region();
+    Server();
+    Server(float capacity);
+    ~Server();
 
-    void subscribe(Cell* c);
-    void unsubscribe(Cell* c);
-    void unsubscribeAllCells();
+    int assignRegion (Region* r);
+    void releaseRegion();
+    static void releaseAllRegions();
+    Region* getRegion();
 
-    list<Cell*> &getCells();
-    list<Region*> &getNeighbors();
-    int getNumberOfNeighbors();
-    bool hasCell(Cell* c);
-
-    float getRWeight();
-    float getEWeight(int neighbor);
-    void updateEWeight(int neighbor);
-    void updateAllEdges();
-
-    Region* getNeighbor(int neighbor);
-       
-    void setBorderColor(Uint32 bc);
-    void drawRegion(SDL_Surface* output);
-    static void drawAllRegions(SDL_Surface* output);
-    void drawEdge(SDL_Surface* output, int neighbor);
-    void drawAllEdges(SDL_Surface* output);
-    static void drawAllRegionsEdges(SDL_Surface* output);
-    void drawWeight(SDL_Surface* output, TTF_Font* font);
-    static void drawAllRegionsWeights(SDL_Surface* output, TTF_Font* font);
-
-    static void toggleShowRegions();
-    static void toggleShowEdges();
-    static void toggleShowRegionWeight();
-    
-    static int getNumRegions();
-    static void divideWorld(int num_reg);
-    static void balanceRegions();    
-    void getWorldPartitionEXAMPLE();
-    void getWorldPartitionRandomStart();
-    void getWorldPartition();
+    void setServerCapacity(float cap);
+    float getServerCapacity();
+    static float getMultiserverCapacity();
 
   protected:
+
+    Region* managedRegion;
+    float serverCapacity;
+    static float multiServerCapacity;
+    static list<Server*> serverList;
     
-    Uint32 borderColor;
-    list<Cell*> cells;
-    list<Region*> neighbors;
-    list<float> edgeWeight;
-    static list<Region*> regionList;
-    static bool showr, showe, showw;
-    static int numRegions;
 };
