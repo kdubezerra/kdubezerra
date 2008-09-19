@@ -86,6 +86,8 @@ class Cell {
     void setParentRegion(Region* region);
     void releaseCellFromRegion();    
     
+    coord getCellMatrixPosition();
+    coord getAbsolutePosition();
     static int getRowLength();
     static int getNumNeigh();
     
