@@ -2,7 +2,7 @@
 
 #ifdef _WIN32
 #include <SDL.h>
-//#include <SDL_ttf.h>
+#include <SDL_ttf.h>
 #else
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
