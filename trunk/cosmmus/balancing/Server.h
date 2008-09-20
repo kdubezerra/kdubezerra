@@ -6,7 +6,9 @@
 #include "myutils.h"
 #endif
 
+#include <algorithm>
 #include <iostream>
+#include <list>
 
 using namespace std;
 
@@ -28,6 +30,9 @@ class Server {
     void setServerCapacity(float cap);
     float getServerCapacity();
     static float getMultiserverCapacity();
+    
+    static bool compareCapacities(Server* sA, Server* sB);
+    static void sortServersByCapacity();
 
   protected:
 
