@@ -18,7 +18,8 @@ Server::Server(float capacity) {
 }
 
 Server::~Server() {
-  for (list<Server*>::iterator it = serverList.begin() ; it != serverList.end() && *it != this ; it++);
+  list<Server*>::iterator it;
+  for (it = serverList.begin() ; it != serverList.end() && *it != this ; it++);
   if (it != serverList.end())
     serverList.erase(it);
 }    
@@ -58,9 +59,17 @@ float Server::getServerCapacity() {
 }
 
 float Server::getMultiserverCapacity() {
-  float totalCap = 0.0f
+  float totalCap = 0.0f;
   for (list<Server*>::iterator it = serverList.begin() ; it != serverList.end() ; it++) {
     totalCap += (*it)->getServerCapacity();
   }
   return totalCap;
+}
+
+bool Server::compareCapacities(Server* sA, Server* sB) {
+  return (sA->getServerCapacity() > sB->getServerCapacity());
+}
+
+void Server::sortServersByCapacity() {
+  sort(serverList.begin(), serverList.end(), compareCapacities);
 }
