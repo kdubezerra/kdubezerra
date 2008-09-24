@@ -1,0 +1,3 @@
+- calcular o peso de uma região como sendo a interação de players dentro da região com os outros players dentro da região, mais a soma da arestas ligadas a outras regiões.
+
+- implementar um algoritmo de particionamento usando spectral bissection.
