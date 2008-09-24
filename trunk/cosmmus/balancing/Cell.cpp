@@ -377,6 +377,16 @@ void Cell::releaseCellFromRegion() {
   parentRegion = NULL;
 }
 
+bool Cell::isBorderCell() {
+  Cell* neigh;
+  for (short n = 0 ; n < getNumNeigh() ; n++) {
+    neigh = getNeighbor(n);
+    if (neigh && neigh->getParentRegion() != this->getParentRegion())
+      return true;
+  }
+  return false;
+}
+
 coord Cell::getCellMatrixPosition() {
   coord position;
   position = *cellposition;

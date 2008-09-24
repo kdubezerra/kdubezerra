@@ -37,7 +37,10 @@ class Region {
     bool hasCell(Cell* c);
 
     float getRWeight();
+    static float getWorldWeight();
     float getEWeight(int neighbor);
+    float getAllEdgesWeight();
+    static float getEdgeCut();
     void updateEWeight(int neighbor);
     void updateAllEdges();    
        
@@ -56,11 +59,23 @@ class Region {
     
     static list<Region*> &getRegionList();
     static int getNumRegions();
+    
+    // FASE DE PARTICIONAMENTO
+    
     static void divideWorld(int num_reg);
     static void balanceRegions();    
     void getWorldPartitionEXAMPLE();
     void getWorldPartitionRandomStart();
     void getWorldPartition();
+
+    // FASE DE REFINAMENTO
+
+    bool testCellSwap(Cell* loc, Cell* ext, float &gain);
+    void testSwapBorderCells(Region* other, Cell*& loc, Cell*& ext, float& newRW, float& newEW);
+    static void refinePartitioningGlobal(int passes = 0);
+    void refinePartitioningLocal(Region* other, int passes = 0);
+    static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float* gain = NULL);
+    static void swapCellsRegions(Cell* c1, Cell* c2);
 
   protected:
     

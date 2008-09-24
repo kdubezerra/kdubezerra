@@ -30,6 +30,8 @@
           swapper = A; A = B; B = swapper
 #define ABS(X) \
           ((X) > 0)?(X):(-(X))
+#define MAX(A,B) \
+          A > B ? A : B
 
 class coord {
   public:

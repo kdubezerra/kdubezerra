@@ -91,12 +91,35 @@ float Region::getRWeight() {
   return weight;
 }
 
-float Region::getEWeight(int neighbor) {
+float Region::getWorldWeight() {
+  float ww = 0.0f;
+  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
+    ww += (*it)->getRWeight();
+  }
+  return ww;
+}
+
+float Region::getEWeight(int neighbor) {//TODO
   if (neighbor >= getNumberOfNeighbors())
     return 0.0f;
   list<float>::iterator it = edgeWeight.begin();
   for (int i = 0 ; i < neighbor ; i++) it++;
   return *it;
+}
+
+float Region::getAllEdgesWeight() {
+  float aew = 0.0f;
+  for (int neigh = 0 ; neigh < getNumberOfNeighbors() ; neigh++)
+    aew += getEWeight(neigh);
+  return aew;
+}
+
+float Region::getEdgeCut() {
+  float ec = 0.0f;
+  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
+    ec += (*it)->getAllEdgesWeight();
+  }
+  return ec;
 }
 
 void Region::updateEWeight(int neighbor) {
@@ -278,4 +301,97 @@ void Region::getWorldPartition() {
     subscribe(c);
     c = Cell::getHighestEdgeFreeNeighbor(getCells());
   }
+}
+
+bool Region::testCellSwap(Cell* loc, Cell* ext, float& gain) {
+  if(!loc->isBorderCell() || !ext->isBorderCell())
+    return false;
+  Region* other = ext->getParentRegion();
+  bool disbalanced = false;
+  gain = getEdgeCut();
+  swapCellsRegions(loc, ext);
+  gain -= getEdgeCut();
+  disbalanced = other->getServer()->isDisbalanced() || this->getServer()->isDisbalanced();
+  swapCellsRegions(loc, ext);
+  return disbalanced;
+}
+
+void Region::testSwapBorderCells(Region* other, Cell*& loc, Cell*& ext, float& newRW, float& newEW) {
+  loc = ext = NULL;
+  newRW = newEW = 0.0f;
+  float best_swap_ew = 0.0f;
+  float best_swap_rw = 0.0f;  
+  for (list<Cell*>::iterator itloc = cells.begin() ; itloc != cells.end() ; itloc++) {
+    if (!(*itloc)->isBorderCell()) continue;
+    for (list<Cell*>::iterator itext = other->getCells().begin() ; itext != other->getCells().end() ; itext++) {
+      if (!(*itext)->isBorderCell()) continue;
+      //TODO
+    }
+  }
+}
+
+void Region::refinePartitioningGlobal(int passes) {
+  int passcount = 0;
+  bool changed = false;
+  Cell* c1 = NULL;
+  Cell* c2 = NULL;
+  Cell* _c1;
+  Cell* _c2;
+  float gain = 0.0f;
+  float new_gain = 0.0f;
+  while (!passes || passcount < passes) {
+    passcount++;
+    for (list<Region*>::iterator it_ri = regionList.begin() ; it_ri != regionList.end() ; it_ri++) {
+      for (list<Region*>::iterator it_rj = it_ri ; it_rj != regionList.end() ; it_rj++) {
+        if (it_rj == it_ri) it_rj++;
+        getBestCellPair(*it_ri, *it_rj, _c1, _c2, &new_gain);
+        if (_c1 && _c2 && new_gain > gain) {
+          gain = new_gain;
+          c1 = _c1;
+          c2 = _c2;
+        }
+      }
+    }
+    swapCellsRegions(c1, c2);
+  }
+}
+
+void Region::refinePartitioningLocal(Region* other, int passes) {
+  int passcount = 0;
+  Cell* c1;
+  Cell* c2;
+  while (!passes || passcount < passes) {
+    passcount++;
+    c1 = c2 = NULL;
+    getBestCellPair(this, other, c1, c2);
+    if (!c1 || !c2) break;
+    swapCellsRegions(c1, c2);
+  }
+}
+
+void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float* gain) {
+  float _new_gain = 0.0f;
+  float _gain = 0.0f;
+  c1 = c2 = NULL;
+  for (list<Cell*>::iterator it1 = r1->getCells().begin() ; it1 != r1->getCells().end() ; it1++)
+    for (list<Cell*>::iterator it2 = r2->getCells().begin() ; it2 != r2->getCells().end() ; it2++) {
+      if (r1->testCellSwap(*it1, *it2, _new_gain) && _new_gain > _gain) {
+        c1 = (*it1);
+        c2 = (*it2);
+        _gain = _new_gain;
+      }
+    }
+  if (gain)
+    *gain = _gain;
+}
+
+void Region::swapCellsRegions(Cell* c1, Cell* c2) {
+  Region* r1 = c1->getParentRegion();
+  Region* r2 = c2->getParentRegion();
+  r1->unsubscribe(c1);
+  r2->subscribe(c1);
+  r1->subscribe(c2);
+  r2->unsubscribe(c2);
+  r1->updateAllEdges();
+  r2->updateAllEdges();
 }

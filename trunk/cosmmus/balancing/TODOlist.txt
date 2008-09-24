@@ -1,3 +1,11 @@
 - calcular o peso de uma região como sendo a interação de players dentro da região com os outros players dentro da região, mais a soma da arestas ligadas a outras regiões.
 
 - implementar um algoritmo de particionamento usando spectral bissection.
+
+- fazer com que os neighbors da região funcionem
+
+- quando duas células são trocadas entre regiões, pensar no que fazer, em relação aos edge weights assimétricos: simplesmente pegar o máximo, ou levar em consideração que "está OK" se o servidor que ficar com maior edge cut for mais poderoso?
+
+- usar apenas células da fronteira
+
+- verificar se, quando células são trocadas, é mantido o balanceamento.

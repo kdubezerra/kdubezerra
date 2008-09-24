@@ -71,6 +71,7 @@ class Cell {
     static void updateAllEdgesAndVertexWeights();
     
     static Cell* getCell(int cell_X, int cell_Y);
+
     Cell* getNeighbor(short neigh);
     short getNeighbor(Cell* neigh);
     Cell* getHighestEdgeFreeNeighbor();
@@ -84,7 +85,8 @@ class Cell {
 
     Region* getParentRegion();
     void setParentRegion(Region* region);
-    void releaseCellFromRegion();    
+    void releaseCellFromRegion();
+    bool isBorderCell();
     
     coord getCellMatrixPosition();
     coord getAbsolutePosition();
