@@ -244,3 +244,12 @@ float convertToScale(float value, float old_min, float old_max, float new_min, f
   new_value = new_value0 + new_min;  
   return new_value;
 }
+
+string floatToString(float f, int precision) {
+  stringstream buf;
+  string _result;
+  buf.precision(precision);
+  buf << fixed << f;
+  buf >> _result;
+  return _result;
+}
