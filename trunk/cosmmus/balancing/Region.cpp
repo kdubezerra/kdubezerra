@@ -12,13 +12,8 @@ int Region::numRegions;
 
 //================================cons/des-truction methods
 
-Region::Region(){
-  parentServer = NULL;
-}
-
-Region::Region(Uint32 borderColor){  
-  Region();
-  setBorderColor(borderColor);
+Region::Region(Uint32 _borderColor) : parentServer(NULL) {
+  setBorderColor(_borderColor);
 }
 
 Region::~Region() {
@@ -75,6 +70,12 @@ int Region::getNumberOfNeighbors() {
   return neighbors.size();
 }
 
+Region* Region::getNeighbor(int neighbor) {
+  list<Region*>::iterator it = neighbors.begin();
+  for (int i = 0 ; i < neighbor ; i++) it++;
+  return *it;
+}
+
 bool Region::hasCell(Cell* c) {
   for (list<Cell*>::iterator it = cells.begin() ; it != cells.end() ; it++)
     if (*it == c)
@@ -118,12 +119,6 @@ void Region::updateAllEdges() {
     updateEWeight(edge);
 }
 
-Region* Region::getNeighbor(int neighbor) {
-  list<Region*>::iterator it = neighbors.begin();
-  for (int i = 0 ; i < neighbor ; i++) it++;
-  return *it;
-}
-
 void Region::setBorderColor(Uint32 bc) {
   borderColor = bc;
 }
@@ -154,24 +149,35 @@ void Region::drawAllRegionsEdges(SDL_Surface* output) {
 
 void Region::drawWeight(SDL_Surface* output, TTF_Font* font) {
   static SDL_Surface* wgSurf = NULL;
+  static SDL_Surface* capSurf = NULL;
+  static SDL_Surface* loadSurf = NULL;
   SDL_Color txtColor;
-  coord wgPos;
-  stringstream buf;
-  string wgTxt;
-  buf.precision(2);
-  buf << fixed << getRWeight();
-  buf >> wgTxt;  
+  coord wgPos, capPos, loadPos;
+  string wgTxt, capTxt, loadTxt;
+  wgTxt = floatToString(getRWeight());
+  if (getServer()) {
+    capTxt = floatToString(getServer()->getServerCapacity());
+    loadTxt = floatToString(getRWeight() / getServer()->getServerCapacity());
+  }
   if (cells.empty()) return;
   wgPos = cells.front()->getAbsolutePosition();
-  wgPos.X += 3;
+  wgPos.X = capPos.X = loadPos.X = wgPos.X + 3;
   wgPos.Y += 3;
+  capPos.Y = wgPos.Y + 15;
+  loadPos.Y = capPos.Y + 15;
   if (wgSurf) SDL_FreeSurface(wgSurf);
+  if (capSurf) SDL_FreeSurface(capSurf);
+  if (loadSurf) SDL_FreeSurface(loadSurf);
   txtColor.r = (Uint8) ((borderColor & 0xFF0000) >> 16);
   txtColor.g = (Uint8) ((borderColor & 0x00FF00) >> 8);
   txtColor.b = (Uint8) (borderColor & 0x0000FF);
   wgSurf = TTF_RenderText_Blended(font, wgTxt.c_str(), txtColor);
+  capSurf = TTF_RenderText_Blended(font, capTxt.c_str(), txtColor);
+  loadSurf = TTF_RenderText_Blended(font, loadTxt.c_str(), txtColor);
 
   apply_surface(wgPos.X, wgPos.Y, wgSurf, output);
+  apply_surface(capPos.X, capPos.Y, capSurf, output);
+  apply_surface(loadPos.X, loadPos.Y, loadSurf, output);
 }
 
 void Region::drawAllRegionsWeights(SDL_Surface* output, TTF_Font* font) {
@@ -191,6 +197,10 @@ void Region::toggleShowEdges() {
 
 void Region::toggleShowRegionWeight() {
   showw = !showw;
+}
+
+list<Region*> &Region::getRegionList() {
+  return regionList;
 }
 
 int Region::getNumRegions() {

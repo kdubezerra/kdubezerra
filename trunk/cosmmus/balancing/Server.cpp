@@ -8,13 +8,8 @@ list<Server*> Server::serverList;
 
 //================================cons/des-truction methods
 
-Server::Server(){
+Server::Server(float capacity) : managedRegion(NULL), serverCapacity(capacity) {  
   serverList.push_back(this);
-}
-
-Server::Server(float capacity) {
-  Server();
-  setServerCapacity(capacity);
 }
 
 Server::~Server() {
@@ -51,7 +46,9 @@ Region* Server::getRegion() {
 }
 
 void Server::setServerCapacity(float cap) {
+  multiServerCapacity -= serverCapacity;
   serverCapacity = cap;
+  multiServerCapacity += serverCapacity;
 }
 
 float Server::getServerCapacity() {
@@ -71,5 +68,6 @@ bool Server::compareCapacities(Server* sA, Server* sB) {
 }
 
 void Server::sortServersByCapacity() {
-  sort(serverList.begin(), serverList.end(), compareCapacities);
+  //sort(serverList.begin(), serverList.end(), &Server::compareCapacities);
+  serverList.sort(Server::compareCapacities);
 }

@@ -18,8 +18,7 @@ class Server {
 
   public:
 
-    Server();
-    Server(float capacity);
+    Server(float capacity = 0.0f);
     ~Server();
 
     int assignRegion (Region* r);
