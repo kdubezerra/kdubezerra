@@ -7,7 +7,6 @@
 #endif
 
 #include <iostream>
-#include <sstream>
 #include <vector>
 #include <list>
 
@@ -20,8 +19,7 @@ class Region {
 
   public:
 
-    Region();
-    Region(Uint32 borderColor);
+    Region(Uint32 borderColor = 0x000000);
     ~Region();
 
     void subscribe(Cell* c);
@@ -35,14 +33,13 @@ class Region {
     list<Cell*> &getCells();
     list<Region*> &getNeighbors();
     int getNumberOfNeighbors();
+    Region* getNeighbor(int neighbor);
     bool hasCell(Cell* c);
 
     float getRWeight();
     float getEWeight(int neighbor);
     void updateEWeight(int neighbor);
-    void updateAllEdges();
-
-    Region* getNeighbor(int neighbor);
+    void updateAllEdges();    
        
     void setBorderColor(Uint32 bc);
     void drawRegion(SDL_Surface* output);
@@ -57,6 +54,7 @@ class Region {
     static void toggleShowEdges();
     static void toggleShowRegionWeight();
     
+    static list<Region*> &getRegionList();
     static int getNumRegions();
     static void divideWorld(int num_reg);
     static void balanceRegions();    

@@ -5,6 +5,7 @@
 #endif
 
 #define CORE_COUNT 4
+#define NUM_SERVERS 4
 
 #define BG_IMAGE "bg.bmp"
 #define VERTEX_IMAGE "vweight.bmp"
@@ -16,6 +17,7 @@
 #include "Avatar.h"
 #include "Cell.h"
 #include "Region.h"
+#include "Server.h"
 
 
 
@@ -25,6 +27,7 @@
 // } thread_data;
 
 Avatar* player[nplayers];
+Server* server[NUM_SERVERS];
 SDL_Surface* screen = NULL;
 SDL_Event event;
 SDL_sem* msem = NULL;
@@ -42,10 +45,16 @@ int weighter (void* data);
 //AQUI COMECA O PROGRAMA
 
 int main (int argc, char* argv[]) {
+  srand(time(NULL));
+  
   setSdl(&screen);
   SDL_EnableKeyRepeat(400, 10);
   
-  srand(time(NULL));
+  for (int i = 0 ; i < NUM_SERVERS ; i++) {
+    server[i] = new Server ((float) (rand() % 2500));
+    cout << "Server " << i << " has capacity of " << server[i]->getServerCapacity() << endl;
+  }
+  
 
   SDL_Surface* bg = NULL;
   bg = load_image (BG_IMAGE);
@@ -80,8 +89,8 @@ int main (int argc, char* argv[]) {
   bli.G = 155;
   bli.B = 100;
   //message = TTF_RenderText_Blended( font, "The quick brown fox jumps over the lazy hound", textColor );
-  if (!message)
-	  cerr << "Erro renderizando o texto" << endl;
+  //if (!message)
+	 // cerr << "Erro renderizando o texto" << endl;
   while (1) {
     apply_surface(0,0,bg,screen);
 
@@ -125,6 +134,7 @@ int main (int argc, char* argv[]) {
 }
 
 void checkInput() {
+  int i = 0;
   if( SDL_PollEvent( &event ) ) { //If a key was pressed 
     if( event.type == SDL_KEYDOWN ) { 
       switch( event.key.keysym.sym ) {
@@ -141,7 +151,14 @@ void checkInput() {
           Region::toggleShowRegionWeight();
           break;
         case SDLK_d:
-          Region::divideWorld(8);
+          Server::releaseAllRegions();
+          Region::divideWorld(NUM_SERVERS);          
+          i = 0;
+          for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {
+            server[i]->assignRegion(*it);
+            i++;
+            cout << "Server " << i << " receives region " << *it << endl;
+          }
           break;
         case SDLK_q:
           exit(0);
