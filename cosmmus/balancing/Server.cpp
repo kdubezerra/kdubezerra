@@ -68,6 +68,15 @@ bool Server::compareCapacities(Server* sA, Server* sB) {
 }
 
 void Server::sortServersByCapacity() {
-  //sort(serverList.begin(), serverList.end(), &Server::compareCapacities);
   serverList.sort(Server::compareCapacities);
+}
+
+float Server::getLoad() {
+  return getRegion()->getRWeight() / getServerCapacity();
+}
+
+bool Server::isDisbalanced() {
+  float world_fraction = getRegion()->getRWeight() / Region::getWorldWeight();
+  float power_fraction = getServerCapacity() / getMultiserverCapacity();
+  return world_fraction / power_fraction > DISBAL_TOLERANCE;
 }

@@ -10,6 +10,8 @@
 #include <iostream>
 #include <list>
 
+#define DISBAL_TOLERANCE 1.2f
+
 using namespace std;
 
 class Region;
@@ -32,6 +34,8 @@ class Server {
     
     static bool compareCapacities(Server* sA, Server* sB);
     static void sortServersByCapacity();
+    float getLoad();
+    bool isDisbalanced();
 
   protected:
 
