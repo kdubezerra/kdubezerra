@@ -9,6 +9,8 @@
 #endif
 
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <cstdlib>
 #include <ctime>
 #include <map>
@@ -59,3 +61,4 @@ SDL_Surface* load_image( string filename );
 bool belongsToVisibility (float px, float py, float dx, float dy, float ox, float oy); //visibility is defined as a semicircle with the observer in the center
 float convertToScale(float value, float old_min, float old_max, float new_min, float new_max);
 float simpleScale(float value, float old_max, float new_max);
+string floatToString(float f, int precision = 2);
