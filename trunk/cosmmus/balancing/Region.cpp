@@ -99,7 +99,7 @@ float Region::getWorldWeight() {
   return ww;
 }
 
-float Region::getEWeight(int neighbor) {//TODO
+float Region::getEWeight(int neighbor) {//TODO: FIXME
   if (neighbor >= getNumberOfNeighbors())
     return 0.0f;
   list<float>::iterator it = edgeWeight.begin();
@@ -109,8 +109,9 @@ float Region::getEWeight(int neighbor) {//TODO
 
 float Region::getAllEdgesWeight() {
   float aew = 0.0f;
-  for (int neigh = 0 ; neigh < getNumberOfNeighbors() ; neigh++)
-    aew += getEWeight(neigh);
+  for (list<Cell*>::iterator it = cells.begin() ; it != cells.end() ; it++) {
+    aew += (*it)->getWeightToAnotherRegion();
+  }
   return aew;
 }
 
@@ -303,6 +304,18 @@ void Region::getWorldPartition() {
   }
 }
 
+void Region::swapCellsRegions(Cell* c1, Cell* c2) {
+  Region* r1 = c1->getParentRegion();
+  Region* r2 = c2->getParentRegion();
+  r1->unsubscribe(c1);
+  r2->unsubscribe(c2);  
+  r1->subscribe(c2);
+  r2->subscribe(c1);    
+  r1->updateAllEdges();
+  r2->updateAllEdges();
+}
+
+
 bool Region::testCellSwap(Cell* loc, Cell* ext, float& gain) {
   if(!loc->isBorderCell() || !ext->isBorderCell())
     return false;
@@ -316,23 +329,9 @@ bool Region::testCellSwap(Cell* loc, Cell* ext, float& gain) {
   return disbalanced;
 }
 
-void Region::testSwapBorderCells(Region* other, Cell*& loc, Cell*& ext, float& newRW, float& newEW) {
-  loc = ext = NULL;
-  newRW = newEW = 0.0f;
-  float best_swap_ew = 0.0f;
-  float best_swap_rw = 0.0f;  
-  for (list<Cell*>::iterator itloc = cells.begin() ; itloc != cells.end() ; itloc++) {
-    if (!(*itloc)->isBorderCell()) continue;
-    for (list<Cell*>::iterator itext = other->getCells().begin() ; itext != other->getCells().end() ; itext++) {
-      if (!(*itext)->isBorderCell()) continue;
-      //TODO
-    }
-  }
-}
-
 void Region::refinePartitioningGlobal(int passes) {
+  int debug = 0;
   int passcount = 0;
-  bool changed = false;
   Cell* c1 = NULL;
   Cell* c2 = NULL;
   Cell* _c1;
@@ -340,15 +339,18 @@ void Region::refinePartitioningGlobal(int passes) {
   float gain = 0.0f;
   float new_gain = 0.0f;
   while (!passes || passcount < passes) {
-    passcount++;
+    passcount++;    
     for (list<Region*>::iterator it_ri = regionList.begin() ; it_ri != regionList.end() ; it_ri++) {
-      for (list<Region*>::iterator it_rj = it_ri ; it_rj != regionList.end() ; it_rj++) {
+      for (list<Region*>::iterator it_rj = it_ri ; it_rj != regionList.end() ; it_rj++) {        
         if (it_rj == it_ri) it_rj++;
+        if (it_rj == regionList.end()) break;
         getBestCellPair(*it_ri, *it_rj, _c1, _c2, &new_gain);
         if (_c1 && _c2 && new_gain > gain) {
+          cout << "Combining pair " << debug++ << " of cells... ";
           gain = new_gain;
           c1 = _c1;
           c2 = _c2;
+          cout << " combined [OK]" << endl;
         }
       }
     }
@@ -370,11 +372,14 @@ void Region::refinePartitioningLocal(Region* other, int passes) {
 }
 
 void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float* gain) {
+  list<Cell*> r1_cells(r1->getCells());
+  list<Cell*> r2_cells(r2->getCells());
+  
   float _new_gain = 0.0f;
   float _gain = 0.0f;
   c1 = c2 = NULL;
-  for (list<Cell*>::iterator it1 = r1->getCells().begin() ; it1 != r1->getCells().end() ; it1++)
-    for (list<Cell*>::iterator it2 = r2->getCells().begin() ; it2 != r2->getCells().end() ; it2++) {
+  for (list<Cell*>::iterator it1 = r1_cells.begin() ; it1 != r1_cells.end() ; it1++)
+    for (list<Cell*>::iterator it2 = r2_cells.begin() ; it2 != r2_cells.end() ; it2++) {
       if (r1->testCellSwap(*it1, *it2, _new_gain) && _new_gain > _gain) {
         c1 = (*it1);
         c2 = (*it2);
@@ -383,15 +388,4 @@ void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float
     }
   if (gain)
     *gain = _gain;
-}
-
-void Region::swapCellsRegions(Cell* c1, Cell* c2) {
-  Region* r1 = c1->getParentRegion();
-  Region* r2 = c2->getParentRegion();
-  r1->unsubscribe(c1);
-  r2->subscribe(c1);
-  r1->subscribe(c2);
-  r2->unsubscribe(c2);
-  r1->updateAllEdges();
-  r2->updateAllEdges();
 }
