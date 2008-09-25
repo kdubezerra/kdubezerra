@@ -150,6 +150,9 @@ void checkInput() {
         case SDLK_w:
           Region::toggleShowRegionWeight();
           break;
+        case SDLK_k:
+          Region::refinePartitioningGlobal(1);
+          break;
         case SDLK_d:
           Server::releaseAllRegions();
           Region::divideWorld(NUM_SERVERS);          

@@ -261,6 +261,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\TODOlist.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

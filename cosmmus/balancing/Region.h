@@ -70,12 +70,11 @@ class Region {
 
     // FASE DE REFINAMENTO
 
+    static void swapCellsRegions(Cell* c1, Cell* c2);
     bool testCellSwap(Cell* loc, Cell* ext, float &gain);
-    void testSwapBorderCells(Region* other, Cell*& loc, Cell*& ext, float& newRW, float& newEW);
     static void refinePartitioningGlobal(int passes = 0);
     void refinePartitioningLocal(Region* other, int passes = 0);
-    static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float* gain = NULL);
-    static void swapCellsRegions(Cell* c1, Cell* c2);
+    static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float* gain = NULL);    
 
   protected:
     
