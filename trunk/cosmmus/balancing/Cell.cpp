@@ -74,7 +74,26 @@ float Cell::getEWeight(Cell* neighbor) {
   return getEWeight(neigh_code);
 }
 
-float Cell::getWeightToAnotherRegion() {
+float Cell::getAllEdgesWeight() {
+  float aew = 0.0f;
+  for (short neigh = 0 ; neigh < getNumNeigh() ; neigh++) {
+    aew += getEWeight(neigh);
+  }
+  return aew;
+}
+
+float Cell::getEWeightToSameRegion() {
+  float wtsar = 0.0f;
+  Cell* neighCell;
+  for (short neigh = 0 ; neigh < getNumNeigh() ; neigh++) {
+    neighCell = getNeighbor(neigh);
+    if (neighCell && neighCell->getParentRegion() == this->getParentRegion())
+      wtar += getEWeight(neigh);
+  }
+  return wtar;
+}
+
+float Cell::getEWeightToAnotherRegion() {
   float wtar = 0.0f;
   Cell* neighCell;
   for (short neigh = 0 ; neigh < getNumNeigh() ; neigh++) {

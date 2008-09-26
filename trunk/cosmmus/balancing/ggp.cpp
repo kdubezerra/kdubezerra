@@ -151,7 +151,7 @@ void checkInput() {
           Region::toggleShowRegionWeight();
           break;
         case SDLK_k:
-          Region::refinePartitioningGlobal(1);
+          Region::refinePartitioningGlobal();
           break;
         case SDLK_d:
           Server::releaseAllRegions();

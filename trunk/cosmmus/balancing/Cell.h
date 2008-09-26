@@ -63,7 +63,9 @@ class Cell {
     float getVWeight();
     float getEWeight(short neighbor);
     float getEWeight(Cell* neighbor);
-    float getWeightToAnotherRegion();
+    float getEWeightToSameRegion();
+    float getEWeightToAnotherRegion();
+    float getAllEdgesWeight();
     static float getTotalWeight();
     
     void updateVWeight();

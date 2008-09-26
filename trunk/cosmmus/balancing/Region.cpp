@@ -87,7 +87,7 @@ float Region::getRWeight() {
   list<Cell*>::iterator it;
   float weight = 0.0f;
   for (it = cells.begin() ; it != cells.end() ; it++)
-    weight += (*it)->getVWeight();      
+    weight += (*it)->getVWeight() + (*it)->getEWeightToSameRegion;      
   return weight;
 }
 
@@ -110,9 +110,13 @@ float Region::getEWeight(int neighbor) {//TODO: FIXME
 float Region::getAllEdgesWeight() {
   float aew = 0.0f;
   for (list<Cell*>::iterator it = cells.begin() ; it != cells.end() ; it++) {
-    aew += (*it)->getWeightToAnotherRegion();
+    aew += (*it)->getEWeightToAnotherRegion();
   }
   return aew;
+}
+
+float Region::getServerCapacityDemand() {
+  return getAllEdgesWeight() + getRWeight();
 }
 
 float Region::getEdgeCut() {
@@ -298,7 +302,8 @@ void Region::getWorldPartitionRandomStart() {
 void Region::getWorldPartition() {
   Cell* c = Cell::getHeaviestFreeCell();
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
-  while (c && getRWeight() < Cell::getTotalWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  //while (c && getRWeight() < Cell::getTotalWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  while (c && getRWeight() < getServer()->getServerCapacity()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
     subscribe(c);
     c = Cell::getHighestEdgeFreeNeighbor(getCells());
   }
@@ -338,24 +343,28 @@ void Region::refinePartitioningGlobal(int passes) {
   Cell* _c2;
   float gain = 0.0f;
   float new_gain = 0.0f;
+  cout << endl << "Global partitioning refinement started..." << endl;
   while (!passes || passcount < passes) {
+    cout << "Executing pass number " << debug++ << "... ";
+    c1 = c2 = NULL;
     passcount++;    
     for (list<Region*>::iterator it_ri = regionList.begin() ; it_ri != regionList.end() ; it_ri++) {
-      for (list<Region*>::iterator it_rj = it_ri ; it_rj != regionList.end() ; it_rj++) {        
+      for (list<Region*>::iterator it_rj = it_ri ; it_rj != regionList.end() ; it_rj++) {                
         if (it_rj == it_ri) it_rj++;
         if (it_rj == regionList.end()) break;
         getBestCellPair(*it_ri, *it_rj, _c1, _c2, &new_gain);
         if (_c1 && _c2 && new_gain > gain) {
-          cout << "Combining pair " << debug++ << " of cells... ";
           gain = new_gain;
           c1 = _c1;
           c2 = _c2;
-          cout << " combined [OK]" << endl;
-        }
+        }        
       }
     }
-    swapCellsRegions(c1, c2);
+    cout << " executed [OK]" << endl;
+    if (c1 && c2) swapCellsRegions(c1, c2);
+    else break;
   }
+  cout << "Global partitioning refinement concluded." << endl;
 }
 
 void Region::refinePartitioningLocal(Region* other, int passes) {
