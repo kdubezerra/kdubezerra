@@ -40,7 +40,9 @@ class Region {
     static float getWorldWeight();
     float getEWeight(int neighbor);
     float getAllEdgesWeight();
+    float getServerCapacityDemand();
     static float getEdgeCut();
+
     void updateEWeight(int neighbor);
     void updateAllEdges();    
        
