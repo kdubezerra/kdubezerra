@@ -52,7 +52,7 @@ int main (int argc, char* argv[]) {
   
   for (int i = 0 ; i < NUM_SERVERS ; i++) {
     server[i] = new Server ((float) (rand() % 2500));
-    cout << "Server " << i << " has capacity of " << server[i]->getServerCapacity() << endl;
+    cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
   }
   
 
@@ -121,15 +121,12 @@ int main (int argc, char* argv[]) {
 
 
 //              while (1);
-    time = SDL_GetTicks();
-    checkInput();
+    time = SDL_GetTicks();    
     apply_surface( 200, 200, message, screen ); 
-
     SDL_Flip( screen );
-
 //     SDL_Delay(5);
     count++;
-
+    checkInput();
   }
 }
 
@@ -155,13 +152,14 @@ void checkInput() {
           break;
         case SDLK_d:
           Server::releaseAllRegions();
-          Region::divideWorld(NUM_SERVERS);          
-          i = 0;
+          Region::initRegions(NUM_SERVERS);
           for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {
             server[i]->assignRegion(*it);
             i++;
             cout << "Server " << i << " receives region " << *it << endl;
-          }
+          }                    
+          Region::balanceRegions();
+          i = 0;
           break;
         case SDLK_q:
           exit(0);

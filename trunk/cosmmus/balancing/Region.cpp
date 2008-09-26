@@ -9,6 +9,7 @@ bool Region::showw = false;
 bool Region::showe = false;
 bool Region::showr = false;
 int Region::numRegions;
+float worldCapacity = 0.0f;
 
 //================================cons/des-truction methods
 
@@ -83,20 +84,20 @@ bool Region::hasCell(Cell* c) {
   return false;
 }
 
+void Region::setRegionCapacity(float cap) {
+  regionCapacity = cap;
+}
+
+float Region::getRegionCapacity(void) {
+  return regionCapacity;
+}
+
 float Region::getRWeight() {
   list<Cell*>::iterator it;
   float weight = 0.0f;
   for (it = cells.begin() ; it != cells.end() ; it++)
-    weight += (*it)->getVWeight() + (*it)->getEWeightToSameRegion;      
+    weight += (*it)->getVWeight() + (*it)->getEWeightToSameRegion();
   return weight;
-}
-
-float Region::getWorldWeight() {
-  float ww = 0.0f;
-  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
-    ww += (*it)->getRWeight();
-  }
-  return ww;
 }
 
 float Region::getEWeight(int neighbor) {//TODO: FIXME
@@ -115,8 +116,17 @@ float Region::getAllEdgesWeight() {
   return aew;
 }
 
-float Region::getServerCapacityDemand() {
+float Region::getAbsoluteLoad() {
+  updateAllEdges();
   return getAllEdgesWeight() + getRWeight();
+}
+
+float Region::getWorldLoad() {
+  float wl = 0.0f;
+  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
+    wl += (*it)->getAbsoluteLoad();
+  }
+  return wl;
 }
 
 float Region::getEdgeCut() {
@@ -175,43 +185,43 @@ void Region::drawAllRegionsEdges(SDL_Surface* output) {
   //TODO
 }
 
-void Region::drawWeight(SDL_Surface* output, TTF_Font* font) {
-  static SDL_Surface* wgSurf = NULL;
-  static SDL_Surface* capSurf = NULL;
-  static SDL_Surface* loadSurf = NULL;
-  SDL_Color txtColor;
-  coord wgPos, capPos, loadPos;
-  string wgTxt, capTxt, loadTxt;
-  wgTxt = floatToString(getRWeight());
-  if (getServer()) {
-    capTxt = floatToString(getServer()->getServerCapacity());
-    loadTxt = floatToString(getRWeight() / getServer()->getServerCapacity());
-  }
+void Region::drawLoad(SDL_Surface* output, TTF_Font* font) {
   if (cells.empty()) return;
-  wgPos = cells.front()->getAbsolutePosition();
-  wgPos.X = capPos.X = loadPos.X = wgPos.X + 3;
-  wgPos.Y += 3;
-  capPos.Y = wgPos.Y + 15;
-  loadPos.Y = capPos.Y + 15;
-  if (wgSurf) SDL_FreeSurface(wgSurf);
-  if (capSurf) SDL_FreeSurface(capSurf);
-  if (loadSurf) SDL_FreeSurface(loadSurf);
+  static SDL_Surface* ldSurf = NULL;
+  static SDL_Surface* capSurf = NULL;
+  static SDL_Surface* percSurf = NULL;
+  SDL_Color txtColor;
+  static coord ldPos, capPos, percPos;
+  string ldTxt, capTxt, percTxt;
+  ldTxt = floatToString(getAbsoluteLoad());  
+  ldPos = cells.front()->getAbsolutePosition();
+  ldPos.X = ldPos.X + 3;
+  ldPos.Y += 3;
+  if (ldSurf) SDL_FreeSurface(ldSurf);
   txtColor.r = (Uint8) ((borderColor & 0xFF0000) >> 16);
   txtColor.g = (Uint8) ((borderColor & 0x00FF00) >> 8);
   txtColor.b = (Uint8) (borderColor & 0x0000FF);
-  wgSurf = TTF_RenderText_Blended(font, wgTxt.c_str(), txtColor);
-  capSurf = TTF_RenderText_Blended(font, capTxt.c_str(), txtColor);
-  loadSurf = TTF_RenderText_Blended(font, loadTxt.c_str(), txtColor);
-
-  apply_surface(wgPos.X, wgPos.Y, wgSurf, output);
-  apply_surface(capPos.X, capPos.Y, capSurf, output);
-  apply_surface(loadPos.X, loadPos.Y, loadSurf, output);
+  ldSurf = TTF_RenderText_Blended(font, ldTxt.c_str(), txtColor);
+  apply_surface(ldPos.X, ldPos.Y, ldSurf, output);
+  if (getServer()) {
+    capTxt = floatToString(getRegionCapacity());
+    percTxt = floatToString(getAbsoluteLoad() / getRegionCapacity());
+    if (capSurf) SDL_FreeSurface(capSurf);
+    if (percSurf) SDL_FreeSurface(percSurf);
+    capSurf = TTF_RenderText_Blended(font, capTxt.c_str(), txtColor);
+    percSurf = TTF_RenderText_Blended(font, percTxt.c_str(), txtColor);
+    capPos.X = percPos.X = ldPos.X;
+    capPos.Y = ldPos.Y + 15;
+    percPos.Y = capPos.Y + 15;
+    apply_surface(capPos.X, capPos.Y, capSurf, output);
+    apply_surface(percPos.X, percPos.Y, percSurf, output);
+  }
 }
 
 void Region::drawAllRegionsWeights(SDL_Surface* output, TTF_Font* font) {
   if (!showw) return;
   for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
-    (*it)->drawWeight(output, font);
+    (*it)->drawLoad(output, font);
   }
 }
 
@@ -233,25 +243,6 @@ list<Region*> &Region::getRegionList() {
 
 int Region::getNumRegions() {
   return numRegions;
-}
-
-void Region::divideWorld(int num_reg) {
-  numRegions = num_reg;
-  Uint32 color;
-  list<Region*>::iterator it;
-  for (it = regionList.begin() ; it != regionList.end() ; it++) {
-    (*it)->unsubscribeAllCells();
-    delete *it;
-  }
-  regionList.clear();
-  for (int r = 0 ; r < num_reg ; r++) {
-    if (r < NUM_COLORS)
-      color = colorTable(r);
-    else
-      color = rand() % (255*255*255);      
-    regionList.push_back(new Region(color));
-  }
-  balanceRegions(); //TODO talvez o divideWorld nao devesse chamar balanceRegions, já que este tem em vista ajustar um balanceamento que foi feito antes
 }
 
 void Region::balanceRegions() {
@@ -293,7 +284,7 @@ void Region::getWorldPartitionRandomStart() {
   int cY = rand() % Cell::getRowLength();
   Cell* c = Cell::getCell(cX, cY);  
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
-  while (c && getRWeight() < Cell::getTotalWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
     subscribe(c);
     c = Cell::getHighestEdgeFreeNeighbor(getCells());
   }
@@ -302,11 +293,62 @@ void Region::getWorldPartitionRandomStart() {
 void Region::getWorldPartition() {
   Cell* c = Cell::getHeaviestFreeCell();
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
-  //while (c && getRWeight() < Cell::getTotalWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
-  while (c && getRWeight() < getServer()->getServerCapacity()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  //while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  while (c) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+    if (getServer() && getAbsoluteLoad() > getRegionCapacity()) break;
     subscribe(c);
     c = Cell::getHighestEdgeFreeNeighbor(getCells());
   }
+}
+
+void Region::initRegions(int num_reg) {
+  if (!regionList.empty()) Region::diposeRegions();
+  numRegions = num_reg;
+  Uint32 color;
+  for (int r = 0 ; r < num_reg ; r++) {
+    if (r < NUM_COLORS)
+      color = colorTable(r);
+    else
+      color = rand() % (255*255*255);      
+    regionList.push_back(new Region(color));
+  }
+}
+
+void Region::diposeRegions() {
+  list<Region*>::iterator it;
+  for (it = regionList.begin() ; it != regionList.end() ; it++) {
+    (*it)->unsubscribeAllCells();
+    delete *it;
+  }
+  regionList.clear();
+}
+
+void Region::partitionWorld() {
+  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
+    (*it)->getProportionalPartition();
+  }
+  if (Cell::getOrphanCell()) {
+    distributeOrphanCells();
+    //TODO escolher como as celulas órfãs serão dividas: atribuir a célula órfã mais pesada ao servidor com mais recursos livres
+  }
+}
+
+void Region::distributeOrphanCells() {
+  list<Cell*> orphanCells(Cell::getOrphansSortedByTotalWeight());
+  list<Cell*>::iterator it_cell = orphanCells.begin();
+  while (it_cell != orphanCells.end()) {
+    sortRegionsByFreeCapacity();
+    (*regionList.begin())->subscribe(*it_cell);
+    it_cell++;
+  }
+}
+
+void Region::sortRegionsByFreeCapacity() {
+  regionList.sort(compareRegionsFreeCapacity);
+}
+
+bool Region::compareRegionsFreeCapacity(Region* rA, Region* rB) {
+  return rA->getRegionCapacity() - rA->getAbsoluteLoad() > rB->getRegionCapacity() - rB->getAbsoluteLoad();
 }
 
 void Region::swapCellsRegions(Cell* c1, Cell* c2) {

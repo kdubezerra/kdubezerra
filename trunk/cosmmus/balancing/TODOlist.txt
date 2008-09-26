@@ -11,3 +11,7 @@
 - verificar se, quando células são trocadas, é mantido o balanceamento.
 
 + isso deverá ser chamado de... demand? : quando for verificado o "peso" de uma região, ou seja, do quanto de capacidade do servidor aquela região precisará, considerar as mensagens vindas de jogadores em regiões vizinhas, ou seja, a soma de suas arestas ligadas a outras regiões
+
++ o mundo pode ter espaços não regionados? a soma de todas as regiões pode ser menor que o mundo inteiro? inicialmente deixar assim, pra facilitar possíveis otimizações no futuro.
+
++ poder remover servidores/regiões, assim como adicionar novos.

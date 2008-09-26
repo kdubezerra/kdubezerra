@@ -11,7 +11,7 @@
 
 Cell*** Cell::cellMatrix = NULL;
 int Cell::cells_on_a_row = 0;
-float Cell::totalWeight = 0.0f;
+float Cell::worldWeight = 0.0f;
 bool Cell::showv = false;
 bool Cell::showe = false;
 SDL_Surface* Cell::surface_vertex_weight = NULL;
@@ -82,15 +82,19 @@ float Cell::getAllEdgesWeight() {
   return aew;
 }
 
+float Cell::getTotalWeight() {
+  return getAllEdgesWeight() + getVWeight();
+}
+
 float Cell::getEWeightToSameRegion() {
-  float wtsar = 0.0f;
+  float wtsr = 0.0f;
   Cell* neighCell;
   for (short neigh = 0 ; neigh < getNumNeigh() ; neigh++) {
     neighCell = getNeighbor(neigh);
     if (neighCell && neighCell->getParentRegion() == this->getParentRegion())
-      wtar += getEWeight(neigh);
+      wtsr += getEWeight(neigh);
   }
-  return wtar;
+  return wtsr;
 }
 
 float Cell::getEWeightToAnotherRegion() {
@@ -104,8 +108,8 @@ float Cell::getEWeightToAnotherRegion() {
   return wtar;
 }
 
-float Cell::getTotalWeight() {
-  return totalWeight;
+float Cell::getWorldWeight() {
+  return worldWeight;
 }
 
 int Cell::updateEWeight(short neighbor) {
@@ -126,17 +130,41 @@ void Cell::updateAllEdges() {
 }
 
 void Cell::updateAllEdgesAndVertexWeights() {
-  totalWeight = 0.0f;
+  worldWeight = 0.0f;
   for (int i = 0 ; i < cells_on_a_row ; i++)
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       cellMatrix[i][j]->updateVWeight();
       cellMatrix[i][j]->updateAllEdges();
-      totalWeight += cellMatrix[i][j]->getVWeight();
+      sWeight += cellMatrix[i][j]->getVWeight();
     }
 }
 
 Cell* Cell::getCell(int X, int Y) {
   return cellMatrix[X][Y];
+}
+
+Cell* Cell::getOrphanCell() {
+  for (int i = 0 ; i < getRowLength() ; i++)
+    for (int j = 0 ; j < getRowLength() ; j++) {
+      if (!cellMatrix[i][j]->getParentRegion())
+        return cellMatrix[i][j];
+    }
+  return NULL;
+}
+
+list<Cell*> Cell::getOrphansSortedByTotalWeight() {
+  list<Cell*> orphanList; 
+  for (int i = 0 ; i < getRowLength() ; i++)
+    for (int j = 0 ; j < getRowLength() ; j++) {
+      if (!cellMatrix[i][j]->getParentRegion())
+        orphanList.push_back(cellMatrix[i][j]);
+    }
+  orphanList.sort(compareCellLoad);
+  return orphanList;
+}
+
+bool Cell::compareCellLoad(Cell* cA, Cell* cB) {
+  return cA->getTotalWeight() > cB->getTotalWeight();
 }
 
 Cell* Cell::getNeighbor(short neighbor) {
