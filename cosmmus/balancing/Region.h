@@ -36,11 +36,14 @@ class Region {
     Region* getNeighbor(int neighbor);
     bool hasCell(Cell* c);
 
+    void setRegionCapacity(float cap);
+    float getRegionCapacity(void);
+
     float getRWeight();
-    static float getWorldWeight();
     float getEWeight(int neighbor);
     float getAllEdgesWeight();
-    float getServerCapacityDemand();
+    float getAbsoluteLoad();
+    static float getWorldLoad();
     static float getEdgeCut();
 
     void updateEWeight(int neighbor);
@@ -52,7 +55,7 @@ class Region {
     void drawEdge(SDL_Surface* output, int neighbor);
     void drawAllEdges(SDL_Surface* output);
     static void drawAllRegionsEdges(SDL_Surface* output);
-    void drawWeight(SDL_Surface* output, TTF_Font* font);
+    void drawLoad(SDL_Surface* output, TTF_Font* font);
     static void drawAllRegionsWeights(SDL_Surface* output, TTF_Font* font);
 
     static void toggleShowRegions();
@@ -62,13 +65,23 @@ class Region {
     static list<Region*> &getRegionList();
     static int getNumRegions();
     
-    // FASE DE PARTICIONAMENTO
+    // FASE DE PARTICIONAMENTO (DEPRECATED)
     
-    static void divideWorld(int num_reg);
     static void balanceRegions();    
     void getWorldPartitionEXAMPLE();
     void getWorldPartitionRandomStart();
     void getWorldPartition();
+
+    // FASE DE PARTICIONAMENTO (WORKING)
+
+    static void initRegions(int num_reg);
+    static void diposeRegions();
+    static void partitionWorld();
+    static void distributeOrphanCells();
+    static void balanceWorld();
+    static void balanceRegions(list<Region*>& regList);
+    static void sortRegionsByFreeCapacity();
+    static bool compareRegionsFreeCapacity(Region* rA, Region* rB);
 
     // FASE DE REFINAMENTO
 
@@ -85,6 +98,8 @@ class Region {
     list<Region*> neighbors;
     list<float> edgeWeight;
     Server* parentServer;
+    float regionCapacity;
+    static float worldCapacity;
     static list<Region*> regionList;
     static bool showr, showe, showw;
     static int numRegions;

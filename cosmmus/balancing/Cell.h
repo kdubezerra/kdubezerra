@@ -66,7 +66,8 @@ class Cell {
     float getEWeightToSameRegion();
     float getEWeightToAnotherRegion();
     float getAllEdgesWeight();
-    static float getTotalWeight();
+    float getTotalWeight();
+    static float getWorldWeight();
     
     void updateVWeight();
     int updateEWeight(short neighbor);
@@ -74,6 +75,9 @@ class Cell {
     static void updateAllEdgesAndVertexWeights();
     
     static Cell* getCell(int cell_X, int cell_Y);
+    static Cell* getOrphanCell();
+    static list<Cell*> getOrphansSortedByTotalWeight();
+    static bool compareCellLoad(Cell* cA, Cell* cB);
 
     Cell* getNeighbor(short neigh);
     short getNeighbor(Cell* neigh);
@@ -115,7 +119,7 @@ class Cell {
     list<Avatar*> avatars;
     static Cell*** cellMatrix;
     static int cells_on_a_row;
-    static float totalWeight;
+    static float worldWeight;
     static bool showv, showe;
     static SDL_Surface* surface_vertex_weight;
     static SDL_Surface* surface_edge_weight;

@@ -3,12 +3,12 @@
 
 //===========================================static members
 
-float Server::multiServerCapacity = 0.0f;
+float Server::multiServerPower = 0.0f;
 list<Server*> Server::serverList;
 
 //================================cons/des-truction methods
 
-Server::Server(float capacity) : managedRegion(NULL), serverCapacity(capacity) {  
+Server::Server(float power) : managedRegion(NULL), serverPower(power) {  
   serverList.push_back(this);
 }
 
@@ -22,9 +22,10 @@ Server::~Server() {
 //============================================other methods
 
 int Server::assignRegion(Region* r) {
-  if (managedRegion || !r) return 0;  
+  if (managedRegion || !r) return 0;
   managedRegion = r;
-  r->setServer(this);  
+  r->setServer(this);
+  r->setRegionCapacity(getServerPower());
   return 1;
 }
 
@@ -45,38 +46,38 @@ Region* Server::getRegion() {
   return managedRegion;
 }
 
-void Server::setServerCapacity(float cap) {
-  multiServerCapacity -= serverCapacity;
-  serverCapacity = cap;
-  multiServerCapacity += serverCapacity;
+void Server::setServerPower(float pow) {
+  multiServerPower -= serverPower;
+  serverPower = pow;
+  multiServerPower += serverPower;
 }
 
-float Server::getServerCapacity() {
-  return serverCapacity;
+float Server::getServerPower() {
+  return serverPower;
 }
 
-float Server::getMultiserverCapacity() {
-  float totalCap = 0.0f;
+float Server::getMultiserverPower() {
+  float totalPow = 0.0f;
   for (list<Server*>::iterator it = serverList.begin() ; it != serverList.end() ; it++) {
-    totalCap += (*it)->getServerCapacity();
+    totalPow += (*it)->getServerPower();
   }
-  return totalCap;
+  return totalPow;
 }
 
-bool Server::compareCapacities(Server* sA, Server* sB) {
-  return (sA->getServerCapacity() > sB->getServerCapacity());
+bool Server::comparePower(Server* sA, Server* sB) {
+  return (sA->getServerPower() > sB->getServerPower());
 }
 
-void Server::sortServersByCapacity() {
-  serverList.sort(Server::compareCapacities);
+void Server::sortServersByPower() {
+  serverList.sort(Server::comparePower);
 }
 
 float Server::getLoad() {
-  return getRegion()->getRWeight() / getServerCapacity();
+  return getRegion()->getAbsoluteLoad() / getServerPower();
 }
 
 bool Server::isDisbalanced() {
-  float world_fraction = getRegion()->getRWeight() / Region::getWorldWeight();
-  float power_fraction = getServerCapacity() / getMultiserverCapacity();
+  float world_fraction = getRegion()->getAbsoluteLoad() / Region::getWorldLoad();
+  float power_fraction = getServerPower() / getMultiserverPower();
   return world_fraction / power_fraction > DISBAL_TOLERANCE;
 }
