@@ -13,22 +13,22 @@
 
 \usepackage{url}
 
-\newcommand{\ppse}{Proj48534}
-\newcommand{\hoverkill}{HK48534}
+\newcommand{\ppse}{P2PSE}
+\newcommand{\hoverkill}{Hoverkill}
 
 %% Paper title.
 \title{\ppse{} - A Peer-to-Peer Support for Multiplayer Games}
 
-\author{JEMS Manuscript Number 48534}
-\contactinfo{48534@JEMS}
-% %% Author and Affiliation (multiple authors). Use: and between authors
-% \author{Felipe J. Vilanova, Carlos Eduardo B. Bezerra , Marcos R. Crippa, Fábio R. Cecin, Cláudio F. R. Geyer\\
-%           Universidade Federal do Rio Grande do Sul\\
-%           Bento Gonçalves, 9500\\
-%           Porto Alegre, RS, Brazil\\
-%           +55 (51) 3316 0000
-% }
-% \contactinfo{\{fjvilanova, carlos.bezerra, mrcrippa, fcecin, geyer\}inf.ufrgs.br}
+% \author{JEMS Manuscript Number 48534}
+% \contactinfo{48534@JEMS}
+%% Author and Affiliation (multiple authors). Use: and between authors
+\author{Felipe J. Vilanova, Carlos Eduardo B. Bezerra , Marcos R. Crippa, Fábio R. Cecin, Cláudio F. R. Geyer\\
+          Universidade Federal do Rio Grande do Sul\\
+          Bento Gonçalves, 9500\\
+          Porto Alegre, RS, Brazil\\
+          +55 (51) 3316 0000
+}
+\contactinfo{\{fjvilanova, carlos.bezerra, mrcrippa, fcecin, geyer\}inf.ufrgs.br}
 
 
 %% Keywords that describe your work.
@@ -66,16 +66,15 @@
 \section{Introduction}
 \label{sec:intro}
 
-Multiplayer games are a very popular game genre, due to their highly interactive nature. Among those games, a class that is growing in popularity is MMOGs (Massively Multiplayer Online Games). MMOGs are real-time multiplayer games played through the Internet, where a great number of players (usually thousands) play within a persistent-state virtual world. Successful examples include EverQuest \cite{everquest} and World of Warcraft \cite{worldofwarcraft}.
+Multiplayer games are a very popular game genre, due to their highly interactive nature. Among those games, a class that is growing in popularity is MMOGs (Massively Multiplayer Online Games). MMOGs are real-time multiplayer games played through the Internet, where a large number of players (usually thousands) play within a persistent-state virtual world. Successful examples include EverQuest \cite{everquest} and World of Warcraft \cite{worldofwarcraft}.
 
 The most common network model used in MMOGs is client-server. In this model, the client only sends its data to the server-side (that can operate on a single machine, a cluster or a grid) and receives frequent updates from the server. The server process all the data from the clients, and broadcasts all the results that occur on the virtual world back to them. Some advantages of this model are: being simple in design; cheating can be efficiently detect and stopped; retaining control over access to the game; and being a predictable model.
 
-The main disadvantage of the client-server model is the lack of scalability. The cost of maintaining the server-side becomes excessive with the increase in the number of clients. When talking about commercial games, the usual approach is to continuously expand the number of machines on the server-side. That is a reasonable solution, however it is not suitable for projects on a budget such as those from small companies or research groups. 
+The main disadvantage of the client-server model is the lack of scalability. The cost of maintaining the server-side becomes excessive with the increase in the number of clients. When it comes to commercial games, the usual approach is to continuously expand the number of machines on the server-side. That is a reasonable solution, however it is not suitable for projects on a limited budget such as those from small companies or research groups. 
 
 One way of dealing with the above problem is to fully or partially distribute the MMOG simulation. All the changes on the game world would be registered and dealt within the client-side, with no interference of the server-side. Security and world state consistence are issues on that model, because there isn't a point where the changes in the virtual world can be evaluated and considered legal or illegal. The main challenge of our project is thus to provide a partially decentralized support model for MMOGs, while retaining the basic properties of the client-server model such as security, consistency and scalability \cite{schiele2007rpp}.
 
-In this paper a hybrid model is proposed, combining the security and consistency of the client-server model with the scalability and flexibility of the distributed model. In sections \ref{sec:c-smodel} and \ref{sec:p2pmodel} we discuss the client-server and peer-to-peer models. The \ppse{} %(acronym in portuguese for ``P2P for Entertainment Software'') 
-architecture is explained in section \ref{sec:p2pse}. Section \ref{sec:simulations} presents the simulations we made to compare client-server and peer-to-peer models. Section \ref{sec:conclusion} presents conclusions on the topic.
+In this paper a hybrid model is proposed, combining the security and consistency of the client-server model with the scalability and flexibility of the distributed model. In sections \ref{sec:c-smodel} and \ref{sec:p2pmodel} we discuss the client-server and peer-to-peer models. The \ppse{} (acronym in portuguese for ``P2P for Entertainment Software'') architecture is explained in section \ref{sec:p2pse}. Section \ref{sec:simulations} presents the simulations we made to compare client-server and peer-to-peer models. Section \ref{sec:conclusion} presents conclusions on the topic.
 
 \section{Client-server model}
 \label{sec:c-smodel}
@@ -90,7 +89,7 @@ A distributed game can use the centralized simulation to accommodate thousands o
 \section{Peer-to-peer model}
 \label{sec:p2pmodel}
 
-There is a growing interest in research and development of peer-to-peer architectures for MMOGs. The models proposed seek decentralization as a way of increasing scalability and reducing dependency on nodes in trusted areas. Other benefits include the elimination of central points of failure, as well as the increase of responsiveness.
+There is a growing interest in research and development of peer-to-peer architectures for MMOGs. The proposed models seek decentralization as a way of increasing scalability and reducing dependency on nodes in trusted areas. Other benefits include the elimination of central points of failure, as well as the increase of responsiveness.
 
 The Communications Architecture for Massive Multiplayer Games, proposed by \cite{fiedler2002cam}, was the first architecture to address the scalability problem by proposing a solution based on the publisher-subscriber paradigm. In this paradigm, the virtual world is divided into smaller pieces, usually called "cells", and each participant can choose to sign (or participate) in only a few cells. Thus, each subscriber of a cell only needs to exchange update messages with subscribers of the same cell. These architectures also deal with other fundamental problems, such as the problem of responsiveness to commands generated by each participant.
 
@@ -121,14 +120,14 @@ The game Guild Wars introduced a new game model, which will be referenced to as 
 
 The relationship between the two spaces is as follows. When a game session ends, the players involved in it return to the social space. All the traits of the characters (e.g. virtual world money, experience points and statistics) are updated with new information from the session. The social space is designed as a contiguous world, as mentioned in the beginning of this section. The action spaces are created dynamically to support temporary game sessions with a small number of players. This space is destroyed after the session ends.
 
-Guild Wars, as far as we can tell, follows the client-server model. Our proposal, which is illustrated in Figure \ref{fig:instanced}, is to use the instanced game model with a hybrid network architecture model. Since the interactions on the social space (chatting, trading) don't require high consistency, and there is a necessity for validation of who can play (game accounts, passwords), the server-side will be responsible for coordinating this part of the game. So even a server-side with modest processing capacity and network bandwidth could manage the social space if game quality is scaled down accordingly, for instance by sending less frequent updates to clients. The game sessions would be processed only on the client-side machines, avoiding unnecessary processing and communication cost on the server-side. The clients would form groups, wich would operate within a peer-to-peer dynamics.
+Guild Wars, as far as we can tell, follows the client-server model. Our proposal, which is illustrated in Figure \ref{fig:instanced}, is to use the instanced game model with a hybrid network architecture model. Since the interactions on the social space (chatting, trading) don't require high consistency, and there is a necessity for validation of who can play (game accounts, passwords), the server-side will be responsible for coordinating this part of the game. So even a server-side with modest processing capacity and network bandwidth could manage the social space if game quality is scaled down accordingly, for instance by sending less frequent updates to clients. The game sessions would be processed only on the client-side machines, avoiding unnecessary processing and communication cost on the server-side. The clients would form groups, which would operate within a peer-to-peer dynamics.
 
 \subsection{\ppse{} architecture}
 \label{sec:p2pse:arch}
 
 \begin{figure}[h]
   \centering 
-  \includegraphics[width=1.0\linewidth]{images/p2pse.pdf}
+  \includegraphics[width=0.7\linewidth]{images/p2pse.pdf}
  \caption{\ppse{} Architecture} 
  \label{fig:p2pse} 
 \end{figure}
@@ -138,7 +137,7 @@ The functionality promised by our network engine is delivered by a set of librar
 \subsubsection{Layer 0}
 \label{sec:p2pse:arch:l0}
 
-The first layer in the \ppse{} architecture is responsible for forming the mesh of point-to-point connections. The clients' connections with the servers and with other clients are established and managed in this layer. The basic network functions for connection establishment, such as socket creation, connection and packet sending and receiving, are given by a low-level API provided by the ZIG library \cite{zige} which basically implements a protocol that resembles SCTP \cite{stewart2000sct} over UDP.
+The first layer in the \ppse{} architecture is responsible for forming the mesh of point-to-point connections. The clients' connections with the servers and with other clients are established and managed in this layer. The basic network functions for connection establishment, such as socket creation, connection and packet sending and receiving, are given by a low-level API provided by the ZIG library \cite{zige} which basically implements a protocol that resembles SCTP \cite{stewart2000sct} over UDP. The term ``connection'', when used in the context of the \ppse{} library, refers to this ZIG-layer level protocol connection, which, again, is implemented over UDP, adding some features, such as reliability, timeout detection and utilization of only one single socket in every host to handle all communications.
 
 The Layer 0 server is responsible for managing connections with all clients. Naturally, it maintains a list of all clients that are connected to it along with a logical communication endpoint object for each client. When started, the server spawns a socialization space called the social space object. The clients that are not in an action space are bound to the social space - or to the ``limbo'', when in transit from one space to the other. All communication between clients that are in the social space is intermediated by the server.
 
@@ -146,7 +145,7 @@ The server can create new empty groups in order to instantiate new action spaces
 
 \begin{enumerate}
 \item The server sends a synchronization message to the new member and to all the other members informing them to which clients they must be connected in order to enter (or stay) in the group. The server sends a list with all the members of the group;
-\item All members then try to establish connections to every other member in the recently received member list, or just keep the connection, if it has already been established (the ZIG library supports simultaneous bidirectional connections through the same socket);
+\item All members try then to establish connections to every other member in the recently received member list, or just keep the connection, if it has already been established (the ZIG library supports simultaneous bidirectional connections through the same socket);
 \item When a client is entering a group, but still has not finished the process, it belongs to the ``limbo'';
 \item As soon as the new member establishes connections to the other clients, the server excludes it from the limbo and inserts it in the member list of the group;
 \item When a client is removed from the group, all connections to the other clients are interrupted and it returns to the social space;
@@ -166,7 +165,7 @@ The communication between the layer 0 and the ZIG library is done with a listene
 
 Layer 1 of the \ppse{} architecture is responsible for handling connection-related problems between the peers within a group. This layer will ensure that all peers are able to send and receive messages from each other.
 
-We see two main problems that can cause a connection failure between two peers: NAT/Firewall block and bandwidth insufficiency. When the Layer 0 indicates that a message must be send from one peer to another, Layer 1 must verify if there is a direct connection between the peers. If this connection doesn't exist, an alternative path must be discovered, using intermediate peers. After the path is discovered, the proper routing of the message can take place.
+We see two main problems that can cause a connection failure between two peers: NAT/Firewall blocking and bandwidth insufficiency. When the Layer 0 indicates that a message must be sent from one peer to another, Layer 1 must verify if there is a direct connection between the peers. If this connection doesn't exist, an alternative path must be discovered, using intermediate peers. After this route is created, the messages will be sent through it.
 
 Among all peers within a group there are different bandwidth capabilities. It is very likely to occur a situation where a peer doesn't have enough upload bandwidth to deal with the number of messages that it has to send. Layer 1 will identify such situation and, instead of sending the messages directly to the  destinations, send them to a peer with good upload bandwidth capability, holding him responsible to send the message. 
 
@@ -175,7 +174,7 @@ Among all peers within a group there are different bandwidth capabilities. It is
 
 The upper layer of the \ppse{} implementation is responsible for guaranteeing the simulation consistency on action spaces, providing support for multiple servers and exposing all of the implementation's functions to the game programmer. Due to the simulation of action spaces being executed asynchronously in each peer, there is no intrinsic guarantee of consistency. To partially address that, Layer 2 introduces the role of the super-peer, which is a special peer responsible for receiving, ordering and redistributing some of the game events such as updating player scores and picking up the flag in a capture-the-flag action game, for instance. To avoid overloading the super-peer, position updates or player movement requests (depending on the game's protocol design) are to be sent directly from each peer to every other peer using the unicast full-mesh provided by the lower layers. Not only position updates, but any other frequent, delay-sensitive and weakly-coupled message type should also be sent peer-to-peer. 
 
-Depending on the game, the resulting conflicts from a lack of centralized timestamping of movement and similar events, whenever they ensue, can be either handled by each peer individually or left for the super-peer to detect it and issue a special correction message later, as the BZFlag protocol does \cite{pellegrino2003bra}. Local corrections are an option if each peer is authoritative over its own avatar's position and if it broadcasts position updates for its own avatar. For instance, if a peer's local avatar overlaps with a remote peer's, the local avatar can push its own avatar out of that position. The remote avatar will do the same. The only issue is ensuring that the correction step won't make both peers try to resolve the situation by unstucking their avatars to the same spot again. This local conflict resolution is what we are currently employing in our capture-the-flag action prototype, \hoverkill\ [reference blinded].%Hoverkill \cite{hoverkill}. 
+Depending on the game, the resulting conflicts from a lack of centralized timestamping of movement and similar events, whenever they ensue, can be either handled by each peer individually or left for the super-peer to detect it and issue a special correction message later, as the BZFlag protocol does \cite{pellegrino2003bra}. Local corrections are an option if each peer is authoritative over its own avatar's position and if it broadcasts position updates for its own avatar. For instance, if a peer's local avatar overlaps with a remote peer's, the local avatar can push its own avatar out of that position. The remote avatar will do the same. The only issue is ensuring that the correction step won't make both peers try to resolve the situation by unstucking their avatars to the same spot again. This local conflict resolution is what we are currently employing in our capture-the-flag action prototype, \hoverkill\ \cite{hoverkill}. 
 
 Besides ordering and distributing some of the events, the super-peer is responsible for the communication of the peer-to-peer action group with the server. The super-peer is the one that reports gameplay results back to the server, whenever necessary.
 
@@ -195,8 +194,7 @@ The social space support provided by Layer 2 is a simple client-server API. Any 
 
 In the previous section, we revealed that we encourage peers in an action space to send authoritative position updates, among other events that might have low-latency requirements and a low probability of having their order of execution affecting the resulting game states too much (weakly-consistent events). This opens up the possibility of cheating.
 
-In this project we tried a somewhat unique approach [reference blinded]%\cite{gaspareto2008nna}
-. Since most events would be still centralized at the super-peer and most action games have one-per-client avatar position updates as their latency, consistency and bandwidth bottlenecks, we just left peers with total control over their positions and with the responsibility for sending them directly to other peers in a broadcast fashion. This optimizes for consistency and latency, and doesn't create a bandwidth bottleneck at the super-peer. On top of that, we tried AI-based detection of unusual patterns over streams of position updates coming from each peer. The approach used for cheat detection was focused on the data packets being transferred during the game sessions - both in the transmitters and receptors - and how they are used during the functioning of the system. Only packets relevant to the cheat being investigated are considered.
+In this project we tried a somewhat unique approach \cite{gaspareto2008nna}. Since most events would be still centralized at the super-peer and most action games have one-per-client avatar position updates as their latency, consistency and bandwidth bottlenecks, we just left peers with total control over their positions and with the responsibility for sending them directly to other peers in a broadcast fashion. This optimizes for consistency and latency, and doesn't create a bandwidth bottleneck at the super-peer. On top of that, we tried AI-based detection of unusual patterns over streams of position updates coming from each peer. The approach used for cheat detection was focused on the data packets being transferred during the game sessions - both in the transmitters and receptors - and how they are used during the functioning of the system. Only packets relevant to the cheat being investigated are considered.
 
 The cheat detection module is implemented in an independent way and works as an attachment to \ppse{}, which, with a parameter passage protocol, informs the set of data received from a player and returns a correspondent ``fraud index'', that tries to quantify the cheating that the player is assumed to have performed in the analyzed period.
 
@@ -204,7 +202,7 @@ The adopted approach was to consider only movement data as input to the cheat de
 
 This way, the point is to analyze a set of movements of the player, in order to detect anomalous sequences. Each player will be evaluated individually, based on his position history, using Artificial Neural Networks (ANN). ANNs, because of their great generalization and pattern recognition capacity, present satisfactory results in tasks similar to the speed-cheating problem. The idea is to identify, in the set of analyzed data, at least one movement that could be considered a fraud, which characterizes the player where this set of data came from as a cheater. The ANN then identifies and classifies the movement patterns as acceptable and non-acceptable.
 
-During the modeling and design of the cheat detection module, the architectures of the ANNs, the set of training data and the set of tests have been defined in order to allows them to solve this kind of problem. Considering that the task consists of the classification of behavior patterns, it has been decided to use the full-connected multilayer perceptron ANN with supervised learning based on back-propagation. The reason to choose it was that it is the ANN model most commonly used in many classification applications, due to it simplicity of understanding and implementation.
+During the modeling and design of the cheat detection module, the architectures of the ANNs, the set of training data and the set of tests have been defined in order to allows them to solve this kind of problem. Considering that the task consists of the classification of behavior patterns, it has been decided to use the full-connected multilayer perceptron ANN with supervised learning based on back-propagation. The reason to choose it was that it is the most commonly used ANN model in many classification applications, due to it simplicity of understanding and implementation.
 
 The projected ANN was simulated using MatLab, to evaluate its efficiency. MatLab allows the creation of complex ANN structures only by informing the neural network parameters, such as the number of neurons in each layer, training algorithm, rates, values that configure this training etc. MatLab was also used to train the ANN to be integrated to the game. This way, the implemented module only performs propagation, but not training of the ANN.
 
@@ -259,14 +257,14 @@ We based our simulation on some works, such as \cite{breu2007ogt}, \cite{park200
 
 \begin{figure}[h]
   \centering 
-  \includegraphics[width=1.0\linewidth]{images/upload_blinded.pdf}
+  \includegraphics[width=1.0\linewidth]{images/upload.pdf}
  \caption{Upload bandwidth utilization by the server} 
  \label{fig:upload} 
 \end{figure}
 
 \begin{figure}[h] 
   \centering 
-  \includegraphics[width=1.0\linewidth]{images/download_blinded.pdf}
+  \includegraphics[width=1.0\linewidth]{images/download.pdf}
  \caption{Download bandwidth utilization by the server} 
  \label{fig:download} 
 \end{figure}
@@ -317,8 +315,7 @@ We are currently integrating the \ppse{} architecture with our game prototype, \
 \section*{Acknowledgements}
 \label{sec:ack}
 
-This work was supported by the Funding for Studies and Projects (FINEP), %through the \ppse{} project (\ppse{}-5849-1),
-and by the National Research Council (CNPq).
+This work was supported by the Funding for Studies and Projects (FINEP), through the \ppse{} project (\ppse{}-5849-1), and by the National Research Council (CNPq).
 
 % \begin{figure} 
 %   \centering 
