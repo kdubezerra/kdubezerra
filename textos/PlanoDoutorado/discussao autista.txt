@@ -1,0 +1,18 @@
+problemas p2p:
+escalabilidade
+confiabilidade
+
+problemas c-s:
+gargalo
+**caro**
+
+pq usar msoi?
+escalavel (sim!!! \o/) -> utiliza um servidor voluntario por regiao, que se sincroniza com seus vizinhos. No entanto, tal servidor poderia ser facilmente substituido por um peer qualquer da arq p2p.
+	pq nao fazer isso?
+confiabilidade. como assegurar que este ou aquele peer é confiável? utilizar "clusters de peers?" isso também não soa muito escalável, se levar em consideração a necessidade de agreement.
+	usar uma infra-estrutura de servidores voluntarios?
+também não recairia no problemad de ter que assegurar que este ou aquele "voluntario" é confiável? No entanto, a quantidade de voluntarios a se assegurar seria algumas centenas de vezes menor do que o número de peers a se garantir.
+
+No entanto, se alguns dos peers jogadores fossem cadastrados como voluntarios para servirem o jogo, podendo atuar como servidores de uma area unica do mundo? nesse caso, haveria dependencia de nodos que não seriam totalmente confiáveis, já que um jogador poderia sair quando quisesse do jogo.
+
+o objetivo do trabalho é propor uma arquitetura mais confiável, baseada em nodos voluntários com seus recursos computacionais comprometidos com o jogo, INDEPENDENTEMENTE de estarem jogando-o naquele momento ou não. se um jogador fosse usado para simular o ambiente, seria necessário algum tipo de controle no sistema para que a simulação continuasse sendo executada de forma transparente aos outros jogadores, independente de quão frequente e dinamica fossem a entrada e saida dos peers "encarregados", o que voltaria a nos remeter a algum tipo de "clustering", o que introduziria complexidade maior e, por conseguinte, reduziria a escalabilidade do sistema.
