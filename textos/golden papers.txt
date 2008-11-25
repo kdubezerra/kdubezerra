@@ -1,1 +1,5 @@
 chen2006pch.pdf (textos, tabela comparativa)
+
+balanceamento de carga:
+p9-de_vleeschauwer.pdf
+Dewan_08_vecims.pdf
