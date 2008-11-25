@@ -1,3 +1,8 @@
+Escrita:
+
+- fazer o estado da arte do plano de doutorado e utilizar na dissertação...
+    problema: a dissertação 
+
 Balanceamento:
 
 - terminar o algoritmo (funcionar ja basta; no máximo levar em conta o histórico de sobrecarga/carga das células ao invés do valor instantâneo de carga)
