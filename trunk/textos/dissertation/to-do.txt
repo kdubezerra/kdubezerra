@@ -1,0 +1,15 @@
+Balanceamento:
+
+- terminar o algoritmo (funcionar ja basta; no máximo levar em conta o histórico de sobrecarga/carga das células ao invés do valor instantâneo de carga)
+
+- definir métricas. ex.:
+	- média e máximo de sobrecarga dos servidores (e desvio padrão) -:> verificar se o algoritmo considera que com 1 serv, msg = n² e com 2, msg = n²/2 + n²/2 + [n (x 2?)]
+	- número total de migrações de usuários (média de migrações para cada usuário e desvio padrão)
+	- corte de aresta (soma dos pesos das arestas ligando regiões)
+
+
+- definir comparações. ex.:
+	- divisão estática
+	- divisão sem pegar maior aresta (randômico)
+	- divisão pegando a menor aresta (pior (?))
+	- divisão feita do ZERO a cada passo (consertar o algoritmo pra que isso funcione, SE POSSÍVEL) V.S. refinamento de K-L.
