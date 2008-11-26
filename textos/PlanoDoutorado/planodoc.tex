@@ -239,6 +239,9 @@ Como exemplos de jogos multijogador online conhecidos, podem ser citados \emph{Q
 
 \section{Jogos Online Maciçamente Multijogador (MMOGs)}
 
+Da mesma forma que jogos de computador evoluíram para jogos multijogador on-line após a popularização da Internet, evoluiu-se em seguida para jogos online maciçamente multijogador (ou MMOG (\emph{massively multiplayer online games}), graças ao barateamento das conexões à Internet e o aumento da sua velocidade. Jogos deste tipo têm se popularizado bastante nos últimos tempos. Além de poderem ser jogados on-line, permitem a interação simultânea de um grande número de participantes. Nos casos de maior sucesso, como World of Warcraft \cite{worldofwarcraft} e Lineage II \cite{lineage2}, por exemplo, é dado suporte a uma base de dezenas a centenas de milhares de jogadores simultâneos \cite{chen2006pch}. Estes jogadores podem, então, interagir entre si e com o ambiente virtual do jogo.
+
+Cada jogador controla uma entidade chamada de \emph{avatar}, que nada mais é que sua representação no ambiente virtual - um personagem que executa as ações determinadas pelo jogador, que dessa forma passa a interferir na história e no encaminhamento do jogo. Para que a partida se mantenha consistente para diferentes participantes, cada alteração de cada avatar deve ser notificada para todos os jogadores que estejam por perto, ou para quem aquela mudança possa dizer respeito. Outras alterações no mundo virtual do jogo, como destruição ou criação de objetos no ambiente, e eventos, como ações de personagens controlados por computador, devem também ser transmitidos aos jogadores envolvidos.
 % requisitos computacionais elevados a 1000
 % 
 
@@ -257,23 +260,23 @@ Para jogos online multijogador de pequena escala (com, no máximo, algumas dezena
 %Jogos eletrônicos on-line têm se popularizado bastante nos últimos tempos, devido principalmente ao aumento do público com acesso à Internet, especialmente com conexões de banda larga. Como exemplos de títulos de sucesso, podem ser citados Starcraft: Brood War \cite{broodwar}, Counter-Strike \cite{counterstrike} e Warcraft III \cite{warcraft3}, que possuem a opção de multijogador (ou \emph{multiplayer}), permitindo que diferentes usuários joguem entre si.
 
 %Mais especificamente, j
-Jogos do tipo MMOG (\emph{massively multiplayer online games}, jogos online maciçamente multijogador) têm se popularizado bastante nos últimos tempos. Além de poderem ser jogados on-line, permitem a interação simultânea de um grande número de participantes. Nos casos de maior sucesso, como World of Warcraft \cite{worldofwarcraft} e Lineage II \cite{lineage2}, por exemplo, é dado suporte a uma base de dezenas a centenas de milhares de jogadores simultâneos \cite{chen2006pch}. Estes jogadores podem, então, interagir entre si e com o ambiente virtual do jogo. Cada jogador controla uma entidade chamada de \emph{avatar}, que nada mais é que sua representação no ambiente virtual - um personagem que executa as ações determinadas pelo jogador, que dessa forma passa a interferir na história e no encaminhamento do jogo. Para que a partida se mantenha consistente para diferentes participantes, cada alteração de cada avatar deve ser notificada para todos os jogadores que estejam por perto, ou para quem aquela mudança possa dizer respeita. Outras alterações no mundo virtual do jogo, como destruição ou criação de objetos no ambiente, e eventos, como ações de personagens controlados por computador, devem também ser transmitidos aos jogadores envolvidos.
 
-Jogos dessa natureza têm alguns requisitos \cite{schiele2007rpp}, dentre os quais podem ser citados: \textbf{persistência} do estado do mundo virtual e dos avatares; \textbf{disponibilidade} do serviço; \textbf{consistência} do estado do mundo e dos avatares entre os diferentes participantes; \textbf{segurança}, no que se refere a tentativas de subversão das regras do jogo por trapaceiros e \textbf{escalabilidade}, tendo em vista o grande número esperado de jogadores.
 
-%\begin{itemize}
-%
-%	\item \textbf{Persistência} - Jogos MMOG, em geral, consistem em um mundo virtual onde os jogadores interagem entre si e com o mundo virtual, alterando o estado do mesmo e de seus avatares (representação virtual do jogador no jogo). Espera-se que essas mudanças não sejam desfeitas entre uma sessão de jogo e outra. Por este motivo, é necessário suporte a persistência dos estados; 
-%		
-%	\item \textbf{Disponibilidade} - Em geral, jogos MMOG são pagos - tais como World of Warcraft \cite{worldofwarcraft} - e, por causa disso, seus usuários costumam ser exigentes quanto ao quesito de disponibilidade. Assim, deseja-se que, a qualquer momento, o sistema esteja disponível;
-%	
-%	\item \textbf{Consistência} - Jogos multijogador consistem em um ambiente virtual compartilhado entre os jogadores, que disputam a mesma partida. Sendo assim, é necessário que aquele ambiente seja representado de maneira equivalente nas máquinas dos diferentes jogadores para que estes possam se coordenar. Isto se torna mais complexo com o aumento do número de participantes;
-%	
-%	\item \textbf{Segurança} - Em um sistema onde há dezenas de milhares de participantes, não é razoável confiar em todos eles, o que torna necessário algum mecanismo que proveja segurança. Segurança aqui se refere não somente a autenticação de usuários cadastrados, como também verificar se os estados/ações que os diferentes jogadores enviam são válidos. Jogadores trapaceiros, por exemplo, podem alterar o software executado em suas máquinas de forma que sejam enviados estados/ações que lhes dêem alguma vantagem no jogo, o que deve ser impedido;
-%	
-%	\item \textbf{Escalabilidade} - Levando-se em conta o número de participantes em um jogo MMOG, é necessário que o sistema que lhe dá suporte seja capaz de suportar bem a carga crescente de processamento e comunicação exigida para isso. No entanto, muitas das técnicas utilizadas para jogos em pequena escala - com algumas dezenas de jogadores - não funcionam bem em cenários com um número muito maior de participantes.
-%	
-%\end{itemize}
+%Jogos dessa natureza têm alguns requisitos \cite{schiele2007rpp}, dentre os quais podem ser citados: \textbf{persistência} do estado do mundo virtual e dos avatares; \textbf{disponibilidade} do serviço; \textbf{consistência} do estado do mundo e dos avatares entre os diferentes participantes; \textbf{segurança}, no que se refere a tentativas de subversão das regras do jogo por trapaceiros e \textbf{escalabilidade}, tendo em vista o grande número esperado de jogadores.
+
+\begin{itemize}
+
+	\item \textbf{Persistência} - Jogos MMOG, em geral, consistem em um mundo virtual onde os jogadores interagem entre si e com o mundo virtual, alterando o estado do mesmo e de seus avatares (representação virtual do jogador no jogo). Espera-se que essas mudanças não sejam desfeitas entre uma sessão de jogo e outra. Por este motivo, é necessário suporte a persistência dos estados; 
+		
+	\item \textbf{Disponibilidade} - Em geral, jogos MMOG são pagos - tais como World of Warcraft \cite{worldofwarcraft} - e, por causa disso, seus usuários costumam ser exigentes quanto ao quesito de disponibilidade. Assim, deseja-se que, a qualquer momento, o sistema esteja disponível;
+	
+	\item \textbf{Consistência} - Jogos multijogador consistem em um ambiente virtual compartilhado entre os jogadores, que disputam a mesma partida. Sendo assim, é necessário que aquele ambiente seja representado de maneira equivalente nas máquinas dos diferentes jogadores para que estes possam se coordenar. Isto se torna mais complexo com o aumento do número de participantes;
+	
+	\item \textbf{Segurança} - Em um sistema onde há dezenas de milhares de participantes, não é razoável confiar em todos eles, o que torna necessário algum mecanismo que proveja segurança. Segurança aqui se refere não somente a autenticação de usuários cadastrados, como também verificar se os estados/ações que os diferentes jogadores enviam são válidos. Jogadores trapaceiros, por exemplo, podem alterar o software executado em suas máquinas de forma que sejam enviados estados/ações que lhes dêem alguma vantagem no jogo, o que deve ser impedido;
+	
+	\item \textbf{Escalabilidade} - Levando-se em conta o número de participantes em um jogo MMOG, é necessário que o sistema que lhe dá suporte seja capaz de suportar bem a carga crescente de processamento e comunicação exigida para isso. No entanto, muitas das técnicas utilizadas para jogos em pequena escala - com algumas dezenas de jogadores - não funcionam bem em cenários com um número muito maior de participantes.
+	
+\end{itemize}
 
 Para dar suporte à grande quantidade de participantes, geralmente é usado o paradigma cliente-servidor, sendo que toda interação é feita através da máquina servidora. Neste paradigma, o computador servidor possui a cópia oficial do estado e é responsável pela computação sobre a mesma, enquanto o cliente atua na apresentação do estado para o usuário. O servidor é responsável, também, por atualizar os clientes, em tempo real, sobre as alterações que ocorrem no ambiente virtual do jogo. A centralização nesse computador servidor, devido ao grande número de participantes, faz com que seu custo de manutenção seja bastante elevado. Geralmente, é necessária uma capacidade de comunicação de dezenas de GBps e um razoável poder de processamento para executar toda a simulação. Torna-se inviável, por exemplo, a manutenção de jogos online maciçamente multijogador por grupos independentes sem grande disponibilidade de recursos financeiros, como o Indigente \cite{indigente}, por exemplo.
 
