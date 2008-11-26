@@ -165,31 +165,12 @@
 
 % resumo na língua do documento
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \begin{abstract}
 
+Este plano de curso de doutorado propõe um modelo de suporte a jogos online maciçamente multijogador fazendo uso de sistemas de compartilhamento em larga escala de recursos computacionais, tais como redes P2P. Seguindo este modelo, sobre uma rede P2P seria formado um sistema que atuaria como servidor de um jogo MMOG. A cada nodo deste sistema seria designado uma porção da carga de comunicação e processamento do jogo -- mais especificamente, seria designada a cada nodo uma região do ambiente virtual do jogo. Tal sistema seria percebido como um servidor central pelos jogadores, que conectar-se-iam a ele através de um \emph{Gateway}, sendo cada um redirecionado para o nodo servidor adequado. Para que esse sistema servidor funcione como esperado, será necessário tratar algumas questões, tais como manter consistente o andamento do jogo nos diferentes nodos servidores, de forma que cada jogador tenha a mesma visão; gerenciamento da carga atribuída a cada servidor, que por se tratar de um jogo é bastante variável e pesa muito mais na rede; o que fazer quando um nodo servidor sai da rede ou entra em colapso e, por fim, como difundir e armazenar os estados dos jogadores de maneira distribuída, de forma que sempre se possa recuperar o estado mais recente.
 
-Este trabalho visa analisar a aplicabilidade das técnicas utilizadas para dar suporte a jogos online maciçamente multijogador em cenários onde os recursos computacionais são mais limitados. Como geralmente são utilizadas redes de servidores de alto custo, com links que dão suporte à comunicação entre dezenas de milhares de jogadores \cite{cecin2004fsa}, é necessário revisar o que foi feito e analisar sua aplicabilidade em arquiteturas que não dispõem de tais recursos. Assim sendo, objetiva-se avaliar e, quando possível, aperfeiçoar as técnicas pesquisadas%\cite{os artigos pesquisados}
-, considerando um cenário em que a infra-estrutura de suporte se restringe a um conjunto de nodos de capacidade menor - ou super-nodos, no sentido em que têm links e capacidade de processamento superiores às dos usuários de Internet em geral, mas inferiores às dos grandes servidores. Pretende-se, por fim, construir um modelo arquitetural de suporte a jogos online maciçamente multijogador, que defina a distribuição das cargas de processamento e comunicação associadas ao jogo entre o conjunto de nodos servidores e integre - tantas quanto for possível - as técnicas pesquisadas e/ou propostas. Após isso, será feito um protótipo e simulações para validar o trabalho.
+%Este trabalho visa analisar a aplicabilidade das técnicas utilizadas para dar suporte a jogos online maciçamente multijogador em cenários onde os recursos computacionais são mais limitados. Como geralmente são utilizadas redes de servidores de alto custo, com links que dão suporte à comunicação entre dezenas de milhares de jogadores \cite{cecin2004fsa}, é necessário revisar o que foi feito e analisar sua aplicabilidade em arquiteturas que não dispõem de tais recursos. Assim sendo, objetiva-se avaliar e, quando possível, aperfeiçoar as técnicas pesquisadas%\cite{os artigos pesquisados}
+%, considerando um cenário em que a infra-estrutura de suporte se restringe a um conjunto de nodos de capacidade menor - ou super-nodos, no sentido em que têm links e capacidade de processamento superiores às dos usuários de Internet em geral, mas inferiores às dos grandes servidores. Pretende-se, por fim, construir um modelo arquitetural de suporte a jogos online maciçamente multijogador, que defina a distribuição das cargas de processamento e comunicação associadas ao jogo entre o conjunto de nodos servidores e integre - tantas quanto for possível - as técnicas pesquisadas e/ou propostas. Após isso, será feito um protótipo e simulações para validar o trabalho.
 
 %O objetivo do trabalho é propor uma arquitetura de sistema distribuído sobre a Internet, que seja tolerante a falhas e escalável. Tal sistema funcionará como um grande servidor para jogos online maciçamente multijogador. A idéia é que diversos computadores de baixo ou médio custo, conectados à Internet, com conexão de banda larga, formem um sistema distribuído que aceitará e repartirá conexões oriundas de jogadores. Os diferentes nodos desse sistema dividirão a carga de processamento e de comunicação dos diferentes jogadores conectados, assim como a simulação do ambiente virtual do jogo. Tal sistema poderá ser expandido por novos computadores que satisfaçam alguns requisitos mínimos de capacidade de processamento, armazenamento e largura de banda disponível para transmissão e recebimento de mensagens. Também deverá ser possível que qualquer nodo se retire do sistema, delegando sua carga aos restantes. Por fim, tal sistema deverá ser tolerante a falhas, de forma a prejudicar o mínimo possível a simulação e a entrega de atualizações de estado aos clientes. O objetivo principal, além da tolerância a falhas, é que o sistema seja escalável, ou seja, suporte um grande número de jogadores, porém sem comprometer severamente a qualidade do serviço.
 
@@ -229,8 +210,49 @@ Este trabalho visa analisar a aplicabilidade das técnicas utilizadas para dar su
 
 
 
+\chapter{Introdução}
+
+Jogos online maciçamente multijogador -- ou MMOGs, \emph{massively multiplayer online games} -- são o tema central deste plano de doutorado. Geralmente, utiliza-se uma infra-estrutura cliente-servidor para dar suporte a este tipo de jogo. Neste plano será proposto um modelo de distribuição do lado servidor, de maneira a reduzir ou eliminar seu custo de manutenção. Nas próximas seções será apresentado o contexto referente a jogos multijogador e MMOGs.
+
+\section{Jogos Multijogador}
+
+% o que são
+% breve histórico e exemplos
+% requisitos computacionais (sem mtos detalhes)
+
+Nas últimas décadas, desde o surgimento do computador pessoal, jogos de computador tem se popularizado de maneira crescente. Mais ainda, após o surgimento da Internet aliado ao fato de as conexões domésticas estarem cada vez mais baratas e mais rápidas, jogos online multijogador têm merecido atenção especial. Estes jogos se caracterizam por haver vários participantes interagindo uns com os outros, utilizando uma conexão através da Internet entre seus dispositivos computacionais, que são geralmente computadores pessoais ou consoles (dispositivos computacionais específicos para jogos). Este tipo de jogo pode ser dividido em vários gêneros, como por exemplo:
+
+\begin{itemize}
+
+\item FPS: \emph{first-person shooting}, ou jogos de tiro com visão em primeira-pessoa, em que cada jogador controla um personagem que dispõe de diferentes armas, com as quais enfrenta monstros ou personagens de outros jogadores. São caracterizados por ação rápida, incluindo atirar, mover-se, esquivar-se etc.;
+
+\item RTS: \emph{real-time strategy}, ou jogos de estratégia em tempo-real, onde cada jogador controla um exército, mas suas ações são executadas simultaneamente às ações dos outros jogadores, ao invés de serem separadas em turnos. A ação é mais lenta que em jogos FPS;
+
+\item RPG: \emph{role-playing game}, ou jogo de interpretação de papéis, no qual cada jogador tem um personagem que evolui com o tempo, adquirindo mais poder e acumulando tesouros. Jogos deste tipo são caracterizados por não terem um início ou fim de partida definidos, constituindo um mundo virtual de estado persistente. Os jogadores então podem evoluir seus personagens, desconectarem-se e reconectarem-se mais tarde para continuarem jogando a partir do ponto onde pararam, pois seu estado estará armazenado.
+
+\end{itemize}
+
+Como exemplos de jogos multijogador online conhecidos, podem ser citados \emph{Quake} \cite{quake}, um jogo do gênero FPS lançado em meados da década de 90; \emph{Starcraft: Brood War} \cite{broodwar}, da mesma época, porém consistindo de um jogo RTS, Counter-Strike \cite{counterstrike}, FPS lançado em 2000 e Diablo II \cite{diablo2}, RPG lançado no mesmo ano.
+
+
+
+
+\section{Jogos Online Maciçamente Multijogador (MMOGs)}
+
+% requisitos computacionais elevados a 1000
+% 
+
 
 \chapter{Motivação}
+\section{Requisitos dos jogos MMOG}
+
+O que é comum a qualquer um dos gêneros de jogos online multijogador é o fato de serem simulações interativas de tempo-real. São simulações no sentido de que simulam um mundo tão parecido quanto possível com o mundo real -- embora alguns jogos se distanciem propositalmente do realismo. A interatividade vem do fato de que há vários participantes executando ações que modificarão o andamento do jogo. Por fim, são de tempo-real porque diversas ações executadas por um jogador devem ter efeito imediato, sob pena de prejudicar alguém. Em um jogo FPS, por exemplo, espera-se que após um jogador enviar o comando de puxar o gatilho, arma de seu personagem dispare o mais rápido possível. Além disso, é necessário manter a consistência da simulação entre os jogadores, para que estes visualizem o jogo no mesmo estado.
+
+Para jogos online multijogador de pequena escala (com, no máximo, algumas dezenas de participantes), costuma ser suficiente montar uma rede cliente-servidor, onde o servidor é o computador de um dos próprios jogadores, que a ele conectam-se através de um software cliente. Esse servidor atua como árbitro, de forma a manter o estado do jogo consistente entre os diferenetes participantes. Outra abordagem é formar uma pequena rede par-a-par entre os jogadores, utilizando algum algoritmo para manter a consistência da simulação, que agora é distribuída.
+
+
+\section{Estado da arte}
+\section{Questões de pesquisa}
 
 %Jogos eletrônicos on-line têm se popularizado bastante nos últimos tempos, devido principalmente ao aumento do público com acesso à Internet, especialmente com conexões de banda larga. Como exemplos de títulos de sucesso, podem ser citados Starcraft: Brood War \cite{broodwar}, Counter-Strike \cite{counterstrike} e Warcraft III \cite{warcraft3}, que possuem a opção de multijogador (ou \emph{multiplayer}), permitindo que diferentes usuários joguem entre si.
 
@@ -330,11 +352,12 @@ Foram feitos trabalhos que buscam tratar alguns destes problemas, como balanceam
 
 
 \chapter{Objetivo}
-
+\section{Objetivo geral}
 O objetivo é criar um modelo arquitetural de suporte a jogos online maciçamente multijogador. Seguindo este modelo, deverá ser possível formar um sistema geograficamente distribuído de nodos servidores, utilizando a Internet como meio de ligação entre os mesmos. Além de distribuir as cargas computacionais (comunicação e processamento) impostas pelo grande número de jogadores, este modelo deverá incluir técnicas com o fim de reduzir o tráfego entre os componentes deste sistema (nodos servidores e máquinas clientes dos jogadores), economizando largura de banda. Tais técnicas são o foco deste trabalho, tendo em vista que se considera um cenário com recursos voláteis e limitados, já que a ligação entre os nodos será feita através da Internet.
 
 Existem outros aspectos relevantes, além da distribuição do servidor e da economia de largura de banda, que poderão ser acrescentados ao modelo, dependo da disponibilidade de tempo para realizar tal tarefa.
 
+\section{Objetivos específicos}
 %A função deste middleware será de abstrair para a camada do jogo, que ficará acima dele, o sistema geograficamente distribuído servidor. distribuir as cargas de processamento e comunicação entre 
 %
 %sistema distribuído sobre a Internet, que funcionará como um grande servidor para jogos online maciçamente multijogador. Pode ser utilizado o conceito de "super-nodo", que nada mais é que um computador conectado à Internet, com capacidade de processamento e comunicação acima da média de usuários comuns, mas que, ainda assim, é bem mais limitado que os grandes servidores que costumam servir os jogos MMOG mais conhecidos. A idéia é que diversos destes super-nodos, conectados à Internet, formem um sistema distribuído que aceitará e repartirá conexões oriundas de jogadores. Eles então dividirão a carga de processamento e de comunicação dos diferentes jogadores conectados, assim como a simulação do ambiente virtual do jogo.
@@ -369,8 +392,8 @@ Existem outros aspectos relevantes, além da distribuição do servidor e da econom
 
 
 
-
-\chapter{Metodologia}
+\chapter{Plano de trabalho}
+\section{Metodologia}
 
 Para atingir o objetivo definido na seção anterior, deverão ser cumpridas algumas etapas, que são as seguintes:
 
@@ -510,7 +533,7 @@ Para atingir o objetivo definido na seção anterior, deverão ser cumpridas alguma
 
 
 
-\chapter{Cronograma}
+\section{Cronograma}
 
 A Tabela \ref{tab:cronograma} apresenta o
 cronograma de atividades a serem desenvolvidas, conforme citadas abaixo
@@ -570,6 +593,12 @@ Etapa
 \end{tabular}
 \end{center}
 \end{table}
+
+\section{Planejamento dos créditos}
+
+\chapter{Informações do candidato}
+\section{Dados de identificação}
+\section{Experiência com pesquisa}
 
 \bibliography{planodoc}
 \bibliographystyle{abnt} 
