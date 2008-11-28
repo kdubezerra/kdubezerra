@@ -300,27 +300,29 @@ Por fim, os autores desse trabalho, assim como em vários outros com propostas se
 Em um MMOG montado sobre uma arquitetura P2P completamente descentralizada, cada par é responsável por decidir o resultado das ações de seu jogador. Apesar disto tornar o sistema menos dependente de cada um deles -- se um jogador se desconectar do jogo, apenas o estado referente a seu avatar será perdido -- e de tornar o jogo independente de servidores centrais, tal abordagem se mostrou muito vulnerável a trapaça, justamente por cada par executar parte da simulação, além de ser propícia à saturação da banda de upload dos participantes, que tem que enviar atualizações de estado da simulação para seus companheiros de jogo.
 
 %\textbf{... por esses motivos, decidiu-se utiliza o msoi (ver \emph{"discussao autista.txt"})}
-O que se pretende investigar é o uso de um sistema servidor composto de nodos voluntários distribuídos geograficamente. Cada nodo teria uma capacidade de processamento e link de comunicação mínimos exigidos para fazer parte do sistema, além de ser necessário garantir de alguma forma que cada um desses nodos seria confiável. Porém, levando-se em consideração que o número de nodos servidores seria muito menor que o de jogadores, seria muito mais viável garantir a sua confiabilidade em relação à possibilidade de haver trapaça do que em uma rede P2P completamenet descentralizada, onde essa tarefa é praticamente impossível. Além do que os nodos servidores não pertenceriam necessariamente a jogadores. Poderiam ser pequenos provedores locais de serviço de Internet, por exemplo, que lucrariam ao disponibilizarem recursos para um jogo. Isso seria interessante para essas empresas, pois os recursos -- pelo menos banda de comunicação -- do provedor seriam utilizados de qualquer forma pelos jogos, pois todo o tráfego de jogadores que também fossem seus assinantes passaria por lá, independente de a qual servidor cada jogador estivesse conectado.
+O que se pretende investigar é o uso de um sistema servidor composto de nodos voluntários distribuídos geograficamente. Esse sistema seria heterogêneo, onde cada nodo poderia ser desde um computador doméstico até um cluster pertencente a alguma empresa que tivesse interesse em servir o jogo. Seria exigida uma capacidade de processamento e link de comunicação mínimos para poder fazer parte do sistema servidor, além de ser necessário garantir de alguma forma que cada um desses nodos seria confiável. Porém, levando-se em consideração que o número de nodos servidores seria muito menor que o de jogadores, seria muito mais viável garantir a sua confiabilidade em relação à possibilidade de haver trapaça do que em uma rede P2P completamenet descentralizada, onde essa tarefa é praticamente impossível. Além do que os nodos servidores não pertenceriam necessariamente a jogadores. Poderiam ser pequenos provedores locais de serviço de Internet, por exemplo, que lucrariam ao disponibilizarem recursos para um jogo. Isso seria interessante para essas empresas, pois os recursos -- pelo menos banda de comunicação -- do provedor seriam utilizados de qualquer forma pelos jogos, pois todo o tráfego de jogadores que também fossem seus assinantes passaria por lá, independente de a qual servidor cada jogador estivesse conectado.
 
 De qualquer forma, como a simulação seria distribuída entre os nodos servidores, não seria necessário que cada um destes tivesse a mesma capacidade de processamento ou comunicação possuída pelos grandes servidores centrais usados comumente para jogos MMOG. Para fazer essa distribuição, o mundo do jogo poderia ser dividido em regiões, cada uma gerenciada por, pelo menos, um destes nodos. Mais de um nodo servidor deverá ser usado por região, de maneira que a simulação seria distribuída em dois níveis: primeiro em regiões, depois dentro de cada uma delas, entre os nodos que a estivessem gerenciando-a. Dessa forma, cada jogador enviaria suas ações a um destes nodos, que as processaria, em seguida se sincronizaria com os outros nodos da mesma região, e por fim, persistiria de maneira distribuída o novo estado do jogo e enviaria para os jogadores a ele conectados. Assim, também seria provida melhor disponibilidade, pois cada região do mundo virtual estaria sendo servida por um conjunto de servidores com estado do jogo sincronizado. Caso algum destes falhasse, o(s) outro(s) poderia(m) tomar para si os jogadores que estavam conectados ao servidor que não está mais disponível.  %Isto é mais desejável do que designar cada região a um par controlado por jogador, como sugerido em alguns trabalhos, pois jogadores saem e entram de volta no jogo de maneira imprevisível.%, o que poderia ser um ponto fraco da abordagem destes autores.
 
-Seguindo esta direção, existem alguns problemas que, ou estão por resolver, ou estão sendo pesquisados atualmente, tais como:
+Para atingir o objetivo de distribuir um servidor de MMOG sobre uma rede dinâmica, com recursos voláteis, mais escassos, e com menor dependabilidade, como são as redes P2P formadas por nodos voluntários, surgem algumas questões que ou tem sido objeto de pesquisa nos últimos anos, ou que ainda estão por resolver. Algumas delas são:
+%TODO: refs
 
 \begin{itemize}
 
-\item Encontrar uma maneira de particionar o espaço virtual, mapeando cada região a um nodo servidor, de forma que nodos com boa comunicação entre si estejam próximos na topologia lógica da rede;
+\item Encontrar uma maneira de particionar o espaço virtual, mapeando cada região a um conjunto de nodos servidores, de forma que nodos com boa comunicação entre si estejam próximos na topologia lógica da rede;
 
-\item	Balancear dinamicamente a carga da simulação entre os nodos servidores, de forma que seja mantida uma qualidade mínima de serviço em cada uma das diferentes regiões do ambiente virtual;
+\item	Balancear dinamicamente a carga da simulação entre os nodos servidores, de forma que seja mantida uma qualidade mínima de serviço em cada uma das diferentes regiões do ambiente virtual, além de tratar a questão dos \emph{hotspots} (aglomerados de avatares em uma área relativamente pequena);
 
-\item Manter consistente a simulação nas diferentes regiões, entre jogadores da mesma região, e de jogadores em regiões adjacentes;
+\item Manter consistente a simulação nas diferentes regiões, entre servidores da mesma região, e de servidores em regiões adjacentes;
 
-\item	Coordenar a entrada, a saída e a detecção de colapso de nodos do sistema;
+\item	Coordenar a entrada, a saída e a detecção de colapso de nodos do sistema, provendo tolerância a falhas;
 
-\item	Distribuir o armazenamento persistente do estado dos jogadores, de forma a poder recuperá-lo quando necessário;
+\item	Distribuir e armazenar de maneira persistente o estado do mundo e dos jogadores, de forma a poder recuperá-lo sempre que necessário;
 
 \item	Otimizar a comunicação entre clientes e servidores, de forma a economizar o máximo possível de largura de banda, sem que isso seja perceptível pelos jogadores;
 
-\item	Como cada nodo tem recursos mais limitados que os de um grande servidor central, deve-se buscar algoritmos adaptativos que tornem a simulação (atualizações de estado e sincronização da simulação entre os clientes) coerente com os recursos disponíveis no momento;
+%TODO: isso aqui "simulação (eh simulação mesmo?) e (PARENTESES)"
+\item	Como cada nodo tem recursos mais limitados que os de um grande servidor central, deve-se buscar algoritmos adaptativos que tornem a simulação (atualizações de estado e sincronização da simulação entre os clientes) coerente com os recursos disponíveis no momento.
 
 %\item	Tornar o sistema como um todo o mais escalável possível, mesmo que para isso seja necessário relaxar algumas restrições, como consistência global, por exemplo;
 %
@@ -328,7 +330,7 @@ Seguindo esta direção, existem alguns problemas que, ou estão por resolver, ou e
 
 \end{itemize}
 
-Foram feitos trabalhos que buscam tratar alguns destes problemas, como balanceamento de carga \cite{lee2003sdl}, assim como foram feitas algumas propostas de arquiteturas de suporte a MMOG \cite{ng2002msa} e \cite{assiotis2006dam}. No entanto, tais propostas levam em consideração que os servidores são de grande porte e ligados através de links de comunicação poderosos, havendo muito pouco atraso entre eles. Cabe, então, fazer a análise da aplicabilidade das técnicas já pesquisadas em um contexto de recursos mais escassos e propor, tendo isso em vista, aperfeiçoamento das mesmas e uma arquitetura que as integre, além de efetuar implementação e testes de um protótipo que as utilize.
+Pretende-se, durante o curso de doutorado, atacar cada um destes problemas, buscando a melhor solução possível em um contexto de jogos online maciçamente multijogador. Com tais questões resolvidas, poderão ser providos a MMOGs disponibilidade e tolerância a falhas -- devido a replicação de nodos servidores em uma mesma região -- e escalabilidade, mantendo o atraso de comuicação dentro de um limite aceitável para o jogo, tudo isso por um baixo custo.
 
 %
 %\begin{figure}
@@ -356,6 +358,8 @@ O objetivo é criar um modelo arquitetural de suporte a jogos online maciçamente 
 Existem outros aspectos relevantes, além da distribuição do servidor e da economia de largura de banda, que poderão ser acrescentados ao modelo, dependo da disponibilidade de tempo para realizar tal tarefa.
 
 \section{Objetivos específicos}
+%TODO: por aqui as referências de gerenciamento de interesse e de topologia, difusao etc. (ver slide "em andamento" da semac)
+
 %A função deste middleware será de abstrair para a camada do jogo, que ficará acima dele, o sistema geograficamente distribuído servidor. distribuir as cargas de processamento e comunicação entre 
 %
 %sistema distribuído sobre a Internet, que funcionará como um grande servidor para jogos online maciçamente multijogador. Pode ser utilizado o conceito de "super-nodo", que nada mais é que um computador conectado à Internet, com capacidade de processamento e comunicação acima da média de usuários comuns, mas que, ainda assim, é bem mais limitado que os grandes servidores que costumam servir os jogos MMOG mais conhecidos. A idéia é que diversos destes super-nodos, conectados à Internet, formem um sistema distribuído que aceitará e repartirá conexões oriundas de jogadores. Eles então dividirão a carga de processamento e de comunicação dos diferentes jogadores conectados, assim como a simulação do ambiente virtual do jogo.
