@@ -353,9 +353,11 @@ Pretende-se, durante o curso de doutorado, atacar cada um destes problemas, busc
 
 \chapter{Objetivo}
 \section{Objetivo geral}
-O objetivo é criar um modelo arquitetural de suporte a jogos online maciçamente multijogador. Seguindo este modelo, deverá ser possível formar um sistema geograficamente distribuído de nodos servidores, utilizando a Internet como meio de ligação entre os mesmos. Além de distribuir as cargas computacionais (comunicação e processamento) impostas pelo grande número de jogadores, este modelo deverá incluir técnicas com o fim de reduzir o tráfego entre os componentes deste sistema (nodos servidores e máquinas clientes dos jogadores), economizando largura de banda. Tais técnicas são o foco deste trabalho, tendo em vista que se considera um cenário com recursos voláteis e limitados, já que a ligação entre os nodos será feita através da Internet.
+%TODO: ponto de vista ... visto... consertar/melhorar
+%TODO: posso dizer que um dos meus objetivos é resistir a trapaça quando eu so estou dizendo que vou usar uma "solucao pronta para cliente/servidor"?
+O objetivo é criar um modelo arquitetural de suporte a jogos online maciçamente multijogador. Seguindo este modelo, deverá ser possível formar um sistema geograficamente distribuído de nodos servidores, utilizando a Internet como meio de ligação entre os mesmos. Do ponto de vista dos jogadores, tal sistema será visto como um servidor de MMOGs que consegue manter o mundo do jogo consistente, disponível e com boa qualidade de serviço, além de não permitir trapaça. %Além de distribuir as cargas computacionais (comunicação e processamento) impostas pelo grande número de pessoas jogando, este modelo deverá incluir técnicas com o fim de reduzir o tráfego entre os componentes deste sistema (nodos servidores e máquinas clientes dos jogadores), economizando largura de banda. Tais técnicas são o foco deste trabalho, tendo em vista que se considera um cenário com recursos voláteis e limitados, já que a ligação entre os nodos será feita através da Internet.
 
-Existem outros aspectos relevantes, além da distribuição do servidor e da economia de largura de banda, que poderão ser acrescentados ao modelo, dependo da disponibilidade de tempo para realizar tal tarefa.
+%Existem outros aspectos relevantes, além da distribuição do servidor e da economia de largura de banda, que poderão ser acrescentados ao modelo, dependo da disponibilidade de tempo para realizar tal tarefa.
 
 \section{Objetivos específicos}
 %TODO: por aqui as referências de gerenciamento de interesse e de topologia, difusao etc. (ver slide "em andamento" da semac)
@@ -364,21 +366,32 @@ Existem outros aspectos relevantes, além da distribuição do servidor e da econom
 %
 %sistema distribuído sobre a Internet, que funcionará como um grande servidor para jogos online maciçamente multijogador. Pode ser utilizado o conceito de "super-nodo", que nada mais é que um computador conectado à Internet, com capacidade de processamento e comunicação acima da média de usuários comuns, mas que, ainda assim, é bem mais limitado que os grandes servidores que costumam servir os jogos MMOG mais conhecidos. A idéia é que diversos destes super-nodos, conectados à Internet, formem um sistema distribuído que aceitará e repartirá conexões oriundas de jogadores. Eles então dividirão a carga de processamento e de comunicação dos diferentes jogadores conectados, assim como a simulação do ambiente virtual do jogo.
 
-%Para atingir este objetivo, algumas metas são traçadas:
-%
-%\begin{enumerate}
-%
-%\item Revisar as técnicas utilizadas para dar suporte a jogos MMOG;
-%
-%\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
-%
-%\item Propor integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
-%
-%\item Implementar um protótipo que integre as técnicas estudadas e/ou desenvolvidas no trabalho;
-%
-%\item Efetuar simulações que demonstrem o resultado obtido do trabalho e avaliar seus resultados.
-%
-%\end{enumerate}
+Para atingir este objetivo geral, algumas metas foram traçadas:
+
+\begin{enumerate}
+
+%TODO: mecanismo -> outra palavra
+%TODO: dividir este item em 2: distribuiçao e rede overlay parecida com a real.
+\item Desenvolver um mecanismo que gerencie a distribuição do mundo do jogo entre os diferentes nodos servidores, lidando com entrada, saída e colapso destes, provendo tolerância a falhas, ao mesmo tempo em que busca manter próximos na rede overlay nodos servidores que estejam próximos geograficamente;
+
+%TODO: dividir este item em 2
+\item Criar um algoritmo de balanceamento da carga do MMOG, que ao mesmo tempo em que mantém a carga em cada servidor proporcional à sua capacidade, leva em consideração a existência de \emph{hotspots}, evitando que algum destes seja particionado entre regiões diferentes, dado que isto causaria forte dependência entre elas;
+
+\item Definir um esquema de sincronização do estado da simulação entre os diferentes nodos servidores designados para a mesma região do mundo do jogo, assim como sincronizar periodicamente, ou quando necessário, os estados das diferentes regiões, de forma a manter consistência global;
+
+\item Definir um mecanismo de persistência distribuída dos estados dos jogadores e do mundo virtual do jogo como um todo, de maneira que estejam sempre disponíveis para qualquer nodo servidor, ainda que alguns destes inesperadamente se tornem indisponíveis;
+
+\item Pesquisar e desenvolver técnicas e algoritmos que visem a reduzir o tráfego entre clientes e servidores e entre servidores, de maneira a economizar recursos, diminuir atraso na comunicação entre eles e ampliar o público do jogo, além de reduzir os requisitos para que um computador possa fazer parte do sistema servidor, porém sem prejudicar a experiência do jogo.
+
+\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
+
+\item Propor integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
+
+\item Implementar um protótipo que integre as técnicas estudadas e/ou desenvolvidas no trabalho;
+
+\item Efetuar simulações que demonstrem o resultado obtido do trabalho e avaliar seus resultados.
+
+\end{enumerate}
 
 
 
