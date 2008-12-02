@@ -20,6 +20,8 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
+\renewcommand{\labelenumii}{\alph{enumii}.}
+
 \hyphenation{di-fe-ren-tes}
 \hyphenation{re-qui-si-to}
 \hyphenation{sa-tis-fa-tó-ria}
@@ -350,6 +352,7 @@ Pretende-se, durante o curso de doutorado, atacar cada um destes problemas, busc
 %\end{equation}
 
 %explicar onde o CoSMMuS se encaixa na literatura: o que que vai contribuir?
+%enfiar tantas referências quanto for possível, porém evitando dizer que já existe algo pronto
 
 \chapter{Objetivo}
 \section{Objetivo geral}
@@ -372,7 +375,7 @@ Para atingir este objetivo geral, algumas metas foram traçadas:
 
 %TODO: mecanismo -> outra palavra
 %TODO: dividir este item em 2: distribuiçao e rede overlay parecida com a real.
-\item Desenvolver um mecanismo que gerencie a distribuição do mundo do jogo entre os diferentes nodos servidores, lidando com entrada, saída e colapso destes, provendo tolerância a falhas, ao mesmo tempo em que busca manter próximos na rede overlay nodos servidores que estejam próximos geograficamente;
+\item Desenvolver um mecanismo que gerencie a distribuição do mundo do jogo entre os diferentes nodos servidores, lidando com entrada, saída e colapso destes, provendo tolerância a falhas, ao mesmo tempo em que busca manter próximos na rede \emph{overlay} nodos servidores que estejam próximos geograficamente;
 
 %TODO: dividir este item em 2
 \item Criar um algoritmo de balanceamento da carga do MMOG, que ao mesmo tempo em que mantém a carga em cada servidor proporcional à sua capacidade, leva em consideração a existência de \emph{hotspots}, evitando que algum destes seja particionado entre regiões diferentes, dado que isto causaria forte dependência entre elas;
@@ -406,24 +409,87 @@ Para atingir o objetivo definido na seção anterior, deverão ser cumpridas alguma
 
 \begin{enumerate}
 
-	\item Revisar as técnicas utilizadas para dar suporte distribuído a jogos MMOG;
-	
-	Será dada continuidade à investigação bibliográfica que já foi iniciada para elaboração deste plano de estudos e pesquisa, além de buscar separá-las em categorias segundo: contexto considerado e problemas que buscam solucionar.
+\item \textbf{Exigências do doutorado}: requisitos impostos pelo programa de pós-graduação em computação da UFRGS ao estudante de doutorado;
 
-	\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
-	
-	Técnicas utilizadas para dar suporte distribuído a jogos MMOG costumam se basear em cenários onde há grande disponibilidade de recursos, com grandes servidores ligados através de rede local com capacidade de comunicação super-dimensionada. Será analisada a viabilidade de serem utilizadas em um contexto onde os nodos têm recursos mais limitados.
+\begin{enumerate}
+\item Revalidação dos 25 créditos cursados durante o mestrado;
+\item Cumprimento dos créditos restantes exigidos para o doutorado;
+\item Realização de atividade didática referente ao estágio-docência;
+\item Apresentação de seminário de andamento na Semana Acadêmica do PPGC;
+\item Realização do exame de qualificação em abrangência;
+\item Apresentação da proposta de tese;
+\end{enumerate}
 
-	\item Propor integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
-	
-	Buscar-se-á fazer aperfeiçoamento de algumas destas técnicas, tendo como ênfase o contexto de super-nodos distribuídos geograficamente e, posteriormente, será proposta uma integração das mesmas% em uma arquitetura de suporte a MMOG
-.
+\item \textbf{Revisão bibliográfica}: tem por objetivo expandir o domínio sobre o estado da arte relacionado a distribuição de jogos MMOG;
+%TODO: por em emph palavras estrangeiras ao longo do plano, mas so na primeira aparição do termo
+\begin{enumerate}
+\item Estudo de tecnologias de formação de redes overlay e verificar sua compatibilidade com o tipo de gerenciamento de entrada, saída e colapso de nodos servidores pretendido;
+\item Pesquisa de artigos que propõem técnicas visando a colocar os servidores distribuídos na rede overlay, levando em consideração a qualidade da comunicação entre eles (i.e. servidores próximos geograficamente tenderão a ser adjacentes na rede overlay);
+\item Análise de algoritmos de balanceamento de carga, no que se refere à sua aplicabilidade em um servidor distribuído de MMOGs, de maneira a determinar o que se precisaria modificar para adaptar ao contexto de jogos;
+\item Pesquisa de trabalhos que têm por objetivo a descoberta e gerenciamento de hotspots, de forma que sua existência não degrade a qualidade de serviço do jogo;
+\item Revisão de técnicas para sincronizar o estado do jogo entre diferentes servidores de maneira dinâmica, sem que isso gere tráfego excessivo no sistema servidor;
+\item Pesquisar mecanismos de persistência distribuída, consistente e tolerante a falhas que possam ser utilizados para armazenar os estados dos jogadores e do ambiente virtual;
+\item Estudo sobre técnicas existentes para reduzir o tráfego entre os clientes e os servidores e entre os servidores, de maneira a reduzir custos sem prejudicar o jogo;
+\end{enumerate} 
 
-	\item Implementar um protótipo que integre as técnicas estudadas e/ou desenvolvidas nas etapas anteriores;
+\item \textbf{Definição do modelo}: tem como objetivo definir os componentes necessários à arquitetura para que seja capaz de fornecer o tipo de serviço pretendido;
 
-	\item Efetuar simulações que demonstrem o resultado obtido do trabalho e avaliar seus resultados.
+\begin{enumerate}
+\item Definição do tipo de topologia que a rede overlay deverá ter e de qual tecnologia será utilizada/adaptada para o gerenciamento desta rede;
+\item Definição dos critérios utilizados para efetuar balanceamento de carga e como isso será feito;
+\item Definição do esquema de sincronização entre os nodos servidores;
+\item Definição do modelo de persistência utilizado para armazenar de maneira distribuída e tolerante a falhas o estado dos mundo virtual e dos jogadores;
+\item Integração do modelo definido com técnicas de otimização do uso de largura de banda e de redução de atraso na comunicação;
+\end{enumerate}
+
+\item \textbf{Implementação do modelo}: visa a criar um protótipo que possa ser utilizado tanto em simulações quanto em execuções reais do modelo proposto;
+
+\begin{enumerate}
+\item Implementação da camada de gerenciamento da malha de conexões entre os nodos servidores e entre servidores e clientes;
+\item Implementação do módulo de distribuição de carga e gerenciamento de hotspots;
+\item Implementação da camada de sincronização da simulação e persistência de estados;
+\item Criação e integração do módulo de gerenciamento do uso de recursos do nodo e adaptar a qualidade do jogo à capacidade de cada servidor;
+\end{enumerate}
+
+\item \textbf{Simulação e testes}: visa validar o modelo proposto e verificar se os objetivos foram alcançados;
+
+\begin{enumerate}
+\item Análise e comparação de simuladores de rede e de sistemas em larga escala, um dos quais será escolhido para realização das simulações do modelo proposto de suporte distribuído a MMOGs;
+\item Adaptação do protótipo para que execute sobre o simulador escolhido;
+\item Execução dos testes com respeito a: qualidade da comunicação entre nodos adjacentes, eficiência do balanceamento de carga e detecção dos hotspots, consistência da simulação entre os diferentes nodos servidores, disponibilidade do jogo e dos estados dos jogadores mesmo com a presença de falhas;
+%TODO: 
+\item Testar o protótipo, sobre um sistema em larga escala real, como o Grid5000 \cite{g5k} e analisar os resultados;
+\end{enumerate}
+
+\item \textbf{Escrita do trabalho}: tem por objetivo documentar o trabalho realizado, por meio da tese, além de divulgá-lo, através da escrita e publicação de artigos;
+
+\begin{enumerate}
+\item Escrita da tese;
+\item Escrita de artigos para publicação nacional (SBGames) e internacional (\mbox{DS-RT}, NetGames) e periódicos internacionais (\emph{Multimedia Tools and Applications}).
+\end{enumerate}
 
 \end{enumerate}
+
+%\begin{enumerate}
+%
+%	\item Revisar as técnicas utilizadas para dar suporte distribuído a jogos MMOG;
+%	
+%	Será dada continuidade à investigação bibliográfica que já foi iniciada para elaboração deste plano de estudos e pesquisa, além de buscar separá-las em categorias segundo: contexto considerado e problemas que buscam solucionar.
+%
+%	\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
+%	
+%	Técnicas utilizadas para dar suporte distribuído a jogos MMOG costumam se basear em cenários onde há grande disponibilidade de recursos, com grandes servidores ligados através de rede local com capacidade de comunicação super-dimensionada. Será analisada a viabilidade de serem utilizadas em um contexto onde os nodos têm recursos mais limitados.
+%
+%	\item Propor integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
+%	
+%	Buscar-se-á fazer aperfeiçoamento de algumas destas técnicas, tendo como ênfase o contexto de super-nodos distribuídos geograficamente e, posteriormente, será proposta uma integração das mesmas% em uma arquitetura de suporte a MMOG
+%.
+%
+%	\item Implementar um protótipo que integre as técnicas estudadas e/ou desenvolvidas nas etapas anteriores;
+%
+%	\item Efetuar simulações que demonstrem o resultado obtido do trabalho e avaliar seus resultados.
+%
+%\end{enumerate}
 
 %
 %As etapas que esse trabalho seguirão são:
@@ -450,95 +516,6 @@ Para atingir o objetivo definido na seção anterior, deverão ser cumpridas alguma
 %
 %	\item Integrar os algoritmos e técnicas pesquisados e executar simulações para medir seu desempenho.
 %\end{enumerate}
-
-%\begin{algorithm}
-%\caption{Algoritmo para geração de CRN}
-%\begin{algorithmic}[1]
-%\label{alg:crn}
-%\FOR{$i=0$ to $STEPS$}
-%\STATE{at = atomos[rand(NATM)];}\COMMENT{\textit{pega um átomo aleatóriamente}}
-%\STATE{E\_local = local\_energy(at);}\COMMENT{\textit{calcula a energia local da célula onde o átomo está inserido}}
-%\STATE{Hibri = hibri\_cost(at);}\COMMENT{\textit{calcula o custo de hibridização local da célula onde o átomo está inserido}}
-%\STATE{at$\rightarrow$x = at$\rightarrow$x + randf();}\COMMENT{\textit{desloca o átomo na direção x}}
-%\label{desloc_ini}
-%\STATE{at$\rightarrow$y = at$\rightarrow$y + randf();}\COMMENT{\textit{desloca o átomo na direção y}}
-%\STATE{at$\rightarrow$z = at$\rightarrow$z + randf();}\COMMENT{\textit{desloca o átomo na direção z}}
-%\label{desloc_fim}
-%\STATE{E\_local\_new = local\_energy(at);}\COMMENT{\textit{calcula a nova energia local da célula onde o átomo está inserido}}
-%\STATE{Hibri\_new = hibri\_cost(at);}\COMMENT{\textit{calcula o novo custo de hibridização local da célula onde o átomo está inserido}}
-%
-%\STATE{dE = E\_new - E\_old;}\COMMENT{\textit{calcula a variação de energia}}
-%\STATE{dH = Hibri\_new - Hibri\_old;}\COMMENT{\textit{calcula a variação do custo de hibridização}}
-%		
-%		
-%\STATE{dfc = (1.0f - COST\_HIBRI)*(dE) + COST\_HIBRI*(dH);}\COMMENT{\textit{calcula a variação da função custo}}
-%
-%\IF{aceita(dfc)}%\COMMENT{\textit{verifica a aceitação de acordo com a temperatura atual}}
-%\STATE{atualiza\_posicao();}\COMMENT{\textit{atualiza a posição do átomo}}
-%\ELSE
-%\STATE{desfaz\_movimento();}\COMMENT{\textit{volta átomo para posição anterior}}
-%\ENDIF
-%
-%\STATE{temperatura = temperatura * 0.98}\COMMENT{\textit{diminui a temperatura}}
-%
-%
-%\ENDFOR
-%\end{algorithmic}
-%\end{algorithm}
-
-%\chapter{Metodologia}
-%
-%As etapas para o desenvolvimento desse trabalho serão:
-%
-%\begin{enumerate}
-%	\item Pesquisar mais a fundo as técnicas utilizadas em trabalhos relacionados, buscando pontos em que possam ser melhoradas;
-%
-%	\item 
-%
-%	\item Encontrar maneiras de otimizar essa implementação seqüencial. 
-%		
-%	\item Buscar formas de paralelizar a aplicação tentando diminuir ainda mais o tempo de execução.
-% Primeiramente essa paralização será feita pela adição da primitivas OpenMP \cite{Chandra-00} no programa seqüencial para tentar explorar o paralelismo nas máquinas multiprocessadas e em novas máquinas multi-core. Essas primitivas serão introduzidas na etapa de cálculo local, que é a etapa que consome mais tempo de processamento e pode facilmente ser paralalelizada através da primitiva ``\textit{parallel for}''. 
-%Espera-se, com essa alteração, uma diminuição no tempo de execução, porém, como apenas pequenas partes do programa poderão ser paralelizadas e as máquinas disponíveis para simulação tem no máximo quatro processadores, acredita-se que o tempo de execução continuará ainda alto.%, necessitando assim, uma outra etapa de paralelização.
-%	\item Buscar formas de paralelizar a aplicação através do uso da biblioteca de troca de mensagens MPI \cite{Pacheco-96,Snir-98} (\textit{Message Passing Interface}). Essa etapa tem duas fases previstas:
-%				
-%\begin{enumerate}
-%	\item Na primeira, será realizada uma paralelização de forma simples, usando primitivas básicas do MPI. Nessa fase as redes serão geradas com o auxílio de algoritmos genéticos para tentar convergir mais rapidamente em um estado estável.
-%	\item Na segunda, além da utilização das primitivas básicas, tentar-se-á introduzir primitivas novas, presentes na norma MPI-2 \cite{Gropp-99}. Uma dessas primitivas é a \textit{MPI\_Comm\_spawn}, que possibilita a criação dinâmica de novos processos. Esses processos serão criados para permitir uma maior concorrência na geração das redes. Com a utilização do MPI, pretende-se obter um bom desempenho, diminuindo significativamente o tempo de execução da aplicação, uma vez que um número bem maior de processadores poderá ser utilizado. 
-%\end{enumerate}
-%				
-%			\end{enumerate}
-%
-%
-%
-%
-%
-%
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 \section{Cronograma}
 
@@ -579,7 +556,7 @@ cronograma de atividades a serem desenvolvidas, conforme citadas abaixo
 \begin{center}
 \caption{Cronograma}
 \label{tab:cronograma}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
 Etapa 
    &Jan&Fev&Mar&Abr&Mai&Jun&Jul&Ago&Set&Out&Nov&Dez&Jan&Fev\\ \hline
