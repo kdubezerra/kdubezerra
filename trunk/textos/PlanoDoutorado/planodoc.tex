@@ -20,7 +20,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
-\renewcommand{\labelenumii}{\alph{enumii}.}
+%\renewcommand{\labelenumii}{\alph{enumii}.}
 
 \hyphenation{di-fe-ren-tes}
 \hyphenation{re-qui-si-to}
@@ -170,7 +170,7 @@
 
 \begin{abstract}
 
-Este plano de curso de doutorado propõe um modelo de suporte a jogos online maciçamente multijogador fazendo uso de sistemas de compartilhamento em larga escala de recursos computacionais, tais como redes P2P. Seguindo este modelo, sobre uma rede P2P seria formado um sistema que atuaria como servidor de um jogo MMOG. A cada nodo deste sistema seria designado uma porção da carga de comunicação e processamento do jogo -- mais especificamente, seria designada a cada nodo uma região do ambiente virtual do jogo. Tal sistema seria percebido como um servidor central pelos jogadores, que conectar-se-iam a ele através de um \emph{Gateway}, sendo cada um redirecionado para o nodo servidor adequado. Para que esse sistema servidor funcione como esperado, será necessário tratar algumas questões, tais como manter consistente o andamento do jogo nos diferentes nodos servidores, de forma que cada jogador tenha a mesma visão; gerenciamento da carga atribuída a cada servidor, sendo que maior parte dela recai sobre a rede e, por se tratar de um jogo, é bastante variável; o que fazer quando um nodo servidor sai da rede ou entra em colapso e, por fim, como difundir e armazenar os estados dos jogadores de maneira distribuída, de forma que sempre se possa recuperar o estado mais recente.
+Este plano de curso de doutorado propõe um modelo de suporte a jogos online maciçamente multijogador fazendo uso de sistemas de compartilhamento em larga escala de recursos computacionais, tais como redes P2P. Seguindo este modelo, sobre uma rede P2P seria formado um sistema que atuaria como servidor de um jogo MMOG. A cada nodo deste sistema seria designada uma porção da carga de comunicação e processamento do jogo -- mais especificamente, o ambiente virtual do jogo seria particionado em regiões, sendo que a cada uma delas seria designado um conjunto de um ou mais nodos servidores. Tal sistema seria percebido como um servidor central pelos jogadores, que conectar-se-iam a ele através de um \emph{Gateway}, sendo cada um redirecionado para o nodo servidor adequado. Para que esse sistema servidor funcione como esperado, será necessário tratar algumas questões, tais como manter consistente o andamento do jogo nos diferentes nodos servidores, de forma que cada jogador tenha a mesma visão; gerenciamento da carga atribuída a cada servidor, sendo que maior parte dela recai sobre a rede e, por se tratar de um jogo, é bastante variável; o que fazer quando um nodo servidor sai da rede ou entra em colapso e, por fim, como difundir e armazenar os estados dos jogadores de maneira distribuída, de forma que sempre se possa recuperar o estado mais recente.
 
 %Este trabalho visa analisar a aplicabilidade das técnicas utilizadas para dar suporte a jogos online maciçamente multijogador em cenários onde os recursos computacionais são mais limitados. Como geralmente são utilizadas redes de servidores de alto custo, com links que dão suporte à comunicação entre dezenas de milhares de jogadores \cite{cecin2004fsa}, é necessário revisar o que foi feito e analisar sua aplicabilidade em arquiteturas que não dispõem de tais recursos. Assim sendo, objetiva-se avaliar e, quando possível, aperfeiçoar as técnicas pesquisadas%\cite{os artigos pesquisados}
 %, considerando um cenário em que a infra-estrutura de suporte se restringe a um conjunto de nodos de capacidade menor - ou super-nodos, no sentido em que têm links e capacidade de processamento superiores às dos usuários de Internet em geral, mas inferiores às dos grandes servidores. Pretende-se, por fim, construir um modelo arquitetural de suporte a jogos online maciçamente multijogador, que defina a distribuição das cargas de processamento e comunicação associadas ao jogo entre o conjunto de nodos servidores e integre - tantas quanto for possível - as técnicas pesquisadas e/ou propostas. Após isso, será feito um protótipo e simulações para validar o trabalho.
@@ -300,7 +300,7 @@ Por fim, os autores desse trabalho, assim como em vários outros com propostas se
 
 \section{Questões de pesquisa}
 
-Em um MMOG montado sobre uma arquitetura P2P completamente descentralizada, cada par é responsável por decidir o resultado das ações de seu jogador. Apesar disto tornar o sistema menos dependente de cada um deles -- se um jogador se desconectar do jogo, apenas o estado referente a seu avatar será perdido -- e de tornar o jogo independente de servidores centrais, tal abordagem se mostrou muito vulnerável a trapaça, justamente por cada par executar parte da simulação, além de ser propícia à saturação da banda de upload dos participantes, que tem que enviar atualizações de estado da simulação para seus companheiros de jogo.
+Em um MMOG completamente descentralizado e montado sobre uma arquitetura par-a-par, cada par é responsável por decidir o resultado das ações de seu jogador. Apesar disto tornar o sistema menos dependente de cada um deles -- se um jogador se desconectar do jogo, apenas o estado referente a seu avatar será perdido -- e de tornar o jogo independente de servidores centrais, tal abordagem se mostrou muito vulnerável a trapaça, justamente por cada par executar parte da simulação, além dessa abordagem ser propícia à saturação da banda de upload dos participantes, que tem que enviar atualizações de estado da simulação para seus companheiros de jogo.
 
 %\textbf{... por esses motivos, decidiu-se utiliza o msoi (ver \emph{"discussao autista.txt"})}
 O que se pretende investigar é o uso de um sistema servidor composto de nodos voluntários distribuídos geograficamente. Esse sistema seria heterogêneo, onde cada nodo poderia ser desde um computador doméstico até um cluster pertencente a alguma empresa que tivesse interesse em servir o jogo. Seria exigida uma capacidade de processamento e link de comunicação mínimos para poder fazer parte do sistema servidor, além de ser necessário garantir de alguma forma que cada um desses nodos seria confiável. Porém, levando-se em consideração que o número de nodos servidores seria muito menor que o de jogadores, seria muito mais viável garantir a sua confiabilidade em relação à possibilidade de haver trapaça do que em uma rede P2P completamenet descentralizada, onde essa tarefa é praticamente impossível. Além do que os nodos servidores não pertenceriam necessariamente a jogadores. Poderiam ser pequenos provedores locais de serviço de Internet, por exemplo, que lucrariam ao disponibilizarem recursos para um jogo. Isso seria interessante para essas empresas, pois os recursos -- pelo menos banda de comunicação -- do provedor seriam utilizados de qualquer forma pelos jogos, pois todo o tráfego de jogadores que também fossem seus assinantes passaria por lá, independente de a qual servidor cada jogador estivesse conectado.
@@ -333,7 +333,7 @@ Para atingir o objetivo de distribuir um servidor de MMOG sobre uma rede dinâmic
 
 \end{itemize}
 
-Pretende-se, durante o curso de doutorado, atacar cada um destes problemas, buscando a melhor solução possível em um contexto de jogos online maciçamente multijogador. Com tais questões resolvidas, poderão ser providos a MMOGs disponibilidade e tolerância a falhas -- devido a replicação de nodos servidores em uma mesma região -- e escalabilidade, mantendo o atraso de comunicação dentro de um limite aceitável para o jogo, tudo isso por um baixo custo.
+Pretende-se, durante o curso de doutorado, pesquisar e desenvolver novas soluções para estes problemas, buscando as que forem mais adequadas em um contexto de jogos online maciçamente multijogador. Com tais questões resolvidas, poderão ser providos a MMOGs disponibilidade e tolerância a falhas -- devido a replicação de nodos servidores em uma mesma região -- e escalabilidade, mantendo o atraso de comunicação dentro de um limite aceitável para o jogo, tudo isso por um baixo custo.
 
 %
 %\begin{figure}
@@ -359,7 +359,7 @@ Pretende-se, durante o curso de doutorado, atacar cada um destes problemas, busc
 \section{Objetivo geral}
 %TODO: ponto de vista ... visto... consertar/melhorar
 %TODO: posso dizer que um dos meus objetivos é resistir a trapaça quando eu so estou dizendo que vou usar uma "solucao pronta para cliente/servidor"?
-O objetivo é criar um modelo arquitetural de suporte a jogos online maciçamente multijogador. Seguindo este modelo, deverá ser possível formar um sistema geograficamente distribuído de nodos servidores, utilizando a Internet como meio de ligação entre os mesmos. Do ponto de vista dos jogadores, tal sistema será visto como um servidor de MMOGs que consegue manter o mundo do jogo consistente, disponível e com boa qualidade de serviço, além de não permitir trapaça. %Além de distribuir as cargas computacionais (comunicação e processamento) impostas pelo grande número de pessoas jogando, este modelo deverá incluir técnicas com o fim de reduzir o tráfego entre os componentes deste sistema (nodos servidores e máquinas clientes dos jogadores), economizando largura de banda. Tais técnicas são o foco deste trabalho, tendo em vista que se considera um cenário com recursos voláteis e limitados, já que a ligação entre os nodos será feita através da Internet.
+O objetivo é criar um modelo arquitetural de suporte a jogos online maciçamente multijogador. Seguindo este modelo, deverá ser possível formar um sistema geograficamente distribuído de nodos servidores, utilizando a Internet como meio de ligação entre os mesmos. Do ponto de vista dos jogadores, tal sistema será visto como um servidor de MMOGs que consegue manter o mundo do jogo consistente, disponível e com boa qualidade de serviço. %Além de distribuir as cargas computacionais (comunicação e processamento) impostas pelo grande número de pessoas jogando, este modelo deverá incluir técnicas com o fim de reduzir o tráfego entre os componentes deste sistema (nodos servidores e máquinas clientes dos jogadores), economizando largura de banda. Tais técnicas são o foco deste trabalho, tendo em vista que se considera um cenário com recursos voláteis e limitados, já que a ligação entre os nodos será feita através da Internet.
 
 %Existem outros aspectos relevantes, além da distribuição do servidor e da economia de largura de banda, que poderão ser acrescentados ao modelo, dependo da disponibilidade de tempo para realizar tal tarefa.
 
@@ -376,7 +376,7 @@ Para atingir este objetivo geral, algumas metas foram traçadas:
 
 %TODO: mecanismo -> outra palavra
 %TODO: dividir este item em 2: distribuiçao e rede overlay parecida com a real.
-\item Desenvolver um mecanismo que gerencie a distribuição do mundo do jogo entre os diferentes nodos servidores, lidando com entrada, saída e colapso destes, provendo tolerância a falhas, ao mesmo tempo em que busca manter próximos na rede \emph{overlay} nodos servidores que estejam próximos geograficamente;
+\item Desenvolver um mecanismo que lide com entrada, saída e colapso destes, provendo tolerância a falhas, ao mesmo tempo em que busca manter próximos na rede \emph{overlay} nodos servidores que estejam próximos geograficamente;
 
 %TODO: dividir este item em 2
 \item Criar um algoritmo de balanceamento da carga do MMOG, que ao mesmo tempo em que mantém a carga em cada servidor proporcional à sua capacidade, leva em consideração a existência de \emph{hotspots}, evitando que algum destes seja particionado entre regiões diferentes, dado que isto causaria forte dependência entre elas;
@@ -398,7 +398,35 @@ Para atingir este objetivo geral, algumas metas foram traçadas:
 \end{enumerate}
 
 
+\chapter{Modelo preliminar: CoSMMuS}
+% as refs vão aqui
+% divisão em regiões
+% distribuição em dois níveis -> porque usar mais de um servidor seria melhor do que um só (menor tráfego entre eles e processamento distribuído)
+% Cooperatie System for Massive Multiplayer Service
+% duong ta
+% citar o fábio e o modelo de sincronização que ele usa (simulador otimista e conservador)
+% falar algo de pastry, chord etc., para persistência distribuída
+% falar do modelo "filosófico" anti-trapaça (falar das duas opções: provider-centric e anarchy-centric)
+% Como os jogadores interagem!!!
 
+Como parte do mestrado, definiu-se um modelo preliminar, que visa justamente ao particionamento do ambiente virtual em regiões, cada uma atribuída a um servidor, sobre o qual foi definido um esquema de balanceamento de carga. O Cosmmus (\emph{Cooperative System for Massive Multiplayer Service}) será uma extensão desse modelo, a ser definida durante o doutorado. No entanto, já há algumas idéias de como poderá ser este modelo.
+% Como os jogadores interagem!!!
+\section{Distribuição da carga do jogo}
+
+Por exemplo, pensa-se em fazer a distribuição da carga do jogo entre os nodos servidores em dois níveis:
+
+\begin{enumerate}
+	\item Particionamento do ambiente virtual em regiões, como já é feito em \cite{trabalhos que fazem isso}. Assim como no mestrado, será utilizada a idéia de células de mesmo tamanho e posição fixa, que são áreas do ambiente. Essas células então são agrupadas em regiões, cujo tamanho e formato irá depender da maneira como os avatares dos jogadores estão mais ou menos concentrados em determinados lugares;	
+	\item Cada região poderá ser designada a mais de um nodo servidor, com dois objetivos principais: primeiramente, prover tolerância a falhas por meio de replicação e, em segundo lugar, permitir que regiões que já estão muito sobrecarregadas sejam gerenciadas por mais de um nodo servidor.	
+\end{enumerate}
+
+No caso de uma região estar muito sobrecarregada, poderia-se pensar em fazer um novo particionamento, em duas ou mais novas regiões, mas isto poderia ser contraproducente em determinadas situações, como no caso em que a região engloba um hotspot e sua divisão resultaria em duas regiões excessivamente dependentes entre si. Para isso deverá ser criado também um algoritmo, métrica ou heurística que determine se uma região deve ou não ser subdividida em novas regiões.
+
+Também seria necessário um esquema de balanceamento de carga, que, pretende-se, será semelhante ao proposto durante o mestrado. A questão é que, diferente do modelo do mestrado, não haverá mais apenas um nodo servidor por região, mas um grupo de nodos servidores. Neste caso, serão investigadas maneiras de balancear a carga do sistema, considerando essa distribuição em dois níveis. Uma idéia seria a de usar apenas réplicas, com o intuito de prover tolerância a falhas na região e distribuir a carga dentro da região quando esta estiver sobrecarregada e nao for viável reparticioná-la.
+
+\section{Formação da rede lógica do sistema servidor}
+
+Quanto à formação da rede overlay sobre a qual será executado o sistema servidor, existem propostas, como em \cite{ratsanamy, duong ta}, que buscam montar a rede de forma que nodos com boa conexão de rede entre si estejam adjacentes na rede lógica. Podem ser utilizadas estas técnicas e adaptá-las, de maneira que nodos servidores servindo regiões adjacentes e, principalmente, que estejam servindo a mesma região, tenham boa comunicação entre si.
 
 \chapter{Plano de trabalho}
 
@@ -442,7 +470,9 @@ Para atingir o objetivo definido na seção anterior, deverão ser cumpridas alguma
 \item Definição do esquema de sincronização entre os nodos servidores;
 \item Definição do modelo de persistência utilizado para armazenar de maneira distribuída e tolerante a falhas o estado dos mundo virtual e dos jogadores;
 \item Integração do modelo definido com técnicas de otimização do uso de largura de banda e de redução de atraso na comunicação;
-\item Cooperação internacional com outro grupo de pesquisa (sanduíche ou co-tutela) a fim de trocar experiências e desenvolver em conjunto o modelo a ser seguido no doutorado. Contatos com os quais é possível formar parceria: SITE - UOttawa (Ottawa, Canadá), Universidade de Lugano (Lugano, Suíça);
+\item Cooperação internacional com outro grupo de pesquisa (sanduíche ou co-tutela).
+
+Foram feitos contatos durante o DS-RT, em Vancouver, com professores do SITE -- \emph{School of Information Technology and Engineering}, \mbox{uOttawa} (Ottawa, Canadá) --, havendo grande interesse por parte destes, e negociações já estão em andamento, faltando alguns detalhes para que isso seja possível. Outra instituição com possibilidade de cooperação é a Universidade de Lugano, na Suíça.
 \end{enumerate}
 
 \item \textbf{Implementação do modelo}: visa a criar um protótipo que possa ser utilizado tanto em simulações quanto em execuções reais do modelo proposto;
@@ -674,6 +704,47 @@ Etapa
 \chapter{Informações do candidato}
 \section{Dados de identificação}
 \section{Experiência com pesquisa}
+
+%papers
+%inge
+%watc...? (sim, como resultado prático, citando premiação)
+%eventos em que participou
+%TODO: ref do K-L, ref do indigente
+
+Antes de realizar o mestrado acadêmicos, o candidato já havia trabalhado com pesquisa e desenvolvimento, no grupo indigente \cite{indigente}, sendo um dos idealizadores e desenvolvedor do motor para jogos InGE -- \emph{indigente game engine} -- \cite{inge}, tendo sido o único responsável pelo módulo de rede. Posteriormente, foi um dos desenvolvedores do jogo \emph{We Are The Campignons}, que obteve premiação em um festival de jogos de âmbito nacional.
+
+O curso de doutorado pretendido terá por objetivo dar continuidade à pesquisa iniciada no mestrado acadêmico pelo PPGC/UFRGS, entre os anos de 2007 e 2009, sendo a defesa da dissertação prevista para fevereiro ou março. Durante o mestrado, foram propostas algumas técnicas que visam a otimizar o uso de largura de banda em um sistema distribuído atuando como servidor para um jogo online maciçamente jogador. Uma destas técnicas consiste no gerenciamento de interesse do jogador, levando em conta diferentes níveis de relevância para diferentes entidades do jogo.
+
+%TODO: jogar isso pro capítulo de modelo
+Outra técnica proposta é a de balanceamento de carga dinâmico, baseado em particionamento de grafo e refinamento de suas partições \cite{KL}. O mundo é dividido em células de mesmo tamanho e posição fixa, cada uma representada um vértice em um grafo. A interação (medida em kilobytes por segundo) entre as células são representadas pelas arestas dos vértices. O algoritmo consiste no particionamento do grafo, sendo cada partição uma região a ser atribuída a um servidor. Tal balanceamento leva em conta diferentes níveis de recursos entre os diferentes servidores e leva em conta as necessidades dos MMOGs, que se concentram com maior peso no uso de largura de banda dos servidores. %A partir daqui, por no experiencia com pesquisa mesmo
+ Este trabalho está em fase de conclusão, faltando coletar os resultados e escrever artigo para publicar no journal \emph{Multimedia Tools and Applications}, da Springer, que terá uma edição especial a respeito de MMOGs.
+ 
+%TODO: ref ns-2
+O candidato também participou do projeto P2PSE \cite{vilanova2008psm}, sendo um dos responsáveis pelo desenvolvimento da funcionalidade de multi-servidor, utilizando linguagem de programação C++. Também é o responsável pelas simulações de rede, realizadas com o auxílio do simulador ns-2 \cite{ns2}, presentes no artigo publicado em simpósio nacional a respeito do projeto.
+
+Tais trabalhos desenvolvidos durante o mestrado, além do envolvimento anterior com pesquisa e desenvolvimento, renderam algumas publicações e uma premiação:
+
+\begin{itemize}
+
+\item Full paper, em simpósio internacional Qualis A:
+
+\textbf{A${^3}$: a novel interest management algorithm for distributed simulations of MMOGs}, BEZERRA, Carlos Eduardo B.; CECIN, Fábio R.; GEYER, Cláudio F. R., em \emph{Proc. of the 12-th IEEE International Symposium on Distributed Simulation and Real Time Applications}, 2008, Vancouver, BC, Canada.
+
+\item Full paper, em simpósio nacional:
+
+\textbf{P2PSE - A peer-to-peer support for multiplayer games}, VILANOVA, Felipe J.; BEZERRA, Carlos Eduardo B.; CRIPPA, Marcos R., CECIN, Fábio R.; GEYER, Cláudio F. R., em \emph{Proc. of SBGames 2008 - VII Brazilian Symposium on Computer Games and Digital Entertainment - Computing Track}, 2008, Belo Horizonte, MG, Brazil.
+
+\item Short paper, em simpósio nacional, a respeito do desenvolvimento do InGE:
+
+\textbf{Desenvolvendo um Motor Multiplataforma para Jogos 3D}, ROCHA, Rodrigo; BESSA, Aline; BEZERRA, Carlos E. B.; MEDEIROS, Ivan; OLIVEIRA, Caio; BANDEIRA, H., em \emph{Anais do SBGames 2007 - VI Simpósio Brasileiro de Jogos para Computador e Entretenimento Digital - Trilha Computação}, 2007, São Leopoldo, RS, Brazil.
+
+\item 3º lugar no Festival de Jogos Independentes do SBGames 2006:
+
+\textbf{We Are The Champignons}, \emph{V Simpósio Brasileiro de Jogos para Computador e Entretenimento Digital}, 2006, Recife, PE, Brasil.
+
+\end{itemize}
+
+Para o curso de doutorado, o candidato pretende-se criar um modelo mais detalhado que cubra os requisitos definidos para o sistema servidor distribuído. Pelo menos devem ser satisfeitos os requisitos de distribuição da persistência do estado dos jogadores e do mundo virtual, da sincronização da simulação distribuída entre os nodos servidores, provendo também tolerância a falhas, além de desenvolver técnicas que otimizem tanto quanto possível o uso de largura de banda, evitando que a qualidade do jogo seja prejudicada.
 
 \bibliography{planodoc}
 \bibliographystyle{abnt} 
