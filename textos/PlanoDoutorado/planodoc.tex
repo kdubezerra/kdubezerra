@@ -30,6 +30,8 @@
 \hyphenation{pre-ci-sa-rão}
 \hyphenation{to-le-rân-cia}
 \hyphenation{vo-lun-tá-rios}
+\hyphenation{com-pa-ti-bi-li-da-de}
+\hyphenation{si-mu-la-ções}
 
 %\renewcomd{\listalgorithmname}{Lista de Algoritmos}
 
@@ -333,7 +335,7 @@ Para atingir o objetivo de distribuir um servidor de MMOG sobre uma rede dinâmic
 
 \end{itemize}
 
-Pretende-se, durante o curso de doutorado, pesquisar e desenvolver novas soluções para estes problemas, buscando as que forem mais adequadas em um contexto de jogos online maciçamente multijogador. Com tais questões resolvidas, poderão ser providos a MMOGs disponibilidade e tolerância a falhas -- devido a replicação de nodos servidores em uma mesma região -- e escalabilidade, mantendo o atraso de comunicação dentro de um limite aceitável para o jogo, tudo isso por um baixo custo.
+Pretende-se, durante o curso de doutorado, pesquisar e desenvolver novas soluções para estes problemas, buscando as que forem mais adequadas em um contexto de jogos online maciçamente multijogador. Com tais questões resolvidas, poderão ser providos a MMOGs disponibilidade e tolerância a falhas -- devido à replicação de nodos servidores em uma mesma região -- e escalabilidade, mantendo o atraso de comunicação dentro de um limite aceitável para o jogo, tudo isso por um baixo custo.
 
 %
 %\begin{figure}
@@ -503,7 +505,7 @@ Para atingir o objetivo definido na seção anterior, deverão ser cumpridas alguma
 \item Apresentação da proposta de tese;
 \end{enumerate}
 
-\item \textbf{Revisão bibliográfica}: tem por objetivo expandir o domínio sobre o estado da arte relacionado a distribuição de jogos MMOG;
+\item \textbf{Revisão bibliográfica}: tem por objetivo expandir o domínio sobre o estado da arte relacionado à distribuição de jogos MMOG;
 %TODO: por em emph palavras estrangeiras ao longo do plano, mas so na primeira aparição do termo
 \begin{enumerate}
 \item Estudo de tecnologias de formação de redes overlay e verificar sua compatibilidade com o tipo de gerenciamento de entrada, saída e colapso de nodos servidores pretendido;
@@ -523,11 +525,7 @@ Para atingir o objetivo definido na seção anterior, deverão ser cumpridas alguma
 \item Definição do esquema de sincronização entre os nodos servidores;
 \item Definição do modelo de persistência utilizado para armazenar de maneira distribuída e tolerante a falhas o estado dos mundo virtual e dos jogadores;
 \item Integração do modelo definido com técnicas de otimização do uso de largura de banda e de redução de atraso na comunicação;
-\item Cooperação internacional com outro grupo de pesquisa (sanduíche ou co-tutela).
-
-Foram feitos contatos durante o DS-RT, em Vancouver, com professores do SITE -- \emph{School of Information Technology and Engineering}, \mbox{uOttawa} (Ottawa, Canadá) --, havendo grande interesse por parte destes, e negociações já estão em andamento, faltando alguns detalhes para que isso seja possível. Outra instituição com possibilidade de cooperação é a Universidade de Lugano, na Suíça.
-\end{enumerate}
-
+\item Cooperação internacional com outro grupo de pesquisa, através de sanduíche ou co-tutela (mais detalhes na seção \ref{sec:ottawa});
 \item \textbf{Implementação do modelo}: visa a criar um protótipo que possa ser utilizado tanto em simulações quanto em execuções reais do modelo proposto;
 
 \begin{enumerate}
@@ -551,7 +549,7 @@ Foram feitos contatos durante o DS-RT, em Vancouver, com professores do SITE -- 
 
 \begin{enumerate}
 \item Escrita da tese;
-\item Escrita de artigos para publicação nacional (SBGames) e internacional (\mbox{DS-RT}, NetGames) e periódicos internacionais (\emph{Multimedia Tools and Applications}).
+\item Escrita de artigos para publicação nacional (SBGames) e internacional (\mbox{DS-RT}, NetGames), além de periódicos internacionais, como o \emph{Multimedia Tools and Applications}, por exemplo.
 \end{enumerate}
 
 \end{enumerate}
@@ -609,7 +607,7 @@ De forma a cumprir os créditos exigidos pelo curso de doutorado, pretende-se:
 
 \begin{enumerate}
 \item Revalidar os 24 créditos obtidos durante o curso de mestrado acadêmico no Programa de Pós Graduação em Computação do Instituto de Informática da UFRGS (PPGC/UFRGS). As disciplinas cursadas estão sumarizadas na Tabela \ref{tab:revalidar};
-\item Obter 16 créditos adicionais, através do curso das disciplinas CMP182 - Redes de Computadores I B, CMP147 - Redes de Computadores II, CMP200 - Criptografia de Dados e CMP260 - Redes P2P: características, protocolos e aplicações;
+\item Obter 12 créditos adicionais, através do curso das disciplinas CMP182 - Redes de Computadores I B, CMP147 - Redes de Computadores II e CMP200 - Criptografia de Dados;
 \item Obter mais 3 créditos, referentes a um trabalho individual e a realização de atividade didática (Tabela \ref{tab:creditos}).
 \end{enumerate}
 
@@ -661,12 +659,25 @@ Código   & Disciplina                  & Créditos \\ \hline \hline
 CMP182   & Redes de Computadores I B   & 4        \\ \hline
 CMP147   & Redes de Computadores II    & 4        \\ \hline
 CMP200   & Criptografia de Dados       & 4        \\ \hline
-CMP260   & Redes P2P: características, protocolos e aplicações & 4        \\ \hline
+%CMP260   & Redes P2P: características, protocolos e aplicações & 4        \\ \hline
 CMP40(X) & Trabalho Individual         & 2        \\ \hline
 CMP411   & Atividade Didática II       & 1        \\ \hline
 \end{tabular}
 \end{center}
 \end{table}
+
+\section{Cooperação internacional}
+\label{sec:ottawa}
+
+Durante a estadia em Vancouver, para apresentação de trabalho no DS-RT -- \emph{IEEE Symposium on Distributed Simulation and Real-Time Applications} -- foram feitos contatos com professores e pesquisadores do SITE (\emph{School of Information Technology and Engineering}), da Universidade de Ottawa, no Canadá. Uma destas pessoas foi o doutorando Dewan Ahmed, que trabalha especificamente com jogos MMOG \cite{ahmed2008dai}. Seu orientador é o professor Shervir Shirmohammadi, que trabalha, dentre outras coisas, com MMOGs e ambientes virtuais e multicast no nível da aplicação com redes overlay. Tem-se mantido contato com este grupo de pesquisa desde então, com o intuito de realizar doutorado sanduíche ou co-tutela, sendo que há interesse de ambas as partes.
+
+Também  houve conversas com o professor Azzedine Boukerche, também da uOttawa, que trabalha com simulações distribuídas de larga escala, das quais MMOGs seriam um caso específico. Também houve interesse em cooperação por parte desse professor, embora sua pesquisa não seja especificamente com jogos online maciçamente multijogador.
+
+Por fim, houve contato também com o professor Fernando Pedone, da Universidade de Lugano (USI), na Suíça, que trabalha com sistemas distribuídos e sistemas de gerenciamento de dados distribuídos, sendo que também há possibilidade de estágio no exterior nessa universidade.
+
+O intuito do período em uma universidade estrangeira seria o de trocar experiências entre os grupos de pesquisa, de forma a definir um melhor modelo final para o Cosmmus, utilizando \emph{know-how} de outros pesquisadores da área de simulação distribuída e, mais especificamente, MMOGs.
+
+
 
 \section{Cronograma}
 
@@ -766,7 +777,7 @@ Etapa
 
 Antes de realizar o mestrado acadêmico, o candidato já havia trabalhado com pesquisa e desenvolvimento, no grupo indigente \cite{indigente}, sendo um dos idealizadores e desenvolvedor do motor para jogos InGE -- \emph{indigente game engine} -- \cite{rocha2007dmm}, tendo sido o único responsável pelo módulo de rede. Posteriormente, foi um dos desenvolvedores do jogo \emph{We Are The Campignons}, que obteve premiação em um festival de jogos de âmbito nacional.
 
-O curso de doutorado pretendido terá por objetivo dar continuidade à pesquisa iniciada no mestrado acadêmico pelo PPGC/UFRGS, entre os anos de 2007 e 2009, sendo a defesa da dissertação prevista para fevereiro ou março. Durante o mestrado, foram propostas algumas técnicas que visam a otimizar o uso de largura de banda em um sistema distribuído atuando como servidor para um jogo online maciçamente jogador. Uma destas técnicas consiste no gerenciamento de interesse do jogador, levando em conta diferentes níveis de relevância para diferentes entidades do jogo. Outra técnica proposta é a de balanceamento de carga dinâmico, baseado em particionamento de grafo e refinamento de suas partições \cite{kernighan1970ehp}. Este trabalho está em fase de conclusão, faltando coletar os resultados e escrever artigo para publicar no journal \emph{Multimedia Tools and Applications}, da Springer, que terá uma edição especial a respeito de MMOGs a ser publicada em 2009.
+O curso de doutorado pretendido terá por objetivo dar continuidade à pesquisa iniciada no mestrado acadêmico pelo PPGC/UFRGS, entre os anos de 2007 a 2009, sendo a defesa da dissertação prevista para fevereiro de 2009. Durante o mestrado, foram propostas algumas técnicas que visam a otimizar o uso de largura de banda em um sistema distribuído atuando como servidor para um jogo online maciçamente jogador. Uma destas técnicas consiste no gerenciamento de interesse do jogador, levando em conta diferentes níveis de relevância para diferentes entidades do jogo. Outra técnica proposta é a de balanceamento de carga dinâmico, baseado em particionamento de grafo e refinamento de suas partições \cite{kernighan1970ehp}. Este trabalho está em fase de conclusão, faltando coletar os resultados e escrever artigo para publicar no journal \emph{Multimedia Tools and Applications}, da Springer, que terá uma edição especial a respeito de MMOGs a ser publicada em 2009.
 
 O candidato também participou do projeto P2PSE \cite{vilanova2008psm}, sendo um dos responsáveis pelo desenvolvimento da funcionalidade de multi-servidor, utilizando linguagem de programação C++. Também é o responsável pelas simulações de rede, realizadas com o auxílio do simulador ns-2 \cite{mccanne:nsn}, presentes no artigo publicado em simpósio nacional a respeito do mesmo projeto.
 
