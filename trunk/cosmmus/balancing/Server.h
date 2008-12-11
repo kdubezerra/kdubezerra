@@ -36,6 +36,7 @@ class Server {
     static void sortServersByPower();
     float getLoad();
     bool isDisbalanced();
+    float getPowerFraction();
 
   protected:
 

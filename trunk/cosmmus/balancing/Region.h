@@ -43,6 +43,7 @@ class Region {
     float getEWeight(int neighbor);
     float getAllEdgesWeight();
     float getAbsoluteLoad();
+    float getLoadFraction();
     static float getWorldLoad();
     static float getEdgeCut();
 
@@ -75,13 +76,16 @@ class Region {
     // FASE DE PARTICIONAMENTO (WORKING)
 
     static void initRegions(int num_reg);
-    static void diposeRegions();
+    static void disposeRegions();
     static void partitionWorld();
     static void distributeOrphanCells();
     static void balanceWorld();
+    void getProportionalPartition();
     static void balanceRegions(list<Region*>& regList);
     static void sortRegionsByFreeCapacity();
     static bool compareRegionsFreeCapacity(Region* rA, Region* rB);
+    static void sortRegionsByServerPower();
+    static bool compareServerPower(Region* rA, Region* rB);
 
     // FASE DE REFINAMENTO
 

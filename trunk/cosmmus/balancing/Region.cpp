@@ -121,6 +121,10 @@ float Region::getAbsoluteLoad() {
   return getAllEdgesWeight() + getRWeight();
 }
 
+float Region::getLoadFraction() {
+  return getAbsoluteLoad() / Cell::getWorldWeight();
+}
+
 float Region::getWorldLoad() {
   float wl = 0.0f;
   for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
@@ -295,14 +299,15 @@ void Region::getWorldPartition() {
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
   //while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
   while (c) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
-    if (getServer() && getAbsoluteLoad() > getRegionCapacity()) break;
+    //if (getServer() && getAbsoluteLoad() > getRegionCapacity()) break;
+    if (getServer() && getLoadFraction() > getServer()->getPowerFraction()) break;
     subscribe(c);
     c = Cell::getHighestEdgeFreeNeighbor(getCells());
   }
 }
 
 void Region::initRegions(int num_reg) {
-  if (!regionList.empty()) Region::diposeRegions();
+  if (!regionList.empty()) Region::disposeRegions();
   numRegions = num_reg;
   Uint32 color;
   for (int r = 0 ; r < num_reg ; r++) {
@@ -314,7 +319,7 @@ void Region::initRegions(int num_reg) {
   }
 }
 
-void Region::diposeRegions() {
+void Region::disposeRegions() {
   list<Region*>::iterator it;
   for (it = regionList.begin() ; it != regionList.end() ; it++) {
     (*it)->unsubscribeAllCells();
@@ -324,11 +329,12 @@ void Region::diposeRegions() {
 }
 
 void Region::partitionWorld() {
+  sortRegionsByServerPower();
   for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
     (*it)->getProportionalPartition();
   }
   if (Cell::getOrphanCell()) {
-    distributeOrphanCells();
+    //distributeOrphanCells();
     //TODO escolher como as celulas órfãs serão dividas: atribuir a célula órfã mais pesada ao servidor com mais recursos livres
   }
 }
@@ -340,6 +346,18 @@ void Region::distributeOrphanCells() {
     sortRegionsByFreeCapacity();
     (*regionList.begin())->subscribe(*it_cell);
     it_cell++;
+  }
+}
+
+void Region::getProportionalPartition() {
+  Cell* c = Cell::getHeaviestFreeCell();
+  //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
+  //while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  while (c) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+    //if (getServer() && getAbsoluteLoad() > getRegionCapacity()) break;
+    if (getServer() && getLoadFraction() > getServer()->getPowerFraction()) break;
+    subscribe(c);
+    c = Cell::getHighestEdgeFreeNeighbor(getCells());
   }
 }
 
@@ -439,4 +457,12 @@ void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float
     }
   if (gain)
     *gain = _gain;
+}
+
+bool Region::compareServerPower(Region* rA, Region* rB) {
+  return (rA->getServer()->getServerPower() > rB->getServer()->getServerPower());
+}
+
+void Region::sortRegionsByServerPower() {
+  regionList.sort(Region::compareServerPower);
 }

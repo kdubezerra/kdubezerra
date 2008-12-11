@@ -81,3 +81,7 @@ bool Server::isDisbalanced() {
   float power_fraction = getServerPower() / getMultiserverPower();
   return world_fraction / power_fraction > DISBAL_TOLERANCE;
 }
+
+float Server::getPowerFraction() {
+  return getServerPower() / getMultiserverPower();
+}
