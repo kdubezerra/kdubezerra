@@ -119,7 +119,6 @@ int main (int argc, char* argv[]) {
     
     for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
 
-
 //              while (1);
     time = SDL_GetTicks();    
     apply_surface( 200, 200, message, screen ); 

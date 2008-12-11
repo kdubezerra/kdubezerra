@@ -63,6 +63,7 @@ void Cell::updateVWeight() {
       weight += (*it1)->OtherRelevance(*it2);    
     }    
   vertexWeight = weight;
+  //somar com o peso de todas as arestas.
 }
 
 float Cell::getEWeight(short neighbor) {
@@ -135,7 +136,8 @@ void Cell::updateAllEdgesAndVertexWeights() {
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       cellMatrix[i][j]->updateVWeight();
       cellMatrix[i][j]->updateAllEdges();
-      sWeight += cellMatrix[i][j]->getVWeight();
+      //sWeight += cellMatrix[i][j]->getVWeight();
+      worldWeight += cellMatrix[i][j]->getVWeight();
     }
 }
 
