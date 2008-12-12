@@ -6,6 +6,8 @@
 #include "myutils.h"
 #endif
 
+#define FAST_SWAP true
+
 #include <iostream>
 #include <vector>
 #include <list>
@@ -25,35 +27,38 @@ class Region {
     void subscribe(Cell* c);
     void unsubscribe(Cell* c);
     void unsubscribeAllCells();
-    
+    list<Cell*> &getCells();
+    bool hasCell(Cell* c);    
+
+    void checkNeighborsList();
+    static void checkAllRegionsNeighbors();
+    list<Region*> &getNeighbors();
+    int getNumberOfNeighbors();
+    bool hasNeighbor(Region* r);
+
     bool setServer(Server* s);
     void unsetServer();
     Server* getServer();
 
-    list<Cell*> &getCells();
-    list<Region*> &getNeighbors();
-    int getNumberOfNeighbors();
-    Region* getNeighbor(int neighbor);
-    bool hasCell(Cell* c);
-
     void setRegionCapacity(float cap);
     float getRegionCapacity(void);
 
-    float getRWeight();
-    float getEWeight(int neighbor);
+    float getRWeight(); //deprecated
+    float getRegionWeight();
+    float getEWeight(Region* neighbor);
     float getAllEdgesWeight();
     float getAbsoluteLoad();
     float getLoadFraction();
     static float getWorldLoad();
     static float getEdgeCut();
 
-    void updateEWeight(int neighbor);
+    void updateEWeight(Region* neighbor);
     void updateAllEdges();    
        
     void setBorderColor(Uint32 bc);
     void drawRegion(SDL_Surface* output);
     static void drawAllRegions(SDL_Surface* output);
-    void drawEdge(SDL_Surface* output, int neighbor);
+    void drawEdge(SDL_Surface* output, Region* neighbor);
     void drawAllEdges(SDL_Surface* output);
     static void drawAllRegionsEdges(SDL_Surface* output);
     void drawLoad(SDL_Surface* output, TTF_Font* font);
@@ -89,7 +94,7 @@ class Region {
 
     // FASE DE REFINAMENTO
 
-    static void swapCellsRegions(Cell* c1, Cell* c2);
+    static void swapCellsRegions(Cell* c1, Cell* c2, bool fast=false);
     bool testCellSwap(Cell* loc, Cell* ext, float &gain);
     static void refinePartitioningGlobal(int passes = 0);
     void refinePartitioningLocal(Region* other, int passes = 0);
@@ -100,7 +105,8 @@ class Region {
     Uint32 borderColor;
     list<Cell*> cells;
     list<Region*> neighbors;
-    list<float> edgeWeight;
+    //list<float> edgeWeight;
+    map<Region*, float> edgeByRegion;
     Server* parentServer;
     float regionCapacity;
     static float worldCapacity;

@@ -63,6 +63,25 @@ list<Cell*> &Region::getCells() {
   return cells;
 }
 
+void Region::checkNeighborsList() {
+  neighbors.clear();
+  list<Cell*>::iterator it_cell, it_neighbor_cell;
+  list<Cell*> neigh_cells;
+  for (it_cell = cells.begin() ; it_cell != cells.end() ; it_cell++) {    
+    neigh_cells = (*it_cell)->getAllNeighbors();
+    for (it_neighbor_cell = neigh_cells.begin() ; it_neighbor_cell != neigh_cells.end() ; it_neighbor_cell++) {
+      if (!hasCell(*it_neighbor_cell) && (*it_neighbor_cell)->getParentRegion() && !hasNeighbor((*it_neighbor_cell)->getParentRegion())) {
+        neighbors.push_back((*it_neighbor_cell)->getParentRegion());
+      }
+    }
+  }
+}
+
+void Region::checkAllRegionsNeighbors() {
+  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++)
+    (*it)->checkNeighborsList();
+}
+
 list<Region*> &Region::getNeighbors() {
   return neighbors;
 }
@@ -71,10 +90,11 @@ int Region::getNumberOfNeighbors() {
   return neighbors.size();
 }
 
-Region* Region::getNeighbor(int neighbor) {
-  list<Region*>::iterator it = neighbors.begin();
-  for (int i = 0 ; i < neighbor ; i++) it++;
-  return *it;
+bool Region::hasNeighbor(Region* r) {
+  for (list<Region*>::iterator it = neighbors.begin() ; it != neighbors.end() ; it++) {
+    if ((*it) == r) return true;
+  }
+  return false;
 }
 
 bool Region::hasCell(Cell* c) {
@@ -100,12 +120,16 @@ float Region::getRWeight() {
   return weight;
 }
 
-float Region::getEWeight(int neighbor) {//TODO: FIXME
-  if (neighbor >= getNumberOfNeighbors())
-    return 0.0f;
-  list<float>::iterator it = edgeWeight.begin();
-  for (int i = 0 ; i < neighbor ; i++) it++;
-  return *it;
+float Region::getRegionWeight() {
+  list<Cell*>::iterator it;
+  float weight = 0.0f;
+  for (it = cells.begin() ; it != cells.end() ; it++)
+    weight += (*it)->getCellWeight();
+  return weight;
+}
+
+float Region::getEWeight(Region* neighbor) {//TODO: FIXME
+  return edgeByRegion[neighbor];
 }
 
 float Region::getAllEdgesWeight() {
@@ -117,8 +141,8 @@ float Region::getAllEdgesWeight() {
 }
 
 float Region::getAbsoluteLoad() {
-  updateAllEdges();
-  return getAllEdgesWeight() + getRWeight();
+  //updateAllEdges();
+  return getAllEdgesWeight() + getRegionWeight();
 }
 
 float Region::getLoadFraction() {
@@ -141,24 +165,24 @@ float Region::getEdgeCut() {
   return ec;
 }
 
-void Region::updateEWeight(int neighbor) {
-
+void Region::updateEWeight(Region* neighRegion) {
   float edgew = 0.0f;
-  Region* neighRegion = getNeighbor(neighbor);
   for (list<Cell*>::iterator itrc = cells.begin() ; itrc != cells.end() ; itrc++) {
     list<Cell*> neighCells = (*itrc)->getAllNeighbors();
     for (list<Cell*>::iterator itnc = neighCells.begin() ; itnc != neighCells.end() ; itnc++)
       if (!this->hasCell(*itnc) && neighRegion->hasCell(*itnc))
         edgew += (*itrc)->getEWeight(*itnc);    
   }
-  list<float>::iterator it = edgeWeight.begin();
-  for (int i = 0 ; i < neighbor ; i++) it++;
-  *it = edgew;
+  edgeByRegion[neighRegion] = edgew;
+  //list<float>::iterator it = edgeWeight.begin();
+  //for (int i = 0 ; i < neighbor ; i++) it++;
+  //*it = edgew;
 }
 
 void Region::updateAllEdges() {
-  for (int edge = 0 ; edge < getNumberOfNeighbors() ; edge++)
-    updateEWeight(edge);
+  edgeByRegion.clear();
+  for (list<Region*>::iterator it = neighbors.begin() ; it != neighbors.end() ; it++)
+    updateEWeight(*it);
 }
 
 void Region::setBorderColor(Uint32 bc) {
@@ -177,7 +201,7 @@ void Region::drawAllRegions(SDL_Surface* output) {
       (*itr)->drawRegion(output);
 }
 
-void Region::drawEdge(SDL_Surface* output, int neighbor) {
+void Region::drawEdge(SDL_Surface* output, Region* neighbor) {
   //TODO
 }
 
@@ -337,6 +361,7 @@ void Region::partitionWorld() {
     //distributeOrphanCells();
     //TODO escolher como as celulas órfãs serão dividas: atribuir a célula órfã mais pesada ao servidor com mais recursos livres
   }
+  checkAllRegionsNeighbors();
 }
 
 void Region::distributeOrphanCells() {
@@ -369,13 +394,16 @@ bool Region::compareRegionsFreeCapacity(Region* rA, Region* rB) {
   return rA->getRegionCapacity() - rA->getAbsoluteLoad() > rB->getRegionCapacity() - rB->getAbsoluteLoad();
 }
 
-void Region::swapCellsRegions(Cell* c1, Cell* c2) {
+void Region::swapCellsRegions(Cell* c1, Cell* c2, bool fast) {
   Region* r1 = c1->getParentRegion();
   Region* r2 = c2->getParentRegion();
   r1->unsubscribe(c1);
   r2->unsubscribe(c2);  
   r1->subscribe(c2);
-  r2->subscribe(c1);    
+  r2->subscribe(c1);
+  if (fast) return;
+  Region::checkAllRegionsNeighbors();
+  cout << "check neigh list OK" << endl;
   r1->updateAllEdges();
   r2->updateAllEdges();
 }
@@ -387,10 +415,10 @@ bool Region::testCellSwap(Cell* loc, Cell* ext, float& gain) {
   Region* other = ext->getParentRegion();
   bool disbalanced = false;
   gain = getEdgeCut();
-  swapCellsRegions(loc, ext);
+  swapCellsRegions(loc, ext, FAST_SWAP);
   gain -= getEdgeCut();
   disbalanced = other->getServer()->isDisbalanced() || this->getServer()->isDisbalanced();
-  swapCellsRegions(loc, ext);
+  swapCellsRegions(loc, ext, FAST_SWAP);
   return disbalanced;
 }
 
@@ -410,10 +438,10 @@ void Region::refinePartitioningGlobal(int passes) {
     passcount++;    
     for (list<Region*>::iterator it_ri = regionList.begin() ; it_ri != regionList.end() ; it_ri++) {
       for (list<Region*>::iterator it_rj = it_ri ; it_rj != regionList.end() ; it_rj++) {                
-        if (it_rj == it_ri) it_rj++;
-        if (it_rj == regionList.end()) break;
+        if (it_rj == it_ri) continue;
         getBestCellPair(*it_ri, *it_rj, _c1, _c2, &new_gain);
         if (_c1 && _c2 && new_gain > gain) {
+          cout << "new best pair found: " << new_gain;
           gain = new_gain;
           c1 = _c1;
           c2 = _c2;
@@ -424,7 +452,8 @@ void Region::refinePartitioningGlobal(int passes) {
     if (c1 && c2) swapCellsRegions(c1, c2);
     else break;
   }
-  cout << "Global partitioning refinement concluded." << endl;
+  checkAllRegionsNeighbors();
+  cout << "Global partitioning refinement concluded." << endl;  
 }
 
 void Region::refinePartitioningLocal(Region* other, int passes) {

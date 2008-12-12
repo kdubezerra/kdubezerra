@@ -134,6 +134,9 @@ void checkInput() {
   if( SDL_PollEvent( &event ) ) { //If a key was pressed 
     if( event.type == SDL_KEYDOWN ) { 
       switch( event.key.keysym.sym ) {
+        case SDLK_p:
+          Avatar::toggleMobility();
+          break;
         case SDLK_v:
           Cell::toggleShowVertexWeight();
           break;
@@ -157,7 +160,8 @@ void checkInput() {
             i++;
             cout << "Server " << i << " receives region " << *it << endl;
           }                    
-          Region::balanceRegions();
+          Region::partitionWorld();
+          Region::checkAllRegionsNeighbors();
           i = 0;
           break;
         case SDLK_q:
