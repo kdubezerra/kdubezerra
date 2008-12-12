@@ -57,6 +57,7 @@ class Avatar {
         
     static void toggleVertex();    
     static void toggleEdge();
+    static void toggleMobility();
 		
   protected:
 
@@ -79,7 +80,7 @@ class Avatar {
     static SDL_Surface* surface_vertex_weight;
     static SDL_Surface* surface_edge_weight;
     static float total_weight;
-    static bool showv, showe;
+    static bool showv, showe, isMobile;
     float my_vweight, my_eweight;
     Cell* my_cell;
     SDL_Surface* screen;		

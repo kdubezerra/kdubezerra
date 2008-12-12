@@ -66,11 +66,11 @@ class Cell {
     float getEWeightToSameRegion();
     float getEWeightToAnotherRegion();
     float getAllEdgesWeight();
-    float getTotalWeight();
+    float getCellWeight();
     static float getWorldWeight();
     
     void updateVWeight();
-    int updateEWeight(short neighbor);
+    float updateEWeight(short neighbor);
     void updateAllEdges();
     static void updateAllEdgesAndVertexWeights();
     
@@ -116,6 +116,7 @@ class Cell {
     coord* cellposition;
     float vertexWeight;
     float edgeWeight[NUM_NEIGH];
+    float totalEdgeWeight;
     list<Avatar*> avatars;
     static Cell*** cellMatrix;
     static int cells_on_a_row;

@@ -28,6 +28,7 @@ Cell::Cell(int coord_x, int coord_y) {
   cellposition->Y = coord_y;
   for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
     edgeWeight[neigh] = 0.0f;
+  totalEdgeWeight = 0.0f;
   vertexWeight = 0.0f;
   parentRegion = NULL;
 }
@@ -83,7 +84,7 @@ float Cell::getAllEdgesWeight() {
   return aew;
 }
 
-float Cell::getTotalWeight() {
+float Cell::getCellWeight() {
   return getAllEdgesWeight() + getVWeight();
 }
 
@@ -113,21 +114,22 @@ float Cell::getWorldWeight() {
   return worldWeight;
 }
 
-int Cell::updateEWeight(short neighbor) {
-  float totalw = 0.0f;
+float Cell::updateEWeight(short neighbor) {
+  float edgew = 0.0f;
   Cell* neighborCell = getNeighbor(neighbor);
   if (!neighborCell)
     return -1;
   for (list<Avatar*>::iterator it = avatars.begin() ; it != avatars.end() ; it++) {
-    totalw += (*it)->getInteraction(neighborCell);
+    edgew += (*it)->getInteraction(neighborCell);
   }
-  edgeWeight[neighbor] = totalw;
-  return 0;
+  edgeWeight[neighbor] = edgew;
+  return edgew;
 }
 
 void Cell::updateAllEdges() {
+  totalEdgeWeight = 0.0f;
   for (int edge = 0 ; edge < NUM_NEIGH ; edge++)
-    updateEWeight(edge);
+    totalEdgeWeight += updateEWeight(edge);
 }
 
 void Cell::updateAllEdgesAndVertexWeights() {
@@ -138,6 +140,7 @@ void Cell::updateAllEdgesAndVertexWeights() {
       cellMatrix[i][j]->updateAllEdges();
       //sWeight += cellMatrix[i][j]->getVWeight();
       worldWeight += cellMatrix[i][j]->getVWeight();
+      worldWeight += cellMatrix[i][j]->getAllEdgesWeight(); //TODO: esse aqui talvez não seja necessário se corrigir o VWeight pra conter a interação fora da célula
     }
 }
 
@@ -166,7 +169,7 @@ list<Cell*> Cell::getOrphansSortedByTotalWeight() {
 }
 
 bool Cell::compareCellLoad(Cell* cA, Cell* cB) {
-  return cA->getTotalWeight() > cB->getTotalWeight();
+  return cA->getCellWeight() > cB->getCellWeight();
 }
 
 Cell* Cell::getNeighbor(short neighbor) {
@@ -276,8 +279,10 @@ Cell* Cell::getHeaviestFreeCell() {
 
 list<Cell*> Cell::getAllNeighbors() {
   list<Cell*> neighlist;
-  for (short i = 0 ; i < NUM_NEIGH ; i++)
-    neighlist.push_back(getNeighbor(i));
+  for (short i = 0 ; i < NUM_NEIGH ; i++) {
+    if (getNeighbor(i))
+      neighlist.push_back(getNeighbor(i));
+  }
   return neighlist;
 }
 
@@ -305,7 +310,7 @@ void Cell::drawCells(SDL_Surface* output) {
   for (int i = 0 ; i < cells_on_a_row ; i++) {
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       if (showv) {
-        alpha = convertToScale(cellMatrix[i][j]->getVWeight(), 0, WW/20, 0, 255);
+        alpha = convertToScale(cellMatrix[i][j]->getCellWeight(), 0, WW/30, 0, 255);
         alpha = alpha>255?255:alpha;
         SDL_SetAlpha( surface_vertex_weight , SDL_SRCALPHA, approx(alpha) );
         apply_surface( i*CELL_LENGTH, j*CELL_LENGTH , surface_vertex_weight, output );

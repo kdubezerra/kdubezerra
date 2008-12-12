@@ -16,6 +16,7 @@ SDL_Surface* Avatar::surface_vertex_weight;
 SDL_Surface* Avatar::surface_edge_weight;
 bool Avatar::showv = false;
 bool Avatar::showe = false;
+bool Avatar::isMobile = true;
 float Avatar::total_weight = 0.0f;
 
 Avatar::Avatar() {
@@ -71,7 +72,9 @@ void Avatar::init() {
 
 
 void Avatar::step(unsigned long delay) { // delay in microseconds  
-  Uint32 elapsed_time = SDL_GetTicks() - last_move;      
+  Uint32 elapsed_time = SDL_GetTicks() - last_move;
+  if (!isMobile) return;
+
   float distance_ = distance(posx, posy, destx, desty);  
   if (distance_ > 20) {    
     coord new_cell_coord;
@@ -222,4 +225,8 @@ void Avatar::toggleVertex() {
 
 void Avatar::toggleEdge() {
   showe = !showe;
+}
+
+void Avatar::toggleMobility() {
+  isMobile = !isMobile;
 }
