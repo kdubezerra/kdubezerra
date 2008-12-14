@@ -11,7 +11,7 @@
 
 Cell*** Cell::cellMatrix = NULL;
 int Cell::cells_on_a_row = 0;
-float Cell::worldWeight = 0.0f;
+double Cell::worldWeight = 0.0f;
 bool Cell::showv = false;
 bool Cell::showe = false;
 SDL_Surface* Cell::surface_vertex_weight = NULL;
@@ -62,7 +62,7 @@ void Cell::updateVWeight() {
     for (it2 = avatars.begin() ; it2 != avatars.end() ; it2++) {
       if (*it1 == *it2) continue;
       weight += (*it1)->OtherRelevance(*it2);    
-    }    
+    }
   vertexWeight = weight;
   //somar com o peso de todas as arestas.
 }
@@ -110,7 +110,7 @@ float Cell::getEWeightToAnotherRegion() {
   return wtar;
 }
 
-float Cell::getWorldWeight() {
+double Cell::getWorldWeight() {
   return worldWeight;
 }
 
@@ -138,9 +138,9 @@ void Cell::updateAllEdgesAndVertexWeights() {
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       cellMatrix[i][j]->updateVWeight();
       cellMatrix[i][j]->updateAllEdges();
-      //sWeight += cellMatrix[i][j]->getVWeight();
-      worldWeight += cellMatrix[i][j]->getVWeight();
-      worldWeight += cellMatrix[i][j]->getAllEdgesWeight(); //TODO: esse aqui talvez não seja necessário se corrigir o VWeight pra conter a interação fora da célula
+      //worldWeight += cellMatrix[i][j]->getVWeight();
+      //worldWeight += cellMatrix[i][j]->getAllEdgesWeight(); //TODO: esse aqui talvez não seja necessário, se corrigir o VWeight pra conter a interação fora da célula
+	  worldWeight += cellMatrix[i][j]->getCellWeight();
     }
 }
 

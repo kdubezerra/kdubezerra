@@ -44,11 +44,12 @@ class Region {
     float getRegionCapacity(void);
 
     float getRWeight(); //deprecated
-    float getRegionWeight();
+    double getRegionWeight();
     float getEWeight(Region* neighbor);
     float getAllEdgesWeight();
-    float getAbsoluteLoad();
-    float getLoadFraction();
+    double getWeightFraction();
+		float getLoadFraction();
+		float getAbsoluteLoad();    		
     static float getWorldLoad();
     static float getEdgeCut();
 
