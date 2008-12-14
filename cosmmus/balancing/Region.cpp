@@ -120,9 +120,9 @@ float Region::getRWeight() {
   return weight;
 }
 
-float Region::getRegionWeight() {
+double Region::getRegionWeight() {
   list<Cell*>::iterator it;
-  float weight = 0.0f;
+  double weight = 0.0f;
   for (it = cells.begin() ; it != cells.end() ; it++)
     weight += (*it)->getCellWeight();
   return weight;
@@ -140,13 +140,20 @@ float Region::getAllEdgesWeight() {
   return aew;
 }
 
-float Region::getAbsoluteLoad() {
-  //updateAllEdges();
-  return getAllEdgesWeight() + getRegionWeight();
+double Region::getWeightFraction() {
+  //return getAbsoluteLoad() / Cell::getWorldWeight();
+  return getRegionWeight() / Cell::getWorldWeight();
 }
 
 float Region::getLoadFraction() {
   return getAbsoluteLoad() / Cell::getWorldWeight();
+  //return getRegionWeight() / Cell::getWorldWeight();
+}
+
+float Region::getAbsoluteLoad() {
+  //updateAllEdges();
+  //TODO: corrigir isso (tirar alledgesweight da conta, MAS TEM QUE LEMBRAR Q O SERVER VAI FAZER UPLOAD PRO OUTRO SERVER!!!)
+  return getAllEdgesWeight() + getRegionWeight();
 }
 
 float Region::getWorldLoad() {
@@ -380,7 +387,8 @@ void Region::getProportionalPartition() {
   //while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
   while (c) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
     //if (getServer() && getAbsoluteLoad() > getRegionCapacity()) break;
-    if (getServer() && getLoadFraction() > getServer()->getPowerFraction()) break;
+    if (getServer() && getWeightFraction() > getServer()->getPowerFraction()) break;
+		//TODO: corrigir para usar o load, porém corrigido (LEVAR EM CONTA QUE O SERVER FAZ UPLOAD PROS OUTROS SERVERS)
     subscribe(c);
     c = Cell::getHighestEdgeFreeNeighbor(getCells());
   }
