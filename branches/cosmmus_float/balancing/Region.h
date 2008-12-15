@@ -1,0 +1,117 @@
+#pragma once
+
+#ifdef _WIN32
+#include "../../myutils.h"
+#else
+#include "myutils.h"
+#endif
+
+#define FAST_SWAP true
+
+#include <iostream>
+#include <vector>
+#include <list>
+
+using namespace std;
+
+class Cell;
+class Server;
+
+class Region {
+
+  public:
+
+    Region(Uint32 borderColor = 0x000000);
+    ~Region();
+
+    void subscribe(Cell* c);
+    void unsubscribe(Cell* c);
+    void unsubscribeAllCells();
+    list<Cell*> &getCells();
+    bool hasCell(Cell* c);    
+
+    void checkNeighborsList();
+    static void checkAllRegionsNeighbors();
+    list<Region*> &getNeighbors();
+    int getNumberOfNeighbors();
+    bool hasNeighbor(Region* r);
+
+    bool setServer(Server* s);
+    void unsetServer();
+    Server* getServer();
+
+    void setRegionCapacity(float cap);
+    float getRegionCapacity(void);
+
+    float getRWeight(); //deprecated
+    double getRegionWeight();
+    float getEWeight(Region* neighbor);
+    float getAllEdgesWeight();
+    double getWeightFraction();
+		float getLoadFraction();
+		float getAbsoluteLoad();    		
+    static float getWorldLoad();
+    static float getEdgeCut();
+
+    void updateEWeight(Region* neighbor);
+    void updateAllEdges();    
+       
+    void setBorderColor(Uint32 bc);
+    void drawRegion(SDL_Surface* output);
+    static void drawAllRegions(SDL_Surface* output);
+    void drawEdge(SDL_Surface* output, Region* neighbor);
+    void drawAllEdges(SDL_Surface* output);
+    static void drawAllRegionsEdges(SDL_Surface* output);
+    void drawLoad(SDL_Surface* output, TTF_Font* font);
+    static void drawAllRegionsWeights(SDL_Surface* output, TTF_Font* font);
+
+    static void toggleShowRegions();
+    static void toggleShowEdges();
+    static void toggleShowRegionWeight();
+    
+    static list<Region*> &getRegionList();
+    static int getNumRegions();
+    
+    // FASE DE PARTICIONAMENTO (DEPRECATED)
+    
+    static void balanceRegions();    
+    void getWorldPartitionEXAMPLE();
+    void getWorldPartitionRandomStart();
+    void getWorldPartition();
+
+    // FASE DE PARTICIONAMENTO (WORKING)
+
+    static void initRegions(int num_reg);
+    static void disposeRegions();
+    static void partitionWorld();
+    static void distributeOrphanCells();
+    static void balanceWorld();
+    void getProportionalPartition();
+    static void balanceRegions(list<Region*>& regList);
+    static void sortRegionsByFreeCapacity();
+    static bool compareRegionsFreeCapacity(Region* rA, Region* rB);
+    static void sortRegionsByServerPower();
+    static bool compareServerPower(Region* rA, Region* rB);
+
+    // FASE DE REFINAMENTO
+
+    static void swapCellsRegions(Cell* c1, Cell* c2, bool fast=false);
+    bool testCellSwap(Cell* loc, Cell* ext, float &gain);
+    static void refinePartitioningGlobal(int passes = 0);
+    void refinePartitioningLocal(Region* other, int passes = 0);
+    static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float* gain = NULL);    
+
+  protected:
+    
+    Uint32 borderColor;
+    list<Cell*> cells;
+    list<Region*> neighbors;
+    //list<float> edgeWeight;
+    map<Region*, float> edgeByRegion;
+    Server* parentServer;
+    float regionCapacity;
+    static float worldCapacity;
+    static list<Region*> regionList;
+    static bool showr, showe, showw;
+    static int numRegions;
+};

@@ -1,0 +1,46 @@
+============== OPCOES PARA O GAMESERVER ==============
+
+./gameserver.bin [%de de perda de pacotes] [-loopback]
+
+Pode-se nao passar argumentos:
+	Ex.: ./gameserver.bin
+
+***Os argumentos devem estar nessa ordem.
+O primeiro, opcional,faz com que seja simulada uma perda
+de pacotes.A percentagem dessa perda é determinada pelo
+argumento.
+
+	Ex.(70% de perda): ./gameserver.bin 70
+
+
+O segundo, tambem opcional, faz com que seja feito um
+"loopback" dos dados de cada cliente. Ou seja, o servidor
+devolve a cada cliente seus proprios pacotes. O padrao do
+servidor eh mandar a cada cliente os dados apenas dos
+OUTROS clientes (para o cliente 3, manda apenas os pacotes
+de 0, 1, 2 e 4, num jogo com 5 clientes).
+
+	Ex.: ./gameserver.bin -loopback
+
+Combinando: ./gameserver.bin 70 -loopback
+
+***NAO FUNCIONA: ./gameserver.bin -loopback 70
+
+
+============== OPCOES PARA O GAMECLIENT ==============
+
+./gameclient.bin server_hostname [dr]
+
+É obrigatório passar o ip, ou hostname do servidor.
+	Ex.: ./gameclient.bin localhost
+
+O argumento dr serve para ativar o algoritmo de DEAD
+RECKONING. Este utiliza predicao linear.
+	Ex.: ./gameclient.bin localhost dr
+
+***Pode-se combinar o loopback e a simulacao de perda
+de pacotes do servidor com o dead reckoning do cliente.
+Isso causara o "self reckoning". Eh muito interessante
+observar isso ;-)
+
+========================GAROU=========================

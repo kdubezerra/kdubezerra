@@ -1,0 +1,11 @@
+1 - Criar ambiente com tela preta e pontos movimentáveis
+2 - Dar controle a esses pontos
+3 - Organizar e guardas as informações desses movimentos
+
+4 - Mandar pela rede...
+5 - Implementar a função dissemine(...)
+6 - Implementar a simulação de LAG (PERDA de pacotes)
+7 - Implementar o dead reckoning
+
+
+*** FUTURAMENTE, implementar ATRASO de pacotes

@@ -1,0 +1,9 @@
+50 0 out_0_50.nam graph_0_50.tr 1200 0
+Number of players set to 50
+Avatar type is 0
+Simulation started with 50 ms step interval and 0 avatar
+Average bandwidth: 37652.333333333336
+Maximum bandwidth: 38600
+Estimated maximum needed bandwidth for 50 players: 1930000 B/s
+Estimated average needed bandwidth for 50 players: 1882616.6666666667 B/s
+Packets lost: 0; packets received: 226106
