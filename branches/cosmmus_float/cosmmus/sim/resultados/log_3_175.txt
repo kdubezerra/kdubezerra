@@ -1,0 +1,8 @@
+175 3 out_3_175.nam graph_3_175.tr 1200 0
+Number of players set to 175
+Avatar type is 3
+Simulation started with 50 ms step interval and 3 avatar
+Average bandwidth: 39321.333333333336
+Maximum bandwidth: 68600
+Estimated maximum needed bandwidth for 175 players: 12005000 B/s
+Estimated average needed bandwidth for 175 players: 6881233.333333333 B/s
