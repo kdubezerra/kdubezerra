@@ -9,7 +9,7 @@ bool Region::showw = false;
 bool Region::showe = false;
 bool Region::showr = false;
 int Region::numRegions;
-float worldCapacity = 0.0f;
+long worldCapacity = 0;
 
 //================================cons/des-truction methods
 
@@ -104,36 +104,36 @@ bool Region::hasCell(Cell* c) {
   return false;
 }
 
-void Region::setRegionCapacity(float cap) {
+void Region::setRegionCapacity(long cap) {
   regionCapacity = cap;
 }
 
-float Region::getRegionCapacity(void) {
+long Region::getRegionCapacity(void) {
   return regionCapacity;
 }
 
-float Region::getRWeight() {
+long Region::getRWeight() {
   list<Cell*>::iterator it;
-  float weight = 0.0f;
+  long weight = 0;
   for (it = cells.begin() ; it != cells.end() ; it++)
     weight += (*it)->getVWeight() + (*it)->getEWeightToSameRegion();
   return weight;
 }
 
-double Region::getRegionWeight() {
+long Region::getRegionWeight() {
   list<Cell*>::iterator it;
-  double weight = 0.0f;
+  long weight = 0;
   for (it = cells.begin() ; it != cells.end() ; it++)
     weight += (*it)->getCellWeight();
   return weight;
 }
 
-float Region::getEWeight(Region* neighbor) {//TODO: FIXME
+long Region::getEWeight(Region* neighbor) {//TODO: FIXME
   return edgeByRegion[neighbor];
 }
 
-float Region::getAllEdgesWeight() {
-  float aew = 0.0f;
+long Region::getAllEdgesWeight() {
+  long aew = 0;
   for (list<Cell*>::iterator it = cells.begin() ; it != cells.end() ; it++) {
     aew += (*it)->getEWeightToAnotherRegion();
   }
@@ -142,30 +142,30 @@ float Region::getAllEdgesWeight() {
 
 double Region::getWeightFraction() {
   //return getAbsoluteLoad() / Cell::getWorldWeight();
-  return getRegionWeight() / Cell::getWorldWeight();
+  return (double)getRegionWeight() / (double)Cell::getWorldWeight();
 }
 
-float Region::getLoadFraction() {
-  return getAbsoluteLoad() / Cell::getWorldWeight();
+double Region::getLoadFraction() {
+  return (double)getAbsoluteLoad() / (double)Cell::getWorldWeight();
   //return getRegionWeight() / Cell::getWorldWeight();
 }
 
-float Region::getAbsoluteLoad() {
+long Region::getAbsoluteLoad() {
   //updateAllEdges();
   //TODO: corrigir isso (tirar alledgesweight da conta, MAS TEM QUE LEMBRAR Q O SERVER VAI FAZER UPLOAD PRO OUTRO SERVER!!!)
   return getAllEdgesWeight() + getRegionWeight();
 }
 
-float Region::getWorldLoad() {
-  float wl = 0.0f;
+long Region::getWorldLoad() {
+  long wl = 0;
   for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
     wl += (*it)->getAbsoluteLoad();
   }
   return wl;
 }
 
-float Region::getEdgeCut() {
-  float ec = 0.0f;
+long Region::getEdgeCut() {
+  long ec = 0;
   for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
     ec += (*it)->getAllEdgesWeight();
   }
@@ -173,7 +173,7 @@ float Region::getEdgeCut() {
 }
 
 void Region::updateEWeight(Region* neighRegion) {
-  float edgew = 0.0f;
+  long edgew = 0;
   for (list<Cell*>::iterator itrc = cells.begin() ; itrc != cells.end() ; itrc++) {
     list<Cell*> neighCells = (*itrc)->getAllNeighbors();
     for (list<Cell*>::iterator itnc = neighCells.begin() ; itnc != neighCells.end() ; itnc++)
@@ -228,7 +228,7 @@ void Region::drawLoad(SDL_Surface* output, TTF_Font* font) {
   SDL_Color txtColor;
   static coord ldPos, capPos, percPos;
   string ldTxt, capTxt, percTxt;
-  ldTxt = floatToString(getAbsoluteLoad());  
+  ldTxt = longToString(getAbsoluteLoad());
   ldPos = cells.front()->getAbsolutePosition();
   ldPos.X = ldPos.X + 3;
   ldPos.Y += 3;
@@ -239,8 +239,8 @@ void Region::drawLoad(SDL_Surface* output, TTF_Font* font) {
   ldSurf = TTF_RenderText_Blended(font, ldTxt.c_str(), txtColor);
   apply_surface(ldPos.X, ldPos.Y, ldSurf, output);
   if (getServer()) {
-    capTxt = floatToString(getRegionCapacity());
-    percTxt = floatToString(getAbsoluteLoad() / getRegionCapacity());
+    capTxt = longToString(getRegionCapacity());
+    percTxt = floatToString((float)getAbsoluteLoad() / (float)getRegionCapacity());
     if (capSurf) SDL_FreeSurface(capSurf);
     if (percSurf) SDL_FreeSurface(percSurf);
     capSurf = TTF_RenderText_Blended(font, capTxt.c_str(), txtColor);
@@ -366,7 +366,7 @@ void Region::partitionWorld() {
   }
   if (Cell::getOrphanCell()) {
     //distributeOrphanCells();
-    //TODO escolher como as celulas órfãs serão dividas: atribuir a célula órfã mais pesada ao servidor com mais recursos livres
+    //TODO: escolher como as celulas órfãs serão dividas: atribuir a célula órfã mais pesada ao servidor com mais recursos livres
   }
   checkAllRegionsNeighbors();
 }
@@ -381,16 +381,20 @@ void Region::distributeOrphanCells() {
   }
 }
 
-void Region::getProportionalPartition() {
+void Region::getProportionalPartition() {  
+  long worldWeightFraction = approxLong((double)Cell::getWorldWeight() * getServer()->getPowerFraction());
+  long _debug_region_weight;
   Cell* c = Cell::getHeaviestFreeCell();
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
   //while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
-  while (c) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  while (getRegionWeight() < worldWeightFraction) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
     //if (getServer() && getAbsoluteLoad() > getRegionCapacity()) break;
-    if (getServer() && getWeightFraction() > getServer()->getPowerFraction()) break;
-		//TODO: corrigir para usar o load, porém corrigido (LEVAR EM CONTA QUE O SERVER FAZ UPLOAD PROS OUTROS SERVERS)
+    _debug_region_weight = getRegionWeight();
+    if (!c) return;    
     subscribe(c);
     c = Cell::getHighestEdgeFreeNeighbor(getCells());
+    if (!c) c = Cell::getHeaviestFreeCell();
+    //TODO: corrigir para usar o load, porém corrigido (LEVAR EM CONTA QUE O SERVER FAZ UPLOAD PROS OUTROS SERVERS)
   }
 }
 
@@ -417,7 +421,7 @@ void Region::swapCellsRegions(Cell* c1, Cell* c2, bool fast) {
 }
 
 
-bool Region::testCellSwap(Cell* loc, Cell* ext, float& gain) {
+bool Region::testCellSwap(Cell* loc, Cell* ext, long& gain) {
   if(!loc->isBorderCell() || !ext->isBorderCell())
     return false;
   Region* other = ext->getParentRegion();
@@ -437,8 +441,8 @@ void Region::refinePartitioningGlobal(int passes) {
   Cell* c2 = NULL;
   Cell* _c1;
   Cell* _c2;
-  float gain = 0.0f;
-  float new_gain = 0.0f;
+  long gain = 0;
+  long new_gain = 0;
   cout << endl << "Global partitioning refinement started..." << endl;
   while (!passes || passcount < passes) {
     cout << "Executing pass number " << debug++ << "... ";
@@ -477,12 +481,12 @@ void Region::refinePartitioningLocal(Region* other, int passes) {
   }
 }
 
-void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float* gain) {
+void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain) {
   list<Cell*> r1_cells(r1->getCells());
   list<Cell*> r2_cells(r2->getCells());
   
-  float _new_gain = 0.0f;
-  float _gain = 0.0f;
+  long _new_gain = 0;
+  long _gain = 0;
   c1 = c2 = NULL;
   for (list<Cell*>::iterator it1 = r1_cells.begin() ; it1 != r1_cells.end() ; it1++)
     for (list<Cell*>::iterator it2 = r2_cells.begin() ; it2 != r2_cells.end() ; it2++) {

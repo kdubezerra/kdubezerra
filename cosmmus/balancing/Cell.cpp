@@ -11,7 +11,7 @@
 
 Cell*** Cell::cellMatrix = NULL;
 int Cell::cells_on_a_row = 0;
-double Cell::worldWeight = 0.0f;
+long Cell::worldWeight = 0;
 bool Cell::showv = false;
 bool Cell::showe = false;
 SDL_Surface* Cell::surface_vertex_weight = NULL;
@@ -27,9 +27,9 @@ Cell::Cell(int coord_x, int coord_y) {
   cellposition->X = coord_x;
   cellposition->Y = coord_y;
   for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++)
-    edgeWeight[neigh] = 0.0f;
-  totalEdgeWeight = 0.0f;
-  vertexWeight = 0.0f;
+    edgeWeight[neigh] = 0;
+  totalEdgeWeight = 0;
+  vertexWeight = 0;
   parentRegion = NULL;
 }
     
@@ -51,45 +51,45 @@ list<Avatar*> &Cell::getAvatars() {
   return avatars;
 }
 
-float Cell::getVWeight() {
+long Cell::getVWeight() {
   return vertexWeight;
 }
 
 void Cell::updateVWeight() {
   list<Avatar*>::iterator it1, it2;
-  float weight = 0.0f;
+  long weight = 0;
   for (it1 = avatars.begin() ; it1 != avatars.end() ; it1++)
     for (it2 = avatars.begin() ; it2 != avatars.end() ; it2++) {
       if (*it1 == *it2) continue;
-      weight += (*it1)->OtherRelevance(*it2);    
+      weight += (long)(*it1)->OtherRelevance(*it2);    
     }
   vertexWeight = weight;
-  //somar com o peso de todas as arestas.
+  //somar com o peso de todas as arestas. (ou deixar assim porque é mais fácil e costurar o resto do protótipo pra usar VWeight + EWeight como peso das células)
 }
 
-float Cell::getEWeight(short neighbor) {
+long Cell::getEWeight(short neighbor) {
   return edgeWeight[neighbor];
 }
 
-float Cell::getEWeight(Cell* neighbor) {
+long Cell::getEWeight(Cell* neighbor) {
   short neigh_code = getNeighbor(neighbor);
   return getEWeight(neigh_code);
 }
 
-float Cell::getAllEdgesWeight() {
-  float aew = 0.0f;
+long Cell::getAllEdgesWeight() {
+  long aew = 0;
   for (short neigh = 0 ; neigh < getNumNeigh() ; neigh++) {
     aew += getEWeight(neigh);
   }
   return aew;
 }
 
-float Cell::getCellWeight() {
+long Cell::getCellWeight() {
   return getAllEdgesWeight() + getVWeight();
 }
 
-float Cell::getEWeightToSameRegion() {
-  float wtsr = 0.0f;
+long Cell::getEWeightToSameRegion() {
+  long wtsr = 0;
   Cell* neighCell;
   for (short neigh = 0 ; neigh < getNumNeigh() ; neigh++) {
     neighCell = getNeighbor(neigh);
@@ -99,8 +99,8 @@ float Cell::getEWeightToSameRegion() {
   return wtsr;
 }
 
-float Cell::getEWeightToAnotherRegion() {
-  float wtar = 0.0f;
+long Cell::getEWeightToAnotherRegion() {
+  long wtar = 0;
   Cell* neighCell;
   for (short neigh = 0 ; neigh < getNumNeigh() ; neigh++) {
     neighCell = getNeighbor(neigh);
@@ -110,12 +110,12 @@ float Cell::getEWeightToAnotherRegion() {
   return wtar;
 }
 
-double Cell::getWorldWeight() {
+long Cell::getWorldWeight() {
   return worldWeight;
 }
 
-float Cell::updateEWeight(short neighbor) {
-  float edgew = 0.0f;
+long Cell::updateEWeight(short neighbor) {
+  long edgew = 0;
   Cell* neighborCell = getNeighbor(neighbor);
   if (!neighborCell)
     return -1;
@@ -127,20 +127,21 @@ float Cell::updateEWeight(short neighbor) {
 }
 
 void Cell::updateAllEdges() {
-  totalEdgeWeight = 0.0f;
+  totalEdgeWeight = 0;
   for (int edge = 0 ; edge < NUM_NEIGH ; edge++)
     totalEdgeWeight += updateEWeight(edge);
 }
 
 void Cell::updateAllEdgesAndVertexWeights() {
-  worldWeight = 0.0f;
+  worldWeight = 0;
   for (int i = 0 ; i < cells_on_a_row ; i++)
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       cellMatrix[i][j]->updateVWeight();
       cellMatrix[i][j]->updateAllEdges();
       //worldWeight += cellMatrix[i][j]->getVWeight();
-      //worldWeight += cellMatrix[i][j]->getAllEdgesWeight(); //TODO: esse aqui talvez não seja necessário, se corrigir o VWeight pra conter a interação fora da célula
-	  worldWeight += cellMatrix[i][j]->getCellWeight();
+      //worldWeight += cellMatrix[i][j]->getAllEdgesWeight();
+      //TODO: esse aqui talvez não seja necessário, se corrigir o VWeight pra conter a interação fora da célula
+      worldWeight += cellMatrix[i][j]->getCellWeight();
     }
 }
 
@@ -222,7 +223,7 @@ short Cell::getNeighbor(Cell* neigh) {
 Cell* Cell::getHighestEdgeFreeNeighbor() {
   Cell* highest_cell = NULL;
   Cell* c;
-  float highest_edge = 0.0f;
+  long highest_edge = 0;
   for (short neigh = 0 ; neigh < NUM_NEIGH ; neigh++) {
     c = getNeighbor(neigh);
     if (c && !c->getParentRegion() && getEWeight(c) >= highest_edge) {
@@ -236,7 +237,7 @@ Cell* Cell::getHighestEdgeFreeNeighbor() {
 Cell* Cell::getHighestEdgeFreeNeighbor(list<Cell*> &cellList) {
   Cell* highest_cell = NULL;
   Cell* c;
-  float highest_edge = 0.0f;
+  long highest_edge = 0;
   for (list<Cell*>::iterator it = cellList.begin() ; it != cellList.end() ; it++) {
     c = (*it)->getHighestEdgeFreeNeighbor();
     if (c && (*it)->getEWeight(c) >= highest_edge) {
@@ -259,12 +260,12 @@ list<Cell*> Cell::getAllCells(bool mustBeFree) {
 
 Cell* Cell::getHeaviestCell(bool mustBeFree) {
   list<Cell*> cell_list = getAllCells(mustBeFree);
-  float highest_weight = 0.0f;
+  long highest_weight = 0;
   Cell* heaviest_cell = NULL;
   for (list<Cell*>::iterator it = cell_list.begin() ; it != cell_list.end() ; it++)
-    if ((*it)->getVWeight() > highest_weight) {
+    if ((*it)->getCellWeight() >= highest_weight) {
       heaviest_cell = *it;
-      highest_weight = (*it)->getVWeight();
+      highest_weight = (*it)->getCellWeight();
     }
   return heaviest_cell;    
 }
@@ -310,7 +311,7 @@ void Cell::drawCells(SDL_Surface* output) {
   for (int i = 0 ; i < cells_on_a_row ; i++) {
     for (int j = 0 ; j < cells_on_a_row ; j++) {
       if (showv) {
-        alpha = convertToScale(cellMatrix[i][j]->getCellWeight(), 0, WW/30, 0, 255);
+        alpha = convertToScale((float)cellMatrix[i][j]->getCellWeight(), 0, WW*100/10, 0, 255);
         alpha = alpha>255?255:alpha;
         SDL_SetAlpha( surface_vertex_weight , SDL_SRCALPHA, approx(alpha) );
         apply_surface( i*CELL_LENGTH, j*CELL_LENGTH , surface_vertex_weight, output );
@@ -357,7 +358,7 @@ void Cell::drawEdge(short neighbor, SDL_Surface* output) {
       //do nothing. x and y are the same of the cell's
       break;
   }  
-  float alpha = convertToScale(getEWeight(neighbor), 0, WW/20, 0, 255);
+  float alpha = convertToScale((float)getEWeight(neighbor), 0, WW*100/10, 0, 255);
   alpha = alpha>255?255:alpha;
   SDL_SetAlpha( surface_edge_weight , SDL_SRCALPHA, approx(alpha) );
   apply_surface( x, y, surface_edge_weight, output );

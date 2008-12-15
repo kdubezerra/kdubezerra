@@ -206,6 +206,12 @@ int approx(float number) {
   return round_up_diff > round_dn_diff ? (int)floor(number) : (int)ceil(number);  
 }
 
+long approxLong(double number) {
+  double round_up_diff = ceil(number) - number;
+  double round_dn_diff = number - floor(number);  
+  return round_up_diff > round_dn_diff ? (long)floor(number) : (long)ceil(number);  
+}
+
 float distance (float xo, float yo, float xf, float yf) {
   return sqrt( apow(xf-xo,2) + apow(yf-yo,2) );
 }
@@ -250,6 +256,14 @@ string floatToString(float f, int precision) {
   string _result;
   buf.precision(precision);
   buf << fixed << f;
+  buf >> _result;
+  return _result;
+}
+
+string longToString(long l) {
+  stringstream buf;
+  string _result;
+  buf << l;
   buf >> _result;
   return _result;
 }

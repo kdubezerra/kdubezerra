@@ -20,7 +20,7 @@ class Server {
 
   public:
 
-    Server(float power = 0.0f);
+    Server(long power = 0);
     ~Server();
 
     int assignRegion (Region* r);
@@ -28,21 +28,21 @@ class Server {
     static void releaseAllRegions();
     Region* getRegion();
 
-    void setServerPower(float pow);
-    float getServerPower();
-    static float getMultiserverPower();
+    void setServerPower(long pow);
+    long getServerPower();
+    static long getMultiserverPower();
     
     static bool comparePower(Server* sA, Server* sB);
     static void sortServersByPower();
-    float getLoad();
+    long getLoad();
     bool isDisbalanced();
-    float getPowerFraction();
+    double getPowerFraction();
 
   protected:
 
     Region* managedRegion;
-    float serverPower;
-    static float multiServerPower;
+    long serverPower;
+    static long multiServerPower;
     static list<Server*> serverList;
     
 };

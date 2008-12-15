@@ -3,12 +3,12 @@
 
 //===========================================static members
 
-float Server::multiServerPower = 0.0f;
+long Server::multiServerPower = 0;
 list<Server*> Server::serverList;
 
 //================================cons/des-truction methods
 
-Server::Server(float power) : managedRegion(NULL), serverPower(power) {  
+Server::Server(long power) : managedRegion(NULL), serverPower(power) {  
   serverList.push_back(this);
 }
 
@@ -46,18 +46,18 @@ Region* Server::getRegion() {
   return managedRegion;
 }
 
-void Server::setServerPower(float pow) {
+void Server::setServerPower(long pow) {
   multiServerPower -= serverPower;
   serverPower = pow;
   multiServerPower += serverPower;
 }
 
-float Server::getServerPower() {
+long Server::getServerPower() {
   return serverPower;
 }
 
-float Server::getMultiserverPower() {
-  float totalPow = 0.0f;
+long Server::getMultiserverPower() {
+  long totalPow = 0;
   for (list<Server*>::iterator it = serverList.begin() ; it != serverList.end() ; it++) {
     totalPow += (*it)->getServerPower();
   }
@@ -72,16 +72,16 @@ void Server::sortServersByPower() {
   serverList.sort(Server::comparePower);
 }
 
-float Server::getLoad() {
+long Server::getLoad() {
   return getRegion()->getAbsoluteLoad() / getServerPower();
 }
 
 bool Server::isDisbalanced() {
-  float world_fraction = getRegion()->getAbsoluteLoad() / Region::getWorldLoad();
-  float power_fraction = getServerPower() / getMultiserverPower();
+  double world_fraction = getRegion()->getAbsoluteLoad() / Region::getWorldLoad();
+  double power_fraction = getServerPower() / getMultiserverPower();
   return world_fraction / power_fraction > DISBAL_TOLERANCE;
 }
 
-float Server::getPowerFraction() {
-  return getServerPower() / getMultiserverPower();
+double Server::getPowerFraction() {
+  return (double)getServerPower() / (double)getMultiserverPower();
 }
