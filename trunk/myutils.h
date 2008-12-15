@@ -56,6 +56,7 @@ void drawLineBresenham(SDL_Surface *screen, int x0, int y0, int x1, int y1, Uint
 void putPixel32(SDL_Surface *surface, int x, int y, Uint32 pixelcolor);
 void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 int approx(float number);
+long approxLong(double number);
 float apow(float a, int b);
 float distance (float xo, float yo, float xf, float yf);
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination );
@@ -64,3 +65,4 @@ bool belongsToVisibility (float px, float py, float dx, float dy, float ox, floa
 float convertToScale(float value, float old_min, float old_max, float new_min, float new_max);
 float simpleScale(float value, float old_max, float new_max);
 string floatToString(float f, int precision = 2);
+string longToString(long l);

@@ -60,17 +60,17 @@ class Cell {
     
     list<Avatar*> &getAvatars();
     
-    float getVWeight();
-    float getEWeight(short neighbor);
-    float getEWeight(Cell* neighbor);
-    float getEWeightToSameRegion();
-    float getEWeightToAnotherRegion();
-    float getAllEdgesWeight();
-    float getCellWeight();
-    static double getWorldWeight();
+    long getVWeight();
+    long getEWeight(short neighbor);
+    long getEWeight(Cell* neighbor);
+    long getEWeightToSameRegion();
+    long getEWeightToAnotherRegion();
+    long getAllEdgesWeight();
+    long getCellWeight();
+    static long getWorldWeight();
     
     void updateVWeight();
-    float updateEWeight(short neighbor);
+    long updateEWeight(short neighbor);
     void updateAllEdges();
     static void updateAllEdgesAndVertexWeights();
     
@@ -114,13 +114,13 @@ class Cell {
     
     Region* parentRegion;
     coord* cellposition;
-    float vertexWeight;
-    float edgeWeight[NUM_NEIGH];
-    float totalEdgeWeight;
+    long vertexWeight;
+    long edgeWeight[NUM_NEIGH];
+    long totalEdgeWeight;
     list<Avatar*> avatars;
     static Cell*** cellMatrix;
     static int cells_on_a_row;
-    static double worldWeight;
+    static long worldWeight;
     static bool showv, showe;
     static SDL_Surface* surface_vertex_weight;
     static SDL_Surface* surface_edge_weight;

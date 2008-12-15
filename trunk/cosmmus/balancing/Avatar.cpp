@@ -17,7 +17,7 @@ SDL_Surface* Avatar::surface_edge_weight;
 bool Avatar::showv = false;
 bool Avatar::showe = false;
 bool Avatar::isMobile = true;
-float Avatar::total_weight = 0.0f;
+long Avatar::total_weight = 0;
 
 Avatar::Avatar() {
   init();
@@ -36,8 +36,8 @@ Avatar::~Avatar() {}
 
 void Avatar::init() {          
   do {
-    posx = rand() % WW;
-    posy = rand() % WW;
+    posx = (float)(rand() % WW);
+    posy = (float)(rand() % WW);
     dirx = rand() % WW;
     diry = rand() % WW;
     destx = rand() % WW;
@@ -45,7 +45,7 @@ void Avatar::init() {
     coord my_location = getCell();
     my_cell = Cell::getCell(my_location.X, my_location.Y);
     my_cell->subscribe(this);
-  } while (distance(posx, posy, destx, desty) <= 20);      
+  } while (distance(posx, posy, destx, desty) <= 20.0f);      
   R = rand() % 255;
   G = rand() % 255;
   B = rand() % 255;      
@@ -121,22 +121,20 @@ void Avatar::setPlayerId (int i) {
   player_id = i;
 }
 
-void Avatar::markAsSeen(float relevance_) {
+void Avatar::markAsSeen(int relevance_) {
   relevance = relevance_;
   isSeen = true;      
 }
 
-float Avatar::OtherRelevance(Avatar* other) {                        
+int Avatar::OtherRelevance(Avatar* other) {//valor entre 0 e 100, ao invés de 0.0f e 1.0f
   float ox = other->GetX();
   float oy = other->GetY();                        
   float dist = distance (posx, posy, ox, oy);                        
   if (dist < THRESHOLD_DISTANCE) {
-    return 1;
+    return 100;
   }
   if (dist < VIEW_DISTANCE && belongsToVisibility(posx, posy, incr_x, incr_y, ox, oy)) {
-    float relevance = 1 - ( ((float)(dist)-(float)(THRESHOLD_DISTANCE)) / ((float)(VIEW_DISTANCE)-(float)(THRESHOLD_DISTANCE)) );                                
-    if (relevance < 0) relevance = 0;
-    return relevance;
+    return approx(convertToScale(dist, THRESHOLD_DISTANCE, VIEW_DISTANCE, 0, 100));
   }                        
   return 0;
 }
@@ -156,7 +154,7 @@ void* Avatar::setImage(string filename) {
 
 void Avatar::draw() {
   if (isSeen) {
-    //SDL_SetAlpha( seen_surface, SDL_SRCALPHA, approx(255*relevance) );
+    //SDL_SetAlpha( seen_surface, SDL_SRCALPHA, approx(2.55f*relevance) );
     apply_surface( approx(posx), approx(posy), my_surface, screen );
     apply_surface( approx(posx), approx(posy), seen_surface, screen );
   }
@@ -184,9 +182,9 @@ void Avatar::checkCellWeight (Avatar* other) { //por hora é mto simples, apenas
   }
 }
 
-float Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferente: getWeightE(UP_LEFT), por exemplo.
+long Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferente: getWeightE(UP_LEFT), por exemplo.
   list<Avatar*>::iterator it;
-  float _interaction = 0.0f;
+  long _interaction = 0;
   for (it = _cell->getAvatars().begin() ; it != _cell->getAvatars().end() ; it++)
     _interaction += this->OtherRelevance(*it);
   return _interaction;

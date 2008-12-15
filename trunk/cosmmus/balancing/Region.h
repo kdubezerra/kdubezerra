@@ -40,18 +40,18 @@ class Region {
     void unsetServer();
     Server* getServer();
 
-    void setRegionCapacity(float cap);
-    float getRegionCapacity(void);
+    void setRegionCapacity(long cap);
+    long getRegionCapacity(void);
 
-    float getRWeight(); //deprecated
-    double getRegionWeight();
-    float getEWeight(Region* neighbor);
-    float getAllEdgesWeight();
+    long getRWeight(); //deprecated
+    long getRegionWeight();
+    long getEWeight(Region* neighbor);
+    long getAllEdgesWeight();
     double getWeightFraction();
-		float getLoadFraction();
-		float getAbsoluteLoad();    		
-    static float getWorldLoad();
-    static float getEdgeCut();
+    double getLoadFraction();
+    long getAbsoluteLoad();    		
+    static long getWorldLoad();
+    static long getEdgeCut();
 
     void updateEWeight(Region* neighbor);
     void updateAllEdges();    
@@ -96,10 +96,10 @@ class Region {
     // FASE DE REFINAMENTO
 
     static void swapCellsRegions(Cell* c1, Cell* c2, bool fast=false);
-    bool testCellSwap(Cell* loc, Cell* ext, float &gain);
+    bool testCellSwap(Cell* loc, Cell* ext, long& gain);
     static void refinePartitioningGlobal(int passes = 0);
     void refinePartitioningLocal(Region* other, int passes = 0);
-    static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, float* gain = NULL);    
+    static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain = NULL);    
 
   protected:
     
@@ -107,10 +107,10 @@ class Region {
     list<Cell*> cells;
     list<Region*> neighbors;
     //list<float> edgeWeight;
-    map<Region*, float> edgeByRegion;
+    map<Region*, long> edgeByRegion;
     Server* parentServer;
-    float regionCapacity;
-    static float worldCapacity;
+    long regionCapacity;
+    static long worldCapacity;
     static list<Region*> regionList;
     static bool showr, showe, showw;
     static int numRegions;

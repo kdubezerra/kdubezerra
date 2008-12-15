@@ -35,9 +35,9 @@ class Avatar {
 					
     void setPlayerId (int i);
     
-    void markAsSeen(float relevance_);
+    void markAsSeen(int relevance_);
 		
-    float OtherRelevance(Avatar* other);
+    int OtherRelevance(Avatar* other);
 	
     float GetX();
     float GetY();
@@ -50,12 +50,12 @@ class Avatar {
     
     void checkCellWeight (Avatar* other);
     
-    float getInteraction(Cell* _cell);
+    long getInteraction(Cell* _cell);
     
     static void resetCells ();    
     static void drawCells (SDL_Surface* output);
         
-    static void toggleVertex();    
+    static void toggleVertex();
     static void toggleEdge();
     static void toggleMobility();
 		
@@ -71,7 +71,7 @@ class Avatar {
     bool isSeen;
     float incr_y;
     float incr_x;
-    float relevance;
+    int relevance;
     unsigned long stopped_time;
     bool isDrawable;		
     unsigned long player_id;
@@ -79,7 +79,7 @@ class Avatar {
     static vector<coord> mv_hotspotlist;
     static SDL_Surface* surface_vertex_weight;
     static SDL_Surface* surface_edge_weight;
-    static float total_weight;
+    static long total_weight;
     static bool showv, showe, isMobile;
     float my_vweight, my_eweight;
     Cell* my_cell;
