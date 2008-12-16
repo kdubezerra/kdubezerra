@@ -4,6 +4,7 @@
 #include "myutils.h"
 #endif
 
+#include "Region.h"
 #include "Cell.h"
 #include "Avatar.h"
 
@@ -108,6 +109,17 @@ long Cell::getEWeightToAnotherRegion() {
       wtar += getEWeight(neigh);
   }
   return wtar;
+}
+
+long Cell::getEWeightToRegion(Region* reg) {
+  long wtr = 0;
+  Cell* neighCell;
+  for (short neigh = 0 ; neigh < getNumNeigh() ; neigh++) {
+    neighCell = getNeighbor(neigh);
+    if (neighCell && neighCell->getParentRegion() == reg)
+      wtr += getEWeight(neigh);
+  }
+  return wtr;
 }
 
 long Cell::getWorldWeight() {
