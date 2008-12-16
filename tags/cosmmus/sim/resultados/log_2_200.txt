@@ -1,9 +1,0 @@
-200 2 out_2_200.nam graph_2_200.tr 1200 0
-Number of players set to 200
-Avatar type is 2
-Simulation started with 50 ms step interval and 2 avatar
-Average bandwidth: 77199.833333333328
-Maximum bandwidth: 124600
-Estimated maximum needed bandwidth for 200 players: 24920000 B/s
-Estimated average needed bandwidth for 200 players: 15439966.666666666 B/s
-Packets lost: 0; packets received: 463400

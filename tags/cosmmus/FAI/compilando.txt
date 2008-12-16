@@ -1,5 +1,0 @@
-para o Cliente:
-	g++ `sdl-config --cflags --libs` -lSDL -lSDL_net gameclient.cpp -o gameclient.bin
-
-para o Servidor:
-	gcc `sdl-config --cflags --libs` -lSDL -lSDL_net gameserver.c -o gameserver.bin

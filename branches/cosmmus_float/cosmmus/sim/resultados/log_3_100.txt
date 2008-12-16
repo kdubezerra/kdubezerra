@@ -1,8 +1,0 @@
-100 3 out_3_100.nam graph_3_100.tr 1200 0
-Number of players set to 100
-Avatar type is 3
-Simulation started with 50 ms step interval and 3 avatar
-Average bandwidth: 22057.833333333332
-Maximum bandwidth: 41000
-Estimated maximum needed bandwidth for 100 players: 4100000 B/s
-Estimated average needed bandwidth for 100 players: 2205783.3333333335 B/s

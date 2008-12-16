@@ -1,8 +1,0 @@
-75 6 out_6_75.nam graph_6_75.tr 1200 0
-Number of players set to 75
-Avatar type is 6
-Simulation started with 50 ms step interval and 6 avatar
-Average bandwidth: 10274.0
-Maximum bandwidth: 22600
-Estimated maximum needed bandwidth for 75 players: 1695000 B/s
-Estimated average needed bandwidth for 75 players: 770550.0 B/s

@@ -1,2 +1,0 @@
-rm server
-rm client
