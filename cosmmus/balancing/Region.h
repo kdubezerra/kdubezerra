@@ -54,7 +54,8 @@ class Region {
     static long getEdgeCut();
 
     void updateEWeight(Region* neighbor);
-    void updateAllEdges();    
+    void updateAllEdges();
+    static void updateAllEdgesAllRegions();
        
     void setBorderColor(Uint32 bc);
     void drawRegion(SDL_Surface* output);

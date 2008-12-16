@@ -15,3 +15,14 @@
 + o mundo pode ter espaços não regionados? a soma de todas as regiões pode ser menor que o mundo inteiro? inicialmente deixar assim, pra facilitar possíveis otimizações no futuro.
 
 + poder remover servidores/regiões, assim como adicionar novos.
+
+==================================== CRASH PROGRAMMING!!! ====================================
+
+ARRUMAR O CÁLCULO DO PESO DA REGIÃO PRA INCLUIR TRÁFEGO COM OUTRAS REGIÕES (de server pra server)
+
+DISTRIBUIR AS CÉLULAS ÓRFÃS DE MANEIRA MAIS "JUSTA" (não por tudo pro server com  poucos recursos)
+  (isso pode ser abstraído se se considerar o algorito K-L/F-M, pois este já disporá de informação do peso de verdade da região [WEIGHT + EDGES])
+  
+TALVEZ FOSSE BOM POR MENOS REGIÕES, SE O PESO TOTAL FOSSE MENOR, CONTANTO QUE OS SERVIDORES NÃO FICASSEM SOBRECARREGADOS.
+
+POR NA CONTA QUE ÀS VEZES PODE SER DESNECESSÁRIO O CUSTO DE BALANCEAR UMA REDE ONDE OS NODOS ESTÃO DESBALANCEADOS, PORÉM SEM USAR 100% DOS SEUS RECURSOS

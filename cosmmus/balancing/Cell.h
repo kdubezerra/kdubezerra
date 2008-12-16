@@ -65,6 +65,7 @@ class Cell {
     long getEWeight(Cell* neighbor);
     long getEWeightToSameRegion();
     long getEWeightToAnotherRegion();
+    long getEWeightToRegion(Region* reg);
     long getAllEdgesWeight();
     long getCellWeight();
     static long getWorldWeight();

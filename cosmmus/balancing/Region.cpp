@@ -80,6 +80,7 @@ void Region::checkNeighborsList() {
 void Region::checkAllRegionsNeighbors() {
   for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++)
     (*it)->checkNeighborsList();
+  updateAllEdgesAllRegions();
 }
 
 list<Region*> &Region::getNeighbors() {
@@ -151,7 +152,7 @@ double Region::getLoadFraction() {
 }
 
 long Region::getAbsoluteLoad() {
-  //updateAllEdges();
+  updateAllEdges();
   //TODO: corrigir isso (tirar alledgesweight da conta, MAS TEM QUE LEMBRAR Q O SERVER VAI FAZER UPLOAD PRO OUTRO SERVER!!!)
   return getAllEdgesWeight() + getRegionWeight();
 }
@@ -175,21 +176,26 @@ long Region::getEdgeCut() {
 void Region::updateEWeight(Region* neighRegion) {
   long edgew = 0;
   for (list<Cell*>::iterator itrc = cells.begin() ; itrc != cells.end() ; itrc++) {
-    list<Cell*> neighCells = (*itrc)->getAllNeighbors();
-    for (list<Cell*>::iterator itnc = neighCells.begin() ; itnc != neighCells.end() ; itnc++)
-      if (!this->hasCell(*itnc) && neighRegion->hasCell(*itnc))
-        edgew += (*itrc)->getEWeight(*itnc);    
+    edgew += (*itrc)->getEWeightToRegion(neighRegion);
+    //list<Cell*> neighCells = (*itrc)->getAllNeighbors();
+    //for (list<Cell*>::iterator itnc = neighCells.begin() ; itnc != neighCells.end() ; itnc++)
+    //  if (!this->hasCell(*itnc) && neighRegion->hasCell(*itnc))
+    //    edgew += (*itrc)->getEWeight(*itnc);
   }
   edgeByRegion[neighRegion] = edgew;
-  //list<float>::iterator it = edgeWeight.begin();
-  //for (int i = 0 ; i < neighbor ; i++) it++;
-  //*it = edgew;
 }
 
 void Region::updateAllEdges() {
   edgeByRegion.clear();
   for (list<Region*>::iterator it = neighbors.begin() ; it != neighbors.end() ; it++)
     updateEWeight(*it);
+}
+
+void Region::updateAllEdgesAllRegions() {
+  list<Region*>::iterator it;
+  for (it = regionList.begin() ; it != regionList.end() ; it++) {
+    (*it)->updateAllEdges();
+  }
 }
 
 void Region::setBorderColor(Uint32 bc) {
@@ -425,17 +431,17 @@ bool Region::testCellSwap(Cell* loc, Cell* ext, long& gain) {
   if(!loc->isBorderCell() || !ext->isBorderCell())
     return false;
   Region* other = ext->getParentRegion();
-  bool disbalanced = false;
+  bool stillBalanced = true;
   gain = getEdgeCut();
   swapCellsRegions(loc, ext, FAST_SWAP);
   gain -= getEdgeCut();
-  disbalanced = other->getServer()->isDisbalanced() || this->getServer()->isDisbalanced();
+  stillBalanced = !other->getServer()->isDisbalanced() && !this->getServer()->isDisbalanced();
   swapCellsRegions(loc, ext, FAST_SWAP);
-  return disbalanced;
+  return stillBalanced;
 }
 
 void Region::refinePartitioningGlobal(int passes) {
-  int debug = 0;
+  int debug = -1;
   int passcount = 0;
   Cell* c1 = NULL;
   Cell* c2 = NULL;
@@ -445,22 +451,22 @@ void Region::refinePartitioningGlobal(int passes) {
   long new_gain = 0;
   cout << endl << "Global partitioning refinement started..." << endl;
   while (!passes || passcount < passes) {
-    cout << "Executing pass number " << debug++ << "... ";
+    cout << "\nExecuting pass number " << ++debug << "..." << endl;
     c1 = c2 = NULL;
-    passcount++;    
+    passcount++;
     for (list<Region*>::iterator it_ri = regionList.begin() ; it_ri != regionList.end() ; it_ri++) {
-      for (list<Region*>::iterator it_rj = it_ri ; it_rj != regionList.end() ; it_rj++) {                
+      for (list<Region*>::iterator it_rj = regionList.begin() ; it_rj != regionList.end() ; it_rj++) {                
         if (it_rj == it_ri) continue;
         getBestCellPair(*it_ri, *it_rj, _c1, _c2, &new_gain);
         if (_c1 && _c2 && new_gain > gain) {
-          cout << "new best pair found: " << new_gain;
+          cout << "\tNew best pair found. gain = " << new_gain << endl;
           gain = new_gain;
           c1 = _c1;
           c2 = _c2;
         }        
       }
     }
-    cout << " executed [OK]" << endl;
+    cout << "\tPass " << debug << " executed [OK]" << endl;
     if (c1 && c2) swapCellsRegions(c1, c2);
     else break;
   }
