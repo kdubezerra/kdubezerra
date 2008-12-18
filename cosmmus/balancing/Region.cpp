@@ -459,7 +459,7 @@ void Region::refinePartitioningGlobal(int passes) {
         if (it_rj == it_ri) continue;
         getBestCellPair(*it_ri, *it_rj, _c1, _c2, &new_gain);
         if (_c1 && _c2 && new_gain > gain) {
-          cout << "\tNew best pair found. gain = " << new_gain << endl;
+          cout << "\tNew best pair found. Gain = " << new_gain << endl;
           gain = new_gain;
           c1 = _c1;
           c2 = _c2;

@@ -1,0 +1,23 @@
+\select@language {brazilian}
+\contentsline {chapter}{Resumo}{3}
+\contentsline {chapter}{\numberline {1}Apresenta\c c\~ao do PPGC/UFRGS}{4}
+\contentsline {chapter}{\numberline {2}Introdu\c c\~ao ao Projeto}{6}
+\contentsline {chapter}{\numberline {3}Contexto Atual}{8}
+\contentsline {section}{\numberline {3.1}Exemplo do comboio}{8}
+\contentsline {section}{\numberline {3.2}Exemplo dos helic\'opteros militares}{9}
+\contentsline {section}{\numberline {3.3}Modelos Te\'oricos de Teamwork}{10}
+\contentsline {subsection}{\numberline {3.3.1}Joint Intentions}{10}
+\contentsline {subsubsection}{\numberline {3.3.1.1}Individual Commitment}{11}
+\contentsline {subsubsection}{\numberline {3.3.1.2}Joint Commitment}{12}
+\contentsline {subsubsection}{\numberline {3.3.1.3}Joint Action}{12}
+\contentsline {subsection}{\numberline {3.3.2}Shared Plans}{13}
+\contentsline {section}{\numberline {3.4}Ferramentas de Teamwork}{14}
+\contentsline {subsection}{\numberline {3.4.1}Infraestrutura RETSINA}{15}
+\contentsline {subsection}{\numberline {3.4.2}STEAM Framework}{17}
+\contentsline {subsection}{\numberline {3.4.3}Machinetta Proxy}{19}
+\contentsline {subsection}{\numberline {3.4.4}TWProxy}{22}
+\contentsline {chapter}{\numberline {4}Objetivo}{25}
+\contentsline {chapter}{\numberline {5}Metodologia}{26}
+\contentsline {chapter}{\numberline {6}Cronograma}{28}
+\contentsline {chapter}{\numberline {7}Resultados Esperados}{29}
+\contentsline {chapter}{Refer{\^e}ncias}{30}

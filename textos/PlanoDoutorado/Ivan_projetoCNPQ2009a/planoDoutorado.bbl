@@ -1,0 +1,178 @@
+\begin{thebibliography}{\hspace{\parindent}}
+
+\bibitem[CHALUPSKY et~al.(2001)CHALUPSKY; GIL; KNOBLOCK; LERMAN; OH; PYNADATH;
+  RUSS; TAMBE]{chalupsky01electric} CHALUPSKY, H.; GIL, Y.; KNOBLOCK, C.;
+  LERMAN, K.; OH, J.; PYNADATH, D.; RUSS, T.; TAMBE, M\@. \textbf{Electric
+  elves}: applying agent technology to support human organizations. 2001.
+
+\bibitem[FININ et~al.(1994)FININ; FRITZSON; MCKAY; MCENTIRE]{finin94kqml}
+  FININ, T.; FRITZSON, R.; MCKAY, D.; MCENTIRE, R\@. {KQML as an Agent
+  Communication Language}. In: INTERNATIONAL CONFERENCE ON INFORMATION AND
+  KNOWLEDGE MANAGEMENT ({CIKM}'94), 3., 1994, Gaithersburg, MD, USA.
+  \textbf{Proceedings{\ldots}} ACM Press, 1994. p.456--463.
+
+\bibitem[GROSZ; KRAUS(1996)GROSZ; KRAUS]{grosz96collaborative} GROSZ, B.~J.;
+  KRAUS, S\@. Collaborative Plans for Complex Group Action. \textbf{Artificial
+  Intelligence}, [S.l.], v.86, n.2, p.269--357, 1996.
+
+\bibitem[GROSZ; KRAUS(1998)GROSZ; KRAUS]{grosz98evolution} GROSZ, B.; KRAUS,
+  S\@. \textbf{The evolution of SharedPlans}. 1998.
+
+\bibitem[HILL et~al.(1997)HILL; CHEN; GRATCH; ROSENBLOOM;
+  TAMBE]{hill97intelligent} HILL, R.; CHEN, J.; GRATCH, J.; ROSENBLOOM, P.;
+  TAMBE, M\@. Intelligent agents for the synthetic battlefield: {A} company of
+  rotary wing aircraft. In: INNOVATIVE APPLICATIONS OF ARTIFICIAL INTELLIGENCE
+  ({IAAI}-97), 1997. \textbf{Anais{\ldots}} [S.l.:~s.n.], 1997.
+
+\bibitem[JENNINGS(1995)JENNINGS]{jennings95controlling} JENNINGS, N.~R\@.
+  Controlling Cooperative Problem Solving in Industrial Multi-Agent Systems
+  Using Joint Intentions. \textbf{Artificial Intelligence}, [S.l.], v.75, n.2,
+  p.195--240, 1995.
+
+\bibitem[JONES et~al.(1999)JONES; LAIRD; NIELSEN; COULTER; KENNY;
+  KOSS]{jones99automated} JONES, R.~M.; LAIRD, J.~E.; NIELSEN, P.~E.; COULTER,
+  K.~J.; KENNY, P.~G.; KOSS, F.~V\@. Automated Intelligent Pilots for Combat
+  Flight Simulation. \textbf{AI Magazine}, [S.l.], v.20, n.1, p.27--41, 1999.
+
+\bibitem[KAMINKA(1999)KAMINKA]{kaminka99robocup} KAMINKA, G.~A\@. The
+  RoboCup-98 Teamwork Evaluation Session: a preliminary report. In: ROBOCUP,
+  1999. \textbf{Anais{\ldots}} [S.l.:~s.n.], 1999. p.345--356.
+
+\bibitem[LAIRD; NEWELL; ROSENBLOOM(1987)LAIRD; NEWELL; ROSENBLOOM]{SOAR} LAIRD,
+  J.~E.; NEWELL, A.; ROSENBLOOM, P.~S\@. SOAR: an architecture for general
+  intelligence. \textbf{Artif. Intell.}, Essex, UK, v.33, n.1, p.1--64, 1987.
+
+\bibitem[LEVESQUE; COHEN; NUNES(1990)LEVESQUE; COHEN; NUNES]{Levesque:90AA}
+  LEVESQUE, H.~J.; COHEN, P.~R.; NUNES, J. H.~T\@. On Acting Together. In:
+  AAAI-90, 1990, Boston, MA. \textbf{Proceedings{\ldots}} [S.l.:~s.n.], 1990.
+  p.94--99.
+
+\bibitem[LEWIS(1999)LEWIS]{citeulike:663622} LEWIS, R.~L\@. \textbf{Cognitive
+  Theory, SOAR}. 1999.
+
+\bibitem[MARSELLA et~al.(1999)MARSELLA; ADIBI; AL-ONAIZAN; KAMINKA; MUSLEA;
+  TAMBE]{marsella99being} MARSELLA, S.; ADIBI, J.; AL-ONAIZAN, Y.; KAMINKA,
+  G.~A.; MUSLEA, I.; TAMBE, M\@. On being a teammate: experiences acquired in
+  the design of {RoboCop} teams. In: THIRD INTERNATIONAL CONFERENCE ON
+  AUTONOMOUS AGENTS (AGENTS'99), 1999, Seattle, WA, USA.
+  \textbf{Proceedings{\ldots}} ACM Press, 1999. p.221--227.
+
+\bibitem[MARSELLA et~al.(2001)MARSELLA; TAMBE; ADIBI; AL-ONAIZAN; KAMINKA;
+  MUSLEA]{marsella01experiences} MARSELLA, S.; TAMBE, M.; ADIBI, J.;
+  AL-ONAIZAN, Y.; KAMINKA, G.~A.; MUSLEA, I\@. Experiences Acquired in the
+  Design of RoboCup Teams: a comparison of two fielded teams.
+  \textbf{Autonomous Agents and Multi-Agent Systems}, [S.l.], v.4, n.1/2,
+  p.115--129, 2001.
+
+\bibitem[MONTEIRO; ALVARES(2008)MONTEIRO; ALVARES]{monteiro2008} MONTEIRO,
+  I.~M.; ALVARES, L.~O\@. A Real-Time Proxy for Flexible Teamwork in Dynamic
+  Environments. In: VII BRAZILIAN SYMPOSIUM ON COMPUTER GAMES AND DIGITAL
+  ENTERTAINMENT - COMPUTING TRACK, 2008. \textbf{Anais{\ldots}} [S.l.:~s.n.],
+  2008. p.83--90.
+
+\bibitem[MONTEIRO; ALVARES(2009)MONTEIRO; ALVARES]{monteiro2009a} MONTEIRO,
+  I.~M.; ALVARES, L.~O\@. TWProxy: a teamwork proxy for real-time dynamic
+  environments. \textbf{VIII Internation Conference on Autonomous Agents and
+  Multiagent Systems (under review)}, [S.l.], 2009.
+
+\bibitem[NAIR et~al.(2000)NAIR; ITO; TAMBE; MARSELLA]{nair00robocuprescue}
+  NAIR, R.; ITO, T.; TAMBE, M.; MARSELLA, S\@. \textbf{RoboCup-Rescue}: a
+  proposal and preliminary experiences. 2000.
+
+\bibitem[PYNADATH; TAMBE(2003)PYNADATH; TAMBE]{781125} PYNADATH, D.~V.; TAMBE,
+  M\@. An Automated Teamwork Infrastructure for Heterogeneous Software Agents
+  and Humans. \textbf{Autonomous Agents and Multi-Agent Systems}, Hingham, MA,
+  USA, v.7, n.1-2, p.71--100, 2003.
+
+\bibitem[RICH; SIDNER(1997)RICH; SIDNER]{rich97collagen} RICH, C.; SIDNER,
+  C.~L\@. {COLLAGEN}: when agents collaborate with people. In: FIRST
+  INTERNATIONAL CONFERENCE ON AUTONOMOUS AGENTS (AGENTS'97), 1997, New York.
+  \textbf{Proceedings{\ldots}} ACM Press, 1997. p.284--291.
+
+\bibitem[SCERRI et~al.(2003)SCERRI; JOHNSON; PYNADATH; ROSENBLOOM; SCHURR; SI;
+  TAMBE]{scerri-getting} SCERRI, P.; JOHNSON, L.; PYNADATH, D.~V.; ROSENBLOOM,
+  P.; SCHURR, N.; SI, M.; TAMBE, M\@. \textbf{Getting Robots, Agents and People
+  to Cooperate}: an initial report. 2003.
+
+\bibitem[SCERRI et~al.(2003)SCERRI; PYNADATH; JOHNSON; SCHURR; SI;
+  TAMBE]{scerri03prototype} SCERRI, P.; PYNADATH, D.; JOHNSON, L.; SCHURR, R.;
+  SI, M.; TAMBE, M\@. \textbf{A prototype infrastructure for distributed
+  robot-agent-person teams}. 2003.
+
+\bibitem[SCERRI et~al.(2004)SCERRI; PYNADATH; SCHURR; FARINELLI; GANDHE;
+  TAMBE]{Scerri_2004_4888} SCERRI, P.; PYNADATH, D.; SCHURR, N.; FARINELLI, A.;
+  GANDHE, S.; TAMBE, M\@. Team Oriented Programming and Proxy Agents: the next
+  generation. In: PROGRAMMING MULTIAGENT SYSTEMS, 1., 2004.
+  \textbf{Proceedings{\ldots}} [S.l.:~s.n.], 2004.
+
+\bibitem[SCERRI; PYNADATH; TAMBE(2001)SCERRI; PYNADATH; TAMBE]{376314} SCERRI,
+  P.; PYNADATH, D.; TAMBE, M\@. Adjustable autonomy in real-world multi-agent
+  environments. In: AGENTS '01: PROCEEDINGS OF THE FIFTH INTERNATIONAL
+  CONFERENCE ON AUTONOMOUS AGENTS, 2001, New York, NY, USA.
+  \textbf{Anais{\ldots}} ACM, 2001. p.300--307.
+
+\bibitem[SCERRI; PYNADATH; TAMBE(2003)SCERRI; PYNADATH; TAMBE]{scerri03towards}
+  SCERRI, P.; PYNADATH, D.; TAMBE, M\@. \textbf{Towards adjustable autonomy for
+  the real world}. 2003.
+
+\bibitem[SCHURR et~al.(2005)SCHURR; MARECKI; TAMBE; SCERRI]{schurr-towards}
+  SCHURR, N.; MARECKI, J.; TAMBE, M.; SCERRI, P\@. \textbf{Towards Flexible
+  Coordination of Human-Agent Teams}. 2005.
+
+\bibitem[SEEM et~al.(2004)SEEM; FARINELLI; OKAMOTO; TAMBE]{1376867} SEEM, P.;
+  FARINELLI, A.; OKAMOTO, S.; TAMBE, M\@. Token approach for role allocation in
+  extreme teams: analysis and experimental evaluation. \textbf{Enabling
+  Technologies: Infrastructure for Collaborative Enterprises, 2004. WET ICE
+  2004. 13th IEEE International Workshops on}, [S.l.], p.397--402, June~2004.
+
+\bibitem[STEVEN(2005)STEVEN]{steven-evolution} STEVEN, N.~S\@.
+  \textbf{Evolution of a Teamwork Model}. Disponível em
+  citeseer.ist.psu.edu/679191.html. Acesso em: Outubro 2007.
+
+\bibitem[STONE; VELOSO(1998)STONE; VELOSO]{stone98task} STONE, P.; VELOSO,
+  M.~M\@. Task Decomposition and Dynamic Role Assignment for Real-Time
+  Strategic Teamwork. In: AGENT THEORIES, ARCHITECTURES, AND LANGUAGES, 1998.
+  \textbf{Anais{\ldots}} [S.l.:~s.n.], 1998. p.293--308.
+
+\bibitem[SYCARA et~al.(2001)SYCARA; PAOLUCCI; VELSEN;
+  GIAMPAPA]{sycara01retsina} SYCARA, K.; PAOLUCCI, M.; VELSEN, M.~van;
+  GIAMPAPA, J\@. \textbf{The {RETSINA} {MAS} Infrastructure}. [S.l.]: Robotics
+  Institute Technical Report, Carnegie Mellon, 2001. (CMU-RI-TR-01-05).
+
+\bibitem[SYCARA; SUKTHANKAR(2006)SYCARA; SUKTHANKAR]{Sycara_2006_5592} SYCARA,
+  K.; SUKTHANKAR, G\@. \textbf{Literature Review of Teamwork Models}.
+  Pittsburgh, PA: Robotics Institute, Carnegie Mellon University, 2006.
+  (CMU-RI-TR-06-50).
+
+\bibitem[TAMBE(1997a)TAMBE]{tambe97towards} TAMBE, M\@. Towards Flexible
+  Teamwork. \textbf{Journal of Artificial Intelligence Research}, [S.l.], v.7,
+  p.83--124, 1997.
+
+\bibitem[TAMBE(1997b)TAMBE]{tambe97agent} TAMBE, M\@. Agent architectures for
+  flexible, practical teamwork. In: NATIONAL CONFERENCE ON ARTIFICIAL
+  INTELLIGENCE (AAAI), 1997. \textbf{Anais{\ldots}} [S.l.:~s.n.], 1997.
+
+\bibitem[TAMBE et~al.(????)TAMBE; SHEN; MATARIC; GOLDBERG; MODI; PYNADATH; QIU;
+  SALEMI]{tambe-teamwork} TAMBE, M.; SHEN, W.; MATARIC, M.; GOLDBERG, D.; MODI,
+  P.; PYNADATH, D.; QIU, Z.; SALEMI, B\@. \textbf{Teamwork in cyberspace}:
+  using teamcore to make agents team-ready.
+
+\bibitem[TAMBE; ZHANG(1998)TAMBE; ZHANG]{tambe98towards} TAMBE, M.; ZHANG, W\@.
+  \textbf{Towards flexible teamwork in persistent teams}. 1998.
+
+\bibitem[TAMBE; ZHANG(2000)TAMBE; ZHANG]{tambe00towards} TAMBE, M.; ZHANG, W\@.
+  Towards Flexible Teamwork in Persistent Teams: extended report.
+  \textbf{Autonomous Agents and Multi-Agent Systems}, [S.l.], v.3, n.2,
+  p.159--183, 2000.
+
+\bibitem[VU et~al.(2003)VU; GO; KAMINKA; VELOSO; BROWNING]{Vu03monad:a} VU, T.;
+  GO, J.; KAMINKA, G.; VELOSO, M.; BROWNING, B\@. MONAD: a flexible
+  architecture for multi-agent control. In: IN PROCEEDINGS OF THE AAMAS¿03,
+  2003. \textbf{Anais{\ldots}} [S.l.:~s.n.], 2003. p.449--456.
+
+\bibitem[YEN et~al.(2001)YEN; YIN; IOERGER; MILLER; XU; VOLZ]{yen01cast} YEN,
+  J.; YIN, J.; IOERGER, T.~R.; MILLER, M.~S.; XU, D.; VOLZ, R.~A\@. {CAST}:
+  collaborative agents for simulating teamwork. In: {IJCAI}, 2001.
+  \textbf{Anais{\ldots}} [S.l.:~s.n.], 2001. p.1135--1144.
+
+\end{thebibliography}

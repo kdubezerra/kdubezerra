@@ -1,0 +1,395 @@
+%
+% exemplo genérico de uso da classe iiufrgs.cls
+% $Id: iiufrgs.tex,v 4.6 2003/11/21 22:36:13 avila Exp $
+%
+\documentclass[plano-doutorado]{iiufrgs}
+% um tipo específico de monografia pode ser informado como parâmetro opcional:
+%\documentclass[tese]{iiufrgs}
+% monografias em inglês devem receber o parâmetro `english':
+%\documentclass[diss,english]{iiufrgs}
+% a opção `openright' pode ser usada para forçar inícios de capítulos
+% em páginas ímpares
+% \documentclass[openright]{iiufrgs}
+% para gerar uma versão somente-frente, basta utilizar a opção `oneside':
+% \documentclass[oneside]{iiufrgs}
+\usepackage[T1]{fontenc}        % pacote para conj. de caracteres correto
+\usepackage[latin1]{inputenc}   % pacote para acentuação
+\usepackage{graphicx}           % pacote para importar figuras
+\usepackage{times}              % pacote para usar fonte Adobe Times
+\usepackage{listings}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+%% the 'caption' package provides a nicer-looking replacement
+\usepackage[labelfont=bf,textfont=it]{caption}
+\usepackage{stackrel}
+\usepackage{mathptmx}          % p/ usar fonte Adobe Times nas fórmulas
+\usepackage{latexsym}
+\usepackage{amsmath}
+
+
+\usepackage{url}
+
+
+
+%\renewcommand{\listalgorithmname}{Lista de Algoritmos}
+
+%
+% Informações gerais
+%
+\title{Um Modelo Geral de Teamwork para Ambientes Dinâmicos com Requisitos de Tempo Real}
+
+
+\author{\textit{  } }
+% alguns documentos podem ter varios autores:
+%\author{Flaumann}{Frida Gutenberg}
+%\author{Flaumann}{Klaus Gutenberg}
+
+% orientador e co-orientador são opcionais (não diga isso pra eles :))
+\advis\footnote{}or[Prof.~Dr.]{Álvares}{Luis Otávio Campos}
+%\coadvisor[Prof.~Dr.]{Knuth}{Donald Ervin}
+
+% a data deve ser a da defesa; se nao especificada, são gerados
+% mes e ano correntes
+%\date{maio}{2001}
+
+% o nome do curso pode ser redefinido (ex. para TCs)
+%\course{Curso de Especialização em Cachaça}
+
+% o local de realização do trabalho pode ser especificado (ex. para TCs)
+% com o comando \location:
+%\location{Itaquaquecetuba}{SP}
+
+% itens individuais da nominata podem ser redefinidos com os comandos
+% abaixo:
+% \renewcommand{\nominataReit}{Prof\textsuperscript{a}.~Wrana Maria Panizzi}
+% \renewcommand{\nominataReitname}{Reitora}
+% \renewcommand{\nominataPRE}{Prof.~Jos{é} Carlos Ferraz Hennemann}
+% \renewcommand{\nominataPREname}{Pr{ó}-Reitor de Ensino}
+% \renewcommand{\nominataPRAPG}{Prof\textsuperscript{a}.~Joc{é}lia Grazia}
+% \renewcommand{\nominataPRAPGname}{Pr{ó}-Reitora Adjunta de P{ó}s-Gradua{ç}{ã}o}
+% \renewcommand{\nominataDir}{Prof.~Philippe Olivier Alexandre Navaux}
+% \renewcommand{\nominataDirname}{Diretor do Instituto de Inform{á}tica}
+% \renewcommand{\nominataCoord}{Prof.~Carlos Alberto Heuser}
+% \renewcommand{\nominataCoordname}{Coordenador do PPGC}
+% \renewcommand{\nominataBibchefe}{Beatriz Regina Bastos Haro}
+% \renewcommand{\nominataBibchefename}{Bibliotec{á}ria-chefe do Instituto de Inform{á}tica}
+% \renewcommand{\nominataChefeINA}{Prof.~Jos{é} Valdeni de Lima}
+% \renewcommand{\nominataChefeINAname}{Chefe do \deptINA}
+% \renewcommand{\nominataChefeINT}{Prof.~Leila Ribeiro}
+% \renewcommand{\nominataChefeINTname}{Chefe do \deptINT}
+
+
+%\renewcommand{\ALG@name}{Algoritmo}
+
+
+% A seguir são apresentados comandos específicos para alguns
+% tipos de documentos.
+
+% Relatório de Pesquisa [rp]:
+% \rp{123}             % numero do rp
+% \financ{CNPq, CAPES} % orgaos financiadores
+
+% Trabalho Individual [ti]:
+% \ti{123}     % numero do TI
+% \ti[II]{456} % no caso de ser o segundo TI
+
+% Trabalho de Conclusão [tc]:
+% além de definir explicitamente o nome do curso (\course) e o local
+% de realização (\location), é necessário redefinir a nominata,
+% pois as informações necessárias dependem do curso. Ex.:
+%\renewcommand{\nominata}{
+%        UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL\\
+%        Reitora: Prof\textsuperscript{a}.~Wrana Maria Panizzi\\
+%        Pró-Reitor de Ensino: Prof.~José Carlos Ferraz Hennemann\\
+%        Diretor do Instituto de Informática: Prof.~Philippe Olivier Alexandre Navaux\\
+%        Coordenador do curso: Prof.~Seu Creysson\\
+%        Bibliotecária-chefe do Instituto de Informática: Beatriz Regina Bastos Haro
+%}
+
+% Monografias de Especialização [espec]:
+% \espec{Redes e Sistemas Distribuídos}      % nome do curso
+% \coord[Profa.~Dra.]{Weber}{Taisy da Silva} % coordenador do curso
+% \dept{INA}                                 % departamento relacionado
+
+%
+% palavras-chave
+% iniciar todas com letras minúsculas, exceto no caso de abreviaturas
+%
+\keyword{Teamwork}
+\keyword{Sistemas Multiagentes}
+\keyword{Inteligência Artificial}
+%
+% inicio do documento
+%
+\begin{document}
+
+% folha de rosto
+% às vezes é necessário redefinir algum comando logo antes de produzir
+% a folha de rosto:
+% \renewcommand{\coordname}{Coordenadora do Curso}
+\maketitle
+
+% dedicatoria
+%\clearpage
+%\begin{flushright}
+%\mbox{}\vfill
+%{\sffamily\itshape
+%``Se eu enxerguei mais longe,\\
+% foi porque me apoiei nos ombros de gigantes.''\\}--- \textsc{Sir~Isaac Newton}
+%\end{flushright}
+%
+%% agradecimentos
+%\chapter*{Agradecimentos}
+%Agradeço a todos\ldots
+
+% sumario
+\tableofcontents
+
+% lista de abreviaturas e siglas
+% o parametro deve ser a abreviatura mais longa
+%\begin{listofabbrv}{SPMD}
+%		\item[CRN] Continuous Random Networks (Redes Aleatórias Contínuas)
+%		\item[WWW] Wooten-Winer-Weaire
+%		\item[DM] Dinâmica Molecular
+%\end{listofabbrv}
+
+% idem para a lista de símbolos
+%\begin{listofsymbols}{$\alpha\beta\pi\omega$}
+%       \item[$\sum{\frac{a}{b}}$] Somatório do produtório
+%       \item[$\alpha\beta\pi\omega$] Fator de inconstância do resultado
+%\end{listofsymbols}
+
+% lista de figuras
+%\listoffigures
+
+% lista de tabelas
+%\listoftables
+
+% resumo na língua do documento
+\begin{abstract}
+
+Embora haja muitas pesquisas na área de \textit{teamwork}, o desenvolvimento de times de agentes para ambientes complexos continua sendo um desafio, especialmente se esses ambientes possuem requisitos de tempo-real. Muitas ferramentas foram desenvolvidas, mas não existe uma solução geral, e as ferramentas mais gerais possuem sérios problemas com o requisito de tempo-real. Adicionalmente, a formação de times heterogêneos contendo agentes e humanos ainda apresenta algumas dificuldades, como a criação de um entendimento compartilhado entre humanos e agentes, e a  previsibilidade mútua entre os membros do time. Assim, neste projeto pretende-se investigar e analisar os problemas de \textit{teamwork} para ambientes dinâmicos com requisitos de tempo real para então propor novo modelo geral de \textit{teamwork} que atenda a tal objetivo.
+
+
+\end{abstract}
+
+% resumo na outra língua
+% como parametros devem ser passados o titulo e as palavras-chave
+% na outra língua, separadas por vírgulas
+%\begin{englishabstract}{English Title}{English KeyWords}
+%
+%\end{englishabstract}
+
+% aqui comeca o texto propriamente dito
+\chapter{Apresentação do PPGC/UFRGS}
+
+O PPGC é um programa de pós-graduação em Computação do Instituto de Informática da UFRGS que desenvolve pesquisa com ênfase em 13 linhas de pesquisa principais. Avaliado pela CAPES com o conceito 6 desde 2006, tem 39 orientadores permanentes (25 bolsistas de produtividade do CNPq, sendo 14 nível 1 e 11 nível 2) e mais de 250 alunos de mestrado e doutorado. Tem participação constante nos principais eventos internacionais da área, projetos de cooperação com Universidades da Europa e Estados Unidos, além do reconhecimento do trabalho de grupos de pesquisa do Instituto de Informática no cenário científico nacional.
+
+
+O PPGC oferece formação em Computação em dois níveis, Mestrado e Doutorado, e é voltado à formação de pesquisadores, docentes e profissionais 
+qualificados para desenvolver atividades em empresas de alta tecnologia.
+
+O ingresso no Mestrado em Ciência da Computação é anual e pressupõe o vínculo a um professor orientador desde o início do curso. A seleção 
+é feita pela Comissão de Pós-Graduação com base no bom desempenho do candidato no POSCOMP, no seu curriculum vitae e nas suas cartas de 
+recomendação. 
+
+O processo de seleção para o doutorado (para ingresso em fluxo-contínuo) envolve a análise da documentação do aluno e uma entrevista com 
+o candidato. Há exigência de um plano de trabalho elaborado juntamente com o orientador, bem como experiência anterior do candidato em 
+pesquisa. Com isso, procura-se garantir alunos com bom potencial para a pesquisa avançada. 
+
+O PPGC tem investido fortemente na formação de mestres e doutores em colaboração com instituições reconhecidas no exterior, incentivando 
+e viabilizando a realização de estágios no exterior durante o doutoramento, bem como o doutoramento em co-tutela. Neste caso, ao final 
+do curso, o aluno recebe o título de doutor pela UFRGS e também pela instituição estrangeira.
+
+Em relação à interação com empresas, o PPGC está intensificando seus esforços no sentido de desenvolver o espírito de empreendedorismo 
+em seus mestrandos e doutorandos, capacitando-os para atuar na indústria.
+
+O Instituto de Informática mantém convênios e projetos de transferência tecnológica com diversas empresas, beneficiando diretamente o 
+PPGC pela obtenção de recursos para laboratórios, bolsas e biblioteca. Em projetos apoiados pela Lei de Informática e/ou financiados 
+pelos fundos setoriais, foram desenvolvidos projetos em cooperação com as empresas Altus, HP, Mimetic, Digitel, SOMAR, TechRobot, 
+Dell, HP, CP Eletrônica, Digitel, Digistar, Leader Tech, Teracom entre outros. 
+
+
+
+% introducao
+\chapter{Introdução ao Projeto}
+%\section{Introdução}
+
+
+\textit{Teamwork}\footnote{Um esforço cooperativo realizados por membros de uma equipe para alcançar um objetivo.} tem emergido como o paradigma para coordenação de agentes de forma cooperativa em ambientes dinâmicos e tem se mostrado capaz de levar a um comportamento robusto e flexível \cite{Sycara_2006_5592}. Entretanto, não existe uma solução geral para construção de times de agentes e cada novo domínio pode ter novos requisitos. Uma classe de aplicação que se mantém como desafio para a área de \textit{teamwork} é aquela na qual o ambiente é altamente dinâmico e que requer um tempo de resposta muito curto. O desafio aumenta quando o time pode ser composto por humanos, robôs e agentes artificiais.
+
+Em ambientes dinâmicos, o estado do ambiente pode sofre alteração entre o agente perceber tal ambiente e atuar sobre ele. Ou seja, o tempo que o agente demora para agir pode afetar a qualidade de suas ações. Isso se torna mais grave quando o ambiente exige uma reatividade muito alta, com intensas atualizações de seu estado. Em domínios altamente dinâmicos a manutenção da coerência de time é também dificultada, dado que a mudança de postura do time precisa acompanhar as mudanças de estado do ambiente.
+
+Aplicações como jogos de computador, podem representar um ambiente com tais características, onde a formação de \textit{teamwork} pode necessitar uma abordagem diferenciada \cite{monteiro2008} \cite{monteiro2009a}. Nesses ambientes frequentemente é necessário sacrificar alguns aspectos gerais, como comunicação assíncrona ou decisões distribuídas, em favor do tempo de resposta. Assim, dependendo do domínio, ainda é possível formar times robustos e coerentes em ambientes altamente dinâmicos.
+
+
+\textit{Teamwork} tem sido aplicado a diversos domínios, como resgate em desastres \cite{nair00robocuprescue}, combate militar \cite{hill97intelligent, jones99automated}, \textit{robocup soccer} \cite{kaminka99robocup, marsella99being, marsella01experiences} e colaboração entre humanos e agentes \cite{scerri-getting}. Um \textit{teamwork} flexível, promovido por um modelo explícito, que define comprometimentos e responsabilidades para os membros do time, permite uma coordenação robusta, mantendo a coerência mesmo que haja falhas individuais e mudanças imprevisíveis no ambiente \cite{steven-evolution}.
+
+Algumas teorias foram propostas para formalizar o comportamento de um grupo de agentes para agir como um time. Duas dessas teorias possuem importantes resultados em problemas reais. Ela são \textit{Joint Intentions} \cite{Levesque:90AA} e \textit{Shared Plans} \cite{grosz96collaborative}. Ambas são descritas através de um formalismo lógico, mas com diferentes abordagens. \textit{Joint Intentions} foca na junção dos estados mentais do time, enquanto \textit{Shared Plans} foca nas intenções do agente voltadas para acões de colaboração ou voltadas para ações conjuntas do grupo.
+
+
+Baseadas nessas teorias surgiram ferramentas como \textit{STEAM} \cite{tambe97towards} e \textit{Machinetta} \cite{steven-evolution} que tiveram bons resultados em diversos domínios de ambiente complexo \cite{hill97intelligent, tambe98towards, tambe00towards, marsella01experiences, jones99automated, 781125, scerri03prototype, schurr-towards, scerri-getting, Scerri_2004_4888, chalupsky01electric, 376314, scerri03towards, yen01cast}. Entretanto, o \textit{STEAM} foi desenvolvido usando uma versão antiga do \textit{SOAR} \cite{SOAR}, que teve mudança na sua linguagem desde então, e o \textit{Machinetta}, que é um projeto derivado do \textit{STEAM}, apresenta diversas limitações para ambientes altamente dinâmicos. 
+
+
+Com objetivo de superar as limitações de tempo de resposta das ferramentas anteriores, foi desenvolvido o \textit{TWProxy} \cite{monteiro2008} \cite{monteiro2009a}, uma nova ferramenta que habilita agentes individuais a integrarem times e agir de forma coerente em ambientes altamente dinâmicos com requisitos de tempo-real. Ele utiliza algumas das boas idéias apresentadas pelo \textit{Machinetta}, contornando algumas de suas limitações e adicionando novas características.  Entretanto, o \textit{TWProxy} não é genérico o suficiente para atender de forma adequada a times mistos de humanos e agentes artificiais pois não possui nenhum suporte a autonomia ajustável.
+
+Nenhuma ferramenta atual oferece uma solução realmente geral para \textit{teamwork}. A diversidade de domínios é o que, na prática, inviabiliza uma solução genérica que seja satisfatória para qualquer tipo de aplicação. Por isso, este projeto foca na investigação e análise de \textit{teamwork} em ambiente multiagente altamente dinâmico, estocástico, parcialmente observável,  com o objetivo de propor um modelo geral para esse tipo de ambiente, não atendido pelos modelos existentes.
+
+
+
+\input{cap02.tex}
+
+\chapter{Objetivo}
+%\section{Objetivo}
+
+Este projeto tem como objetivo geral propor um novo modelo de \textit{teamwork} que atenda aos requisitos impostos por domínios altamente dinâmicos, sacrificando ao mínimo as características gerais dos modelos atuais e possibilitando a formação de times heterogêneos nesses domínios. O \textit{TWProxy} \cite{monteiro2008} \cite{monteiro2009a}, como ferramenta, já representa um passo nesse sentido, pois ele foca justamente na manutenção da coerência de time em ambientes altamente dinâmicos. Entretanto, ele possui muitos pontos a serem melhorados, como a autonomia ajustável, afim de se constituir em um modelo genérico de \textit{teamwork} heterogêneo para domínios com requisitos de tempo-real.
+
+
+Para atingir este objetivo geral, este projeto possui diversos objetivos específicos listados a seguir:
+
+
+\begin{itemize}
+	\item Identificar as características que levam a maioria dos modelos atuais de \textit{teamwork} a falhar em ambientes bastante dinâmicos.
+	\item Identificar as possíveis restrições a que deverá estar submetido um sistema multiagente situado em um ambiente bastante dinâmico, em virtude de limitações e especializações de algumas de suas características gerais como: organização, comunicação e decisão.
+	\item Avaliar as possíveis formas de interação de humanos com agentes artificiais em um time.
+	\item Balancear as restrições a serem impostas a sistemas multiagentes para a formação de \textit{teamwork} heterogêneo em ambientes altamente dinâmicos, afim de manter o modelo a ser proposto o mais genérico e flexível possível.
+	\item Avaliar as possíveis perdas de qualidade das decisões de time em função do tempo de resposta requerido.
+	\item Propor um modelo geral de \textit{teamwork} para ambientes altamente dinâmicos.
+	\item Implementar um protótipo do modelo proposto.
+	\item Validar o modelo em domínios dinâmicos com requisitos de tempo-real.
+\end{itemize}
+
+
+
+
+
+\chapter{Metodologia}
+%\section{Metodologia}
+
+As etapas previstas para esse projeto são baseadas nas investigações e análises dos modelos atuais, identificando características importantes que devem ser ajustadas para alcançar um modelo genérico de \textit{teamwork} para a classe de domínio proposta. Assim, a revisão bibliográfica apresenta-se como o passo inicial e também persistente ao longo desse projeto. Apesar do foco na sub-área de sistema multiagente conhecida como \textit{teamwork}, outras sub-áreas da inteligência artificial e até mesmo áreas como sistemas de tempo-real e sistemas distribuídos são relevantes para a pesquisa.   
+
+A investigação das deficiências encontradas em modelos e ferramentas atuais é um método a ser utilizado para identificar quais características são críticas no tratamento de ambientes altamente dinâmicos. Na modelagem do \textit{E-GAP} \cite{1376867}, por exemplo, existe um termo de custo que penaliza a função a ser otimizada quando ocorre atraso na execução de algum papel. Entretanto, o algoritmo LA-DCOP, apresentado no mesmo trabalho, resolve o \textit{E-GAP} apenas de forma aproximada e não leva em consideração a penalização pelo atraso.
+
+Outra etapa importante é analisar como um sistema multiagente pode ser afetado em função da formação de times em ambientes que possuem requisitos de tempo-real. Avaliar a questão da organização multiagente, identificando se existe ou não necessidade de se fazer alguma restrição. Definir as características de canal de comunicação e os recursos necessários para a comunicação. Também nesta etapa é necessário verificar a forma como as decisões de time precisam ser tomadas, analisando as perdas e ganhos de abordagens centralizadas, parcialmente distribuídas e totalmente distribuídas.
+
+Um grande desafio neste projeto é a identificação das possíveis formas de como humanos podem interagir com agentes artificiais em times, degradando ao mínimo a reatividade da equipe e aumentando a eficiência do grupo. Isso se torna um desafio porque é difícil criar uma compreensão mútua entre membros reais e agentes artificiais. Além do conhecimento compartilhado do time, é necessário que haja de alguma forma uma predição mútua e também que os membros do time se adaptem uns aos outros. 
+
+A necessidade de reagir em um tempo de resposta bastante curto pode levar a perda de qualidade nas decisões do time. Por isso, será necessário quantificar o quão está se perdendo em qualidade para atender a um requisito de reatividade. Assim, também é um desafio neste projeto permitir um balanceamento entre a qualidade das decisões e a reatividade do time, lembrando que para ambientes dinâmicos a reatividade influi na qualidade das ações. 
+
+
+A investigação das deficiências dos modelos atuais, a identificação das restrições de organização, a integração humano-agente e o balanceamento entre a qualidade das decisões e reatividade do time,  serão executados de duas maneiras principais: pela análise dos modelos teóricos existentes juntamente com os modelos parciais propostos, e pela avaliação de experimentos. 
+
+Com base na análise realizada será proposto um modelo geral de \textit{teamwork} para ambientes altamente dinâmicos. Tal modelo pretende possibilitar a definição de vários aspectos de sistemas multiagentes, como suas possíveis organizações, a forma como se efetua a comunição entre os agentes e o comprometimento entre os membros do time. Além de descrever também a forma de interação dos agentes de um time com os membros humanos e como será feito o processo de decisão da equipe.
+
+
+Para validação do modelo a ser proposto, um protótipo será implementado e aplicado no desenvolvimento de times de agentes para domínios distintos como jogos de computador, resgate simulado em ambiente de desastre e futebol simulado.  Serão realizadas análises de desempenho em termo de escalabilidade, eficácia da coordenação e tempo de inconsistência para troca de papéis.
+
+Parte da pesquisa será realizada em uma instituição no exterior. Contatos já foram estabelecidos com o Prof. Dr. Paul Scerri, da Carnegie Mellon University, que mostrou-se bastante interessado no trabalho. Pretende-se também entrar em contato com Prof. Dr. Milind Tambe, chefe do grupo de pesquisa em \textit{teamwork} ( TEAMCORE ) da University of Southern California.
+
+
+%\chapter{Plano de Estudo}
+%
+%O plano estudo para esse projeto consiste em trabalho de pesquisa e cursar disciplinas de áreas relacionadas. Como este plano é uma continuação dos trabalhos iniciados no mestrado, está incluso o aproveitamento das disciplinas já cursadas, apresentadas na Tabela \ref{cursadas}, bem como cursar novos créditos relacionados a linha de pesquisa, como visto na Tabela \ref{acursar}.
+%
+%
+%\begin{table}[!ht]
+%\begin{center}
+%\caption{Créditos cursados a serem revalidados}
+%\label{cursadas}
+%\begin{tabular}{|c|c|c|}
+%\hline
+%Código&Disciplina&Créditos \\ \hline
+%CMP236&Inteligência Artificial Avançada&4 \\ \hline
+%CMP247&Sistemas Conexionistas Avançados&4 \\ \hline
+%CMP253&Lógica Aplicada&4 \\ \hline
+%CMP167&Programação com Objetos Distribuídos B&4 \\ \hline
+%CMP121&Redes Neurais&2 \\ \hline
+%CMP533&Tópicos Especiais em Computação XXXIII&2 \\ \hline
+%CMP40(X)&Trabalho Individual&2 \\ \hline
+%CMP410&Atividade Didática I&1 \\ \hline
+%
+%
+%\end{tabular}
+%\end{center}
+%\end{table}
+%
+%
+%\begin{table}[!ht]
+%\begin{center}
+%\caption{Créditos a serem cursados}
+%\label{acursar}
+%\begin{tabular}{|c|c|c|}
+%\hline
+%Código&Disciplina&Créditos \\ \hline
+%CMP124&Sistemas Multiagentes&4 \\ \hline
+%CMP166&Sistemas Dinâmicos Evolutivos&4 \\ \hline
+%CMP158&Sistemas de Tempo Real&4 \\ \hline
+%CMP40(X)&Trabalho Individual&2 \\ \hline
+%CMP411&Atividade Didática II&1 \\ \hline
+%\end{tabular}
+%\end{center}
+%\end{table}
+%
+
+\chapter{Cronograma}
+
+A Tabela \ref{tab:cronograma} apresenta o
+cronograma de atividades a serem desenvolvidas, conforme citadas abaixo:
+
+\begin{enumerate}
+	\item Revisão bibliográfica. 
+
+	\item Interação com instituição no exterior para aprofundamento teórico e desenvolvimento parcial da parte experimental.
+
+	\item Proposta de tese de doutorado.
+
+	\item Desenvolvimento do modelo geral de \textit{teamwork}.
+
+	\item Desenvolvimento de protótipo do modelo proposto.
+
+	\item Validação do modelo.
+	
+	\item Escrita de artigos com resultados parciais/finais.
+
+	\item Redação da Tese.
+	
+	\item Defesa.
+\end{enumerate}
+
+\begin{table}[!ht]
+
+\begin{center}
+\caption{Cronograma}
+\label{tab:cronograma}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+Etapa 
+   &2009/1&2009/2&2010/1&2010/2&2011/1&2011/2&2012/1&2012/2\\ \hline
+1  &xxxxxx&xxxxxx&xxxxxx&xxxxxx&xxxxxx&xxxxxx&xxxxxx&      \\ \hline
+2  &      &      &xxxxxx&xxxxxx&      &      &      &      \\ \hline
+3  &      &      &      &      &xxxxxx&      &      &      \\ \hline
+4  &      &      &      &xxxxxx&xxxxxx&xxxxxx&      &      \\ \hline
+5  &      &      &      &      &xxxxxx&xxxxxx&      &      \\ \hline
+6  &      &      &      &      &      &xxxxxx&xxxxxx&      \\ \hline
+7  &      &xxxxxx&      &xxxxxx&      &xxxxxx&      &xxxxxx\\ \hline
+8  &      &      &      &      &      &xxxxxx&xxxxxx&xxxxxx\\ \hline
+9  &      &      &      &      &      &      &      &xxxxxx\\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\chapter{Resultados Esperados}
+
+Este projeto tem a expectativa de formar um doutor em computação e de avançar, de forma significativa, o estado da arte em sistemas multiagentes com importantes contribuições na área de \textit{teamwork}. Espera-se que tais contribuições possibilite que problemas envolvendo ambientes altamente dinâmicos sejam resolvidos de maneira mais simples e mais eficiente, possibilitando, inclusive, novas aplicações em tais ambientes. 
+
+\bibliography{planoDoutorado}
+\bibliographystyle{abnt} 
+
+
+
+\end{document}
+
+

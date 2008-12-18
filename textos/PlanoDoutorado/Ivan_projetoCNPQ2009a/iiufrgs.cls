@@ -38,7 +38,6 @@
 \iiu@novodoc{rp}
 \iiu@novodoc{prop-tese}
 \iiu@novodoc{plano-doutorado}
-\iiu@novodoc{edital-cnpq}
 \iiu@novodoc{dipl}
 \iiu@novodoc{ti}
 \iiu@novodoc{pep}

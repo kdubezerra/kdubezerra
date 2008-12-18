@@ -152,6 +152,9 @@ void checkInput() {
         case SDLK_k:
           Region::refinePartitioningGlobal();
           break;
+        case SDLK_l:
+          //Region::refinePartitioningGlobal();
+          break;
         case SDLK_d:
           Server::releaseAllRegions();
           Region::initRegions(NUM_SERVERS);
