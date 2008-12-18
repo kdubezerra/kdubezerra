@@ -1,0 +1,392 @@
+
+\chapter{Contexto Atual}
+\label{sec:cap02}
+
+
+Diversos problemas multiagentes podem ser enquadrados como um problema de \textit{teamwork}. Essencialmente, problemas de \textit{teamwork} são aqueles onde um grupo de agentes compartilham um objetivo e precisam cooperar entre si agindo de forma coordenada para alcançar o objetivo. A diferença principal entre um problema de \textit{teamwork} e de coordenação clássica é que em \textit{teamwork} um objetivo compartilhado precisa ser alcançado com a cooperação dos agentes envolvidos. Para alguns domínios é possível ter um esquema de coordenação pré-combinado, assumindo a suposição da sala fechada\cite{stone98task}, onde planos pré-definidos são executados pelo time após observar os ambientes e escolher o adequado. Em diversos ambientes dinâmicos, a suposição da sala fechada não é válida, o que torna a diferença entre \textit{teamwork} e coordenação clássica ainda mais clara, quando é mais difícil manter a coerência de time. Abaixo são apresentados dois exemplos onde a coordenação clássica falha e é necessária a atuação em time. 
+
+\section{Exemplo do comboio}
+
+Para ilustrar as diferenças entre \textit{teamwork} e coordenação multiagente, Levesque \cite{Levesque:90AA} apresenta o exemplo de dirigir em comboio. Neste, existem dois agentes, $A$ e $B$. O agente $B$ deseja dirigir até sua casa mas não sabe o caminho, e $A$ conhece o caminho para a casa de $B$. Assim, $A$ pretende guiar $B$ até um caminho que ele saiba seguir, cada um fazendo a sua parte. Neste exemplo, a coordenação clássica pode demonstrar vários pontos de falha de consistência.
+
+Quando um agente acredita que seu objetivo ou foi alcançado, ou tornou-se impossível de alcançar, uma escolha racional seria abandonar o objetivo. Por exemplo, se o caminho que $A$ conhecia está interditado e ele não conhece outro caminho que leve à casa de $B$, a intenção de guiar $B$ deveria ser abortada. Neste caso, a coordenação não fornece nenhum compromisso entre $A$ e $B$, não existindo nada que impeça que $A$ simplesmente siga seu caminho. Se $B$ percebe que conhece o caminho restante para sua casa, o objetivo para $B$ foi satisfeito, então ele poderia seguir para casa sem considerar como $A$ iria interpretar sua ação. Como $A$ não tem consciência que o objetivo foi alcançado, continua tentando guiar $B$ para o caminho de sua casa.
+
+Até mesmo se um agente leva em consideração as ações do outro, a falta de coerência ainda poderia ocorrer. Se $A$ faz um retorno, $B$ poderia erroneamente concluir que $A$ não está habilitado para acompanhá-lo e poderia executar outros planos para chegar em casa. Ou se $B$ é forçado a parar, $A$ poderia simplesmente interpretar que $B$ sabe o caminho de casa e continuar dirigindo sem ele.
+
+\section{Exemplo dos helicópteros militares}
+
+O exemplo dos helicópteros militares\cite{jones99automated} envolve um caso de ataque como exemplificado na Figura \ref{ATAQUE}. O grupo começa na base, onde o piloto comandante primeiro envia as ordens e instruções para os membros da equipe. O grupo processa as ordens e então segue até a posição de espera, próximo ao campo de batalha. Uma vez que o grupo alcança sua posição de espera especificada, ele aguarda enquanto os helicópteros de reconhecimento seguem ao campo de batalha. Baseados na comunicação entre os helicópteros de reconhecimento e o restante do grupo, os demais seguem para o campo de batalha para realizar um ataque. Uma vez que o ataque esteja completo, os helicópteros se reagrupam e voltam para base. Caso algum veículo inimigo seja encontrado pelo caminho em posição de ameaça, os demais são alertados para que seja feita uma nova rota que evite o veículo inimigo.
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\linewidth]{figures/ataque.jpg}
+ \caption{Simulação militar de ataque de helicópteros\cite{jones99automated}.}
+ \label{ATAQUE}
+  
+\end{figure}
+
+
+Nesse domínio haverá potenciais falhas de \textit{teamwork} caso os membros da equipe não estejam comprometidos em manter a coerêcia do time. Abaixo são enumeradas possíveis falhas na coerência de time para esses dois domínios.
+
+\begin{enumerate}
+ \item Após batalha com o inimigo, o comandante poderia retornar sozinho à base, abandonando os membros de sua equipe no campo de batalha.
+ \item Após a chegada do grupo no ponto de espera, um helicóptero de reconhecimento deveria se certificar de que a área atrás da colina estaria livre. Mas nessa verificação ele poderia ser abatido, deixando o resto da equipe esperando indefinidamente.
+ \item Um piloto, inesperadamente, processa as ordens iniciais antes dos outros. Ele então segue sozinho para o campo de batalha enquanto o restante do time continua na base.
+ \item Após helicópteros serem abatidos, apenas um de escolta chega na posição de espera. Este helicóptero espera indefinidamente os demais helicópteros para seguir em frente.
+ \item Quando a ordem inicial falha em atribuir o papel de escolta para um membro do time, o grupo inteiro espera indefinidamente quando chegar no ponto de espera.
+ \item As instruções enviadas pelo comandante para alguns membros foram perdidas, porque o comandante enviou a mensagem quando os membros da equipe estavam ocupados com outra tarefa. Neste caso, estes membros estão impossibilitados de selecionar as ações apropriadas.
+ \item Enquanto o grupo desvia de um veículo inimigo, inesperadamente um dos helicópteros destrói o veículo. Entretanto, os demais pilotos não são informados, assim uma rota alternativa é planejada desnecessariamente.
+ \item Em um caso extremo, quando a munição de todos os membros do time acaba, o grupo falha em inferir que a missão não poderia continuar.
+ \item Dois grupos de helicópteros acidentalmente usam o mesmo canal de rádio, levando à interferência e perda da mensagem inicial enviada pelo comandante. O grupo espera indefinidamente na base.
+
+
+
+\end{enumerate}
+
+
+
+
+
+\section{Modelos Teóricos de Teamwork}
+
+Trabalhos teóricos em \textit{teamwork} \cite{Levesque:90AA} \cite{grosz96collaborative} \cite{grosz98evolution} de agentes formalizam o comportamento de time e definem alguns pré-requisitos para a atuação coerente em equipe, tais como: os agentes precisam compartilhar os objetivos que eles querem alcançar, um plano de tudo que eles seguem juntos e conhecimentos do ambiente no qual eles operam; eles também necessitam compartilhar as intenções de executar um plano para alcançar um objetivo comum; os membros do time precisam ser conscientes das suas capacidades e como eles podem preencher os papéis necessários para os planos de alto nível do time; membros do time devem estar aptos para monitorar seus próprios progressos voltados aos objetivos do time, monitorar atividades de outros membros e as \textit{Joint Intentions} do time\cite{Levesque:90AA}. Muitos sistemas têm sido desenvolvidos usando essas idéias básicas de \textit{teamwork}. %, incluindo times com suporte à colaboração de humanos\cite{scerri03prototype}, times para cuidar de situações de desastre\cite{nair00robocuprescue} e times para linhas de produção de indústrias\cite{jennings95controlling}.
+
+
+\subsection{Joint Intentions}
+
+Segundo \textit{Joint Intentions} \cite{Levesque:90AA}, ações conjuntas de um time não consistem apenas de ações simultâneas e individualmente coordenadas. Para atuar em conjunto, um time deve ter consciência do estado da equipe e dos esforços do grupo como um todo. Por exemplo, no tráfego de automóveis, onde os motoristas atuam simultaneamente e são coordenados pelos sinais e leis de trânsito, não existe de fato \textit{teamwork} envolvido. Mas se um grupo de motoristas decide fazer alguma coisa em conjunto, como por exemplo, dirigir em comboio, irá parecer que o grupo age como um único agente com crenças, objetivos e intenções próprias. Baseado nisso, \textit{Joint Intentions} apresenta um modelo formal das propriedades mentais de um grupo de agentes que deseja executar ações conjuntas.
+
+O formalismo de \textit{Joint Intentions} foca na junção de estados mentais de membros de um time. Nele, para que um time faça uma ação em conjunto é necessário que seus membros se comprometam a completar a ação do grupo, enquanto mutuamente acreditam que é possível fazê-la. Além de se comprometer a realizar a tarefa, os membros de um time se comprometem a tornar de conhecimento comum o fato de um objetivo ser concluído, tornar-se impossível de se atingir ou deixar de ser importante. 
+
+Em \textit{Joint Intentions}, assume-se que os agentes são modelados em um ambiente multiagente dinâmico, sem possuir uma crença completa, nem necessariamente correta, do mundo e dos demais agentes. Eles possuem objetivos modificáveis e suas ações são falíveis. Por simplicidade é também assumido que uma vez o agente venha a pensar que o objetivo não é mais alcançável, ele nunca muda de idéia, e que sempre é possível alcançar a crença mútua.
+
+
+\subsubsection{Individual Commitment}
+
+O formalismo de \textit{Joint Intention} é expresso em uma linguagem modal de primeira-ordem com o conectivo de igualdade e os operadores proposicionais. Nesta sub-seção são apresentadas as definições necessárias para compor as definições de comprometimento mútuo do time. A seguir são descritos os operadores da linguagem utilizada.
+
+\begin{itemize}
+ \item $BEL(x, p)$ , o agente $x$ acredita em $p$.
+
+ \item $GOAL(x, p)$ , o agente $x$ tem $p$ como objetivo.
+
+ \item $MB(x, y, p )$, os agentes $x$ e $y$ acreditam mutuamente em $p$.
+
+ \item $AGT(x_1, \ldots, x_n, e)$, os agentes $x_1$, $\ldots$, $x_n$ são os únicos agentes para a seqüência de eventos $e$.
+
+ \item $e_1 \leq e_2$, $e_1$ é uma subseqüência anterior a $e_2$.
+
+ \item $HAPPENED(a)$, $a$ aconteceu.
+
+ \item $HAPPENING(a)$, $a$ está acontecendo.
+
+ \item $HAPPENS(a)$, $a$ irá acontecer.
+ 
+ \item $a;b$ , composição de ações.
+
+ \item $a|b$ , escolha não determinística.
+
+ \item $a||b$ , ocorrência concorrente de $a$ e $b$.
+
+ \item $p?$, teste de ação.
+
+ \item $a^*$, repetição da ação $a$.
+
+
+\end{itemize}
+
+Dentro da modelagem é assumido que cada agente tem um conhecimento perfeito sobre suas crenças e objetivos, que as crenças são consistentes, e que os objetivos são consistentes entre si e com a crença.
+
+Para simplificar a notação, são feitas as seguintes abreviações sintáticas paras as ações: 
+\begin{itemize}
+ \item $DONE(x_1, \ldots , x_n , a ) \stackrel{def}{=} HAPPENED(a) \wedge AGT(x_1, \ldots , x_n,  e)$
+
+ \item $DOING(x_1, \ldots , x_n , a ) \stackrel{def}{=} HAPPENING(a) \wedge AGT(x_1, \ldots , x_n,  e)$
+
+ \item $DOES(x_1, \ldots , x_n , a ) \stackrel{def}{=} HAPPENS(a) \wedge AGT(x_1, \ldots , x_n,  e)$ \\
+\end{itemize} 
+
+Os operadores modais $\Diamond$ \textit{eventually}, $\Box$ \textit{always} e \textit{until} são definidos a seguir com base nos predicados e operadores a cima: 
+
+
+
+
+
+\begin{itemize}
+ \item $\Diamond p \stackrel{def}{=} \exists e HAPPENS( e;p? )$ , \\
+   $p$ é verdade em algum ponto do futuro.
+ \item $\Box p \stackrel{def}{=} \neg \Diamond \neg p$ , \\
+   $p$ é sempre verdade a partir do momento atual.
+ \item $UNTIL(p,q) \stackrel{def}{=} \forall c HAPPENS( c; \neg q? ) \rightarrow \exists a ( a \le c ) \wedge HAPPENS(a;p?)$ , \\
+   $p$ é verdade até que $q$ seja verdade.
+ 
+\end{itemize}
+
+
+
+
+Para concluir as definições de compromissos e intenções individuais, são definidos $PGOAL$ e $INTEND$. $PGOAL$ representando um objetivo individual persistente, onde o agente acredita que o seu objetivo ainda não foi atingido e que é possível atingí-lo. Assim, ele continua no objetivo enquanto ainda for possível ou relevante continuar. O $INTEND$ representa a intenção do agente em executar uma ação, enquanto mantém um objetivo persistente que inclui tal ação e acredita que a está excutando.
+
+\begin{itemize}
+
+ \item $PGOAL(x,p,q) \stackrel{def}{=} BEL(x, \neg p ) \wedge GOAL(x,\Diamond p) \wedge UNTIL ( [ BEL(x,p) \vee $ \\ $ BEL(x, \Box \neg p) \vee BEL(x,\neg q) ],GOAL(x, \Diamond p ))$  \\
+  Onde $x$ é o agente, $p$ é o objetivo de $x$ e $q$ é o critério que torna $p$ irrelevante.
+ \item $INTEND(x, a, q) \stackrel{def}{=} PGOAL(x, DONE(x, UNTIL(DONE(x,a),$ \\ $BEL(x,DOING(x,a)))?;a ),q )$, \\
+  Onde $x$ é o agente, $a$ é a ação que o agente pretende fazer e $q$ é o critério que torna irrelevante executar a ação.
+\end{itemize}
+
+\subsubsection{Joint Commitment}
+
+Uma generalização do $PGOAL$ para o caso onde o grupo atua como um agente é dada pelo predicado $JPG(x,y,p,q)$. Para se definir o $JPG$ é necessário antes definir o objetivo mútuo $MG$ e o objetivo fraco $WG$. No objetivo mútuo, os agentes envolvidos devem acreditar que todos possuem o mesmo objetivo e no objetivo fraco o agente envolvido continua com seu objetivo enquanto acredita que ele não foi alcançado, mas caso perceba que ele foi alcançado ou que se tornou inviável torna conhecimento mútuo o novo fato. \\
+
+\begin{itemize}
+ \item $MG(x,y,p) \stackrel{def}{=} MB(x,y, GOAL(x, \Diamond p) \wedge GOAL(y, \Diamond p))$ \\
+  Onde $x$ e $y$ são agentes com um mesmo objetivo $p$
+
+ \item $WG(x,y,p) \stackrel{def}{=} [\neg BEL(x,p) \wedge GOAL(x, \Diamond p)] \vee [BEL(x,p) \wedge GOAL(x, $ \\ $ \Diamond MB(x,y,p))] \vee [BEL(x, \Box \neg p) \wedge GOAL(x, \Diamond MB(x,y, \Box \neg p))]$\\
+  Onde $x$ e $y$ são agentes com um mesmo objetivo $p$
+
+
+
+\item $JPG(x,y,p,q) \stackrel{def}{=} MB(x,y,\neg p) \wedge MG(x,y,p) \wedge UNTIL([MB(x,y,p) \vee MB(x,y, \box\neg p) \vee $ \\ $ MB(x,y, \neg q)], MB(x,y,WG(x,y,p) \wedge WG(y,x,p)))$\\
+  Onde $x$ e $y$ são agentes com o um objetivo $p$ e com uma cláusula de relevância $q$
+\end{itemize}
+
+\subsubsection{Joint Action}
+
+Dada a noção de comprometimento em conjunto é possível definir \textit{Joint Intention} $JI$ como uma generelização da intenção individual, que se resume em um comprometimento em conjunto para realizar uma ação enquanto todos, mutuamente, acreditam que estão executando a ação.
+
+
+\begin{itemize}
+ \item $JI(x,y,a,q) \stackrel{def}{=} JPG(x,y, \\ DONE(x,y,UNTIL(DONE(x,y,a),MB(x,y,DOING(x,y,a)))?;a), q)$ \\
+   Onde $x$ e $y$ são agentes envolvidos na ação em grupo, $a$ é a ação executada em grupo e $q$ a cláusula que torna a execução da ação $a$ irrelevante.
+\end{itemize}
+
+
+\subsection{Shared Plans}
+
+Em contraste com \textit{Joint Intentions}, o conceito de \textit{SharedPlans} \cite{grosz96collaborative} não é baseado na junção de atitudes mentais. Ao invés disso, \textit{SharedPlans} remete ao conceito de atitudes intencionais, \textit{intending-that}, o qual é similar a uma ação normal de um agente. Entretanto, um \textit{intending-that} de um agente individual é voltado para ações de colaboração ou voltado a uma ação em conjunto do grupo. \textit{Intending-that} é definido por um conjunto de axiomas que guia um indivíduo a realizar ações, incluindo ações de comunicação, que permitem membros do time, sub-time ou o time executar a tarefa atribuída\cite{grosz96collaborative}.
+
+Um \textit{SharedPlans} pode ser representado por um \textit{full SharedPlans}(FSP) ou por um \textit{partial SharedPlans}(PSP). Um FSP para realizar uma ação $\alpha$ representa uma situação onde todos os aspectos de uma atividade conjunta $\alpha$ é completamente determinada. Isto inclui crença mútua e acordos em uma receita completa $R_\alpha$ para fazer a ação $\alpha$. $R_\alpha$ é uma especificação de um conjunto de ações $\beta_i$, a qual, quando executada sobre as restrições especificadas contitui a execução de $\alpha$. $FSP(P,GR,\alpha,T_p,T_\alpha,R_\alpha)$ denota o plano $P$ de um grupo $GR$ no tempo $T_p$ para fazer a ação $\alpha$ no tempo $T_\alpha$ usando a receita $R_\alpha$. De forma resumida, $FSP(P,GR,\alpha,T_p,T_\alpha,R_\alpha)$ é verdade se e somente se as seguintes condições são satisfeitas:
+
+\begin{enumerate}
+ \item Todos os membros do grupo $GR$ acreditam mutuamente que eles pretendem que a proposição $Do(GR,\alpha, T_\alpha)$ seja verdade, por exemplo, que $GR$ faz $\alpha$ no tempo $T_\alpha$.
+
+ \item Todos os membros de $GR$ mutuamente acreditam que $R_\alpha$ é receita de $\alpha$
+
+ \item Para cada passo de $\beta_i$ em $R_\alpha$:
+	\begin{itemize}
+	 \item Um sub-grupo $GR_k(GR_k \subseteq GR)$ tem um FSP para $\beta_i$, usando a receita $R_\beta i$. ($GR_k$ pode ser apenas individual, no caso ele deve ter um \textit{full individual plan}, uma analogia ao FSP só que individual.)
+	 \item Outro membro de $GR$ acredita que existe uma receita tal que $GR_k$ pode levar a um $\beta_i$ e ter um FSP para $\beta_i$ (mas outros membros podem não conhecer $R_\beta i$)
+	 \item Outros membros de $GR$ pretendem que $GR_k$ possa levar a $\beta_i$ usando alguma receita.
+	\end{itemize}
+\end{enumerate}
+
+A teoria de \textit{SharedPlans} se propõe a descrever uma rede inteira de crenças e intenções de time quando engajado em \textit{teamwork}. Nesta tentativa, um FSP representa um caso limite. Normalmente, quando engajado em uma atividade de time, um time só tem um \textit{partial SharedPlan}(PSP). O PSP é uma foto do estado mental do time em uma situação particular em seu \textit{teamwork}, e comunicação e planejamento são freqüentemente utilizados para completar as condições de um FSP(Embora, em um ambiente dinâmico, o time possa nunca realmente formar um FSP). Abaixo seguem três exemplos nos quais podem existir um PSP.
+\begin{itemize}
+ \item A receita $R_\alpha$ pode ser apenas parcialmente especificada. Como o time decide reativamente o próximo passo baseado no contexto e na situação atual, poderiam ser consideradas evoluções das receitas ao longo do tempo, principalmente em ambientes dinâmicos. De acordo com a teoria de \textit{SharedPlans}, membros do time devem chegar a uma crença mútua nos próximos passos $\beta_i$. Para cada passo $\beta_i$ na receita, o subgrupo relevante deve formar um \textit{SharedPlan}.
+
+ \item A alocação de tarefas do time pode não ser conciliada. Por exemplo, o agente ou o grupo para executar uma tarefa pode não ser determinado. Nesta situação, membros do time pretendem que exista algum indivíduo ou sub-grupo para fazer a tarefa. Dentre as ações consideradas como um resultado de um \textit{intending-that}, indivíduos podem se voluntariar para executar a tarefa não conciliada ou persuadir/ordenar outros a pegar a tarefa.
+
+ \item Indivíduos ou sub-grupos podem não ter atingido uma crença mútua apropriada para formação de um FSP, levando à comunicação dentro do time. Essa comunicação também pode surgir devido às atitudes de \textit{intenting-that} dos agentes, ambas voltadas aos objetivos do time e às atividades dos membros do time. Por exemplo, um membro do time pretende que o time faça uma ação $\beta_i$, e acredita que a comunicação de alguma informação particular irá habilitar o time a fazer $\beta_i$. Isso irá levá-lo a comunicar tal informação ao time, desde que a comunicação não conflite com os compromissos anteriores.
+\end{itemize}
+
+
+
+
+\section{Ferramentas de Teamwork}
+
+Baseadas em \textit{Joint Intentions} e \textit{SharedPlans} surgiram várias ferramentas que auxiliam na manutenção da coerência de \textit{teamwork}, tais como: \textit{GRATE*} \cite{jennings95controlling}, \textit{COLLAGEN} \cite{rich97collagen}, \textit{STEAM} \cite{tambe97towards}, \textit{RETSINA} \cite{sycara01retsina}, \textit{MONAD} \cite{Vu03monad:a}, \textit{Machinetta} \cite{Scerri_2004_4888} e \textit{TWProxy} \cite{monteiro2008} \cite{monteiro2009a}. 
+
+\textit{GRATE*} é uma versão extendida do \textit{GRATE}(\textit{Generic Rules and Agent model Testbed Environment}), um sistema integrado de propósito geral que contém conhecimento genérico sobre cooperação embutido. O \textit{GRATE*} é baseado em \textit{Joint Responsibility}, que por sua vez é baseado em \textit{Joint Intentions}. Ele propõe uma arquitetura integrada de agente com duas camadas, uma do sistema de domínio e outra de controle e cooperação, tendo a sua principal aplicação no domínio da indústria. 
+
+O \textit{COLLAGEN} é uma ferramenta feita em \textit{Common Lisp} e baseado em \textit{SharedPlan} que incorpora a idéia do discurso colaborativo\cite{rich97collagen}. Ele foi inicialmente desenvolvido para uma aplicação simples de escolha de rotas aéreas e mantém o foco na interação entre humano e agentes. O \textit{COLLAGEN} segue o paradigma de que a colaboração de agentes com humanos deve ser governada pelos mesmos princípios que seguem as interações entre as pessoas.
+
+\textit{RETSINA} é uma infraestrutura de sistemas multiagentes que utiliza mecanismo de raciocínio de time baseado em \textit{SharedPlans}, com os  objetivos de traçar tarefas interdependentes para membros do time, reconhecer e reportar conflitos, propor soluções para resolver os conflitos e monitorar a performance do time. 
+
+O \textit{STEAM} é um modelo genérico para implementação de \textit{teamwork}. Foi desenvolvido sobre a plataforma \textit{SOAR}\cite{SOAR} e é baseado nas teorias de \textit{Joint Intentions} e \textit{SharedPlans}. Diversos resultados demonstram o seu sucesso na composição de times de agentes em ambientes dinâmicos \cite{tambe97agent, tambe97towards, hill97intelligent,  tambe98towards, jones99automated, tambe00towards, marsella01experiences}. 
+
+O \textit{MONAD} \cite{Vu03monad:a} define toda uma arquitetura de controle multiagente inspirada no funcionamento do \textit{STEAM}. Ele integra o projeto do time baseado em programação de \textit{script} \textit{off-line} com um motor de coordenação em tempo de execução. Seu principal avanço em relação ao \textit{STEAM} é permitir que o projetista defina diferentes metodos de arbitragem multiagente, além de fornecer um conjunto de ferramentas gráficas para do desenvolvimento de sistemas multiagentes.
+
+\textit{Machinetta} é uma evolução do modelo de \textit{teamwork} do \textit{STEAM}. Implementado em Java, ele segue uma abordagem baseada em \textit{proxy},  que visa habilitar agentes não comprometidos socialmente ao comportamento social. Introduz um novo algoritmo de alocação de papéis e tem como característica importante a cooperação entre robôs, agentes e humanos através do ajuste de autonomia das entidades.
+
+
+Devido a limitações das ferramentas existentes em fornecer suporte de \textit{teamwork} para ambientes altamente dinâmicos, foi desenvolvido o \textit{TWProxy}. Baseado em \textit{Joint Intentions}, o \textit{TWProxy} utiliza algumas características do \textit{Machinetta}, superando suas principais limitações em atender a requisitos de tempo-real e introduzindo novas características úteis para domínios altamente dinâmicos. A seguir, são descritas algumas dessas ferramentas citadas.
+
+
+\subsection{Infraestrutura RETSINA} 
+
+\textit{RETSINA} é uma infraestrutura aberta de sistema multiagente que suporta comunidades de agentes heterogêneos. O sistema \textit{RETSINA} foi implementado com a idéia de que o agente deveria formar uma comunidade de pontos que se engajam em uma relação ponto a ponto. Qualquer estrutura de coordenação na comunidade de agentes deve emergir da relação entre os agentes ao invés de imposta pela infraestrutura. Seguindo essa premissa, \textit{RETSINA} não emprega controle centralizado em sistemas multiagentes, em vez disso ele implementa serviços de infraestrutura distribuída que facilitam a relação entre agentes em vez de gerenciá-los.
+
+
+O \textit{RETSINA} é definido como um conjunto de serviços, convenções e conhecimentos que dá suporte às interações sociais complexas. Os agentes precisam dos serviços para tornarem-se aptos a encontrar os outros em um ambiente aberto, para se comunicar e para garantir que as restrições de seguranças serão satisfeitas. Convenções, como linguagem de comunicação de agentes e políticas de conversação são a base para alcançar o acordo do que os agentes estão fazendo e o que eles estão alcançando. O agente precisa também do conhecimento de como usar a infraestrutura, as linguagens de comunicação e protocolos, bem como uma ontologia comum para ter uma participação efetiva na comunidade.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\linewidth]{figures/retsina.jpg}
+ \caption{Infraestruta multiagente RETSINA e infraestrutura de agente individual \cite{sycara01retsina}.}
+ \label{RETSINA}
+\end{figure}
+
+
+
+A organização da infraestrutura de sistemas multiagentes \textit{RETSINA} é mostrada na Figura \ref{RETSINA}. Ela apresenta como os vários componentes são organizados. O restante dessa seção descreve cada um desses componentes.
+
+\begin{itemize}
+ \item \textbf{Ambiente de Operação:} O \textit{RETSINA} é independente da plataforma na qual os componentes de infraestrutura e os agentes executam. Ele automaticamente lida com os diferentes tipos de camadas de transporte.
+ \item \textbf{Infraestrutura de comunicação:} O \textit{RETSINA} é baseado em dois tipos de canais de comunicação. Um provê transferência de mensagens por comunicação direta ponto a ponto entre os agentes, a outra é baseada em \textit{multicast} usada para descobrir processos que levem o agente a achar os componentes de infraestrutura. 
+
+ \item \textbf{Infraestrutura de linguagem de comunicação de agente:} A troca de mensagens entre agentes no RETSINA é feita em KQML\cite{finin94kqml}. As mensagens possuem dois componentes: a especificação do conteúdo da mensagem e o envelope da mensagem. No envelope são especificadas informações como o remetente, o destinatário, o histórico da conversação, a ontologia e a linguagem utilizadas no conteúdo. O formato do envelope é fixado pelo \textit{RETSINA}, entretanto nenhuma suposição é feita quanto ao conteúdo da mensagem.
+
+ \item \textbf{Gestão de serviços:} O gerenciamento de aplicações é uma tarefa complexa que fica mais difícil com o tamanho da aplicação e o aumento do número de máquinas e agentes. Ele inclui três componentes de gerenciamento: o \textit{Logger}, \textit{Activity Visualizer} e \textit{Laucher}, que formam um conjunto de ferramentas para ajudar a depurar, monitorar e lançar alguma aplicação.
+
+ \item \textbf{Serviços de execução:} O \textit{RETSINA} provê serviços de monitoramento na simulação, \textit{check-pointing} e \textit{roll-back} distribuídos.
+
+ \item \textbf{Segurança:} Como o \textit{RETSINA} é um sistema aberto, agentes desconhecidos e possivelmente não confiáveis podem entrar a qualquer momento. Esses agentes podem causar danos ao sistema de várias formas: eles podem espionar outros agentes, roubar informações e danificar o conteúdo dos componentes de infraestrutura. A infraestrutura de segurança do \textit{RETSINA} entretanto, previne que tais problemas aconteçam.
+
+ \item \textbf{Mapeamento de nome para localização:} Este componente provê um significado à localização física do agente através do mapeando em um ID. Assim, quando um agente precisa saber o endereço de um outro agente, ele pergunta para o componente de mapeamento.
+
+\end{itemize}
+
+\subsection{STEAM Framework}
+
+O \textit{STEAM}\cite{tambe97towards} é um modelo geral de \textit{teamwork} construído com base nos trabalhos teóricos de \textit{Joint Intentions}\cite{Levesque:90AA} e  de \textit{SharedPlans}. Ele foi desenvolvido com o objetivo de contornar problemas envolvidos no desenvolvimento de times de agentes para ambientes complexos. Isto porque, até então os sistemas multiagentes implementados freqüentemente falhavam em fornecer a flexibilidade necessária na coordenação e comunicação para manter a coerência do time em tais domínios. A maioria desses sistemas era suprida com planos pré-definidos e coordenação específica para o domínio. Quando colocadas em um domínio dinâmico com incertezas, a inflexibilidade da coordenação pré-planejada leva a grandes falhas, pois em muitos casos é praticamente impossível pré-planejar todas as situações possíveis. Com o crescimento da complexidade das situações de \textit{teamwork}, essas abordagens aumentavam os casos de falha. Outro problema existente era o fato da coordenação estar ligada a domínios específicos, o que inviabiliza o reuso em outros domínios.
+
+Assim, o \textit{STEAM} surge para prover aos agentes um modelo geral de \textit{teamwork} que possibilita contornar essas dificuldades. Tal modelo permite ao agente raciocinar de forma autônoma sobre a coordenação e a comunicação, provendo os requisitos de flexibilidade no \textit{teamwork}. Este modelo genérico também permite o reuso da capacidade de \textit{teamwork} em diversos domínios. Tal reuso não apenas economiza tempo de implementação, como também garante a consistência do \textit{teamwork} através das aplicações.
+
+No \textit{STEAM}, \textit{Joint Intentions} são usadas como blocos de construção do \textit{teamwork}. Algumas vantagens são tiradas disso. A primeira é que o comprometimento em \textit{Joint Intention} provê o princípio para o raciocínio sobre a coordenação e a comunicação em \textit{teamwork}. Segunda, a junção de comprometimentos em \textit{Joint Intentions} provê o guia para monitorar e manter as atividades do time. Terceiro, um \textit{Joint Intention} leva para uma representação explícita de uma atividade de time, e assim facilita o raciocínio sobre \textit{teamwork}.
+
+
+Adicionalmente, para garantir a coerência do time, o \textit{STEAM} utiliza o \textit{SharedPlans} para resolver questões como as seguintes: 
+\begin{itemize}
+ \item Evitar que um agente interfira de forma destrutiva nas ações de outros.
+
+ \item Controlar a quantidade de informação compartilhada.
+
+ \item Replanejar quando o objetivo é visto como inalcançável.
+
+ \item Generalizar a capacidade de comunicação.
+
+ \end{itemize}
+
+ Membros do time devem possuir um caminho de solução comum em seus \textit{Joint Intentions} para um objetivo de alto-nível. Sem essa restrição, membros do time poderiam possuir soluções alternativas que cancelam uns aos outros, não gerando progresso em direção ao objetivo. A teoria de \textit{SharedPlans} resolve tal coerência seguindo o \textit{intentions-that} voltado ao objetivo. A abordagem do \textit{STEAM} é paralela com \textit{SharedPlans}, entretanto ele é construído sobre \textit{Joint Intentions}. O \textit{STEAM} usa \textit{Joint Intentions} como bloco de construção para hierarquicamente construir um estado mental de atitudes do membro do time individual e garantir que os membros do time possuam um caminho de solução comum. Em domínios dinâmicos, dado planos reativos, uma receita $R_\alpha$ pode evoluir passo a passo durante a execução. No \textit{STEAM}, como a receita evolui, se o passo $\beta_i$ requer execução por todo o time, o \textit{STEAM} requisita que todo o time concorde com $\beta_i$ e forme um \textit{Joint Intention} para executá-lo. Para executar um sub-passo de $\beta_i$ outros \textit{Joint Intentions} são formados, levando a uma hierarquia. Durante a expansão da hierarquia, se um passo envolve apenas um sub-time então este sub-time deve formar um \textit{Joint Intentions} para executar esse passo. Se só um indivíduo está envolvido no passo, este forma uma intenção de fazer o passo. Em geral, o resultado da hierarquia de intenções evolui dinamicamente, dependendo da situação em que o time se encontra.
+
+ \textit{SharedPlans} também ajuda a resolver questões como a quantidade de informação que os membros do time devem manter sobre os outros, particularmente quando o passo $\beta_i$ envolve apenas um sub-time ou um indivíduo. O \textit{STEAM} requer que caso o passo $\beta_i$ seja executado por um sub-time, membros do time mantenham um rastro das \textit{Joint Intentions} do sub-time para executar o passo. Este rastro intencional não precisa envolver detalhes do plano. Um membro do time deve apenas ser apto a inferir o que os outros membros pretendem fazer no passo $\beta_i$.
+
+ O \textit{STEAM} precisa formar um \textit{Joint Intention} para replanejar sempre que um objetivo de time para executar $\beta_i$ é visto como inalcançável. O replanejamento pode levar o time primeiro a analisar a causa da não alcançabilidade. Dentre outras possibilidades, a causa poderia ser a ausência de uma sub-tarefa para o sub-time ou indivíduo, ou a falha de um sub-time ou indivíduo na execução de uma tarefa relevante. Em tal caso, cada membro do time atua para determinar o agente apropriado ou o sub-time para executar a tarefa relevante. Como resultado, um agente pode se voluntariar, ou sugerir outro indivíduo ou sub-time para executar a tarefa.
+
+ A capacidade de comunicação do \textit{STEAM} é generalizada via abordagem híbrida que combina \textit{Joint Intention} como aspectos de \textit{SharedPlans}. A comunicação de \textit{Joint Intention} poderia potencialmente ser alcançada em \textit{SharedPlans} através de axiomas definidos como \textit{intention-that}. Como por exemplo, considerando que um membro do time obteve informações privadas sobre o sucesso da ação $\beta_1$ do time. Em \textit{Joint Intentions} esse membro do time tentará uma crença mútua de que $\beta_1$ teve sucesso, levando à comunicação. Em contraste, em \textit{SharedPlans}, a comunicação de membros do time deveria aparecer porque: uma ação $\beta_2$ segue $\beta_1$, e o time não pode fazer $\beta_2$ sem todos tomarem conhecimento que $\beta_1$ foi feito com sucesso. Assim, baseado na interrelação entre as ações, é possível raciocinar e derivar a comunicação em \textit{SharedPlans}, mas \textit{Joint Intentions} provê tal comunicação sem a necessidade de raciocínio.
+
+
+
+Assim, o \textit{STEAM} inicia com \textit{Joint Intentions}, mas quando constroí a estrutura hierárquica ele tem um paralelo com a teoria de \textit{SharedPlans}, em particular, \textit{Partial SharedPlans}. O resultado pode ser considerado como modelo híbrido, que une a formalização do comprometimento de \textit{Joint Intentions} e o tratamento detalhado das atitudes do time em tarefas complexas do \textit{SharedPlans}.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\linewidth]{figures/operadores_steam.jpg}
+ \label{HIERARQUIA}
+ \caption{Hierarquia de operadores para o domínio de ataque aéreo\cite{tambe97towards}}
+\end{figure}
+
+A base do \textit{STEAM} é a execução hierárquica de planos reativos. Estes planos reativos são implementados com operadores em \textit{SOAR}\cite{citeulike:663622}. O \textit{STEAM} introduz a idéia de operador de time, que quando instanciado por um agente, forma uma \textit{Joint Intention} do time. Os operadores de time expressam explicitamente uma junção de atividades de time, diferente do operador individual regular, que expressa a atividade do próprio agente. Na hierarquia apresentada na figura \ref{HIERARQUIA}, os operadores de time são envolvidos em colchetes, enquanto os outros são operadores individuais.
+
+Como os operadores individuais, os operadores de time também consistem de regras de precondições; regras de aplicação; e regras de terminação. Dado um operador $OP$ arbitrário, todos os membros do time devem simultaneamente selecionar $OP$ para estabelecer um \textit{Joint Intention}. Na Figura \ref{HIERARQUIA}, em alto nível, o time forma um \textit{Joint Intention} para $[execute-mission]_\theta$, na execução desse \textit{Joint Intention}, o time pode fomar o \texttt{Joint Intention} $[engage]_\theta$ e para executar $[engage]_\theta$, todos os membros do time devem selecionar individualmente os operadores $employ-weapongs$ formando intenções individuais. Assim, uma hierarquia inteira de intenções individuais e conjuntas é formada quando um agente participa de um trabalho em grupo.
+ 
+Apesar de representar um marco no desenvolvimento de \textit{teamwork}, a utilização do \textit{STEAM} em sistemas atuais é dificultada devido a existência de complicadores. Um deles é o sistema baseado em regras (\textit{SOAR}) sobre o qual o \textit{STEAM} foi desenvolvido. Como o \textit{STEAM} é representado por um conjunto de operadores e regras genéricas de time na linguagem do \textit{SOAR 7}, mudanças na linguagem utilizada por versões mais recentes do \textit{SOAR} impõe a necessidade reescrever algumas das regras e operadores do \textit{STEAM}, o que pode inviabilizar a sua utilização. O próprio grupo desenvolvedor do \textit{STEAM} fala do \textit{Machinetta} como uma evolução do \textit{STEAM}. 
+
+\subsection{Machinetta Proxy}
+
+O \textit{Machinetta} é uma ferramenta para o desenvolvimento de time de agentes que derivou de trabalhos como o \textit{STEAM} e o \textit{TEAMCORE} \cite{tambe-teamwork}. Ele usa uma abordagem de \textit{proxy}, ou seja, faz um papel de intermediador de time para agentes heterogêneos, podendo formar inclusive time contendo agentes artificiais, humanos e robôs. Uma das suas principais inovações frente aos seus antecessores é a autonomia ajustável, que permite, por exemplo, que humanos assumam papéis que estejam sendo executados por agentes. O \textit{Machinetta} também introduz um novo algoritmo de alocação de papéis, que em teoria permite a formação de times com grande quantidade de agentes.
+
+Um padrão que tem emergido para a criação de times robustos e altamente heterogêneos é a arquitetura que utiliza \textit{proxies} semi-autonômos para criar um camada homogênea de coordenação para agente altamente heterogêneos \cite{tambe-teamwork}. Provendo cada agente com um \textit{proxy} que tem o conhecimento de time, a habilidade de coordenação de cada par agente-\textit{proxy} é uniformizada.
+
+O \textit{proxy} gerencia a coordenação e executa operações de rotina que são necessárias para a cooperação, como: informar aos demais quando um plano já foi completado, não pode mais ser completado ou tornou-se irrelevante; achar RAPs (\textit{Robot-Agent-Person}) para preencher um determinado papel; quando necessário, ajustar o plano que o grupo está seguindo; e compartilhar informação para garantir a operação continua do time, enquanto deixa os RAPs livres para suas atividades. Nessa abordagem, a coordenação do time é alcançada para cada domínio dando ao membro do time um \textit{proxy} que assume as rotinas de coordenação em nome do RAP membro do time \cite{781125}.
+
+Assim, um time de \textit{proxies} implementa um Programa Orientado a Time (POT). Um POT é uma descrição das atividades que precisam ser executadas em nível de time para alcançar o objetivo. Ele consiste de planos de time reativos, papéis, relacionamento entre papéis, e condições para iniciar e terminar um plano. Os \textit{proxies} instanciam os planos dinamicamente quando, durante a execução, o seu estado atual casa com as condições requeridas para lançar o plano. O controle de comunicação do \textit{proxy} determina quais mensagens devem ser enviadas dentre os proxies para garantir que seja mantida a coesão.
+
+Com \textit{proxies} homogêneos é possível escrever um POT que será executado de acordo com o algoritmo de coordenação utilizado pelo \textit{proxy}. Na criação dos POTs os programadores não precisam se preocupar com detalhes específicos de baixo nível da coordenação. Isto porque eles especificam as atividades do time utilizando apenas primitivas de alto nível. Escrevendo POTs neste nível de abstração fica mais fácil para o programador especificar rapidamente atividades complexas de time.
+
+Os planos de time provêm uma representação explícita dos objetivos do time que são mantidos conjuntamente por seus membros. Eles permitem que membros do time simplifiquem seus raciocínios e concentrem-se apenas em suas tarefas que são diretamente relevantes para o atual objetivo do time. Assim, eles dão forma ao comportamento do time, usando comportamentos individuais como meios para alcançar um objetivo comum.
+
+Toda a coordenação no \textit{Machinetta} é feita através da alocação de papéis. Os planos de alto nível definidos em um POT determinam quais são as possíveis ações que um time pode executar. Essas tarefas são representadas através de papéis que são atribuidos quando um novo plano é lançado. 
+
+Uma contribuição importante do \textit{Machinetta} é seu algoritmo de alocação de papéis, o \textit{LA-DCOP}. Esse algoritmo utiliza uma abordagem de \textit{token}, no qual um \textit{token}, que representa um papel a ser alocado, é passado entre os RAPs até que algum deles aceite ficar com o papel. Assim, a decisão de quem fica com o papel é feita através da verificação de um limiar que o \textit{token} carrega, onde aquele que possui habilidade superior a aquela especificada no limiar pré-estabelecido do \textit{token}, fica com o papel.
+
+O \textit{software} do \textit{Machinetta} \textit{proxy} é formado por cinco componentes, como visto na Figura \ref{PROXY}. 
+\begin{itemize}
+ \item Comunicação: Trata a comunicação com outros \textit{proxies}.
+ \item Coordination: Trata o raciocínio sobre planos de time e comunicação.
+ \item Estado: A memória de trabalho do \textit{proxy}.
+ \item Autonomia Ajustável: Raciocina sobre quando atuar de forma autônoma ou passar o controle pra outro membro do time.
+ \item Interface RAP: Trata a comunicação com os membros do time.
+\end{itemize}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\linewidth]{figures/proxy.jpg}
+ \label{PROXY}
+ \caption{Arquitetura do \textit{Machinetta} \textit{Proxy} \cite{Scerri_2004_4888}.}
+\end{figure}
+
+Os \textit{proxies} por si só não possuem a habilidade de alcançar objetivos no nível do domínio. Ao invés disso, eles precisam garantir que todas as necessidades requisitadas em nível de domínio são atendidas através da instanciação de papéis apropriados atribuidos aos RAPs devidos.
+
+Toda a execução do \textit{proxy} é dirigida a mensagem. Quando um mensagem chega de um RAP ou de outro \textit{proxy}, uma nova crença é adicionada ao estado do \textit{proxy}. As crenças no estado constituem o conhecimento do \textit{proxy} da situação do time e do ambiente. Este estado opera como um quadro-negro, com componentes escrevendo informações no quadro-negro e outros reagindo a informação escritas. 
+
+
+Para o \textit{Machinetta}, criar o entendimento compartilhado entre humanos e agentes membros de um time é o maior desafio face ao desenvolvimento de iniciativas mistas com organizações de humanos e agentes. O componente de autonomia ajustável resolve as circunstâncias sobre quando o \textit{proxy} deveria agir de forma autônoma ou quando deveria esperar por entrada de um membro do time. Tal raciocínio é vital para o sucesso da implantação de times heterogêneos contendo pessoas. Entretanto, os outros componentes do \textit{proxy} são isolados do processo de raciocínio pelo componente de autonomia ajustável, assim esses componentes precisam conhecer apenas se a última decisão feita pelo \textit{proxy} foi feita de forma autônoma ou por um membro do time.
+
+Através da autonomia ajustável, um agente pode dinamicamente variar o nível de autonomia com o qual ele atua, permitindo explorar habilidade humanas para melhorar sua performance de tarefas, sem tornar-se necessariamente dependente de uma interação humana. Por este motivo, a autonomia ajustável é vista como um ponto crítico para o sucesso de um sistema multiagente com suporte a interação humana.
+
+A formação de times com humanos e agentes artificiais carrega alguns desafios que vão além da interação individual entre humano e agente artificial. O time pode ter sua coordenação afetada enquanto espera uma resposta humana, um time de agentes artificiais pode potencialmente tornar globais decisões que são inaceitáveis para times de humanos, e a diversidade da organização humana no mundo real pode necessitar que agentes gradualmente aprendam modelos individualizados dos humanos membros do time, tomando decisões razoáveis mesmo antes de ter informações suficientes disponíveis.
+
+No \textit{Machinetta}, o componente de interface RAP é o principal ponto de extensão do \textit{proxy} para integração com um novo RAP. Nesta interface é tratada a forma como o RAP e o \textit{proxy} compartilham informação. Por exemplo, a interface RAP para um bombeiro que está atendendo uma situação de desastre poderia ser uma grande interface gráfica, enquanto para um agente artificial bastaria uma comunicação simples via \textit{socket}. 
+
+
+
+
+\subsection{TWProxy}
+
+Apesar de existirem soluções de \textit{teamwork} para ambientes dinâmicos, não existia, por parte das ferramentas anteriores ao \textit{TWProxy} \cite{monteiro2008} \cite{monteiro2009a}, uma preocupação evidente com o tempo de resposta no processo de mudança de atividades dentro do time a ponto de atender a requisitos de tempo real. Essa característica é muito importante quando o ambiente é altamente dinâmico e a qualidade das ações do time pode cair muito com o atraso na mudança de uma estratégia. Por isso, o \textit{TWProxy} mantém o foco na diminuição do tempo de resposta, sem perder a qualidade do gerenciamento das ações de time.
+
+O \textit{TWProxy} é uma nova infraestrutura leve e eficiente que promove coordenação para times de agentes heterogêneos, com a finalidade de atender aos requesitos para o desenvolvimento de times de agentes em ambientes dinâmicos de tempo-real. \textit{TWProxy} é baseado no formalismo de  \textit{Joint Intentions} e inspirado no \textit{Machinetta}, superando algumas de suas limitações e adicionando novas características importantes como:
+
+\begin{itemize}
+ \item uma linguagem simples e extensível para descrição de crenças e planos,
+ \item dois processos eficientes de alocação de tarefas parcialmente distribuídos,
+ \item manutenção de consistência através de comunicação atômica,
+ \item reuso de planos terminados,
+ \item planos invariantes ao número de agentes.
+\end{itemize}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/twproxy_general_model2.jpg}
+    \caption{Teamwork model based on proxy.}
+    \label{twproxy}
+\end{figure}
+
+Na abordagem apresentada pelo \textit{TWProxy}, cada agente é associado a um \textit{proxy}, como visto na Figura \ref{twproxy}. O \textit{proxy} fornece ao agente uma interface de time, permitindo que ele participe de uma equipe sem se preocupar com os detalhes de coordenação. Tudo que ele precisa para compor um time é agir conforme as sugestões do \textit{proxy} e informar a seu \textit{proxy} sobre a atualização de determinadas crenças. Assim, os \textit{proxies} ficam responsáveis por manter a coerência de time através da comunicação \textit{inter-proxy} e do planejamento realizado pelo grupo de \textit{proxies}. O acoplamento simbiôntico do agente individual com o seu \textit{proxy} é o que forma o agente social, onde toda a comunicação e planejamento de time são feitos através dos \textit{proxies}, sem necessidade de consciência social do agente individual.
+
+A forma utilizada pelo \textit{TWProxy} para alcançar a coordenação multiagente é através da alocação de papéis, que pode ser vista também como a alocação de tarefas ou atividades de time. Essa maneira de coordenar os agentes é flexível o suficiente para permitir que agentes heterogêneos componham a equipe, já que o \textit{proxy} não diz como o agente deve executar as atividades. O conhecimento de como executar a tarefa fica por conta do próprio agente e este deve ter conhecimento do que ele está capacitado para fazer. Assim, quando ele informar ao \textit{TWProxy} sobre suas capacidades estará habilitando o \textit{proxy} a realizar um alocação adequada. Como os \textit{proxies} comunicam-se entre si, cada \textit{proxy} conhece as habilidades dos demais membros da equipe.
+
+
+
+\textit{TWProxy} também provê a funcionalidade de quadro-negro distribuído, pois o mesmo mantém o conhecimento compartilhado consistente. Este repositório de crenças pode ajudar os agentes a tomarem decisões. Como o ambiente é parcialmente observável e as percepções dos agentes possuem restrições, o conhecimento compartilhado pelo \textit{TWProxy} reflete um conjunto de crenças que não poderiam ser diretamente percebidas por um único agente.
+
+
+A Figura \ref{twproxy_organizacao} mostra a organização interna do \textit{TWProxy}. A seta 1 indica a chegada de uma nova crença percebida pelo agente que irá atualizar a base de conhecimento. Tal base de conhecimento é utilizado pelo planejador, como indicado na seta 2, para verificar as condições de ativação e término dos planos e para acessar as crenças sobre as capacidades dos membros do time. As setas 3 e 4, indicam que o planejador pode deliberar sobre a alocação de papéis tanto para o agente acoplado quanto para os demais membros do time. Informações de outros \textit{proxies} podem atualizar o conjuto de crenças, como visto na seta 5, e um agente pode compartilhar informações usando o \textit{TWProxy} como meio, como visto na seta 6.
+
+
+
+O planejador do \textit{TWProxy} utiliza o conceito de líder de time para lançar um novo plano. O líder do time pode ser prefixado estaticamente ou definido dinamicamente em tempo de execução. O uso de líder de time evita a necessidade de resolver problemas de conflitos na alocação de papéis, economizando o tempo para reagir às mudanças do ambiente. O líder do time tem as crenças atualizadas e pode lançar de forma consistente um plano de time, porque todos estão comprometidos a compartilhar informações relevantes para o time.
+
+Para alcançar os requerimentos de tempo-real, o processo de alocação de papéis não é inteiramente distribuído. Depois que o líder do time recebe informações sobre as habilidades do time, ele decide sozinho sobre a alocação. Esta é a principal limitação do \textit{TWProxy}, mas também é a principal característica que aumenta a performance na alocação de papéis. São necessárias poucas de trocas mensagens para atualizar o líder do time com as habilidades da equipe, e desta forma o processo é otimizado para alcançar o melhor desempenho.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/twproxy_organizacao2.jpg}
+    \caption{\textit{TWProxy} organization.}
+    \label{twproxy_organizacao}
+\end{figure}
+

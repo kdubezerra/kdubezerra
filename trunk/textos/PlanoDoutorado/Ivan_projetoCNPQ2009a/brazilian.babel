@@ -43,8 +43,7 @@
 		para a obten{\c{c}}{\~a}o do grau de\\
 		Doutor em Ci{\^e}ncia da Computa{\c{c}}{\~a}o
 	}%
-	\def\planodoutoradospecificinfo{Plano de Curso para Doutorado}%
-	\def\editalcnpqspecificinfo{\textbf{Projeto de pesquisa}\\Edital MCT/CNPq N$^o$ 70/2008}%
+	\def\planodoutoradospecificinfo{\textbf{Projeto de Pesquisa}\\Edital MCT/CNPq N$^o$ 70/2008}%
 	\def\proptesespecificinfo{Proposta de Tese de Doutorado}%
 	\def\tcname{Trabalho de Conclus{\~a}o (mestrado)}%
 	\def\tcspecificinfo{%

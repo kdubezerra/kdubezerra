@@ -1,0 +1,2 @@
+\ProvidesFile{edital-cnpq.def}[2002/11/14 Edital CNPq]
+\newcommand{\titlepagespecificinfo}{\editalcnpqspecificinfo}
