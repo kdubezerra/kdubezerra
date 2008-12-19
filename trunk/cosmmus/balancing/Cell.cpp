@@ -11,6 +11,7 @@
 //===========================================static members
 
 Cell*** Cell::cellMatrix = NULL;
+Region* Cell::regionUnderComparison = NULL;
 int Cell::cells_on_a_row = 0;
 long Cell::worldWeight = 0;
 bool Cell::showv = false;
@@ -69,6 +70,7 @@ void Cell::updateVWeight() {
 }
 
 long Cell::getEWeight(short neighbor) {
+  if (neighbor == -1) return 0;
   return edgeWeight[neighbor];
 }
 
@@ -124,6 +126,25 @@ long Cell::getEWeightToRegion(Region* reg) {
 
 long Cell::getWorldWeight() {
   return worldWeight;
+}
+
+long Cell::getDesireToSwap(Region* r) {
+  if (!r) r = regionUnderComparison;
+  return getEWeightToRegion(r) - getEWeightToRegion(getParentRegion());
+}
+
+void Cell::sortByDesireToSwap(list<Cell*>& cell_list, Region* r) {
+  regionUnderComparison = r;
+  cell_list.sort(Cell::compareCellDesireToSwap);
+}
+
+bool Cell::compareCellDesireToSwap(Cell* cA, Cell* cB) {
+  return (cA->getDesireToSwap() > cB->getDesireToSwap());
+}
+
+long Cell::getSwapGain(Cell *c1, Cell *c2) {
+  return 
+    c1->getDesireToSwap(c2->getParentRegion()) + c2->getDesireToSwap(c1->getParentRegion()) - c1->getEWeight(c2) - c2->getEWeight(c1);
 }
 
 long Cell::updateEWeight(short neighbor) {

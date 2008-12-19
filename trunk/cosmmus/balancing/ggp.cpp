@@ -153,7 +153,7 @@ void checkInput() {
           Region::refinePartitioningGlobal();
           break;
         case SDLK_l:
-          //Region::refinePartitioningGlobal();
+          Region::refineKL_kwise(Region::getRegionList());
           break;
         case SDLK_d:
           Server::releaseAllRegions();

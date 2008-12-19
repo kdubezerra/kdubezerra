@@ -69,6 +69,11 @@ class Cell {
     long getAllEdgesWeight();
     long getCellWeight();
     static long getWorldWeight();
+
+    long getDesireToSwap(Region* r = NULL);
+    static void sortByDesireToSwap(list<Cell*>& cell_list, Region* r);
+    static bool compareCellDesireToSwap(Cell* cA, Cell* cB);
+    static long getSwapGain(Cell *c1, Cell *c2);
     
     void updateVWeight();
     long updateEWeight(short neighbor);
@@ -119,6 +124,7 @@ class Cell {
     long edgeWeight[NUM_NEIGH];
     long totalEdgeWeight;
     list<Avatar*> avatars;
+    static Region* regionUnderComparison;
     static Cell*** cellMatrix;
     static int cells_on_a_row;
     static long worldWeight;
