@@ -487,6 +487,62 @@ void Region::refinePartitioningLocal(Region* other, int passes) {
   }
 }
 
+void Region::refineKL_kwise(list<Region*> &regionsToRefine) {
+  list<Region*>::iterator it_r1, it_r2;
+  for (it_r1 = regionsToRefine.begin() ; it_r1 != regionsToRefine.end() ; it_r1++) {
+    for (it_r2 = regionsToRefine.begin() ; it_r2 != regionsToRefine.end() ; it_r2++) {
+      if (*it_r1 == *it_r2) continue;
+      refineKL_pairwise(*it_r1, *it_r2);
+    }
+  }
+}
+
+void Region::refineKL_pairwise(Region* r1, Region* r2) {
+  list<Cell*> cell_list_1, cell_list_2;
+  list<Cell*>::iterator it_c1, it_c2;
+  cell_list_1 = r1->getCells();
+  cell_list_2 = r2->getCells();
+  Cell::sortByDesireToSwap(cell_list_1, r2);
+  Cell::sortByDesireToSwap(cell_list_2, r1);
+  long max_gain = 0;
+  long new_gain = 0;
+  Cell* max_c1 = NULL;
+  Cell* max_c2 = NULL;
+  bool swapping;
+  
+  do {
+    swapping = false;
+    max_gain = 0;
+    for (it_c1 = cell_list_1.begin() ; it_c1 != cell_list_1.end() ; it_c1++) {
+      cout << "C1_desire = " << (*it_c1)->getDesireToSwap(r2) << endl;
+      for (it_c2 = cell_list_2.begin() ; it_c2 != cell_list_2.end() ; it_c2++) {
+        cout << "C2_desire = " << (*it_c2)->getDesireToSwap(r1) << endl;
+        new_gain = Cell::getSwapGain(*it_c1, *it_c2);
+        if (new_gain > max_gain) {
+          max_gain = new_gain;
+          max_c1 = *it_c1;
+          max_c2 = *it_c2;
+          swapping = true;
+        }
+        else if ((*it_c1)->getDesireToSwap(r2) + (*it_c2)->getDesireToSwap(r1) < max_gain) {
+          break;
+          cout << "Should BREAK the inner for( ; ; ) loop here" << endl;
+        }
+      }
+      if ((*it_c1)->getDesireToSwap(r2) + (*it_c2)->getDesireToSwap(r1) < max_gain) {
+        break;
+        cout << "Should BREAK the outter for( ; ; ) loop here" << endl;
+      }
+    }
+    if (swapping) {
+      swapCellsRegions(max_c1, max_c2);
+      cell_list_1.remove(max_c1);
+      cell_list_2.remove(max_c2);
+    }
+
+  } while (swapping);
+}
+
 void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain) {
   list<Cell*> r1_cells(r1->getCells());
   list<Cell*> r2_cells(r2->getCells());

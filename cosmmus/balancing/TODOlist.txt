@@ -1,8 +1,10 @@
-- calcular o peso de uma região como sendo a interação de players dentro da região com os outros players dentro da região, mais a soma da arestas ligadas a outras regiões.
+- fazer o kl, quando remove o par de celulas trocadas da lista de celulas a comparar, recalcular o D de cada célula extraindo as antigas dos grafos do proximo pass, ao invés de fazer como está sendo feito em refinekl_pairwise, onde a celula, mesmo apos ser removida, é comparada com as proximas celulas analisadas
+
+OK - calcular o peso de uma região como sendo a interação de players dentro da região com os outros players dentro da região, mais a soma da arestas ligadas a outras regiões.
 
 - implementar um algoritmo de particionamento usando spectral bissection.
 
-- fazer com que os neighbors da região funcionem
+OK - fazer com que os neighbors da região funcionem
 
 - quando duas células são trocadas entre regiões, pensar no que fazer, em relação aos edge weights assimétricos: simplesmente pegar o máximo, ou levar em consideração que "está OK" se o servidor que ficar com maior edge cut for mais poderoso?
 
@@ -26,3 +28,11 @@ DISTRIBUIR AS CÉLULAS ÓRFÃS DE MANEIRA MAIS "JUSTA" (não por tudo pro server com
 TALVEZ FOSSE BOM POR MENOS REGIÕES, SE O PESO TOTAL FOSSE MENOR, CONTANTO QUE OS SERVIDORES NÃO FICASSEM SOBRECARREGADOS.
 
 POR NA CONTA QUE ÀS VEZES PODE SER DESNECESSÁRIO O CUSTO DE BALANCEAR UMA REDE ONDE OS NODOS ESTÃO DESBALANCEADOS, PORÉM SEM USAR 100% DOS SEUS RECURSOS
+  -> usar o trigger de um dos servidores quando está sobrecarregado: comparar global e local .
+  
+  K-L. pairwise.
+  
+  divide e rebalance
+  
+  
+É DINÂMICO!!! OU SEJA, FAZ O TEMPO TODO!!!
