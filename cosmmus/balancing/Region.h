@@ -102,7 +102,7 @@ class Region {
     void refinePartitioningLocal(Region* other, int passes = 0);
     static bool refineKL_kwise(list<Region*> &regionsToRefine, int passes = 100);
     static bool refineKL_pairwise(Region* r1, Region* r2);
-    static long getBalancingChange(Cell* c1, Cell* c2);
+    static double getBalancingChange(Cell* c1, Cell* c2);
     static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain = NULL);    
 
   protected:
