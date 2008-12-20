@@ -62,7 +62,6 @@ int main (int argc, char* argv[]) {
   tsem = SDL_CreateSemaphore(0);
   msem = SDL_CreateSemaphore(0);
   font = TTF_OpenFont( "FreeSansBold.ttf", 10 );
-  //font = TTF_OpenFont( "lazy.ttf", 10 );
   if (!font)
 	  cerr << "Erro carregando a fonte" << endl;
 
@@ -77,24 +76,21 @@ int main (int argc, char* argv[]) {
         
   if (!player[0]->setImage(PLAYER_ZERO_IMAGE)) cerr << "\nErro setando a imagem do player 0: " << PLAYER_ZERO_IMAGE << endl;
 
-//   for (int i = 0 ; i < CORE_COUNT ; i++) {
-//     thread[i] = SDL_CreateThread( weighter , (void*)(i) );
-//   }
-
   Uint32 time = SDL_GetTicks();
+  Uint32 step_delay = 250;
   Uint32 dtime = time;
   long unsigned count = 0;
   Color bli;
   bli.R = 255;
   bli.G = 155;
   bli.B = 100;
-  //message = TTF_RenderText_Blended( font, "The quick brown fox jumps over the lazy hound", textColor );
-  //if (!message)
-	 // cerr << "Erro renderizando o texto" << endl;
+
   while (1) {
     apply_surface(0,0,bg,screen);
 
-    for (int i = 0 ; i < nplayers ; i ++) player[i]->step(10*(SDL_GetTicks() - time));
+    step_delay = SDL_GetTicks() - time;
+    step_delay = step_delay > 40 ? 40 : step_delay;
+    for (int i = 0 ; i < nplayers ; i ++) player[i]->step(10*step_delay);
     time = SDL_GetTicks();
     
     if (SDL_GetTicks() - dtime >= 25) {
@@ -104,26 +100,12 @@ int main (int argc, char* argv[]) {
     Cell::drawCells(screen);
     Region::drawAllRegions(screen);
     Region::drawAllRegionsWeights(screen, font);
-
-//     for (int i = 0 ; i < CORE_COUNT ; i++)
-//       SDL_SemPost(tsem);
-//     for (int i = 0 ; i < CORE_COUNT ; i++)
-//       SDL_SemWait(msem);
-
-
-//     for (int i = 0 ; i < nplayers ; i ++) player[i]->checkEdgeWeight();
-//     Avatar::drawCells(screen);
-
-    
-//     drawLine(screen, 100, 100, 100, 300, bli);
     
     for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
 
-//              while (1);
     time = SDL_GetTicks();    
     apply_surface( 200, 200, message, screen ); 
     SDL_Flip( screen );
-//     SDL_Delay(5);
     count++;
     checkInput();
   }

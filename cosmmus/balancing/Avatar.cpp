@@ -217,14 +217,23 @@ void Avatar::drawCells (SDL_Surface* output) {
   }  
 }
 
-void Avatar::toggleVertex() {
+bool Avatar::toggleVertex() {
   showv = !showv;
+  return showv;
 }
 
-void Avatar::toggleEdge() {
+bool Avatar::toggleEdge() {
   showe = !showe;
+  return showe;
 }
 
-void Avatar::toggleMobility() {
+bool Avatar::toggleMobility() {
   isMobile = !isMobile;
+  return isMobile;
+}
+
+bool Avatar::setMobility(bool value) {
+  bool oldstate = isMobile;
+  isMobile = value;
+  return oldstate;
 }

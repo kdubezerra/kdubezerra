@@ -267,3 +267,7 @@ string longToString(long l) {
   buf >> _result;
   return _result;
 }
+
+long absolute(long l) {
+  return l >= 0 ? l : -l;
+}

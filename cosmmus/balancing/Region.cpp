@@ -1,6 +1,7 @@
 #include "Region.h"
 #include "Server.h"
 #include "Cell.h"
+#include "Avatar.h"
 
 //===========================================static members
 
@@ -441,6 +442,7 @@ bool Region::testCellSwap(Cell* loc, Cell* ext, long& gain) {
 }
 
 void Region::refinePartitioningGlobal(int passes) {
+  bool mobile_state = Avatar::setMobility(false);
   int debug = -1;
   int passcount = 0;
   Cell* c1 = NULL;
@@ -471,10 +473,12 @@ void Region::refinePartitioningGlobal(int passes) {
     else break;
   }
   checkAllRegionsNeighbors();
-  cout << "Global partitioning refinement concluded." << endl;  
+  Avatar::setMobility(mobile_state);
+  cout << "Global partitioning refinement concluded." << endl;
 }
 
 void Region::refinePartitioningLocal(Region* other, int passes) {
+  bool mobile_state = Avatar::setMobility(false);
   int passcount = 0;
   Cell* c1;
   Cell* c2;
@@ -485,19 +489,31 @@ void Region::refinePartitioningLocal(Region* other, int passes) {
     if (!c1 || !c2) break;
     swapCellsRegions(c1, c2);
   }
+  Avatar::setMobility(mobile_state);
 }
 
-void Region::refineKL_kwise(list<Region*> &regionsToRefine) {
+bool Region::refineKL_kwise(list<Region*> &regionsToRefine, int passes) {
+  bool mobile_state = Avatar::setMobility(false);
   list<Region*>::iterator it_r1, it_r2;
-  for (it_r1 = regionsToRefine.begin() ; it_r1 != regionsToRefine.end() ; it_r1++) {
-    for (it_r2 = regionsToRefine.begin() ; it_r2 != regionsToRefine.end() ; it_r2++) {
-      if (*it_r1 == *it_r2) continue;
-      refineKL_pairwise(*it_r1, *it_r2);
+  bool swapped = true;
+  for (int i = 0 ; i < passes && swapped; i++) {
+    swapped = false;
+    for (it_r1 = regionsToRefine.begin() ; it_r1 != regionsToRefine.end() ; it_r1++) {
+      for (it_r2 = regionsToRefine.begin() ; it_r2 != regionsToRefine.end() ; it_r2++) {
+        if (*it_r1 == *it_r2) continue;
+        if (refineKL_pairwise(*it_r1, *it_r2))
+          swapped = true;
+      }
     }
   }
+  Avatar::setMobility(mobile_state);
+  return swapped;
 }
 
-void Region::refineKL_pairwise(Region* r1, Region* r2) {
+//TODO: TEM QUE SELECIONAR O K QUE MAXIMIZE O GANHO COM O K-L
+//TODO: TEM QUE verificar se pode trocar o par de células (ou seja, se mantém o balanceamento)
+bool Region::refineKL_pairwise(Region* r1, Region* r2) {
+  bool mobile_state = Avatar::setMobility(false);
   list<Cell*> cell_list_1, cell_list_2;
   list<Cell*>::iterator it_c1, it_c2;
   cell_list_1 = r1->getCells();
@@ -509,6 +525,7 @@ void Region::refineKL_pairwise(Region* r1, Region* r2) {
   Cell* max_c1 = NULL;
   Cell* max_c2 = NULL;
   bool swapping;
+  bool swapped = false;
   
   do {
     swapping = false;
@@ -518,7 +535,7 @@ void Region::refineKL_pairwise(Region* r1, Region* r2) {
       for (it_c2 = cell_list_2.begin() ; it_c2 != cell_list_2.end() ; it_c2++) {
         cout << "C2_desire = " << (*it_c2)->getDesireToSwap(r1) << endl;
         new_gain = Cell::getSwapGain(*it_c1, *it_c2);
-        if (new_gain > max_gain) {
+        if (new_gain > max_gain  && getBalancingChange(*it_c1, *it_c2) >= 0) { //TODO: verificar esse método de pegar o balchange
           max_gain = new_gain;
           max_c1 = *it_c1;
           max_c2 = *it_c2;
@@ -529,7 +546,7 @@ void Region::refineKL_pairwise(Region* r1, Region* r2) {
           cout << "Should BREAK the inner for( ; ; ) loop here" << endl;
         }
       }
-      if ((*it_c1)->getDesireToSwap(r2) + (*it_c2)->getDesireToSwap(r1) < max_gain) {
+      if (it_c2 != cell_list_2.end() && (*it_c1)->getDesireToSwap(r2) + (*it_c2)->getDesireToSwap(r1) < max_gain) {
         break;
         cout << "Should BREAK the outter for( ; ; ) loop here" << endl;
       }
@@ -538,9 +555,23 @@ void Region::refineKL_pairwise(Region* r1, Region* r2) {
       swapCellsRegions(max_c1, max_c2);
       cell_list_1.remove(max_c1);
       cell_list_2.remove(max_c2);
+      swapped = true;
     }
-
   } while (swapping);
+  Avatar::setMobility(mobile_state);
+  return swapped;
+}
+
+long Region::getBalancingChange(Cell* c1, Cell* c2) {
+  long power_fraction1 = c1->getParentRegion()->getServer()->getPowerFraction();
+  long power_fraction2 = c2->getParentRegion()->getServer()->getPowerFraction();
+  long weight_fraction_r1_before = c1->getParentRegion()->getRegionWeight() / Cell::getWorldWeight();
+  long weight_fraction_r2_before = c2->getParentRegion()->getRegionWeight() / Cell::getWorldWeight();
+  long weight_fraction_r1_after = (c1->getParentRegion()->getRegionWeight() - c1->getCellWeight() + c2->getCellWeight()) / Cell::getWorldWeight();
+  long weight_fraction_r2_after = (c2->getParentRegion()->getRegionWeight() - c2->getCellWeight() + c1->getCellWeight()) / Cell::getWorldWeight();;
+  long bal_change_r1 = absolute(power_fraction1 - weight_fraction_r1_after) - absolute(power_fraction1 - weight_fraction_r1_before);
+  long bal_change_r2 = absolute(power_fraction2 - weight_fraction_r2_after) - absolute(power_fraction2 - weight_fraction_r2_before);
+  return bal_change_r1 + bal_change_r2;
 }
 
 void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain) {
