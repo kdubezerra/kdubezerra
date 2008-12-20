@@ -55,9 +55,10 @@ class Avatar {
     static void resetCells ();    
     static void drawCells (SDL_Surface* output);
         
-    static void toggleVertex();
-    static void toggleEdge();
-    static void toggleMobility();
+    static bool toggleVertex();
+    static bool toggleEdge();
+    static bool toggleMobility();
+    static bool setMobility(bool value);
 		
   protected:
 
