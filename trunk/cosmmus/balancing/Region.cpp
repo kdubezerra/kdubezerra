@@ -535,7 +535,7 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
       for (it_c2 = cell_list_2.begin() ; it_c2 != cell_list_2.end() ; it_c2++) {
         cout << "C2_desire = " << (*it_c2)->getDesireToSwap(r1) << endl;
         new_gain = Cell::getSwapGain(*it_c1, *it_c2);
-        if (new_gain > max_gain  && getBalancingChange(*it_c1, *it_c2) >= 0) { //TODO: verificar esse método de pegar o balchange
+        if (new_gain > max_gain  && getBalancingChange(*it_c1, *it_c2) >= 0.0f) { //TODO: verificar esse método de pegar o balchange
           max_gain = new_gain;
           max_c1 = *it_c1;
           max_c2 = *it_c2;
@@ -562,15 +562,15 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
   return swapped;
 }
 
-long Region::getBalancingChange(Cell* c1, Cell* c2) {
-  long power_fraction1 = c1->getParentRegion()->getServer()->getPowerFraction();
-  long power_fraction2 = c2->getParentRegion()->getServer()->getPowerFraction();
-  long weight_fraction_r1_before = c1->getParentRegion()->getRegionWeight() / Cell::getWorldWeight();
-  long weight_fraction_r2_before = c2->getParentRegion()->getRegionWeight() / Cell::getWorldWeight();
-  long weight_fraction_r1_after = (c1->getParentRegion()->getRegionWeight() - c1->getCellWeight() + c2->getCellWeight()) / Cell::getWorldWeight();
-  long weight_fraction_r2_after = (c2->getParentRegion()->getRegionWeight() - c2->getCellWeight() + c1->getCellWeight()) / Cell::getWorldWeight();;
-  long bal_change_r1 = absolute(power_fraction1 - weight_fraction_r1_after) - absolute(power_fraction1 - weight_fraction_r1_before);
-  long bal_change_r2 = absolute(power_fraction2 - weight_fraction_r2_after) - absolute(power_fraction2 - weight_fraction_r2_before);
+double Region::getBalancingChange(Cell* c1, Cell* c2) {
+  double power_fraction1 = c1->getParentRegion()->getServer()->getPowerFraction();
+  double power_fraction2 = c2->getParentRegion()->getServer()->getPowerFraction();
+  double weight_fraction_r1_before = (double)c1->getParentRegion()->getRegionWeight() / (double)Cell::getWorldWeight();
+  double weight_fraction_r2_before = (double)c2->getParentRegion()->getRegionWeight() / (double)Cell::getWorldWeight();
+  double weight_fraction_r1_after = ((double)c1->getParentRegion()->getRegionWeight() - (double)c1->getCellWeight() + (double)c2->getCellWeight()) / (double)Cell::getWorldWeight();
+  double weight_fraction_r2_after = ((double)c2->getParentRegion()->getRegionWeight() - (double)c2->getCellWeight() + (double)c1->getCellWeight()) / (double)Cell::getWorldWeight();
+  double bal_change_r1 = abs(power_fraction1 - weight_fraction_r1_after) - abs(power_fraction1 - weight_fraction_r1_before);
+  double bal_change_r2 = abs(power_fraction2 - weight_fraction_r2_after) - abs(power_fraction2 - weight_fraction_r2_before);
   return bal_change_r1 + bal_change_r2;
 }
 
