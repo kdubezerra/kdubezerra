@@ -116,6 +116,9 @@ void checkInput() {
   if( SDL_PollEvent( &event ) ) { //If a key was pressed 
     if( event.type == SDL_KEYDOWN ) { 
       switch( event.key.keysym.sym ) {
+        case SDLK_o:
+          Region::improveBalancing_kwise(Region::getRegionList());
+          break;
         case SDLK_p:
           Avatar::toggleMobility();
           break;

@@ -516,10 +516,6 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
   bool mobile_state = Avatar::setMobility(false);
   list<Cell*> cell_list_1, cell_list_2;
   list<Cell*>::iterator it_c1, it_c2;
-  cell_list_1 = r1->getCells();
-  cell_list_2 = r2->getCells();
-  Cell::sortByDesireToSwap(cell_list_1, r2);
-  Cell::sortByDesireToSwap(cell_list_2, r1);
   long max_gain = 0;
   long new_gain = 0;
   Cell* max_c1 = NULL;
@@ -528,6 +524,10 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
   bool swapped = false;
   
   do {
+    cell_list_1 = r1->getCells();
+    cell_list_2 = r2->getCells();
+    Cell::sortByDesireToSwap(cell_list_1, r2);
+    Cell::sortByDesireToSwap(cell_list_2, r1);
     swapping = false;
     max_gain = 0;
     for (it_c1 = cell_list_1.begin() ; it_c1 != cell_list_1.end() ; it_c1++) {
@@ -535,7 +535,7 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
       for (it_c2 = cell_list_2.begin() ; it_c2 != cell_list_2.end() ; it_c2++) {
         cout << "C2_desire = " << (*it_c2)->getDesireToSwap(r1) << endl;
         new_gain = Cell::getSwapGain(*it_c1, *it_c2);
-        if (new_gain > max_gain  && getBalancingChange(*it_c1, *it_c2) >= 0.0f) { //TODO: verificar esse método de pegar o balchange
+        if (new_gain > max_gain  && getBalancingImprovement(*it_c1, *it_c2) >= 0.0f) { //TODO: verificar esse método de pegar o balchange
           max_gain = new_gain;
           max_c1 = *it_c1;
           max_c2 = *it_c2;
@@ -562,16 +562,93 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
   return swapped;
 }
 
-double Region::getBalancingChange(Cell* c1, Cell* c2) {
+double Region::getBalancingImprovement(Cell* c1, Cell* c2) {
   double power_fraction1 = c1->getParentRegion()->getServer()->getPowerFraction();
   double power_fraction2 = c2->getParentRegion()->getServer()->getPowerFraction();
   double weight_fraction_r1_before = (double)c1->getParentRegion()->getRegionWeight() / (double)Cell::getWorldWeight();
   double weight_fraction_r2_before = (double)c2->getParentRegion()->getRegionWeight() / (double)Cell::getWorldWeight();
   double weight_fraction_r1_after = ((double)c1->getParentRegion()->getRegionWeight() - (double)c1->getCellWeight() + (double)c2->getCellWeight()) / (double)Cell::getWorldWeight();
   double weight_fraction_r2_after = ((double)c2->getParentRegion()->getRegionWeight() - (double)c2->getCellWeight() + (double)c1->getCellWeight()) / (double)Cell::getWorldWeight();
-  double bal_change_r1 = abs(power_fraction1 - weight_fraction_r1_after) - abs(power_fraction1 - weight_fraction_r1_before);
-  double bal_change_r2 = abs(power_fraction2 - weight_fraction_r2_after) - abs(power_fraction2 - weight_fraction_r2_before);
+  double bal_change_r1 = abs(power_fraction1 - weight_fraction_r1_before) - abs(power_fraction1 - weight_fraction_r1_after);
+  double bal_change_r2 = abs(power_fraction2 - weight_fraction_r2_before) - abs(power_fraction2 - weight_fraction_r2_after);
   return bal_change_r1 + bal_change_r2;
+}
+
+void Region::improveBalancing_kwise(list<Region*> &regionsToImproveBalancing, int passes) {
+  bool mobile_state = Avatar::setMobility(false);  
+  Region* rmaxload;
+  Region* rminload;
+
+  list<Region*> balregions = regionsToImproveBalancing;
+
+  while (balregions.size() > 1) {
+    sortByOverload(balregions);
+    rmaxload = balregions.front();
+    rmaxload->alleviateOverload();
+    balregions.pop_front();
+  }
+
+  Avatar::setMobility(mobile_state);
+}
+
+Region* Region::improveBalancing_pairwise(Region* rmaxload, Region* rminload) { //retorna a região curada/saturada
+  bool mobile_state = Avatar::setMobility(false);
+  list<Cell*> cell_list;
+
+  long ideal_weight_rmax = approxLong(rmaxload->getServer()->getPowerFraction() * (double)Cell::getWorldWeight());
+  long ideal_weight_rmin = approxLong(rminload->getServer()->getPowerFraction() * (double)Cell::getWorldWeight());
+  
+  while (rmaxload->getRegionWeight() > ideal_weight_rmax && rminload->getRegionWeight() < ideal_weight_rmin) {
+    cell_list = rmaxload->getCells();
+    Cell::sortByWeight(cell_list);
+    rmaxload->unsubscribe(cell_list.back()); //tira a célula menos pesada
+    rminload->subscribe(cell_list.back());   //entrega-a pro servidor menos sobrecarregado
+  }
+
+  Avatar::setMobility(mobile_state);
+
+  if (rmaxload->getRegionWeight() <= ideal_weight_rmax)
+    return rmaxload;
+  if (rminload->getRegionWeight() >= ideal_weight_rmin)
+    return rminload;
+}
+
+void Region::alleviateOverload() {
+  list<Region*>::iterator it;
+  list<Cell*> regcells;
+  double otherregdim = 999999999;
+  Region* receiving_reg = NULL;
+  long ideal_weight = approxLong(this->getServer()->getPowerFraction() * (double)Cell::getWorldWeight());
+  regcells = this->getCells();
+  Cell::sortByWeight(regcells);
+
+  while (this->getRegionWeight() > ideal_weight) {
+    otherregdim = 999999999;
+    for ( it = regionList.begin() ; it != regionList.end() ; it++ ) {
+      if (*it == this) continue;
+      if ((*it)->getDisbalancingByCell(regcells.back()) < otherregdim) {
+        otherregdim = (*it)->getDisbalancingByCell(regcells.back());
+        receiving_reg = (*it);
+      }      
+    }
+    this->unsubscribe(regcells.back());
+    receiving_reg->subscribe(regcells.back());
+    regcells.pop_back();
+  }
+}
+
+void Region::sortByOverload(list<Region*> &regionList) {
+  regionList.sort(Region::compareRegionsOverload);
+}
+
+bool Region::compareRegionsOverload(Region* rA, Region* rB) {
+  return (rA->getRegionWeight() / rA->getServer()->getServerPower() > rB->getRegionWeight() / rB->getServer()->getServerPower());
+}
+
+double Region::getDisbalancingByCell(Cell* c) {
+  double resulting_overload = (double)(getRegionWeight() + c->getCellWeight()) / (double)Cell::getWorldWeight();
+  double ideal_overload = getServer()->getPowerFraction();
+  return resulting_overload - ideal_overload;
 }
 
 void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain) {

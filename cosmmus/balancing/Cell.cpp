@@ -138,6 +138,10 @@ void Cell::sortByDesireToSwap(list<Cell*>& cell_list, Region* r) {
   cell_list.sort(Cell::compareCellDesireToSwap);
 }
 
+void Cell::sortByWeight(list<Cell*>& cell_list) {
+  cell_list.sort(Cell::compareCellLoad);
+}
+
 bool Cell::compareCellDesireToSwap(Cell* cA, Cell* cB) {
   return (cA->getDesireToSwap() > cB->getDesireToSwap());
 }

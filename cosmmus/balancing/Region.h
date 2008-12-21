@@ -102,8 +102,17 @@ class Region {
     void refinePartitioningLocal(Region* other, int passes = 0);
     static bool refineKL_kwise(list<Region*> &regionsToRefine, int passes = 100);
     static bool refineKL_pairwise(Region* r1, Region* r2);
-    static double getBalancingChange(Cell* c1, Cell* c2);
-    static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain = NULL);    
+    static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain = NULL);
+    static double getBalancingImprovement(Cell* c1, Cell* c2);
+
+    //REBALANCEAMENTO
+
+    static void improveBalancing_kwise(list<Region*> &regionsToImproveBalancing, int passes = 100);
+    static Region* improveBalancing_pairwise(Region* r1, Region* r2);
+    void alleviateOverload();
+    static void sortByOverload(list<Region*> &regionList);
+    static bool compareRegionsOverload(Region* rA, Region* rB);
+    double getDisbalancingByCell(Cell* c);
 
   protected:
     
