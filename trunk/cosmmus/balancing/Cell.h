@@ -72,6 +72,7 @@ class Cell {
 
     long getDesireToSwap(Region* r = NULL);
     static void sortByDesireToSwap(list<Cell*>& cell_list, Region* r);
+    static void sortByWeight(list<Cell*>& cell_list);
     static bool compareCellDesireToSwap(Cell* cA, Cell* cB);
     static long getSwapGain(Cell *c1, Cell *c2);
     

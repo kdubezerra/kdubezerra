@@ -1,5 +1,7 @@
 - fazer o kl, quando remove o par de celulas trocadas da lista de celulas a comparar, recalcular o D de cada célula extraindo as antigas dos grafos do proximo pass, ao invés de fazer como está sendo feito em refinekl_pairwise, onde a celula, mesmo apos ser removida, é comparada com as proximas celulas analisadas
 
+- calcular o k que maximize o gain, pra escabar de mínimos locais (ver paper do k-l)
+
 OK - calcular o peso de uma região como sendo a interação de players dentro da região com os outros players dentro da região, mais a soma da arestas ligadas a outras regiões.
 
 - implementar um algoritmo de particionamento usando spectral bissection.
