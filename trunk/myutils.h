@@ -67,3 +67,4 @@ float simpleScale(float value, float old_max, float new_max);
 string floatToString(float f, int precision = 2);
 string longToString(long l);
 long absolute(long l);
+long minimum(long a, long b);

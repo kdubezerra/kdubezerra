@@ -5,7 +5,7 @@
 #endif
 
 #define CORE_COUNT 4
-#define NUM_SERVERS 4
+#define NUM_SERVERS 2
 
 #define BG_IMAGE "bg.bmp"
 #define VERTEX_IMAGE "vweight.bmp"
@@ -117,7 +117,8 @@ void checkInput() {
     if( event.type == SDL_KEYDOWN ) { 
       switch( event.key.keysym.sym ) {
         case SDLK_o:
-          Region::improveBalancing_kwise(Region::getRegionList());
+          //Region::improveBalancing_kwise(Region::getRegionList());
+          Region::improveBalancing_v2(Region::getRegionList());
           break;
         case SDLK_p:
           Avatar::toggleMobility();

@@ -105,14 +105,22 @@ class Region {
     static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain = NULL);
     static double getBalancingImprovement(Cell* c1, Cell* c2);
 
-    //REBALANCEAMENTO
+    //REBALANCEAMENTO v1
 
     static void improveBalancing_kwise(list<Region*> &regionsToImproveBalancing, int passes = 100);
     static Region* improveBalancing_pairwise(Region* r1, Region* r2);
-    void alleviateOverload();
+    void alleviateOverload(list<Region*> &regionsToImproveBalancing);
     static void sortByOverload(list<Region*> &regionList);
     static bool compareRegionsOverload(Region* rA, Region* rB);
-    double getDisbalancingByCell(Cell* c);
+    double getDisbalanceAfterAddingCell(Cell* c);
+    double getDisbalanceAfterRemovingCell(Cell* c);
+    double getBalancingImprovementForTransfering(Cell* c, Region* r);
+
+    //REBALANCEAMENTO v2
+
+    static void improveBalancing_v2(list<Region*> &regionsToImproveBalancing);
+    void alleviateOverload_v2(list<Region*> &regionsToReceive);
+    Cell* getCellWithWeightLowerThanButClosestTo(long weight);
 
   protected:
     

@@ -153,6 +153,7 @@ double Region::getLoadFraction() {
 }
 
 long Region::getAbsoluteLoad() {
+  checkNeighborsList();
   updateAllEdges();
   //TODO: corrigir isso (tirar alledgesweight da conta, MAS TEM QUE LEMBRAR Q O SERVER VAI FAZER UPLOAD PRO OUTRO SERVER!!!)
   return getAllEdgesWeight() + getRegionWeight();
@@ -235,7 +236,7 @@ void Region::drawLoad(SDL_Surface* output, TTF_Font* font) {
   SDL_Color txtColor;
   static coord ldPos, capPos, percPos;
   string ldTxt, capTxt, percTxt;
-  ldTxt = longToString(getAbsoluteLoad());
+  ldTxt = longToString(getRegionWeight());
   ldPos = cells.front()->getAbsolutePosition();
   ldPos.X = ldPos.X + 3;
   ldPos.Y += 3;
@@ -246,8 +247,8 @@ void Region::drawLoad(SDL_Surface* output, TTF_Font* font) {
   ldSurf = TTF_RenderText_Blended(font, ldTxt.c_str(), txtColor);
   apply_surface(ldPos.X, ldPos.Y, ldSurf, output);
   if (getServer()) {
-    capTxt = longToString(getRegionCapacity());
-    percTxt = floatToString((float)getAbsoluteLoad() / (float)getRegionCapacity());
+    capTxt = longToString(/*getRegionCapacity()*/getServer()->getServerPower());
+    percTxt = floatToString((float)getRegionWeight() / (float)getServer()->getServerPower());
     if (capSurf) SDL_FreeSurface(capSurf);
     if (percSurf) SDL_FreeSurface(percSurf);
     capSurf = TTF_RenderText_Blended(font, capTxt.c_str(), txtColor);
@@ -510,8 +511,23 @@ bool Region::refineKL_kwise(list<Region*> &regionsToRefine, int passes) {
   return swapped;
 }
 
-//TODO: TEM QUE SELECIONAR O K QUE MAXIMIZE O GANHO COM O K-L
-//TODO: TEM QUE verificar se pode trocar o par de células (ou seja, se mantém o balanceamento)
+// KL - SIMPLIFICADO:
+//
+//enquanto (quiser repetir) {
+//  listc1;
+//  listc2;
+//  ordenar listas;
+//  enquanto (listas nao vazias) {
+//    para cada c1 {
+//      para cada c2 {
+//        ver ganho e ver se vale a pena trocar
+//      }
+//    }
+//    trocar, se houver ganho;
+//    remove c1 e c2 das listas;
+//  }
+//}
+
 bool Region::refineKL_pairwise(Region* r1, Region* r2) {
   bool mobile_state = Avatar::setMobility(false);
   list<Cell*> cell_list_1, cell_list_2;
@@ -520,44 +536,49 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
   long new_gain = 0;
   Cell* max_c1 = NULL;
   Cell* max_c2 = NULL;
-  bool swapping;
+  bool swapped_in_this_pass = false;
   bool swapped = false;
+  bool swapping = true;
+
   
-  do {
+  do { //início do kl pairwise
     cell_list_1 = r1->getCells();
     cell_list_2 = r2->getCells();
-    Cell::sortByDesireToSwap(cell_list_1, r2);
-    Cell::sortByDesireToSwap(cell_list_2, r1);
-    swapping = false;
-    max_gain = 0;
-    for (it_c1 = cell_list_1.begin() ; it_c1 != cell_list_1.end() ; it_c1++) {
-      cout << "C1_desire = " << (*it_c1)->getDesireToSwap(r2) << endl;
-      for (it_c2 = cell_list_2.begin() ; it_c2 != cell_list_2.end() ; it_c2++) {
-        cout << "C2_desire = " << (*it_c2)->getDesireToSwap(r1) << endl;
-        new_gain = Cell::getSwapGain(*it_c1, *it_c2);
-        if (new_gain > max_gain  && getBalancingImprovement(*it_c1, *it_c2) >= 0.0f) { //TODO: verificar esse método de pegar o balchange
-          max_gain = new_gain;
-          max_c1 = *it_c1;
-          max_c2 = *it_c2;
-          swapping = true;
-        }
-        else if ((*it_c1)->getDesireToSwap(r2) + (*it_c2)->getDesireToSwap(r1) < max_gain) {
+    swapped_in_this_pass = false;
+    while (!cell_list_1.empty() && !cell_list_2.empty()) { //início de um passe
+      Cell::sortByDesireToSwap(cell_list_1, r2);
+      Cell::sortByDesireToSwap(cell_list_2, r1);
+      swapping = false;
+      max_gain = 0;
+      for (it_c1 = cell_list_1.begin() ; it_c1 != cell_list_1.end() ; it_c1++) {
+        cout << "C1_desire = " << (*it_c1)->getDesireToSwap(r2) << endl;
+        for (it_c2 = cell_list_2.begin() ; it_c2 != cell_list_2.end() ; it_c2++) {
+          cout << "C2_desire = " << (*it_c2)->getDesireToSwap(r1) << endl;
+          new_gain = Cell::getSwapGain(*it_c1, *it_c2);
+          if (new_gain > max_gain  && getBalancingImprovement(*it_c1, *it_c2) >= 0.0f) { //TODO: verificar esse método de pegar o balchange
+            max_gain = new_gain;
+            max_c1 = *it_c1;
+            max_c2 = *it_c2;
+            swapping = true;
+          }
+          else if ((*it_c1)->getDesireToSwap(r2) + (*it_c2)->getDesireToSwap(r1) < max_gain) {
+            break;
+          }
+        } //end for
+        if (it_c2 != cell_list_2.end() && (*it_c1)->getDesireToSwap(r2) + (*it_c2)->getDesireToSwap(r1) < max_gain) {
           break;
-          cout << "Should BREAK the inner for( ; ; ) loop here" << endl;
         }
+      } //end for
+      if (swapping) {
+        swapCellsRegions(max_c1, max_c2);
+        cell_list_1.remove(max_c1);
+        cell_list_2.remove(max_c2);
+        swapped_in_this_pass = true;
+        swapped = true;
       }
-      if (it_c2 != cell_list_2.end() && (*it_c1)->getDesireToSwap(r2) + (*it_c2)->getDesireToSwap(r1) < max_gain) {
-        break;
-        cout << "Should BREAK the outter for( ; ; ) loop here" << endl;
-      }
-    }
-    if (swapping) {
-      swapCellsRegions(max_c1, max_c2);
-      cell_list_1.remove(max_c1);
-      cell_list_2.remove(max_c2);
-      swapped = true;
-    }
-  } while (swapping);
+      else break; //não conseguiu achar mais pares. encerre este passe.
+    } //final do passe
+  } while (swapped_in_this_pass);
   Avatar::setMobility(mobile_state);
   return swapped;
 }
@@ -577,14 +598,13 @@ double Region::getBalancingImprovement(Cell* c1, Cell* c2) {
 void Region::improveBalancing_kwise(list<Region*> &regionsToImproveBalancing, int passes) {
   bool mobile_state = Avatar::setMobility(false);  
   Region* rmaxload;
-  Region* rminload;
 
   list<Region*> balregions = regionsToImproveBalancing;
 
   while (balregions.size() > 1) {
     sortByOverload(balregions);
     rmaxload = balregions.front();
-    rmaxload->alleviateOverload();
+    rmaxload->alleviateOverload(regionsToImproveBalancing);
     balregions.pop_front();
   }
 
@@ -613,27 +633,31 @@ Region* Region::improveBalancing_pairwise(Region* rmaxload, Region* rminload) { 
     return rminload;
 }
 
-void Region::alleviateOverload() {
+void Region::alleviateOverload(list<Region*> &regionsToImproveBalancing) {
   list<Region*>::iterator it;
   list<Cell*> regcells;
-  double otherregdim = 999999999;
-  Region* receiving_reg = NULL;
+  double maximprovement;
+  Region* receiving_reg;
   long ideal_weight = approxLong(this->getServer()->getPowerFraction() * (double)Cell::getWorldWeight());
   regcells = this->getCells();
   Cell::sortByWeight(regcells);
 
   while (this->getRegionWeight() > ideal_weight) {
-    otherregdim = 999999999;
-    for ( it = regionList.begin() ; it != regionList.end() ; it++ ) {
+    receiving_reg = NULL;
+    maximprovement = 0.0f;
+    for ( it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++ ) {
       if (*it == this) continue;
-      if ((*it)->getDisbalancingByCell(regcells.back()) < otherregdim) {
-        otherregdim = (*it)->getDisbalancingByCell(regcells.back());
-        receiving_reg = (*it);
+      if (getBalancingImprovementForTransfering(regcells.back(), *it) > 0.0f) {
+        maximprovement = getBalancingImprovementForTransfering(regcells.back(), *it);
+        receiving_reg = *it;
       }      
     }
-    this->unsubscribe(regcells.back());
-    receiving_reg->subscribe(regcells.back());
-    regcells.pop_back();
+    if (receiving_reg) {
+      this->unsubscribe(regcells.back());
+      receiving_reg->subscribe(regcells.back());
+      regcells.pop_back();
+    }
+    else break; //qualquer outra mudança de células só vai prejudicar o balanceamento
   }
 }
 
@@ -645,11 +669,73 @@ bool Region::compareRegionsOverload(Region* rA, Region* rB) {
   return (rA->getRegionWeight() / rA->getServer()->getServerPower() > rB->getRegionWeight() / rB->getServer()->getServerPower());
 }
 
-double Region::getDisbalancingByCell(Cell* c) {
+double Region::getDisbalanceAfterAddingCell(Cell* c) {
   double resulting_overload = (double)(getRegionWeight() + c->getCellWeight()) / (double)Cell::getWorldWeight();
   double ideal_overload = getServer()->getPowerFraction();
   return resulting_overload - ideal_overload;
 }
+
+double Region::getDisbalanceAfterRemovingCell(Cell* c) {
+  double resulting_overload = (double)(getRegionWeight() - c->getCellWeight()) / (double)Cell::getWorldWeight();
+  double ideal_overload = getServer()->getPowerFraction();
+  return resulting_overload - ideal_overload;
+}
+
+double Region::getBalancingImprovementForTransfering(Cell* c, Region* r) {
+  double power_fraction1 = getServer()->getPowerFraction(); //1 = this; 2 = r
+  double power_fraction2 = r->getServer()->getPowerFraction();
+  double weight_fraction_r1_before = (double)getRegionWeight() / (double)Cell::getWorldWeight();
+  double weight_fraction_r2_before = (double)r->getRegionWeight() / (double)Cell::getWorldWeight();
+  double weight_fraction_r1_after = ((double)getRegionWeight() - (double)c->getCellWeight()) / (double)Cell::getWorldWeight();
+  double weight_fraction_r2_after = ((double)r->getRegionWeight() + (double)c->getCellWeight()) / (double)Cell::getWorldWeight();
+  double bal_change_r1 = abs(power_fraction1 - weight_fraction_r1_before) - abs(power_fraction1 - weight_fraction_r1_after);
+  double bal_change_r2 = abs(power_fraction2 - weight_fraction_r2_before) - abs(power_fraction2 - weight_fraction_r2_after);
+  return bal_change_r1 + bal_change_r2;
+}
+
+void Region::improveBalancing_v2(list<Region*> &regionsToImproveBalancing) {
+  Region* rmaxload;
+  list<Region*> balregions = regionsToImproveBalancing;
+  sortByOverload(balregions);
+  for (list<Region*>::iterator it = balregions.begin() ; it != balregions.end() ; it++) {
+    (*it)->alleviateOverload_v2(balregions);
+  }
+}
+
+void Region::alleviateOverload_v2(list<Region*> &regionsToReceive) {
+  list<Region*> balregions = regionsToReceive;  
+  Region* recv_reg;
+  long weight_to_lose = getRegionWeight() - approxLong((double)Cell::getWorldWeight() * getServer()->getPowerFraction());
+  long recv_server_free_capacity;
+
+  balregions.remove(this);
+  while (!balregions.empty()) {
+    recv_reg = balregions.back();
+    recv_server_free_capacity = approxLong(recv_reg->getServer()->getPowerFraction()*(double)Cell::getWorldWeight()) - recv_reg->getRegionWeight();
+    weight_to_lose = getRegionWeight() - approxLong((double)Cell::getWorldWeight() * getServer()->getPowerFraction());
+    long weight_to_this_reg = minimum(weight_to_lose, recv_server_free_capacity);
+    while (weight_to_this_reg > 0) {
+      Cell* c = getCellWithWeightLowerThanButClosestTo(weight_to_this_reg);
+      if (c) {
+        unsubscribe(c);
+        recv_reg->subscribe(c);
+        weight_to_this_reg -= c->getCellWeight();
+      }
+      else break; // não achou célula que coubesse nesse outro servidor
+    }
+    balregions.pop_back();
+  }
+}
+
+Cell* Region::getCellWithWeightLowerThanButClosestTo(long weight) {
+  list<Cell*> cell_list = this->getCells();
+  Cell::sortByWeight(cell_list);
+  for (list<Cell*>::iterator it = cell_list.begin() ; it != cell_list.end() ; it++) {
+    if ((*it)->getCellWeight() <= weight) return (*it);
+  }
+  return NULL;
+}
+
 
 void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain) {
   list<Cell*> r1_cells(r1->getCells());
