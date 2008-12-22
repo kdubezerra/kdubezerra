@@ -138,6 +138,7 @@ class Region {
     static void improveBalancing_repart(list<Region*> regionsToImproveBalancing);
     void startLocalBalancing();
     Region* getLightestNeighbor(list<Region*> region_list);
+    void checkBalancing();
 
   protected:
     
