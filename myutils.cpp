@@ -271,3 +271,7 @@ string longToString(long l) {
 long absolute(long l) {
   return l >= 0 ? l : -l;
 }
+
+long minimum(long a, long b) {
+  return a > b ? a : b;
+}
