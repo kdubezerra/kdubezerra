@@ -5,7 +5,7 @@
 #endif
 
 #define CORE_COUNT 4
-#define NUM_SERVERS 2
+#define NUM_SERVERS 4
 
 #define BG_IMAGE "bg.bmp"
 #define VERTEX_IMAGE "vweight.bmp"
@@ -26,6 +26,8 @@
 //   int thid;
 // } thread_data;
 
+bool showing_help = false;
+
 Avatar* player[nplayers];
 Server* server[NUM_SERVERS];
 SDL_Surface* screen = NULL;
@@ -40,6 +42,8 @@ TTF_Font *font = NULL;
 SDL_Color textColor = { 255, 255, 255 };
 
 void checkInput();
+void showHelp();
+void toggleShowHelp();
 int weighter (void* data);
 
 //AQUI COMECA O PROGRAMA
@@ -104,7 +108,8 @@ int main (int argc, char* argv[]) {
     for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
 
     time = SDL_GetTicks();    
-    apply_surface( 200, 200, message, screen ); 
+    apply_surface( 200, 200, message, screen );
+    showHelp();
     SDL_Flip( screen );
     count++;
     checkInput();
@@ -116,8 +121,22 @@ void checkInput() {
   if( SDL_PollEvent( &event ) ) { //If a key was pressed 
     if( event.type == SDL_KEYDOWN ) { 
       switch( event.key.keysym.sym ) {
+        case SDLK_h:
+          toggleShowHelp();
+          break;
+        case SDLK_y:
+          Region::improveBalancing_repart(Region::getRegionList());
+          break;
+        case SDLK_u:
+          Region::improveBalancing_kwise(Region::getRegionList()); //aquele que eu achei que podia ser o melhor... ver comentário
+          break;
+        case SDLK_i:
+          Region::improveBalancing_v4(Region::getRegionList());
+          break;
         case SDLK_o:
-          //Region::improveBalancing_kwise(Region::getRegionList());
+          Region::improveBalancing_v3(Region::getRegionList());
+          break;
+        case SDLK_t:
           Region::improveBalancing_v2(Region::getRegionList());
           break;
         case SDLK_p:
@@ -177,5 +196,38 @@ int weighter (void* data) {
     }
     SDL_SemPost(msem);
   }
+}
+
+void toggleShowHelp() {
+  showing_help = !showing_help;
+}
+
+void showHelp() {
+  if (!showing_help) return;
+
+  static SDL_Surface* helpSurf[] = {NULL,NULL,NULL,NULL,NULL,NULL};
+  SDL_Color txtColor;
+  static coord helpPos;
+  helpPos.X = helpPos.Y = 10;
+  //string helpTxt = "p : pausa\nv : mostrar pesos das células\ne : mostrar peso das arestas\nd : fazer todo particionamento do 0\nr : mostrar regiões\nw : mostrar pesos das regiões\n";
+  static string helpTxt[] = {"d : particionamento global, do zero","y : particionamento local, do zero",
+                             "u : distribuir celulas mais leves a regioes que se aproximem da carga ideal",
+                             "t : v2, getCellWithWeightLowerThanButClosestTo","o : v3, mantem a celula mais pesada",
+                             "i : v4, libera as celulas mais leves e algum outro server pega","PROPOSTA: P-Y-L! melhor ate entao. (P-I-L tambem eh bom)"};
+  //ldTxt = longToString(getRegionWeight());
+  //ldPos = cells.front()->getAbsolutePosition();
+  //ldPos.X = ldPos.X + 3;
+  //ldPos.Y += 3;
+  for (int i = 0 ; i < 7 ; i++) {
+    if (helpSurf[i]) SDL_FreeSurface(helpSurf[i]);
+  }
+  txtColor.r = (Uint8) 0xFF;
+  txtColor.g = (Uint8) 0xFF;
+  txtColor.b = (Uint8) 0xFF;
+  for (int i = 0 ; i < 7 ; i++) {
+    helpSurf[i] = TTF_RenderText_Blended(font, helpTxt[i].c_str(), txtColor);
+    apply_surface(helpPos.X, helpPos.Y + 15*i, helpSurf[i], screen);
+  }  
   
+
 }
