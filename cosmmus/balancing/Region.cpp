@@ -822,10 +822,19 @@ Region* Region::getLightestNeighbor(list<Region*> region_list) {
   Region::sortByOverload(all_neighbors);
   cout << "Region::getLightestNeighbor {all_neighbors:\n\t";
   for (list<Region*>::iterator it = all_neighbors.begin() ; it != all_neighbors.end() ; it++) {    
-    cout << (double)(*it)->getRegionWeight() / (double)Cell::getWorldWeight() << "\t";
+    cout << (double)(*it)->getRegionWeight() / (double)(*it)->getServer()->getServerPower() << "\t";
   }
   cout << "\n}" << endl;
+  if (all_neighbors.empty()) return NULL;
   return all_neighbors.back();
+}
+
+void Region::checkBalancing() {
+  if (!getServer()) return;
+  double overload = (double)getRegionWeight() / (double)getServer()->getServerPower();
+  long ideal_weight = approxLong(getServer()->getPowerFraction() * (double)Cell::getWorldWeight() * DISBAL_TOLERANCE);
+  if (overload > DISBAL_TOLERANCE && getRegionWeight() > ideal_weight)
+    startLocalBalancing();
 }
 
 void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain) {

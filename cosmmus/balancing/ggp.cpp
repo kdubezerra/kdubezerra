@@ -5,7 +5,7 @@
 #endif
 
 #define CORE_COUNT 4
-#define NUM_SERVERS 4
+#define NUM_SERVERS 10
 
 #define BG_IMAGE "bg.bmp"
 #define VERTEX_IMAGE "vweight.bmp"
@@ -89,7 +89,7 @@ int main (int argc, char* argv[]) {
   bli.G = 155;
   bli.B = 100;
 
-  while (1) {
+  while (1) { // CICLO PRINCIPAL
     apply_surface(0,0,bg,screen);
 
     step_delay = SDL_GetTicks() - time;
@@ -113,6 +113,11 @@ int main (int argc, char* argv[]) {
     SDL_Flip( screen );
     count++;
     checkInput();
+    
+    for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {
+      (*it)->checkBalancing();
+    }                    
+
   }
 }
 
@@ -167,7 +172,7 @@ void checkInput() {
             server[i]->assignRegion(*it);
             i++;
             cout << "Server " << i << " receives region " << *it << endl;
-          }                    
+          }
           Region::partitionWorld();
           Region::checkAllRegionsNeighbors();
           i = 0;
@@ -214,10 +219,6 @@ void showHelp() {
                              "u : distribuir celulas mais leves a regioes que se aproximem da carga ideal",
                              "t : v2, getCellWithWeightLowerThanButClosestTo","o : v3, mantem a celula mais pesada",
                              "i : v4, libera as celulas mais leves e algum outro server pega","PROPOSTA: P-Y-L! melhor ate entao. (P-I-L tambem eh bom)"};
-  //ldTxt = longToString(getRegionWeight());
-  //ldPos = cells.front()->getAbsolutePosition();
-  //ldPos.X = ldPos.X + 3;
-  //ldPos.Y += 3;
   for (int i = 0 ; i < 7 ; i++) {
     if (helpSurf[i]) SDL_FreeSurface(helpSurf[i]);
   }

@@ -1,3 +1,37 @@
+
+==============   CORRECTION LIST   ==============
+
+*** ver onde tem powerfraction, worldweight, etc., pois isso não é a medida da carga ideal de cada servidor!
+
+*** ver onde tem sort(), porque não tá funcionando, pelo menos, pra all_neighbors no findLightestNeighbor(list_of_regions);
+
+*** ver por que diabos que estão surgindo células órfãs no balanceamento dinâmico (region->checkBalacing())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+============================== old to-do list ==============================
+
+
+
+
+
+
+
+
 - fazer o kl, quando remove o par de celulas trocadas da lista de celulas a comparar, recalcular o D de cada célula extraindo as antigas dos grafos do proximo pass, ao invés de fazer como está sendo feito em refinekl_pairwise, onde a celula, mesmo apos ser removida, é comparada com as proximas celulas analisadas
 
 - calcular o k que maximize o gain, pra escabar de mínimos locais (ver paper do k-l)
