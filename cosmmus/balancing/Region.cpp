@@ -3,6 +3,8 @@
 #include "Cell.h"
 #include "Avatar.h"
 
+#define MIN_BAL_IMPROVEMENT 0.0f
+
 //===========================================static members
 
 list<Region*> Region::regionList;
@@ -104,6 +106,13 @@ bool Region::hasCell(Cell* c) {
     if (*it == c)
       return true;
   return false;
+}
+
+Cell* Region::getHeaviestCell() {
+  if (cells.empty()) return NULL;
+  list<Cell*> celllist = cells;
+  Cell::sortByWeight(celllist);
+  return celllist.front();
 }
 
 void Region::setRegionCapacity(long cap) {
@@ -392,7 +401,14 @@ void Region::distributeOrphanCells() {
 void Region::getProportionalPartition() {  
   long worldWeightFraction = approxLong((double)Cell::getWorldWeight() * getServer()->getPowerFraction());
   long _debug_region_weight;
-  Cell* c = Cell::getHeaviestFreeCell();
+  Cell* c = NULL;
+  
+  if(getRegionWeight() > 0 && Cell::getHighestEdgeFreeNeighbor(getCells())) {
+    c = Cell::getHighestEdgeFreeNeighbor(getCells());
+  } else {
+    c = Cell::getHeaviestFreeCell();
+  }
+
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
   //while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
   while (getRegionWeight() < worldWeightFraction) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
@@ -555,7 +571,7 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
         for (it_c2 = cell_list_2.begin() ; it_c2 != cell_list_2.end() ; it_c2++) {
           cout << "C2_desire = " << (*it_c2)->getDesireToSwap(r1) << endl;
           new_gain = Cell::getSwapGain(*it_c1, *it_c2);
-          if (new_gain > max_gain  && getBalancingImprovement(*it_c1, *it_c2) >= 0.0f) { //TODO: verificar esse método de pegar o balchange
+          if (new_gain > max_gain  && getBalancingImprovement(*it_c1, *it_c2) >= MIN_BAL_IMPROVEMENT) { //TODO: verificar esse método de pegar o balchange
             max_gain = new_gain;
             max_c1 = *it_c1;
             max_c2 = *it_c2;
@@ -736,6 +752,81 @@ Cell* Region::getCellWithWeightLowerThanButClosestTo(long weight) {
   return NULL;
 }
 
+void Region::improveBalancing_v3(list<Region*> regionsToImproveBalancing) {
+  for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
+    Cell* c = (*it)->getHeaviestCell(); //pegar a célula mais pesada da região -> c
+    (*it)->unsubscribeAllCells(); //limpar a região
+    (*it)->subscribe(c); //atribuir c de volta à região
+  }
+  for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
+    (*it)->getProportionalPartition(); //fazer novament o ggp na região, partindo de cada c.
+  }
+}
+
+void Region::improveBalancing_v4(list<Region*> regionsToImproveBalancing) {
+  //LIBERANDO O PESO DE SERVIDORES SOBRECARREGADOS
+  Region::sortByOverload(regionsToImproveBalancing);
+  for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
+    list<Cell*> celllist = (*it)->getCells();
+    Cell::sortByWeight(celllist);
+    while (!celllist.empty() && (*it)->getWeightFraction() > (*it)->getServer()->getPowerFraction()) {
+      (*it)->unsubscribe(celllist.back());
+      celllist.pop_back();
+    }
+  }
+  
+  //COLETANDO AS CÉLULAS LIVRES
+  Region::sortByOverload(regionsToImproveBalancing);
+  while (!regionsToImproveBalancing.empty()) {
+    regionsToImproveBalancing.back()->getProportionalPartition();
+    regionsToImproveBalancing.pop_back();
+  }
+}
+
+void Region::improveBalancing_repart(list<Region*> regionsToImproveBalancing) {
+  for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
+    (*it)->unsubscribeAllCells();
+  }
+  for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
+    (*it)->getProportionalPartition();
+  }
+}
+
+void Region::startLocalBalancing() {
+  list<Region*> local_group;
+  local_group.push_back(this);
+  long total_weight = this->getRegionWeight();
+  long total_capacity = this->getServer()->getServerPower();
+  double average_overload = this->getRegionWeight() / this->getServer()->getServerPower();
+  while (average_overload > 1.0f && average_overload > Cell::getWorldWeight()/Server::getMultiserverPower()) {
+    Region* next_region = getLightestNeighbor(local_group);
+    if (!next_region) break;
+    total_weight += next_region->getRegionWeight();
+    total_capacity += next_region->getServer()->getServerPower();
+    average_overload = total_weight / total_capacity;
+    local_group.push_back(next_region);    
+  }
+  Region::improveBalancing_repart(local_group);
+}
+
+Region* Region::getLightestNeighbor(list<Region*> region_list) {
+  list<Region*> all_neighbors;
+  for (list<Region*>::iterator it = region_list.begin() ; it != region_list.end() ; it++) {
+    (*it)->checkNeighborsList();
+    list<Region*> next_neighs = (*it)->getNeighbors();
+    all_neighbors.merge(next_neighs);
+  }
+  for (list<Region*>::iterator it = region_list.begin() ; it != region_list.end() ; it++) {    
+    all_neighbors.remove(*it);
+  }
+  Region::sortByOverload(all_neighbors);
+  cout << "Region::getLightestNeighbor {all_neighbors:\n\t";
+  for (list<Region*>::iterator it = all_neighbors.begin() ; it != all_neighbors.end() ; it++) {    
+    cout << (double)(*it)->getRegionWeight() / (double)Cell::getWorldWeight() << "\t";
+  }
+  cout << "\n}" << endl;
+  return all_neighbors.back();
+}
 
 void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain) {
   list<Cell*> r1_cells(r1->getCells());
