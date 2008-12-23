@@ -53,6 +53,7 @@ class Region {
     long getAbsoluteLoad();    		
     static long getWorldLoad();
     static long getEdgeCut();
+    double getRegionOverload();
 
     void updateEWeight(Region* neighbor);
     void updateAllEdges();
@@ -93,6 +94,7 @@ class Region {
     static void sortRegionsByFreeCapacity();
     static bool compareRegionsFreeCapacity(Region* rA, Region* rB);
     static void sortRegionsByServerPower();
+    static void sortRegionsByServerPower(list<Region*> &regionlist);
     static bool compareServerPower(Region* rA, Region* rB);
 
     // FASE DE REFINAMENTO
