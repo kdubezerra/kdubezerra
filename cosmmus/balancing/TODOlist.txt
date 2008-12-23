@@ -11,9 +11,15 @@
 
 
 
+==============   TESTS LIST   ==============
 
+retorno: load e migration
 
-
+idéia de gráficos de barras: cada barra = weight + load de cada região em cada esquema de balanceamento
+idéias de comparações:
+  com e sem a3
+  global e local (load e migration)
+  com e sem K-L
 
 
 

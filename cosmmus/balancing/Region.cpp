@@ -120,7 +120,8 @@ void Region::setRegionCapacity(long cap) {
 }
 
 long Region::getRegionCapacity(void) {
-  return regionCapacity;
+  //return regionCapacity;
+  return getServer()->getServerPower();
 }
 
 long Region::getRWeight() {
@@ -182,6 +183,10 @@ long Region::getEdgeCut() {
     ec += (*it)->getAllEdgesWeight();
   }
   return ec;
+}
+
+double Region::getRegionOverload() {
+  return (double)getRegionWeight() / (double)getServer()->getServerPower();
 }
 
 void Region::updateEWeight(Region* neighRegion) {
@@ -411,7 +416,7 @@ void Region::getProportionalPartition() {
 
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
   //while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
-  while (getRegionWeight() < worldWeightFraction) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  while (getRegionWeight() < worldWeightFraction /*|| getRegionOverload() < 1.0f*/) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
     //if (getServer() && getAbsoluteLoad() > getRegionCapacity()) break;
     _debug_region_weight = getRegionWeight();
     if (!c) return;    
@@ -787,6 +792,7 @@ void Region::improveBalancing_repart(list<Region*> regionsToImproveBalancing) {
   for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
     (*it)->unsubscribeAllCells();
   }
+  Region::sortRegionsByServerPower(regionsToImproveBalancing);
   for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
     (*it)->getProportionalPartition();
   }
@@ -797,13 +803,13 @@ void Region::startLocalBalancing() {
   local_group.push_back(this);
   long total_weight = this->getRegionWeight();
   long total_capacity = this->getServer()->getServerPower();
-  double average_overload = this->getRegionWeight() / this->getServer()->getServerPower();
+  double average_overload = (double)total_weight / (double)total_capacity;
   while (average_overload > 1.0f && average_overload > Cell::getWorldWeight()/Server::getMultiserverPower()) {
     Region* next_region = getLightestNeighbor(local_group);
     if (!next_region) break;
     total_weight += next_region->getRegionWeight();
     total_capacity += next_region->getServer()->getServerPower();
-    average_overload = total_weight / total_capacity;
+    average_overload = (double)total_weight / (double)total_capacity;
     local_group.push_back(next_region);    
   }
   Region::improveBalancing_repart(local_group);
@@ -826,14 +832,14 @@ Region* Region::getLightestNeighbor(list<Region*> region_list) {
   }
   cout << "\n}" << endl;
   if (all_neighbors.empty()) return NULL;
-  return all_neighbors.back();
+  return all_neighbors.back(); //retorna o ultimo da lista ordenada por overload, ou seja, o menos overloaded
 }
 
 void Region::checkBalancing() {
   if (!getServer()) return;
   double overload = (double)getRegionWeight() / (double)getServer()->getServerPower();
-  long ideal_weight = approxLong(getServer()->getPowerFraction() * (double)Cell::getWorldWeight() * DISBAL_TOLERANCE);
-  if (overload > DISBAL_TOLERANCE && getRegionWeight() > ideal_weight)
+  long ideal_weight = approxLong(getServer()->getPowerFraction() * (double)Cell::getWorldWeight());
+  if (overload > DISBAL_TOLERANCE && getRegionWeight() > approxLong((double)ideal_weight * DISBAL_TOLERANCE))
     startLocalBalancing();
 }
 
@@ -862,4 +868,8 @@ bool Region::compareServerPower(Region* rA, Region* rB) {
 
 void Region::sortRegionsByServerPower() {
   regionList.sort(Region::compareServerPower);
+}
+
+void Region::sortRegionsByServerPower(list<Region*> &region_list) {
+  region_list.sort(Region::compareServerPower);
 }

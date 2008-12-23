@@ -5,7 +5,7 @@
 #endif
 
 #define CORE_COUNT 4
-#define NUM_SERVERS 10
+#define NUM_SERVERS 5
 
 #define BG_IMAGE "bg.bmp"
 #define VERTEX_IMAGE "vweight.bmp"
@@ -55,7 +55,7 @@ int main (int argc, char* argv[]) {
   SDL_EnableKeyRepeat(400, 10);
   
   for (int i = 0 ; i < NUM_SERVERS ; i++) {
-    server[i] = new Server (100*(rand() % 2500));
+    server[i] = new Server (10*(rand() % 2500));
     cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
   }
   
