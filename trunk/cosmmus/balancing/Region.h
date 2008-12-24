@@ -89,7 +89,7 @@ class Region {
     static void partitionWorld();
     static void distributeOrphanCells();
     static void balanceWorld();
-    void getProportionalPartition(long weight_to_divide);
+    void getProportionalPartition(long weight_to_divide, long free_capacity);
     static void balanceRegions(list<Region*>& regList);
     static void sortRegionsByFreeCapacity();
     static bool compareRegionsFreeCapacity(Region* rA, Region* rB);
@@ -140,6 +140,7 @@ class Region {
     static void improveBalancing_repart(list<Region*> regionsToImproveBalancing);
     void startLocalBalancing();
     Region* getLightestNeighbor(list<Region*> region_list);
+    static Region* getHighestCapacityFreeRegion();
     void checkBalancing();
 
   protected:
