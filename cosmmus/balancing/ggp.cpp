@@ -5,7 +5,9 @@
 #endif
 
 #define CORE_COUNT 4
-#define NUM_SERVERS 5
+#define NUM_SERVERS 4
+
+#define REBAL_INTERVAL 0 // 1000
 
 #define BG_IMAGE "bg.bmp"
 #define VERTEX_IMAGE "vweight.bmp"
@@ -40,6 +42,7 @@ SDL_Thread* thread[CORE_COUNT];
 SDL_Surface* message = NULL;
 TTF_Font *font = NULL;
 SDL_Color textColor = { 255, 255, 255 };
+Uint32 lastbal = 0;
 
 void checkInput();
 void showHelp();
@@ -55,7 +58,7 @@ int main (int argc, char* argv[]) {
   SDL_EnableKeyRepeat(400, 10);
   
   for (int i = 0 ; i < NUM_SERVERS ; i++) {
-    server[i] = new Server (10*(rand() % 2500));
+    server[i] = new Server (200*(rand() % 2500));
     cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
   }
   
@@ -114,10 +117,12 @@ int main (int argc, char* argv[]) {
     count++;
     checkInput();
     
-    for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {
-      (*it)->checkBalancing();
-    }                    
-
+    if (SDL_GetTicks() > lastbal + REBAL_INTERVAL) {
+      lastbal = SDL_GetTicks();
+      for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {      
+        (*it)->checkBalancing();
+      }
+    }
   }
 }
 
@@ -217,8 +222,8 @@ void showHelp() {
   //string helpTxt = "p : pausa\nv : mostrar pesos das células\ne : mostrar peso das arestas\nd : fazer todo particionamento do 0\nr : mostrar regiões\nw : mostrar pesos das regiões\n";
   static string helpTxt[] = {"d : particionamento global, do zero","y : particionamento local, do zero",
                              "u : distribuir celulas mais leves a regioes que se aproximem da carga ideal",
-                             "t : v2, getCellWithWeightLowerThanButClosestTo","o : v3, mantem a celula mais pesada",
-                             "i : v4, libera as celulas mais leves e algum outro server pega","PROPOSTA: P-Y-L! melhor ate entao. (P-I-L tambem eh bom)"};
+                             "t : v2 (NAO!), getCellWithWeightLowerThanButClosestTo","o : v3 (parece funcionar, mas *NAO* da forma ideal), mantem a celula mais pesada",
+                             "i : v4 (NAO! bagunca muito as regioes), libera as celulas mais leves e algum outro server pega","PROPOSTA: P-Y-L! melhor ate entao. (P-I-L tambem eh bom)"};
   for (int i = 0 ; i < 7 ; i++) {
     if (helpSurf[i]) SDL_FreeSurface(helpSurf[i]);
   }
