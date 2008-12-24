@@ -384,7 +384,7 @@ void Region::disposeRegions() {
 void Region::partitionWorld() {
   sortRegionsByServerPower();
   for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
-    (*it)->getProportionalPartition();
+    (*it)->getProportionalPartition(Cell::getWorldWeight());
   }
   if (Cell::getOrphanCell()) {
     //distributeOrphanCells();
@@ -403,8 +403,8 @@ void Region::distributeOrphanCells() {
   }
 }
 
-void Region::getProportionalPartition() {  
-  long worldWeightFraction = approxLong((double)Cell::getWorldWeight() * getServer()->getPowerFraction());
+void Region::getProportionalPartition(long weight_to_divide) {
+  long weightFraction = approxLong((double)weight_to_divide * getServer()->getPowerFraction());
   long _debug_region_weight;
   Cell* c = NULL;
   
@@ -416,7 +416,7 @@ void Region::getProportionalPartition() {
 
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
   //while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
-  while (getRegionWeight() < worldWeightFraction /*|| getRegionOverload() < 1.0f*/) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  while (getRegionWeight() < weightFraction /*|| getRegionOverload() < 1.0f*/) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
     //if (getServer() && getAbsoluteLoad() > getRegionCapacity()) break;
     _debug_region_weight = getRegionWeight();
     if (!c) return;    
@@ -605,14 +605,24 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
 }
 
 double Region::getBalancingImprovement(Cell* c1, Cell* c2) {
-  double power_fraction1 = c1->getParentRegion()->getServer()->getPowerFraction();
+  double ideal_overload = (double)Cell::getWorldWeight() / (double)Server::getMultiserverPower();
+  Region* r1 = c1->getParentRegion();
+  Region* r2 = c2->getParentRegion();
+  double overload_r1_before = (double)r1->getRegionWeight() / (double)r1->getServer()->getServerPower();
+  double overload_r2_before = (double)r2->getRegionWeight() / (double)r2->getServer()->getServerPower();
+  double overload_r1_after = (double)(r1->getRegionWeight() - c1->getCellWeight() + c2->getCellWeight()) / (double)r1->getServer()->getServerPower();
+  double overload_r2_after = (double)(r2->getRegionWeight() - c2->getCellWeight() + c1->getCellWeight()) / (double)r2->getServer()->getServerPower();
+
+  double bal_change_r1 = abs(ideal_overload - overload_r1_before) - abs(ideal_overload - overload_r1_after);
+  double bal_change_r2 = abs(ideal_overload - overload_r2_before) - abs(ideal_overload - overload_r2_after);
+  /*double power_fraction1 = c1->getParentRegion()->getServer()->getPowerFraction();
   double power_fraction2 = c2->getParentRegion()->getServer()->getPowerFraction();
   double weight_fraction_r1_before = (double)c1->getParentRegion()->getRegionWeight() / (double)Cell::getWorldWeight();
   double weight_fraction_r2_before = (double)c2->getParentRegion()->getRegionWeight() / (double)Cell::getWorldWeight();
   double weight_fraction_r1_after = ((double)c1->getParentRegion()->getRegionWeight() - (double)c1->getCellWeight() + (double)c2->getCellWeight()) / (double)Cell::getWorldWeight();
   double weight_fraction_r2_after = ((double)c2->getParentRegion()->getRegionWeight() - (double)c2->getCellWeight() + (double)c1->getCellWeight()) / (double)Cell::getWorldWeight();
   double bal_change_r1 = abs(power_fraction1 - weight_fraction_r1_before) - abs(power_fraction1 - weight_fraction_r1_after);
-  double bal_change_r2 = abs(power_fraction2 - weight_fraction_r2_before) - abs(power_fraction2 - weight_fraction_r2_after);
+  double bal_change_r2 = abs(power_fraction2 - weight_fraction_r2_before) - abs(power_fraction2 - weight_fraction_r2_after);*/
   return bal_change_r1 + bal_change_r2;
 }
 
@@ -668,7 +678,7 @@ void Region::alleviateOverload(list<Region*> &regionsToImproveBalancing) {
     maximprovement = 0.0f;
     for ( it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++ ) {
       if (*it == this) continue;
-      if (getBalancingImprovementForTransfering(regcells.back(), *it) > 0.0f) {
+      if (getBalancingImprovementForTransfering(regcells.back(), *it) > maximprovement) {
         maximprovement = getBalancingImprovementForTransfering(regcells.back(), *it);
         receiving_reg = *it;
       }      
@@ -703,14 +713,23 @@ double Region::getDisbalanceAfterRemovingCell(Cell* c) {
 }
 
 double Region::getBalancingImprovementForTransfering(Cell* c, Region* r) {
-  double power_fraction1 = getServer()->getPowerFraction(); //1 = this; 2 = r
-  double power_fraction2 = r->getServer()->getPowerFraction();
-  double weight_fraction_r1_before = (double)getRegionWeight() / (double)Cell::getWorldWeight();
-  double weight_fraction_r2_before = (double)r->getRegionWeight() / (double)Cell::getWorldWeight();
-  double weight_fraction_r1_after = ((double)getRegionWeight() - (double)c->getCellWeight()) / (double)Cell::getWorldWeight();
-  double weight_fraction_r2_after = ((double)r->getRegionWeight() + (double)c->getCellWeight()) / (double)Cell::getWorldWeight();
-  double bal_change_r1 = abs(power_fraction1 - weight_fraction_r1_before) - abs(power_fraction1 - weight_fraction_r1_after);
-  double bal_change_r2 = abs(power_fraction2 - weight_fraction_r2_before) - abs(power_fraction2 - weight_fraction_r2_after);
+  double ideal_overload = (double)Cell::getWorldWeight() / (double)Server::getMultiserverPower();
+  double overload_r1_before = (double)this->getRegionWeight() / (double)this->getServer()->getServerPower();
+  double overload_r2_before = (double)r->getRegionWeight() / (double)r->getServer()->getServerPower();
+  double overload_r1_after = (double)(this->getRegionWeight() - c->getCellWeight()) / (double)this->getServer()->getServerPower();
+  double overload_r2_after = (double)(r->getRegionWeight() + c->getCellWeight()) / (double)r->getServer()->getServerPower();
+
+  double bal_change_r1 = abs(ideal_overload - overload_r1_before) - abs(ideal_overload - overload_r1_after);
+  double bal_change_r2 = abs(ideal_overload - overload_r2_before) - abs(ideal_overload - overload_r2_after);
+
+  //double power_fraction1 = this->getServer()->getPowerFraction(); //1 = this; 2 = r
+  //double power_fraction2 = r->getServer()->getPowerFraction();
+  //double weight_fraction_r1_before = (double)this->getRegionWeight() / (double)Cell::getWorldWeight();
+  //double weight_fraction_r2_before = (double)r->getRegionWeight() / (double)Cell::getWorldWeight();
+  //double weight_fraction_r1_after = ((double)getRegionWeight() - (double)c->getCellWeight()) / (double)Cell::getWorldWeight();
+  //double weight_fraction_r2_after = ((double)r->getRegionWeight() + (double)c->getCellWeight()) / (double)Cell::getWorldWeight();
+  //double bal_change_r1 = abs(power_fraction1 - weight_fraction_r1_before) - abs(power_fraction1 - weight_fraction_r1_after);
+  //double bal_change_r2 = abs(power_fraction2 - weight_fraction_r2_before) - abs(power_fraction2 - weight_fraction_r2_after);
   return bal_change_r1 + bal_change_r2;
 }
 
@@ -758,20 +777,26 @@ Cell* Region::getCellWithWeightLowerThanButClosestTo(long weight) {
 }
 
 void Region::improveBalancing_v3(list<Region*> regionsToImproveBalancing) {
+  long weight_to_divide = 0;
   for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
+    weight_to_divide += (*it)->getRegionWeight();
     Cell* c = (*it)->getHeaviestCell(); //pegar a célula mais pesada da região -> c
     (*it)->unsubscribeAllCells(); //limpar a região
-    (*it)->subscribe(c); //atribuir c de volta à região
+    if (c) {
+      (*it)->subscribe(c); //atribuir c de volta à região
+    }
   }
   for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
-    (*it)->getProportionalPartition(); //fazer novament o ggp na região, partindo de cada c.
+    (*it)->getProportionalPartition(weight_to_divide); //fazer novament o ggp na região, partindo de cada c.
   }
 }
 
 void Region::improveBalancing_v4(list<Region*> regionsToImproveBalancing) {
   //LIBERANDO O PESO DE SERVIDORES SOBRECARREGADOS
+  long weight_to_divide = 0;
   Region::sortByOverload(regionsToImproveBalancing);
   for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
+    weight_to_divide += (*it)->getRegionWeight();
     list<Cell*> celllist = (*it)->getCells();
     Cell::sortByWeight(celllist);
     while (!celllist.empty() && (*it)->getWeightFraction() > (*it)->getServer()->getPowerFraction()) {
@@ -783,18 +808,20 @@ void Region::improveBalancing_v4(list<Region*> regionsToImproveBalancing) {
   //COLETANDO AS CÉLULAS LIVRES
   Region::sortByOverload(regionsToImproveBalancing);
   while (!regionsToImproveBalancing.empty()) {
-    regionsToImproveBalancing.back()->getProportionalPartition();
+    regionsToImproveBalancing.back()->getProportionalPartition(weight_to_divide);
     regionsToImproveBalancing.pop_back();
   }
 }
 
 void Region::improveBalancing_repart(list<Region*> regionsToImproveBalancing) {
+  long weight_to_divide = 0;
   for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
+    weight_to_divide += (*it)->getRegionWeight();
     (*it)->unsubscribeAllCells();
   }
   Region::sortRegionsByServerPower(regionsToImproveBalancing);
   for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
-    (*it)->getProportionalPartition();
+    (*it)->getProportionalPartition(weight_to_divide);
   }
 }
 
@@ -813,6 +840,7 @@ void Region::startLocalBalancing() {
     local_group.push_back(next_region);    
   }
   Region::improveBalancing_repart(local_group);
+  //Region::improveBalancing_kwise(local_group);
 }
 
 Region* Region::getLightestNeighbor(list<Region*> region_list) {
