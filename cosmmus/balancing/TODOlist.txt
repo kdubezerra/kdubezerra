@@ -3,9 +3,9 @@
 
 *** ver onde tem powerfraction, worldweight, etc., pois isso não é a medida da carga ideal de cada servidor!
 
-*** ver onde tem sort(), porque não tá funcionando, pelo menos, pra all_neighbors no findLightestNeighbor(list_of_regions);
+*** ver por que diabos que estão surgindo células órfãs no balanceamento dinâmico (region->checkBalacing()), quando seleciona região livre
 
-*** ver por que diabos que estão surgindo células órfãs no balanceamento dinâmico (region->checkBalacing())
+*** 
 
 
 
@@ -21,7 +21,8 @@ idéias de comparações:
   global e local (load e migration)
   com e sem K-L
 
-
+comparar migration: com e sem disbal_tolerance.
+comparar load: com e sem disbal_tolerance no K-L.
 
 
 
