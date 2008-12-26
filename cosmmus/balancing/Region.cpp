@@ -415,15 +415,12 @@ void Region::getProportionalPartition(long weight_to_divide, long free_capacity)
   }
 
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
-  //while (c && getRWeight() < Cell::getWorldWeight() / getNumRegions()) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
   while (getRegionWeight() < weightFraction /*|| getRegionOverload() < 1.0f*/) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
-    //if (getServer() && getAbsoluteLoad() > getRegionCapacity()) break;
     _debug_region_weight = getRegionWeight();
     if (!c) return;    
     subscribe(c);
     c = Cell::getHighestEdgeFreeNeighbor(getCells());
     if (!c) c = Cell::getHeaviestFreeCell();
-    //TODO: corrigir para usar o load, porém corrigido (LEVAR EM CONTA QUE O SERVER FAZ UPLOAD PROS OUTROS SERVERS)
   }
 }
 
@@ -839,7 +836,7 @@ void Region::startLocalBalancing() {
   double average_overload = (double)total_weight / (double)total_capacity;
   while (average_overload > 1.0f && average_overload > Cell::getWorldWeight()/Server::getMultiserverPower()) {
     Region* next_region = getLightestNeighbor(local_group);
-    //if (!next_region) next_region = getHighestCapacityFreeRegion();
+    if (!next_region) next_region = getHighestCapacityFreeRegion();
     if (!next_region) break;
     total_weight += next_region->getRegionWeight();
     total_capacity += next_region->getServer()->getServerPower();
