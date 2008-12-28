@@ -24,6 +24,8 @@ idéias de comparações:
 comparar migration: com e sem disbal_tolerance.
 comparar load: com e sem disbal_tolerance no K-L.
 
+testar se usar apenas o numero necessario de servidores nao melhora no desempenho (migracoes e overhead)
+
 
 
 
