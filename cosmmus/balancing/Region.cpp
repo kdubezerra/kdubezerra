@@ -404,7 +404,7 @@ void Region::distributeOrphanCells() {
 }
 
 void Region::getProportionalPartition(long weight_to_divide, long free_capacity) {
-  long weightFraction = approxLong((double)weight_to_divide * (double)getServer()->getServerPower() / (double)free_capacity);
+  long weightShare = approxLong((double)weight_to_divide * (double)getServer()->getServerPower() / (double)free_capacity);
   long _debug_region_weight;
   Cell* c = NULL;
   
@@ -415,7 +415,7 @@ void Region::getProportionalPartition(long weight_to_divide, long free_capacity)
   }
 
   //TODO fazer com que a verificação do peso total permita que TODAS as células sejam selecionadas por alguma região
-  while (getRegionWeight() < weightFraction /*|| getRegionOverload() < 1.0f*/) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
+  while (getRegionWeight() < weightShare /*|| getRegionOverload() < 1.0f*/) { //TODO fazer de forma que não precise fazer subscribe o tempo todo (mas não sei se é realmente um problema)
     _debug_region_weight = getRegionWeight();
     if (!c) return;    
     subscribe(c);
@@ -694,12 +694,12 @@ void Region::sortByOverload(list<Region*> &regionList) {
 }
 
 bool Region::compareRegionsOverload(Region* rA, Region* rB) {
-  return (rA->getRegionWeight() / rA->getServer()->getServerPower() > rB->getRegionWeight() / rB->getServer()->getServerPower());
+  return ((double)rA->getRegionWeight() / (double)rA->getServer()->getServerPower() > (double)rB->getRegionWeight() / (double)rB->getServer()->getServerPower());
 }
 
 double Region::getDisbalanceAfterAddingCell(Cell* c) {
-  double resulting_overload = (double)(getRegionWeight() + c->getCellWeight()) / (double)Cell::getWorldWeight();
-  double ideal_overload = getServer()->getPowerFraction();
+  double resulting_overload = (double)(getRegionWeight() + c->getCellWeight()) / (double)getServer()->getServerPower();
+  double ideal_overload = (double)Cell::getWorldWeight() / (double)Server::getMultiserverPower();
   return resulting_overload - ideal_overload;
 }
 
@@ -852,6 +852,7 @@ Region* Region::getLightestNeighbor(list<Region*> region_list) {
   for (list<Region*>::iterator it = region_list.begin() ; it != region_list.end() ; it++) {
     (*it)->checkNeighborsList();
     list<Region*> next_neighs = (*it)->getNeighbors();
+    next_neighs.sort();
     all_neighbors.merge(next_neighs);
   }
   for (list<Region*>::iterator it = region_list.begin() ; it != region_list.end() ; it++) {    
@@ -870,8 +871,12 @@ Region* Region::getLightestNeighbor(list<Region*> region_list) {
 Region* Region::getHighestCapacityFreeRegion() {  
   list<Region*> reg_list = regionList;
   Region::sortRegionsByServerPower(reg_list);
-  for (list<Region*>::iterator it = reg_list.begin() ; it != reg_list.end() ; it++)
-    if ((*it)->getRegionWeight() == 0) return (*it);
+  for (list<Region*>::iterator it = reg_list.begin() ; it != reg_list.end() ; it++) {
+    if ((*it)->getRegionWeight() == 0) {
+      cout << "Returning Highest Capacity Free " << (*it)->getRegionWeight() << " Region: " << (*it) << "; Capacity = " << (*it)->getServer()->getServerPower() << endl;
+      return (*it);
+    }
+  }
   return NULL;
 }
 

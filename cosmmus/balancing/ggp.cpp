@@ -5,7 +5,7 @@
 #endif
 
 #define CORE_COUNT 4
-#define NUM_SERVERS 20
+#define NUM_SERVERS 4
 
 #define REBAL_INTERVAL 0 // 1000
 
