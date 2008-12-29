@@ -61,7 +61,11 @@ int main (int argc, char* argv[]) {
     server[i] = new Server (200*(rand() % 2500));
     cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
   }
-  
+
+  server[0]->setServerPower(35000);
+  server[1]->setServerPower(235000);
+  server[2]->setServerPower(235000);
+  server[3]->setServerPower(235000);
 
   SDL_Surface* bg = NULL;
   bg = load_image (BG_IMAGE);
