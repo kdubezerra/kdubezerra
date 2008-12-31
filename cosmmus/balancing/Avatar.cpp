@@ -18,6 +18,8 @@ bool Avatar::showv = false;
 bool Avatar::showe = false;
 bool Avatar::isMobile = true;
 long Avatar::total_weight = 0;
+long Avatar::migration_walk = 0;
+long Avatar::migration_still = 0;
 
 Avatar::Avatar() {
   init();
@@ -44,6 +46,8 @@ void Avatar::init() {
     desty = rand() % WW;
     coord my_location = getCell();
     my_cell = Cell::getCell(my_location.X, my_location.Y);
+    old_cell = my_cell;
+    old_region = old_cell->getParentRegion();
     my_cell->subscribe(this);
   } while (distance(posx, posy, destx, desty) <= 20.0f);      
   R = rand() % 255;
@@ -115,6 +119,33 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
       desty = mv_hotspotlist[spot].Y;
     }
   }
+  checkMigration();
+}
+
+void Avatar::checkMigration() {
+  coord cell_coord = getCell();
+  Cell* new_cell = Cell::getCell(cell_coord.X, cell_coord.Y);  
+  Region* new_region = new_cell->getParentRegion();
+  if (new_region != old_region) {
+    if (new_cell   !=   old_cell)
+      migration_walk++; 
+    else
+      migration_still++;    
+  }
+  old_cell = new_cell;
+  old_region = new_region;
+}
+
+long Avatar::getMigrationStill(bool clear_migs) {
+  long migs = migration_still;
+  if (clear_migs) migration_still = 0;
+  return migs;
+}
+
+long Avatar::getMigrationWalk(bool clear_migw) {
+  long migw = migration_walk;
+  if (clear_migw) migration_walk = 0;
+  return migw;
 }
 
 void Avatar::setPlayerId (int i) {

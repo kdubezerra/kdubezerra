@@ -46,6 +46,7 @@ class Region {
 
     long getRWeight(); //deprecated
     long getRegionWeight();
+    long getNeighborsOverhead();
     long getEWeight(Region* neighbor);
     long getAllEdgesWeight();
     double getWeightFraction();

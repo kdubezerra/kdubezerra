@@ -15,6 +15,7 @@ using namespace std;
 #define THRESHOLD_DISTANCE 10
 
 class Cell;
+class Region;
 
 // class Avatar;//TODO apagar esta linha
 
@@ -32,6 +33,10 @@ class Avatar {
     void setDrawable(string my_surface_file, string seen_surface_file, SDL_Surface* out_screen);
     
     void step(unsigned long delay);
+
+    void checkMigration();
+    static long getMigrationStill(bool clear_migs = true);
+    static long getMigrationWalk(bool clear_migw = true);
 					
     void setPlayerId (int i);
     
@@ -84,5 +89,9 @@ class Avatar {
     static bool showv, showe, isMobile;
     float my_vweight, my_eweight;
     Cell* my_cell;
-    SDL_Surface* screen;		
+    Cell* old_cell;
+    Region* old_region;
+    SDL_Surface* screen;
+    static long migration_walk;
+    static long migration_still;
 };

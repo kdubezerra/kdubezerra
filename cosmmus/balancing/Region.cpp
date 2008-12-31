@@ -140,8 +140,24 @@ long Region::getRegionWeight() {
   return weight;
 }
 
-long Region::getEWeight(Region* neighbor) {//TODO: FIXME
-  return edgeByRegion[neighbor];
+long Region::getNeighborsOverhead() {
+  long overhead = 0;
+  //checkNeighborsList();
+  //checkAllRegionsNeighbors();
+  //updateAllEdgesAllRegions();  
+  //TODO: corrigir isso (tirar alledgesweight da conta, MAS TEM QUE LEMBRAR Q O SERVER VAI FAZER UPLOAD PRO OUTRO SERVER!!!)
+  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
+    overhead += (*it)->getEWeight(this);
+  }
+  return overhead;
+
+}
+
+long Region::getEWeight(Region* neighbor) {
+  if (edgeByRegion.find(neighbor) != edgeByRegion.end())
+    return edgeByRegion[neighbor];
+  else
+    return 0;
 }
 
 long Region::getAllEdgesWeight() {
@@ -163,10 +179,11 @@ double Region::getLoadFraction() {
 }
 
 long Region::getAbsoluteLoad() {
-  checkNeighborsList();
-  updateAllEdges();
+  //checkNeighborsList();
+  //checkAllRegionsNeighbors();
+  //updateAllEdgesAllRegions();  
   //TODO: corrigir isso (tirar alledgesweight da conta, MAS TEM QUE LEMBRAR Q O SERVER VAI FAZER UPLOAD PRO OUTRO SERVER!!!)
-  return getAllEdgesWeight() + getRegionWeight();
+  return getRegionWeight() + getNeighborsOverhead();
 }
 
 long Region::getWorldLoad() {
@@ -862,11 +879,11 @@ Region* Region::getLightestNeighbor(list<Region*> region_list) {
   }
   all_neighbors.unique();
   Region::sortByOverload(all_neighbors);
-  cout << "Region::getLightestNeighbor {all_neighbors:\n\t";
-  for (list<Region*>::iterator it = all_neighbors.begin() ; it != all_neighbors.end() ; it++) {    
-    cout << (double)(*it)->getRegionWeight() / (double)(*it)->getServer()->getServerPower() << "\t";
-  }
-  cout << "\n}" << endl;
+  //cout << "Region::getLightestNeighbor {all_neighbors:\n\t";
+  //for (list<Region*>::iterator it = all_neighbors.begin() ; it != all_neighbors.end() ; it++) {    
+  //  cout << (double)(*it)->getRegionWeight() / (double)(*it)->getServer()->getServerPower() << "\t";
+  //}
+  //cout << "\n}" << endl;
   if (all_neighbors.empty()) return NULL;
   return all_neighbors.back(); //retorna o ultimo da lista ordenada por overload, ou seja, o menos overloaded
 }
@@ -876,7 +893,7 @@ Region* Region::getHighestCapacityFreeRegion() {
   Region::sortRegionsByServerPower(reg_list);
   for (list<Region*>::iterator it = reg_list.begin() ; it != reg_list.end() ; it++) {
     if ((*it)->getRegionWeight() == 0) {
-      cout << "Returning Highest Capacity Free " << (*it)->getRegionWeight() << " Region: " << (*it) << "; Capacity = " << (*it)->getServer()->getServerPower() << endl;
+      //cout << "Returning Highest Capacity Free " << (*it)->getRegionWeight() << " Region: " << (*it) << "; Capacity = " << (*it)->getServer()->getServerPower() << endl;
       return (*it);
     }
   }

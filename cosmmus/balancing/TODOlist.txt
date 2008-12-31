@@ -5,7 +5,7 @@
 
 *** ver por que diabos que estão surgindo células órfãs no balanceamento dinâmico (region->checkBalacing()), quando seleciona região livre
 
-*** 
+*** definir REBAL_INTERVAL *ou* fazer alguma coisa que impeça sucessivos rebalanceamentos (como carga média dos últimos X u_tempo de cada região)
 
 
 
