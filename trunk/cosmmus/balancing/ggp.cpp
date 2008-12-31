@@ -7,7 +7,7 @@
 #define CORE_COUNT 4
 #define NUM_SERVERS 4
 
-#define REBAL_INTERVAL 0 // 1000
+#define REBAL_INTERVAL 1000 // INTERVALO ENTRE REBALANCEAMENTOS, EM MILISEGUNDOS
 
 #define BG_IMAGE "bg.bmp"
 #define VERTEX_IMAGE "vweight.bmp"
@@ -87,7 +87,8 @@ int main (int argc, char* argv[]) {
         
   if (!player[0]->setImage(PLAYER_ZERO_IMAGE)) cerr << "\nErro setando a imagem do player 0: " << PLAYER_ZERO_IMAGE << endl;
 
-  Uint32 time = SDL_GetTicks();
+  //Uint32 time = SDL_GetTicks();
+  Uint32 time = 0;
   Uint32 step_delay = 250;
   Uint32 dtime = time;
   long unsigned count = 0;
@@ -101,31 +102,38 @@ int main (int argc, char* argv[]) {
 
     step_delay = SDL_GetTicks() - time;
     step_delay = step_delay > 40 ? 40 : step_delay;
-    for (int i = 0 ; i < nplayers ; i ++) player[i]->step(10*step_delay);
-    time = SDL_GetTicks();
+    for (int i = 0 ; i < nplayers ; i ++) player[i]->step(100/* * step_delay*/);
+    //time = SDL_GetTicks();
+    time += 100;
     
-    if (SDL_GetTicks() - dtime >= 25) {
+    if (/*SDL_GetTicks()*/ time - dtime >= 25) {
       Cell::updateAllEdgesAndVertexWeights();
-      dtime = SDL_GetTicks();
+      dtime = time;
     }    
-    Cell::drawCells(screen);
-    Region::drawAllRegions(screen);
-    Region::drawAllRegionsWeights(screen, font);
+    //Cell::drawCells(screen);
+    //Region::drawAllRegions(screen);
+    //Region::drawAllRegionsWeights(screen, font);
     
-    for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
+    //for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
 
-    time = SDL_GetTicks();    
-    apply_surface( 200, 200, message, screen );
+    //time = SDL_GetTicks();
     showHelp();
-    SDL_Flip( screen );
+    //SDL_Flip( screen );
     count++;
     checkInput();
     
-    if (SDL_GetTicks() > lastbal + REBAL_INTERVAL) {
-      lastbal = SDL_GetTicks();
+    if (time > lastbal + REBAL_INTERVAL) {
+      Region::checkAllRegionsNeighbors();
+      Region::updateAllEdgesAllRegions();
+      for (int i = 0 ; i < NUM_SERVERS && server[i]->getRegion() ; i++)
+        cout << "Server " << i << " :: LOAD = " << server[i]->getRegion()->getAbsoluteLoad() << " (W = " << server[i]->getRegion()->getRegionWeight() 
+        << ", OH = " << server[i]->getRegion()->getNeighborsOverhead() << ")" << endl;
+      cout << "Still migrations = " << Avatar::getMigrationStill() << endl;
+      cout << "Walk migrations = " << Avatar::getMigrationWalk() << endl;      
       for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {      
         (*it)->checkBalancing();
       }
+      lastbal = time;//SDL_GetTicks();
     }
   }
 }
