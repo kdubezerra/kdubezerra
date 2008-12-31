@@ -110,15 +110,15 @@ int main (int argc, char* argv[]) {
       Cell::updateAllEdgesAndVertexWeights();
       dtime = time;
     }    
-    //Cell::drawCells(screen);
-    //Region::drawAllRegions(screen);
-    //Region::drawAllRegionsWeights(screen, font);
+    Cell::drawCells(screen);
+    Region::drawAllRegions(screen);
+    Region::drawAllRegionsWeights(screen, font);
     
-    //for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
+    for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
 
     //time = SDL_GetTicks();
     showHelp();
-    //SDL_Flip( screen );
+    SDL_Flip( screen );
     count++;
     checkInput();
     
