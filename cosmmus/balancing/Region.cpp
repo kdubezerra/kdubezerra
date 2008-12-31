@@ -627,8 +627,8 @@ double Region::getBalancingImprovement(Cell* c1, Cell* c2) {
   double overload_r1_after = (double)(r1->getRegionWeight() - c1->getCellWeight() + c2->getCellWeight()) / (double)r1->getServer()->getServerPower();
   double overload_r2_after = (double)(r2->getRegionWeight() - c2->getCellWeight() + c1->getCellWeight()) / (double)r2->getServer()->getServerPower();
 
-  double bal_change_r1 = abs(ideal_overload - overload_r1_before) - abs(ideal_overload - overload_r1_after);
-  double bal_change_r2 = abs(ideal_overload - overload_r2_before) - abs(ideal_overload - overload_r2_after);
+  double bal_change_r1 = fabs(ideal_overload - overload_r1_before) - fabs(ideal_overload - overload_r1_after);
+  double bal_change_r2 = fabs(ideal_overload - overload_r2_before) - fabs(ideal_overload - overload_r2_after);
   /*double power_fraction1 = c1->getParentRegion()->getServer()->getPowerFraction();
   double power_fraction2 = c2->getParentRegion()->getServer()->getPowerFraction();
   double weight_fraction_r1_before = (double)c1->getParentRegion()->getRegionWeight() / (double)Cell::getWorldWeight();
@@ -733,8 +733,8 @@ double Region::getBalancingImprovementForTransfering(Cell* c, Region* r) {
   double overload_r1_after = (double)(this->getRegionWeight() - c->getCellWeight()) / (double)this->getServer()->getServerPower();
   double overload_r2_after = (double)(r->getRegionWeight() + c->getCellWeight()) / (double)r->getServer()->getServerPower();
 
-  double bal_change_r1 = abs(ideal_overload - overload_r1_before) - abs(ideal_overload - overload_r1_after);
-  double bal_change_r2 = abs(ideal_overload - overload_r2_before) - abs(ideal_overload - overload_r2_after);
+  double bal_change_r1 = fabs(ideal_overload - overload_r1_before) - fabs(ideal_overload - overload_r1_after);
+  double bal_change_r2 = fabs(ideal_overload - overload_r2_before) - fabs(ideal_overload - overload_r2_after);
 
   //double power_fraction1 = this->getServer()->getPowerFraction(); //1 = this; 2 = r
   //double power_fraction2 = r->getServer()->getPowerFraction();
