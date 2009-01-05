@@ -1,0 +1,316 @@
+%
+% exemplo genérico de uso da classe iiufrgs.cls
+% $Id: iiufrgs.tex,v 4.6 2003/11/21 22:36:13 avila Exp $
+%
+\documentclass[diss]{iiufrgs}
+% um tipo específico de monografia pode ser informado como parâmetro opcional:
+%\documentclass[tese]{iiufrgs}
+% monografias em inglês devem receber o parâmetro `english':
+%\documentclass[diss,english]{iiufrgs}
+% a opção `openright' pode ser usada para forçar inícios de capítulos
+% em páginas ímpares
+% \documentclass[openright]{iiufrgs}
+% para gerar uma versão somente-frente, basta utilizar a opção `oneside':
+% \documentclass[oneside]{iiufrgs}
+\usepackage[T1]{fontenc}        % pacote para conj. de caracteres correto
+\usepackage[latin1]{inputenc}   % pacote para acentuação
+\usepackage{graphicx}           % pacote para importar figuras
+\usepackage{times}              % pacote para usar fonte Adobe Times
+%\usepackage{mathptmx}          % p/ usar fonte Adobe Times nas fórmulas
+
+% o pacote natbib, abaixo, é necessário sempre que o abnt.bst for usado
+% (mas se você estiver usando a classe iiufrgs.cls, a inclusão é automática)
+%
+\usepackage{natbib}
+
+% ajustes relativos ao uso do natbib
+% (novamente, não são necessários com o iiufrgs.cls)
+\setlength{\bibhang}{0pt}
+\let\cite\citep
+
+
+\hyphenation{de-vi-do}
+
+\hyphenation{fa-bri-can-do}
+\hyphenation{au-to-ri-za-ção}
+\hyphenation{re-pre-sen-ta}
+\hyphenation{cri-té-rios}
+\hyphenation{re-cu-pe-ra-ção}
+\hyphenation{di-fe-ren-te}
+\hyphenation{ca-be-ça-lhos}
+\hyphenation{trans-fe-rên-cias}
+\hyphenation{va-ri-a-ção}
+\hyphenation{in-di-vi-du-al-men-te}
+
+\hyphenation{des-tru-í-do}
+\hyphenation{des-cre-ve}
+\hyphenation{des-cri-to}
+\hyphenation{re-gis-tro}
+\hyphenation{des-as-si-na-tu-ras}
+\hyphenation{pro-ces-sa-do-res}
+\hyphenation{con-si-de-ra-dos}
+\hyphenation{cen-tra-li-zam}
+\hyphenation{me-lho-ri-as}
+\hyphenation{di-fe-ren-tes}
+
+\hyphenation{dei-xa-dos}
+\hyphenation{ge-ne-rais}
+\hyphenation{ou-tros}
+\hyphenation{ar-bi-tra-ria-men-te}
+\hyphenation{si-mul-ta-nea-men-te}
+\hyphenation{pro-li-fe-ra-ção}
+\hyphenation{es-ca-la-bi-li-da-de}
+\hyphenation{con-tro-le}
+\hyphenation{e-qui-va-len-te}
+\hyphenation{con-ti-nu-ar}
+\hyphenation{con-si-de-ra-do}
+\hyphenation{a-tu-a-li-za-do}
+\hyphenation{res-tri-ção}
+\hyphenation{res-tri-ções}
+\hyphenation{per-so-na-gem}
+\hyphenation{per-so-na-gens}
+\hyphenation{ve-ri-fi-can-do}
+\hyphenation{re-qui-si-ções}
+\hyphenation{e-xis-tam}
+\hyphenation{hos-pe-da-gem}
+
+\hyphenation{fa-lha}
+\hyphenation{fa-lhas}
+\hyphenation{fa-lham}
+\hyphenation{mi-lhões}
+\hyphenation{pro-ble-ma}
+\hyphenation{res-tri-ções}
+\hyphenation{mi-nu-tos}
+
+\hyphenation{e-xem-plo}
+\hyphenation{ge-ra-dos}
+\hyphenation{si-mu-la-dor}
+\hyphenation{ge-ra-do}
+\hyphenation{des-cen-tra-li-za-dos}
+
+\hyphenation{a-tu-a-li-za-ção}
+\hyphenation{e-vi-den-te}
+\hyphenation{com-par-ti-lha-dos}
+\hyphenation{par-ti-ci-pan-te}
+\hyphenation{par-ti-ci-pan-tes}
+\hyphenation{ex-pe-ri-men-tos}
+\hyphenation{des-ne-ce-ssa-ria-men-te}
+\hyphenation{mo-de-lo}
+\hyphenation{fa-lham}
+\hyphenation{si-mu-la-ção}
+\hyphenation{se-cre-ta}
+\hyphenation{au-xi-li-ou}
+\hyphenation{com-pa-nhia}
+\hyphenation{si-mu-la-tor}
+
+\hyphenation{e-xer-cer}
+\hyphenation{in-te-res-sa-do}
+\hyphenation{in-te-res-se}
+\hyphenation{des-ne-ces-sa-ria-men-te}
+
+\hyphenation{per-so-na-gem}
+\hyphenation{ne-ces-sá-rios}
+\hyphenation{in-te-ra-ções}
+\hyphenation{atri-bui-ções}
+\hyphenation{atri-buin-do}
+\hyphenation{mo-de-los}
+\hyphenation{exis-tên-cia}
+\hyphenation{pos-si-bi-li-da-des}
+\hyphenation{cir-cuns-tân-cias}
+\hyphenation{com-ple-xi-da-de}
+\hyphenation{con-si-de-ram}
+\hyphenation{con-si-de-ra}
+\hyphenation{de-ta-lha-dos}
+\hyphenation{de-ta-lha-do}
+\hyphenation{co-nhe-ci-do}
+\hyphenation{mi-lha-res}
+\hyphenation{ca-rac-te-rís-ti-cas}
+\hyphenation{má-qui-nas}
+
+\hyphenation{pa-ra-dig-ma}
+\hyphenation{ad-mi-nis-tra-ti-vo}
+\hyphenation{o-fe-re-cer}
+\hyphenation{no-ti-fi-can-do}
+\hyphenation{mí-ni-mo}
+\hyphenation{do-mí-nio}
+
+%
+% Informações gerais
+%
+\newcommand{\X}{\textbullet}
+
+\title{FreeMMG: uma arquitetura cliente-servidor e par-a-par de suporte a jogos maciçamente distribuídos}
+
+\author{Cecin}{Fábio Reis}
+% alguns documentos podem ter varios autores:
+%\author{Flaumann}{Frida Gutenberg}
+%\author{Flaumann}{Klaus Gutenberg}
+
+% orientador e co-orientador são opcionais (não diga isso pra eles :))
+\advisor[Prof.~Dr.]{Geyer}{Cláudio Fernando Resin}
+%\coadvisor[Prof.~Dr.]{Knuth}{Donald Ervin}
+
+% a data deve ser a da defesa; se nao especificada, são gerados
+% mes e ano correntes
+\date{março}{2005}
+
+% o nome do curso pode ser redefinido (ex. para TCs)
+%\course{Curso de Especialização em Cachaça}
+
+% o local de realização do trabalho pode ser especificado (ex. para TCs)
+% com o comando \location:
+%\location{Itaquaquecetuba}{SP}
+
+% itens individuais da nominata podem ser redefinidos com os comandos
+% abaixo:
+% \renewcommand{\nominataReit}{Prof\textsuperscript{a}.~Wrana Maria Panizzi}
+% \renewcommand{\nominataReitname}{Reitora}
+% \renewcommand{\nominataPRE}{Prof.~Jos{\'e} Carlos Ferraz Hennemann}
+% \renewcommand{\nominataPREname}{Pr{\'o}-Reitor de Ensino}
+% \renewcommand{\nominataPRAPG}{Prof\textsuperscript{a}.~Joc{\'e}lia Grazia}
+% \renewcommand{\nominataPRAPGname}{Pr{\'o}-Reitora Adjunta de P{\'o}s-Gradua{\c{c}}{\~a}o}
+% \renewcommand{\nominataDir}{Prof.~Philippe Olivier Alexandre Navaux}
+% \renewcommand{\nominataDirname}{Diretor do Instituto de Inform{\'a}tica}
+% \renewcommand{\nominataCoord}{Prof.~Flávio Rech Wagner}
+% \renewcommand{\nominataCoordname}{Coordenador do PPGC}
+% \renewcommand{\nominataBibchefe}{Beatriz Regina Bastos Haro}
+% \renewcommand{\nominataBibchefename}{Bibliotec{\'a}ria-chefe do Instituto de Inform{\'a}tica}
+% \renewcommand{\nominataChefeINA}{Prof.~Jos{\'e} Valdeni de Lima}
+% \renewcommand{\nominataChefeINAname}{Chefe do \deptINA}
+% \renewcommand{\nominataChefeINT}{Prof.~Leila Ribeiro}
+% \renewcommand{\nominataChefeINTname}{Chefe do \deptINT}
+
+% A seguir são apresentados comandos específicos para alguns
+% tipos de documentos.
+
+% Relatório de Pesquisa [rp]:
+% \rp{123}             % numero do rp
+% \financ{CNPq, CAPES} % orgaos financiadores
+
+% Trabalho Individual [ti]:
+% \ti{123}     % numero do TI
+% \ti[II]{456} % no caso de ser o segundo TI
+
+% Trabalho de Conclusão [tc]:
+% além de definir explicitamente o nome do curso (\course) e o local
+% de realização (\location), é necessário redefinir a nominata,
+% pois as informações necessárias dependem do curso. Ex.:
+%\renewcommand{\nominata}{
+%        UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL\\
+%        Reitora: Prof\textsuperscript{a}.~Wrana Maria Panizzi\\
+%        Pró-Reitor de Ensino: Prof.~José Carlos Ferraz Hennemann\\
+%        Diretor do Instituto de Informática: Prof.~Philippe Olivier Alexandre Navaux\\
+%        Coordenador do curso: Prof.~Seu Creysson\\
+%        Bibliotecária-chefe do Instituto de Informática: Beatriz Regina Bastos Haro
+%}
+
+% Monografias de Especialização [espec]:
+% \espec{Redes e Sistemas Distribuídos}      % nome do curso
+% \coord[Profa.~Dra.]{Weber}{Taisy da Silva} % coordenador do curso
+% \dept{INA}                                 % departamento relacionado
+
+%
+% palavras-chave
+% iniciar todas com letras minúsculas, exceto no caso de abreviaturas
+%
+\keyword{jogos maciçamente multijogador}
+\keyword{simulação interativa distribuída}
+\keyword{sistemas peer-to-peer}
+\keyword{jogos de estratégia em tempo real}
+
+%
+% inicio do documento
+%
+\begin{document}
+
+% folha de rosto
+% às vezes é necessário redefinir algum comando logo antes de produzir
+% a folha de rosto:
+% \renewcommand{\coordname}{Coordenadora do Curso}
+\maketitle
+
+% dedicatoria
+%\clearpage
+%\begin{flushright}
+%\mbox{}\vfill
+%{\sffamily\itshape
+%``If I have seen farther than others,\\
+%it is because I stood on the shoulders of giants.''\\}
+%--- \textsc{Sir~Isaac Newton}
+%\end{flushright}
+
+% agradecimentos
+%\chapter*{Agradecimentos}
+\input{agrad}
+
+
+
+% sumario
+\tableofcontents
+
+% lista de abreviaturas e siglas
+% o parametro deve ser a abreviatura mais longa
+%\begin{listofabbrv}{SPMD}
+%        \item[SMP] Symmetric Multi-Processor
+%        \item[NUMA] Non-Uniform Memory Access
+%        \item[SIMD] Single Instruction Multiple Data
+%        \item[SPMD] Single Program Multiple Data
+%        \item[ABNT] Associação Brasileira de Normas Técnicas
+%\end{listofabbrv}
+
+\input{glossario}
+
+% idem para a lista de símbolos
+%\begin{listofsymbols}{$\alpha\beta\pi\omega$}
+%       \item[$\sum{\frac{a}{b}}$] Somatório do produtório
+%       \item[$\alpha\beta\pi\omega$] Fator de inconstância do resultado
+%\end{listofsymbols}
+
+% lista de figuras
+\listoffigures
+
+% lista de tabelas
+%\listoftables
+
+% resumo na língua do documento
+\begin{abstract}
+%Este documento é um exemplo de como formatar documentos para o
+%Instituto de Informática da UFRGS usando as classes \LaTeX\
+%disponibilizadas pelo UTUG\@. Ao mesmo tempo, pode servir de consulta
+%para comandos mais genéricos. \emph{O texto do resumo não deve
+%conter mais do que 500 palavras.}
+
+A popularização das tecnologias de acesso à Internet por ``banda larga'' suportam a crescente proliferação de aplicações do tipo ``par-a-par'' (peer-to-peer), onde o usuário doméstico, tipicamente consumidor de informação, passa também a atuar como provedor. De forma simultânea, há uma popularização crescente dos jogos em rede, especialmente dos ``jogos maciçamente multijogador'' (MMG ou \textit{massively multiplayer game}) onde milhares de jogadores interagem, em tempo real, em mundos virtuais de estado persistente. Os MMGs disponíveis atualmente, como \textit{EverQuest} e \textit{Ultima Online}, são implementados como sistemas centralizados, que realizam toda a simulação do jogo no ``lado servidor''. Este modelo propicia controle de acesso ao jogo pelo servidor, além de ser muito resistente a jogadores trapaceiros. Porém, a abordagem cliente-servidor não é suficientemente escalável, especialmente para pequenas empresas ou projetos de pesquisa que não podem pagar os altos custos de processamento e comunicação dos servidores de MMGs centralizados. Este trabalho propõe o FreeMMG, um modelo híbrido, cliente-servidor e par-a-par, de suporte a jogos maciçamente multijogador de estratégia em tempo real (MMORTS ou \textit{massively multiplayer online real-time strategy}). O servidor FreeMMG é escalável pois delega a maior parte da tarefa de simulação do jogo para uma rede par-a-par, formada pelos clientes. É demonstrado que o FreeMMG é resistente a certos tipos de trapaças, pois cada segmento da simulação distribuída é replicado em vários clientes. Como protótipo do modelo, foi implementado o jogo \textit{FreeMMG Wizards}, que foi utilizado para gerar testes de escalabilidade com até 300 clientes simulados e conectados simultaneamente no mesmo servidor. Os resultados de escalabilidade obtidos são promissores, pois mostram que o tráfego gerado em uma rede FreeMMG, entre servidor e clientes, é significativamente menor se comparado com uma alternativa puramente cliente-servidor, especialmente se for considerado o suporte a jogos maciçamente multijogador de estratégia em tempo real.
+
+
+\end{abstract}
+
+% resumo na outra língua
+% como parametros devem ser passados o titulo e as palavras-chave
+% na outra língua, separadas por vírgulas
+\begin{englishabstract}{FreeMMG: A Client-Server and Peer-to-Peer Support Architecture for Massively Distributed Games}{massively multiplayer games, distributed interactive simulation, peer-to-peer systems, real-time strategy games}
+%This document is an example on how to prepare documents at II/UFRGS
+%using the \LaTeX\ classes provided by the UTUG\@. At the same time, it
+%may serve as a guide for general-purpose commands. \emph{The text in
+%the abstract should not contain more than 500~words.}
+The increasing adoption of ``broadband'' Internet access technology fosters the increasing development of networked ``peer-to-peer'' applications, where the end-user, usually the consumer of information, begins to act also as a producer of information. Simultaneously, there is a growing popularity of networked games, especially ``massively multiplayer games'' (MMGs) where thousands of players interact, in real time, in persistent-state virtual worlds. State-of-the-art massively multiplayer games such as EverQuest and Ultima Online are currently implemented as centralized, client-server systems, which run the entire game simulation on the ``server-side''. Although this approach allows the development of commercially viable MMG services, with game access control and player cheating prevention, the processing and communications costs associated with running a MMG server are often too high for small companies or research projects. This dissertation proposes FreeMMG, a mixed peer-to-peer and client-server approach to the distribution aspect of MMGs. It is argued that the FreeMMG model supports scalable, cheat-resistant, massively multiplayer real-time strategy games (MMORTS games) using a lightweight server that delegates the bulk of the game simulation to a peer-to-peer network of game clients. It is shown that FreeMMG is resistant to certain kinds of cheating attempts because each segment of the distributed simulation is replicated by several clients. A working prototype game called FreeMMG Wizards is presented, together with scalability test results featuring up to 300 simulated game clients connected to a FreeMMG server. The obtained results are promising, by showing that the generated server traffic in a FreeMMG network, between the server and the clients, is substantially lower if compared with purely client-server alternatives, especially if the support for massively multiplayer real-time strategy games is considered.
+
+\end{englishabstract}
+
+% aqui comeca o texto propriamente dito
+
+\input{cap1}
+
+\input{cap2}
+
+\input{cap3}
+
+\input{cap4}
+
+\input{cap5}
+
+\bibliography{diss}
+\bibliographystyle{abnt}
+
+
+\end{document}

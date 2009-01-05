@@ -1,0 +1,418 @@
+\chapter{Suporte a jogos distribuídos}
+
+O objetivo principal deste capítulo é mostrar o problema dos jogos distribuídos e o estado-da-arte em soluções para este problema. Primeiramente, serão estabelecidos os conceitos básicos. Estes conceitos (jogos distribuídos, MMGs, simulação, etc.) caracterizam as áreas de aplicação em jogos distribuídos. A seguir, são analisados alguns trabalhos representativos do estado-da-arte em jogos distribuídos, incluindo modelos aplicados na prática da indústria de jogos, bem como modelos acadêmicos. O capítulo conclui identificando a lacuna no estado-da-arte do suporte a jogos distribuídos onde o modelo FreeMMG se insere.
+
+\section{Conceitos básicos}
+
+Nesta seção alguns conceitos básicos serão discutidos. As definições fornecidas para os termos, alguns bastante genéricos, como ``simulação'', ``jogo'' e ``tempo real'', não são absolutas e apenas caracterizam uma base para a argumentação presente no restante do texto.
+
+\subsection{Centralização e distribuição}
+
+Um sistema pode ser considerado ao mesmo tempo ``centralizado'' e ``distribuído'', dependendo do ponto de vista. Por exemplo, um sistema cliente-servidor pode ser considerado tanto um modelo de computação centralizada, quanto um modelo de computação distribuída~\cite{couloris}. Se o sistema for considerado como um todo, ou seja, incluindo os clientes e suas requisições, então o sistema poderia ser considerado um sistema distribuído. Por outro lado, em vários sistemas cliente-servidor, geralmente a plataforma servidora é que possui o ``estado-mestre'' da computação. Se for considerado apenas este aspecto (distribuição ou centralização do repositório de dados, serviço, etc.), um sistema cliente-servidor pode ser considerado como centralizado.
+
+Para tornar a questão ainda mais complexa, muitos sistemas cliente-servidor empregam vários equipamentos servidores, que compartilham de forma transparente a responsabilidade de prover o serviço aos clientes. Neste caso, o ``servidor'' pode ser considerado como um sistema distribuído, mas, do ponto de vista dos clientes, o serviço é provido por uma plataforma central. Além disso, o controle administrativo deve ser levado em conta. Por exemplo, do ponto de vista administrativo um \textit{cluster} pode ser considerado como um recurso centralizado caso o acesso ao mesmo seja controlado por uma única entidade.
+
+\subsection{Simulação e jogo}
+
+Neste trabalho, o conceito de ``jogo'' é um refinamento do conceito de ``simulação''~\cite{fujimoto2000}. Simulações são aplicações que computam a variação do estado de um sistema qualquer com base em parâmetros como ``tempo''. Jogos são simulações de ambientes onde cada jogador (uma entidade participante) busca atingir um certo objetivo através da interação com outros jogadores e com o ambiente.
+
+Desta forma, considera-se que um sistema de suporte para jogos possui restrições adicionais. Um sistema de suporte para jogos deve evitar que os jogadores possam alterar o estado do jogo de forma indevida, ou seja, de forma que as regras do jogo sejam burladas. Em outras palavras, o sistema deve ser tolerante à presença de jogadores dispostos a trapacear. Um sistema de suporte para jogos também deve prover um serviço de igual qualidade para todos os participantes, de forma que todos tenham a mesma chance no jogo. Estas são duas preocupações fundamentais para a área de jogos distribuídos, que geralmente não caracterizam o foco principal de trabalhos posicionados na área de simulação distribuída e interativa. Esta distinção é importante para este trabalho pois as preocupações adicionais dos programadores de jogos justificam em parte o modelo apresentado no capítulo 3.
+
+\subsection{Jogos distribuídos de tempo real ou multijogador}
+
+Um jogo de tempo real é um jogo onde o jogador envia comandos de forma assíncrona à passagem do tempo da simulação. Uma corrida de carros, onde o jogador é o piloto, é um exemplo de jogo de tempo real. Em contraste, um jogo baseado em turnos é um jogo onde o jogador envia comandos de forma síncrona à passagem do tempo da simulação. Um jogo de xadrez, onde a partida não avança até que o jogador da vez realize a sua jogada, é um exemplo de jogo baseado em turnos.
+
+O foco deste trabalho compreende os jogos de tempo real distribuídos sobre Internet. O termo ``jogo multi-jogador'' será utilizado com este sentido. Neste contexto, os jogos multi-jogador geralmente impõem restrições quanto ao atraso máximo entre o envio de um comando pelo jogador e a efetivação do comando no jogo. O atraso máximo tolerável varia de pessoa para pessoa ~\cite{pantel}, mas geralmente pode-se estabelecer um valor representativo. O atraso máximo tolerável também depende do tipo de jogo. Por exemplo, em um jogo de corrida de carro, se o jogador é um piloto e comanda que o seu carro vire para a esquerda, este comando deve ser reconhecido pelo simulador do jogo o mais rapidamente possível, pois se o atraso for muito grande, o carro do jogador corre o risco de sair da pista. Neste tipo de jogo (jogos de ``ação''), um atraso aceitável geralmente fica em torno de 100ms. O atraso aceitável também depende do tipo de comando ~\cite{pantel}. Mesmo em jogos de ação que exigem reflexos rápidos, alguns comandos podem possuir requisitos de tempo mais relaxados e podem ser processados com vários segundos de atrasos. Porém, quando se propõe sistemas de suporte para jogos de ação, a preocupação central geralmente é com os comandos que possuem fortes restrições de tempo.
+
+\subsection{Jogos maciçamente multijogador (MMGs)}
+
+Exemplos clássicos jogos maciçamente multijogador ou \textit{massively multiplayer games} (MMGs) compreendem Ultima Online ~\cite{ultimaonline}, EverQuest ~\cite{everquest} e Lineage ~\cite{lineage}. No contexto deste trabalho, MMGs são jogos distribuídos que envolvem uma grande quantidade de jogadores simultâneos interagindo, em tempo real, em um mundo virtual de estado persistente. Porém, o termo MMG é largamente utilizado em uma série de contextos. Um jogo que suporta uma quantidade de jogadores simultâneos realmente muito grande como, por exemplo, milhares ou mesmo milhões de jogadores, e que suporta um ambiente de interação de estado persistente, pode ser considerado um ``MMG'' em revistas especializadas ou relatórios da indústria~\cite{igdapsw}. Por este critério, jogos baseados em turnos ou jogos baseados em ambientes textuais também são considerados MMGs.
+
+No contexto deste trabalho, um MMG é um jogo com um elevado número de participantes simultâneos, que suporta interações em ``tempo real'' e que simula um ambiente virtual complexo, visualizado graficamente pelos jogadores. A representação gráfica, enviada aos jogadores, pode ser tanto 3D quanto 2D, desde que precise ser constantemente atualizada (dez vezes por segundo, por exemplo), ou seja, seja um ambiente gráfico atualizado em ``tempo real''. Em geral, este trabalho não considera um jogo baseado em eventos, ou em ``turnos'' de simulação muito grandes (dezenas de segundos ou minutos) como um MMG. Em outras palavras, para que um jogo seja considerado um MMG no contexto deste trabalho, os tempos de resposta às interações, entre os vários jogadores, devem ser compatíveis com os tempos de resposta esperados, em geral, pelos jogadores de jogos tipicamente classificados como \textit{real-time}~\cite{pantel}.
+
+\subsection{Jogos de estado persistente}
+
+Jogos de estado persistente (\textit{persistent-world games}) suportam uma grande quantidade de jogadores simultâneos interagindo em um mundo virtual persistente, assim como os MMGs, mas a interação não é, necessariamente, em tempo real. Um exemplo deste tipo de jogo é Eixo do Mal ~\cite{eixodomal}. Neste jogo, cada jogador possui territórios e exércitos e deve conquistar os territórios dos adversários. Para interagir com o mundo, cada jogador possui uma certa quantidade de turnos, que podem ser trocados por ações (movimentar exército, explorar território, etc). O jogo executa em um servidor \textit{web}, que mantém o estado do mundo virtual, bem como o perfil de cada jogador, como a quantidade de exércitos, territórios, e a quantidade de turnos que cada jogador possui. A cada quatro minutos (tempo real), o servidor atualiza o perfil de cada jogador, acrescentando mais turnos.
+
+É interessante observar que neste tipo de jogo a passagem do tempo é independente das ações dos jogadores, pois os jogadores continuarão ganhando turnos e estado do jogo continuará em evolução, mesmo que um jogador não realize nenhuma ação. Porém, no contexto deste trabalho, estes jogos não são considerados como de tempo real, pois o tamanho do passo da simulação é muito grande (ordem de minutos) e não há nenhuma restrição do tempo de resposta aos comandos do jogador. Para os MMGs, tanto o tempo de resposta aos comandos do jogador quanto o passo da simulação são da ordem de milisegundos ~\cite{pantel} de forma a garantir a imersão do jogador na simulação de um mundo virtual gráfico. Em contraste, os chamados ``jogos de estado persistente'' são freqüentemente implementados em plataformas \textit{web}, textuais.
+
+\subsection{Jogos de estratégia em tempo real (RTS)}
+
+Jogos de estratégia em tempo real (abreviados para RTS ou ``real-time strategy'') são jogos multi-jogador onde o jogador atua como um estrategista, controlando vários personagens independentes ao mesmo tempo. Warcraft ~\cite{warcraft} e Age of Empires II ~\cite{ageofempires} são exemplos de jogos RTS. Em ambos os exemplos (e na maioria dos jogos RTS), o jogador é um estrategista militar que busca a vitória através do gerenciamento do seu exército, geralmente composto por vários tipos de personagens distintos como cavaleiros, arqueiros, engenheiros, catapultas, etc. Dois aspectos importantes devem ser ressaltadas sobre os jogos RTS. Primeiro, os jogos RTS são mais tolerantes ao atraso entre o envio e o processamento dos comandos do jogador. Um atraso constante de 200ms passa praticamente desapercebido aos jogadores ~\cite{archers1500}. E segundo, jogos RTS distribuídos são difíceis de serem implementados utilizando-se uma topologia cliente-servidor ~\cite{archers1500,cecin2003ti}.
+
+\subsection{Jogos baseados em avatares}
+
+Neste texto, iremos classificar certos jogos como ``baseados em avatares''. O termo \textit{avatar} significa algo como \textit{encarnação}. Nos jogos baseados em avatares, cada jogador controla apenas uma entidade (a sua \textit{encarnação}) de cada vez. Por exemplo, em um MMG como EverQuest, cada jogador controla um personagem humanóide, comandando-o para, por exemplo, se movimentar em uma certa direção. O oposto dos jogos baseados em avatares são os jogos RTS, onde cada jogador pode comandar não apenas um, mas vários personagens ou objetos de cada vez.
+
+Apesar de não ser comum, esta distinção é importante no contexto deste trabalho, pois a grande maioria dos MMGs em funcionamento atualmente são jogos baseados em avatares. Como será visto a seguir, o modelo cliente-servidor, empregado pela grande maioria dos jogos \textit{on-line} e pela quase totalidade dos MMGs em funcionamento, não é adequado para jogos de estratégia em tempo real. Uma das vantagens do modelo proposto neste trabalho (FreeMMG) é o suporte a jogos Massively Multiplayer de estratégia em tempo real.
+
+\subsection{Ambientes virtuais colaborativos (CVEs)}
+
+Os ``ambientes virtuais colaborativos'' (CVEs ou \textit{collaborative virtual environments}) são, como aplicações, uma tecnologia de telecomunicação capaz de reunir participantes fisicamente distantes em um ambiente simulado, onde um contexto compartilhado, social e espacial, é estabelecido entre eles~\cite{roberts2004}. Os CVEs podem ser considerados uma especialização dos ``ambientes virtuais em rede'' (NVEs ou \textit{networked virtual environments}), apesar destes termos serem freqüentemente utilizados como sinônimos. Alguns exemplos de CVEs incluem NPSNET~\cite{npsnet}, DIVE~\cite{dive}, PaRADE~\cite{parade}, MASSIVE~\cite{massive3} e SOLIPSIS~\cite{solipsis}. 
+
+A pesquisa no contexto de CVEs e NVEs herda, em grande parte, os resultados da pesquisa em simulação militar~\cite{singhal99} obtidos no desenvolvimento de sistemas de simulação interativa e distribuída como DIS~\cite{tarr2002} e SIMNET~\cite{simnet}. Por sua vez, a pesquisa no contexto de jogos distribuídos, em especial jogos maciçamente multijogador ou maciçamente distribuídos, herda em grande parte os resultados obtidos no contexto da pesquisa em CVEs. Apesar de os CVEs antecederem a explosão de popularidade dos jogos multijogador e da Internet comercial, muitos problemas e soluções são compartilhados entre CVEs e MMGs, relativos a, por exemplo, gerência da consistência, escalabilidade e responsividade~\cite{roberts2004}.
+
+Apesar das fortes similaridades, existe pelo menos uma diferença importante entre CVEs e MMGs. Os CVEs suportam aplicações cooperativas, onde a prevenção de ``trapaças''~\cite{karlsson2004, cronin2003, baughman2001}, ou seja, ações ilegais realizadas por jogadores maliciosos, não é uma das principais preocupações. Os MMGs, por outro lado, são sistemas de suporte a jogos competitivos via Internet. Como os MMGs simulam ambientes virtuais de estado persistente, os efeitos das alterações ilegais podem afetar o jogo de forma irreversível, arruinando a reputação do jogo perante milhares de jogadores. Portanto, é muito importante que os seus sistemas de suporte possuam mecanismos para prevenção, detecção ou correção de trapaças~\cite{karlsson2004, cronin2003, baughman2001, cunnin2000}. Esta única diferença é suficiente para que muitos sistemas de suporte a CVEs não sejam aplicáveis, pelo menos diretamente, para o suporte a MMGs.
+
+\section{Jogos cliente-servidor (centralizados)}
+
+O modelo cliente-servidor é, sem dúvida, o mais utilizado atualmente na implementação de jogos distribuídos (``multi-jogador'', em tempo real) para a Internet. Exemplos comerciais destes jogos incluem Doom, Quake e  Half-Life, todos jogos de ação 3D em tempo real. A seguir, serão discutidas as vantagens e desvantagens do paradigma cliente-servidor quando aplicado a jogos, bem como alguns detalhes de implementação de protocolos cliente-servidor para jogos de tempo real.
+
+\subsection{Utilizando cliente-servidor em jogos distribuídos de tempo real}
+
+Em qualquer jogo cliente-servidor, os jogadores interagem com o ambiente e com os outros jogadores através de um programa cliente. Cada cliente possui uma conexão de rede apenas com o servidor. O servidor é responsável por receber a informação de cada cliente e repassar atualizações para os mesmos. Existem várias maneiras diferentes de implementar o protocolo entre os clientes e o servidor. Algumas são mais seguras, outras mais eficientes em determinados casos. A seguir, serão apresentadas duas técnicas básicas de implementação para o protocolo de um jogo cliente-servidor de tempo real:
+
+\begin{itemize}
+
+\item \textbf{Clientes enviam atualizações:} Uma técnica possível, que é empregada no jogo Half-Life~\cite{halflife}, é deixar os clientes arbitrarem sobre parte do estado do jogo. Por exemplo, um processo cliente pode atualizar periodicamente a posição atual do personagem que o jogador local controla e informar o servidor da nova posição do personagem. O servidor então ``corrige'' a sua cópia do personagem com base nesta informação, quando for recebida. É evidente que isto facilita o desenvolvimento de programas clientes ``trapaceiros'', pois o cliente pode, a princípio, ``posicionar'' o personagem do jogador aonde bem entender. Mesmo que o servidor realize testes para detectar alguns tipos óbvios de manipulação (por exemplo, verificando se um personagem não percorreu vários ``quilômetros virtuais'' em alguns poucos segundos), geralmente fica difícil para o servidor diferenciar entre uma informação correta e uma manipulação cuidadosa, que altera levemente a posição de um personagem para desviar de um projétil, por exemplo.
+
+\item \textbf{Clientes enviam comandos:} Outra técnica possível, que é empregada nos jogos Quake~\cite{quake} e Outgun~\cite{outgun}, consiste em não confiar em atualizações dos clientes, fazendo com que o servidor aceite apenas ``requisições'' dos clientes. Ou seja, o servidor não consulta os clientes quanto ao estado atual de algum objeto de jogo ou à ordem em que certos eventos ocorrem. Neste contexto, o cliente envia ao servidor apenas requisições, que podem ser atendidas ou não. Estas requisições podem ser, por exemplo, comandos para movimentar um personagem ou disparar um projétil. Cada vez que um jogador emite um comando relevante ao jogo (evento de mouse, teclado, joystick, ...) este é empacotado pelo cliente e enviado ao servidor.
+
+\end{itemize}
+
+Independente da técnica utilizada, o servidor é o responsável por manter o estado do jogo atualizado conforme a passagem do tempo de jogo. Como se trata de uma simulação de tempo real, é necessário que o estado do jogo seja recalculado com freqüência. Em geral, o servidor é configurado para atualizar o estado utilizando um ``passo'' fixo de tamanho relativamente pequeno, por exemplo, de 50ms. O ``passo'' da simulação constitui em calcular o novo estado do jogo partindo de regras de atualização (por exemplo, equações de movimento para atualizar posição de objetos baseado em velocidade) e da informação recebida dos clientes desde o último passo (atualizações e/ou comandos).
+
+O servidor também é programado para enviar, periodicamente, mensagens de atualização para todos os clientes. Isto é necessário para que um cliente consiga visualizar localmente o que os outros clientes estão ``fazendo'' no jogo, já que não há conexão de rede entre os clientes. Estas mensagens permitem aos clientes atualizarem as suas cópias locais do estado do jogo, que são utilizadas para alimentar as rotinas que desenham a tela do jogador, emitem sons, etc.
+
+Como o recurso de rede, tanto dos clientes, quanto do servidor, é precioso e geralmente limitado, uma mensagem de atualização geralmente não contém o estado completo do jogo. Tipicamente se envia a um cliente apenas atualizações referentes aos objetos de jogo que são do seu ``interesse''~\cite{morse1996}. Imaginando um ``mundo virtual'' de jogo em 3D, os objetos de interesse são, por exemplo, objetos que estão diretamente na linha de visão do jogador ou que estão potencialmente visíveis. Há também outras maneiras de reduzir o tamanho de uma mensagem de atualização, como filtragem~\cite{morse1996, morse99multicast, vanhook1994} por prioridade (importância do objeto para a tomada de decisão do jogador), por distância (objetos ``distantes'' podem necessitar de atualizações de posição menos freqüentes ou de menor resolução), etc. Além da limitação de banda, reduzir o tamanho das mensagens aumenta as chances destas serem rapidamente transmitidas pela Internet~\cite{bass97traffic}, o que é muito importante para a implementação de jogos de ação.
+
+\subsection{Exemplo: o jogo Outgun}
+
+A seguir será detalhado o protocolo utilizado no jogo Outgun~\cite{outgun}, um jogo distribuído, cliente-servidor, de ação simples em um ambiente 2D, projetado para a Internet. Neste jogo dois times de jogadores controlam personagens representados por círculos que disparam projéteis uns contra os outros enquanto tentam capturar a bandeira do time adversário. Cada partida se desenvolve em um ``mapa'' (o ``mundo virtual'' do jogo) que é composto de um número variável de salas. Cada jogador só enxerga a posição exata dos jogadores que estão mesma sala. O jogo oferece também um ``radar'', localizado no canto superior direito da tela, que exibe todas as salas do mapa, a posição global do jogador, a posição dos jogadores aliados, e a posição de outros objetos (bandeiras e jogadores inimigos) que estejam no campo de visão de pelo menos um aliado. A figura 2.1 exibe uma tela do jogo.
+
+% ~\ref{fig:fig21}
+%
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.5]{figuras/fig21.eps}
+  \end{center}
+\caption{Captura de tela do jogo Outgun}
+\label{fig:fig21}
+\end{figure}
+
+Historicamente, os jogos de ação como Doom, Quake e Half-Life tiveram seus protocolos desenvolvidos para modems com capacidade de transmissão entre 14KBPS e 56KBPS, sendo 2Kbytes/s a 5Kbytes/s (por conexão cliente-servidor) uma linha-guia geral para um protocolo destes. O protocolo do jogo, via de regra, é implementado sobre UDP, pois as mensagens de atualização enviadas pelo servidor, em geral, não precisam ser retransmitidas quando perdidas, pois cada atualização enviada torna as atualizações anteriores obsoletas. Para satisfazer as necessidades de garantia de entrega e ordenamento do protocolo do jogo, pode-se utilizar outra conexão TCP em conjunto com a conexão UDP, ou, o que é geralmente o caso, é utilizado um protocolo que suporta retransmissão e ordenamento seletivos sobre UDP (por exemplo, RTP~\cite{rtp} ou outro desenvolvido especificamente para a aplicação).
+
+O jogo Outgun foi desenvolvido com o objetivo de utilizar poucos recursos de rede. A versão 0.5.0 do jogo utiliza 0,5Kbytes/s entre o cliente e o servidor na maioria das situações, mas pode chegar a picos de 2Kbytes/s por jogador durante as batalhas mais acirradas. O jogo foi projetado para suportar até 32 clientes simultâneos (até 16 jogadores em cada um dos dois times de jogadores). Um protocolo específico de retransmissão e ordenamento seletivos foi implementado sobre UDP e foi batizado de RUDP (Reliable UDP). A tabela~\ref{tab:rudp} exibe o formato de um pacote RUDP. O pacote consiste de quatro partes básicas: um cabeçalho que inclui o identificador do pacote, uma lista de mensagens de entrega garantida (``mensagens confiáveis'') que estão sendo transmitidas (ou retransmitidas) neste pacote, uma lista de ``acks'' que confirmam os identificadores dos pacotes recebidos, e um bloco de entrega não garantida (``mensagem não-confiável''). Cada mensagem confiável enviada por um lado da conexão recebe um identificador único e sempre crescente. Quando um pacote com mensagens confiáveis é recebido, o identificador deste pacote é incluído na lista de ``acks'' do próximo pacote enviado. Desta forma são detectadas, indiretamente, as mensagens confiáveis que já foram recebidas. Enquanto uma mensagem confiável não é confirmada, ela é constantemente retransmitida. Isto é feito para minimizar o atraso na entrega de mensagens, e não caracteriza um problema visto que o protocolo foi projetado para aplicações que enviam mensagens confiáveis muito pequenas. As mensagens confiáveis em Outgun tem tipicamente menos de 50 bytes, e a maioria não ultrapassa 10 bytes.
+
+%~\ref{tab:rudp}
+%um pacote  RUDP utilizado pelo jogo Outgun
+\begin{table}[htbp]
+  \centering
+  \caption{Estrutura do pacote RUDP utilizado pelo jogo Outgun}
+  \vspace{0.3cm}
+  \begin{tabular}{l|l}
+    \hline
+    \textbf{Tipo} & \textbf{Descrição} \\
+    \hline
+    int (32 bits) & ``Id'' do pacote \\
+    \hline
+    short (16 bits) & Nº de confirmações de pacotes (nack) \\
+    \hline
+    int [nack] & lista de ``Id''s de pacotes confirmados \\
+    \hline
+    byte (8 bits) & Nº de mensagens confiáveis no pacote (nmsg) \\
+    \hline
+    estrutura [nmsg]: & Lista de mensagens confiáveis\\
+    \hline
+    -- int & ``Id'' da mensagem \\
+    \hline
+    -- short & Tamanho da mensagem (msize)\\
+    \hline
+    -- byte [msize] & Dados da mensagem \\
+    \hline
+    byte [...] & Dados não-confiáveis (qualquer tamanho)\\
+    \hline
+  \end{tabular}
+  \label{tab:rudp}
+\end{table}
+
+Utilizando RUDP, foi implementado o protocolo do jogo em si, o protocolo Outgun. O protocolo Outgun determina que os clientes enviam ao servidor apenas requisições. Desta forma, é dificultado o surgimento de programas clientes com suporte a trapaças, pois o cliente pode apenas enviar ``pedidos'' ao servidor, que tem autonomia para decidir se a ``jogada'' enviada pelo jogador é válida ou não. Neste sentido, o cliente Outgun envia, no bloco ``não confiável'' do pacote, apenas um único byte onde é codificado o estado atual das teclas do jogador (tabela~\ref{tab:cts}). As teclas determinam a direção e velocidade em que o jogador quer se movimentar, e também determina se o jogador quer atirar ou não.
+
+%~\ref{tab:cts}
+%pacote cliente-servidor do jogo Outgun (bloco unrel)
+\begin{table}[htbp]
+  \centering
+  \caption{Estrutura do bloco não-confiável enviado pelo cliente do Outgun}
+  \vspace{0.3cm}
+  \begin{tabular}{l|l}
+    \hline
+    \textbf{Tipo} & \textbf{Descrição} \\
+    \hline
+    byte (8 bits): & Estado do dispositivo de entrada do jogador \\
+    \hline
+    -- bit 0 & ``mover-se para a esquerda'' (left)\\
+    \hline
+    -- bit 1 & ``mover-se para a direita'' (right)\\
+    \hline
+    -- bit 2 & ``mover-se para cima'' (up)\\
+    \hline
+    -- bit 3 & ``mover-se para baixo'' (down)\\
+    \hline
+    -- bit 4 & ``esquivar'' (strafe)\\
+    \hline
+    -- bit 5 & ``correr'' (run)\\
+    \hline
+  \end{tabular}
+  \label{tab:cts}
+\end{table}
+
+O servidor Outgun atualiza o estado da simulação a cada 100ms. A atualização é feita utilizando o estado anterior do jogo e o último estado conhecido das teclas dos jogadores. Após recalcular o estado, o servidor envia um pacote RUDP de atualização para cada cliente. Áreas de interesse são contempladas à medida que cada cliente é atualizado apenas sobre os objetos (personagens, projéteis, etc) localizados na sala em que o personagem do jogador em questão se encontra. O servidor envia os disparos (criação dos projéteis dos jogadores) como mensagens confiáveis.
+
+%REMOVIDO: óbvio
+% , pois após a criação do projétil, a trajetória do mesmo é previsível pelos clientes e não 
+% precisa de correção do servidor. 
+
+%~\ref{tab:stc}
+%pacote servidor-to-client do jogo Outgun (bloco unrel)
+\begin{table}[htbp]
+  \centering
+  \caption{Estrutura do bloco não-confiável enviado pelo servidor do Outgun}
+  \vspace{0.3cm}
+  \begin{tabular}{l|l}
+    \hline
+    \textbf{Tipo} & \textbf{Descrição} \\
+    \hline
+    int (32 bits) & Tempo ou relógio de simulação (timestamp) \\
+    \hline
+    int & Jogadores presentes (0 a 31, 1 bit por jogador, bit ligado \\
+        & significa que o respectivo jogador está presente no jogo) \\
+    \hline
+    byte (8 bits): & Miscelânea \\
+    \hline
+    -- bit 0 & Bit extra para saúde do jogador (+256) \\
+    \hline
+    -- bit 1 & Bit extra para energia do jogador (+256) \\
+    \hline
+    -- bit 2 & Skip frame (fim do pacote) \\
+    \hline
+    -- bits 3..7 & Identificador do jogador (0..31) \\
+    \hline
+    byte [2] & Coordenada (x,y) da sala do jogador \\
+    \hline
+    int & Jogadores presentes na sala (0 a 31) (pfield) \\ 
+        & pcount = Quantidade de bits ``1'' em (pfield) \\
+    \hline
+    estrutura [pcount]: & Lista de atualização de jogadores (ordem crescente) \\
+    \hline
+    -- byte [3] & Coordenada (x,y) do jogador (na sala) \\
+    \hline
+    -- byte [2] & Vetor de velocidade (sx,sy) do jogador \\
+    \hline
+    -- byte: & Modificadores do jogador \\
+    \hline
+    --- bit 0 & morto? \\
+    \hline
+    --- bit 1 & possui ``deathbringer''? \\
+    \hline
+    --- bit 2 & atingido por ``deathbringer''? \\
+    \hline
+    --- bit 3 & possui ``escudo''? \\
+    \hline
+    --- bit 4 & possui ``turbo''? \\
+    \hline
+    --- bit 5 & possui ``quad damage''? \\
+    \hline
+    -- byte: & Comandos do jogador \\
+    \hline
+    --- bit 0 & movendo-se para a esquerda \\
+    \hline
+    --- bit 1 & movendo-se para a direita \\
+    \hline
+    --- bit 2 & movendo-se para cima \\
+    \hline
+    --- bit 3 & movendo-se para baixo \\
+    \hline
+    --- bit 4 & correndo \\
+    \hline
+    --- bits 5..7 & direção do jogador (0..7) \\
+    \hline
+    -- byte & Grau de opacidade do jogador (alpha) \\
+    \hline
+    short (16 bits) & Inimigos visíveis (0 a 15, 1 bit por jogador) \\
+    \hline
+    byte & Índice do jogador atualizado no mini-mapa (jogmm) \\
+    \hline
+    byte [2] & Coordenada (x,y) do jogador[jogmm] no mini-mapa \\
+    \hline
+    byte & Saúde do jogador (8 bits menos significativos) \\
+    \hline
+    byte & Energia do jogador (8 bits menos significativos) \\
+    \hline
+    short & Latência de rede do jogador[timestamp módulo 32]\\
+    \hline
+  \end{tabular}
+  \label{tab:stc}
+\end{table}
+
+Como mensagem ``não confiável'', o servidor envia em cada pacote um registro de atualização para cada avatar que está na área de interesse do cliente em questão. A tabela~\ref{tab:stc} mostra a estrutura do bloco ``não confiável'' enviado pelo servidor aos clientes, que inclui a lista de registros de atualização de avatares. É importante que estas atualizações de posição e direção do personagem não sejam retransmitidas em caso de perda, pois estas informações se tornam obsoletas muito rapidamente (pacotes com informação mais atual são enviados a cada 100ms) e a retransmissão da mesma apenas usaria mais recursos de rede, sem nenhum ganho adicional.
+
+Uma observação interessante é a de que o tamanho do pacote enviado do servidor para um cliente é diretamente proporcional ao número de ``avatares'' na linha de visão deste jogador, e não ao número total de jogadores conectados no servidor. Esta mesma observação vale para os jogos ``massively multiplayer'', cliente-servidor. Mesmo que existam milhares de jogadores conectados a um servidor de MMG, cada cliente tipicamente só será atualizado sobre os avatares ou objetos dinâmicos do jogo que sejam do seu interesse, ou seja, que estejam próximos do avatar controlado por aquele cliente.
+
+Em resumo, Outgun é um exemplo de jogo distribuído, cliente-servidor, de ação em tempo real. É um jogo baseado em ``avatares'', ou seja, onde cada jogador controla diretamente um objeto dinâmico (o ``avatar'' ou personagem) que interage diretamente com os outros objetos dinâmicos do jogo (outros avatares, projéteis, etc). Neste tipo de jogo, é muito importante que os jogadores tenham um tempo de resposta o mínimo possível aos seus comandos, ou seja, o atraso entre o envio de um pacote de comando (por exemplo, ``mover personagem para frente'') e o recebimento de um pacote de atualização que é influenciado pelo comando (por exemplo, atualização onde o avatar começou a mover-se para frente). O protocolo foi desenvolvido especificamente para atender a este requisito. O protocolo também foi desenvolvido para oferecer um bom nível de proteção contra trapaças. Por exemplo, o cliente não decide a posição final do seu avatar, apenas envia requisições de movimentação para o servidor.
+
+\subsection{Cliente-servidor aplicado para jogos maciçamente multijogador}
+
+Teoricamente, um jogo distribuído pode utilizar a técnica de simulação centralizada do paradigma cliente-servidor para atender a milhares de clientes simultâneos. Para que isto ocorra, o servidor deve possuir poder de processamento (CPU e, indiretamente, memória) e taxa de transmissão (rede) suficientes. Os primeiros jogos comerciais considerados ``massively multiplayer'' para a Internet como Meridian 59 executavam o jogo a partir de um único servidor físico (uma única máquina).
+
+Porém, na prática, pode ser difícil~\cite{igdapsw} hospedar em uma única máquina todo o poder de processamento (CPU e memória) necessário para executar a simulação, em tempo real, de um ``mundo virtual'' habitado por milhares ou milhões de jogadores. Uma solução para este problema, comumente empregada nos MMGs comerciais como EverQuest e PlanetSide, consiste em particionar o mundo virtual e fazer com que cada partição seja atualizada por uma máquina individual, por exemplo, um nodo de um \textit{cluster}. Como sempre haverão dependências de dados entre as diferentes partições do mundo virtual, será sempre necessário sincronizar as tarefas dos nodos responsáveis pelas partições através de troca de mensagens. Por isso, via de regra emprega-se uma rede confiável, de boa velocidade e largura de banda entre os nodos do \textit{cluster}, o que não deixa de ser comum na maioria das aplicações de \textit{clusters}. Existem várias maneiras de particionar um mundo virtual e várias maneiras de mapear as partições nos nodos disponíveis. Este problema é discutido em detalhe por Cunnin ~\cite{cunnin2000}, que também propõe novos algoritmos de balanceamento de partições em nodos e sincronização entre os nodos de um \textit{cluster} que atua como um servidor de MMG.
+
+Mesmo utilizando-se \textit{clusters} para atenuar o problema do custo de processamento de um servidor MMG, ainda resta o problema do consumo de rede. O servidor MMG, seja uma única máquina ou um \textit{cluster}, necessita de uma conexão com a Internet de baixa latência e alta largura de banda, de onde irá se comunicar em tempo real com as centenas, milhares ou milhões de clientes. Tomando como exemplo o jogo Outgun descrito na seção anterior, onde cada jogador pode utilizar até 2Kbytes/s por cliente, um servidor de Outgun que atendesse a 5.000 jogadores, por exemplo, consumiria aproximadamente 80 megabits/s de rede. Esta extrapolação é válida pois um protocolo de MMG cliente-servidor é, em essência, idêntico ao protocolo cliente-servidor para jogos de tempo real distribuídos em pequena escala. Na verdade, o protocolo de um MMG cliente-servidor tende a ser mais pesado, pois o número de objetos dinâmicos que podem ser do interesse de um cliente MMG, a princípio, tende a ser maior. Por exemplo, no MMG PlanetSide, é possível que mais de uma centena de personagens, que movimentam-se dinamicamente em um ambiente 3D, estejam na linha de visão de um jogador. Outro dado que reforça a extrapolação apresentada acima é que o servidor do MMG Ultima Online gasta aproximadamente 2Kbytes/s por cliente servido.
+
+Apesar dos custos de processamento e de rede da simulação centralizada de um mundo virtual de MMG, o paradigma cliente-servidor oferece boas garantias em relação à segurança do jogo. Por exemplo, a ocorrência de ``trapaças'' por parte dos jogadores é dificultada, dependendo apenas do grau de robustez do protocolo empregado entre cliente e servidor, aspecto discutido nas seções anteriores. Outra vantagem é a maior simplicidade na implementação visto que, em geral, sistemas descentralizados são mais complexos que os seus equivalentes cliente-servidor~\cite{mcgregor2003, schoder2003, kubiatowics2003}.
+
+\section{A proposta Grid: Butterfly.net}
+
+O projeto Butterfly.net ~\cite{butterfly} oferece uma solução de computação em grade (\textit{Grid computing})~\cite{ianfoster} para resolver o problema da hospedagem de servidores de MMGs. O propósito geral do Grid da Butterfly.net é substituir os servidores (\textit{clusters}) utilizados pelas empresas que servem os MMGs. Um dos argumentos técnicos principais a favor da migração de \textit{clusters} para o Grid refere-se ao problema do dimensionamento destes \textit{clusters}, visto que não é possível prever exatamente qual será o sucesso do jogo, ou seja, o número de clientes que este jogo terá. Se um MMG fracassar, a empresa pode acabar com poder computacional de sobra, e se um MMG fizer muito sucesso, podem faltar máquinas e alguns clientes que compraram o jogo podem ficar de fora nos horários de pico ou a qualidade do serviço pode decair.
+
+% ~\ref{fig:fig22}
+%Visão simplificada do Butterfly: centro + ISPs + clientes
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.7]{figuras/fig22.eps}
+  \end{center}
+\caption{Uma visão simplificada da plataforma ``Butterfly Grid'' (gerenciador central, provedores de serviço e clientes)}
+\label{fig:fig22}
+\end{figure}
+
+A figura~\ref{fig:fig22} mostra uma visão simplificada do Butterfly Grid. O Grid possui um ``centro'' onde ficam hospedadas as máquinas da Butterfly.net. Neste centro localizam-se servidores mestres de dados e outros serviços essenciais, além dos servidores de jogo propriamente ditos. O servidor de jogo é o que se conecta diretamente com os clientes dos vários MMGs que são servidos pelo Grid e executa o protocolo cliente-servidor de jogo discutido anteriormente. Conectados ao ``centro'' do Grid, e entre si de forma dinâmica, estão servidores de jogo hospedados por provedores de serviço associados, por exemplo, provedores de acesso à Internet ou provedores de jogos e conteúdo.
+
+Existe um problema de escalonamento envolvido~\cite{real2004}, como em toda aplicação de computação em grade. O problema consiste em alocar os servidores físicos (máquinas) do Grid para hospedar um nodo virtual de um servidor distribuído de cada MMG hospedado pelo Grid. Para cada máquina do Grid, o escalonador deve decidir qual servidor de MMG deve ser servido por aquela máquina, ou seja, cada MMG necessita de vários servidores ``lógicos'' alocados em vários locais (físicos) distintos. Se um jogo faz sucesso e sua base de jogadores aumenta, o Grid irá alocar mais máquinas para servir este jogo. Desta forma, a adequação do poder de processamento (CPU) no ``lado servidor'' de um MMG cliente-servidor é resolvido.
+
+Porém, resta verificar se o problema do consumo de rede entre os nodos servidores e os clientes ainda persiste. Apesar de a solução do Grid ser mais sofisticada do que a utilização de servidor em \textit{cluster} próprio, o protocolo de rede entre servidor de jogo e cliente continua, a princípio, sendo o mesmo, que foi descrito anteriormente. Isto significa que o consumo de rede total entre clientes e servidores deve continuar na mesma ordem de grandeza. Uma maneira de resolver este problema, no contexto do Butterfly Grid, seria buscar alocar servidores de jogo em máquinas próximas aos clientes. Por exemplo, alocar um servidor de jogo em um nodo do Grid localizado no provedor de acesso à Internet que é utilizado pelo cliente do jogo. Mesmo que não seja sempre possível realizar esta alocação ótima, basta garantir que grande parte dos servidores estejam localizados em provedores de serviço. Desta forma ao menos, o gargalo do servidor é distribuído em várias localidades.
+
+Uma das característica importantes do Butterfly Grid é a garantia oferecida de uma alta qualidade de serviço. Esta garantia inclui uma transparência total do mecanismo de partição do ``mundo virtual'' do jogo. Em outras palavras, mesmo que dois ``pedaços'' do mundo virtual estejam hospedados em máquinas distintas no Grid, e até distantes entre si, para os jogadores esta divisão deve ser imperceptível, mesmo que os próprios jogadores estejam distantes entre si e das máquinas servidoras que estão escalonadas para aquelas partições do mundo do jogo. Como discutido anteriormente, uma solução de \textit{cluster} em rede local para um servidor MMG é viável visto que neste contexto é fácil instalar uma rede de alta velocidade e baixa latência, suficiente para que os servidores se sincronizem durante a simulação das partições do mundo do jogo. Isto implica, a princípio, que a Butterfly.net utiliza redes de longa distância que possuem qualidade similar para interligar as máquinas do Grid.
+
+Em resumo, a tecnologia de Grid aplicada para MMGs cliente-servidor apresenta algumas vantagens sobre a utilização de \textit{clusters} de servidores. O Butterfly Grid emprega uma infra-estrutura de alta qualidade (nodos e rede). Os nodos servidores, que são alocados dinamicamente, são posicionados nos provedores de serviço, próximo aos clientes. Apesar da infra-estrutura ser razoavelmente distribuída, o paradigma da aplicação ainda é jogo cliente-servidor, onde os clientes fazem apenas requisições e os servidores atuam como sincronizadores das ações dos clientes, garantindo a princípio uma proteção contra clientes potencialmente desonestos (``trapaceiros'').
+
+\section{Jogos \textit{peer-to-peer} de ação em pequena escala}
+
+É possível implementar jogos distribuídos de ``ação'', em tempo real, de uma forma mais descentralizada do que a empregada pelo protocolo cliente-servidor. Por exemplo, pode-se utilizar uma abordagem \textit{peer-to-peer}, onde os nodos dos jogadores se comunicam entre si diretamente sem depender de um nodo sincronizador central~\cite{mimaze}. A figura~\ref{fig:fig23} ilustra uma visão abstrata de uma sessão de jogo \textit{peer-to-peer}, comparada com uma sessão de jogo cliente-servidor. Pode-se observar que há um problema de escalabilidade, pois cada participante do jogo deve possuir uma conexão com cada outro participante, aumentando o custo de rede de forma linear em todos os nodos, para cada participante adicional. Isto pode não ser problemático para um pequeno número de participantes (jogos em ``pequena escala'' com 8, 16, ou 32 participantes), mas torna-se inviável para aplicação em jogos maciçamente multijogador, especialmente se a rede utilizada para a troca de mensagens não possuir suporte a multicast como, por exemplo, a Internet em geral.
+
+% ~\ref{fig:fig23}
+%cliente-servidor versus \textit{peer-to-peer}
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.7]{figuras/fig23.eps}
+  \end{center}
+\caption{Uma sessão de jogo interativo, em cliente-servidor e \textit{peer-to-peer}}
+\label{fig:fig23}
+\end{figure}
+
+O funcionamento básico de um jogo \textit{peer-to-peer} determina que:
+
+\vspace{0.25cm}
+
+\hspace{0.2cm}\textbullet~Não há um servidor central para manter o estado global do jogo;
+
+\vspace{0.2cm}
+
+\hspace{0.2cm}\textbullet~Cada cliente deve enviar atualizações para cada outro cliente;
+
+\vspace{0.2cm}
+
+\hspace{0.2cm}\textbullet~O estado do jogo em cada cliente é computado com base nas atualizações recebidas
+
+\hspace{0.57cm}de outros clientes;
+
+\vspace{0.2cm}
+
+\hspace{0.2cm}\textbullet~Clientes podem entrar e sair do jogo dinamicamente após o início do mesmo, se o
+
+\hspace{0.57cm}protocolo do jogo permitir.
+
+\vspace{0.25cm}
+
+Assim como no paradigma cliente-servidor, o protocolo específico empregado por um jogo \textit{peer-to-peer} pode ser implementado utilizando diferentes técnicas, dependendo de fatores como o tipo de jogo que se pretende suportar e as características da rede (multicast ou apenas unicast). Como exemplo, considere-se um jogo de ação baseado em ``avatares'', ou seja,  um jogo onde cada jogador controla um único personagem em tempo real. Um jogo que se encaixa neste perfil é MiMaze ~\cite{mimaze}, um jogo de ação \textit{peer-to-peer} projetado para um \textit{backbone} experimental da Internet com suporte a multicast, o MBone~\cite{almeroth00evolution, handley97examination, almeroth97multicast}. Em MiMaze, cada jogador controla um personagem dentro de um labirinto 3D. Cada cliente MiMaze envia, periodicamente, uma mensagem de atualização que contém, entre outras informações, a posição atual do personagem controlado pelo jogador. Como a atualização de posição do personagem precisa ser enviada para vários (potencialmente todos) os jogadores ao mesmo tempo, o suporte a multicast da rede pode ser explorado, reduzindo de forma significativa a quantidade total de mensagens enviadas.
+
+Porém, como discutido anteriormente, deixar um nodo decidir a posição do seu personagem em um jogo de ação caracteriza um ponto fraco do protocolo. A vantagem de enviar atualizações de posição é que estas podem ser perdidas sem necessidade de retransmissão, simplificando o protocolo e as tarefas de manter o jogo responsivo, minimizando o efeito do atraso da rede. Se cada cliente enviasse apenas comandos como ``mover personagem para frente'', com o objetivo de diminuir a vulnerabilidade do protocolo à trapaças, estes teriam de ser enviadas de forma confiável, com retransmissão em caso de perda. Isto seria necessário pois, como não há um nodo central para sincronizar os comandos ou ``eventos'', cada cliente necessitaria da lista completa destes eventos para poder manter a sua cópia do jogo sincronizada com as demais. Esta abordagem (\textit{peer-to-peer} com envio de comandos) será discutida em detalhe na seção seguinte.
+
+Em resumo, jogos de ação em tempo real podem ser implementados como sistemas \textit{peer-to-peer}. Uma vantagem dos jogos \textit{peer-to-peer} é não 
+necessitar de um servidor dedicado para sincronizar os eventos dos jogadores. Outra vantagem bastante significativa é o menor atraso experimentado pelos jogadores, pois os eventos gerados pelos jogadores são enviados diretamente de um cliente a outro, ao passo que em um jogo cliente-servidor, os eventos são primeiramente enviados ao 
+servidor para depois serem repassados aos clientes. Outra importante característica do jogo \textit{peer-to-peer} é que a escalabilidade ou quantidade de jogadores simultâneos suportados é limitada em todos os nodos, pois cada nodo, a cada ``passo'' da simulação, deve enviar e receber mensagem para todos os outros nodos. Um jogo cliente-servidor é limitado, a princípio, apenas pelo servidor, que é o único nodo cuja demanda cresce à medida em que mais jogadores são adicionados. Isto permite que a escalabilidade do sistema seja proporcional ao investimento de recursos no servidor, enquanto os clientes podem ser de baixa capacidade. Se a rede oferece suporte a multicast, o gargalo de escalabilidade do jogo \textit{peer-to-peer} pode ser significativamente reduzido.
+
+\section{Jogos \textit{peer-to-peer} de estratégia em pequena escala}
+
+Esta seção descreve um protocolo de simulação interativa baseado em \textit{peer-to-peer} onde cada participante possui uma cópia completa do estado da simulação que deve estar sempre sincronizada com a cópia de todos os outros participantes. Este protocolo, será referido ao longo do texto como ``simulação \textit{peer-to-peer} replicada'', mas também é conhecido na literatura como \textit{lockstep}~\cite{neo2004full, cronin2003} ou \textit{stop-and-wait}. Este protocolo é utilizado pelo modelo FreeMMG, que será apresentado no capítulo 3.
+
+Os protocolos de jogo discutidos anteriormente, tanto cliente-servidor quanto \textit{peer-to-peer}, resolvem o problema de ``jogos de ação em tempo real baseados em avatares''. De ``ação em tempo real'', enfatizando a necessidade de priorizar um baixo tempo de resposta aos comandos dos jogadores, e ``baseados em avatares'', ou seja, jogadores controlando ou influenciando em tempo real, diretamente, apenas um objeto dinâmico (o personagem ou ``avatar''). Os protocolos descritos anteriormente não são os mais adequados para lidar com jogos onde cada jogador controla diretamente, em tempo real, centenas de objetos dinâmicos.
+
+Um tipo de jogo que permite aos jogadores controlar centenas de objetos dinâmicos simultaneamente é o jogo de estratégia militar. Exemplos destes jogos incluem Age of Empires II ~\cite{ageofempires} e Rise of Nations ~\cite{riseofnations}. Os protocolos baseados em atualizações de \textit{status} ou posição de objetos dinâmicos não são muito adequados para estes jogos pois a quantidade de objetos em potencial que necessitam de atualizações constantes pode ser muito grande. Por exemplo, em um MMG cliente-servidor como PlanetSide ~\cite{planetside}, um jogador pode, muito raramente, visualizar batalhas envolvendo uma centena de jogadores, necessitando neste caso de até cem ``registros'' de atualização de objeto em cada pacote de atualização enviado pelo servidor, pois cada jogador controla um objeto dinâmico (desconsiderando mensagens de disparo de projéteis, etc). Em um jogo de estratégia como Age of Empires II, que suporta até 8 jogadores simultâneos, um encontro rotineiro entre apenas dois jogadores pode envolver até 400 objetos dinâmicos (200 de cada jogador). Ou seja, se Age of Empires II fosse implementado utilizando o mesmo protocolo de PlanetSide, e considerando o exemplo anterior, o servidor utilizaria até quatro vezes mais largura de banda (100 contra 400 objetos dinâmicos) para atualizar cinqüenta vezes menos jogadores (100 contra 2 jogadores). No exemplo os clientes também utilizariam até quatro vezes mais largura de banda.
+
+Se considerarmos uma rede sem suporte a multicast, o protocolo \textit{peer-to-peer} para jogos de ação descrito na seção anterior é igualmente inadequado. O protocolo especifica que cada cliente atualiza os objetos dinâmicos que controla e envia periodicamente uma mensagem de atualização para cada outro cliente. Se o cliente controla não apenas um, mas, por exemplo, cem objetos, o tamanho da mensagem a largura de banda utilizada pelo cliente são, a princípio, multiplicados por cem.
+
+A idéia central da solução para o jogo de estratégia consiste em utilizar uma codificação diferente para o protocolo de jogo. O protocolo até aqui discutido determina que para cada objeto dinâmico deve haver um nodo ``responsável'' que calcula a posição do objeto e atualiza com freqüência os outros nodos, enviando a informação em pacotes sem entrega garantida. Isto faz com que o tráfego de rede seja diretamente proporcional à quantidade de objetos dinâmicos do jogo. O protocolo utilizado por Age of Empires e descrito por Bettner e Terrano ~\cite{archers1500} é diferente. A topologia de rede utilizada é \textit{peer-to-peer}, com uma conexão entre cada cliente participante, como descrito anteriormente para jogos de ação, mas com a diferença de que há garantia de entrega de mensagens.
+
+O cliente de Age of Empires utiliza estas conexões ``confiáveis'' para enviar listas de comandos e um comando pode ser, por exemplo, uma requisição para mover um determinado exército para certas coordenadas. É importante destacar que o tamanho (em bits) de um comando não é proporcional ao número de objetos dinâmicos envolvidos: o comando do exemplo anterior não varia de tamanho de acordo com o número de objetos que compõe o exército que está sendo comandado. As listas de comandos são despachadas periodicamente, por exemplo, a cada 100ms. A cada envio, um contador inteiro de tempo de simulação local é incrementado e associado à lista de comandos, caracterizando o ``timestamp'' da lista. Como a entrega de mensagens é garantida, cada cliente recebe todas as listas de comandos enviadas por cada outro cliente.
+
+A figura~\ref{fig:fig24} ilustra um cenário envolvendo dois simuladores (réplicas). No início de uma partida, todos os clientes participantes concordam em um estado inicial e inicializam seus contadores de tempo de simulação local em zero. A partir desta inicialização, cada cliente fica em laço aguardando o recebimento das listas de comandos de todos os jogadores cujo ``timestamp'' é igual ao seu tempo de simulação local. Quando isto ocorre em um cliente, este tem informação suficiente para atualizar sua cópia da simulação, como mostra o exemplo da figura~\ref{fig:fig24}. Como todos os clientes partem do mesmo estado inicial, e recebem os mesmos comandos, os estados calculados em cada cliente serão idênticos, para qualquer tempo de simulação T.
+
+% ~\ref{fig:fig24}
+%estado(T) + comandos(T) = estado(T+1)
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.66]{figuras/fig24.eps}
+  \end{center}
+\caption{Exemplo de atualização do estado replicado, com duas réplicas e sem utilização de \textit{lookahead}}
+\label{fig:fig24}
+\end{figure}
+
+\subsection{Compensando atrasos de rede com \textit{lookahead}}
+
+Apesar da maior capacidade de tratamento de grandes quantidades de objetos, a simulação replicada apresenta um problema oriundo do atraso de rede. Considerando um único cliente (réplica) do jogo, há um atraso entre coletar os comandos locais, emitidos pelo jogador (via teclado, mouse, etc), que recebem um timestamp local T qualquer, e o recebimento dos comandos dos jogadores remotos que também terão este timestamp T. O resultado é que, seguindo a regra de atualização anterior, a simulação em tempo real irá ``travar'' regularmente, ou seja, a atualização das réplicas não poderá prosseguir temporariamente, por um tempo proporcional ao atraso médio da rede. A tendência é a de que cada cliente do jogo colete seus comandos locais para o turno T aproximadamente ao mesmo tempo, envie este comando para os outros clientes e fique esperando (o equivalente a ``um atraso'' de rede) pelo recebimento dos comandos de T dos outros clientes. Este cenário é ilustrado pela figura~\ref{fig:fig24}.
+
+% Uma maneira de resolver este problema é extrapolar a réplica, ou seja, atualizar a réplica utilizando os últimos comandos recebidos (ou heurísticas), durante a espera. Quando todos os comandos para o turno T forem recebidos, a réplica extrapolada é corrigida, aplicando-se a regra de atualização apresentada anteriormente. 
+
+A solução empregada em Age of Empires II, para evitar que os simuladores fossem suspensos enquanto aguardassem comandos, foi modificar a regra de atualização para que os comandos utilizados para atualizar uma réplica do turno T para o turno T+1 fossem os comandos coletados no turno T-2, ou seja, de dois turnos atrás. A duração de um turno em Age of Empires II pode variar, por exemplo, entre 50ms e 200ms. Considerando um turno de 200ms, atualizar uma réplica no turno T com os comandos de T-2 significa mascarar até 400ms de atraso de rede. Em outras palavras, se nenhum cliente demorar mais do que 400ms para enviar um comando para outro cliente, a simulação não irá ``travar'' por falta de dados. Esta solução causa um atraso mínimo e constante entre a coleta do comando do jogador e a aplicação deste comando. Em Age of Empires II, com um turno de 100ms por exemplo,
+isto significa que o jogador sempre irá experimentar um atraso mínimo de 200ms entre seu
+comando (``mover tropas'' por exemplo) no dispositivo de entrada (teclado, etc) e a execução do comando no jogo (tropas em movimento). A introdução de um atraso mínimo pode ser algo inviável em alguns tipos de jogo, especialmente nos jogos em tempo real baseados em ``avatares'' como jogos de tiro em primeira pessoa ou jogos de corrida onde um atraso acima de 100ms já é bastante perceptível e um atraso de 200ms prejudica substancialmente a qualidade do jogo ~\cite{pantel, cronin2003}. Porém, em jogos de estratégia em tempo real, onde o jogador tipicamente controla uma grande quantidade de objetos, obter um tempo de atraso constante, em contraste com um tempo de atraso que flutua de forma abrupta, é mais importante do que obter um tempo de atraso muito próximo de zero ~\cite{archers1500}. 
+
+O restante do texto irá referir como \textit{lookahead}~\cite{lookahead, fujimoto2000} à quantidade de turnos ``no passado'' do simulador que é utilizada como parâmetro para a regra de atualização do estado. A figura~\ref{fig:fig25} ilustra um exemplo com dois simuladores, utilizando a regra de atualização com \textit{lookahead} e um valor de \textit{lookahead} igual a um. O cenário ilustrado assume que a latência da rede é suficientemente menor que o intervalo de tempo real entre as iterações de cada simulador local. Caso o atraso de rede seja maior que este intervalo, os simuladores irão parar enquanto aguardam os comandos necessários. Por isso, é importante configurar um valor adequado ao \textit{lookahead}. Se o valor do \textit{lookahead} for muito reduzido, os simuladores irão ``travar'' com freqüência, mas se o valor for muito elevado, os comandos dos jogadores irão demorar muito para serem executados, o que reduz a sensação de interação em tempo real com o jogo.
+
+% ~\ref{fig:fig25}
+%estado(T) + comandos(T-Lookahead) = estado(T+1)
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.66]{figuras/fig25.eps}
+  \end{center}
+\caption{Exemplo de atualização do estado replicado, com duas réplicas e com \textit{lookahead} igual a 1}
+\label{fig:fig25}
+\end{figure}
+
+\subsection{Tolerância a falhas e proteção contra trapaças}
+
+A replicação do estado garante duas propriedades: tolerância a falhas e proteção contra jogadores trapaceiros. Se um cliente conectado ao jogo falhar (por exemplo, se sua conexão com a rede é interrompida abruptamente), os outros participantes podem continuar o jogo normalmente após a detecção da falha, pois cada participante possui uma réplica do estado da simulação e não depende de informação mantida pelos outros clientes. Se um cliente resolver alterar ilegalmente sua réplica do estado (por exemplo, fabricando exércitos ou outro tipo de recurso para si mesmo), o cliente trapaceiro irá prejudicar a si mesmo pois irá fazer com que o jogo saia de sincronia sem nenhum ganho real, pois as cópias dos outros jogadores não são afetadas. Fazer com que o jogo saia de sincronia irá fazer, no máximo, com que o mesmo seja interrompido. Isto pode ocorrer se os clientes trocarem \textit{hashes} ou \textit{checksums} das réplicas periodicamente, uma técnica implementada em Age of Empires II. De qualquer maneira, o objetivo do trapaceiro, que é alterar o jogo e passar despercebido, não é alcançado.
+
+\subsection{O problema da ocultação parcial do estado}
+
+Porém, a replicação do estado apresenta uma desvantagem importante: não há como manter uma parte do estado inacessível a um certo cliente, pois todos os clientes tem acesso a todo o estado replicado do jogo. Uma solução possível é programar o cliente do jogo de forma a não revelar ao jogador humano certa informação. Em Age of Empires II , por exemplo, um jogador só enxerga a porção do campo de batalha que está próxima a alguma de suas tropas, apesar de cada cliente conectado ao jogo possuir informação completa do campo de batalha (posição exata de todas as outras tropas). Esta capacidade de ocultação de informação permite novas táticas de jogo e, dependendo do jogo, pode ser essencial (por exemplo, um jogo de Pôquer). Porém, se o cliente do jogo é responsável pela ocultação (e não o protocolo do jogo), então há a possibilidade de que o cliente do jogo seja adulterado por um jogador trapaceiro para revelar o jogo completo. Este tipo de trapaça ocorreu com Age of Empires II. A solução empregada foi modificar o código compilado do jogo para que se tornasse diferente do anterior, e provavelmente mais obscuro. Note-se que a indisponibilidade do código-fonte do cliente do jogo não chega a ser um problema para os trapaceiros mais perseverantes, como mostra o caso de Age of Empires II.
+
+%FIXME-FÍGURA: ocultação de estado pelo cliente
+
+\subsection{Resumo e considerações finais}
+
+Em resumo, a técnica empregada no jogo Age of Empires suporta jogos distribuídos em pequena escala, de estratégia em tempo real. É empregada uma topologia \textit{peer-to-peer} onde há uma réplica (cópia) completa do estado do jogo em cada nodo ou cliente participante. Periodicamente, cada cliente  envia uma lista com os comandos de jogo acumulados até o momento, recebe as listas dos outros clientes, incrementa o seu contador de tempo de simulação local e atualiza sua réplica do estado do jogo. Como todos os clientes partem do mesmo estado inicial e a entrega de comandos é garantida, a atualização das réplicas é determinística e previsível por todos os clientes, mantendo todas as réplicas em sincronia. Como o estado é totalmente replicado, não há como haver ocultação de objetos entre os jogadores. Porém, a replicação garante tolerância a falhas e também uma forte proteção contra trapaças, duas características importantes. Esta técnica é adequada para implementar jogos \textit{peer-to-peer} de estratégia pois permite que cada jogador controle um número arbitrariamente grande de objetos dinâmicos em tempo real, sem variar o consumo de rede do protocolo. Há um problema de atraso, onde o comando gerado localmente pelo jogador (teclado, mouse) não pode ser aplicado imediatamente pois há a necessidade de esperar os comandos dos outros jogadores para o mesmo turno, sujeitos ao atraso da rede. Este problema é resolvido com o uso de \textit{lookahead}, onde os comandos utilizados na atualização da réplica não são os comandos mais atualmente gerados e sim comandos gerados em um ``turno'' passado que depende do \textit{lookahead} utilizado pelo jogo. Esta solução é aceitável em jogos de estratégia pois estes são mais tolerantes a um atraso maior (mas fixo) entre um comando gerado localmente e a aplicação deste comando no jogo.
+
+Uma observação interessante é que Age of Empires não possui suporte para que um jogador entre no meio de uma partida em andamento. Porém, a técnica descrita nesta seção poderia ser incrementada para permitir a entrada de novos jogadores. Para isso seria necessário enviar ao novo cliente uma cópia do estado atual do jogo. Devido à quantidade de objetos dinâmicos em jogo, e do próprio jogo em questão, uma cópia do estado pode ter um tamanho significativo, e isto significa que haveria um certo tempo mínimo necessário para a transmissão do mesmo. A transmissão da cópia do estado também precisaria ser concorrente com o envio das listas de comandos pois ela necessita de atualizações a partir do momento que começa a ser transmitida. Se as listas de comandos são enviadas a cada 100ms, por exemplo, e a transmissão de uma cópia do estado para o novo jogador demorar 1 minuto, isto significa que quando a cópia for recebida, ela já teria que ser atualizada 600 vezes.
+
+\section{Suporte descentralizado a jogos maciçamente multijogador}
+
+Como discutido anteriormente, os sistemas de suporte a MMGs atualmente empregados comercialmente são, em sua grande maioria, baseados em uma filosofia de execução ``centralizada'' da simulação~\cite{neo2004full}, na medida em que atualizações ao estado do jogo (por exemplo, decidir qual jogador ganhou uma disputa) são computadas ou autorizadas por servidores localizados em domínios administrativos ``confiáveis''. Isto ocorre tanto para MMGs cliente-servidor, quanto para MMGs baseados em arquiteturas do tipo ``computação em grade'', como é o caso do Butterfly Grid~\cite{butterfly}.
+
+Neste contexto, há um crescente interesse na pesquisa e desenvolvimento de arquiteturas mais ``descentralizadas'' (ou ``par-a-par'') de suporte a MMGs. Os modelos científicos propostos buscam a descentralização, em geral, como forma de aumentar a escalabilidade do modelo e reduzir a dependência em nodos alocados em domínios ``confiáveis''. Outros benefícios incluem a eliminação dos pontos centrais de falha~\cite{bharambe2002}, bem como o aumento da responsividade, que pode ser obtido através da exploração da localidade nas interações entre os ``avatares'' dos jogadores no mundo virtual~\cite{knutsson2004}. Neste sentido, estes modelos são diretamente relacionados com o modelo FreeMMG, proposto neste trabalho.
+
+Algumas destas propostas não tratam o problema da proteção contra jogadores trapaceiros, como é o caso de Mercury~\cite{bharambe2002} e a ``arquitetura de comunicação para jogos maciçamente multijogador'' proposta por Fiedler et al~\cite{fiedler2002}. Ambas as arquiteturas tratam o problema da escalabilidade ao propor uma solução baseada no paradigma publicador-assinante. Neste paradigma, o mundo virtual é dividido em partes menores,  geralmente denominadas de ``células'', e cada participante pode optar por assinar (ou seja, participar) de apenas algumas células. Desta forma, cada assinante de uma célula só precisa trocar mensagens de atualização com os assinantes da mesma célula. As arquiteturas também tratam de outros problemas básicos, como o problema da responsividade aos comandos gerados por cada participante. Mercury enfatiza a robustez da arquitetura em execução, enfocando a eliminação do servidor, que é considerado um ponto central de falha. Já Fiedler et al propõem a divisão do mundo virtual não só em células geográficas como também em ``canais'' dentro de cada célula, sendo que em cada canal trafegam mensagens com requisitos diferentes. Por exemplo, uma célula pode possuir um canal ``de ambiente'', com envio de mensagens menores e de maior prioridade (mudanças no ``mapa'' do mundo, por exemplo) e um canal ``de interações'', com envio de mensagens maiores e de menor prioridade (atualizações de posição de ``avatares'', por exemplo).
+
+Recentemente, observa-se que as propostas de arquiteturas de suporte a MMGs que utilizam modelos de distribuição \textit{peer-to-peer} estão se tornando cada vez mais adequadas à realidade da Internet e às necessidades dos MMGs ``reais''. Um exemplo disto é o modelo NEO, publicado recentemente~\cite{neo2004full, neo2004lowlat}. O modelo NEO é dividido em quatro componentes principais: autenticação, comunicação, armazenamento e computação. O componente de autenticação é responsável por controlar o acesso dos jogadores ao jogo, e deve executar em máquinas ``confiáveis''. O componente de armazenamento provê o armazenamento de longo prazo do estado persistente do mundo virtual através de uma tabela \textit{hash} distribuída (DHT ou \textit{distributed hash table}), sem a necessidade de um armazenamento persistente em máquinas confiáveis. O componente de comunicação determina como os jogadores em um mesmo ``grupo NEO'' enviam mensagens entre si (por multicast ou unicast, etc), utilizando o ``protocolo NEO''. Por fim, o componente de computação decide como distribuir a responsabilidade da atualização do mundo virtual entre os vários nodos ``clientes'' que participam da simulação. O componente de computação também evita a ocorrência de trapaças através da replicação de uma mesma computação em vários clientes.
+
+Como a maioria dos sistemas de suporte a NVEs, o modelo NEO explora a localidade das interações entre os jogadores. Neste sentido, um ``grupo NEO'' é um grupo de simulação \textit{peer-to-peer} em pequena escala, ou seja, um subconjunto dos participantes do mundo virtual. O ``protocolo NEO'' é utilizado para a comunicação entre os participantes de um grupo NEO. Este protocolo é um refinamento do protocolo \textit{lockstep} ou ``simulação \textit{peer-to-peer} replicada'', apresentado na seção anterior, sendo acrescentadas algumas características presentes em outros protocolos, como a proteção contra trapaças do protocolo ``\textit{lockstep} seguro''~\cite{baughman2001} e a redução do \textit{jitter} (intervalo entre o recebimento de pacotes) presente no protocolo \textit{Sliding Pipeline}~\cite{cronin2003}. 
+
+Atualmente, a parte mais desenvolvida do modelo NEO é o componente de comunicação, e a modelagem de algumas partes importantes deste componente ainda permanecem em aberto~\cite{neo2004full, neo2004lowlat}. Por exemplo, a versão atual do modelo não especifica como seria feita a formação dos ``grupos NEO'' (ou seja, como seria feita a inclusão ou a remoção de jogadores de um grupo) ou como o ``protocolo NEO'' propagaria os eventos que afetam mais de um grupo ou ``célula'' do mundo virtual (o que incluiria, em princípio, o suporte à interação entre ``objetos de jogo'' localizados em diferentes grupos). Por outro lado, o projeto NEO possui objetivos interessantes, em especial a intenção de suportar jogos maciçamente multijogador de ação, baseados em ``avatares''.
+
+\section{Considerações finais}
+
+Nos últimos anos, observa-se um aumento crescente no contexto de pesquisa e desenvolvimento de  sistemas baseados em \textit{peer-to-peer} para a Internet~\cite{livrop2p}. A crescente popularização do acesso de ``banda larga'' à Internet, bem como a proliferação de dispositivos móveis e tecnologias de acesso sem-fio, tornam os equipamentos ``clientes'' cada vez mais aptos a atuarem não só como consumidores de informação, mas também como produtores. Cada vez mais, problemas tipicamente difíceis de serem tratados de forma distribuída, se tornam viáveis de serem resolvidos, total ou parcialmente, através de computação colaborativa, sem a necessidade de participação de entidades centrais ~\cite{freenet, solipsis} ou, pelo menos, através de arquiteturas híbridas, onde a entidade central tem um papel reduzido na rede ~\cite{bittorrent, pellegrino2003, setiathome}.
+
+A análise do estado-da-arte do suporte a jogos distribuídos para a Internet mostra que há uma lacuna em relação a sistemas de suporte de jogos maciçamente multijogador através de plataformas que não exijam um ``lado servidor'' custoso. Por um lado, as plataformas cliente-servidor e Grid, que são usadas atualmente no suporte a MMGs, exigem uma estrutura servidora custosa, tanto em relação ao poder de processamento, quanto em relação aos recursos de rede, relativos à interconexão entre os servidores e à conexão com a Internet para provimento do serviço aos jogadores. Por outro lado, existem propostas acadêmicas de modelos descentralizados, totalmente \textit{peer-to-peer}, e também de modelos híbridos, que combinam as vantagens dos modelos cliente-servidor e \textit{peer-to-peer}.
+
+Porém, alguns destes modelos não oferecem garantias de proteção contra jogadores trapaceiros, o que é uma característica essencial para a implementação de soluções para a Internet. Além disso, foi verificado que há uma lacuna em relação ao suporte a jogos de estratégia em tempo real (jogos RTS), em um contexto maciçamente multijogador, justamente devido às características de centralização da simulação que são buscadas pelas implementações atuais de MMGs comerciais. Neste contexto insere-se a motivação da pesquisa e desenvolvimento do modelo FreeMMG. O capítulo 3 descreve o modelo proposto, que caracteriza uma arquitetura híbrida, cliente-servidor e \textit{peer-to-peer}, de suporte a jogos maciçamente multijogador, que utiliza um servidor de baixo custo ao mesmo tempo em que oferece resistência a alguns dos principais tipos de trapaças em jogos distribuídos.
+
