@@ -1,0 +1,72 @@
+\chapter{Conclusão}
+
+O constante crescimento da disponibilidade do acesso à Internet em banda larga, bem como a popularização dos dispositivos móveis e tecnologias de acesso sem fim, contribuem para a popularização dos jogos distribuídos, ou ``multijogador'', e dos jogos distribuídos escaláveis, ou ``maciçamente multijogador''. Atualmente, percebe-se uma crescente demanda, na indústria de desenvolvimento de jogos, por novas tecnologias de suporte a jogos distribuídos. Neste sentido, também observa-se um crescente aumento em trabalhos de pesquisa, eventos e publicações científicas orientadas para o problema do suporte a jogos distribuídos.
+
+Este trabalho insere-se no contexto de pesquisa de novas tecnologias de suporte a jogos maciçamente distribuídos na Internet. Foi mostrado que o problema do suporte a jogos competitivos é diferente do problema de suporte a, por exemplo, ambientes colaborativos, especialmente no que diz respeito à vulnerabilidade a alterações ilegais no estado da simulação distribuída do ambiente de jogo. Além disso, foram discutidas as desvantagens dos paradigmas de simulação atualmente empregados pelos desenvolvedores de MMGs, como o paradigma cliente-servidor e o paradigma Grid de execução, que centralizam todo o custo de simulação no ``lado servidor'' e aumentam os custos dos provedores de acesso aos jogos.
+
+Neste contexto, foi proposto o FreeMMG, um modelo de suporte para jogos de estratégia em tempo real maciçamente multijogador. Foi demonstrado que o modelo é baseado, em parte, em uma arquitetura cliente-servidor, mas que o servidor empregado é escalável, através da distribuição da maior parte da simulação entre os próprios clientes (máquinas e conexões dos jogadores). Os resultados experimentais demonstraram que um servidor FreeMMG pode servir centenas de jogadores através de uma conexão de ``banda larga'' comum. 
+
+Por fim, em relação à originalidade do trabalho, pode-se dizer que o FreeMMG é, até onde foi pesquisado pelo autor, o único modelo que unifica as seguintes características:
+
+\begin{itemize}
+
+\item Arquitetura de suporte a jogos maciçamente multijogador (MMGs) de tempo real que depende apenas de um ``lado servidor'' de baixo custo (CPU e rede) como foi demonstrado pelos resultados experimentais obtidos;
+\item Suporte específico para jogos maciçamente multijogador de estratégia em tempo real, através da utilização de um protocolo conservador de simulação determinística e sincronização de entradas (comandos);
+\item Resistência a jogadores trapaceiros, por exemplo, através da replicação dos segmentos em vários assinantes e através da comunicação por ``mensagens replicadas'' durante a interação entre segmentos distintos.
+
+\end{itemize}
+
+O modelo FreeMMG continua em desenvolvimento, juntamente com uma nova implementação do mesmo, em formato \textit{framework} reusável. Espera-se que a implementação do ``FreeMMG Framework'' seja útil como uma plataforma de suporte a jogos maciçamente multijogador de tempo real. Através da operação em servidores de baixo custo, espera-se que o FreeMMG beneficie, por exemplo, projetos de pesquisa relacionados a jogos escaláveis e projetos de desenvolvimento de jogos experimentais e estudo prático de ``game design'' aplicado a MMGs. Com o desenvolvimento de trabalhos futuros orientados à adição de mais mecanismos de segurança, o FreeMMG também pode se tornar uma alternativa para a aplicação em projetos de jogos comerciais, em especial de empresas iniciantes (ou independentes de publicadores) que, em geral, não possuem os recursos necessários para custear o ``lado servidor'' de um MMG cliente-servidor. Neste sentido, a implementação em software livre do ``FreeMMG Framework'' visa facilitar o envolvimento de empresas e outros pesquisadores interessados na evolução do modelo e da implementação do FreeMMG.
+
+\section{Contribuições}
+
+Identificam-se as seguintes contribuições no contexto deste trabalho:
+
+\begin{itemize}
+
+% não é contribuição
+%\item Estudo e revisão de conceitos relacionados à simulação distribuída e interativa em tempo real, com ênfase nos requisitos impostos, às arquiteturas de suporte, pelos vários tipos de aplicações como ambientes colaborativos e jogos competitivos;
+
+% não é contribuição
+%\item Estudo e comparação de técnicas de implementação de jogos maciçamente multijogador empregadas pela indústria, bem como estudo de outros trabalhos científicos de aplicação nesta área, dissertando sobre os pontos fortes e fracos de cada um;
+
+\item Desenvolvimento de um modelo de suporte para jogos maciçamente multijogador que unifica metas opostas como o suporte a jogos de estratégia em tempo real maciçamente multijogador, resistência a jogadores trapaceiros e utilização de ``lado servidor'' de baixo custo (relativo ao custo de processamento e custo de rede);
+\item Validação da escalabilidade do modelo proposto através da implementação dos principais componentes, para até 300 clientes conectados simultaneamente, sendo que o servidor não utilizou mais do que 30 Kbytes/s de recursos de rede em todos os testes, o que caracteriza um resultado significativo;
+\item Detalhamento de trabalhos futuros importantes, como a extensão do modelo para que haja garantias de consistência global e proteção contra jogadores trapaceiros através dos mecanismos de envio e, possivelmente, de processamento no servidor dos ``resumos de comandos'' (descrito na seção 3.16);
+\item Cinco publicações em eventos científicos ~\cite{cecin2004dsrt, cecin2003wjogos, cecin2004netgames, cecin2004erad, cecin2003wsgppd}, sendo a mais significativa ~\cite{cecin2004dsrt} um paper completo publicado na oitava edição do simpósio internacional DS-RT 2004 da IEEE;
+\item Participação na aprovação e na execução, em 2004, do projeto ``FreeMMG: Um Framework Livre para Desenvolvimento de Massively Multiplayer Games'', Edital MCT/CNPq/CT-INFO 01/2003, com a orientação de dois programadores para uma implementação reusável do FreeMMG (''FreeMMG Framework'') e de um novo jogo demonstrativo (o jogo ``Robonationz''), que caracterizam um trabalho em andamento;
+\item No contexto do projeto FreeMMG, um trabalho de conclusão de curso de graduação foi defendido ~\cite{marcio} e três trabalhos de conclusão de curso de graduação ~\cite{enoch, rolf, leandro} e um trabalho de conclusão de curso de especialização ~\cite{luiscarvalho} encontram-se em desenvolvimento. Além destes, dois trabalhos de disciplina relacionados a melhorias no modelo FreeMMG foram desenvolvidos ~\cite{freemmgmultiserver, josiane};
+
+\end{itemize}
+
+\section{Trabalhos futuros}
+
+O modelo FreeMMG pode ser melhorado em diversos aspectos. Alguns destes aspectos, como o tratamento de falhas por \textit{snapshots} e \textit{logs} de comandos (descrito na seção 3.16) já estão sendo implementados na primeira versão do \textit{framework} reusável FreeMMG, cujo desenvolvimento é um trabalho em andamento. Outras possibilidades de melhoria, que ainda precisam ser modeladas, são relacionadas a seguir.
+
+\subsection{Novos mecanismos de segurança}
+
+O modelo FreeMMG oferece mecanismos de resistência e proteção contra alguns tipos específicos de trapaças, em especial as do tipo ``alteração de estado'' pois os clientes são responsáveis por executar a simulação e gerar as transferências de objetos entre os segmentos. Porém, existem várias maneiras de se implementar ``trapaças'' em um protocolo de jogo distribuído, sendo que modelos de simulação descentralizada ou \textit{peer-to-peer} são especialmente vulneráveis. Neste sentido, um trabalho futuro consiste em estudar os vários tipos de ``trapaças'' conhecidos e publicados em textos científicos, e incorporar soluções no modelo FreeMMG.
+
+\subsection{Servidor distribuído}
+
+Os resultados obtidos nos experimentos apresentados no capítulo 4 apontam para uma escalabilidade do servidor FreeMMG, em relação aos recursos de processamento utilizados (CPU), para algumas centenas de jogadores. Porém, é provável que para quantidades de jogadores muito grandes, como centenas de milhares de jogadores, seja inviável ou muito custoso executar o servidor em uma única máquina. 
+
+Neste contexto, seria desejável a extensão do modelo para que múltiplas máquinas pudessem executar o ``lado servidor'' de uma rede FreeMMG~\cite{freemmgmultiserver}. Além disso, uma implementação do multi-servidor do FreeMMG permitiria a implementação de uma variante do algoritmo de recuperação de falhas por \textit{snapshots} e \textit{logs} de comandos (seção 3.16) que, ao executar os ``resumos de comandos'' de todos os jogadores em tempo real, garantiria a consistência global e a proteção contra trapaças oriundas de comandos e transferências ilegais de objetos, sem necessidade de alocação de assinantes ``extras'' ou ``aleatórios'' em cada segmento.
+
+\subsection{Particionamento transparente}
+
+No atual modelo FreeMMG, a partição do ``mundo virtual'' não é transparente. Isto ocorre devido aos atrasos na transferência de objetos e na impossibilidade de interação direta entre objetos localizados em ``segmentos'' diferentes. Idealmente, o particionamento realizado pelo mecanismo de distribuição de estado de um jogo multijogador deve ser transparente, ou seja, invisível aos jogadores. 
+
+A possibilidade da modificação do modelo para uma maior transparência do particionamento foi estudada de forma extensiva. Uma das alternativas estudadas aponta para a troca do algoritmo de ``simulação \textit{peer-to-peer} replicada'' por uma variante otimista. Isto dispensaria a sincronização entre os comandos enviados por participantes de segmentos adjacentes, permitindo que os simuladores de um segmento recebessem comandos de assinantes dos segmentos vizinhos. Porém, ainda não é claro  como esta modificação poderia ser feita de forma a manter os outros benefícios, como a proteção contra trapaças e a escalabilidade do servidor.
+
+\subsection{Tratamento de \textit{hot spots} no mundo virtual}
+
+Uma rede FreeMMG pode lidar com uma grande quantidade de jogadores simultâneos principalmente porque implementa um mundo virtual particionado. Se a distribuição dos jogadores e seus objetos de jogo no mundo virtual for uniforme, o desenvolvedor do jogo poderia simplesmente escolher um tamanho otimizado para os segmentos, de forma a manter o número médio de assinantes por segmento dentro de um intervalo adequado para o protocolo de simulação \textit{peer-to-peer} replicada.
+
+Porém, os mundos virtuais dos jogos maciçamente multijogador sofrem do problema dos \textit{hot spots} (ou ``pontos quentes''). Um \textit{hot spot}, em um mundo virtual, é uma área onde há uma alta concentração de ``avatares'' ou objetos de jogo de muitos jogadores diferentes, causando a sobreposição de muitas áreas de interesse. Os MMGs cliente-servidor geralmente lidam com este problema através da utilização de arquiteturas multi-servidor e balanceamento dinâmico de carga~\cite{cunnin2000}. No FreeMMG, um segmento é um \textit{hot spot} se a quantidade de assinantes interessados se torna muito elevada (por exemplo, acima de 20 ou 30 assinantes), especialmente se todos os assinantes estão ativamente gerando comandos no contexto do segmento, sem a presença de assinantes inativos.
+
+Foram estudadas três soluções para este problema. A primeira solução envolveria a subdivisão temporária de um segmento \textit{hot spot} em segmentos menores. Esta solução não somente lidaria com a questão da superlotação de assinantes, como também permitiria que os segmentos fossem configurados, por \textit{default}, para um tamanho grande, reduzindo o impacto da falta de transparência dos segmentos. Uma segunda opção seria a redução temporária da taxa de envio de comandos pelos jogadores, de forma análoga ao que é feito com os jogadores inativos, porém aplicando para todos os jogadores de forma simultânea. Por fim, a opção mais drástica envolveria um simples limite máximo de  assinantes para cada segmento. Neste caso, se o número máximo é atingido, o servidor coloca os novos pedidos de assinatura em uma fila, para processamento quando novas vagas forem abertas. Estas soluções seriam combinadas para resolver o problema com o menor impacto possível aos jogadores.
+
+\subsection{Suporte a jogos de ação maciçamente multijogador}
+
+Inicialmente, o FreeMMG havia sido projetado para suportar MMGs em geral, sem considerar as diferenças entre um jogo de ação e um jogo de estratégia. O foco para ``jogos de estratégia em tempo real'' surgiu através do estudo do algoritmo de simulação \textit{peer-to-peer} replicada, que garantia descentralização e resistência contra trapaças, mas não seria adequado para ``jogos de ação'', ou seja, baseados em avatares. A adaptação do FreeMMG para o suporte a jogos de ação, ou mesmo o desenvolvimento de um novo modelo que compartilhasse as características-chave do FreeMMG, como servidor com baixo custo (rede e CPU) e proteção contra trapaças, caracterizaria uma contribuição interessante, pois este tipo de modelo vai ao encontro das necessidades atuais da maioria dos MMGs atualmente no mercado. Neste sentido, a integração do protocolo NEO~\cite{neo2004full, neo2004lowlat} com os serviços oferecidos pelo modelo FreeMMG (gerência de grupos, interação entre grupos, etc) caracterizaria uma alternativa promissora.

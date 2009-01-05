@@ -1,0 +1,66 @@
+\chapter{Introdução}
+
+\section{Tema}
+
+O tema central deste trabalho compreende os sistemas de suporte (motores ou \textit{middleware}) para uma classe de aplicação denominada \textit{massively multiplayer game} (abreviadamente, MMG). Os MMGs podem ser considerados como derivados dos jogos ``multi-jogador'' (ou \textit{multiplayer}), que são essencialmente simulações interativas em tempo real que permitem que uma pessoa com um computador conectado a alguma rede (local ou Internet) interaja, em um ambiente virtual, com outros jogadores. O aspecto ``tempo real'', neste contexto, é uma restrição sobre simulações interativas. Como discutido em ~\cite{cecin2003ti}, jogos interativos em tempo real são simulações onde o avanço do tempo de simulação ocorre em pequenos passos discretos (geralmente abaixo de 1s) e não depende das ações dos jogadores, como num jogo baseado em turnos.
+
+Os jogos distribuídos chamados simplesmente de ``multi-jogador'' suportam um número relativamente limitado de participantes simultâneos no ``ambiente virtual'' onde se desenvolve o jogo. Os limites típicos para jogos como Quake~\cite{quake} e Half-Life~\cite{halflife} variam entre 8 e 64 jogadores. Outra característica dos jogos multi-jogador é que estes tem uma duração relativamente curta. Partidas típicas podem durar alguns minutos ou algumas horas, e o resultado de uma partida não afeta o estado da partida seguinte.
+
+Os Massively Multiplayer Games são jogos multi-jogador com duas características adicionais. Primeiro, os MMGs envolvem uma quantidade relativamente grande de jogadores simultâneos interagindo em tempo real. Esta quantidade pode variar entre algumas centenas de jogadores até centenas de milhares de jogadores~\cite{kent2004, igdapsw, igda2003}. Segundo, os MMGs suportam uma simulação de estado persistente. Em outras palavras, o jogo não é dividido em partidas de curta duração: as ações que um jogador realiza afetam de forma duradoura o ``mundo virtual'' onde este jogador interage. Vários MMGs comerciais estão em funcionamento há anos, onde os participantes continuam jogando a mesma ``partida''. Exemplos clássicos são Ultima Online ~\cite{ultimaonline}, EverQuest ~\cite{everquest} e Lineage ~\cite{lineage}.
+
+Como será discutido neste texto, a maioria dos MMGs disponíveis comercialmente utilizam modelos centralizados como suporte à distribuição do jogo. Esta dissertação propõe o FreeMMG, um modelo descentralizado (ou peer-to-peer) de suporte a MMGs. Como será visto, existem várias propostas de modelos descentralizados de suporte a MMGs. Neste contexto, a dissertação posiciona o FreeMMG não só como uma arquitetura descentralizada, mas também resistente a jogadores trapaceiros e que suporta jogos de estratégia em tempo real. Estas três características não foram encontradas, de forma simultânea, em nenhuma das propostas pesquisadas durante a realização deste trabalho.
+
+\section{Contexto de pesquisa}
+
+Este trabalho está inserido no projeto ``FreeMMG: Um Framework Livre para Desenvolvimento de Massively Multiplayer Games'', de execução em 2004 e de fomento do CNPq (Edital MCT/CNPq/CT-INFO 01/2003). O objetivo do projeto é implementar em Java o modelo FreeMMG, disponibilizando um conjunto de interfaces (que abstraem as dificuldades do modelo) para o desenvolvimento de jogos ``massively multiplayer'' com servidor de baixo custo e clientes que realizam simulação cooperativa (peer-to-peer).
+
+A implementação do framework FreeMMG é disponibilizada como software livre (licença GNU LGPL), no site do projeto~\footnote{http://sourceforge.net/projects/freemmg/}. Esta implementação é baseada no modelo FreeMMG e na implementação do seu protótipo (jogo FreeMMG Wizards), apresentados nos capítulos 3 e 4 desta dissertação, respectivamente.
+
+Este trabalho teve apoio financeiro de uma bolsa de mestrado CAPES concedida entre 2002 e 2003. Adicionalmente, teve apoio financeiro do CNPq oriundo do projeto FreeMMG no ano de 2004.
+
+\section{Motivação}
+
+A indústria do entretenimento eletrônico produz jogos para computadores pessoais, consoles caseiros, aparelhos móveis, etc. Atualmente, esta indústria movimenta mais verba do que a indústria cinematográfica. Dentre os vários tipos de jogos, os jogos \textit{on-line}, especialmente os jogos \textit{on-line} em tempo real, como corridas de carros e expedições em mundos fantásticos, vem ganhando cada vez mais espaço. Este crescimento é parcialmente devido ao crescimento constante do público com acesso à Internet e do sucesso das tecnologias de banda larga.
+
+Atualmente, os MMGs de sucesso comercial são implementados utilizando alguma variante do paradigma cliente-servidor. No paradigma cliente-servidor, o servidor possui a cópia ``oficial'' do estado e é responsável pela computação sobre a mesma, enquanto o cliente geralmente atua apenas na camada de apresentação. Adicionalmente, o servidor é responsável por atualizar os clientes, em tempo real, sobre as alterações que ocorrem no mundo de jogo simulado. Esta centralização do jogo no ``lado servidor'' minimiza a ocorrência de trapaças, pois os clientes não podem alterar diretamente a cópia ``oficial'' do estado do jogo. Porém, devido ao grande número de participantes, o custo de manutenção dos servidores de um MMG é bastante elevado.
+
+Neste contexto, é desejavel a redução do custo da plataforma de execução de um MMG. Trabalhos recentes propõem a distribuição do servidor em várias máquinas interconectadas por redes de alta velocidade, ou seja, resolver o problema através de \textit{cluster computing}. Apesar de \textit{cluster computing} ser uma excelente solução para a distribuição do custo de processamento (CPU), estas propostas, de forma isolada, geralmente não são suficientes para aumentar a escalabilidade do servidor MMG. Isto ocorre porque ainda resta o problema do custo de comunicação entre o \textit{cluster} servidor e os clientes. Devido ao modelo de distribuição adotado por praticamente todas as arquiteturas de MMGs implementadas comercialmente~\cite{igdapsw}, o servidor é responsável por enviar, continuamente e em tempo real, um fluxo de informação para que o cliente tenha sempre uma versão atualizada do ``mundo virtual''. Este tipo de atualização de estado, quando utilizado em um contexto de jogo maciçamente multijogador, resulta na necessidade da alocação de uma ligação de rede dedicada, com baixo atraso, poucas perdas de pacotes e largura de banda elevada para que o servidor possa atualizar a ``visão do jogo'' de milhares de jogadores simultaneamente~\cite{igdapsw}. Este aspecto da motivação é discutido em mais detalhes no capítulo 2.
+
+Esta dissertação propõe o modelo FreeMMG como uma alternativa às arquiteturas centralizadas que são empregadas atualmente na grande maioria dos MMGs. O modelo FreeMMG propõe a delegação do processo simulador para os próprios clientes do jogo, em uma abordagens baseada em peer-to-peer. Desta forma, o equipamento dos próprios jogadores é utilizado para fornecer o poder de processamento e de comunicação necessários para executar a simulação.
+
+Porém, isto não é algo essencialmente novo: na área de simulação distribuída e interativa. Já existem trabalhos tradicionais como o DIS~\cite{tarr2002} que tratam do problema da distribuição de uma simulação em uma rede sem recair em uma hierarquia do tipo cliente-servidor entre os participantes da simulação. Porém, os MMGs, que são sistemas que se utilizam da Internet como meio de comunicação entre jogadores anônimos, apresentam uma peculiaridade: a necessidade de proteção contra participantes trapaceiros. Isto foi discutido por Cunnin ~\cite{cunnin2000} em sua dissertação de mestrado. Cunnin argumenta que uma abordagem como DIS~\cite{tarr2002} não pode ser empregada para jogos \textit{on-line} pois é muito vulnerável ao ataque de jogadores trapaceiros.
+
+A motivação principal deste trabalho é propor uma solução para a redução tanto do custo computacional (CPU) quanto do custo de comunicação (rede) associado à entidade servidora nas arquiteturas cliente-servidor tradicionais de MMGs. Porém, apesar de reduzir custos, deve ser mantido o mesmo nível de proteção contra jogadores trapaceiros. Isto é importante pois, em um jogo, um jogador trapaceiro pode arruinar a experiência de muitos jogadores. Em outras palavras, o grau de vulnerabilidade a trapaças determina a viabilidade de uma arquitetura para jogos \textit{on-line}.
+
+\section{Objetivos}
+
+O objetivo geral deste trabalho consiste na criação de um novo modelo de suporte à distribuição de jogos \textit{massively multiplayer}. Neste contexto, destacam-se como objetivos específicos:
+
+\begin{itemize}
+
+\item Descrever os temas de pesquisa envolvidos na criação do modelo, discutindo o estado da arte no escopo pesquisado (trabalhos relacionados);
+
+\item Propor um modelo de suporte a jogos distribuídos (Modelo FreeMMG) que atenda às seguintes exigências:
+
+\subitem \textendash~Que seja capaz de executar sobre a Internet;
+
+\subitem \textendash~Que dependa de servidores dedicados de baixo custo (CPU e rede);
+
+\subitem \textendash~Que seja escalável;
+
+\subitem \textendash~Que seja resistente a jogadores trapaceiros;
+
+\subitem \textendash~Que seja tolerante a certos tipos de falhas, como desconexão de jogadores;
+
+\subitem \textendash~Que garanta a consistência global da simulação;
+
+\item Implementar um protótipo do modelo (Protótipo FreeMMG);
+
+\item Propor e implementar o protótipo de um jogo \textit{massively multiplayer} (FreeMMG Wizards) sobre o protótipo do modelo, e executar testes de escalabilidade e usabilidade sobre o protótipo combinado;
+
+\end{itemize}
+
+\section{Organização do texto}
+
+Esta dissertação está organizada em cinco capítulos. O capítulo 2 apresenta os conceitos básicos em jogos distribuídos, discute trabalhos relacionados ao FreeMMG e compara diferentes abordagens de suporte a jogos distribuídos. O capítulo 3 descreve o modelo FreeMMG, empregando um jogo de estratégia em tempo real como caso de uso. Ao final do capítulo são discutidos os pontos fortes e fracos do modelo, justificando oportunidades para trabalhos futuros. O  capítulo 4 apresenta o jogo FreeMMG Wizards, que é o protótipo do modelo. Resultados de testes de escalabilidade do FreeMMG são apresentados e comparados com outros trabalhos. O capítulo 5 destaca as contribuições, e conclui discutindo trabalhos em andamento e possibilidades de trabalhos futuros.
+

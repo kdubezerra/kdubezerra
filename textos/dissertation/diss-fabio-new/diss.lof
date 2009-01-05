@@ -1,0 +1,46 @@
+\select@language {brazilian}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\select@language {brazilian}
+\addvspace {10\p@ }
+\select@language {brazilian}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {Figura\nobreakspace 2.1:}{\ignorespaces Captura de tela do jogo Outgun}}{22}
+\contentsline {figure}{\numberline {Figura\nobreakspace 2.2:}{\ignorespaces Uma vis\~ao simplificada da plataforma ``Butterfly Grid'' (gerenciador central, provedores de servi\c co e clientes)}}{26}
+\contentsline {figure}{\numberline {Figura\nobreakspace 2.3:}{\ignorespaces Uma sess\~ao de jogo interativo, em cliente-servidor e \textit {peer-to-peer}}}{28}
+\contentsline {figure}{\numberline {Figura\nobreakspace 2.4:}{\ignorespaces Exemplo de atualiza\c c\~ao do estado replicado, com duas r\'eplicas e sem utiliza\c c\~ao de \textit {lookahead}}}{31}
+\contentsline {figure}{\numberline {Figura\nobreakspace 2.5:}{\ignorespaces Exemplo de atualiza\c c\~ao do estado replicado, com duas r\'eplicas e com \textit {lookahead} igual a 1}}{33}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.1:}{\ignorespaces FreeMMG: modelo de aplica\c c\~ao suportada}}{39}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.2:}{\ignorespaces A rede FreeMMG: servidor, clientes, \textit {peer-to-peer} entre clientes}}{39}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.3:}{\ignorespaces Mapeamento entre segmentos, assinantes e clientes, sendo utilizada a regra ``default'' para o c\'alculo da \'area de interesse dos jogadores}}{41}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.4:}{\ignorespaces Transfer\^encia de objeto, gerenciada pelo servidor, entre assinantes de segmentos}}{42}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.5:}{\ignorespaces Exemplo de mensagem segmento-servidor evitando a transfer\^encia ilegal de um objeto}}{45}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.6:}{\ignorespaces Mensagem ``incluir presen\c ca'' enviada ap\'os a movimenta\c c\~ao de um objeto}}{47}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.7:}{\ignorespaces Exemplo de descontinuidade causada por segmentos inativos, onde ``T'' representa o tempo de simula\c c\~ao de cada segmento)}}{48}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.8:}{\ignorespaces Exemplo de forma\c c\~ao de conex\~oes entre os membros de um grupo (A) e um novo membro (N) gerenciado pelo servidor (S)}}{50}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.9:}{\ignorespaces Exemplo de envio de \textit {snapshot} para o novo assinante}}{51}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.10:}{\ignorespaces Exemplo de sincroniza\c c\~ao (habilita\c c\~ao da gera\c c\~ao e envio de comandos) do simulador do novo assinante}}{52}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.11:}{\ignorespaces Exemplo de aplica\c c\~ao dos crit\'erios ``default'' e ``expandido'' de c\'alculo de ADI (\'area de interesse) de um jogador}}{53}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.12:}{\ignorespaces Expans\~ao da ADI por objeto pr\'oximo \`a borda de um segmento}}{54}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.13:}{\ignorespaces Exemplo de execu\c c\~ao do algoritmo de desassinatura}}{55}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.14:}{\ignorespaces Exemplo de detec\c c\~ao de inconsist\^encia nas entradas enviadas (simuladores sem ``look-ahead'')}}{59}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.15:}{\ignorespaces Exemplo de falha parcial em um grupo de assinantes}}{60}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.16:}{\ignorespaces Exemplo de falha fatal em um grupo de assinantes}}{61}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.17:}{\ignorespaces Exemplo de execu\c c\~ao do protocolo inicial de recupera\c c\~ao de falhas}}{62}
+\contentsline {figure}{\numberline {Figura\nobreakspace 3.18:}{\ignorespaces Exemplo de execu\c c\~ao do protocolo inicial de recupera\c c\~ao de falhas}}{64}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.1:}{\ignorespaces Exemplo de disparo do servidor em modo console}}{76}
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.2:}{\ignorespaces Exemplo de disparo da interface gr\'afica}}{77}
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.3:}{\ignorespaces Exemplo de estado da interface durante uma sess\~ao de jogo}}{78}
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.4:}{\ignorespaces Altera\c c\~ao na \'area de interesse do jogador ap\'os transfer\^encia de objeto}}{79}
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.5:}{\ignorespaces Estado de uma rede FreeMMG com dois clientes assinando um segmento}}{82}
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.6:}{\ignorespaces Tr\'afego no lado servidor, variando a quantidade de clientes e o tempo de execu\c c\~ao}}{85}
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.7:}{\ignorespaces Tr\'afego no lado servidor, variando a quantidade de clientes}}{86}
+\contentsline {figure}{\numberline {Figura\nobreakspace 4.8:}{\ignorespaces Tr\'afego m\'edio do cliente, variando a quantidade total de clientes}}{86}
+\addvspace {10\p@ }
+\addvspace {10\p@ }

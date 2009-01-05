@@ -1,0 +1,1 @@
+wmf2eps *.wmf

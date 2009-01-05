@@ -1,0 +1,723 @@
+\chapter{Modelo FreeMMG}
+
+Este capítulo descreve o modelo FreeMMG, que é um sistema de suporte otimizado para aplicações do tipo ``jogo \textit{massively multiplayer} de estratégia em tempo real''. A seção 3.1 caracteriza o modelo de aplicação suportado pelo modelo FreeMMG. A seção 3.2 fornece uma descrição de alto nível do modelo FreeMMG. As seções seguintes descrevem em detalhe os diferentes aspectos do modelo, como a gerência de grupos de jogadores, persistência do ``mundo virtual'', e detecção e recuperação de falhas. Por fim, é feita uma discussão sobre a contribuição do modelo, bem como sobre os pontos em que é possível desenvolver trabalhos futuros.
+
+\section{A aplicação: jogo de estratégia em tempo real maciçamente multijogador (MMORTS)}
+
+Um jogo de estratégia em tempo real ou \textit{real-time strategy game} (geralmente abreviado para ``RTS'') é um jogo de ação que simula um ambiente virtual onde um ou mais jogadores controlam, em tempo real, um conjunto de objetos. Em geral, os jogos RTS simulam guerras onde cada jogador controla seu próprio exército com o objetivo de derrotar os oponentes (outros jogadores conectados por rede local ou Internet). Em geral, os jogos RTS também simulam um sistema econômico simplificado, envolvendo a extração de recursos naturais (minério, combustível, alimentos, etc) e a conversão destes recursos em ``objetos de jogo'' (construções, soldados, tecnologia, etc) que são necessários para que um jogador supere os seus adversários. ``Age of Empires II''~\cite{ageofempires}, ``Warcraft III''~\cite{warcraft}, ``Starcraft''~\cite{starcraft}, ``Rise of Nations''~\cite{riseofnations} e ``Rome: Total War''~\cite{totalwar} são exemplos de jogos do tipo RTS.
+
+O típico jogo RTS não é projetado para ser escalável ou para suportar estado de jogo persistente. Os jogos RTS com suporte ``multijogador'' (participantes conectados por rede local ou Internet) geralmente não suportam mais do que 8 ou 16 participantes simultaneamente. Os jogos RTS são disputados em ``partidas'' cujo cenário inicial é escolhido de comum acordo entre todos os participantes. E, após iniciada, uma partida de jogo RTS dura apenas algumas horas (em torno de duas horas sendo uma duração típica). Após o término da partida é declarado o vencedor (ou vencedores), e novas partidas podem ser disputadas a partir de um novo cenário inicial, sem relação com o resultado da partida anterior.
+
+O modelo FreeMMG é uma solução para o problema de suporte à execução de jogos de estratégia em tempo real maciçamente multijogador ou \textit{massively  multiplayer online real-time strategy game} (``MMORTS'', para abreviar). O MMORTS é um jogo RTS maciçamente multijogador, ou seja, projetado para suportar milhares de jogadores simultaneamente que interagem, em tempo real, em um ``mundo virtual'' de estado persistente. Para facilitar o desenvolvimento do modelo, foi criado um ``modelo abstrato'' de aplicação do tipo ``jogo MMORTS'', que é descrito a seguir.
+
+\subsection{Modelo de aplicação do FreeMMG}
+
+A aplicação suportada pelo modelo FreeMMG é um jogo de estratégia em tempo real maciçamente multijogador (jogo MMORTS) que implementa os seguintes conceitos-chave: ``jogador'', ``objeto'', ``mundo'' e ``área de interesse''. A figura~\ref{fig:fig31} ilustra um cenário de jogo que envolve estes conceitos, que são definidos a seguir.
+
+O ``mundo'' é o sistema de regras ou ``leis'' que implementam o espaço virtual onde estão localizados os ``objetos''. Espera-se que o mundo simule um ambiente virtual típico, onde os objetos possuem uma posição relativa aos outros objetos, tamanho, velocidade, aceleração, etc. Espera-se também que quaisquer objetos localizados no mesmo mundo possam interagir entre si (colisão, troca de informações, etc) e que as interações entre objetos ocorram com maior freqüência quando estes objetos estão ``próximos''.
+
+O ``objeto'' é o elemento básico que compõe o conjunto de informações dinâmicas do mundo. Ou seja, qualquer informação que pode ser adicionada, copiada, alterada ou removida do mundo virtual pode ser modelada como um objeto, ao passo que a informação estática pode ser modelada como parte do mundo. Se o ``mundo virtual'' do jogo é uma simulação de um campo de batalha, exemplos típicos de objetos que serão percebidos pelos usuários do jogo são os soldados, veículos, construções, projéteis, etc. que habitam o campo de batalha. Um objeto pode (opcionalmente) ser associado a um ``jogador'', que é então o ``dono'' deste objeto.
+
+O ``jogador'' representa o usuário do jogo, que interage com o mundo ao exercer controle sobre os objetos. Cada jogador, tipicamente, só poderá controlar diretamente uma certa parte dos objetos. Por exemplo, pode-se determinar que um jogador pode controlar apenas os objetos que são marcados como tendo o jogador em questão como ``dono''. Como se trata de um jogo maciçamente multijogador com um mundo virtual arbitrariamente grande, cada jogador poderá interagir, em um dado momento, com apenas um subconjunto do mundo. O subconjunto do mundo que um jogador pode interagir define a ``área de interesse''~\cite{morse1996} deste jogador. Por default, a área de interesse de um jogador compreende o espaço do mundo que é ocupado pelos objetos que pertencem ao jogador. Porém, o modelo FreeMMG deve suportar qualquer tipo de critério para o cálculo da área de interesse de um jogador. Ou seja, o critério de cálculo da área de interesse deve ser configurável pela aplicação.
+
+% ~\ref{fig:fig31}
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.75]{figuras/fig31.eps}
+  \end{center}
+\caption{FreeMMG: modelo de aplicação suportada}
+\label{fig:fig31}
+\end{figure}
+
+Como será visto nas seções seguintes, o FreeMMG propõe o particionamento do mundo virtual em ``segmentos''. O segmento é a menor unidade do ``mundo virtual'' que pode ser adicionada ou não à área de interesse de um jogador. Ou seja, em tempo de execução, a aplicação pode adicionar ou não um segmento, com todos os objetos que estão localizados naquele segmento, à área de interesse de um jogador. Mesmo que apenas um objeto em um segmento seja ``de interesse'' a um jogador, o mesmo terá que receber atualizações para todo o segmento. 
+
+Um exemplo de jogo implementado a partir deste modelo de aplicação é o jogo-protótipo ``FreeMMG Wizards'' (ou simplesmente Wizards), um MMORTS simples que foi implementado para auxiliar o processo de validação do modelo FreeMMG. No Wizards, o mundo virtual é particionado em segmentos retangulares e um segmento é considerado pertencente à ``área de interesse'' de um jogador se este jogador é ``dono'' de, no mínimo, um objeto no segmento em questão. Mais detalhes sobre o protótipo são apresentados no capítulo 4.
+
+\section{Modelo FreeMMG: visão geral}
+
+O FreeMMG é um modelo de suporte para a distribuição de jogos maciçamente multijogador (MMGs) otimizado para o suporte de jogos maciçamente multijogador de estratégia em tempo real (jogos MMORTS), descritos na seção anterior. O FreeMMG utiliza uma estratégia de distribuição híbrida, baseada em parte no paradigma cliente-servidor e em parte no paradigma \textit{peer-to-peer}. Esta estratégia visa usufruir das vantagens de ambos os paradigmas. O componente ``cliente-servidor'' do FreeMMG caracteriza-se pela utilização de nodos ou máquinas servidoras confiáveis para a realização de tarefas críticas, como autenticação e autorização de usuários, que são difíceis de serem distribuídas de forma segura entre nodos anônimos e não-confiáveis. A versão atual do modelo FreeMMG suporta a utilização de apenas um único servidor (para cada instância de ``mundo virtual'' simulado). Porém já existem trabalhos que apontam para a possibilidade de extensão do modelo FreeMMG para utilização de um servidor distribuído~\cite{freemmgmultiserver}.
+
+% ~\ref{fig:fig32}
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.55]{figuras/fig32.eps}
+  \end{center}
+\caption{A rede FreeMMG: servidor, clientes, \textit{peer-to-peer} entre clientes}
+\label{fig:fig32}
+\end{figure}
+
+É de interesse do provedor do jogo (ou seja, de quem possui poder administrativo sobre as máquinas servidoras) que o custo associado à implantação e à manutenção dos servidores seja o menor possível. Com a distribuição do servidor FreeMMG, um eventual gargalo de processamento (CPU) no ``lado servidor'' pode ser aliviado. Porém, a quantidade de dados trocados entre os servidores e os clientes permanece a mesma, pois mesmo que cada servidor fique responsável por se comunicar com apenas parte dos clientes, o custo da comunicação entre os servidores e todos os clientes ainda recai sobre o provedor do serviço.
+
+Para evitar que o ``lado servidor'' se torne um gargalo, tanto de recursos de rede quanto de processamento, o FreeMMG utiliza, juntamente com a estratégia cliente-servidor, uma estratégia \textit{peer-to-peer}, onde os nodos ``clientes'' da simulação, ou seja, as máquinas dos jogadores, negociam parte do jogo diretamente entre si, evitando assim a utilização do servidor como único ponto de sincronização entre os jogadores. Porém, como discutido no capítulo anterior, ao se considerar uma estratégia de execução descentralizada para jogos, especialmente jogos voltados para redes com participantes anônimos como a Internet, deve-se também considerar como será resolvido o problema oriundo da participação de nodos maliciosos (trapaceiros ou vândalos) na simulação.
+
+\subsection{Simulação \textit{peer-to-peer} replicada no FreeMMG}
+
+Para executar a simulação de forma descentralizada e, ao mesmo tempo, oferecer um mecanismo de resistência contra nodos maliciosos, o FreeMMG utiliza a técnica de simulação \textit{peer-to-peer} com replicação de estado descrita na seção 2.5 do capítulo anterior. Desta forma, os clientes podem sincronizar o andamento do jogo, em tempo real, diretamente entre si. O servidor se envolve na comunicação apenas para realizar tarefas administrativas eventuais, como inserir e retirar clientes da rede.
+
+O principal problema desta técnica de simulação \textit{peer-to-peer} com replicação é que esta não é uma técnica escalável, pois ela exige que cada participantes tenha uma conexão direta com cada outro participante e comunique-se em tempo real com cada um. A técnica funciona para suportar 10 ou 20 nodos de jogadores, mas não é adequada para suportar MMGs com milhares de participantes. Para resolver este problema, o FreeMMG estabelece que o ``mundo virtual'' do jogo deve ser particionado em ``segmentos'' menores. Cada segmento é simulado por um grupo de nodos conectados em uma rede \textit{peer-to-peer} que é independente das demais redes, e cada nodo cliente irá participar apenas dos grupos que são do seu interesse em um determinado momento. Desta forma, mantém-se um número reduzido de nodos em cada grupo ou segmento, de forma que o algoritmo de simulação \textit{peer-to-peer} replicada  possa ser utilizado.
+
+Um cliente que participa do grupo que executa a simulação de um segmento é dito ser ``assinante'' do segmento em questão. Cada assinante de um segmento possui uma cópia (réplica) do estado do segmento (relativo a um ponto ``t'' no tempo de simulação daquele segmento). Os assinantes de um segmento trocam mensagens entre si em tempo real em turnos de tempo de comprimento fixo (por exemplo, 200ms). As mensagens indicam os comandos ou ações que cada assinante está realizando sobre o estado daquele segmento.
+
+% ~\ref{fig:fig33}
+%servidor, clientes, ``segments'' com objetos, \textit{peer-to-peer} entre assinantes do mesmo segment
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig33.eps}
+  \end{center}
+\caption{Mapeamento entre segmentos, assinantes e clientes, sendo utilizada a regra ``default'' para o cálculo da área de interesse dos jogadores}
+\label{fig:fig33}
+\end{figure}
+
+No modelo de aplicação do FreeMMG apresentado anteriormente, um jogador pode controlar os objetos de jogo que possui, a qualquer momento. Cada objeto está localizado em um segmento específico. Portanto, a ``área de interesse'' de um jogador é caracterizada por todos os segmentos em que possui pelo menos um objeto. Para que o jogador possa interagir com todos os objetos dentro da sua área de interesse, este deve ``assinar'' todos os segmentos que estão nesta área, pois é através da assinatura de um segmento que um cliente pode interagir com os objetos que estão no segmento.
+
+É importante ressaltar aqui que o critério de cálculo de áreas de interesse pode ser customizado pela aplicação do FreeMMG. Implementações do modelo FreeMMG podem refinar o conceito de ``posse'' de objetos e relações entre jogadores para implementar regras mais complexas de cálculo de áreas de interesse. Por exemplo, as regras do jogo podem determinar que um jogador pode possuir ``aliados'', e que todos os jogadores que são aliados devem compartilhar o mesmo campo de visão, apesar de não exercerem controle sobre os objetos dos outros aliados. Esta é uma semântica bastante empregada para implementar ``áreas de interesse'' em jogos de estratégia em tempo real que permitem a formação de alianças entre os jogadores.
+
+\subsection{Interação e sincronização do tempo entre segmentos}
+
+A técnica de partição do estado do jogo em ``segmentos'' garante escalabilidade~\cite{jogalekar00evaluating} ao modelo, mas introduz um novo problema, que é o problema do suporte à interação entre objetos de jogo localizados em segmentos distintos. Se cada segmento executar seu próprio protocolo de simulação, sem envolver os outros segmentos, de forma isolada, então não tem-se um sistema de suporte a um ``mundo virtual'' escalável e sim um sistema de suporte a um grande número de ``pequenos mundos virtuais'' que não interagem entre si.
+
+Uma solução ideal para este problema envolveria um suporte para que os objetos de jogo pudessem interagir entre si utilizando sempre as mesmas regras, independente do segmento em que os mesmos estão localizados. Porém, o protocolo de simulação \textit{peer-to-peer} replicada, que é utilizado pelo FreeMMG para executar a simulação em pequena escala de cada segmento, não pode ser facilmente adaptado para esta situação. Isto ocorre pois a simulação \textit{peer-to-peer} replicada só suporta a interação entre dois objetos se eles estão na mesma réplica. Desta forma, objetos localizados em réplicas diferentes só poderiam interagir se as réplicas envolvidas forem somadas, o que resultaria, na prática, em um mundo virtual não particionado e não escalável. Portanto, o modelo FreeMMG determina que objetos em segmentos distintos não podem interagir diretamente entre si. Para que dois objetos localizados em segmentos distintos interajam, é necessário que um deles seja transferido (pelo jogador que o controla) para o segmento onde está localizado o outro objeto. Neste sentido, o FreeMMG suporta a ``transferência de objetos'' entre segmentos através de um protocolo específico (figura~\ref{fig:fig34}). A transferência de um objeto entre segmentos é feita através do servidor. Os assinantes do segmento de origem enviam o objeto para o servidor, e este envia o objeto para o segmento destino. 
+
+% ~\ref{fig:fig34}
+%transferência de objeto entre segmentos para gerar interação entre segmentos
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig34.eps}
+  \end{center}
+\caption{Transferência de objeto, gerenciada pelo servidor, entre assinantes de segmentos}
+\label{fig:fig34}
+\end{figure}
+
+Ao transferir objetos entre segmentos, o servidor atua como um ``sincronizador'' de eventos distribuídos~\cite{fujimoto2000}, que envolvem mais de um segmento. O servidor ordena estes ``eventos distribuídos'' de acordo com a ordem em que são recebidos. Eventualmente, se os clientes da rede FreeMMG fossem modificados para trocar eventos distribuídos diretamente entre si, sem a intervenção do servidor, seria necessária alguma forma de sincronização dos relógios entre os participantes~\cite{fujimoto2000}, por exemplo, através do relógio lógico de Lamport~\cite{lamport} ou de \textit{proper time}~\cite{hrischuk96proper}. Dentro de cada segmento, o ordenamento dos eventos também é total, pois é relativo ao relógio (contador de ``turnos'') do algoritmo de ``simulação \textit{peer-to-peer} replicada'' apresentado na seção 2.5.
+
+\subsection{Detecção e tratamento de falhas}
+
+O sistema de suporte à distribuição de um MMG deve especificar como é feito o tratamento de falhas de clientes. Um cliente é considerado ``falho'' quando deixa de se comportar do modo previsto~\cite{apostilatf}. Por exemplo, o servidor pode parar de receber dados do cliente, devido à perda de conexão (falha da rede) ou queda do processo cliente devido a defeitos no programa.
+
+O cliente pode falhar também devido à ação de clientes maliciosos. Pode-se considerar basicamente dois tipos de clientes maliciosos: o vândalo e o trapaceiro. O vândalo quer apenas prejudicar o andamento do sistema, isto é, fazer com que ele pare de funcionar. Por exemplo, o vândalo pode propositalmente enviar mensagens mal-formadas para outros clientes ou para o servidor, visando explorar fraquezas na implementação dos mesmos e causar, por exemplo, esgotamento de recursos, caracterizando então um ataque similar a ``negação de serviço''. O resultado de vandalismo geralmente é facilmente detectável, apesar de que a fonte do ataque pode ser facilmente mascarada, ou seja, o servidor dificilmente vai saber qual identidade de jogador (se alguma) que está por trás dos ataques. Por outro lado, o objetivo do cliente ``trapaceiro'' é o de ganhar vantagem no jogo ao mesmo tempo em que sua ação passe despercebida. Uma ``trapaça'' bem-sucedida, como alterar o estado do jogo para conferir uma vantagem extra para algum jogador, é uma situação de falha que não foi detectada pelo sistema e, portanto, não dispara um processo de tratamento.
+
+O FreeMMG especifica uma série de estratégias para detecção e tratamento de falhas de clientes, tanto falhas não-intencionais (clientes perdem conexão, etc) como falhas intencionais, causadas por clientes maliciosos (trapaceiros ou vândalos). A base de todas as estratégias é a replicação (ou redundância), seja replicação de estado, através do armazenamento de cópias do jogo em vários nodos, de computação, através de computação redundante em vários nodos, ou de comunicação, com o envio de mensagens redundantes por várias fontes. Por exemplo, a técnica de ``simulação \textit{peer-to-peer} replicada'', que é empregada pelos grupos de assinantes de segmentos, utiliza redundância de estado, pois cada assinante mantém uma cópia do estado do segmento, e também utiliza redundância de computação, pois cada assinante deve processar o mesmo conjunto de comandos para atualizar a sua cópia. A redundância ajuda a minimizar as chances de que haja uma alteração ilegal no estado do jogo ou que haja uma perda total de parte do estado do jogo em caso de falha não-intencional de um cliente (por exemplo, por uma perda súbita de conexão).
+
+A redundância oferecida pela replicação de estado nos clientes fornece um nível de tolerância a falhas sem aumentar o peso no lado servidor, que é o recurso da rede que precisa ser economizado. Porém, ela não garante uma segurança total contra falhas, especialmente falhas intencionais do tipo ``trapaça''. Por exemplo, mesmo que cada segmento tenha vinte réplicas (assinantes), nada impediria que estes vinte clientes componham um grupo pré-combinado de ``trapaceiros'', que irão alterar o estado de forma ilegal em comum acordo. Em outras palavras, utilizar apenas replicação de estado, onde nenhum dos clientes envolvidos é confiável, pode dificultar a execução de trapaças, mas, a princípio, não as impede. Nas seções seguintes, serão detalhados mecanismos alternativos para reduzir ou mesmo eliminar a possibilidade de que clientes (ou grupos de clientes) ``trapaceiros'' possam alterar ilegalmente o estado do ``mundo virtual''.
+
+Os algoritmos do FreeMMG que realizam replicação, que serão descritos nas seções seguintes em maiores detalhes, são inspirados em soluções para problemas do tipo ``generais bizantinos''~\cite{castro99practical, lamportbizantino}. No caso, cada ``assinante'' de um segmento é um componente que pode ``falhar'' ou agir maliciosamente, representando um ``general bizantino''. Porém, como será visto adiante, os limiares de aceitação do resultado após uma falha não são estabelecidos pelo modelo (por exemplo, baseados em limiares obtidos de soluções publicadas para falhas bizantinas), mas deixados para configuração pela aplicação. Um trabalho que busca valores adequados para os limiares e aprofunda a comparação dos problemas do FreeMMG com o problema do consenso distribuído dos ``generais bizantinos'' encontra-se em desenvolvimento~\cite{enoch}.
+
+% FIGURA-fixme: problema do ``grupo de trapaceiros'', fabricando objetos e transferindo para outros segmentos
+%  dificil de fazer uma figura boa para isso - melhor é o texto mesmo
+
+
+\section{Mensagens replicadas}
+
+Como discutido na seção anterior, a replicação do estado de cada segmento é importante pois reduz a chance de que o estado do segmento seja alterado de forma ilegal por um ou mais jogadores maliciosos. Além de replicar o estado do segmento, o modelo FreeMMG também determina que os eventos distribuídos~\cite{fujimoto2000}, gerados no contexto de um segmento, devem ser enviados para os outros segmentos de forma redundante através de uma ``mensagem replicada''. Isto é feito para prevenir a ocorrência de trapaças, como será discutido a seguir. Existem dois tipos de ``mensagem replicada'' utilizados no FreeMMG:
+
+\begin{itemize}
+
+\item Mensagem segmento-servidor: mensagem enviada por todos os assinantes de um segmento para o servidor;
+\item Mensagem servidor-segmento: mensagem enviada pelo servidor para todos os assinantes de um segmento.
+
+\end{itemize}
+
+A mensagem segmento-servidor é uma mensagem enviada por várias fontes que, individualmente, não são confiáveis, ou seja, um conjunto de clientes que assinam um segmento. O receptor da mensagem replicada (o servidor) aguarda o recebimento de todas as cópias da mensagem antes de validar e processar a mesma. Mesmo que apenas um dos assinantes não envie uma cópia da mensagem, a mesma será descartada, gerando um evento de falha. O tempo limite para o recebimento da última cópia da mensagem é determinado pelo tempo em que foi recebida a primeira cópia. Por exemplo, se o ``timeout'' para mensagens replicadas for configurado para 10 segundos, o recebimento da mensagem replicada irá falhar se não forem recebidas todas as cópias até 10 segundos após o recebimento da primeira cópia. Isto caracteriza uma falha individual por tempo limite (seção 3.10.1) que, por sua vez, causa uma falha de grupo, cujo tratamento é discutido a partir da seção 3.11. 
+
+A exigência de que todos os assinantes enviem para o servidor uma cópia da mensagem segmento-servidor evita a ocorrência de trapaças como, por exemplo, a ``fabricação'' de quantidades arbitrárias de objetos de jogo através de transferências ilegais, como é ilustrado pela figura~\ref{fig:fig35}. Como será discutido em detalhes na seção seguinte, a transferência de um objeto entre dois segmentos é iniciada por uma mensagem replicada segmento-servidor que parte do segmento de ``origem'' do objeto. Se o servidor aceitasse um pedido de transferência de objeto informado por apenas um assinante do segmento, por exemplo, este assinante poderia gerar, com facilidade, qualquer quantidade de objetos ``inexistentes'', ao transferir estes objetos para os segmentos adjacentes. Com a utilização da mensagem replicada, esta trapaça só é possível se todos os assinantes de um segmento resolverem trapacear em comum acordo, o que é mais difícil de ocorrer~\cite{neo2004full}.
+
+% ~\ref{fig:fig35}
+%envio mensagem replicada segmento-servidor (transf. objeto)
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig35.eps}
+  \end{center}
+\caption{Exemplo de mensagem segmento-servidor evitando a transferência ilegal de um objeto}
+\label{fig:fig35}
+\end{figure}
+
+A mensagem servidor-segmento é uma mensagem enviada pelo servidor para todos os assinantes de um segmento. Ao enviar a mensagem diretamente a todos os assinantes, o servidor evita a utilização de intermediários, que podem simplesmente não enviar a mensagem ao destino. Isto poderia ocorrer se, por exemplo, o servidor solicitasse a um assinante que entregasse a mensagem para outro assinante do mesmo segmento. No caso da mensagem replicada do tipo ``servidor-segmento'', a entrega da mensagem é garantida pelo protocolo de rede utilizado para conectar o servidor com cada cliente (por exemplo, TCP/IP). ``Timeouts'' podem ser detectados pelo servidor através de mensagens adicionais, por exemplo, ao esperar uma mensagem segmento-servidor de resposta ou outra mensagem qualquer enviada pelos clientes.
+
+\section{Algoritmo de transferência de objeto entre segmentos}
+
+Um algoritmo do FreeMMG que utiliza tanto mensagens replicadas segmento-servidor quanto servidor-segmento é o algoritmo de transferência de objeto entre dois segmentos. Como citado anteriormente, a transferência de um objeto começa com o envio de uma mensagem dos assinantes do segmento de ``origem'' (em que o objeto está localizado originalmente) para o servidor. Para reduzir o consumo de recursos de rede, poderia se considerar que apenas um dos assinantes precisasse enviar o objeto para o servidor. Porém, isto não pode ser feito pois o cliente escolhido pode resolver ``mentir'' para o servidor para, por exemplo, trapacear e obter uma vantagem no jogo (por exemplo, fabricando uma quantidade qualquer de objetos no segmento destino da transferência). Para reduzir as chances de que uma transferência ilegal de objeto ocorra, o servidor exige que todos os assinantes enviem a mensagem que contém o objeto a ser transferido. Portanto, a mensagem de envio de objeto, de um segmento para o servidor, é uma ``mensagem replicada''.
+
+O algoritmo de transferência de objetos consiste dos seguintes passos, onde S é o servidor, O representa o objeto a ser transferido, A é o segmento (grupo de assinantes) de origem e B é o segmento (grupo de assinantes) destino:
+
+\begin{itemize}
+
+\item Cada assinante de A detecta, individualmente, que o objeto O, que inicialmente reside no segmento A, deve ser transferido para o grupo B, e envia ``mensagem coletiva'' para S contendo (t, O), onde ``t'' é o valor do relógio (timestamp) do simulador local quando O foi removido de A para que fosse transferido;
+\item S recebe a mensagem de A contendo (t, O) e então envia para B uma mensagem solicitando o valor atual do relógio de simulação (de cada assinante), juntamente com uma cópia do objeto (O) e uma constante numérica C, configurada pela aplicação;
+\item Cada assinante de B recebe a mensagem e envia para S o valor R do relógio local (''turno'' atual da simulação), bem como garante que não procederá com a simulação localmente se o relógio local atingir (R + C);
+\item S recebe todos os R, escolhe o maior (R'), e envia mensagem para B solicitando a inserção do objeto em B no turno T, onde (T = R' + C);
+\item Cada assinante de B recebe a mensagem contendo T, ``cancela'' o limite local (R + C) do simulador local e, quando o simulador local atingir o turno T, insere o objeto O na sua cópia local do segmento.
+
+\end{itemize}
+
+A constante ``C'' citada acima, e que também é utilizada por outros algoritmos do modelo, é um valor fornecido pela aplicação que tenta se aproximar ao máximo do valor real do intervalo de tempo necessário para que a sincronização entre todos os assinantes seja feita. Se valor de ``C'' for muito baixo, os assinantes ``antigos'' (ou seja, que já estavam presentes no grupo quando foi iniciada a inclusão do novo assinante) irão acabar bloqueando a simulação local para que a barreira de sincronização seja satisfeita. Para evitar que, durante uma assinatura (ou desassinatura, como será visto na seção seguinte), os jogadores que já estão jogando sejam prejudicados, o valor de ``C'' deve ser estimado para um valor mais elevado do que o tempo médio necessário para que o servidor calcule o turno em que ocorrerá a sincronização dos relógios, o que depende principalmente do tempo de resposta das conexões entre os clientes e o servidor.
+
+Porém, o valor de ``C'' não pode ser muito grande, pois isto pode resultar em um aumento sensível no tempo necessário para a execução do algoritmo. No caso de transferência de objetos, pode resultar em um intervalo muito grande para que um objeto cruze a ``fronteira'' entre dois segmentos. No protótipo do FreeMMG (discutido no capítulo 4), valores de C que foram utilizados variaram entre 4 e 30 turnos em uma simulação que executa 10 turnos por segundo (ou seja, entre 0,4 e 3 segundos de tempo real).
+
+\section{Cálculo de áreas de interesse e notificação de presença}
+
+Quem conhece e aplica as regras relativas ao cálculo da área de interesse de cada cliente é o servidor. Ou seja, o cliente não pode assinar um segmento sem a prévia autorização do servidor. Porém, um cliente pode estar sobrecarregado a ponto de não conseguir assinar um segmento, mesmo que o cliente esteja autorizado pelo servidor para assinar aquele segmento. Um cliente pode estar sobrecarregado se, por exemplo, a sua conexão de rede não suportar mais uma assinatura de segmento, visto que cada assinatura adicional impõe mais trocas de mensagens com outros assinantes.
+
+O servidor pode implementar qualquer critério de autorização de assinatura. Porém, o servidor precisa de certas informações para que seja possível tomar decisões relativas à área de interesse de cada cliente. Por exemplo, saber se um jogador está ``presente'' em um segmento é uma informação essencial para que o servidor implemente a regra ``default'' de cálculo de área de interesse. Um jogador está ``presente'' em um segmento se possui, no mínimo, um objeto no segmento.
+
+Como o servidor, a princípio, não tem uma informação atualizada sobre quais objetos estão presentes em cada segmento, esta informação deve ser fornecida pelos assinantes. O modelo FreeMMG prevê duas mensagens replicadas enviadas pelos assinantes do segmento para o servidor, para notificar o servidor sobre alterações relativas à ``presença'' dos jogadores no segmento:
+
+\begin{itemize}
+
+\item Mensagem ``incluir presença (X)'' (ilustrada, no seu contexto, pela figura~\ref{fig:fig36}): mensagem replicada segmento-servidor, enviada quando é adicionado o primeiro objeto no segmento cujo dono é o jogador X;
+\item Mensagem ``excluir presença (X)'': mensagem replicada segmento-servidor, enviada quando é removido o último objeto do segmento cujo dono é o jogador X.
+
+\end{itemize}
+
+% ~\ref{fig:fig36}
+%objeto transferido, mensagem ``incluir presença'', seguido de atualização da área de interesse
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig36.eps}
+  \end{center}
+\caption{Mensagem ``incluir presença'' enviada após a movimentação de um objeto}
+\label{fig:fig36}
+\end{figure}
+
+%FIGURA-fixme: objeto transferido, mensagem ``excluir presença'', seguido de atualização da área de interesse
+%figura redundante (?)
+
+A figura 3.6 ilustra o contexto em que se insere a mensagem do tipo ``incluir presença''. Na figura, é importante observar que as setas entre os segmentos e o servidor são, na verdade, mensagens replicadas entre todos os assinantes do segmento e o servidor. 
+
+Estas mensagens de inclusão e remoção de presença permitem a implementação do critério ``default'' de determinação de áreas de interesse, bem como de alguns critérios mais complexos, como permitir que um cliente assine segmentos onde haja presença sua ou de qualquer um de seus aliados. Uma implementação do modelo FreeMMG deve, idealmente, permitir que novas mensagens de notificação sejam especificadas, de forma a permitir critérios mais complexos de determinação de áreas de interesse.
+
+\section{Segmentos inativos}
+
+Em uma situação ideal, uma rede FreeMMG deve possuir clientes suficientes para que todos os segmentos do mundo sejam simulados em tempo real. Isto seria ideal pois, em geral, um ``mundo virtual'' é projetado para que todas as suas ``partes'' sejam afetadas de forma igual com a passagem do tempo de simulação.
+
+Porém, na prática, o ``mundo virtual'' deverá possuir segmentos que não serão do interesse de nenhum jogador, ao menos temporariamente. Um ``segmento inativo'' é um segmento do mundo virtual que não possui assinantes interessados e, portanto, fica armazenado no servidor (provavelmente em disco). O segmento inativo não é simulado, de forma que todos os objetos que estão localizados nele não serão modificados até que um grupo de assinantes se torne interessado no segmento.
+
+Dependendo das regras que regem o mundo virtual, esta restrição pode não causar efeitos indesejáveis. Mas se, por exemplo, as regras estabelecem que certos objetos são modificados mesmo sem a intervenção de um jogador, é possível que a inatividade de segmentos seja um problema significativo. Por exemplo, se a aplicação modela um jogo onde existem ``recursos naturais'' que se regeneram com o tempo (por exemplo, vegetação que fornece madeira para os jogadores), a inatividade de um segmento pode causar descontinuidades (figura~\ref{fig:fig37}) ou mesmo favorecer alguns jogadores.
+
+% ~\ref{fig:fig37}
+%vegetação crescendo em só um segmento
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.37]{figuras/fig37.eps}
+  \end{center}
+\caption{Exemplo de descontinuidade causada por segmentos inativos, onde ``T'' representa o tempo de simulação de cada segmento)}
+\label{fig:fig37}
+\end{figure}
+
+Para evitar este tipo de situação, é necessário que o servidor forneça assinantes ``extras'' para os segmentos que estão sem clientes interessados. Como será visto nas seções seguintes, um assinante ``extra'' pode ser qualquer cliente que, em princípio, não está interessado no segmento em questão, mas que possui os recursos necessários (poder de processamento e rede) para atuar como assinante. Estes assinantes podem ser alocados entre os próprios clientes que estão jogando ativamente, mas com recursos sobrando, quanto clientes dedicados, oriundos de uma iniciativa própria de computação distribuída similar a outras como SETI@Home~\cite{setiathome} e Freenet~\cite{freenet}. 
+
+Outra alternativa é fazer com que o próprio servidor realize a simulação dos segmentos inativos, visto que há a vantagem adicional de que as atualizações ao segmento não precisariam ser enviadas a nenhum cliente remoto (pois não há interesse). Porém, esta abordagem exigiria um maior poder de processamento do servidor, tornando-se mais um obstáculo para a escalabilidade do modelo. A simulação de centenas ou milhares de segmentos inativos, onde cada segmento pode possuir centenas de objetos, pode ser uma tarefa muito custosa, e um dos objetivos principais do modelo FreeMMG é a adoção de um lado servidor que possua os menores custos possíveis, de comunicação e de processamento.
+
+\section{Algoritmo de assinatura}
+
+Em uma rede FreeMMG, os grupos de assinantes de cada segmento são formados dinamicamente. Quando o servidor detecta que um cliente se torna ``interessado'' em um novo segmento do qual não é assinante, é iniciado o protocolo de ``assinatura'' do cliente ao novo segmento. O algoritmo (ou protocolo) de assinatura do FreeMMG é responsável por inserir um novo cliente em um grupo de clientes que já são ``assinantes'' de um segmento, de forma similar a outros mecanismos de gerência de grupos em modelos de suporte a interação entre participantes distribuídos~\cite{bharambe2002, fiedler2002, cai2002, massive3, dive}.
+
+Um caso especial do algoritmo de assinatura ocorre quando o segmento a ser assinado está inativo. Quando uma rede FreeMMG é iniciada, ou seja, quando um ``mundo virtual'' é criado e disponibilizado pela primeira vez pelo servidor, todos os segmentos são gerados e armazenados como ``inativos'' no servidor. Quando um segmento está inativo, ou seja, sem nenhum assinante, a tarefa de alocar o primeiro assinante consiste em apenas fazer o upload, do servidor para o cliente, do estado atual do segmento (ou \textit{snapshot} do segmento). Quando o primeiro cliente recebe a cópia, a princípio ele já é um assinante, e pode começar a executar a simulação, se os parâmetros de ``replicação mínima'' do servidor permitirem isso.
+
+Excetuando-se este caso especial, o algoritmo de assinatura é composto de três passos:
+
+\begin{itemize}
+
+\item Formação das conexões \textit{peer-to-peer} entre os assinantes antigos do grupo com o novo assinante;
+\item Sincronização entre os assinantes antigos e posterior envio de um instantâneo (\textit{snapshot}) inicial para o novo assinante;
+\item Sincronização entre todos os assinantes (antigos e novo) para inserção do novo assinante no algoritmo de simulação replicada.
+
+\end{itemize}
+
+\subsection{Formação das conexões}
+
+O primeiro passo compreende a formação da rede de conexões entre os assinantes para que seja possível a posterior execução do algoritmo de ``simulação \textit{peer-to-peer} replicada'' (figura~\ref{fig:fig38}). As implementações atuais do FreeMMG utilizam conexões ponto-a-ponto TCP/IP entre cada assinante de um grupo, mas outro tipo de tecnologia poderia ser empregado como, por exemplo, alguma forma de multicast confiável~\cite{lin96rmtp, cronin2002} ou um protocolo ponto-a-ponto utilizando UDP/IP com extensões para entrega confiável de mensagens~\cite{zige}.
+
+No caso de conexões ponto-a-ponto entre os clientes, o primeiro passo do algoritmo procede da seguinte forma, sendo ``S'' o servidor, ``N'' o novo assinante e ``A'' o conjunto de assinantes antigos:
+
+\begin{itemize}
+
+\item S envia mensagem coletiva para A com os detalhes (endereço IP, identificador, etc) de N;
+\item Após confirmação da mensagem coletiva (feita pelo envio de uma mensagem individual de confirmação a S, por parte de cada A), S envia para N a lista contendo detalhes de todos os A;
+\item N dispara conexão para todos os A;
+\item Cada A aceita a conexão remota de N (pois já recebeu, de S, os detalhes para a autorização) e, a seguir, envia mensagem para S confirmando a conexão;
+\item Para cada conexão aceita, N envia mensagem de confirmação para S;
+\item S aguarda o recebimento de todas as mensagens de confirmação (\textit{2*tamanho(A)} mensagens).
+
+\end{itemize}
+
+% ~\ref{fig:fig38}
+%formação das conexões
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.77]{figuras/fig38.eps}
+  \end{center}
+\caption{Exemplo de formação de conexões entre os membros de um grupo (A) e um novo membro (N) gerenciado pelo servidor (S)}
+\label{fig:fig38}
+\end{figure}
+
+Após a execução do primeiro passo, o novo assinante já possui conexões de rede configuradas com todos os assinantes antigos. Todos os clientes envolvidos sabem que as novas conexões são aprovadas pelo servidor, o que reduz as chances de que um cliente seja assinante de um segmento sem ser autorizado pelo servidor.
+
+\subsection{Envio do \textit{snapshot} ao novo assinante}
+
+O segundo passo envolve o envio de uma cópia ``atual'' estado do segmento para o novo assinante (figura~\ref{fig:fig39}). Este passo procede da seguinte forma (seguindo a notação do passo anterior):
+
+\begin{itemize}
+
+\item S envia para cada A mensagem solicitando o valor atual do relógio de simulação, juntamente com uma constante numérica C, configurada pela aplicação;
+\item Cada A recebe a mensagem e envia para S o valor R do relógio local (''turno'' atual da simulação), bem como garante que não procederá com a simulação localmente se o relógio local atingir (R + C);
+\item S recebe todos os R, escolhe o maior (R') e envia mensagem para cada A solicitando o envio do \textit{snapshot} do segmento ao novo assinante no turno T, onde (T = R' + C);
+\item Cada A recebe a mensagem, ``cancela'' o limite local (R + C) do simulador local e aguarda até a simulação chegar no turno T;
+\item Quando cada A atinge localmente T, envia para N uma mensagem contendo T, um ``hash'' da forma serializada do segmento, e a I-ésima parte da forma serializada do segmento onde I é a posição de cada A em uma lista que ordena totalmente os clientes da rede FreeMMG;
+\item Após o tempo de simulação T, cada A também passa a enviar para N todos os comandos gerados pelo jogador local, para que N seja capaz de atualizar o \textit{snapshot};
+\item N recebe todas as mensagens de A e restaura localmente uma cópia completa ou \textit{snapshot} do segmento no tempo de simulação T (utilizando os valores de ``hash'' fornecidos para detectar erros) e então envia mensagem para S confirmando o recebimento da cópia.
+
+\end{itemize}
+
+% ~\ref{fig:fig39}
+%envio do \textit{snapshot}
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.77]{figuras/fig39.eps}
+  \end{center}
+\caption{Exemplo de envio de \textit{snapshot} para o novo assinante}
+\label{fig:fig39}
+\end{figure}
+
+Após a execução do segundo passo, o novo assinante tem uma cópia do estado do segmento para um tempo de simulação ``T''. Porém, enquanto o novo assinante estava fazendo o download do \textit{snapshot}, os assinantes antigos estavam continuando com a simulação. Portanto, quando o novo assinante recebe o \textit{snapshot}, este já está obsoleto. O novo assinante deve então processar os comandos ``atrasados'' localmente, de forma acelerada (ou seja, desconsiderando o intervalo de tempo real entre cada passo da simulação), até que não haja mais nenhum comando para ser processado. 
+
+\subsection{Sincronização do novo assinante com os assinantes ``antigos''}
+
+Quando o novo assinante consegue processar todos os comandos pendentes, o terceiro passo do algoritmo é executado para sincronizar o novo assinante com os assinantes antigos (figura~\ref{fig:fig310}). O terceiro passo procede da seguinte forma:
+
+\begin{itemize}
+
+\item N envia mensagem para S avisando que já conseguiu processar todas as mensagens acumuladas localmente;
+\item S envia para cada A mensagem solicitando o valor atual do relógio de simulação, juntamente com uma constante numérica C, configurada pela aplicação;
+\item Cada A recebe a mensagem e envia para S o valor R do relógio local, bem como garante que não procederá com a simulação localmente se o relógio local atingir (R + C);
+\item S recebe todos os R, escolhe o maior (R'), e envia mensagem para N e A notificando que o primeiro turno (tempo de simulação) em que N será considerado um assinante será (R' + C) e, a partir deste momento, S já considera N um assinante do segmento;
+\item Cada A recebe a mensagem de S, ``cancela'' o limite local (R + C) do simulador e configura o simulador para esperar comandos de N no turno (R' + C);
+\item N recebe a mensagem de S e configura o simulador local para enviar comandos para os outros assinantes a partir do turno (R' + C).
+
+\end{itemize}
+
+% ~\ref{fig:fig310}
+%passo 3 - sincronização do novo assinante
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.77]{figuras/fig310.eps}
+  \end{center}
+\caption{Exemplo de sincronização (habilitação da geração e envio de comandos) do simulador do novo assinante}
+\label{fig:fig310}
+\end{figure}
+
+\subsection{Avaliando o desempenho do algoritmo de assinatura}
+
+Os critérios mais importantes para a avaliação do desempenho do algoritmo de assinatura são:
+
+\begin{itemize}
+
+\item Não-intrusão, ou seja, não afetar negativamente o funcionamento dos clientes que já são assinantes;
+\item Menor tempo total de execução, do ponto de vista do ``novo assinante''.
+
+\end{itemize}
+
+O algoritmo foi projetado especificamente para causar um impacto reduzido na ``experiência de jogo'' dos jogadores que já são assinantes do segmento (evitar travadas, lentidão, etc). Porém, este ganho possui como custo a imposição de (potencialmente) um maior tempo total de execução do algoritmo. Enquanto o algoritmo está executando, o ``novo assinante'' está, a princípio, sendo prejudicado no jogo, pois o servidor já lhe garantiu o direito de interagir com um segmento do mundo virtual mas, por causa do algoritmo utilizado na sincronização de novos assinantes, o jogador ainda não pode interagir com aquele segmento. Isto pode resultar em, por exemplo, objetos se tornando vulneráveis (pois não podem ser comandados pelo jogador que os possui) por um certo período de tempo.
+
+Esta desvantagem pode ser contornada através do aumento das áreas de interesse dos jogadores. Ao invés de utilizar um critério de cálculo de área de interesse que exija que um cliente já possua objetos em um segmento para que seja assinante deste segmento, pode-se utilizar um critério que exija apenas um objeto em um segmento adjacente (figura~\ref{fig:fig311}). Desta forma, quando um cliente estiver movendo um de seus objetos para um segmento adjacente, é bastante provável que ele já seja assinante deste segmento. Porém, esta técnica possui duas possíveis desvantagens que precisam ser consideradas.
+
+% ~\ref{fig:fig311}
+%área de interesse ``default'' vs. área de interesse ``expandida''
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.96]{figuras/fig311.eps}
+  \end{center}
+\caption{Exemplo de aplicação dos critérios ``default'' e ``expandido'' de cálculo de ADI (área de interesse) de um jogador}
+\label{fig:fig311}
+\end{figure}
+
+A primeira desvantagem é que isto pode reduzir o ``fator surpresa'' de um jogo pois, em princípio, se um cliente é assinante de um segmento, ele sabe de tudo o que está ocorrendo, em tempo real, naquele segmento. Se os segmentos, em uma determinada aplicação, já são configurados para serem grandes, isto significa que o ``raio'' de visão de um objeto pode ser muito grande. Jogos de estratégia como Age of Empires resolvem este problema fazendo com que o programa cliente do jogo ``esconda'' informação do jogador. Porém, se o cliente do jogo é adulterado, o jogador passa a ter a informação completa. Este problema não parece ter uma solução definitiva, visto que o protocolo de rede exige que a máquina do jogador (o ``cliente'' do jogo), em última análise, tenha a informação completa do jogo (ou, no caso do FreeMMG, do segmento).
+
+A segunda desvantagem é que esta técnica pode aumentar significativamente o número de segmentos a serem assinados por um cliente. Visto que cada assinatura exige mais poder de processamento e recursos de rede em um cliente, este critério ``expandido'' para determinação de áreas de interesse pode causar um esgotamento bem mais rápido dos recursos dos clientes, que acabariam, de qualquer maneira,  tendo que optar (por iniciativa própria, ou por decisão do servidor) por assinar apenas os segmentos mais próximos dos seus objetos. Este problema pode ser mitigado através de uma otimização que será discutida na seção 3.17.
+
+Uma maneira de mitigar tanto o problema da redução do ``fator surpresa'', quanto o problema do excesso de assinaturas, é fazer com que um cliente possa assinar os segmentos ``adjacentes'' apenas se o jogador em questão possuir um objeto próximo da ``fronteira'' entre os dois segmentos (figura~\ref{fig:fig312}). Se os segmentos do mundo virtual forem suficientemente grandes, o ganho pode ser significativo. Para implementar este critério, algumas novas ``mensagens replicadas'' são necessárias, para que o grupo de assinantes de um segmento notifique o servidor sobre a ``presença'' de um jogador não só no segmento como um todo, mas também notifique a ``presença'' do jogador nas fronteiras do segmento.
+
+% ~\ref{fig:fig312}
+%área de interesse ``expandida'' por objetos próximos à borda
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.76]{figuras/fig312.eps}
+  \end{center}
+\caption{Expansão da ADI por objeto próximo à borda de um segmento}
+\label{fig:fig312}
+\end{figure}
+
+Por fim, é importante citar que o (possível) paralelismo do algoritmo de assinatura não foi explorado. A implementação realizada do algoritmo apenas funciona corretamente se, para cada segmento, somente uma nova assinatura for negociada de cada vez. Porém, pode-se dizer com segurança que ao menos o primeiro passo do algoritmo pode ser implementado de forma concorrente, ou seja, para vários ``novos assinantes'' de um mesmo segmento, ao mesmo tempo. Isto é possível pois a primeira parte do algoritmo de assinatura é apenas um procedimento de estabelecimento de conexões, sem necessidade de sincronização ou ordem na execução dos seus passos.
+
+\section{Algoritmo de desassinatura}
+
+Na rede FreeMMG, os clientes que não estão mais interessados em um segmento devem executar um protocolo específico de ``desassinatura de segmento'' (figura~\ref{fig:fig313}). O algoritmo é composto dos seguintes passos, onde S é o servidor, D é o assinante que está sendo retirado do segmento, e A o conjunto total de assinantes do segmento (ou seja, D pertence a A):
+
+\begin{itemize}
+
+\item D decide que quer cancelar sua assinatura e envia mensagem para S com a solicitação (passo opcional);
+\item S decide que o assinante D deve ser retirado do seu segmento (por solicitação de D ou outra razão, como mudança na área de interesse de D detectada por S) e envia mensagem para cada A solicitando o valor atual do relógio de simulação, juntamente com uma constante numérica C, configurada pela aplicação;
+\item Cada A recebe a mensagem e envia para S o valor R do relógio local, bem como garante que não procederá com a simulação localmente se o relógio local atingir (R + C);
+\item S recebe todos os R, escolhe o maior (R'), e envia mensagem para cada A informando que a assinatura de D será cancelada no turno T, onde (T = R' + C);
+\item Cada A recebe a mensagem de S, ``cancela'' o limite local (R + C) do simulador e configura o simulador local para esperar comandos de D apenas até o turno (R' + C);
+\item Quando cada assinante atinge o turno (R' + C) localmente, desfaz as conexões com D (se é o próprio D, desfaz as conexões com todos os outros assinantes), e envia mensagem para S notificando a conclusão da desassinatura;
+\item S espera o recebimento de todas as mensagens de conclusão de desassinatura para considerar D efetivamente retirado do segmento.
+
+\end{itemize}
+
+% ~\ref{fig:fig313}
+%algoritmo de desassinatura
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig313.eps}
+  \end{center}
+\caption{Exemplo de execução do algoritmo de desassinatura}
+\label{fig:fig313}
+\end{figure}
+
+Durante a desassinatura (assim como durante a assinatura), é necessário que seja feita uma sincronização entre os assinantes, o que pode causar uma suspensão da simulação, causada pelos ``limites locais'', durante a negociação da desassinatura. Para que o cancelamento de assinatura seja feito de forma a evitar suspensões e prejudicar a quem já é assinante do segmento, é necessário que haja um acordo entre todos os assinantes sobre qual será o último turno em que D será considerado assinante. Porém, enquanto este valor está sendo negociado, a simulação prossegue, em tempo real. Para que o acordo não se torne obsoleto antes de ser realizado, é utilizada a constante auxiliar ``C'', discutida na seção anterior para o algoritmo de assinatura, que garante que a simulação não será executada locamente após um certo limiar, que é o valor mínimo a ser decidido pelo acordo.
+
+Em princípio, vários protocolos de desassinatura podem executar em paralelo, para um mesmo segmento, pois a remoção, por desassinatura, de qualquer um dos assinantes durante a execução do protocolo não causa nenhuma perda de informação. Isto ocorre pois o assinante participa da negociação de desassinatura informando um valor para o ``turno'' a ser negociado que lhe interessa, ou seja, que evita que ele próprio saia de sincronia. Caso um assinante A saia do grupo durante a negociação de uma outra desassinatura, isto não prejudica os outros assinantes, pois o pior que pode acontecer é que a restrição imposta pelo assinante A seja utilizada, desnecessariamente, para o cálculo do turno que satisfaz a todos os assinantes. Porém o algoritmo de desassinatura, em princípio, não pode executar de forma concorrente ao algoritmo de assinatura, no mesmo segmento.
+
+\subsection{Desativação de segmentos}
+
+O algoritmo de desassinatura descrito acima trata apenas do caso em que existe interesse em continuar a execução da simulação após a remoção do assinante em questão. Isto ocorre quando o assinante removido não é o último assinante interessado, ou quando a implementação do modelo busca alocar assinantes ``extras'' para que os segmentos não se tornem inativos (como discutido na seção 3.6). Caso o servidor decida que a simulação do segmento não deve prosseguir por falta de assinantes interessados, o segmento é desativado. O protocolo de desativação pode ser executado no lugar do procedimento de desassinatura de um assinante, quando a remoção deste satisfaz o critério do servidor para desativação de segmentos.
+
+A desativação de um segmento procede da seguinte forma:
+
+\begin{itemize}
+
+\item Servidor envia mensagem para todos os assinantes solicitando o valor atual do relógio de simulação, juntamente com uma constante numérica C, configurada pela aplicação;
+\item Cada assinante recebe a mensagem e envia para o servidor o valor R do relógio local, bem como garante que não procederá com a simulação localmente se o relógio local atingir (R + C);
+\item Servidor recebe todos os R, escolhe o maior (R'), e envia mensagem para cada assinante informando que a simulação deve parar no turno T, onde (T = R' + C);
+\item Cada assinante recebe a mensagem, ``cancela'' o limite local (R + C) do simulador e, quando a simulação atinge localmente o turno T, envia para o servidor uma cópia do segmento no tempo de simulação T, e a seguir fecha todas as conexões com os outros assinantes do grupo;
+\item Servidor compara as versões recebidas e armazena a ``melhor'' (versão com mais assinantes concordantes, versão mais recente, ou uma combinação destes dois critérios) localmente como cópia inativa.
+
+\end{itemize}
+
+Os últimos dois passos podem também ser implementados de forma que cada assinante envie apenas uma parte do segmento para o servidor, juntamente com um ``hash'' da cópia completa (ou um hash de cada uma das partes). Também é importante destacar que, caso o servidor decida que as cópias obtidas não sejam confiáveis (por exemplo, se cada assinante possui uma cópia diferente) então uma ``falha fatal'' ocorre e um dos procedimentos descritos na seção 3.14 é adotado para realizar a recuperação.
+
+\section{Número mínimo de assinantes e assinantes aleatórios}
+
+O ``trapaceiro'' é um jogador, em um jogo distribuído, que quer obter uma vantagem ilegal no jogo sem ser detectado. Existem várias maneiras de se trapacear em um jogo distribuído, bem como existem várias técnicas para prevenção, detecção e correção de trapaças, que dependem principalmente do modelo de distribuição adotado pelo jogo. Para o modelo FreeMMG, o pior tipo  de trapaça, que é combatido através da replicação de cada segmento, é a alteração arbitrária do estado do jogo.
+
+A replicação de estado, como discutido anteriormente, garante um certo nível de resistência contra jogadores trapaceiros pois, em princípio, um trapaceiro só poderá alterar a sua cópia local do estado do jogo, não podendo afetar as outras réplicas. Mesmo na presença de ``grupos de trapaceiros'' agindo de forma coordenada, a existência de replicação ao menos torna o desenvolvimento de software dos programas clientes ``maliciosos'' mais complexo.
+
+Porém, o modelo apresentado até aqui permite que apenas um cliente seja assinante de um segmento em um determinado momento. Por exemplo, se um segmento possuir apenas objetos de posse de um único jogador, pelo critério ``default'' de cálculo de área de interesse, este jogador seria o único assinante do segmento. Este jogador poderia facilmente trapacear no jogo pois ele possui a única cópia ativa do segmento. As alterações ilegais deste cliente seriam simples alterações locais e sem correr o risco de uma outra réplica ``honesta'' avisar o servidor de que a simulação saiu de sincronia.
+
+Para evitar esta situação insegura, uma implementação do modelo FreeMMG deve expor uma interface para a aplicação que permita a especificação de um número ``mínimo'' de assinantes (réplicas ativas) para que a atualização do segmento seja autorizada pelo servidor. Após especificado este valor, a implementação do FreeMMG deve inserir assinantes ``extras'' nos segmentos que possuírem menos assinantes do que o valor configurado. Os assinantes extras ou ``assinantes aleatórios'' são clientes que não estão interessados no segmento mas que participam da simulação do mesmo para ajudar a dificultar a ação de trapaceiros, bem como reduzir as chances de ocorrência de ``falhas fatais'', que serão discutidas nas seções seguintes.
+
+Assinantes ``aleatórios'' poderiam ser obtidos através de alocação dos clientes de jogadores ativos que estão com recursos sobrando, ou então através de clientes voluntários recrutados através de uma iniciativa de computação distribuída similar a SETI@Home ou Freenet. A participação como assinante extra em uma rede FreeMMG poderia ser recompensada através de algum bônus no jogo, incentivando assim que os jogadores executem o assinante extra quando não estão jogando ou que  peçam para seus ``contatos'' na Internet que participem da iniciativa para ajudar o seu desempenho no jogo. Adicionalmente, assinantes extras podem contribuir para resolver o problema da ``inatividade seletiva'' do mundo virtual, que foi discutida na seção 3.6.
+
+\subsection{Problema da ``maioria trapaceira''}
+
+É importante destacar que, mesmo com a adoção de assinantes aleatórios, não é possível garantir que não ocorrerão alterações ilegais. Isto ocorre porque mesmo que os assinantes ``aleatórios'' sejam escolhidos ao acaso, é possível que certos assinantes cadastrados como voluntários para assinaturas extras, junto ao servidor, sejam clientes maliciosos que estão procurando ativamente a oportunidade de serem alocados junto a outros trapaceiros. A única solução que resolve de fato o problema da trapaça por alteração de estado em uma rede FreeMMG é a exigência de que assinantes confiáveis, ou seja, alocados no ``lado servidor'', participem da simulação de cada segmento ativo. Se cada segmento ativo possuir ao menos um assinante que executa no servidor, a execução de trapaças do tipo ``alteração ilegal de estado'' se torna impossível, pois a cópia do assinante confiável será sempre utilizada em caso de disputas. Por outro lado, a simulação irá se tornar, na prática, centralizada, o que torna o servidor novamente um gargalo de processamento e de comunicação.
+
+\section{Detecção e tipos de falhas de clientes (individuais)}
+
+Um cliente é considerado ``falho'' pelo servidor quando este se desvia do seu comportamento esperado~\cite{apostilatf}. Quando um cliente falha, todas as suas assinaturas falham, ou seja, todos os grupos (ou segmentos) de que o cliente estava participando são afetados negativamente, de uma forma ou de outra. Nesta seção são relacionadas as situações que fazem o servidor considerar um cliente como ``falho''. As falhas de clientes (ou falhas de assinantes) causam as falhas de grupo (ou falhas de segmento) que serão discutidas na seção seguinte. Neste contexto, os principais tipos de falhas detectáveis de clientes são os seguintes:
+
+\subsection{Timeout, quebra de conexão ou violação de protocolo detectado pelo servidor}
+
+Neste caso, o servidor detecta diretamente a ocorrência da falha do cliente através da sua conexão de rede com o mesmo. Porém, é importante destacar que a falha não necessariamente indica que o cliente é malicioso. Pelo contrário, pode-se considerar um cenário onde todos os outros assinantes de um segmento unem-se para ``sabotar'' um dos assinantes, que acabará falhando.
+
+\subsection{Timeout, quebra de conexão ou violação de protocolo detectado por um cliente-assinante}
+
+Similar ao caso anterior, porém, quem detecta a falha de um cliente é outro cliente, que então avisa o servidor. Este caso é problemático pois o servidor não pode ``acreditar'' cegamente em algo relatado por apenas um cliente, mas também não pode descartar a possibilidade de que o cliente está sendo honesto. De qualquer forma, os grupos (segmentos) assinados pelos clientes envolvidos são considerados falhos, como será visto na seção seguinte.
+
+\subsection{Inconsistência detectada nas entradas enviadas pelos clientes}
+
+Um assinante pode fazer com que a simulação de um segmento saia de sincronia se, durante a execução do algoritmo de simulação, ele enviar comandos diferentes para cada outro assinante, em um mesmo turno. Isto faz com que os assinantes utilizem entradas diferentes para a ``simulação replicada'', fazendo com que o jogo saia de sincronia.
+
+Para detectar este tipo de falha (que pode ser intencional ou não), uma implementação de um assinante para a rede FreeMMG deve fazer com que cada assinante envie não só os seus comandos para um turno T, mas também um ``hash'' de todas as entradas que recebeu durante a execução do turno anterior (T - 1). Desta forma, se um ou mais assinantes tentarem fornecer comandos diferentes para um mesmo turno, durante a negociação do próximo turno esta situação pode ser detectada, como é ilustrado pela figura~\ref{fig:fig314}.
+
+% ~\ref{fig:fig314}
+%detecção de inconsistência nas entradas enviadas
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig314.eps}
+  \end{center}
+\caption{Exemplo de detecção de inconsistência nas entradas enviadas (simuladores sem ``look-ahead'')}
+\label{fig:fig314}
+\end{figure}
+
+Neste caso, qualquer nodo ``honesto'' pode avisar o servidor sobre a falha. Porém, como discutido no item anterior, o servidor não tem como saber se a notificação é honesta ou não. Mesmo que quase todos os nodos façam a mesma notificação, o servidor não tem como saber se a maioria é que está mentindo de comum acordo. De qualquer forma, os grupos (segmentos) assinados pelos clientes envolvidos são considerados falhos, como será visto na seção seguinte.
+
+\section{Falhas de grupo: parciais e fatais}
+
+Quando o servidor detecta que um ou mais assinantes de um grupo de assinantes de um segmento falham, seja qual for a razão, o servidor marca o segmento como ``falho'' e dispara um procedimento de recuperação do segmento para um estado válido, através do tratamento da falha. Porém, antes de serem apresentados os mecanismos de recuperação de falhas de grupo (ou ``falhas de segmento''), primeiro deve-se distinguir os dois tipos de falhas de grupo: falhas parciais e falhas fatais.
+
+\subsection{Falha parcial}
+
+Uma falha de grupo é considerada ``parcial'' pelo servidor se, após a falha do grupo, parte das cópias do estado do segmento, em posse dos assinantes que não falharam, ainda puderem ser utilizadas na recuperação da falha do grupo. Em geral, o critério para decidir se as cópias restantes são confiáveis é relativo ao maior número de assinantes restantes que ainda concordam entre si sobre a versão mais atual do estado do segmento. Se este número satisfaz um certo limiar, a falha é considerada ``parcial''. Um bom exemplo de falha parcial envolve um cenário com um número elevado de assinantes (por exemplo, oito assinantes) onde apenas um assinante ``falha'' individualmente e todos os outros assinantes concordam com uma versão do estado do segmento (figura~\ref{fig:fig315}).
+
+O limiar citado deve ser especificado tanto para assinantes ``normais'' quanto para assinantes ``aleatórios''. Como discutido anteriormente, a aplicação pode determinar um número mínimo de assinantes ``aleatórios'' em cada segmento. Da mesma forma, a aplicação pode determinar também um número mínimo de assinantes ``aleatórios'' no conjunto de réplicas confiáveis após uma falha. Se este número não for satisfeito, a falha não é considerada parcial.
+
+O objetivo deste número mínimo de nodos aleatórios após uma falha é o de evitar uma situação onde uma maioria de assinantes ``normais'', que podem compor um grupo de clientes ``trapaceiros'', resolvem eliminar os assinantes aleatórios (que provavelmente compõe a minoria dos assinantes) e forçar um cenário de recuperação de falha parcial onde seja possível que os trapaceiros forcem a adoção de uma versão incorreta do estado do segmento. Ao estabelecer que o grupo de réplicas restantes, após uma falha, componha tanto assinantes ``normais'' quanto assinantes ``aleatórios'', se reduz a probabilidade de que a restauração da uma cópia ativa, nos assinantes, seja explorada para execução de uma trapaça.
+
+% ~\ref{fig:fig315}
+%bom exemplo de falha parcial
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.65]{figuras/fig315.eps}
+  \end{center}
+\caption{Exemplo de falha parcial em um grupo de assinantes}
+\label{fig:fig315}
+\end{figure}
+
+Por fim, se houver um assinante ``confiável'' no segmento, ou seja, se houver ao menos um assinante alocado no lado servidor, a falha do segmento é considerada sempre parcial. Porém, como foi discutido, este cenário exigiria que o servidor se comunicasse em tempo real com todos os clientes e realizasse a computação da simulação de todos os segmentos ativos, anulando a escalabilidade conferida pela simulação descentralizada do ``mundo virtual''.
+
+\subsection{Falha fatal}
+
+A ``falha fatal'' de um grupo de assinantes ocorre quando o servidor decide que as cópias restantes (se alguma) do estado do segmento simulado pelo grupo não são confiáveis. Neste cenário, toda a informação de estado do jogo que está nos clientes deve ser descartada, sendo que o servidor fica responsável por utilizar a informação que tem armazenado localmente (por exemplo, uma cópia antiga do segmento) para restaurar o estado do jogo para uma versão confiável. Um bom exemplo de falhas fatal envolve um cenário de falha de grupo onde apenas um entre vários assinantes não falhou. Outro bom exemplo envolve um cenário onde restam todos os assinantes menos um (o que causou a falha do grupo), mas cada um dos assinantes restantes possui uma cópia diferente do estado do segmento. A figura~\ref{fig:fig316} ilustra um cenário de ``falha fatal'' que é causado pela insuficiência de ``assinantes aleatórios'' após a falha. 
+
+% ~\ref{fig:fig316}
+%os dois bons exemplos de falhas fatais
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.65]{figuras/fig316.eps}
+  \end{center}
+\caption{Exemplo de falha fatal em um grupo de assinantes}
+\label{fig:fig316}
+\end{figure}
+
+\subsection{Diferenças entre falha parcial e falha fatal}
+
+É importante distinguir entre ``falha parcial'' e ``falha fatal'' de um grupo de assinantes pois o impacto de uma falha parcial no sistema pode ser significativamente menor do que o de uma falha fatal. Mesmo que o servidor tivesse informação completa sobre o estado de cada segmento, ou seja, mesmo que o servidor fosse assinante de cada segmento ativo, uma falha parcial ainda seria menos custosa de ser reparada, pois ao menos os assinantes que não falharam não precisariam obter do servidor uma nova cópia ``correta'' do estado do segmento, economizando transferências de estado de segmento. E se o servidor não possuir uma informação atualizada, ou seja, se possuir apenas uma cópia antiga (por exemplo, a última cópia inativa do segmento), a falha parcial evita a restauração de uma versão  ``antiga'' do segmento e, portanto, evita que o tempo de simulação do segmento volte atrás no tempo. Isto é significativo pois se um dos simuladores em uma simulação distribuída volta atrás no tempo de simulação, então é possível que inconsistências na simulação global sejam introduzidas. O problema da inconsistência global no FreeMMG será discutido em detalhe nas seções seguintes.
+
+\section{Algoritmo inicial de recuperação de falhas}
+
+Quando há uma falha de grupo, a primeira coisa que o servidor FreeMMG deve fazer é decidir qual o procedimento de recuperação que será adotado. Para isso, o servidor deve decidir se a falha é ``parcial'' ou ``fatal''. Antes de saber qual o tipo de falha, o servidor executa um ``protocolo inicial'' de recuperação de falhas, composto dos seguintes passos:
+
+\begin{itemize}
+
+\item O servidor descarta o estado de todos os nodos que ``falharam'' (falha individual do assinante, falha por timeout, etc). Porém, como discutido na seção anterior, nem sempre o servidor terá certeza sobre qual assinante realmente falhou, como é o caso em que um ou mais assinantes avisam o servidor sobre a falha de outros assinantes. Em princípio, o servidor só descarta o estado, neste passo, de clientes que perderam a conexão com o servidor;
+\item O servidor verifica se a quantidade e tipos de clientes restantes satisfazem os critérios mínimos para falha parcial (supondo, neste ponto, que todos os clientes restantes concordam entre si em relação ao estado atual do segmento). Em caso afirmativo, o algoritmo prossegue para o passo seguinte. Caso contrário, o algoritmo determina a ocorrência de uma ``falha fatal'', e aplica-se um dos protocolos de recuperação de ``falhas fatais'' descritos na seção 3.14;
+\item O servidor envia mensagem para todos os assinantes (restantes) notificando a interrupção temporária da simulação do grupo e pedindo uma lista de estados recentes que o nodo possua no seu histórico (se algum);
+\item Cada assinante restante envia uma lista contendo tuplas (T, h) onde T é o ``timestamp'' de uma das cópias do segmento que está armazenada no histórico do assinante, juntamente com um ``hash'' (''h'') calculado sobre o conteúdo binário da cópia;
+\item O servidor recebe as tuplas (T, h) de cada cliente e decide qual a tupla representa o estado mais confiável (que possui mais cópias dentre os assinantes, ou que melhor satisfaça os critérios para falha parcial). Se o conjunto de clientes que possui o estado escolhido como o ``mais confiável'' satisfizer os critérios mínimos para falha parcial, então o procedimento de recuperação de falha parcial é disparado (descrito na seção 3.13). Caso contrário, o algoritmo determina a ocorrência de uma ``falha fatal'', e aplica-se um dos protocolos de recuperação de ``falhas fatais'' descritos na seção 3.14;
+
+\end{itemize}
+
+% ~\ref{fig:fig317}
+%protocolo inicial de recuperação de falhas
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig317.eps}
+  \end{center}
+\caption{Exemplo de execução do protocolo inicial de recuperação de falhas}
+\label{fig:fig317}
+\end{figure}
+
+A figura~\ref{fig:fig317} mostra um exemplo da execução do protocolo inicial de recuperação de falhas. No exemplo da figura, o servidor (S) determina a ocorrência de uma falha parcial do grupo, pois os números mínimos de assinantes concordantes após a falha satisfazem, no exemplo, os limiares configurados pelo servidor. Após a execução deste protocolo inicial, um protocolo de recuperação de falhas específico para o tipo de falha do grupo (''parcial'' ou ``fatal'') é executado. Na seção 3.13 é detalhado o protocolo de recuperação de falhas parciais. Já na seção 3.14 são detalhados dois protocolos alternativos de recuperação de falhas ``fatais'', sendo que cada um exige um tipo de suporte diferente para executar.
+
+\section{Recuperação de falhas parciais}
+
+Quando uma falha de grupo é ``parcial'', isto significa que o servidor considera que pelo menos um conjunto dos assinantes que não falharam são confiáveis e estão de acordo entre si. Em uma situação ideal, uma rede FreeMMG sofreria apenas de falhas não-intencionais e esporádicas, como a perda de conexão de um único assinante, sendo que as falhas ``fatais'' raramente ocorreriam. Neste sentido, o objetivo do algoritmo de recuperação de falha ``parcial'' é o de prover um mecanismo de recuperação rápida, que tenha o menor impacto possível no andamento do jogo tanto para os assinantes do grupo afetado pela falha quanto para todos os outros assinantes da rede FreeMMG.
+
+Após a detecção da falha parcial em um grupo, existirão assinantes em duas situações diferentes:
+
+\begin{itemize}
+
+\item Assinantes que possuem a cópia do ``estado escolhido'' pelo servidor como sendo o ``mais confiável'';
+\item Assinantes que não possuem a cópia do ``estado escolhido'' e que precisam ser atualizados.
+
+\end{itemize}
+
+Portanto, o primeiro passo da recuperação consiste em passar uma cópia do ``estado escolhido'' pelo servidor para os assinantes que não possuem uma cópia. Isto pode ser feito de duas maneiras:
+
+\begin{itemize}
+
+\item Servidor obtém uma cópia, salva localmente, e depois envia para os assinantes que não a possuem;
+\item Servidor ordena que os assinantes que possuem a cópia enviem para os assinantes que não a possuem.
+
+\end{itemize}
+
+A primeira alternativa é a mais simples de ser implementada, porém, pode demorar mais tempo, especialmente se houverem muitos assinantes para receber a cópia. Para a implementação do protótipo do modelo (descrita no capítulo 4), foi escolhida a primeira opção. Porém, a segunda opção também pode ser utilizada por uma implementação do modelo. O algoritmo de recuperação completo, utilizando a primeira alternativa, consiste dos seguintes passos:
+
+\begin{itemize}
+
+\item Servidor obtém uma cópia do ``estado mais correto'' (para abreviar, ``C'') do segmento junto aos assinantes que a possuem;
+\item Após receber C, o servidor recalcula as áreas de interesse dos jogadores baseado na informação contida em C (objetos presentes e donos de objetos);
+\item Servidor dispara as assinaturas necessárias para que sejam satisfeitos tanto os critérios de área de interesse, quanto os critérios de números mínimos de assinantes (descritos na seção 3.9). Os novos assinantes (se algum) recebem o estado C do segmento diretamente do servidor;
+\item Após a finalização das novas assinaturas, o servidor envia mensagem para todos os assinantes autorizando a continuação da simulação.
+
+\end{itemize}
+
+A figura~\ref{fig:fig318} continua o cenário ilustrado pela figura~\ref{fig:fig317}, executando a recuperação da ``falha parcial'' que foi detectada anteriormente. É importante destacar que, segundo o terceiro passo do algoritmo acima, há o disparo de novas assinaturas para o grupo. Estas novas assinaturas são disparadas principalmente para que os critérios de ``número mínimo'' de assinantes (''normais'' ou ``aleatórios'') sejam cumpridos. Por exemplo, se a aplicação especifica que cada grupo deve possuir no mínimo dois assinantes aleatórios durante a execução, e no mínimo um assinante aleatório após uma falha (para que a mesma seja considerada ``parcial''), então, durante a execução do terceiro passo do algoritmo acima, será alocado um novo assinante ``aleatório'', para que o número mínimo de dois assinantes aleatórios seja cumprido. Esta situação é ilustrada no passo ``3'' da figura~\ref{fig:fig318}, onde há a inclusão de um novo assinante aleatório no grupo.
+
+% ~\ref{fig:fig318}
+%exemplo completo de falha parcial e recuperação
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig318.eps}
+  \end{center}
+\caption{Exemplo de execução do protocolo inicial de recuperação de falhas}
+\label{fig:fig318}
+\end{figure}
+
+Também é importante destacar que o protocolo de assinatura utilizado durante a recuperação não é exatamente o mesmo utilizado para uma assinatura ``normal''. Isto ocorre pois, por um lado, as assinaturas ocorrem com a simulação parada e, portanto, a sincronização dos relógios dos simuladores não é necessária. Por outro lado, quem fornece o estado inicial da simulação para os novos assinantes é o servidor, e não os assinantes ``antigos'', que não falharam. A lógica por trás desta decisão de modelo é que, após uma falha, mesmo que o servidor decida ``acreditar'' nos assinantes restantes, o risco de que os assinantes restantes estejam trapaceando é maior do que o risco de ocorrência de trapaças durante a execução normal, quando o número de réplicas é maior. Portanto, para minimizar problemas, o servidor é utilizado para entregar a cópia para os novos assinantes, reduzindo as chances de que a própria recuperação da falha resulte em uma situação de falha (o que pode acabar resultando em uma situação de falha ``fatal'').
+
+\section{Recuperação de falhas fatais}
+
+O mecanismo descrito na seção anterior, de restauração de falha parcial, é independente do mecanismo de restauração de falha fatal que pode ser empregado em uma implementação do FreeMMG. Nas próximas duas seções serão descritos dois protocolos alternativos de recuperação de ``falhas fatais''. Cada algoritmo necessita de diferentes mecanismos de suporte (\textit{snapshots} periódicos, \textit{logs} de comandos, etc) e causa maior ou menor aumento no custo total de processamento e de comunicação, tanto do servidor quanto dos clientes. Neste sentido, cada algoritmo também fornece diferentes garantias à aplicação como, por exemplo, manutenção ou não da consistência global em caso de falha, maior ou menor impacto no jogo durante a recuperação da falha, etc.
+
+Durante a execução de ambos os algoritmos, o servidor já sabe que o grupo de assinantes não possui uma cópia confiável do estado da simulação. Portanto, o servidor sabe que pode utilizar apenas a informação que possui armazenado localmente para realizar a recuperação da falha. Dependendo do algoritmo de recuperação utilizado, outras medidas de suporte também precisarão de uma implementação, como obtenção de \textit{snapshots} periódicos pelo servidor ou alocação de um assinante no servidor.
+
+\section{Restauração de falha fatal por \textit{snapshots} (algoritmo 1)}
+
+O protocolo mais simples possível para recuperação de falha pelo servidor consiste na restauração da última ``cópia inativa'' ou \textit{snapshot} salvo pelo servidor. A principal desvantagem desta técnica é que, após uma falha, o dano ao andamento do jogo pode ser grande, pois todas as ``jogadas'' realizadas pelos jogadores entre o tempo do \textit{snapshot} e o tempo da falha são perdidas. Em passos, o algoritmo de recuperação por \textit{snapshot} consiste do seguinte:
+
+\begin {itemize}
+
+\item Servidor detecta a falha do grupo e restaura o último \textit{snapshot} disponível localmente (S);
+\item Servidor recalcula as áreas de interesse dos jogadores baseado na informação contida em S (objetos presentes e donos de objetos);
+\item Servidor dispara as assinaturas necessárias para que sejam satisfeitos tanto os critérios de área de interesse, quanto os critérios de números mínimos de assinantes (descritos na seção 3.9). Os novos assinantes (se algum) recebem o estado S do segmento diretamente do servidor;
+\item Após finalização das novas assinaturas, o servidor envia mensagem para todos os assinantes autorizando a continuação da simulação.
+
+\end{itemize}
+
+Para minimizar a perda de estado do jogo após a recuperação da falha, o servidor deve ser configurado para obter, periodicamente, \textit{snapshots} ou cópias completas do estado da simulação de cada grupo ativo. Dependendo do tamanho da representação (em bytes) e da quantidade de ``objetos'' que são criados pela aplicação, o custo de comunicação para a obtenção de um \textit{snapshot} pode ser proibitivo. Como referência, um \textit{snapshot} de Age of Empires II, medido pelo tamanho do arquivo de salvamento de jogo, pode ter entre 200 e 1500 Kbytes. Por outro lado, um \textit{snapshot} do jogo-protótipo implementado (descrito no capítulo 4) pode ter menos de 10 Kbytes, mas o tamanho dos segmentos é configurado pela aplicação para ser bastante pequeno e, portanto, o número total de segmentos ativos no sistema pode ser muito grande.
+
+Quanto mais freqüente for a obtenção de \textit{snapshots}, menor será a perda causada ao jogo. De qualquer forma, é possível imaginar que muitos jogadores ficariam bastante insatisfeitos mesmo com uma perda de 5 ou 10 minutos de jogo. Além disso, a obtenção muito freqüente de \textit{snapshots} pelo servidor pode negar um dos principais benefícios do modelo FreeMMG, que é a reduzida utilização dos recursos de rede do servidor.
+
+Neste sentido, caso o servidor não possua recursos de rede suficientes, a única saída viável para a redução do impacto ao jogo é tentar evitar ao máximo que falhas do tipo ``fatal'' ocorram. Isto pode ser feito tanto através do aumento dos limiares mínimos de assinantes por segmento, bem como através da redução dos limiares mínimos de assinantes para configuração de ``falha parcial''. Caso a replicação seja suficientemente alta, é possível que a obtenção de \textit{snapshots} possa ser feita em intervalos bastante grandes (por exemplo, uma vez por dia) ou mesmo completamente descartada (recuperação de segmentos falhos através da restauração de uma cópia ``em branco'' do segmento).
+
+\subsection{Problema da inconsistência global}
+
+Um problema inerente a esta abordagem de recuperação por \textit{snapshots} é a introdução de inconsistências na simulação ``global'', ou seja, considerando-se o conjunto de todos os simuladores (grupos de assinantes de segmentos). Apesar de cada segmento possuir o seu próprio relógio de simulação, os estados dos vários segmentos são sincronizados entre si através da transferência constante de objetos entre os segmentos.
+
+Dois exemplos claros de ``inconsistência global'' consistem na duplicação e na eliminação de objetos. A duplicação de um objeto pode ocorrer no seguinte cenário:
+
+\begin{itemize}
+
+\item Inicialmente, o segmento A possui objeto O, e segmento B está vazio;
+\item Servidor obtém \textit{snapshot} do segmento A;
+\item Objeto O é transferido de A para B;
+\item Uma falha fatal ocorre no segmento A, e o \textit{snapshot} obtido anteriormente é restaurado. Como resultado, o objeto O possui duas instâncias (uma em A, e outra em B).
+
+\end{itemize}
+
+De forma similar, um objeto pode ser eliminado da seguinte forma:
+
+\begin{itemize}
+
+\item Inicialmente, o segmento A possui objeto O, e segmento B está vazio;
+\item Servidor obtém \textit{snapshot} do segmento B;
+\item Objeto O é transferido de A para B;
+\item Uma falha fatal ocorre no segmento B, e o \textit{snapshot} obtido anteriormente é restaurado. Como resultado, o objeto O não possui mais nenhuma instância (pois B não possui mais o objeto).
+
+\end{itemize}
+
+Este tipo de problema é bastante estudado em simulação distribuída, no contexto de implementação de algoritmos otimistas ou especulativos~\cite{fujimoto2000}. Como a simulação é otimista e possui um relógio lógico global, um dos simuladores distribuídos pode detectar localmente, através da comparação de ``timestamps'' de mensagens, que aplicou mensagens fora de ordem. A restauração pode ser feita de várias formas, como através do cancelamento das mensagens ou eventos distribuídos (o que pode envolver envio de mensagens de cancelamento para outros simuladores) e posterior re-aplicação dos eventos na ordem correta~\cite{fujimoto2000}. Existem outras soluções como o algoritmo de Trailing State Synchronization ~\cite{cronin2002, cronin2001}, que realiza a  manutenção de simuladores paralelos, cada um com um nível diferente de ``otimismo''. No TSS, a recuperação da sincronia é feita através da restauração do simulador mais ``otimista'' que ainda é correto, sendo que os outros são descartados.
+
+No FreeMMG poderia ser implementado um algoritmo de recuperação similar. Como as transferências de objetos entre segmentos passam pelo servidor, o servidor pode, em princípio, manter um registro de todas as transferências de objetos relacionadas com um segmento deste o último \textit{snapshot} obtido daquele segmento. Então, para restaurar a consistência global, em princípio bastaria restaurar o último \textit{snapshot} e desfazer as transferências de objetos de e para aquele segmento desde o tempo do relógio associado ao \textit{snapshot}. Porém, esta solução causa outro problema: ao ``desfazer'' uma transferência de objeto de ou para outro segmento, é causada a ``falha'' deste outro segmento, e também se faz necessária a restauração do último \textit{snapshot} deste segmento, o que também pode causar a necessidade de falhar e restaurar outros segmentos, e assim por diante.
+
+% FIGURA: restauração de falha global só com \textit{snapshots} : efeito ``cascata''
+
+Mesmo que o impacto deste tipo de recuperação seja aceitável pelos jogadores, o que é difícil, a qualidade do estado restaurado ainda pode ser ``inconsistente'', caso a aplicação defina critérios mais complexos de consistência do jogo que envolvam, por exemplo, o posicionamento específico dos objetos. As transferências de objetos ocorrem em tempos diferentes entre si, mas o servidor, ao desfazer (ou refazer) as transferências de objetos, faz isso de uma só vez. E, como o servidor não sabe onde exatamente colocar os objetos (pois eles foram transferidos em tempos diferentes), isto pode resultar em objetos em locais absurdos ou não exatamente apropriados, como tanques de guerra posicionados dentro de bases inimigas, etc. Mesmo que nenhuma regra formal de consistência seja quebrada, o resultado final provavelmente decepcionaria os jogadores. Além disso,  deve-se também considerar as inconsistências que se originam das transformações dos atributos dos objetos ao longo do tempo. Por exemplo, se os objetos ``envelhecem'' ou se tornam mais fortes ao longo do tempo, isto é perdido ao se desfazer uma transferência de objeto, pois o servidor só possui a cópia do objeto de quando este foi transferido.
+
+Neste contexto, fica claro que, se o servidor obtém apenas \textit{snapshots} periódicos, além de saber sobre a transferência de objetos entre segmentos, o desenvolvimento de um algoritmo de ``rollback distribuído'' não contribui significativamente para a manutenção da consistência global da simulação. Isto ocorre pois muita informação é perdida, e a informação que é recuperada não compensa o estrago perceptível pelos jogadores que é causado por um rollback.
+
+\subsection{Aplicabilidade do algoritmo}
+
+O algoritmo de recuperação de falha fatal por restauração de \textit{snapshot} pode ser útil especialmente se o jogo ou aplicação for projetado para tolerar perdas eventuais no estado do jogo. Se a rede FreeMMG é configurada para garantir uma elevada replicação nos grupos de assinantes, a ocorrência de falhas fatais pode ser reduzida ao ponto em que a perda de estado torna-se aceitável. Outra vantagem da abordagem é que ela não exige que as transferências de objetos sejam realizadas pelo servidor. Por exemplo, os objetos poderiam ser transferidos diretamente entre os assinantes, desde que respeitado um critério mínimo de replicação de mensagens para que não seja possível a fabricação gratuita de objetos através de transferências ilegais.
+
+\section{Restauração de falha fatal por \textit{snapshots} e \textit{logs} de comandos (algoritmo 2)}
+
+Como já discutido anteriormente, o problema da recuperação de ``falhas fatais'' é resolvido se cada segmento ativo possuir um assinante ``confiável'', alocado em uma máquina no ``lado servidor'' da rede FreeMMG. Mas, neste caso, o ``lado servidor'' torna-se novamente um gargalo de rede e de processamento à medida em que o número de clientes aumenta. Com milhares de clientes e segmentos ativos, isto anularia o benefício da distribuição da simulação entre os clientes, que é razão de ser do modelo FreeMMG. Porém, pode-se obter um resultado similar através da alocação de um ``pseudo-assinante'' no servidor, para cada segmento ativo. Este pseudo-assinante se diferencia de um assinante ``completo'' em três aspectos: não-envio de comandos, recebimento de ``resumos'' de comandos e processamento de comandos apenas para recuperação de falhas ``fatais''.
+
+\subsection{Não-envio de comandos}
+
+Em primeiro lugar, o pseudo-assinante não envia comandos. Desta forma, o custo adicional de tráfego no lado servidor já é reduzido pela metade. Porém, isto não é suficiente para manter a escalabilidade do servidor, pois milhares de assinantes enviando comandos para o servidor já caracterizam um gargalo na comunicação. Além disso, esta é uma medida que também poderia ser adotada por assinantes ``normais'' alocados no lado servidor.
+
+\subsection{Recebimento de resumos de comandos}
+
+Em segundo lugar, o pseudo-assinante recebe ``resumos de comandos'' enviados pelos outros assinantes em intervalos grandes, ao invés de receber comandos normalmente, em pequenos intervalos. Supondo que o passo dos simuladores seja configurado para 100ms, isto significa que um assinante ``normal'' recebe, em média, 10 mensagens por segundo, cada uma contendo um conjunto de comandos gerados pelo jogador remoto desde a última mensagem. Neste contexto, um ``pseudo-assinante'' pode ser configurado para receber uma única mensagem contendo os últimos 100 comandos gerados pelos outros assinantes, o que resultaria no envio, para o ``pseudo-assinante'' de uma única mensagem a cada 10 segundos. Isto tende a reduzir de forma significativa o custo de comunicação dos clientes com o servidor por duas razões.
+
+Primeiro, como vários comandos são concatenados em uma única mensagem, isto significa que os ganhos através da compressão de pacotes podem ser bastante significativos. Considerando-se que o comando ``padrão'' enviado por um assinante é nulo (pacote vazio, ou 1 byte notificando que o mesmo não gerou nenhum comando naquele turno), um assinante que fique 10 segundos sem enviar nenhum comando estará gerando ou a concatenação de 100 mensagens vazias (nada) ou uma ``string'' de 100 bytes que possuem o mesmo valor, o que é bastante compressível. Mesmo que um jogador gere, em média, um comando por segundo, isto ainda resulta em seqüências grandes onde não há nenhum comando gerado, o que ainda resultaria em ganhos significativos durante a compressão do resumo de comandos.
+
+Segundo, há uma grande economia de tráfego efetivo através da eliminação dos cabeçalhos de pacotes. Uma implementação do FreeMMG pode utilizar protocolos-padrão da Internet como TCP/IP ou UDP/IP que, na prática, chegam a utilizar em torno de 50 bytes para o cabeçalho de um pacote (somando-se o overhead dos protocolos TCP, UDP, IP, etc). Já o tamanho médio do conteúdo de uma mensagem do tipo ``comando'' tipicamente não ocupará, em média, mais do que 10 bytes, sendo que o valor médio típico deve ser muito menor por causa dos períodos de inatividade dos jogadores (detalhes de implementação e resultados obtidos são discutidos no capítulo 4). Se considerarmos os tamanhos médios de cabeçalho (50 bytes) e comando (10 bytes) considerados, e o envio de ``resumos de comandos'' apenas a cada 100 turnos, o tráfego no servidor é reduzido para 17,5% (6000 bytes sem a utilização de resumos e 1050 bytes com a utilização de resumos), sendo que o ganho, na prática, deve ser maior, através da utilização de compressão dos pacotes.
+
+\subsection{Não-execução de comandos}
+
+Apesar de receber os comandos de todos os assinantes de cada segmento ativo, os pseudo-assinantes alocados no lado servidor não executam estes comandos em tempo real. Em uma situação normal, os comandos são apenas armazenados, sendo só utilizados quando é necessário que o servidor execute o algoritmo de recuperação de falha fatal. Assim, juntamente com as duas características descritas anteriormente (não-envio de comandos e recebimento de resumos), o servidor pode manter localmente um \textit{log} atualizado de todos os comandos enviados por todos os assinantes de cada segmento ativo, sem que isto resulte em um aumento proibitivo no custo de comunicação e de processamento do ``lado servidor''.
+
+\subsection{Recuperação de falhas com \textit{snapshot} e \textit{logs} de comandos}
+
+Visto que o pseudo-assinante possui um custo de comunicação e de processamento que são bastante reduzidos, se comparados com o custo da alocação de um assinante ``normal'', resta saber como os dados coletados pelo pseudo-assinante (os ``resumos'' de comandos) são utilizados para o tratamento de ``falhas fatais''. Este algoritmo (Algoritmo 2) também é baseado no algoritmo anterior (Algoritmo 1) de recuperação de falhas fatais por restauração de \textit{snapshot} armazenado no servidor. Neste sentido, o Algoritmo 2 consiste, basicamente, na aplicação dos \textit{logs} de comandos sobre o último \textit{snapshot} salvo. Como a ``simulação replicada'' do FreeMMG é determinística, o estado resultante deve ser idêntico ao estado calculado pelos clientes (pelo menos até o ponto onde foram recebidos os últimos resumos de comandos) e, portanto, reduzindo significativamente as perdas no estado da simulação. Em passos, a recuperação por \textit{snapshot} e \textit{log} consiste do seguinte:
+
+\begin{itemize}
+
+\item Servidor detecta a falha do grupo e busca localmente o último \textit{snapshot} do segmento (S) e o \textit{log} de comandos dos assinantes, e constrói uma cópia atualizada do segmento (S') através da execução dos ``turnos'' em que o servidor possui a lista completa de comandos (de todos os assinantes);
+\item Servidor recalcula as áreas de interesse dos jogadores baseado na informação contida em S' (objetos presentes e donos de objetos);
+\item Servidor dispara as assinaturas necessárias para que sejam satisfeitos tanto os critérios de área de interesse, quanto os critérios de números mínimos de assinantes (descritos na seção 3.9). Os novos assinantes (se algum) recebem o estado S' do segmento diretamente do servidor;
+\item Após finalização das novas assinaturas, o servidor envia mensagem para todos os assinantes autorizando a continuação da simulação.
+
+\end{itemize}
+
+% FIGURA: recuperação de falha pelo algoritmo 2
+
+Com esta abordagem, a freqüência de atualização do \textit{snapshot}, no lado servidor, não precisa ser alta. Em princípio, a atualização do \textit{snapshot} no servidor deve ser feita apenas se os \textit{logs} de comandos de um certo segmento ou grupo tornarem-se muito grandes. Quando um \textit{snapshot} é obtido pelo servidor, este pode descartar todos os comandos de clientes no \textit{log} que possuem um timestamp menor do que o timestamp do novo \textit{snapshot}.
+
+Apesar de a perda causada pela ocorrência de uma falha ser bastante reduzida, a consistência global é garantida somente se duas condições forem satisfeitas. Primeiro, cada segmento deve possuir no mínimo um assinante ``honesto'' pois se todos os assinantes resolvem fabricar objetos através de transferências ilegais, o servidor não terá como detectar esta situação (pois o servidor não está executando os comandos dos clientes). Além disso, a consistência global só é garantida se as transferências de objetos forem adiadas, pelo servidor, até que os resumos de comandos do segmento de origem do objeto transferido sejam atualizados até o timestamp em que o objeto é retirado. Isto é necessário para garantir que a transferência de objeto, em caso de falha ``fatal'', não precisará ser desfeita pelo servidor.
+
+\subsection{Aplicabilidade do algoritmo e melhorias possíveis}
+
+Se o servidor possuir recursos de rede suficientes para o recebimento constante de resumos de comandos, este algoritmo pode resolver o problema da perda de estado devido à ocorrência de uma falha ``fatal'' em um grupo de simuladores. Porém, a ``consistência global'' da simulação só pode ser garantida se forem alocados assinantes ``honestos'' em todos os grupos. Além disso, a transferência de objetos entre segmentos deve ser ``adiada'' pelo servidor até que os resumos de comandos do segmento de origem sejam atualizados até o ponto onde o objeto deixa o segmento.
+
+Em princípio, a garantia de consistência global, bem como a garantia de que transferências ilegais de objetos não possam ocorrer, poderiam ser obtidas se o ``lado servidor'' executasse os resumos de comandos que recebe de todos os assinantes. Porém, como já discutido, isto representa um gargalo de processamento para o servidor, pois uma rede FreeMMG pode possuir milhares de segmentos ativos simultaneamente. Porém, se a obtenção de poder de processamento (CPUs) para o servidor não for um problema, então é possível que o servidor forneça garantias sobre a manutenção da consistência global, bem como previna a ocorrência de ``trapaças'' de alterações arbitrárias no estado dos segmentos e de transferências ilegais de objetos entre segmentos.
+
+\section{Otimização de rede para assinantes inativos}
+
+Dependendo do tipo de jogo que for implementado sobre uma rede FreeMMG, é possível que um cliente venha a ser assinante de muitos segmentos. Isso pode resultar em um problema de falta de recursos suficientes, tanto de processamento quanto de rede, nos clientes que assinam os segmentos. Se um cliente executa uma parte muito grande da simulação do ``mundo virtual'', além de sobrecarregar a sua CPU, terá que se comunicar com uma grande quantidade de assinantes remotos. Isto é especialmente grave, se considerarmos que o FreeMMG precisa, em geral, manter um número elevado de assinantes em cada segmento para que a ocorrência de trapaças e o estrago provocado por falhas de assinantes seja minimizado.
+
+Para minimizar pelo menos o problema do excesso de comunicação do cliente, é possível explorar a ``localidade'' das interações do usuário. Mesmo que um cliente controlado por um jogador humano venha a assinar um grande número de segmentos, e que estes segmentos sejam suficientemente ``grandes'', é muito provável que a atenção deste jogador esteja voltada sempre para uma parte reduzida do ``mundo virtual'', visto que jogadores humanos geralmente tem recursos limitados de tempo para interagir com a área de jogo, especialmente em jogos de estratégia. Por exemplo, se um assinante estiver assinando vinte segmentos, onde cada segmento corresponde a, aproximadamente, uma ``tela cheia'' de objetos, é provável que, em média, o jogador concentre sua atenção em apenas um ou dois segmentos de uma só vez. Este fato pode ser explorado para que se implemente uma otimização que reduza significativamente as mensagens enviadas por cada assinante. E como os outros assinantes também estarão executando a otimização, a otimização também reduz, na prática, o número de mensagens recebidas por cada assinante.
+
+% FIGURA: localidade de interação em um MMORTS no FreeMMG (zoom geral e segmento no wizards)
+
+Em princípio, a freqüência com que os assinantes trocam mensagens entre si deve ser suficientemente alta para que o tempo entre a realização de um comando, por um jogador (por exemplo, mover um objeto) e a execução deste comando seja o menor possível. Mas se um assinante fica vários segundos ou minutos sem enviar nenhum comando para um segmento, em princípio as mensagens com ``comandos'' vazios deste jogador não precisariam ser enviadas. Porém, um assinante ``inativo'' não pode simplesmente parar de enviar comandos pois, como a simulação não é ``otimista'', os outros assinantes precisam esperar o assinante inativo avisar que não fará nada, em cada turno, para que a simulação possa prosseguir. Para resolver este problema, a otimização para assinantes inativos faz com que o assinante inativo ``negocie'', com os outros assinantes, uma nova freqüência de envio de comandos. Desta forma, quando um assinante é detectado como ``inativo'', este pode passar a enviar mensagens em uma freqüência bastante reduzida.
+
+A detecção da inatividade é realizada individualmente por cada assinante, sem a necessidade de troca de mensagens adicional. Quando um assinante detecta, localmente, que não recebeu nenhum comando efetivo de um certo assinante ``A'' (que pode ser ele mesmo), apenas comandos ``vazios'', por uma certa quantidade ``T'' de turnos, então a otimização é ativada localmente para o assinante ``A''. Enquanto ``A'' estiver marcado como ``inativo'', de cada ``S'' turnos executados pelo simulador local, em apenas um turno será esperado um comando do assinante ``A'', sendo que, em todos os outros turnos do intervalo ``S'', os simuladores do grupo irão ignorar comandos de ``A''. Como ``A'' também detecta a sua própria inatividade, também não irá enviar comandos durante os turnos inativos. Neste contexto, ``S'' e ``T'' são constantes configuradas pela aplicação.
+
+% FIGURA: assinante se tornando inativo
+
+O único efeito colateral da otimização é que quando um assinante está inativo e o jogador associado gera um ou mais comandos naquele segmento (por exemplo, ordena a movimentação de um objeto),  estes ``primeiros comandos'' só serão executados quando for o momento de enviar o próximo comando. Por exemplo, se a constante S é configurada para 50 turnos (S = 50) e os simuladores são configurados para executar 10 turnos por segundo, isto significa que os primeiros comandos gerados durante a inatividade de um assinante poderão demorar até 5 segundos para serem enviados e executados. Porém, quando todos os assinantes detectarem o envio de comandos ``efetivos'' por um assinante inativo, este passa novamente a ficar ``ativo'' e a enviar comandos em todos os turnos.
+
+% FIGURA: assinante se tornando ativo novamente
+
+Variações desta otimização são possíveis. Por exemplo, pode-se configurar vários ``graus'' de inatividade de um assinante. Se um assinante fica inativo por 10 segundos, pode-se reconfigurar o envio de comandos para funcionar na metade da velocidade normal, ou seja, se normalmente são enviados 10 comandos por segundo, com esta ``inatividade leve'' o assinante passa a enviar apenas 5 comandos por segundo (S = 2). E, caso o assinante permaneça inativo por um tempo elevado, por exemplo, 1 minuto, o ``grau'' de inatividade pode ser elevado, por exemplo, para que o assinante envie apenas 1 comando por segundo (S = 10). Esta configuração foi testada no protótipo implementado (jogo FreeMMG Wizards, apresentado no capítulo 4) e foi constatado informalmente que o impacto do ``primeiro'' grau de inatividade (S = 2) é difícil de ser notado pelo jogador, enquanto que o impacto do ``segundo'' grau (S = 10) pode ser notado mas, na prática, pode ser tolerado pelos jogadores.
+
+Caso sejam utilizados valores muito elevados para o parâmetro ``S'', é possível modificar a otimização para que o atraso do envio do ``primeiro comando'' após a inatividade se torne aceitável. Para isto, basta que o assinante inativo, ao detectar um comando gerado pelo jogador local, inicie uma troca de mensagens independente para a sua reativação. Isto poderia ser feito através do servidor, ou diretamente entre os assinantes. Esta variação não foi implementada mas, em princípio, poderia até fazer com que assinantes com um ``grau'' de inatividade elevado parassem completamente de enviar comandos.
+
+\section{Revisão e considerações finais}
+
+Este capítulo apresentou uma descrição detalhada do FreeMMG, um modelo híbrido, cliente-servidor e \textit{peer-to-peer}, para simulação distribuída e interativa, em tempo real, de jogos maciçamente multijogador (MMGs ou \textit{massively multiplayer games}). Neste contexto, foram apresentados os principais componentes do modelo, a saber:
+
+\begin{itemize}
+
+\item Servidor: utilização de um servidor para tarefas de gerência da rede, como autorização e autenticação, detecção e recuperação de falhas e gerenciamento dos grupos de clientes;
+\item Segmentos: partição do ``mundo virtual'' do jogo ou simulação em ``segmentos'' (ou células);
+\item Simulação \textit{peer-to-peer} replicada: formação de ``grupos de assinantes'' em cada segmento, formando redes \textit{peer-to-peer} de tamanho reduzido em cujo contexto é executado um algoritmo não-otimista de ``simulação replicada'';
+\item Assinatura e desassinatura: Suporte a inclusão (''assinatura'') e remoção (''desassinatura'') de clientes em cada grupo de assinantes, de forma dinâmica;
+\item Áreas de interesse: suporte a diferentes critérios para cálculo de ``áreas de interesse'' dos clientes, o que permite ao servidor determinar quais clientes devem assinar quais segmentos;
+\item Ativação e desativação de segmentos: mecanismos específicos para o tratamento de grupos que recebem o seu primeiro assinante ou retiram o seu último assinante interessado (de forma a não permitir trapaças ou exploração de vulnerabilidade nestes casos);
+\item Mensagens replicadas: eventos gerados de forma determinística por todos os clientes ``assinantes'' de um segmento, quando enviados para o servidor, devem ser enviados em mensagens por todos os assinantes;
+\item Transferências de objetos: interação entre diferentes segmentos é suportada através da transferência de objetos entre segmentos;
+\item Prevenção de falhas: manutenção de um número mínimo de réplicas de dois tipos (assinante ``normal'' e assinante ``aleatório'') em cada segmento, através da alocação de assinantes complementares ou ``extras'';
+\item Recuperação de falhas: um mecanismos para recuperação de falhas ``parciais'' (poucas falhas individuais de assinantes) e dois mecanismos alternativos para recuperação de falhas ``fatais'' (vários assinantes de um mesmo segmento falhando simultaneamente);
+\item Otimização para tratamento de clientes que possuem ``assinantes'' inativos em segmentos, visando a redução dos recursos de rede necessários para que um cliente participe como simulador assinante em vários segmentos simultaneamente.
+
+\end{itemize}
+
+É importante destacar os seguintes aspectos do modelo, que se fazem presentes na especificação e na avaliação de aplicabilidade de cada componente do modelo, individualmente, bem como do modelo como um todo:
+
+\begin{itemize}
+
+\item Reduzido consumo de recursos no ``lado servidor'': todos os componentes foram projetados com a preocupação constante de que o servidor não se caracterizasse como um ``gargalo'' para a simulação (tanto de processamento quanto de rede), o que anularia os benefícios da maior complexidade do modelo, que utiliza uma rede \textit{peer-to-peer} de clientes para a execução da simulação;
+\item Proteção contra jogadores ``trapaceiros'': todos os componentes do modelo foram projetados para resistirem a tentativas de ``trapaça'', em especial às trapaças mais fáceis de serem executadas e que causam os maiores prejuízos, como é o caso de trapaças do tipo ``alteração arbitrária de estado'';
+\item Extensibilidade: apesar de ser uma tarefa difícil, o modelo foi desenvolvido de forma a impor o menor número possível de restrições em futuras extensões. Por exemplo, é possível a extensão do modelo para a utilização de um servidor distribuído em várias máquinas, para que uma maior escalabilidade seja alcançada;
+\item Aplicabilidade em jogos de tempo real: o modelo foi projetado para que fosse possível suportar jogos já existentes ou, no mínimo, jogos comparáveis aos jogos de tempo real disponíveis comercialmente.
+
+\end{itemize}
+
+O primeiro aspecto será avaliado em detalhes no capítulo 4, que apresentará os resultados experimentais obtidos com a execução de testes sobre o protótipo do modelo. Em relação ao segundo aspecto, o FreeMMG se posiciona como uma solução ``resistente'' a certos tipos de trapaças. Apesar de o modelo ser centrado na prevenção de um tipo específico de trapaça (alteração arbitrária do estado distribuído do jogo), certamente é possível a integração de outras técnicas de detecção e prevenção de trapaças ao modelo, o que vai de encontro ao aspecto de extensibilidade do modelo. Por fim, sobre a aplicabilidade do modelo em problemas reais, como o suporte a \textit{massively multiplayer games}, pode-se afirmar que o modelo FreeMMG apresentado neste capítulo é adequado para suportar, no mínimo, jogos de estratégia em tempo real (jogos ``RTS'' ou \textit{real-time strategy}) em um contexto maciçamente multijogador. Porém, devem ser levadas em consideração as limitações atuais do modelo, como a não-transparência do mecanismo de distribuição do estado em ``segmentos'' pois, como será discutido no capítulo seguinte, as ``fronteiras'' entre os segmentos podem ser percebidas com uma certa facilidade pelos jogadores.

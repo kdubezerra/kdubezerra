@@ -1,0 +1,293 @@
+\chapter{Implementação}
+
+Neste capítulo são apresentados os detalhes de implementação do protótipo que foi desenvolvido para validar o modelo, bem como os resultados que foram obtidos através de experimentos práticos. O protótipo implementado pode ser dividido em quatro partes principais:
+
+\begin{itemize}
+
+\item Servidor: implementa a funcionalidade do ``lado servidor'' do FreeMMG (provedor de autenticação, gerência de clientes, etc.);
+\item Cliente: implementa a funcionalidade do ``lado cliente'' do FreeMMG (algoritmo de simulação peer-to-peer replicada, gerência de múltiplas assinaturas, etc.);
+\item Jogo e interface: implementação da ``aplicação'', incluindo as regras de um jogo simples (batizado de ``FreeMMG Wizards'') e a interface gráfica para os jogadores humanos;
+\item Simulador de clientes em lote: ferramenta que conecta em um servidor do jogo ``FreeMMG Wizards'' e simula o comportamento de múltiplos jogadores, utilizada nos experimentos para geração de resultados.
+
+\end{itemize}
+
+Na seção 4.1 é apresentado o protótipo desenvolvido, o jogo FreeMMG Wizards, sendo que esta apresentação é centrada nas características (''features'') do protótipo e como elas atenderiam as expectativas de um usuário. Na seção 4.2 são apresentados os detalhes de implementação dos componentes principais (servidor, cliente, interface e jogo). Na seção 4.3 o simulador de clientes é apresentado, e na seção 4.4 é descrita da metodologia empregada para a realização dos experimentos com o simulador de clientes, bem como os resultados obtidos. A seção 4.5 discute os resultados, tecendo uma comparação com o desempenho tipicamente apresentado por MMGs cliente-servidor. A seção 4.6 compara o FreeMMG com algumas das arquiteturas apresentadas no capítulo 2. Por fim, a seção 4.7 apresenta algumas considerações finais relacionadas ao protótipo e conclusões.
+
+\section{O protótipo: jogo FreeMMG Wizards}
+
+Para a validação do modelo, foi desenvolvido um jogo simples, de estratégia em tempo real, que prevê a utilização de um ``mundo virtual'' de estado persistente e a participação de centenas ou milhares de jogadores, simultaneamente. O jogo é simples, mas é suficiente para exigir a maior parte das funcionalidades de uma implementação do modelo. O jogo foi batizado de ``FreeMMG Wizards'', e a versão utilizada para os testes (versão 0.0.5.1) pode ser obtida na página de desenvolvimento do projeto~\footnote{http://sourceforge.net/projects/freemmg/}. Todos os componentes do protótipo foram implementados sobre a plataforma Java J2SE versão 1.4, sendo necessária uma máquina virtual Java compatível para o disparo do cliente e do servidor.
+
+\subsection{Disparo do servidor}
+
+Para que os jogadores possam participar de uma ``partida'' de Wizards, primeiro é preciso iniciar o servidor. Para iniciar um servidor em um terminal texto, basta invocar a classe mmg.proto.ConServer, que dispara o servidor em ``modo console''. Utilizando o pacote pré-compilado, disponibilizado no site do projeto, o disparo pode ser feito a partir do diretório principal do pacote, como mostrado pela figura 4.1. Durante o disparo, o servidor restaura o último estado do jogo, o que inclui a última cópia ou versão do mundo virtual e a relação de jogadores cadastrados.
+
+Para parar o servidor na máquina local, a classe mmg.proto.ConServerStop pode ser invocada. O encerramento do servidor consiste na desativação de todos os segmentos ativos, seguido do encerramento das threads do servidor. Alternativamente, o usuário pode simplesmente matar o processo do servidor (ou da máquina virtual Java que executa o servidor), pois o mesmo é tolerante à interrupção abrupta da execução. A única desvantagem do encerramento abrupto do servidor é que parte do estado do jogo será perdido, pois as cópias mais atuais dos segmentos ativos estarão com os clientes, visto que o servidor utiliza o algoritmo de recuperação de falhas por snapshots periódicos (descrito na seção 3.15). Este efeito indesejável pode ser evitado em uma futura implementação do modelo que, por exemplo, empregue o algoritmo de envio de ``resumos de comandos'' dos clientes para o servidor (apresentado na seção 3.16).
+
+% ~\ref{fig:fig41}
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.65]{figuras/fig41.eps}
+  \end{center}
+\caption{Exemplo de disparo do servidor em modo console}
+\label{fig:fig41}
+\end{figure}
+
+\subsection{Disparo da interface gráfica}
+
+A interface gráfica, além de implementar o cliente do FreeMMG e a interface do jogo, também pode ser utilizada para disparar um servidor. Para disparar a interface, basta invocar a classe mmg.proto.Application1. Utilizando o pacote pré-compilado, o disparo pode ser feito como mostrado pela figura 4.2. Após disparada a interface gráfica, o servidor pode ser disparado através do menu ``Server'', opção ``Start'', e pode ser parado pela opção ``Stop''.
+
+% ~\ref{fig:fig42}
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.5]{figuras/fig42.eps}
+  \end{center}
+\caption{Exemplo de disparo da interface gráfica}
+\label{fig:fig42}
+\end{figure}
+
+\subsection{Criando uma conta de jogador e conectando o cliente no servidor}
+
+Quando um novo jogador quer participar do jogo, a primeira coisa que ele deve fazer é solicitar uma conta de jogador ao servidor. Isto é feito através do menu ``Client'', opção ``New Account''. Após selecionar esta opção, interface solicita um nome simbólico para o jogador, a senha desejada pelo jogador, e o endereço do servidor. O cliente então conecta ao servidor e solicita a criação de uma nova conta, recebendo como resposta um número identificador único (o ``Player ID'') para aquela conta de jogador. O pedido de criação de conta, se bem-sucedido, automaticamente dispara a primeira sessão de jogo do usuário. Quando o jogador decide encerrar a sua sessão de jogo, pode utilizar a opção ``Disconnect'' do menu ``Client''. Para retornar ao jogo mais tarde, pode utilizar a opção ``Connect'' do menu ``Client'', fornecendo o seu número identificador, a sua senha, e o endereço do servidor.
+
+\subsection{Visão geral do jogo e da interface do jogador}
+
+A interface do jogo é uma versão simplificada da interface típica de um jogo de estratégia em tempo real (''jogo RTS''). A área principal da interface exibe uma parte de um ``tabuleiro'' bidimensional plano de cor cinza, sem nenhum tipo de ornamentação como diferentes tipos de terreno, obstáculos, etc. O tabuleiro é particionado em retângulos, sendo que cada retângulo caracteriza um ``segmento'' do FreeMMG. Assim, um cliente pode ``assinar'' de forma individual cada ``retângulo'' ou segmento da área de jogo de forma independente dos outros segmentos. As ``fronteiras'' entre os retângulos são, por default, exibidas para os jogadores (figura 4.3). Isto é feito pois, em princípio, o jogador precisa saber onde ficam as fronteiras entre os segmentos para que ele possa adaptar a sua estratégia de jogo, já que o FreeMMG ainda não suporta a interação entre objetos localizados em segmentos diferentes.
+
+% ~\ref{fig:fig43}
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.45]{figuras/fig43.eps}
+  \end{center}
+\caption{Exemplo de estado da interface durante uma sessão de jogo}
+\label{fig:fig43}
+\end{figure}
+
+Seguindo a terminologia da seção 3.1 (que especifica o tipo de aplicação suportado pelo FreeMMG), o jogo possui apenas dois tipos de ``objetos'' que são visíveis para os jogadores: ``magos'' e ``monstros''. Os magos são representados por elipses, e os monstros são representados por retângulos. Cada jogador possui, no máximo, um único mago. O jogador pode mover o seu mago livremente pelo tabuleiro, e também pode utilizar o mago para criar ``monstros'' através dos botões disponibilizados na interface (''Goblin'', ``Lizard'', etc). Um jogador pode possuir e controlar qualquer número de monstros, simultaneamente. Assim como o mago, o jogador pode mover os monstros livremente pelo tabuleiro. A interface suporta a seleção individual de objetos, bem como a seleção de um grupo de objetos através de um retângulo de seleção (figura 4.3), de forma que o jogador pode mover cada objeto individualmente ou mover um grupo de objetos ao mesmo tempo.
+
+A área do jogo pode ser composta de milhares de segmentos, mas cada jogador só estará interessado em assinar uma pequena fração destes segmentos. A atualização da área de interesse de cada jogador é feita pelo servidor, na medida em que os jogadores movem seus objetos entre os vários segmentos (figura 4.4). O servidor é notificado pelos assinantes de cada segmento quando um novo jogador se torna ``presente'' em um segmento (primeiro objeto deste jogador entra no segmento) e quando um jogador se torna ``ausente'' em um segmento (último objeto deste jogador sai do segmento ou é destruído). Quando mudanças nas áreas de interesse são detectadas, o servidor dispara as assinaturas e desassinaturas necessárias para que as mudanças sejam satisfeitas. O servidor determina que cliente é assinante de um segmento se, e somente se, o jogador em questão possuir no mínimo um objeto (''mago'' ou ``monstro'') neste segmento. Na interface, os segmentos que um jogador não está assinando são representados como retângulos pretos, e os segmentos assinados são representados por um fundo cinza-claro, mais os objetos, que são desenhados em primeiro plano (figura 4.3). 
+
+% ~\ref{fig:fig44}
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.6]{figuras/fig44.eps}
+  \end{center}
+\caption{Alteração na área de interesse do jogador após transferência de objeto}
+\label{fig:fig44}
+\end{figure}
+
+Tanto magos quanto monstros possuem dois atributos relevantes: pontos de vida e força de ataque. Quando dois objetos (magos ou monstros) colidem e são de posse de jogadores diferentes, ocorre um combate. O combate entre dois objetos A e B consiste em subtrair a força de ataque de A dos pontos de vida de B, e vice-versa. Após um combate, é possível que um dos objetos fique com uma quantidade de pontos de vida igual ou menor que zero. Neste caso, o objeto é removido do jogo, e o mago que controla o objeto ``vitorioso'' recebe um bônus que o torna mais forte (capacidade de criar monstros com maior freqüência ou capacidade de criar monstros mais fortes). Como em boa parte dos jogos de estado persistente, como EverQuest ou Ultima Online, quanto mais o jogador participa do jogo, mais ``forte'' se torna o seu personagem. Caso o mago de um jogador seja destruído, o jogador pode reviver o mago através do menu ``Player'', opção ``Respawn'', que recoloca o mago em jogo em um segmento escolhido aleatoriamente pelo servidor. Esta opção também deve ser utilizada pelo jogador quando conectar no jogo pela primeira vez, pois os novos jogadores ainda não possuem nenhum objeto no tabuleiro.
+
+\subsection{Persistência, escalabilidade e adaptação do tabuleiro à quantidade de jogadores}
+
+O ``mundo virtual'' de Wizards, ou seja, o conjunto de objetos distribuídos pelos vários segmentos, é persistente. Se um jogador desconectar-se do jogo e, mais tarde reconectar, os objetos que o jogador possui ainda estarão no jogo, desde que não tenham sido destruídos por outros jogadores. Cada segmento persistido impõe um custo adicional no servidor mas, em princípio, o ``mundo virtual'' de Wizards não possui um limite ``máximo'' de tamanho, e também não há um limite específico para o número de jogadores cadastrados ou o número de participantes simultâneos no jogo. Portanto, os recursos computacionais disponíveis para a execução do servidor caracterizam o principal fator limitante.
+
+O ``mundo virtual'' é uma grade bidimensional de segmentos retangulares, e cada segmento é identificado unicamente pela sua coordenada (X, Y) na grade. A grade é mantida no servidor em uma tabela hash (mais especificamente, um java.util.HashMap), onde a chave é a coordenada (X, Y) do segmento, e o valor é uma estrutura de dados que descreve toda a informação gerenciada pelo servidor relativa àquele segmento (incluindo snapshots, logs de comandos, relação de assinantes, etc). Um novo segmento é alocado pelo servidor quando um objeto é transferido para uma coordenada (X, Y) cuja chave ainda não existe na tabela da grade. Desta forma, o tamanho do ``mundo virtual'' se adapta à quantidade de jogadores.
+
+\section{Implementação do protótipo}
+
+A implementação da versão 0.0.5.1 do protótipo ``FreeMMG Wizards'' possui, no total, 11.939 linhas de código Java distribuídas entre 42 classes e interfaces (sem incluir classes internas, adaptadores, etc). Isto inclui a implementação do cliente, do servidor, da lógica do jogo, da interface gráfica e também do simulador de clientes em lote. A implementação do modelo foi feita especificamente para suportar o jogo ``Wizards'', de forma que a lógica do jogo e a implementação do cliente e do servidor estão fortemente acopladas. A implementação do modelo FreeMMG em um framework reusável, que isola a implementação do sistema de suporte e expõe uma API para o programador da aplicação, é um trabalho em andamento (atualmente com 6.735 linhas de código Java distribuídas entre 51 classes e interfaces, sendo que a maior parte deste código foi re-escrita).
+
+Todo o código é baseado exclusivamente no perfil Java J2SE. Para a interface gráfica, foi utilizado o kit Swing (pacotes javax.swing, java.awt.event, etc), sendo que parte do código da interface (relativo aos menus, botões, etc) foi gerado pelo Borland JBuilder Foundation. Para a comunicação são utilizadas as sockets TCP/IP de Java (pacotes java.io e java.net), com a alocação de uma thread para cada socket, sendo que a leitura em cada socket é bloqueante. O protocolo TCP/IP foi escolhido pois os algoritmos do FreeMMG só utilizam entrega de mensagens de forma confiável e ordenada, e o suporte a TCP/IP é, pelo menos atualmente, mais ubíquo do que o suporte a protocolos do tipo ``multicast''. O suporte a serialização de objetos do Java é utilizado para o envio, pelas sockets, de ``objetos de jogo'', ``snapshots'', etc. 
+
+Para a persistência dos dados no servidor optou-se por utilizar a biblioteca Prevayler versão 1.02. O Prevayler garante a persistência de objetos Java de forma relativamente transparente, eliminando a necessidade de se mapear os objetos em outro paradigma (relacional) ou de se executar um ``container'' ou banco de dados juntamente com o servidor, o que simplifica bastante a distribuição e a instalação do mesmo. A principal desvantagem é que o Prevayler exige que todos os objetos a serem persistidos devem caber na memória da máquina virtual. Portanto, neste protótipo, o tamanho do ``mundo virtual'' persistido não pode ultrapassar o limite da memória física da máquina que executa o servidor.
+
+\subsection{Visão geral das principais classes}
+
+As principais classes que implementam o servidor são as seguintes:
+
+\begin{itemize}
+
+\item GameServer: classe principal do servidor, que gerencia instâncias das classes listadas abaixo;
+\item SegmentManager: gerencia um segmento (assinantes, snapshots, assinaturas, informação de presença, etc);
+\item Player: representa uma conta de jogador (identificador, nome do usuário, senha, etc) bem como trata a conexão com um jogador autenticado;
+\item SegPlayer: representa um ``assinante'' remoto de um segmento, ou seja, a associação de um Player com um SegmentManager. Trata as mensagens enviadas por um cliente no contexto de uma assinatura (ver classe Subscription).
+
+\end{itemize}
+
+As principais classes do cliente são as seguintes:
+
+\begin{itemize}
+
+\item GameClient: classe principal do cliente, que gerencia instâncias das classes listadas abaixo;
+\item Subscription: gerencia uma assinatura de segmento, tratando da comunicação com o SegmentManager associado (servidor), bem como da comunicação com os outros assinantes do segmento (ver classe Peer, abaixo);
+\item Peer: representa, no contexto de uma assinatura (Subscription), um assinante remoto (identificado por uma instância da classe PeerPlayer);
+\item Simulator: no contexto de uma assinatura (Subscription), gerencia a execução do algoritmo de simulação peer-to-peer replicada, tratando da geração e da leitura dos comandos dos jogadores, bem como da atualização da cópia local do segmento (a comunicação em si é tratada pela classe Subscription);
+\item SimPlayer: representa um assinante no contexto de um simulador local (Simulator), sendo responsável por armazenar o histórico de comandos recebidos de um assinante remoto;
+
+\end{itemize}
+
+As seguintes classes são utilizadas tanto pelo cliente, quanto pelo servidor:
+
+\begin{itemize}
+
+\item GameObject: representa um ``objeto de jogo'' (mago, monstro, e outros objetos auxiliares que não são exibidos para os jogadores);
+\item Segment: representa um ``segmento'' do mundo virtual, ou seja, uma coleção de GameObjects, juntamente com um ``timestamp'', que é o valor do relógio de simulação que está associado ao estado atual dos objetos representados.
+\item Frame1: implementa a interface gráfica do jogo.
+
+\end{itemize}
+
+A figura~\ref{fig:fig45} ilustra as relações entre as classes através de um exemplo. A figura mostra o estado de uma rede FreeMMG com dois clientes conectados no servidor, sendo que ambos estão assinando o mesmo segmento. O servidor (GameServer) possui uma única conexão TCP com cada cliente, sendo que a thread que trata as mensagens do cliente fica na classe Player, e a thread que trata as mensagens do servidor fica na classe GameClient. Cada ``assinatura'' (Subscription) de um cliente também possui o seu próprio canal de rede com o servidor, que é tratado no servidor pela classe SegPlayer. Porém este canal de rede (entre um Subscription e um SegPlayer) é ``virtual'', sendo emulado sobre a conexão TCP entre as classes GameClient e Player. Isto foi feito para que fosse reduzido ao máximo o número de sockets TCP ativas que o servidor precisa gerenciar. A classe SegPlayer faz apenas um tratamento básico das mensagens recebidas pelo cliente, geralmente repassando as mensagens para que sejam tratadas pela classe SegmentManager. A classe SegmentManager é responsável por gerenciar as ``mensagens coletivas'' que são enviadas pelos assinantes, bem como gerenciar o andamento de assinaturas, desassinaturas, obtenção de \textit{snapshots} periódicos, detecção e recuperação de falhas, etc.
+
+% ~\ref{fig:fig46}
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.36]{figuras/fig45.eps}
+  \end{center}
+\caption{Estado de uma rede FreeMMG com dois clientes assinando um segmento}
+\label{fig:fig45}
+\end{figure}
+
+A classe Subscription gerencia, no cliente, a rede de conexões ``peer-to-peer'' com os outros assinantes do segmento, bem como gerencia a conexão do assinante local com o servidor. Cada Subscription gerencia vários objetos Peer, onde cada um representa uma conexão com um dos outros assinantes remotos. Desta forma, os ``grupos'' de simuladores de um mesmo segmento se conectam de forma direta, em uma malha completa de conexões entre todos os membros do grupo. A conexão entre dois objetos Peer é uma nova conexão TCP/IP entre dois clientes. Ou seja, dois clientes podem compartilhar múltiplas conexões TCP/IP entre si, sendo cada uma no contexto de uma assinatura diferente.
+
+Cada instância de Subscription gerencia exatamente uma instância da classe Simulator. A classe Simulator e a classe SimPlayer implementam o algoritmo de ``simulação peer-to-peer replicada'' para um segmento, sem se preocupar com os detalhes da comunicação (se os outros jogadores são remotos ou locais, se usam sockets TCP/IP ou UDP multicast, etc). Um Simulator gerencia várias instâncias de SimPlayer, onde cada SimPlayer representa um jogador que está participando da simulação, ou seja, do qual são esperados comandos para que a simulação possa prosseguir. O Simulador aloca um SimPlayer para cada assinante remoto. Também é alocado um SimPlayer para representar um assinante local, caso o assinante local seja um assinante interessado em interagir com o segmento e não um assinante ``aleatório'', por exemplo. Cada SimPlayer mantém um registro dos comandos recebidos do cliente associado, de forma que o Simulator tem como determinar se possui todas as entradas necessárias para incrementar o relógio do simulador local e prosseguir com a simulação.
+
+\subsection{Algoritmo de simulação peer-to-peer replicada}
+
+O algoritmo de simulação replicada implementado é bastante similar ao algoritmo descrito por Bettner e Terrano e aplicado no jogo Age of Empires II (discutido em detalhes no capítulo 2). A principal diferença é que, no Wizards, o tamanho do ``passo'' do simulador é fixo em 100ms (em Age of Empires II, o passo do simulador se adapta aos recursos dos jogadores, variando tipicamente entre 50ms e 200ms, em passos de 50ms). O ``lookahead'' do simulador, para testes, foi configurado para dois turnos, o que permite o mascaramento da latência dos jogadores ate 200ms. Porém, esta configuração não foi testada em um cenário real de uso, e é provável que o valor do ``lookahead'' tenha que ser aumentado.
+
+\subsection{Gerenciador de segmentos (SegmentManager)}
+
+Como discutido no capítulo 3, os algoritmos relacionados à gerência de assinantes, que são coordenados pelo servidor, possuem restrições quanto à concorrência. Para evitar problemas, optou-se pelo processamento seqüencial destes algoritmos. Cada SegmentManager possui uma fila de requisições de quatro tipos: assinatura de cliente, desassinaturas de cliente, transferência de objetos entre segmentos, e recuperação de falha. Cada SegmentManager possui uma thread dedicada ao processamento destas requisições, sendo que a thread processa uma requisição de cada vez, de forma seqüencial. 
+
+O caso mais problemático que foi observado em relação à serialização das requisições é relativo à transferência de grandes quantidades de objetos entre dois segmentos, simultaneamente. Se um grupo grande de objetos cruza a fronteira entre dois segmentos de forma simultânea (ou quase), os objetos irão ``sumir'' simultaneamente do segmento de origem, mas aparecerão gradualmente no segmento destino. Além disso, as outras requisições, como assinaturas e desassinaturas, ficam impedidas de executar até que todos os objetos sejam transferidos.
+
+Este problema pode ser minimizado de várias maneiras. Em primeiro lugar, a otimização mais óbvia é a transferência ``em lote'' de objetos, em uma mesma requisição. Ou seja, quando um SegmentManager for processar uma transferência de objeto, ele retira do início da fila todas as requisições de transferência de objetos e resolve todas de uma só vez. Outra possibilidade é a exploração da concorrência entre as requisições, que foi explorada superficialmente pelo modelo e constitui um trabalho futuro.
+
+\subsection{Alocação de assinantes ``extras'' e protocolo de recuperação de falhas}
+
+Neste protótipo, os seguintes componentes do modelo, relativos à prevenção e tratamento de falhas, não foram implementados:
+
+\begin{itemize}
+
+\item Alocação de assinantes ``extras'' (assinantes ``aleatórios'', etc) para que uma quantidade mínima de assinantes esteja presente em cada segmento ativo;
+\item Algoritmo inicial de diferenciação entre ``falha parcial'' e ``falha fatal'' (quantidade mínima dos vários tipos de assinantes após uma falha, etc);
+
+\end{itemize}
+
+Quando um ou mais assinantes falham, o servidor executa automaticamente o procedimento de recuperação de falha ``parcial'', sem considerar uma quantidade mínima de assinantes.  Caso vários assinantes respondam com uma cópia válida, o servidor escolhe a mais atual. Caso nenhum assinante consiga fornecer uma cópia atualizada do segmento para a restauração, o servidor executa a restauração de falha ``fatal'' por snapshot restaura um ``snapshot'' (antigo) do segmento, armazenado localmente pelo SegmentManager correspondente. A implementação dos mecanismos de prevenção e tratamento de falhas é um trabalho em andamento no contexto do projeto FreeMMG, que atualmente trabalha na implementação de um framework reusável baseado no modelo FreeMMG.
+
+\section{Implementação do simulador de clientes}
+
+Para que fosse possível obter uma avaliação inicial sobre a escalabilidade potencial do FreeMMG, foi desenvolvido um simulador de clientes. O simulador de clientes é composto por um disparador de jogadores simulados (classe BatchClient) e um jogador simulado (classe ClientSimulator), que tenta simular o comportamento de um único jogador humano. O disparador de clientes executa um número configurável de jogadores simulados, cada um na sua própria thread. Cada jogador simulado conecta em um servidor FreeMMG, cujo endereço é passado para o disparador.
+
+O jogador simulado utiliza a mesma implementação do cliente FreeMMG que é utilizada pela interface gráfica. A diferença é que o jogador simulado sintetiza uma seqüência de comandos que pode ser gerada por um cliente controlado por um jogador humano. Os seguintes comportamentos sintéticos foram implementados:
+
+\begin{itemize}
+
+\item Estabelecimento da conexão com o servidor. Durante os experimentos, utilizou-se a criação de uma nova conta por cada jogador simulado, mas também há suporte para que o cliente simulado se autentique em uma conta já existente;
+\item Pedido de recolocação do mago em jogo (menu ``Player'', opção ``Respawn'', na interface gráfica);
+\item Criação de monstros (no mesmo segmento em que é colocado o mago);
+\item Movimentação aleatória do mago e dos monstros para segmentos adjacentes;
+
+\end{itemize}
+
+Por um lado, estes comportamentos são muito simples. A modelagem do comportamento fiel de jogadores humanos é um problema muito difícil, especialmente para tipos experimentais de jogos, que não possuem muitos casos conhecidos, como é o caso dos jogos de estratégia ``maciçamente multijogador'' suportados pelo FreeMMG. Por outro lado, o FreeMMG Wizards, na sua versão atual, é praticamente um jogo ``sintético'' pois não possui complexidade e objetivos suficientes para cativar um jogador humano, então a complexidade dos comportamentos, nestas circunstâncias, pode ser considerada adequada para a realização dos experimentos.
+
+\section{Experimentos realizados e resultados obtidos}
+
+Todos os testes utilizaram um mundo com 25 segmentos (grade 5x5). Foram realizados testes com todos os comportamentos de clientes simulados mas, para os resultados apresentados nesta seção, não foi utilizado o comportamento de movimentação de objetos entre segmentos, de forma que cada jogador simulado assina um único segmento de cada vez. Testes com movimentação de objetos entre segmentos foram executados, mas devido a problemas da implementação, estes testes não puderam ser executados de forma confiável para um número elevado de clientes simultâneos ou por um período significativo de tempo. Porém, durante estes testes limitados observou-se que o custo de rede do servidor não aumentaria, por exemplo, em uma ordem de magnitude ou mais. 
+
+Os experimentos utilizaram dois computadores Linux (kernel 2.6.5) com processadores Pentium IV e conectados por uma rede local. Um deles executou o servidor, e o outro executou o simulador de clientes. Com esta configuração foram executadas simulações com durações de 5, 10, 20, 30 e 60 minutos. Para cada duração foram feitas simulações com 50, 100, 150, 200 e 300 clientes simulados. Cada caso foi executado 20 vezes, sendo obtida a média. Foram consideradas execuções bem-sucedidas apenas as execuções em que o servidor não detectou nenhuma falha (de cliente ou do próprio servidor).
+
+Os experimentos foram concentrados na medição da largura de banda utilizada, tanto pelos clientes quanto pelo servidor. Não foi gerado um gráfico de utilização de CPU, mas o uso de CPU foi verificado durante os experimentos para que não houvesse uma saturação que pudesse prejudicar os resultados obtidos. Foi verificado que a utilização da CPU de ambas as máquinas manteve-se, em geral, sempre abaixo de 80\%, tanto a máquina cliente, quanto a máquina do servidor, sendo 10\% de utilização de CPU um valor mais comumente observado na máquina servidor, e 50\% o valor mais aproximado do uso de CPU na máquina cliente. Esta tendência foi observada com a utilização do Linux kernel 2.6, que possui um bom gerenciamento de grandes quantidades de threads. Em experimentos iniciais, as máquinas executaram com o Linux kernel 2.4, que cria um processo para cada thread. Como o protótipo faz uso pesado de threads (mais de 5.000 threads simultâneas na máquina cliente foram observadas com freqüência), nos primeiros experimentos a utilização de CPU pela máquina simuladora de clientes era completamente saturada com apenas 10 clientes simulados. Mas, como constatamos mais tarde, isto era apenas devido ao grande número de threads. Em geral, as threads do protótipo ficam a maior parte do tempo bloqueadas em I/O (leitura de socket), sendo que não existe nenhuma tarefa realmente pesada, em termos de processamento, para ser executada pelo cliente ou pelo servidor.
+
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig46.eps}
+  \end{center}
+\caption{Tráfego no lado servidor, variando a quantidade de clientes e o tempo de execução}
+\label{fig:fig46}
+\end{figure}
+
+A figura~\ref{fig:fig46} apresenta o tráfego no servidor durante a variação do tempo total do experimento e do número de clientes simulados. Pode-se observar que durante as simulações de menor duração a comunicação é maior e, nas simulações de longa duração, a comunicação é menor, sendo que o gráfico exibe uma tendência de estabilização. Isto ocorre porque no início da execução os clientes simulados realizam as assinaturas de segmentos e, após esta fase, o servidor é utilizado apenas para a criação de monstros em segmentos adjacentes ao do segmento em que o mago é criado. Isto também exercita o algoritmo de transferências de objetos e a comunicação com o servidor, pois a criação de um monstro é implementada como uma transferência de objeto entre o segmento onde está o mago e o segmento destino (que, no caso dos clientes simulados, é o mesmo segmento).
+
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig47.eps}
+  \end{center}
+\caption{Tráfego no lado servidor, variando a quantidade de clientes}
+\label{fig:fig47}
+\end{figure}
+
+A figura~\ref{fig:fig47} exibe o tráfego médio observado no servidor. Neste gráfico foram considerados apenas 
+os resultados referentes aos experimentos com 30 e 60 minutos de duração, que compreendem um tempo suficiente para que as assinaturas iniciais já houvessem sido concluídas, apresentando uma comunicação mais estável ao fim dos períodos de medição.
+
+\begin{figure}[!h]
+  \begin{center}
+          \includegraphics[scale=0.8]{figuras/fig48.eps}
+  \end{center}
+\caption{Tráfego médio do cliente, variando a quantidade total de clientes}
+\label{fig:fig48}
+\end{figure}
+
+A figura~\ref{fig:fig48} exibe a medição do tráfego médio de um cliente durante os experimentos de duração de 5, 10, 20, 30 e 60 minutos. O valor individual, por cliente, foi obtido através da divisão do tráfego total gerado pelo processo simulador de clientes, dividido pelo número de clientes simulados.
+
+\section{Comparação dos resultados com o modelo centralizado}
+
+Para que os resultados obtidos possam ser colocados em perspectiva, esta seção compara os resultados experimentais obtidos com o desempenho provável de uma implementação hipotética de um jogo de estratégia em tempo real maciçamente multijogador em um paradigma de simulação centralizada. Em uma simulação centralizada, como é o caso da arquitetura cliente-servidor tradicional, ou mesmo da proposta Butterfly Grid~\cite{butterfly}, cada cliente envia constantemente pedidos (comandos) e constantemente recebe atualizações de objetos sobre a área de interesse do cliente. Tipicamente, jogos cliente-servidor baseados em ``avatares'' (ou controle de um único objeto dinâmico por jogador), como Quake e Ultima Online, consomem, de forma aproximada, entre 2 Kbytes/s e 5 Kbytes/s por jogador. 
+
+Isto é muito menos do que seria requerido por um jogo de estratégia em tempo real, com centenas de objetos dinâmicos a serem codificados em mensagens ou ``deltas'' de atualização de estado. Para fins de comparação, será utilizado o jogo Outgun, descrito no capítulo 2, que implementa um protocolo simples e otimizado para um jogo de ação cliente-servidor. No protocolo do Outgun, cada objeto dinâmico utiliza apenas 8 bytes para ser atualizado (posição, velocidade, aceleração atual e informações de animação do objeto). Atualizando cada cliente 10 vezes por segundo, o Outgun utiliza, em média, 0,5 Kbytes/s para atualizar cada cliente, quando apenas um objeto está visível para o jogador.
+
+Se cada cliente possuir, em média, 200 objetos visíveis na sua área de interesse (uma quantidade normal para um jogo de estratégia multijogador convencional como Age of Empires II), o consumo de rede no servidor, por cliente, passaria para, no mínimo, 16 Kbytes/s, o que corresponde a 8 bytes por atualização multiplicados pela freqüência de 10 atualizações por segundo. Com a participação de 300 clientes simultaneamente, o uso de rede no servidor para atualização dos clientes seria então de 4,8 Mbytes/s, ou 38,4 Mbits/s (38.400 Kbits/s), o que corresponde a 16Kbytes/s multiplicados por 300 clientes.
+
+A figura 4.6 mostra que o servidor FreeMMG com 300 clientes utilizou sempre menos do que 30 Kbytes/s ou 240 Kbits/s, ou seja, uma utilização de rede do servidor no mínimo 160 vezes menor (duas ordens de magnitude). A figura 4.8 também mostra que a utilização média da rede, pelos clientes, esteve sempre abaixo de 3 Kbytes/s, com uma média de 1 Kbyte/s após a estabilização, um valor bastante compatível com as tecnologias de acesso à Internet por ``banda larga'' já disponíveis para uso doméstico. Apesar de que cada cliente simulado só assinou um único segmento, muitas medidas ainda podem ser tomadas para que o uso de rede nos clientes seja reduzido, como a otimização relativa a clientes inativos descrita na seção 3.16.
+
+Esta comunicação reduzida, tanto no cliente quanto no servidor, é devida ao protocolo de simulação replicada utilizado pelos FreeMMG que, além de isolar o servidor da maior parte do protocolo de simulação, utiliza os mesmos recursos de rede nos clientes para qualquer quantidade de objetos de jogo. A comparação acima pode ser estendida para 2.000 ou 20.000 objetos, apenas aumentando a vantagem do FreeMMG em mais ordens de magnitude. Porém, nestes casos, o custo do processamento de todos estes objetos, durante a execução do simulador nos clientes, pode passar a ser um problema, apesar de que o processamento dos objetos também seria problemático para o sistema cliente-servidor, que executa a simulação somente no servidor.
+
+Por fim, é importante ressaltar que o protótipo implementado ainda não suporta a manutenção da consistência global em caso de falha. Como visto na seção 3.16 do capítulo anterior, uma possível solução envolveria o envio periódico para o servidor, por cada assinante, de ``resumos de comandos''. Este envio com certeza aumentaria significativamente o uso de rede do servidor FreeMMG e, por isso, os resultados obtidos, que apontam para uma boa folga em relação ao uso de rede do servidor, são bastante importantes para motivar a continuação do projeto.
+
+\section{Comparação entre o FreeMMG e trabalhos relacionados}
+
+Esta seção compara o FreeMMG com outros sistemas de suporte a MMGs que também buscam tratar dos principais problemas relacionados ao modelo cliente-servidor de suporte a MMGs. Para esta comparação foi escolhido o sistema Butterfly Grid~\cite{butterfly}, apresentado na seção 2.3, bem como os modelos NEO~\cite{neo2004full} e Mercury~\cite{bharambe2002}, e o modelo de Fiedler et al~\cite{fiedler2002}, apresentados na seção 2.6. A tabela~\ref{tab:freemmg_x_outros} apresenta um resumo desta comparação, listando as características desejáveis em um modelo de suporte a jogos maciçamente multijogador e destacando os trabalhos que satisfazem estas características.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Comparação entre o FreeMMG e trabalhos relacionados}
+  \vspace{0.3cm}
+  \begin{tabular}{p{4.5cm}|c|c|c|c|c}
+\hline
+    {\bf Característica}
+     & \bf \small FreeMMG & \bf \small Butterfly & \bf  \small NEO & \bf \small Mercury & \bf \small Fiedler \\
+     &             & \bf \small Grid      &          &             & \bf \small{et al.} \\
+    
+\hline
+    Lado ``servidor'' (confiável) de baixo custo
+    & \X        &            & \X          &   \X     &  \X \\
+\hline
+    Resistente a trapaças de alteração arbitrária do estado
+    &   \X    &      \X    & parcial          &          &  \\
+\hline
+    Trata gerência de grupos e interação entre grupos
+    &  \X     &  \X         &         & \X         & \X \\
+\hline
+    Trata detecção e recuperação de falhas de clientes
+    &  \X        & \X           &         &          &  \\
+\hline
+    Trata autenticação de jogadores e persistência do mundo virtual
+    & \X         & \X          & \X          &          &  \\
+\hline
+    Protocolo de simulação adaptado a jogos MMORTS
+    &    \X    &           &    \X       &          &  \\
+\hline
+    Protocolo de simulação adaptado a MMGs de ação (MMORPGs e MMOFPSs)
+    &          & \X          &  \X         & \X         & \X \\
+\hline
+  \end{tabular}
+  \label{tab:freemmg_x_outros}
+\end{table}
+
+Como discutido na seção 2.3, o sistema Butterfly Grid funciona sobre uma infra-estrutura complexa de hardware, composta de máquinas localizadas em domínios confiáveis e de interconexões de alta velocidade entre estas máquinas. Como mostra a tabela~\ref{tab:freemmg_x_outros}, todos os outros trabalhos analisados, inclusive o FreeMMG, não precisam de servidores confiáveis para simular, em tempo real, o ``mundo virtual'' do jogo. Os modelos FreeMMG e NEO dependem de ``servidores confiáveis'' apenas para tarefas de execução eventual, como é o caso da autenticação de usuários.
+
+O sistema Mercury e a ``arquitetura de comunicação para jogos maciçamente multijogador'' de Fiedler et al tratam principalmente dos problemas relacionados à disseminação de informação de forma eficiente entre os participantes de um MMG. Neste sentido, estas arquiteturas oferecem suporte à gerência de grupos de clientes (adição e remoção de clientes em grupos), bem como oferecem suporte à interação entre clientes e objetos de jogo localizados em diferentes grupos. Contudo, ambas as arquiteturas não tratam dos problemas referentes a clientes trapaceiros e a falhas de clientes, além de não detalharem como seria feita a autenticação de clientes ou a persistência, de longo prazo, do estado do ``mundo virtual'' do MMG.
+
+O modelo NEO é o que mais se aproxima do FreeMMG. Assim como o modelo FreeMMG, o modelo NEO emprega um protocolo de simulação, no contexto de um grupo de clientes, que é baseado no protocolo ``lockstep''~\cite{neo2004full}. O protocolo de simulação em grupos ou ``segmentos'' utilizado no FreeMMG é o ``lockstep'' com lookahead, apresentado na seção 2.5, que suporta jogos de estratégia em tempo real, mas não é adaptado para o suporte a jogos de ação~\cite{archers1500}. 
+
+Porém, o ``protocolo NEO'' elimina esta limitação ao realizar uma votação em cada turno. Basicamente, durante a troca de mensagens de um turno T, cada participante, além de enviar o seu comando para o turno T, informa de quais participantes ele já recebeu o comando referente ao turno anterior (T - 1). Se a maioria dos participantes conseguiu receber o comando a tempo, ele é escalonado para execução no turno seguinte (T + 1), caso contrário, o comando é descartado. A votação dispensa a utilização de um protocolo de transporte confiável de mensagens, permitindo que o protocolo NEO seja implementado diretamente sobre UDP. Além disso, a votação elimina uma das principais desvantagens do protocolo ``lockstep'', que é a suspensão da simulação quando apenas um participante deixa de enviar um comando. Neste sentido, o protocolo NEO não necessita do ``lookahead'' para reduzir a ocorrência de ``travadas'' na simulação e, juntamente com o ``dead reckoning''~\cite{tarr2002, neo2004full} que é executado em cada cliente, oferece suporte a jogos de ação.
+
+O protocolo NEO é resistente a vários tipos de trapaças, inclusive a trapaça de alteração arbitrária do estado da simulação, que pode ser executada por jogadores mal-intencionados que participam de um mesmo grupo (ou ``segmento''). Os autores de NEO referem-se a este tipo de trapaça como ``collusion cheat''~\cite{neo2004full}. Porém, o modelo NEO ainda não especifica como é feita a gerência de grupos e a interação entre clientes e objetos de jogo localizados em diferentes grupos, o que é uma característica essencial. Os autores de NEO ressaltam que vários problemas, inclusive relacionados a trapaças, encontram-se no caminho para a especificação destes serviços. Portanto, NEO é resistente a trapaças no contexto de um único grupo de clientes, mas esta característica ainda não está presente no modelo se considerarmos o suporte à interação entre os grupos, que ainda não foi modelado. Em contraste, o modelo FreeMMG fornece soluções resistentes a trapaças para a gerência de grupos (denominados ``segmentos'') e para interação entre os grupos, através da transferência de objetos entre segmentos. O modelo NEO também não especifica como é feito o tratamento das falhas dos clientes que, como discutido no capítulo 3, também caracteriza uma oportunidade para que jogadores trapaceiros realizem alterações arbitrárias no estado do jogo.
+
+Por fim, destaca-se que, entre os modelos estudados, o FreeMMG é o único modelo que, além de suportar jogos maciçamente multijogador de estratégia em tempo real (jogos MMORTS), é resistente a trapaças e executa a partir de um ``lado servidor'' de baixo custo. O modelo NEO se aproxima destas características, mas não especifica vários mecanismos essenciais como a gerência de grupos, o suporte à interação entre grupos e o tratamento de falhas de clientes, que já estão especificados no modelo FreeMMG e, até certo ponto, implementados no protótipo \textit{FreeMMG Wizards} e validados através dos resultados obtidos.
+
+\section{Considerações finais}
+
+Este capítulo apresentou e avaliou a implementação do modelo, e utilizou os resultados experimentais obtidos para tecer argumentos que caracterizam o modelo como uma contribuição válida para o estudo científico do problema de suporte a jogos de tempo real, escaláveis e persistentes (''jogos maciçamente multijogador'' ou MMGs). Foi apresentado um protótipo denominado ``FreeMMG Wizards'', que implementa um jogo simples de estratégia em tempo real maciçamente multijogador. A seguir, foram descritas as principais classes que implementam o protótipo, incluindo uma descrição do simulador de clientes, que foi utilizado na geração dos resultados. A seguir, os resultados dos experimentos foram apresentados, validando a utilização da rede FreeMMG para jogos com até 300 participantes simultâneos. Os resultados foram comparados com uma implementação hipotética de um jogo de estratégia maciçamente multijogador utilizando-se um paradigma cliente-servidor, mostrando que, neste caso, a utilização da rede do servidor FreeMMG é ordens de magnitude menor. Por fim, o modelo é validado através da comparação de características (seção 4.6) com outras propostas de arquiteturas. Neste sentido, este capítulo mostrou que o modelo FreeMMG, além de possuir um desempenho satisfatório em relação ao problema que se propôs a tratar, possui originalidade em relação às características oferecidas, se comparado com práticas da indústria e com trabalhos científicos recentes da área.
