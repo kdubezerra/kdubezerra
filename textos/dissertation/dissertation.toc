@@ -10,4 +10,4 @@
 \contentsline {chapter}{\numberline {3}Modelo base}{11}
 \contentsline {chapter}{\numberline {4}A${^3}$: um algoritmo de otimiza\c c\~ao por \'area de interesse}{12}
 \contentsline {chapter}{\numberline {5}Balanceamento de carga}{13}
-\contentsline {chapter}{\numberline {6}Considera\c c\~oes Finais e Trabalhos Futuros}{15}
+\contentsline {chapter}{\numberline {6}Considera\c c\~oes Finais e Trabalhos Futuros}{16}

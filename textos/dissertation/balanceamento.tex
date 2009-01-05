@@ -33,10 +33,23 @@ Percebe-se, então, que cada estado deverá ser enviado duas vezes, para cada par 
 Assim sendo, jogadores que estão interagindo entre si devem, idealmente, estar conectados ao mesmo servidor. Contudo, é possível que todos os jogadores estejam ligados entre si através de relações de interação. Por exemplo, dois avatares, de dois jogadores diferentes, podem estar distantes, porém ambos interagindo com um terceiro avatar, entre os dois. Esse tipo de situação faz com que todos os jogadores estejam relacionados de alguma forma. Portanto, é necessário um critério para decidir quando dois jogadores estarão conectados ao mesmo servidor, e quando não estarão.
 
 %falar do macrocell/microcell (usar localidade)
+\section{Macrocélula e microcélula}
 
+O balanceamento de carga entre servidores de jogos online maciçamente multijogador é fortemente dependente da distribuição dos avatares dos jogadores através do ambiente virtual. Além disso, a depender da concentração de avatares, pode-se alternar entre uma função de crescimento de tráfego linear e uma função quadrática. Sendo assim, é necessário lidar com a localidade dos avatares, de maneira a otimizar o uso de largura de banda do sistema servidor, minimizando, tanto quanto possível, o overhead causado pela comunicação entre jogadores ligados a servidores diferentes.
 
+Uma maneira de fazer uso da localidade dos jogadores é agrupá-los de acordo com a posição ocupada por seus avatares no ambiente virtual. A questão seria a de como formar estes grupos. Uma das idéias propostas na literatura [TODO:ref] foi a de  A distribuição ideal seria então aquela que agrupasse jogadores que estivessem próximos uns dos outros
+
+Uma idéia proposta por [TODO:ref] foi a de 
+
+%agrupar
+%mundo estatico/geralmente estatico
+%definir/definição de interação
 
 %detecção de hotspots
+
+%calculo do load, baseado em pares de interações
+
+%granularidade grossa+fina (otimizada) no ger. interesse
 
 %falar da distribuição de tarefas usando grafos
 
