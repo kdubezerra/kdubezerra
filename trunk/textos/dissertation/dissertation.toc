@@ -1,0 +1,13 @@
+\select@language {brazilian}
+\contentsline {chapter}{Lista de Abreviaturas e Siglas}{5}
+\contentsline {chapter}{Lista de Figuras}{6}
+\contentsline {chapter}{Resumo}{7}
+\select@language {brazilian}
+\contentsline {chapter}{Resumo}{8}
+\select@language {brazilian}
+\contentsline {chapter}{\numberline {1}Introdu\c c\~ao}{9}
+\contentsline {chapter}{\numberline {2}Contexto, estado da arte e motiva\c c\~ao}{10}
+\contentsline {chapter}{\numberline {3}Modelo base}{11}
+\contentsline {chapter}{\numberline {4}A${^3}$: um algoritmo de otimiza\c c\~ao por \'area de interesse}{12}
+\contentsline {chapter}{\numberline {5}Balanceamento de carga}{13}
+\contentsline {chapter}{\numberline {6}Considera\c c\~oes Finais e Trabalhos Futuros}{15}
