@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.9 (MiKTeX 2.7) (preloaded format=pdflatex 2008.12.18)  5 JAN 2009 17:59
+This is pdfTeX, Version 3.1415926-1.40.9 (MiKTeX 2.7) (preloaded format=pdflatex 2008.12.18)  6 JAN 2009 16:30
 entering extended mode
 **D:/kdubezerra/trunk/textos/dissertation/dissertation.tex
 (D:/kdubezerra/trunk/textos/dissertation/dissertation.tex
@@ -157,41 +157,114 @@ LaTeX Info: Redefining \addtolength on input line 76.
 \ALC@tlm=\skip56
 \algorithmicindent=\skip57
 )
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\algorithms\algorithm.sty"
+Package: algorithm 
+
+Document Style `algorithm' - floating environment
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\float\float.sty"
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count99
+\float@exts=\toks17
+\float@box=\box26
+\@float@everytoks=\toks18
+\@floatcapt=\box27
+)
+\@float@every@algorithm=\toks19
+\c@algorithm=\count100
+)
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\amsmath\amsmath.sty"
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip58
+
+For additional information on amsmath, use the `?' option.
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\amsmath\amstext.sty"
+Package: amstext 2000/06/29 v2.01
+
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\amsmath\amsgen.sty"
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks20
+\ex@=\dimen108
+))
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\amsmath\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen109
+)
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\amsmath\amsopn.sty"
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count101
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count102
+\leftroot@=\count103
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count104
+\DOTSCASE@=\count105
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box28
+\strutbox@=\box29
+\big@size=\dimen110
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count106
+\c@MaxMatrixCols=\count107
+\dotsspace@=\muskip10
+\c@parentequation=\count108
+\dspbrk@lvl=\count109
+\tag@help=\toks21
+\row@=\count110
+\column@=\count111
+\maxfields@=\count112
+\andhelp@=\toks22
+\eqnshift@=\dimen111
+\alignsep@=\dimen112
+\tagshift@=\dimen113
+\tagwidth@=\dimen114
+\totwidth@=\dimen115
+\lineht@=\dimen116
+\@envbody=\toks23
+\multlinegap=\skip59
+\multlinetaggap=\skip60
+\mathdisplay@stack=\toks24
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
 (dissertation.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 222.
-LaTeX Font Info:    ... okay on input line 222.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 222.
-LaTeX Font Info:    ... okay on input line 222.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 222.
-LaTeX Font Info:    ... okay on input line 222.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 222.
-LaTeX Font Info:    ... okay on input line 222.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 222.
-LaTeX Font Info:    ... okay on input line 222.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 222.
-LaTeX Font Info:    ... okay on input line 222.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 222.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 227.
+LaTeX Font Info:    ... okay on input line 227.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 227.
+LaTeX Font Info:    ... okay on input line 227.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 227.
+LaTeX Font Info:    ... okay on input line 227.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 227.
+LaTeX Font Info:    ... okay on input line 227.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 227.
+LaTeX Font Info:    ... okay on input line 227.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 227.
+LaTeX Font Info:    ... okay on input line 227.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 227.
 
 ("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\psnfss\t1ptm.fd"
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 )
 ("C:\Arquivos de programas\MiKTeX 2.7\tex\context\base\supp-pdf.tex"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count99
-\scratchdimen=\dimen108
-\scratchbox=\box26
-\nofMPsegments=\count100
-\nofMParguments=\count101
-\everyMPshowfont=\toks17
-\MPscratchCnt=\count102
-\MPscratchDim=\dimen109
-\MPnumerator=\count103
-\everyMPtoPDFconversion=\toks18
+\scratchcounter=\count113
+\scratchdimen=\dimen117
+\scratchbox=\box30
+\nofMPsegments=\count114
+\nofMParguments=\count115
+\everyMPshowfont=\toks25
+\MPscratchCnt=\count116
+\MPscratchDim=\dimen118
+\MPnumerator=\count117
+\everyMPtoPDFconversion=\toks26
 )
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 228.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 233.
 
-Underfull \hbox (badness 10000) in paragraph at lines 228--228
+Underfull \hbox (badness 10000) in paragraph at lines 233--233
 
  []
 
@@ -200,13 +273,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 228--228
 {C:/Documents and Settings/All Users/Dados de aplicativos/MiKTeX/2.7/pdftex/con
 fig/pdftex.map}]
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 228.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 228.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 228.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 228.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 233.
  (agrad.tex [2
 
 
@@ -265,12 +332,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 11--11
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 12--12
+Underfull \hbox (badness 10000) in paragraph at lines 24--24
  []  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 13--13
+Underfull \hbox (badness 10000) in paragraph at lines 30--30
+ []  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 31--31
  []  
  []
 
@@ -287,7 +359,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--13
 ] [7
 
 ]
-Overfull \hbox (3.0pt too wide) in paragraph at lines 291--291
+Overfull \hbox (3.0pt too wide) in paragraph at lines 296--296
 [] 
  []
 
@@ -320,55 +392,229 @@ LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <16> not available
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <16> not available
 (Font)              size <17.28> substituted on input line 1.
 
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <16> on input line 1.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <11.19995> on input line 1.
-) (balanceamento.tex
+
+LaTeX Font Warning: Font shape `OMX/cmex/m/n' in size <16> not available
+(Font)              size <17.28> substituted on input line 1.
+
+
+Package natbib Warning: Citation `guildwars' on page 12 undefined on input line
+ 14.
+
+
+Underfull \vbox (badness 1147) has occurred while \output is active []
+
+
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 12
  []
 
 [12
 
-] [13
-
 ]
+
+Package natbib Warning: Citation `boulanger2006cim' on page 13 undefined on inp
+ut line 26.
+
+[13]
+
+Package natbib Warning: Citation `yan2005scc' on page 14 undefined on input lin
+e 38.
+
+
+Overfull \hbox (30.54655pt too wide) in paragraph at lines 38--39
+[]\T1/ptm/m/n/12 Outro tra-balho voltado para o mo-delo par-a-par (IIMURA; HAZE
+YAMA; KADOBAYASHI,
+ []
+
+
+Underfull \vbox (badness 1248) has occurred while \output is active []
+
+
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 14
  []
 
-[14]) (conclusao.tex [15]) (dissertation.bbl) AED: lastpage setting LastPage
+[14]
+
+Package natbib Warning: Citation `morse1996iml' on page 15 undefined on input l
+ine 52.
+
+
+Package natbib Warning: Citation `rak1996egb' on page 15 undefined on input lin
+e 52.
+
+
+Package natbib Warning: Citation `zou2001egt' on page 15 undefined on input lin
+e 52.
+
+
+Package natbib Warning: Citation `rak1996egb' on page 15 undefined on input lin
+e 52.
+
+
+Package natbib Warning: Citation `zou2001egt' on page 15 undefined on input lin
+e 54.
+
+
+Package natbib Warning: Citation `morse1996iml' on page 15 undefined on input l
+ine 60.
+
+
+Package natbib Warning: Citation `elsayed2004alm' on page 15 undefined on input
+ line 65.
+
+
+Package natbib Warning: Citation `morse1996iml' on page 15 undefined on input l
+ine 66.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [15]
+Overfull \hbox (3.57314pt too wide) in paragraph at lines 89--90
+\T1/ptm/m/n/12 geren-ci-ada por um servi-dor. As regiões são con-tíguas, ex-plo
+-rando a lo-cal-i-dade dos avatares
+ []
+
+<images/part.pdf, id=55, 461.725pt x 461.725pt>
+File: images/part.pdf Graphic file (type pdf)
+ <use images/part.pdf>
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 16
  []
 
-[16
+[16]
+Underfull \vbox (badness 3482) has occurred while \output is active []
 
-] (dissertation.aux)
+ [17 <images/part.pdf>]
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 18
+ []
+
+[18] <images/circle.pdf, id=288, 206.7725pt x 163.61125pt>
+File: images/circle.pdf Graphic file (type pdf)
+
+<use images/circle.pdf> <images/fov.pdf, id=289, 279.0425pt x 204.765pt>
+File: images/fov.pdf Graphic file (type pdf)
+
+<use images/fov.pdf> [19 <images/circle.pdf>]
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 20
+ []
+
+[20 <images/fov.pdf>]
+
+Package natbib Warning: Citation `boulanger2006cim' on page 21 undefined on inp
+ut line 174.
+
+<images/gcircle.pdf, id=312, 206.7725pt x 163.61125pt>
+File: images/gcircle.pdf Graphic file (type pdf)
+
+<use images/gcircle.pdf>
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 198.
+
+
+("C:\Arquivos de programas\MiKTeX 2.7\tex\latex\psnfss\omsptm.fd"
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 198.
+
+
+Package natbib Warning: Citation `smed2002rna' on page 21 undefined on input li
+ne 206.
+
+[21] <images/a3.pdf, id=317, 279.0425pt x 204.765pt>
+File: images/a3.pdf Graphic file (type pdf)
+ <use images/a3.pdf>
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 22
+ []
+
+[22 <images/gcircle.pdf>]
+Underfull \vbox (badness 1881) has occurred while \output is active []
+
+ [23 <images/a3.pdf>]
+
+Package natbib Warning: Citation `yu2007nas' on page 24 undefined on input line
+ 246.
+
+
+Package natbib Warning: Citation `kim2005tcm' on page 24 undefined on input lin
+e 246.
+
+
+Package natbib Warning: Citation `svoboda2007taa' on page 24 undefined on input
+ line 246.
+
+<images/max.pdf, id=359, 361.35pt x 252.945pt>
+File: images/max.pdf Graphic file (type pdf)
+ <use images/max.pdf>
+<images/avg.pdf, id=360, 361.35pt x 252.945pt>
+File: images/avg.pdf Graphic file (type pdf)
+ <use images/avg.pdf>
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 24
+ []
+
+[24] [25 <images/max.pdf>])
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 26
+ []
+
+[26 <images/avg.pdf>] (balanceamento.tex [27]
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 28
+ []
+
+[28
+
+] [29]) (conclusao.tex
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 30
+ []
+
+[30]) (dissertation.bbl [31
+
+]) AED: lastpage setting LastPage
+Underfull \hbox (badness 10000) has occurred while \output is active
+\T1/ptm/m/n/10.95 32
+ []
+
+[32
+
+]
+
+Package natbib Warning: There were undefined citations.
+
+(dissertation.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.28pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 2417 strings out of 95304
- 27919 string characters out of 1182723
- 86192 words of memory out of 1500000
- 5467 multiletter control sequences out of 110000
- 36074 words of font info for 49 fonts, out of 1200000 for 2000
+ 3232 strings out of 95304
+ 37171 string characters out of 1182723
+ 106975 words of memory out of 1500000
+ 6252 multiletter control sequences out of 110000
+ 38840 words of font info for 55 fonts, out of 1200000 for 2000
  105 hyphenation exceptions out of 8191
- 39i,6n,26p,2183b,223s stack positions out of 5000i,500n,10000p,200000b,5000s
+ 39i,8n,27p,2183b,575s stack positions out of 5000i,500n,10000p,200000b,5000s
 {C:/Arquivos de programas/MiKTeX 2.7/fonts/enc/dvips/fontname/8r.enc}<C:/Arqu
-ivos de programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr10.pfb><C:/Arquivos de p
-rogramas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr8.pfb><C:/Arquivos de programas/M
-iKTeX 2.7/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Arquivos de programas/MiKTeX 
-2.7/fonts/type1/urw/times/utmb8a.pfb><C:/Arquivos de programas/MiKTeX 2.7/fonts
-/type1/urw/times/utmr8a.pfb><C:/Arquivos de programas/MiKTeX 2.7/fonts/type1/ur
-w/times/utmri8a.pfb>
-Output written on dissertation.pdf (16 pages, 84778 bytes).
+ivos de programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmmi12.pfb><C:/Arquivos de 
+programas/MiKTeX 2.7/fonts/type1/bluesky/cm/cmmi8.pfb><C:/Arquivos de programas
+/MiKTeX 2.7/fonts/type1/bluesky/cm/cmr10.pfb><C:/Arquivos de programas/MiKTeX 2
+.7/fonts/type1/bluesky/cm/cmr12.pfb><C:/Arquivos de programas/MiKTeX 2.7/fonts/
+type1/bluesky/cm/cmr8.pfb><C:/Arquivos de programas/MiKTeX 2.7/fonts/type1/blue
+sky/cm/cmsy10.pfb><C:/Arquivos de programas/MiKTeX 2.7/fonts/type1/bluesky/cm/c
+msy8.pfb><C:/Arquivos de programas/MiKTeX 2.7/fonts/type1/urw/helvetic/uhvb8a.p
+fb><C:/Arquivos de programas/MiKTeX 2.7/fonts/type1/urw/times/utmb8a.pfb><C:/Ar
+quivos de programas/MiKTeX 2.7/fonts/type1/urw/times/utmr8a.pfb><C:/Arquivos de
+ programas/MiKTeX 2.7/fonts/type1/urw/times/utmri8a.pfb>
+Output written on dissertation.pdf (32 pages, 259477 bytes).
 PDF statistics:
- 79 PDF objects out of 1000 (max. 8388607)
+ 432 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
