@@ -394,7 +394,7 @@
         }{
                 \begin{otherlanguage}{english}
         }
-                \chapter*{\abstractname}
+                \chapter*{ABSTRACT}
                 % os 22ex abaixo fazem o título em inglês iniciar a
                 % aproximadamente 5cm da borda superior
                 \noindent\raisebox{22ex}[0pt][0pt]{%

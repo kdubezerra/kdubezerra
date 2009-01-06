@@ -1,6 +1,60 @@
-[TODO:cap/lista de termos]
-
+[TODO:cap/lista de termos e definições]
+%por figuras para ilustrar o que se está falando
 \chapter {Balanceamento de carga}
+
+
+
+
+%\section{Introdução (nao precisa por "introdução"}
+%dinamica dos avatares
+%heterogeneidade dos servidores
+%necessidade de bal. de carga
+
+
+
+
+\section{Trabalhos relacionados}
+%micro/macro-cell
+%esquemas já propostos (ahmed, lee, devlechauer)
+%o que falta em cada um
+
+
+
+
+\section{Esquema proposto}
+%princípio do uso de particionamento de grafos para distribuição de tarefas com corte de aresta tão pequeno quanto possível -> tarefas mais independentes
+%    ggp, gggp, spectral bissection, kernighan-lin
+%definições de: vértice, aresta, partição, weight, overhead e load (weight + overhead)
+%uso do IM para definir os pesos das arestas
+%otimização do IM com células vizinhas
+%algoritmos propostos: v1, v2, v3, v4... etc.
+
+
+
+
+\section{Implementação}
+%detalhes da implementação: classes, métodos, otimização do IM com células vizinhas e uso de long ao invés de float (pode não ter influenciado, mas é melhor prevenir. float causa SIM erros de precisão, especialmente na soma) e adaptação do valor de relevancia para uma escala de 0 a 100 (antes eram 0 ou 1 ...). uso de float para as frações de load e de power.
+
+
+
+
+\section{Simulações e resultados}
+%definir cada caso da simulação e o porquê dele, em que influenciam os parametros e o que se quer tirar de conclusão
+%mostrar quais parametros foram fixados em cada caso, o seu valor e o porquê destes para destes parâmetros terem sido fixados
+%resultados: analisar, falar em ganhos em %, e buscar razões para estes ganhos/perdas.
+
+%implementação: falar TUDO que foi feito como implementação, todos os algoritmos criados
+%falar de cada um dos algoritmos definidos e implementados
+%otimização com redução de overhead e de load
+%uso de grafos para distribuir tarefas
+%balanceamento global X local
+%tolerância a desbalanceamentos (para evitar balanceamentos sucessivos que não parem...), ou algo que resolva este problema, ou não falar deste problema
+%definição do formato das células, vantagens e desvantagens (quadrado, hexagono, pentagono, etc...) - tessellation graph degree
+%o que fazer quando, mesmo pondo apenas uma célula para o servidor mais poderoso, este fica sobrecarregado -> graceful degradation (trabalhos futuros?)
+%comentar a respeito do uso de uma média (ou dizer que usei, tanto faz) de load, ao invés de usar o load instantâneo para o bal. de carga.
+
+%refs: Optimal Subset Mapping And Convergence Evaluation of Mapping Algorithms for Distributing Task Graphs on Multiprocessor SoC
+%    : Mesh Partitioning for Efficient Use of Distributed Systems, 2002
 
 A principal característica dos jogos maciçamente multijogador é a grande quantidade de jogadores, chegando a ter dezenas ou centenas de milhares de participantes simultaneamente [TODO:ref]. Essa grande quantidade de jogadores interagindo entre si gera um tráfego na rede de suporte que tem crescimento quadrático em relação ao número de jogadores, no pior caso [TODO:referenciar/provar].
 
@@ -55,4 +109,4 @@ Uma idéia proposta por [TODO:ref] foi a de
 
 %falar do kernighan-lin e a dependência entre tarefas
 
-%propostas existentes, falar mal, etc...
+%propostas existentes, falar mal (nao eh proporcional, usa no. de players e nao load), etc...
