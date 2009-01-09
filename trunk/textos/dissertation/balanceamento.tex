@@ -188,10 +188,31 @@ Com o término do reparticionamento das regiões, o servidor que iniciou todo o pr
 
 \section{Esquema proposto}
 
-Na seção anterior foram apresentados trabalhos existentes no que se refere a balanceamento de carga em MMOGs que utilizam vários servidores para prover o suporte de rede. 
+Na seção anterior foram apresentados trabalhos existentes no que se refere a balanceamento de carga em MMOGs que utilizam vários servidores para prover o suporte de rede. O esquema de balanceamento de carga proposto neste trabalho tem como base alguns dos princípos já existentes na literatura. Um deles é o da divisão do ambiente virtual em microcélulas, para posterior agrupamento em macrocélulas. Isto permite tratar de maneira relativamente simples a questão da dinâmica da movimentação dos avatares através do mundo do jogo, através da formação dos conjuntos de microcélulas, cujos elementos podem ser transferidos dinamicamente de acordo com a necessidade.
 
-O esquema de balanceamento de carga proposto neste trabalho 
+Além disso, também será utilizada a idéia de fazer o balanceamento baseado apenas em informações locais -- cada servidor, quando precisar diminuir a carga atribuída a ele, seleciona somente alguns outros servidores para participar de um rebalanceamento de carga local. Dessa forma, pode-se reduzir consideravelmente a complexidade do balanceamento, pois não será necessário que todos os servidores do jogo troquem mensagens entre si cada vez que qualquer um deles estiver desbalanceado. %[TODO: falar da vantagem de diminuir migrações também, assim que se entender/provar com resultados]
 
+%sem detalhes do algoritmo de balanceamento de grafos escolhido, nem faz uso do edge-cut (isso vai pra minha solução proposta)
+%o peso é a quantidade de jogadores
+%considera-se que os servidores estejam conectados através de uma rede de alta velocidade. (oh de bal. e oh de intercomunicação)
+%a capacidade do servidor é o poder de processamento, ao invés da banda
+
+%servidores com mesmo peso
+%a cada servidor é alocado 90% de sua capacidade. Isso pode não funcionar. Critério ruim.
+%possível loop infinito, se não houverem vizinhos capazes ou disponíveis. Outro critério ruim.
+
+
+Os trabalhos relacionados que foram descritos na seção anterior buscam resolver o problema do balanceamento de carga dinâmico. No entanto, carecem de diversas melhorias para que sejam mais coerentes com as necessidades dos MMOGs. Por exemplo, em momento algum foi considerado que, geralmente, o tráfego gerado pelos jogadores não é simplesmente linear, mas quadrático para cada aglomerado de jogadores. Tal equívoco pode gerar diferenças consideráveis entre a carga real de cada servidor e a carga estimada pelo algoritmo de balanceamento. Uma célula com 100 avatares esparsamente distribuídos no ambiente virtual teria um peso muito menor que uma célula onde outros 100 avatares estivessem todos próximos uns dos outros e interagindo entre si.
+
+Outra questão que foi deixada de lado refere-se ao overhead, tanto no atraso para o envio de mensagens, quanto no uso de largura de banda dos servidores, quando jogadores estão interagindo cada um conectado a um servidor diferente. Em \cite{lee2003sdl}, é considerado que os servidores estão todos em uma mesma rede local, de alta velocidade e baixo atraso, e que esse overhead é desprezível. No entanto, ao se considerar um sistema servidor geograficamente distribuído, não se pode partir desse pressuposto. Esse overhead deve ser levado em conta para qualquer que seja o algoritmo de balanceamento a ser utilizado nesse sistema.
+
+Mais um ponto importante que não foi devidamente considerado por outros trabalhos existentes: o critério principal a ser levado em consideração em um balanceamento de carga de servidores de MMOGs é o da largura de banda, e nem tanto o poder de processamento. Diversos jogos eletrônicos incluem simulações de ambientes virtuais, de várias centenas ou milhares de entidades, como é o caso do jogo Age of Empires [TODO:ref], que são efetuadas sem problemas nos computadores pessoais de hoje em dia. No entanto, se esse jogo fosse multijogador e cada uma dessas mesmas entidades fosse controlada por um jogador conectado em rede aos outros jogadores, muito provavelmente seria gerado um tráfego que dificilmente seria suportado por uma conexão doméstica[TODO:ref].
+
+Além disso, a largura de banda de envio, ou \emph{upload}, deve ser levada em conta, muito mais do que a de recebimento, ou \emph{download}. Isso ocorre por duas razões: em primeiro lugar, o uso da banda de recebimento por cada nodo servidor cresce linearmente com o número de jogadores a ele conectados, enquanto que o uso da banda de envio pode ter um crescimento quadrático, saturando-a muito mais rapidamente; segundo, as conexões domésticas -- pretende-se obter recursos para formar o sistema servidor dos próprios jogadores, pelo menos em parte -- geralmente possuem uma banda de envio pequena em comparação com a banda de recebimento.
+
+Por fim, há questões de menor importância, mas que também devem ser levadas em consideração. 
+
+Não explicou direito o uso de grafos... introduzir a próxima seção (poe esse parágrafo antes ou depois da quebra de seção?)
 
 %revisar rapidamente os trabalhos existentes, apontando o que falta e mostrando que foi feito nesta dissertação
 %FALAR MAL:
@@ -249,6 +270,7 @@ antes dos algoritmos, falar da redução de overhead, dos hotspots, e de todos os 
 
 
 \section{Trabalhos futuros [TODO:move/rename]}
+%tirar alguma coisa do plano de doutorado!!!
 %o que fazer quando, mesmo pondo apenas uma célula para o servidor mais poderoso, este fica sobrecarregado -> graceful degradation (trabalhos futuros?)
 %comentar a respeito do uso de uma média (ou dizer que usei, tanto faz) de load, ao invés de usar o load instantâneo para o bal. de carga.
 
