@@ -210,9 +210,9 @@ Mais um ponto importante que não foi devidamente considerado por outros trabalho
 
 Além disso, a largura de banda de envio, ou \emph{upload}, deve ser levada em conta, muito mais do que a de recebimento, ou \emph{download}. Isso ocorre por duas razões: em primeiro lugar, o uso da banda de recebimento por cada nodo servidor cresce linearmente com o número de jogadores a ele conectados, enquanto que o uso da banda de envio pode ter um crescimento quadrático, saturando-a muito mais rapidamente; segundo, as conexões domésticas -- pretende-se obter recursos para formar o sistema servidor dos próprios jogadores, pelo menos em parte -- geralmente possuem uma banda de envio pequena em comparação com a banda de recebimento.
 
-Por fim, há questões de menor importância, mas que também devem ser levadas em consideração. 
+Há questões de menor importância, mas que também devem ser levadas em consideração e que não foram consideradas em outros trabalhos. Uma delas é que dificilmente o sistema servidor será homogêneo -- considerando-se que é baseado em recursos voluntários. Portanto, não se pode assumir que os servidores tenham a mesma quantidade de recursos. Outro problema, específico do algoritmo proposto por \cite{lee2003sdl}, o critério de alocar para cada servidor uma carga equivalente a 90\% da sua capacidade, com o fim de evitar rebalanceamentos constantes, é fraco. Não há garantias de que o sistema servidor terá 11,11\% a mais de capacidade total do que o necessário. Muito pelo contrário, ele deve se adaptar a situações de sobrecarga generalizada. Além disso, o critério de parada é fraco pois o algoritmo não termina se o sistema todo estiver com carga acima de 90\% da sua capacidade, ou se o servidor sobrecarregado não tiver vizinhos disponíveis para balanceamento.
 
-Não explicou direito o uso de grafos... introduzir a próxima seção (poe esse parágrafo antes ou depois da quebra de seção?)
+Porém, uma idéia importante que foi sugerida é a do uso de grafos para representar o ambiente virtual, e usar algoritmos de particionamento de grafo para realizar o balanceamento de carga. Na seção seguinte, será feita uma breve introdução a respeito desse princípio, que é a base do esquema de balanceamento de carga aqui proposto.
 
 %revisar rapidamente os trabalhos existentes, apontando o que falta e mostrando que foi feito nesta dissertação
 %FALAR MAL:
@@ -224,12 +224,37 @@ Não explicou direito o uso de grafos... introduzir a próxima seção (poe esse par
 %a cada servidor é alocado 90% de sua capacidade. Isso pode não funcionar. Critério ruim.
 %possível loop infinito, se não houverem vizinhos capazes ou disponíveis. Outro critério ruim.
 
+%[TODO:isso não deveria ir para os "trabalhos relacionados" deste capítulo?]
 \subsection{Uso de grafos em distribuição de tarefas [TODO:rename]}
 %***princípio do uso de particionamento de grafos para distribuição de tarefas com corte de aresta tão pequeno quanto possível -> tarefas mais independentes
 %    ggp, gggp, spectral bissection, kernighan-lin
 %falar do kernighan-lin e a dependência entre tarefas
-%uso de grafos para distribuir tarefas
-\subsection{Definições}
+%as tarefas são geralmente estáticas..
+
+Um problema clássico de alocação de tarefas em sistemas distribuídos é o da dependência entre tarefas [TODO:refsDEdistGRAPH]. Tarefas dependentes entre si fazem com que os processadores nos quais elas estão sendo executadas tenham que se comunicar para que o processamento possa continuar. Isso gera dois problemas principais: em primeiro lugar, o processamento como um todo é atrasado por causa do tempo de espera de cada transmissão e recebimento de mensagens -- supondo que a comunicação entre os processos seja por meio de mensagens, como é o caso do MPI [TODO:ref].
+
+Para resolver este problema, são utilizados grafos, da seguinte maneira: o conjunto de tarefas a realizar é mapeado em um grafo com pesos. Cada vértice representa uma tarefa e cada aresta representa a comunicação entre as tarefas. O peso de cada vértice representa o custo de processamento e o peso da aresta a carga de comunicação. Para fazer a distribuição, é feito um particionamento do grafo gerado. Cada partição terá um conjunto de tarefas que serão executadas no mesmo nodo e, conseqüentemente, o atraso de comunicação entre elas será relativamente pequeno [TODO:refbli]. No entanto, as arestas do grafo que ligam partições diferentes representam comunicação entre diferentes nodos. A Figura [TODO:ref] ilustra essa situação.
+
+[TODO:figura do grafo de tarefas e dependências, assim como particionamento com corte de arestas e diferentes particionamentos levando a diferentes cortes de aresta]
+
+Os algoritmos de particionamento do grafo de tarefas, geralmente, buscam atingir dois objetivos: gerar partições de peso aproximadamente igual, ou seja, cada nodo terá uma carga computacional semelhante à dos outros; e minimizar o corte de aresta, ou seja, fazer com que a dependência entre os conjuntos de tarefas seja a menor possível, reduzindo a comunicação entre os nodos de processamento. Por corte de aresta, entende-se o somatório dos pesos de todas as arestas que ligam vértices que estão em partições diferentes. [TODO:reffig]
+
+O problema de particionamento de grafos é NP-completo [TODO:ref]. Contudo, já foi feita bastante pesquisa nessa área, resultando em heurísticas que obtêm boas soluções, muitas vezes se aproximando de valores ótimos [TODO:ref]. Uma das heurísticas mais conhecidas é a de Kernighan e Lin \cite{kernighan1970ehp}, que tem como objetivo, partindo de duas partições iniciais quaisquer, chegar a duas partições com peso semelhante e corte de aresta reduzido. O algoritmo de Fiduccia e Mattheyses \cite{fiduccia1982lth} incrementa a solução de Kernighan e Lin, generalizando-a para hipergrafos, além de permitir que cada partição tenha uma fração diferente do peso total do hipergrafo.
+
+Existem outros algoritmos mais recentes, como os baseados em divisão espectral [TODO:ref-33-e-20-karypisirreggraphs]. Este é computacionalmente caro, por envolver complexos de álgebra linear, precisando autovetor associado ao menor autovalor da matrix laplaciana associada ao grafo [TODO:ref]. No entanto, o particionamento resultante é considerado excelente para uma vasta gama de problemas [TODO:ref]. Existe também a abordagem em vários níveis [TODO:citemultilevel], através da simplifação do grafo por meio de contração dos mesmos e sobreposição das arestas correspondentes. Com o grafo mais simples, é aplicado algum algoritmo de particionamente e então ele se desdobra, já particionado, até o grafo original. Eventualmente, refinamentos no particionamento podem ser necessários. Esta última técnica é especialmente útil em grafos com grande número de vértices, na ordem de centenas a milhares, ou mais. Na figura [TODO:ref] é ilustrado esse particionamento em vários níveis.
+
+[TODO:figura do multilevel]
+
+Contudo, MMOGs são geralmente aplicações de tempo-real, além de a carga imposta sobre os servidores mudar constantemente em tempo de execução. Por esse motivo, o algoritmo de particionamento utilizado deve ser rápido, tornando inviável o uso da divisão espectral. É proposto neste trabalho utilizar um algoritmo guloso, mais simples, definido em [TODO:aOUTRArefdekarypis], que pode não atingir soluções tão boas quanto as da divisão espectral, porém é consideravelmente mais rápido. Além disso, o custo para encontrar uma solução muito próxima do ótimo não se justifica no contexto de MMOGs, pelo fato dos pesos mudarem constantemente, precisando de um novo particionamento em relativamente pouco tempo. Já quanto ao particionamento em vários níveis, seu uso não foi considerado necessário pois o número de vértices do grafo que representará o ambiente virtual é relativamente pequeno.
+
+%TODO:ver esse "definições e parametros"
+Nas próximas seções, será apresentada a solução proposta neste trabalho para balanceamento de carga, começando pelas definições e parâmetros utilizados, assim como será descrito como o problema foi mapeado para grafos e quais os objetivos e critérios do esquema proposto.
+%even
+%uneven
+
+\subsection{Definições e parâmetros}
+%critérios devem ser definidos com cuidado
+
 %calculo do load, baseado em pares de interações
 %macrocélula := região;
 %definições de: vértice, aresta (o que é comunicação entre servidores, como é feita e o porquê), partição, weight, overhead e load (weight + overhead)
@@ -242,8 +267,13 @@ Não explicou direito o uso de grafos... introduzir a próxima seção (poe esse par
 %definir/definição de interação
 
 \subsection{Algoritmos propostos}
+%falar do GGP. explicar o GGP
+%heterogeneidade dos servidores
+%ggp/spectral/etc. -> k-l/f-m
 
-antes dos algoritmos, falar da redução de overhead, dos hotspots, e de todos os princípios utilizados para desenvolver a solução proposta para balanceamento
+%os servidores já dispõem da informação de arestas, pois precisam disto para ajustar a frequencia de updates? mas nao sabem dos vizinhos... mas cada vizinho envia para o outro esses dados. por isso no algoritmo.
+
+%antes dos algoritmos, falar da redução de overhead, dos hotspots, e de todos os princípios utilizados para desenvolver a solução proposta para balanceamento
 
 %algoritmos propostos: v1, v2, v3, v4... etc.
 %kwise-kl
@@ -276,3 +306,4 @@ antes dos algoritmos, falar da redução de overhead, dos hotspots, e de todos os 
 
 %refs: Optimal Subset Mapping And Convergence Evaluation of Mapping Algorithms for Distributing Task Graphs on Multiprocessor SoC
 %    : Mesh Partitioning for Efficient Use of Distributed Systems, 2002
+%    : A survey on solution methods for task graph models, 2004
