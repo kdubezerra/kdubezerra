@@ -1,3 +1,18 @@
+%\newcommand{\ggp}{ProGReGA} [TODO:mudar esse nome]
+%\newcommand{\ggpmeaning}{proportional greedy region growing algorithm}
+%\newcommand{\wtodiv}{weight\_to\_divide}
+%\newcommand{\freecap}{free\_capacity}
+%\newcommand{\rlist}{region\_list}
+%\newcommand{\wshare}{weight\_share}
+
+\newcommand{\ggp}{ProGReGA}
+\newcommand{\ggpmeaning}{proportional greedy region growing algorithm}
+\newcommand{\wtodiv}{carga\_a\_dividir}
+\newcommand{\freecap}{capacidade\_livre}
+\newcommand{\rlist}{lista\_de\_regi\tilde{o}es}
+%\newcommand{\wshare}{por\text{\emph{\c{c}}}\tilde{a}o\_da\_carga}
+\newcommand{\wshare}{parcela\_da\_carga}
+
 [TODO:cap/lista de termos e definições]
 %por figuras para ilustrar o que se está falando
 \chapter {Balanceamento de carga}
@@ -259,14 +274,22 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 %TODO:definir um por um em detalhes, depois enumerá-los no parágrafo acima ^ para o leitor não se perder
 
 \begin{itemize}
-	\item \textbf{Células}: semelhante às microcélulas do modelo de \cite{devleeschauwer2005dma}, considera-se aqui o ambiente dividido em células pequenas, com tamanho e posições fixas;
-	\item \textbf{Regiões}:  as células se agrupam, formando o que será chamado de regiões. Geralmente essas regiões são contíguas, embora em alguns casos o subgrafo que as representa pode ser desconexo, resultando na presença de células isoladas umas das outras. Cada região é atribuída a um servidor;
+	\item \textbf{Servidor}: aqui, servidor é definido como sendo um nodo pertencente ao sistema distribuído que servirá o jogo. A cada servidor, pode ser atribuída uma única região;
+	\item \textbf{Capacidade do servidor}: a capacidade do servidor, $p(S)$, é um valor numérico proporcional à largura de banda de envio do servidor, que será um dos critérios para o algoritmo de balanceamento de carga utilizado;
+	\item \textbf{Capacidade do sistema}: a capacidade total do sistema, $P_{total}$, é igual a soma da capacidade dos $n$ servidores que o compõem:
+	
+		\begin{center}
+			$\displaystyle P_{total} = \sum_{i=1}^{n} p(Si)$
+		\end{center}
+	
+	\item \textbf{Célula}: semelhante às microcélulas do modelo de \cite{devleeschauwer2005dma}, considera-se aqui o ambiente dividido em células pequenas, com tamanho e posições fixas;
+	\item \textbf{Região}:  as células se agrupam, formando o que será chamado de regiões. Geralmente essas regiões são contíguas, embora em alguns casos o subgrafo que as representa pode ser desconexo, resultando na presença de células isoladas umas das outras. Cada região é atribuída a um único servidor, sendo $s(R)$ o servidor associado à região $R$;
 	%[TODO:ver se realmente precisa do item interação, ou se nao eh melhor usar relevancia mesmo]
 	\item \textbf{Relevância}: a relevância de um avatar $A_i$ para outro, $A_j$, determina a freqüência das atualizações do estado de $A_i$ que o servidor deve enviar ao jogador controlando $A_j$ \cite{bezerra2008a3}. Pode ser representada pela função $R(a,b)$, onde $a$ e $b$ são avatares quaisquer;
 	\item \textbf{Carga de um avatar}: a cada avatar estarão associados diversas outras entidades (aqui, considera-se apenas outros avatares) do jogo, cada uma com uma freqüência de atualizações de estado que precisarão ser enviadas para o jogador que controla aquele avatar. Assim sendo, para cada avatar $A$, a sua carga individual -- ou banda de envio que o servidor utilizará para enviar a seu jogador atualizações de estado -- $w_a(A)$ dependerá de quais outras entidades lhe são relevantes, e o quanto. Seja $\{A_1, A_2, ..., A_t\}$ o conjunto de todos os avatares presentes no ambiente virtual, temos:
 	
 		\begin{center}
-			$w_a(A) = \sum_{i=1}^{t} R(A,Ai)$
+			$\displaystyle w_a(A) = \sum_{i=1}^{t} R(A,Ai)$
 		\end{center}
 		
 		Seja o servidor $S$ aquele ao qual está conectado o jogador $P$ que controla o avatar $A$. Seré $S$ quem deverá enviar a $P$ atualizações de estado de qualquer outro avatar, independente de onde esteja. Se $A$ estiver interagindo com um avatar $A'$, cujo jogador estiver conectado a outro servidor, $S'$, este deverá primeiro enviar o estado de $A'$ para $S$, que então encaminhará para o jogador $P$.
@@ -274,19 +297,21 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 	\item \textbf{Carga de uma célula}: aqui, carga total da célula (ou uso da banda de envio do servidor) será igual à soma das cargas individuais dos jogadores. Seja a célula $C$, onde estão presentes $n$ avatares $\{A_1, A_2, ..., A_n\}$, sendo que em todo o ambiente virtual existem, no total, $t$ avatares. A carga da célula, $w_c(C)$, é encontrada com o seguinte somatório:
 	
 		\begin{center}		
-			$w_c(C) = \sum_{i=1}^{n} w(Ai) = \sum_{i=1}^{n} \sum_{j=1}^{t} R(A_i,A_j)$
+			$\displaystyle w_c(C) = \sum_{i=1}^{n} w(Ai) = \sum_{i=1}^{n} \sum_{j=1}^{t} R(A_i,A_j)$
 		\end{center}
 		
 	\item \textbf{Carga de uma região}: a carga da região equivale à soma das cargas individuais das células que a compõem. Seja a região $R$ formada pelas células $\{C_1, C_2, ..., C_p\}$, a carga da região, $w_r(R)$, será definida por:
 	
 		\begin{center}
-			$w_r(R) = \sum_{i=1}^{p} w_c(Ci)$
+			$\displaystyle w_r(R) = \sum_{i=1}^{p} w_c(Ci)$
 		\end{center}
+		
+		Uma região é considerada sobrecarregada quando seu peso é maior que a capacidade do servidor que a administra, ou seja, $w_r(R) > p(s(R))$;
 		
 	\item \textbf{Carga total do jogo}: a carga total do jogo, $W_{total}$ independe de como será feita a distribuição e será usado como parâmetro para o particionamento do ambiente virtual. Equivale à soma da carga individual de todas as células. Seja $\{C_1, C_2, ..., C_w\}$ o conjunto de todas as células em que está subdivido o mundo do jogo, temos:
 	
 		\begin{center}
-			$W_{total} = \sum_{i=1}^{w} w_c(Ci)$
+			$\displaystyle W_{total} = \sum_{i=1}^{w} w_c(Ci)$
 		\end{center}
 	
 	%explicar o pq da carga ser isso (upload)
@@ -294,7 +319,7 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 	\item \textbf{Interação entre células}: a interação entre duas células é igual à soma de todas as interações entre pares de avatares onde cada um está situado em uma dessas células. Para tornar mais claro, sejam $C_i$ e $C_j$, $i \neq j$, duas células quaisquer. Sejam $AvSet_i$ e $AvSet_j$ os conjuntos de avatares presentes em $C_i$ e $C_j$, respectivamente, com cardinalidades $m$ e $n$. A interação entre essas células é dada por:
 	
 		\begin{center}
-			$Int_c(C_i,C_j) = \sum_{i=1}^{m} \sum_{j=1}^{n} R(A_i,A_j)$,
+			$\displaystyle Int_c(C_i,C_j) = \sum_{i=1}^{m} \sum_{j=1}^{n} R(A_i,A_j)$,
 			
 			onde $A_i \in AvSet_i$ e $A_j \in AvSet_j$.
 		\end{center}
@@ -302,7 +327,7 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 	\item \textbf{Overhead} entre duas regiões: se houver apenas um servidor e uma região, compreendendo todo o ambiente virtual do jogo, o uso da banda de envio do servidor será proporcional à carga total do jogo. No entanto, devido à distribuição em diversos servidores, surge o problema de haver jogadores de diferentes regiões interagindo um com o outro muito próximos à fronteira entre as regiões (Figura [TODO:ref]). Por causa disso, cada atualização de estado dos avatares desses jogadores será enviada duas vezes. Para exemplificar, seja $A_i$ o avatar do jogador $P_i$, conectado ao servidor $S_i$, e $A_j$ o avatar do jogador $P_j$, conectado ao servidor $S_j$. Para que $P_i$ interaja com $P_j$, é necessário que $S_i$ envie o estado de $A_i$ ao servidor $S_j$, que então encaminha ao computador de $P_j$. O mesmo ocorre no caminho inverso. O overhead entre as regiões $R_i$ e $R_j$ é igual, portanto, à soma das interações entre pares de células onde cada uma está em uma dessas regiões. Se $R_i$ e $R_j$ possuem respectivamente $m$ e $n$ células, temos que a interação -- ou \emph{overhead} -- entre elas é dada por:
 	
 	  \begin{center}
-			$Int_r(R_i,R_j) = \sum_{i=1}^{m} \sum_{j=1}^{n} Int_c(C_i,C_j)$,
+			$\displaystyle Int_r(R_i,R_j) = \sum_{i=1}^{m} \sum_{j=1}^{n} Int_c(C_i,C_j)$,
 			
 			onde $C_i \in R_i$ e $C_j \in R_j$.
 	  \end{center}
@@ -310,9 +335,8 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
   \item \textbf{Overhead Total}: o overhead total sobre o sistema servidor é calculado como a soma dos overheads entre cada par de regiões. Sendo assim, temos:
 
     \begin{center}
-      $OverHead = \sum_{i=1}^{n} \sum_{j=1, j \neq i}^{n} Int_r(Ri,Rj)$
+      $\displaystyle OverHead = \sum_{i} \sum_{j, j \neq i} Int_r(Ri,Rj)$
     \end{center}
-
 
 \end{itemize}
 
@@ -320,23 +344,23 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 
 [TODO:figura com o overhead]
 
-Agora que os conceitos necessários para entender o esquema de balanceamento de carga proposto foram definidos, será descrito como será o mapeamento dos mesmo em um grafo com pesos, para posterior particionamento. Seja um grafo $G = (V,E)$, onde $V$ é o conjunto de vértices e $E$ é o conjunto de arestas entre os vértices. A seguir são listados cada componente desse grafo e o que representam:
+Agora que os conceitos necessários para entender o esquema de balanceamento de carga proposto foram definidos, será descrito como será o mapeamento dos mesmo em um grafo com pesos, para posterior particionamento. Seja $GW =(V,E)$ um grafo que reprenta o mundo do jogo, onde $V$ é o conjunto de vértices e $E$ é o conjunto de arestas entre os vértices. A seguir são listados cada componente desse grafo e o que representam:
 
 \begin{itemize}
 	\item \textbf{Vértice}: cada vértice do grafo representa uma célula no ambiente virtual;
 	\item \textbf{Aresta}: cada aresta do grafo liga dois vértices que representam células adjacentes, ou seja, que compartilham uma fronteira;
-	\item \textbf{Partição}: cada partição do grafo $G$ -- um subconjunto de vértices do grafo $G$, mais as arestas que ligam pares de vértices nessa mesma partição -- representa uma região;
+	\item \textbf{Partição}: cada partição do grafo $GW$ -- um subconjunto de vértices do grafo $GW$, mais as arestas que ligam pares de vértices nessa mesma partição -- representa uma região;
 	\item \textbf{Peso do vértice}: o peso de cada vértice é igual à carga da célula que representa;
 	\item \textbf{Peso da aresta}: o peso da aresta que liga dois vértices é igual à interação entre as células que os mesmos representam;
 	\item \textbf{Peso da partição}: o peso da partição é igual à soma do peso de seus vértices, ou seja, o peso da região que representa;
-	\item \textbf{Corte de aresta}: o corte de aresta em um particionamento é igual à soma dos pesos de todas as arestas que ligam vértices de diferentes partições. Este valor é igual à soma dos overheads entre todos os pares de regiões. Assim sendo, o corte de aresta do grafo $G$ é igual ao overhead total sobre o sistema servidor, sendo que reduzí-lo é um dos objetivos deste esquema de balanceamento de carga.
+	\item \textbf{Corte de aresta}: o corte de aresta em um particionamento é igual à soma dos pesos de todas as arestas que ligam vértices de diferentes partições. Este valor é igual à soma dos overheads entre todos os pares de regiões. Assim sendo, o corte de aresta do grafo $GW$ é igual ao overhead total sobre o sistema servidor, sendo que reduzí-lo é um dos objetivos deste esquema de balanceamento de carga.
 \end{itemize}
 
 [TODO:figura do mapeamento de cell/region para vertex/partition/edge]
 
 O objetivo do esquema de balanceamento aqui proposto é atribuir a cada servidor uma carga proporcional à sua capacidade, reduzindo tanto quanto possível o corte de aresta do grafo que representa o ambiente virtual e, portanto, o overhead intrínseco à distribuição do jogo em vários servidores. Embora este seja um problema NP-completo [TODO:ref, de novo?], serão utilizadas heurísticas eficientes para reduzir esse problema. Nas seções a seguir serão apresentados alguns algoritmos propostos neste trabalho.
 
-%[TODO:poe o conceito de DESIRE de mudar de regiao aqui, na secao anterior (kl) ou na dos ->**algoritmos**?)
+
 
 %arestas assimétricas/grafo orientado (acochambrar ou definir de maneira melhor isto?)
 %critérios devem ser definidos com cuidado
@@ -345,7 +369,7 @@ O objetivo do esquema de balanceamento aqui proposto é atribuir a cada servidor 
 %definições de: vértice, aresta (o que é comunicação entre servidores, como é feita e o porquê), partição, weight, overhead e load (weight + overhead)
 %\subsubsection{Uso de gerenciamento de interesse}
 %uso do IM para definir os pesos das arestas
-%otimização do IM com células vizinhas
+%[TODO:otimização do IM com células vizinhas]
 %granularidade grossa+fina (otimizada) no ger. interesse
 %definição do formato das células, vantagens e desvantagens (quadrado, hexagono, pentagono, etc...) - tessellation graph degree
 %definir/definição de interação
@@ -354,7 +378,89 @@ O objetivo do esquema de balanceamento aqui proposto é atribuir a cada servidor 
 
 \subsection{Algoritmos propostos}
 
-Não há como saber o overhead antes de efetuar o particionamento do mundo virtual, portanto, usa o GGP/v1/v2/v3 etc. antes e depois usa o KL pra minimizar o edge-cut.
+Considera-se que uma divisão inicial do ambiente virtual já foi feita. Deverá então ser verificado periodicamente se houve um desbalanceamento e disparar o algoritmo. Embora o overhead resultante da distribuição do ambiente virtual faça parte da carga imposta aos servidores, não há como saber qual será esse overhead sem efetuar o reparticionamento primeiro. Por esta razão, a ``carga'' a ser distribuída não incluirá este sobrecusto. Em um primeiro momento, será utilizado um algoritmo cujos parâmetros são as cargas das células e suas interações (que são os pesos dos vértices e das arestas), pois já se dispõe desses dados. Em uma segunda fase, com o grafo já particionado, será utilizado o algoritmo de Kernighan e Lin para refinar o particionamento, reduzindo o corte de aresta.
+
+Outro aspecto importante é que cada servidor sempre tem uma região associada. O que pode ocorrer é de uma região ser vazia, ou seja, não possui células e o servidor daquela região não participar da distribuição. Isso é útil quando a capacidade total do sistema servidor é muito maior que a carga total do jogo, ou seja, $P_{total} \gg W_{total}$. Neste caso, a introdução de mais servidores aumentaria o overhead de comunicação no sistema, sem melhorar sua qualidade -- salvo quando provesse tolerância a falhas.
+
+Os algoritmos foram desenvolvidos orientados a regiões, ao invés de servidores, para que fossem mais legíveis, levando em conta as constantes transferências de células. Além disso, torna-se mais fácil no futuro estender o modelo de balanceamento utilizado aqui para que mais de um servidor possa administrar a mesma região. Foram feitas diferentes versões do algoritmo de particionamento, que serão descritas a seguir:
+
+\subsubsection{\ggp}
+
+%O algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph{\ggpmeaning}) busca atribuir as cregiões mais sobrecarregadas aos servidores mais poderosos, embora seja uma heurística e não há garantias de que isso vá acontecer em 100\% dos casos. Para prover um particionamento balanceado, proporcional e com um corte de aresta já reduzido na primeira fase do balanceamento, os servidores são ordenados em ordem decrescente de capacidade. Cada um então toma uma porção do ambiente virtual, que julga-se ser a mais carregada naquele momento, até que seja atingido o limite daquele servidor, e então passa-se para o próximo da lista. Os detalhes do algoritmo estão em [TODO:refEvercomoficaessaref].
+
+O algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph{\ggpmeaning}) busca atribuir as células mais carregadas às regiões gerenciadas pelos servidores mais poderosos. Como entrada do algoritmo, é passada uma lista das regiões a balancear.  Os detalhes estão exibidos no Algoritmo \ref{alg:ggp}.
+
+%parametros: lista de regioes, lista de celulas que pertenciam àquelas regiões, capacidade dos servidores
+
+%\begin{algorithm}
+%%\renewcommand{\ALG}{Algoritmo}
+%\caption{\ggp}
+%\label{alg:ggp}
+%\begin{algorithmic}
+%	 \STATE $\wtodiv \leftarrow 0$
+%	 \STATE $\freecap \leftarrow 0$
+%	 \FOR{each region $R$ in the $\rlist$}
+%	 		\STATE $\wtodiv \leftarrow \wtodiv + w_r(R)$
+%	 		\STATE $\freecap \leftarrow \freecap + p(s(R))$
+%	 		\STATE free all cells from $R$, temporarily
+%	 \ENDFOR
+%	 \STATE sort $\rlist$ in decreasing region's server power order
+%	 \FOR{each region $R$ in the $\rlist$}
+%	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$
+%	 		\WHILE{$w_r(R) < \wshare$}
+%	 		   \IF{$R$ has a cell with a free neighbor cell}
+%	 		   		\STATE $R \leftarrow R \cup \{$free neighbor cell with highest edge$\}$
+%	 		   \ELSIF{there is any free cell}
+%	 		   		\STATE $R \leftarrow R \cup \{$heaviest free cell$\}$
+%	 		   \ELSE
+%	 		   		\STATE stop. there are no more free cells.
+%	 		   \ENDIF
+%	 		\ENDWHILE
+%	 \ENDFOR
+%\end{algorithmic}
+%\end{algorithm}
+
+\begin{algorithm}
+%\renewcommand{\ALG}{Algoritmo}
+\caption{\ggp}
+\label{alg:ggp}
+\begin{algorithmic}[1]
+	 \STATE $\wtodiv \leftarrow 0$ \label{alg:ggp:begingetlocalinfo}
+	 \STATE $\freecap \leftarrow 0$
+	 \FOR{cada região $R$ na $\rlist$}
+	 		\STATE $\wtodiv \leftarrow \wtodiv + w_r(R)$
+	 		\STATE $\freecap \leftarrow \freecap + p(s(R))$
+	 		\STATE libere temporariamente todas as células de $R$ \label{alg:ggp:freeallcells}
+	 \ENDFOR \label{alg:ggp:endgetlocalinfo}
+	 \STATE ordene a $\rlist$ em ordem decrescente de $p(s(R))$ de cada região $R$ \label{alg:ggp:sortregions}
+	 \FOR{cada região $R$ na $\rlist$}
+	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$
+	 		\WHILE{$w_r(R) < \wshare$}
+	 		   \IF{existe alguma célula de $R$ vizinha a uma célula livre}
+	 		   		\STATE $R \leftarrow R \cup \{$célula vizinha livre ligada pela aresta mais pesada$\}$ \label{alg:ggp:freeneighbor}
+	 		   \ELSIF{existe alguma célula livre}
+	 		   		\STATE $R \leftarrow R \cup \{$célula livre mais pesada$\}$ \label{alg:ggp:freeheavycell}
+	 		   \ELSE
+	 		   		\STATE pare. não há mais células livres.
+	 		   \ENDIF
+	 		\ENDWHILE
+	 \ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+Como foi dito, é passado ao algoritmo uma lista das regiões cuja carga será rebalanceada. Isso torna possível o uso desse algoritmo tanto em âmbito local quanto em âmbito global, dependendo de quantas regiões lhe são passadas. A distribuição será feita com base nas informações que são passadas a esse algoritmo, e o critério de proporcionalidade e de balanceamento se restringe ao grupo de regiões -- e servidores a elas associados -- que lhe são dadas como entrada. As linhas de \ref{alg:ggp:begingetlocalinfo} a \ref{alg:ggp:endgetlocalinfo} têm por objetivo calcular o peso total do grupo de regiões dados e a capacidade total daquele grupo de regiões. Além disso, na linha \ref{alg:ggp:freeallcells}, as células associadas às regiões passadas ao algoritmo são liberadas para que sejam posteriormente redistribuídas.
+
+Para prover um particionamento balanceado, proporcional e com um corte de aresta já reduzido na primeira fase do balanceamento, as regiões são ordenadas em ordem decrescente de capacidade de seus servidores (linha \ref{alg:ggp:sortregions}). O \ggp então itera através dessa lista ordenada, buscando atribuir às regiões com mais capacidade as células mais pesadas, enquanto que encarrega as regiões com servidores mais fracos de células menos carregadas.
+
+explicar direito o algoritmo, linha por linha
+
+explicar que o objetivo é balancear de verdade, ou seja, cada região com uma carga (ou sobrecarga) proporcional ao p(s(R))
+
+falar dos possiveis contras (regiao pode mudar completamente de lugar. pode ser q nao seja necessario + servidores, e isso so aumentar o overhead, assim como ignora a possibilidade de haver novos servidores, livres)
+
+%[TODO:poe o conceito de DESIRE de mudar de regiao aqui, na secao anterior (kl) ou na dos ->**algoritmos**?)
+
+%Quando é iniciado o jogo, não qualquer particionamento 
 
 %falar do GGP. explicar o GGP
 %heterogeneidade dos servidores
