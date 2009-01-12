@@ -301,12 +301,19 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 	
 	\item \textbf{Overhead} entre duas regiões: se houver apenas um servidor e uma região, compreendendo todo o ambiente virtual do jogo, o uso da banda de envio do servidor será proporcional à carga total do jogo. No entanto, devido à distribuição em diversos servidores, surge o problema de haver jogadores de diferentes regiões interagindo um com o outro muito próximos à fronteira entre as regiões (Figura [TODO:ref]). Por causa disso, cada atualização de estado dos avatares desses jogadores será enviada duas vezes. Para exemplificar, seja $A_i$ o avatar do jogador $P_i$, conectado ao servidor $S_i$, e $A_j$ o avatar do jogador $P_j$, conectado ao servidor $S_j$. Para que $P_i$ interaja com $P_j$, é necessário que $S_i$ envie o estado de $A_i$ ao servidor $S_j$, que então encaminha ao computador de $P_j$. O mesmo ocorre no caminho inverso. O overhead entre as regiões $R_i$ e $R_j$ é igual, portanto, à soma das interações entre pares de células onde cada uma está em uma dessas regiões. Se $R_i$ e $R_j$ possuem respectivamente $m$ e $n$ células, temos que a interação -- ou \emph{overhead} -- entre elas é dada por:
 	
-	\begin{center}
+	  \begin{center}
 			$Int_r(R_i,R_j) = \sum_{i=1}^{m} \sum_{j=1}^{n} Int_c(C_i,C_j)$,
 			
 			onde $C_i \in R_i$ e $C_j \in R_j$.
-		\end{center}
-		
+	  \end{center}
+  	
+  \item \textbf{Overhead Total}: o overhead total sobre o sistema servidor é calculado como a soma dos overheads entre cada par de regiões. Sendo assim, temos:
+
+    \begin{center}
+      $OverHead = \sum_{i=1}^{n} \sum_{j=1, j \neq i}^{n} Int_r(Ri,Rj)$
+    \end{center}
+
+
 \end{itemize}
 
 [TODO:figura ilustrando a carga de uma célula/regiao]
