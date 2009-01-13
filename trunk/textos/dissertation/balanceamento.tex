@@ -7,6 +7,8 @@
 
 \newcommand{\ggp}{ProGReGA}
 \newcommand{\ggpmeaning}{proportional greedy region growing algorithm}
+\newcommand{\ggpk}{\mbox{ProGReGA-KH}}
+\newcommand{\ggpkmeaning}{proportional greedy region growing algorithm keeping heaviest cell}
 \newcommand{\wtodiv}{carga\_a\_dividir}
 \newcommand{\freecap}{capacidade\_livre}
 \newcommand{\rlist}{lista\_de\_regi\tilde{o}es}
@@ -282,8 +284,8 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 			$\displaystyle P_{total} = \sum_{i=1}^{n} p(Si)$
 		\end{center}
 	
-	\item \textbf{Célula}: semelhante às microcélulas do modelo de \cite{devleeschauwer2005dma}, considera-se aqui o ambiente dividido em células pequenas, com tamanho e posições fixas;
-	\item \textbf{Região}:  as células se agrupam, formando o que será chamado de regiões. Geralmente essas regiões são contíguas, embora em alguns casos o subgrafo que as representa pode ser desconexo, resultando na presença de células isoladas umas das outras. Cada região é atribuída a um único servidor, sendo $s(R)$ o servidor associado à região $R$;
+	\item \textbf{Célula}: semelhante às microcélulas do modelo de \cite{devleeschauwer2005dma}, considera-se aqui o ambiente dividido em células pequenas, com tamanho e posições fixas. Se duas células compartilham uma fronteira, elas são ditas adjacentes, ou vizinhas;
+	\item \textbf{Região}:  as células se agrupam, formando o que será chamado de regiões. Geralmente essas regiões são contíguas, embora em alguns casos o subgrafo que as representa pode ser desconexo, resultando na presença de células isoladas umas das outras. Cada região é atribuída a um servidor, e apenas um, sendo $s(R)$ o servidor associado à região $R$. Poderá ser lido ao longo do texto ``capacidade da região'', o que se refere na verdade à capacidade do servidor associado àquela região, ou seja, $p(s(R))$;
 	%[TODO:ver se realmente precisa do item interação, ou se nao eh melhor usar relevancia mesmo]
 	\item \textbf{Relevância}: a relevância de um avatar $A_i$ para outro, $A_j$, determina a freqüência das atualizações do estado de $A_i$ que o servidor deve enviar ao jogador controlando $A_j$ \cite{bezerra2008a3}. Pode ser representada pela função $R(a,b)$, onde $a$ e $b$ são avatares quaisquer;
 	\item \textbf{Carga de um avatar}: a cada avatar estarão associados diversas outras entidades (aqui, considera-se apenas outros avatares) do jogo, cada uma com uma freqüência de atualizações de estado que precisarão ser enviadas para o jogador que controla aquele avatar. Assim sendo, para cada avatar $A$, a sua carga individual -- ou banda de envio que o servidor utilizará para enviar a seu jogador atualizações de estado -- $w_a(A)$ dependerá de quais outras entidades lhe são relevantes, e o quanto. Seja $\{A_1, A_2, ..., A_t\}$ o conjunto de todos os avatares presentes no ambiente virtual, temos:
@@ -434,8 +436,8 @@ O algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph
 	 \ENDFOR \label{alg:ggp:endgetlocalinfo}
 	 \STATE ordene a $\rlist$ em ordem decrescente de $p(s(R))$ de cada região $R$ \label{alg:ggp:sortregions}
 	 \FOR{cada região $R$ na $\rlist$}
-	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$
-	 		\WHILE{$w_r(R) < \wshare$}
+	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$ \label{alg:ggp:fraction}
+	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggp:whilefraction}
 	 		   \IF{existe alguma célula de $R$ vizinha a uma célula livre}
 	 		   		\STATE $R \leftarrow R \cup \{$célula vizinha livre ligada pela aresta mais pesada$\}$ \label{alg:ggp:freeneighbor}
 	 		   \ELSIF{existe alguma célula livre}
@@ -448,15 +450,61 @@ O algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph
 \end{algorithmic}
 \end{algorithm}
 
-Como foi dito, é passado ao algoritmo uma lista das regiões cuja carga será rebalanceada. Isso torna possível o uso desse algoritmo tanto em âmbito local quanto em âmbito global, dependendo de quantas regiões lhe são passadas. A distribuição será feita com base nas informações que são passadas a esse algoritmo, e o critério de proporcionalidade e de balanceamento se restringe ao grupo de regiões -- e servidores a elas associados -- que lhe são dadas como entrada. As linhas de \ref{alg:ggp:begingetlocalinfo} a \ref{alg:ggp:endgetlocalinfo} têm por objetivo calcular o peso total do grupo de regiões dados e a capacidade total daquele grupo de regiões. Além disso, na linha \ref{alg:ggp:freeallcells}, as células associadas às regiões passadas ao algoritmo são liberadas para que sejam posteriormente redistribuídas.
+Como foi dito, é passada como parâmetro uma lista das regiões cuja carga será rebalanceada. Isso torna possível o uso desse algoritmo tanto em âmbito local quanto global, pois a lista pode conter apenas algumas das regiões do mundo do jogo. A distribuição será feita com base nas informações desse conjunto de regiões, cujas carga e capacidade totais são calculas nas linhas \ref{alg:ggp:begingetlocalinfo} a \ref{alg:ggp:endgetlocalinfo}. Para que sejam posteriormente redistribuídas, todas as células associadas a essas regiões são liberadas (linha \ref{alg:ggp:freeallcells}).
 
-Para prover um particionamento balanceado, proporcional e com um corte de aresta já reduzido na primeira fase do balanceamento, as regiões são ordenadas em ordem decrescente de capacidade de seus servidores (linha \ref{alg:ggp:sortregions}). O \ggp então itera através dessa lista ordenada, buscando atribuir às regiões com mais capacidade as células mais pesadas, enquanto que encarrega as regiões com servidores mais fracos de células menos carregadas.
+Para prover um particionamento balanceado, proporcional e com um corte de aresta já reduzido na primeira fase do balanceamento, as regiões são ordenadas em ordem decrescente de capacidade de seus servidores (linha \ref{alg:ggp:sortregions}). O \ggp\ então percorre essa lista ordenada, buscando atribuir às regiões com mais capacidade as células mais pesadas, enquanto que encarrega as regiões com servidores mais fracos de células menos carregadas.
 
-explicar direito o algoritmo, linha por linha
+Na linha \ref{alg:ggp:fraction}, é calculado qual a parcela de carga que cabe a cada região, considerando a carga total que está sendo dividida e a capacidade total daquelas regiões. A fração da capacidade de servidor daquela região, em relação ao conjunto de todas as regiões envolvidas no balanceamento, $\frac{p(s(R))}{\freecap}$, deve ser a mesma fração de carga que deve ser atribuída a ela. Ainda que essa carga seja maior que a capacidade do servidor, resultando em uma sobrecarga, todos os servidores estarão igualmente sobrecarregados, satisfazendo o critério de balanceamento que foi definido. A condição para o término da alocação de novas células a uma região é que a sua carga seja maior ou igual a essa parcela.
 
-explicar que o objetivo é balancear de verdade, ou seja, cada região com uma carga (ou sobrecarga) proporcional ao p(s(R))
+A escolha de células para incluir na região busca fazer com que cada uma das arestas mais pesadas do grafo $GW$ ligue vértices da mesma partição, reduzindo o corte de aresta e, assim, o overhead. A cada passo é dado preferência a escolher a célula livre que não apenas seja vizinha de uma célula já presente na região, mas também cuja aresta ligando-as seja a mais pesada possível. A Figura [TODO:reffig] mostra um exemplo dos passos do crescimento de uma região até atingir a sua parcela de carga no balanceamento.
 
-falar dos possiveis contras (regiao pode mudar completamente de lugar. pode ser q nao seja necessario + servidores, e isso so aumentar o overhead, assim como ignora a possibilidade de haver novos servidores, livres)
+[TODO:figura -> passos do crescimento de uma região]
+
+No primeiro passo do ciclo iniciado na linha \ref{alg:ggp:whilefraction}, quando a região ainda não tem célula nenhuma, o \ggp\ lhe atribui a célula livre mais pesada que houver (linha \ref{alg:ggp:freeheavycell}). O mesmo ocorre quando uma região está comprimida entre as fronteiras de outras regiões (Figura [TODO:ref]), e não possui nenhum vizinho livre, precisando buscar células em outros lugares. Isso pode gerar regiões fragmentadas e possivelmente aumentar o corte de aresta do grafo que representa o ambiente virtual. No entanto, isso acontecerá com mais freqüência nos últimos passos da distribuição, quando a maior parte das células já estaria alocada em regiões. Pelo fato do algoritmo ser guloso, quando se chegasse a essa fase de sua execução, as células que ficariam isoladas seriam, provavelmente, células muito mais leves que as outras, causando pouco overhead.
+
+[TODO: figura região comprimida]
+
+
+
+
+
+%falar dos possiveis contras (regiao pode mudar completamente de lugar. pode ser q nao seja necessario + servidores, e isso so aumentar o overhead, assim como ignora a possibilidade de haver novos servidores, livres)
+
+\subsubsection{\ggpk}
+
+Um possível efeito indesejável do algorito \ggp\ é que, ao liberar todas as células e redistribuí-las, pode ocorrer de uma ou mais regiões mudar completamente de lugar, fazendo com que vários jogadores precisem desconectar-se de um servidor e reconectar-se a outro. Para tentar reduzir a probabilidade disso acontecer, é proposto o \textbf{\ggpk} (\emph{\ggpkmeaning}). Este novo algoritmo é semelhante ao \ggp, exceto que cada região mantém sua célula mais carregada, a partir da qual pode ser formado uma região semelhante à que se tinha anteriormente, evitando que vários jogadores precisem migrar de servidor (Algoritmo \ref{alg:ggpk}). No entanto, ao se manter uma das células de cada região, pode-se estar impedindo que um balanceamento melhor ocorra, ou introduzindo-se overhead, se a presença daquela célula impedir que a região seja completamente contígua.
+
+\begin{algorithm}
+%\renewcommand{\ALG}{Algoritmo}
+\caption{\ggpk}
+\label{alg:ggpk}
+\begin{algorithmic}[1]
+	 \STATE $\wtodiv \leftarrow 0$ \label{alg:ggp:begingetlocalinfo}
+	 \STATE $\freecap \leftarrow 0$
+	 \FOR{cada região $R$ na $\rlist$}
+	 		\STATE $\wtodiv \leftarrow \wtodiv + w_r(R)$
+	 		\STATE $\freecap \leftarrow \freecap + p(s(R))$
+	 		\STATE $c \leftarrow $ célula mais pesada de $R$
+	 		\STATE libere temporariamente todas as células de $R$ \label{alg:ggp:freeallcells}
+	 		\STATE $R \leftarrow R \cup \{c\}$
+	 \ENDFOR \label{alg:ggp:endgetlocalinfo}
+	 \STATE ordene a $\rlist$ em ordem decrescente de $p(s(R))$ de cada região $R$ \label{alg:ggp:sortregions}
+	 \FOR{cada região $R$ na $\rlist$}
+	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$ \label{alg:ggp:fraction}
+	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggp:whilefraction}
+	 		   \IF{existe alguma célula de $R$ vizinha a uma célula livre}
+	 		   		\STATE $R \leftarrow R \cup \{$célula vizinha livre ligada pela aresta mais pesada$\}$ \label{alg:ggp:freeneighbor}
+	 		   \ELSIF{existe alguma célula livre}
+	 		   		\STATE $R \leftarrow R \cup \{$célula livre mais pesada$\}$ \label{alg:ggp:freeheavycell}
+	 		   \ELSE
+	 		   		\STATE pare. não há mais células livres.
+	 		   \ENDIF
+	 		\ENDWHILE
+	 \ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+
 
 %[TODO:poe o conceito de DESIRE de mudar de regiao aqui, na secao anterior (kl) ou na dos ->**algoritmos**?)
 
