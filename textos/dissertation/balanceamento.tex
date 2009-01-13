@@ -5,13 +5,25 @@
 %\newcommand{\rlist}{region\_list}
 %\newcommand{\wshare}{weight\_share}
 
+%[TODO:por nomes mais simples e elegantes]
 \newcommand{\ggp}{ProGReGA}
+%\newcommand{\ggp}{PGRGA}
 \newcommand{\ggpmeaning}{proportional greedy region growing algorithm}
-\newcommand{\ggpk}{\mbox{ProGReGA-KH}}
+\newcommand{\ggpk}{\mbox{\ggp-KH}}
 \newcommand{\ggpkmeaning}{proportional greedy region growing algorithm keeping heaviest cell}
+\newcommand{\ggpf}{\ggp-KF}
+\newcommand{\ggpfmeaning}{proportional greedy region growing algorithm keeping usage fraction}
+\newcommand{\bfa}{BFBCT}
+\newcommand{\bfameaning}{best-fit based cell transference}
+\newcommand{\kl}{Kernighan-Lin}
 \newcommand{\wtodiv}{carga\_a\_dividir}
 \newcommand{\freecap}{capacidade\_livre}
 \newcommand{\rlist}{lista\_de\_regi\tilde{o}es}
+\newcommand{\clist}{lista\_de\_c\acute{e}lulas}
+\newcommand{\locgroup}{grupo\_local}
+\newcommand{\avguse}{uso\_m\acute{e}dio}
+\newcommand{\wlocal}{carga\_local}
+\newcommand{\caplocal}{capacidade\_local}
 %\newcommand{\wshare}{por\text{\emph{\c{c}}}\tilde{a}o\_da\_carga}
 \newcommand{\wshare}{parcela\_da\_carga}
 
@@ -135,6 +147,7 @@ Foi definida a carga de trabalho de uma célula como o número de avatares present
 %1.3
 %\subsubsection{O esquema de distribuição de carga dinâmico proposto}
 \subsubsection{Seleção de grupo local para balancear a carga}
+\label{lee:regselect}
 
 %o servidor que iniciou reparte as regiões que eram dedicadas a ele entre os servidores envolvidos, de forma que eles terão aproximadamente a mesma carga. Então, os servidores envolvidos migram suas celulas e usuários entre si de maneira par-a-par, de acordo com o resultado do reparticionamento. Nas sessões seguintes, será descrito em detalhes como isso é realizado.
 
@@ -270,6 +283,7 @@ Nas próximas seções, será apresentada a solução proposta neste trabalho para bal
 %uneven
 
 \subsection{Definições e mapeamento para grafo}
+%[TODO:talvez, compactar essa lista, que está detalhada demais]
 
 Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um grafo, que será então particionado para dividir a carga do jogo entre os diferentes servidores. Para isso, é necessário primeiramente definir o que são vértices, arestas, pesos e partições no grafo que representa o mundo do jogo, além de outros conceitos que serão utilizados ao longo do texto.
 
@@ -278,6 +292,12 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 \begin{itemize}
 	\item \textbf{Servidor}: aqui, servidor é definido como sendo um nodo pertencente ao sistema distribuído que servirá o jogo. A cada servidor, pode ser atribuída uma única região;
 	\item \textbf{Capacidade do servidor}: a capacidade do servidor, $p(S)$, é um valor numérico proporcional à largura de banda de envio do servidor, que será um dos critérios para o algoritmo de balanceamento de carga utilizado;
+	\item \textbf{Fração de capacidade do servidor}: dado um conjunto de servidores $Servers$ = $\{S_1, S_2, ..., S_n\}$, a fração de capacidade de um servidor $S$, $frac_p(S)$, em relação àquele conjunto, é igual à sua capacidade dividida pela soma das capacidades dos servidores do conjunto $Servers$. Tem-se:
+	
+		\begin{center}
+			$frac_p(S) = \frac{\displaystyle p(S)}{\displaystyle\sum_{i=1}^{n} p(S_i)}$
+		\end{center}
+		
 	\item \textbf{Capacidade do sistema}: a capacidade total do sistema, $P_{total}$, é igual a soma da capacidade dos $n$ servidores que o compõem:
 	
 		\begin{center}
@@ -294,7 +314,7 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 			$\displaystyle w_a(A) = \sum_{i=1}^{t} R(A,Ai)$
 		\end{center}
 		
-		Seja o servidor $S$ aquele ao qual está conectado o jogador $P$ que controla o avatar $A$. Seré $S$ quem deverá enviar a $P$ atualizações de estado de qualquer outro avatar, independente de onde esteja. Se $A$ estiver interagindo com um avatar $A'$, cujo jogador estiver conectado a outro servidor, $S'$, este deverá primeiro enviar o estado de $A'$ para $S$, que então encaminhará para o jogador $P$.
+		Seja o servidor $S$ aquele ao qual está conectado o jogador $P$ que controla o avatar $A$. Será $S$ a enviar para $P$ atualizações de estado de qualquer outro avatar, independente de onde esteja. Se $A$ estiver interagindo com um avatar $A'$, cujo jogador estiver conectado a outro servidor, $S'$, este deverá primeiro enviar o estado de $A'$ para $S$, que então encaminhará para o jogador $P$.
 		
 	\item \textbf{Carga de uma célula}: aqui, carga total da célula (ou uso da banda de envio do servidor) será igual à soma das cargas individuais dos jogadores. Seja a célula $C$, onde estão presentes $n$ avatares $\{A_1, A_2, ..., A_n\}$, sendo que em todo o ambiente virtual existem, no total, $t$ avatares. A carga da célula, $w_c(C)$, é encontrada com o seguinte somatório:
 	
@@ -308,7 +328,17 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 			$\displaystyle w_r(R) = \sum_{i=1}^{p} w_c(Ci)$
 		\end{center}
 		
-		Uma região é considerada sobrecarregada quando seu peso é maior que a capacidade do servidor que a administra, ou seja, $w_r(R) > p(s(R))$;
+		\item \textbf{Fração de carga da região}: dado um conjunto de regiões $Regions$ = $\{R_1, R_2, ..., R_n\}$, a fração de carga de uma região $R$, $frac_r(R)$, em relação àquele conjunto, é igual à sua carga dividida pela soma das cargas das regiões do conjunto $Regions$. Tem-se:
+	
+		\begin{center}
+			$frac_r(R) = \frac{\displaystyle w_r(R)}{\displaystyle\sum_{i=1}^{n} w_r(R_i)}$
+		\end{center}
+		
+	\item \textbf{Uso de recursos em uma região}: fração que indica o quanto da capacidade do servidor daquela região está sendo utilizada. É definido por:
+	
+		\begin{center}
+			$u(s(R)) = \frac{\displaystyle w_r(R)}{\displaystyle p(s(R))}$	
+		\end{center}
 		
 	\item \textbf{Carga total do jogo}: a carga total do jogo, $W_{total}$ independe de como será feita a distribuição e será usado como parâmetro para o particionamento do ambiente virtual. Equivale à soma da carga individual de todas as células. Seja $\{C_1, C_2, ..., C_w\}$ o conjunto de todas as células em que está subdivido o mundo do jogo, temos:
 	
@@ -317,6 +347,12 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 		\end{center}
 	
 	%explicar o pq da carga ser isso (upload)
+	
+	\item \textbf{Uso total do sistema}: fração que indica o quanto de recursos do sistema como um todo está sendo utilizado. É definido por:
+
+		\begin{center}
+			$\displaystyle U_{total} = \frac{W_{total}}{P_{total}}$
+		\end{center}
 	
 	\item \textbf{Interação entre células}: a interação entre duas células é igual à soma de todas as interações entre pares de avatares onde cada um está situado em uma dessas células. Para tornar mais claro, sejam $C_i$ e $C_j$, $i \neq j$, duas células quaisquer. Sejam $AvSet_i$ e $AvSet_j$ os conjuntos de avatares presentes em $C_i$ e $C_j$, respectivamente, com cardinalidades $m$ e $n$. A interação entre essas células é dada por:
 	
@@ -380,13 +416,67 @@ O objetivo do esquema de balanceamento aqui proposto é atribuir a cada servidor 
 
 \subsection{Algoritmos propostos}
 
-Considera-se que uma divisão inicial do ambiente virtual já foi feita. Deverá então ser verificado periodicamente se houve um desbalanceamento e disparar o algoritmo. Embora o overhead resultante da distribuição do ambiente virtual faça parte da carga imposta aos servidores, não há como saber qual será esse overhead sem efetuar o reparticionamento primeiro. Por esta razão, a ``carga'' a ser distribuída não incluirá este sobrecusto. Em um primeiro momento, será utilizado um algoritmo cujos parâmetros são as cargas das células e suas interações (que são os pesos dos vértices e das arestas), pois já se dispõe desses dados. Em uma segunda fase, com o grafo já particionado, será utilizado o algoritmo de Kernighan e Lin para refinar o particionamento, reduzindo o corte de aresta.
+%[TODO:falar do algoritmo de seleção de regiões do lee]
 
-Outro aspecto importante é que cada servidor sempre tem uma região associada. O que pode ocorrer é de uma região ser vazia, ou seja, não possui células e o servidor daquela região não participar da distribuição. Isso é útil quando a capacidade total do sistema servidor é muito maior que a carga total do jogo, ou seja, $P_{total} \gg W_{total}$. Neste caso, a introdução de mais servidores aumentaria o overhead de comunicação no sistema, sem melhorar sua qualidade -- salvo quando provesse tolerância a falhas.
+Considera-se que uma divisão inicial do ambiente virtual já foi feita. Deverá então ser verificado periodicamente se houve um desbalanceamento e disparar o algoritmo. Embora o overhead resultante da distribuição do ambiente virtual faça parte da carga imposta aos servidores, não há como saber qual será esse overhead sem efetuar o reparticionamento primeiro. Por esta razão, a ``carga'' a ser distribuída não incluirá este sobrecusto.
 
-Os algoritmos foram desenvolvidos orientados a regiões, ao invés de servidores, para que fossem mais legíveis, levando em conta as constantes transferências de células. Além disso, torna-se mais fácil no futuro estender o modelo de balanceamento utilizado aqui para que mais de um servidor possa administrar a mesma região. Foram feitas diferentes versões do algoritmo de particionamento, que serão descritas a seguir:
+Quando se verifica que uma região está desbalanceada, é selecionado um grupo local de regiões, de maneira parecida com o que foi mostrado na seção \ref{lee:regselect}, porém com algumas mudanças (seção \ref{sec:alg:localselect}). Após essa seleção, será utilizado um algoritmo cujos parâmetros são apenas as cargas das células e suas interações (que são os pesos dos vértices e das arestas), pois já se dispõe desses dados. Por último, com as partições do grafo já balanceadas, será utilizado o algoritmo de Kernighan e Lin para refinar o particionamento, reduzindo o corte de aresta, porém mantendo o balanceamento.
 
-\subsubsection{\ggp}
+O esquema proposto se divide então em três fases:
+
+\begin{enumerate}
+	\item Seleção do grupo local de regiões;
+	\item Balanceamento dessas regiões, atribuindo a cada uma delas uma carga proporcional à capacidade do seu servidor;
+	\item Refinamento do particionamento, reduzindo o overhead.
+\end{enumerate}
+
+%[TODO: ver se ponho opção de ter ou nao disbal tolerance, tanto aqui quanto no transfer(bfa)/overhead(kl)]
+%[    : independente disso, eu posso por no grafico e na implementação "versao sem disbal tolerance X com"]
+Uma decisão tomada para esse esquema de balanceamento é que uma região $R$ é considerada sobrecarregada apenas quando o uso de seus recursos é maior que o uso total do sistema, considerando também uma certa tolerância, $tol$, para evitar constantes rebalanceamentos. Assim, o servidor de $R$ inicia o balanceamento sempre que, e somente quando, \mbox{$u(s(R)) > U_{total} \times tol$}. Dessa forma, mesmo que o sistema como um todo esteja sobrecarregado, será mantida uma qualidade de jogo semelhante nas diferentes regiões, dividindo o excedente de carga entre todos os servidores de maneira justa. O que pode ser feito quando \mbox{$U_{total} > 1$} é reduzir gradativamente a quantidade de informações enviadas a cada atualização de estado, deixando a aplicação extrapolar as lacunas com base em atualizações anteriores.
+%[TODO:por vantagens e desvantagens depois]
+
+Outro aspecto importante é que cada servidor sempre tem uma região associada. O que pode ocorrer é de uma região ser vazia, ou seja, ela não possui células e o seu servidor não participa da execução do jogo. Isso é útil quando a capacidade total do sistema servidor é muito maior que a carga total do jogo, ou seja, $P_{total} \gg W_{total}$. Neste caso, a introdução de mais servidores aumentaria o overhead de comunicação no sistema, sem melhorar sua qualidade -- salvo quando provesse tolerância a falhas.
+
+Os algoritmos foram desenvolvidos orientados a regiões, ao invés de servidores, para que fossem mais legíveis, levando em conta as constantes transferências de células. Além disso, torna-se mais fácil no futuro estender o modelo de balanceamento utilizado aqui para que mais de um servidor possa administrar a mesma região. Os algoritmos propostos são descritos a seguir, sendo que o da seção \ref{sec:alg:localselect} é para a fase 1; os das seções \ref{sec:alg:ggp} a \ref{sec:alg:bfa} são opções para a fase 2; e o algoritmo da seção \ref{sec:alg:kl} é o refinamento da fase 3.
+
+\subsubsection{Seleção local de regiões}
+\label{sec:alg:localselect}
+
+O algoritmo de seleção de regiões (Algoritmo \ref{alg:local}) tem como objetivo formar um conjunto de regiões tal que o uso médio de recursos dos servidores dessas regiões esteja abaixo de um certo limite. Partindo da região do servidor que disparou o balanceamento, as regiões vizinhas com menor uso de recursos vão sendo adicionadas. Quando o uso médio for menor que 1, ou menor que $U_{total}$ (linha \ref{alg:local:condition}), a seleção termina e a fase 2 começa, tendo como entrada o conjunto formado nesta fase. Essas duas condições se justificam porque existem duas possibilidades: $U_{total} \leq 1$ e $U_{total} > 1$.
+
+No caso de $U_{total} \leq 1$, existe capacidade suficiente no sistema para que todos os servidores tenham um uso menor que 100\%. Assim, são adicionadas regiões ao grupo até que todos os servidores envolvidos estejam usando menos recursos do que possuem. No entanto, quando $U_{total} > 1$, não há como todos os servidores estarem usando menos que 100\% de seus recursos ao mesmo tempo. Assim, considera-se suficiente que todos os servidores estejam igualmente sobrecarregados, e que algum tipo de adaptação seja feita, o que provavelmente será uma redução nas informações enviadas aos jogadores a cada atualização de estado.
+
+Se mesmo após serem selecionadas todas as regiões vizinhas, as vizinhas das vizinhas e assim por diante, o critério não for cumprido, regiões vazias -- pertencentes a servidores ociosos -- serão incluídas no grupo (linha \ref{alg:local:idleserver}), pois o overhead de interação entre regiões introduzido por elas se justifica pela necessidade de mais recursos.
+
+\begin{algorithm}
+\caption{Seleção local de regiões}
+\label{alg:local}
+\begin{algorithmic}[1]
+	 \STATE $\locgroup \leftarrow \{R\}$
+	 \STATE $\wlocal \leftarrow w_r(R)$
+	 \STATE $\caplocal \leftarrow p(s(R))$
+	 \STATE $\avguse \leftarrow \frac{\wlocal}{\caplocal}$
+	 \WHILE{$\avguse > max(1, U_{total})$} \label{alg:local:condition}
+	 		\IF{há alguma região não selecionada vizinha a um dos elementos do $\locgroup$}
+	 			 \STATE $R \leftarrow$ região vizinha a um dos elementos do $\locgroup$ que não foi selecionada, com o menor $u(s(R))$
+	 		\ELSIF{há alguma região vazia} \label{alg:local:idleserver}
+	 			 \STATE $R \leftarrow$ região vazia com o maior $p(s(R))$
+	 		\ELSE
+	 			 \STATE pare. não há mais regiões a selecionar.
+	 		\ENDIF
+	 		\STATE $\wlocal \leftarrow \wlocal + w_r(R)$
+	 		\STATE $\caplocal \leftarrow \caplocal + p(s(R))$
+	 		\STATE $\avguse \leftarrow \frac{\wlocal}{\caplocal}$
+	 		\STATE $\locgroup \leftarrow \locgroup \cup \{R\}$
+	 \ENDWHILE
+	 \STATE executar a fase 2 passando $\locgroup$ como parâmetro
+\end{algorithmic}
+\end{algorithm}
+
+%[TODO:]
+
+\subsubsection{\ggp} %repart
+\label{sec:alg:ggp}
 
 %O algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph{\ggpmeaning}) busca atribuir as cregiões mais sobrecarregadas aos servidores mais poderosos, embora seja uma heurística e não há garantias de que isso vá acontecer em 100\% dos casos. Para prover um particionamento balanceado, proporcional e com um corte de aresta já reduzido na primeira fase do balanceamento, os servidores são ordenados em ordem decrescente de capacidade. Cada um então toma uma porção do ambiente virtual, que julga-se ser a mais carregada naquele momento, até que seja atingido o limite daquele servidor, e então passa-se para o próximo da lista. Os detalhes do algoritmo estão em [TODO:refEvercomoficaessaref].
 
@@ -423,7 +513,6 @@ O algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph
 %\end{algorithm}
 
 \begin{algorithm}
-%\renewcommand{\ALG}{Algoritmo}
 \caption{\ggp}
 \label{alg:ggp}
 \begin{algorithmic}[1]
@@ -434,7 +523,7 @@ O algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph
 	 		\STATE $\freecap \leftarrow \freecap + p(s(R))$
 	 		\STATE libere temporariamente todas as células de $R$ \label{alg:ggp:freeallcells}
 	 \ENDFOR \label{alg:ggp:endgetlocalinfo}
-	 \STATE ordene a $\rlist$ em ordem decrescente de $p(s(R))$ de cada região $R$ \label{alg:ggp:sortregions}
+	 \STATE ordene a $\rlist$ em ordem decrescente de $p(s(R))$ \label{alg:ggp:sortregions}
 	 \FOR{cada região $R$ na $\rlist$}
 	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$ \label{alg:ggp:fraction}
 	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggp:whilefraction}
@@ -470,32 +559,32 @@ No primeiro passo do ciclo iniciado na linha \ref{alg:ggp:whilefraction}, quando
 
 %falar dos possiveis contras (regiao pode mudar completamente de lugar. pode ser q nao seja necessario + servidores, e isso so aumentar o overhead, assim como ignora a possibilidade de haver novos servidores, livres)
 
-\subsubsection{\ggpk}
+\subsubsection{\ggpk} %v3
 
-Um possível efeito indesejável do algorito \ggp\ é que, ao liberar todas as células e redistribuí-las, pode ocorrer de uma ou mais regiões mudar completamente de lugar, fazendo com que vários jogadores precisem desconectar-se de um servidor e reconectar-se a outro. Para tentar reduzir a probabilidade disso acontecer, é proposto o \textbf{\ggpk} (\emph{\ggpkmeaning}). Este novo algoritmo é semelhante ao \ggp, exceto que cada região mantém sua célula mais carregada, a partir da qual pode ser formado uma região semelhante à que se tinha anteriormente, evitando que vários jogadores precisem migrar de servidor (Algoritmo \ref{alg:ggpk}). No entanto, ao se manter uma das células de cada região, pode-se estar impedindo que um balanceamento melhor ocorra, ou introduzindo-se overhead, se a presença daquela célula impedir que a região seja completamente contígua.
+Um possível efeito indesejável do algorito \ggp\ é que, ao liberar todas as células e redistribuí-las, pode ocorrer de uma ou mais regiões mudar completamente de lugar, fazendo com que vários jogadores precisem desconectar-se de um servidor e reconectar-se a outro. Para tentar reduzir a probabilidade disso acontecer, é proposto o \textbf{\ggpk} (\emph{\ggpkmeaning}). Este novo algoritmo (exibido em Algoritmo \ref{alg:ggpk}) é semelhante ao \ggp, exceto que cada região mantém sua célula mais carregada (linhas \ref{alg:ggpk:saveheaviestcell} e \ref{ggpk:getbackheaviestcell}), a partir da qual pode ser formado uma região semelhante à que se tinha anteriormente, evitando que vários jogadores precisem migrar de servidor (Algoritmo \ref{alg:ggpk}). No entanto, ao se manter uma das células de cada região, pode-se estar impedindo que um balanceamento melhor ocorra, ou introduzindo-se overhead, se a presença daquela célula impedir que a região seja completamente contígua.
 
 \begin{algorithm}
 %\renewcommand{\ALG}{Algoritmo}
 \caption{\ggpk}
 \label{alg:ggpk}
 \begin{algorithmic}[1]
-	 \STATE $\wtodiv \leftarrow 0$ \label{alg:ggp:begingetlocalinfo}
+	 \STATE $\wtodiv \leftarrow 0$
 	 \STATE $\freecap \leftarrow 0$
 	 \FOR{cada região $R$ na $\rlist$}
 	 		\STATE $\wtodiv \leftarrow \wtodiv + w_r(R)$
 	 		\STATE $\freecap \leftarrow \freecap + p(s(R))$
-	 		\STATE $c \leftarrow $ célula mais pesada de $R$
-	 		\STATE libere temporariamente todas as células de $R$ \label{alg:ggp:freeallcells}
-	 		\STATE $R \leftarrow R \cup \{c\}$
-	 \ENDFOR \label{alg:ggp:endgetlocalinfo}
-	 \STATE ordene a $\rlist$ em ordem decrescente de $p(s(R))$ de cada região $R$ \label{alg:ggp:sortregions}
+	 		\STATE $c \leftarrow $ célula mais pesada de $R$ \label{alg:ggpk:saveheaviestcell}
+	 		\STATE libere temporariamente todas as células de $R$
+	 		\STATE $R \leftarrow R \cup \{c\}$ \label{alg:ggpk:getbackheaviestcell}
+	 \ENDFOR
+	 \STATE ordene a $\rlist$ em ordem decrescente de $p(s(R))$
 	 \FOR{cada região $R$ na $\rlist$}
-	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$ \label{alg:ggp:fraction}
-	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggp:whilefraction}
+	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$
+	 		\WHILE{$w_r(R) < \wshare$}
 	 		   \IF{existe alguma célula de $R$ vizinha a uma célula livre}
-	 		   		\STATE $R \leftarrow R \cup \{$célula vizinha livre ligada pela aresta mais pesada$\}$ \label{alg:ggp:freeneighbor}
+	 		   		\STATE $R \leftarrow R \cup \{$célula vizinha livre ligada pela aresta mais pesada$\}$
 	 		   \ELSIF{existe alguma célula livre}
-	 		   		\STATE $R \leftarrow R \cup \{$célula livre mais pesada$\}$ \label{alg:ggp:freeheavycell}
+	 		   		\STATE $R \leftarrow R \cup \{$célula livre mais pesada$\}$
 	 		   \ELSE
 	 		   		\STATE pare. não há mais células livres.
 	 		   \ENDIF
@@ -504,7 +593,79 @@ Um possível efeito indesejável do algorito \ggp\ é que, ao liberar todas as célu
 \end{algorithmic}
 \end{algorithm}
 
+\subsubsection{\ggpf} %v4
+%[TODO: por desvantagens em outra seção posteriores]
+Outra maneira de tentar minimizar a migração de jogadores entre servidores por causa do rebalanceamento é com o \textbf{\ggpf}, ou \emph{\ggpfmeaning} (Algoritmo \ref{alg:ggpf}). Neste algoritmo, cada região vai liberando suas células em ordem crescente de carga, até que a fração de carga da região seja menor ou igual à fração de capacidade do seu servidor. Dessa forma, mantêm-se as células mais carregadas no mesmo servidor e, portanto, a maior parte dos jogadores não precisará migrar. Após isso, as células que foram liberadas vão sendo distribuídas entre as regiões com menor uso dos recursos de seu servidor. A desvantagem deste algoritmo é, tal como no \ggpk, a possibilidade de fragmentar as regiões em muitas células isoladas por causa da redistribuição das células livres, aumentando o overhead.
 
+%  weight_to_divide = 0;
+%  free_capacity = 0;
+%  
+%  for each region R in regionlist {
+%    weight_to_divide += ...
+%    free_capacity += ...
+%    celllist <- lista de celulas de R em ordem decrescente de peso
+%    enquanto (R !empty e frac_r(R) > frac_p(s(R)) {
+%      c <- primeiro elemento de celllist;
+%      remova c de R
+%      remova c de celllist
+%    }
+%  }
+%  
+%  sort regionlist in increasing order of region`s server usage;
+%
+%  for each region R in the regionlist {
+%    weight_share = weight_to_divide * p(s(R)) / free_capacity; //proportional
+%    while(w_r(R) < weight_share) {
+%      if R is neighbor to a free cell {
+%        R = R U {highest edge free neighbor cell};
+%      }
+%      else if there is any free cell {
+%        R = R U {heaviest free cell}
+%      }
+%      else break;
+%    }
+%  }
+
+\begin{algorithm}
+%\renewcommand{\ALG}{Algoritmo}
+\caption{\ggpf}
+\label{alg:ggpf}
+\begin{algorithmic}[1]
+	 \STATE $\wtodiv \leftarrow 0$
+	 \STATE $\freecap \leftarrow 0$
+	 \FOR{cada região $R$ na $\rlist$}
+	 		\STATE $\wtodiv \leftarrow \wtodiv + w_r(R)$
+	 		\STATE $\freecap \leftarrow \freecap + p(s(R))$
+	 		\STATE $\clist \leftarrow $ lista de celulas de $R$ em ordem decrescente de carga
+	 		\WHILE{$frac_r(R) > frac_p(s(R))$}
+	 			 \STATE $C \leftarrow$ primeiro elemento de $\clist$
+	 			 \STATE remova $C$ de $R$
+	 			 \STATE remova $C$ de $\clist$
+	 		\ENDWHILE
+	 \ENDFOR
+	 \STATE ordene $\rlist$ em ordem crescente de $u(s(R))$
+	 \FOR{cada região $R$ na $\rlist$}
+	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$
+	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggp:whilefraction}
+	 		   \IF{existe alguma célula de $R$ vizinha a uma célula livre}
+	 		   		\STATE $R \leftarrow R \cup \{$célula vizinha livre ligada pela aresta mais pesada$\}$
+	 		   \ELSIF{existe alguma célula livre}
+	 		   		\STATE $R \leftarrow R \cup \{$célula livre mais pesada$\}$
+	 		   \ELSE
+	 		   		\STATE pare. não há mais células livres.
+	 		   \ENDIF
+	 		\ENDWHILE
+	 \ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{\bfa}
+\label{sec:alg:bfa}
+
+O \bfa\ (\emph{\bfameaning}) é proposto aqui como uma alternativa ao \ggp\ e suas variantes. 
+
+\subsubsection{\kl}
+\label{sec:alg:kl}
 
 %[TODO:poe o conceito de DESIRE de mudar de regiao aqui, na secao anterior (kl) ou na dos ->**algoritmos**?)
 
