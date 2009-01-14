@@ -15,7 +15,8 @@
 \newcommand{\ggpfmeaning}{proportional greedy region growing algorithm keeping usage fraction}
 \newcommand{\bfa}{BFBCT}
 \newcommand{\bfameaning}{best-fit based cell transference}
-\newcommand{\kl}{Kernighan-Lin}
+\newcommand{\kl}{Kernighan\-Lin}
+\newcommand{\klalg}{Kernighan-Lin}
 \newcommand{\wtodiv}{carga\_a\_dividir}
 \newcommand{\freecap}{capacidade\_livre}
 \newcommand{\rlist}{lista\_de\_regi\tilde{o}es}
@@ -565,7 +566,7 @@ No primeiro passo do ciclo iniciado na linha \ref{alg:ggp:whilefraction}, quando
 
 \subsubsection{\ggpk} %v3
 
-Um possível efeito indesejável do algorito \ggp\ é que, ao liberar todas as células e redistribuí-las, pode ocorrer de uma ou mais regiões mudar completamente de lugar, fazendo com que vários jogadores precisem desconectar-se de um servidor e reconectar-se a outro. Para tentar reduzir a probabilidade disso acontecer, é proposto o \textbf{\ggpk} (\emph{\ggpkmeaning}). Este novo algoritmo (exibido em Algoritmo \ref{alg:ggpk}) é semelhante ao \ggp, exceto que cada região mantém sua célula mais carregada (linhas \ref{alg:ggpk:saveheaviestcell} e \ref{ggpk:getbackheaviestcell}), a partir da qual pode ser formado uma região semelhante à que se tinha anteriormente, evitando que vários jogadores precisem migrar de servidor (Algoritmo \ref{alg:ggpk}). No entanto, ao se manter uma das células de cada região, pode-se estar impedindo que um balanceamento melhor ocorra, ou introduzindo-se overhead, se a presença daquela célula impedir que a região seja completamente contígua.
+Um possível efeito indesejável do algorito \ggp\ é que, ao liberar todas as células e redistribuí-las, pode ocorrer de uma ou mais regiões mudar completamente de lugar, fazendo com que vários jogadores precisem desconectar-se de um servidor e reconectar-se a outro. Para tentar reduzir a probabilidade disso acontecer, é proposto o \textbf{\ggpk} (\emph{\ggpkmeaning}). Este novo algoritmo (exibido em Algoritmo \ref{alg:ggpk}) é semelhante ao \ggp, exceto que cada região mantém sua célula mais carregada (linhas \ref{alg:ggpk:saveheaviestcell} e \ref{alg:ggpk:getbackheaviestcell}), a partir da qual pode ser formado uma região semelhante à que se tinha anteriormente, evitando que vários jogadores precisem migrar de servidor (Algoritmo \ref{alg:ggpk}). No entanto, ao se manter uma das células de cada região, pode-se estar impedindo que um balanceamento melhor ocorra, ou introduzindo-se overhead, se a presença daquela célula impedir que a região seja completamente contígua.
 
 \begin{algorithm}
 %\renewcommand{\ALG}{Algoritmo}
@@ -665,29 +666,8 @@ Outra maneira de tentar minimizar a migração de jogadores entre servidores por c
 \subsubsection{\bfa} %v2
 \label{sec:alg:bfa}
 
-O \bfa\ (\emph{\bfameaning}) é proposto aqui como uma alternativa ao \ggp\ e suas variantes. 
+O \textbf{\bfa} (\emph{\bfameaning}) é proposto aqui como uma alternativa ao \ggp\ e suas variantes. O objetivo do algoritmo é verificar qual é a carga excedente em cada região e transferí-la para regiões cuja capacidade livre é a mais próxima desse valor. Isso é feito transferindo células cuja carga se aproxime mais da capacidade livre da região que as receberá, observado duas restrições: primeiro, a carga total transferida não pode ser maior que a capacidade da região de destino e, segundo, não se deve transferir uma carga maior do que o necessário para eliminar a sobrecarga. A segunda restrição se justifica porque uma maior transferência de carga provavelmente implicaria em uma maior quantidade de jogadores migrando. A exceção a essa regra seria quando uma célula está mais carregada que a outra, não por ter mais avatares, mas porque estes estão mais próximos, conferindo crescimento quadrático ao tráfego entre os jogadores. O Algoritmo \ref{alg:bfa} descreve com detalhes o funcionamento do \bfa.
 
-%  for (each region R_i in reglist) {
-%    weight_to_lose <- w_r(R_i) - W_{total} \times frac_p(s(R_i)) \\explicar
-%    destination_regions <- reglist - {R_i}    
-%    sort destination_regions in decreasing server resources' usage order \\explicar
-%    for each region R_j in destination_regions {
-%      region_capacity <- frac_p(s(R_j)) \times W_{total} - w_r(R_j)
-%      weight_to_this_reg <- min(weight_to_lose, region_capacity) \\explicar que eh pra nao perder mais peso do que precisa, e pra nao sobrecarregar a outra regiao
-%      while (weight_to_this_reg > 0) {
-%        if (R_i has a cell with weight lower then weight_to_this_reg) {
-%          C <- cell from R_i with weight closest to, but not greater than, weight_to_this_reg   
-%          R_i <- R_i - {C}
-%          R_j <- R_j U {C}
-%          weight_to_this_reg <- weight_to_this_reg - w_c(C)
-%          weight_to_lose <- weight_to_lose - w_c(C)
-%        }
-%        else {
-%          no more possible transferences to this region. continue with next R_j.
-%        }
-%      }
-%    }  
-%  }
 
 \begin{algorithm}
 \caption{\bfa}
@@ -718,8 +698,75 @@ O \bfa\ (\emph{\bfameaning}) é proposto aqui como uma alternativa ao \ggp\ e sua
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{\kl}
+%  for (each region R_i in reglist) {
+%    weight_to_lose <- w_r(R_i) - W_{total} \times frac_p(s(R_i)) \\explicar
+%    destination_regions <- reglist - {R_i}    
+%    sort destination_regions in decreasing server resources' usage order \\explicar
+%    for each region R_j in destination_regions {
+%      region_capacity <- frac_p(s(R_j)) \times W_{total} - w_r(R_j)
+%      weight_to_this_reg <- min(weight_to_lose, region_capacity) \\explicar que eh pra nao perder mais peso do que precisa, e pra nao sobrecarregar a outra regiao
+%      while (weight_to_this_reg > 0) {
+%        if (R_i has a cell with weight lower then weight_to_this_reg) {
+%          C <- cell from R_i with weight closest to, but not greater than, weight_to_this_reg   
+%          R_i <- R_i - {C}
+%          R_j <- R_j U {C}
+%          weight_to_this_reg <- weight_to_this_reg - w_c(C)
+%          weight_to_lose <- weight_to_lose - w_c(C)
+%        }
+%        else {
+%          no more possible transferences to this region. continue with next R_j.
+%        }
+%      }
+%    }  
+%  }
+
+\subsubsection{Refinamento com o algoritmo \kl}
 \label{sec:alg:kl}
+
+Depois de balancear a carga entre os diferentes servidores na fase 2, cada servidor terá uma taxa de uso de seus recursos semelhante à dos outros. No entanto, pela fase dois não considerar a interação entre as células nem o overhead entre regiões, estas podem ter sido fragmentadas, implicando em muitos pares de células vizinhas que não fazem parte da mesma região. Isso aumenta a probabilidade de dois jogadores, cada um em uma dessas células, interagirem entre si, por estarem próximos da mesma fronteira, o que, como foi mostrado em seções anteriores, causa um desperdício de recursos do sistema servidor.
+
+%[TODO:por o mapeamento de grafo aqui? para de usar a terminologia de grafos... só por no começo um comentário de que célula = vértice etc...]
+
+Para minimizar esse problema, é proposto aqui o uso de uma variante do algoritmo de Kernighan e Lin \cite{kernighan1970ehp}. Como foi mostrado, pode-se mapear as células, regiões e cargas em vértices, partições e pesos, respectivamente, em um grafo. Feito isso, dado um par de partições, o \kl\ busca pares de vértices que, se trocados entre essas partições, diminuirão o corte de aresta.
+
+Sejam $R_A$ e $R_B$ duas regiões e $a$ uma célula tal que $a \in A$. A interação externa da célula $a$ é definida como $E(a) = \sum_{b \in R_B} Int_c(a,b)$ e a interação interna é definida como $I(a) = \sum_{a' \in R_A} Int_c(a,a')$. A célula $a$ está propensa a trocar de região se sua interação com $R_B$ for maior que sua interação com $R_A$, ou seja $D(a) = E(a) - I(a) > 0$. Supondo que exista uma célula $b \in R_B$, tal que $D(a) + D(b) - 2 \times Int_c(a,b) > 0$, a troca irá reduzir o overhead entre as regiões. A expressão $D(a) + D(b) - 2 \times Int_c(a,b)$ é chamada de $gain(a,b)$, pois representa o ganho (redução do corte de aresta) ao serem trocadas $a$ e $b$ de região.
+
+No caso de um ambiente virtual distribuída entre várias regiões, geralmente mais que duas, executa-se o \kl\ para cada par de partições do grafo. Além disso, após cada troca deverá ser mantido o balanceamento entre as regiões -- caso contrário, todas as células poderiam ir para a mesma região, eliminando completamente o overhead. O \kl\ é extensamente conhecido na área de sistemas distribuídos, então não serão dados detalhes aqui. Considera-se apenas que ele retorna um valor de verdadeiro se foi realizada alguma troca e false, se não foi. Ele é executado para todos os pares de regiões até que retorne um valor de falso, indicando que nenhuma troca irá prover ganho adicional.
+O Algoritmo \ref{alg:kl} mostra de que maneira o algoritmo de \kl\ é chamado.
+
+
+%swapped = true;
+%while swapped = true;
+%	swapped = false;
+%  for (each region R_i in reglist) {
+%    for (each region R_j in reglist) {      
+%      if kernighan-lin(R_i, R_j) = true
+				  %swapped = true;
+%    }
+%  }
+%}
+
+\begin{algorithm}
+\caption{\kl}
+\label{alg:kl}
+\begin{algorithmic}[1]
+
+	\STATE $swapped \leftarrow$ \textbf{true}
+	\WHILE{$swapped =$ \textbf{true}}
+		\STATE $swapped \leftarrow$ \textbf{false}
+		\FOR{cada região $R_i$ em $\rlist$}
+			\FOR{cada região $R_j$ em $\rlist$}
+				\IF{$\kl(R_i, R_j) =$ \textbf{true}}
+					\STATE $swapped \leftarrow$ \textbf{true}
+				\ENDIF
+			\ENDFOR
+		\ENDFOR
+	\ENDWHILE
+
+\end{algorithmic}
+\end{algorithm}
+
+%[TODO:explicar o algoritmo, que se repete cada vez que troca, e que elimina cada célula que já foi trocada de região]
 
 %[TODO:poe o conceito de DESIRE de mudar de regiao aqui, na secao anterior (kl) ou na dos ->**algoritmos**?)
 
