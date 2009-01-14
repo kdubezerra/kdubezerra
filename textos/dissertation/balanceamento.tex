@@ -26,6 +26,10 @@
 \newcommand{\caplocal}{capacidade\_local}
 %\newcommand{\wshare}{por\text{\emph{\c{c}}}\tilde{a}o\_da\_carga}
 \newcommand{\wshare}{parcela\_da\_carga}
+\newcommand{\wlose}{carga\_a\_perder}
+\newcommand{\destreg}{regi\tilde{o}es\_de\_destino}
+\newcommand{\regcap}{capacidade\_livre}
+\newcommand{\wtoreg}{carga\_para\_esta\_regi\tilde{a}o}
 
 [TODO:cap/lista de termos e definições]
 %por figuras para ilustrar o que se está falando
@@ -627,7 +631,6 @@ Outra maneira de tentar minimizar a migração de jogadores entre servidores por c
 %  }
 
 \begin{algorithm}
-%\renewcommand{\ALG}{Algoritmo}
 \caption{\ggpf}
 \label{alg:ggpf}
 \begin{algorithmic}[1]
@@ -659,10 +662,61 @@ Outra maneira de tentar minimizar a migração de jogadores entre servidores por c
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{\bfa}
+\subsubsection{\bfa} %v2
 \label{sec:alg:bfa}
 
 O \bfa\ (\emph{\bfameaning}) é proposto aqui como uma alternativa ao \ggp\ e suas variantes. 
+
+%  for (each region R_i in reglist) {
+%    weight_to_lose <- w_r(R_i) - W_{total} \times frac_p(s(R_i)) \\explicar
+%    destination_regions <- reglist - {R_i}    
+%    sort destination_regions in decreasing server resources' usage order \\explicar
+%    for each region R_j in destination_regions {
+%      region_capacity <- frac_p(s(R_j)) \times W_{total} - w_r(R_j)
+%      weight_to_this_reg <- min(weight_to_lose, region_capacity) \\explicar que eh pra nao perder mais peso do que precisa, e pra nao sobrecarregar a outra regiao
+%      while (weight_to_this_reg > 0) {
+%        if (R_i has a cell with weight lower then weight_to_this_reg) {
+%          C <- cell from R_i with weight closest to, but not greater than, weight_to_this_reg   
+%          R_i <- R_i - {C}
+%          R_j <- R_j U {C}
+%          weight_to_this_reg <- weight_to_this_reg - w_c(C)
+%          weight_to_lose <- weight_to_lose - w_c(C)
+%        }
+%        else {
+%          no more possible transferences to this region. continue with next R_j.
+%        }
+%      }
+%    }  
+%  }
+
+\begin{algorithm}
+\caption{\bfa}
+\label{alg:bfa}
+\begin{algorithmic}[1]
+
+	 \FOR{cada região $R_i$ em $\rlist$}
+			\STATE $\wlose \leftarrow w_r(R_i) - W_{total} \times frac_p(s(R_i))$ \label{alg:bfa:wlose}
+			\STATE $\destreg \leftarrow \rlist - \{R_i\}$
+			\STATE ordene $\destreg$ em ordem decrescente de $u(s(R))$ \label{alg:bfa:sort}
+			\FOR{cada região $R_j$ em $\destreg$}
+				 \STATE $\regcap \leftarrow frac_p(s(R_j)) \times W_{total} - w_r(R_j)$ \label{alg:bfa:freecap}
+				 \STATE $\wtoreg \leftarrow min(\wlose, \regcap)$ \label{alg:bfa:min}
+				 \WHILE{$\wtoreg > 0$}
+				 		\IF{$R_i$ tem uma célula com carga menor ou igual a $\wtoreg$}
+				 			 \STATE $C \leftarrow$ célula de $R_i$ com o peso mais próximo de $\wtoreg$, porém não maior \label{alg:bfa:bestfit}
+				 			 \STATE $R_i \leftarrow R_i - \{C\}$
+				 			 \STATE $R_j \leftarrow R_j \cup \{C\}$
+				 			 \STATE $\wtoreg \leftarrow \wtoreg - w_c(C)$
+				 			 \STATE $\wlose \leftarrow \wlose - w_c(C)$
+				 		\ELSE
+				 			 \STATE continue com o próximo $R_j$. \label{alg:bfa:continue}
+				 		\ENDIF
+				 \ENDWHILE
+			\ENDFOR			
+	 \ENDFOR
+
+\end{algorithmic}
+\end{algorithm}
 
 \subsubsection{\kl}
 \label{sec:alg:kl}
