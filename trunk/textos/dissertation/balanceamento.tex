@@ -799,7 +799,34 @@ O Algoritmo \ref{alg:kl} mostra de que maneira o algoritmo de \kl\ é chamado.
 %definir cada caso da simulação e o porquê dele, em que influenciam os parametros e o que se quer tirar de conclusão
 %mostrar quais parametros foram fixados em cada caso, o seu valor e o porquê destes para destes parâmetros terem sido fixados
 %resultados: analisar, falar em ganhos em %, e buscar razões para estes ganhos/perdas.
+%gráficos
+%   I: migraçãoXinstante, linhas, cada linha é um tipo de balanceamento
+%	 II: migraçãoXtipo de balanceamento, barras empilhadas: barra de baixo: walk migrations; barra de cima: still migrations
+% III: desvio de u(S)Xinstante
+%  IV: (wtotal+overhead)X(servidor(divido em tipos de bal. carga). barras p/ cada servidor: p(s); TB1 (carga + overhead); TB2 (c+oh); ... TBn (c+oh)
+%   V: overheadXinstante(linhas, cada uma um tipo de bal.)
 
+
+Para realizar a simulação do balanceamento de carga, foi simulado um ambiente virtual com diversos avatares que se movem segundo o modelo de \emph{random waypoint} [TODO:ref] com \emph{random wait}. O ambiente consiste em um espaço bidimensional, divido em 225 células, formando uma matriz de ordem 15. [TODO:terminar de descrever, dando no. de servidores, de hotspots etc.]
+
+Foi utilizado o simulador de rede ns-2 \cite{mccanne:nsn}. Este simulador permite criar código específico da aplicação que será simulada. No caso, foi simulado um servidor, que deveria enviar atualizações de estado para um cliente, responsável por um dos avatares na região. Baseado na localização dos outros avatares e no algoritmo de gerenciamento de interesse escolhido, o servidor decidia quais outros avatares tinham um estado relevante para o cliente em questão. Com isso, obtém-se a ocupação de largura de banda de envio necessária para um único cliente. Não se julgou necessário simular simultaneamente todos os clientes conectados àquele servidor, pois todos os avatares têm o mesmo perfil. Para encontrar a carga total no servidor, basta multiplicar a banda de envio necessária para um cliente pelo número de clientes presentes na região.
+
+Outra questão é que o consumo de largura de banda de envio do servidor é muito maior que o de recepção - se ele recebe $n$ ações, cada uma oriunda de um dos $n$ clientes, é necessário, no pior caso, enviar $O(n^2)$ atualizações de estado, pois cada jogador precisaria do estado de todos os outros. Assim sendo, foi necessário apenas medir a banda de transmissão utilizada.
+
+%falar do svoboda e do kim??...
+Em trabalhos como \cite{yu2007nas}, \cite{kim2005tcm} e \cite{svoboda2007taa}, é analisado o tráfego de rede gerado por jogos em larga escala. Baseado nestes trabalhos, e adotando uma postura conservadora, foram decididos os seguinte parâmetros para serem utilizados na simulação:
+
+\begin{itemize}
+ \item Intervalo normal de atualização: 250 ms;
+ \item Tamanho do pacote de atualização de estado de uma única entidade: 100 bytes;
+ \item Duração de cada sessão de jogo simulada: 20 min;
+ \item Área do ambiente virtual: 750 x 750 unidades de área;
+ \item Alcance da visão: 120 unidades de comprimento;
+ \item Distância crítica: 40 unidades de comprimento;
+ \item Ângulo de visão: 180°.
+\end{itemize}
+
+Foram executadas diversas simulações, com o objetivo de comparar os algoritmos de gerenciamento de interesse apresentados. O número de avatares presentes no ambiente foi uma das variáves analisadas, para verificar a escalabilidade. Os algoritmos comparados foram os baseados em círculo, círculo com atenuação, ângulo de visão e o algoritmo proposto, \malg. Para demonstrar o quanto cada um destes reduz o tráfego, foram feitas simulações também em que não é empregado nenhum tipo de gerenciamento de interesse, e o servidor envia para o cliente atualizações de estado de todas as outras entidades do jogo.
 
 
 

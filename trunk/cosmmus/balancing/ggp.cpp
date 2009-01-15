@@ -15,6 +15,7 @@
 #define PLAYER_IMAGE "player.bmp"
 #define PLAYER_ZERO_IMAGE "player0.bmp"
 #define PLAYER_SEEN_IMAGE "seen.bmp"
+#define EXECUTION_TIME 120000
 
 #include "Avatar.h"
 #include "Cell.h"
@@ -43,6 +44,11 @@ SDL_Surface* message = NULL;
 TTF_Font *font = NULL;
 SDL_Color textColor = { 255, 255, 255 };
 Uint32 lastbal = 0;
+
+inflong sum_weight[NUM_SERVERS];
+inflong sum_oh[NUM_SERVERS];
+long total_mig_walk = 0;
+long total_mig_still = 0;
 
 void checkInput();
 void showHelp();
@@ -97,7 +103,7 @@ int main (int argc, char* argv[]) {
   bli.G = 155;
   bli.B = 100;
 
-  while (1) { // CICLO PRINCIPAL
+  while (time < EXECUTION_TIME) { // CICLO PRINCIPAL
     apply_surface(0,0,bg,screen);
 
     step_delay = SDL_GetTicks() - time;
@@ -125,17 +131,46 @@ int main (int argc, char* argv[]) {
     if (time > lastbal + REBAL_INTERVAL) {
       Region::checkAllRegionsNeighbors();
       Region::updateAllEdgesAllRegions();
-      for (int i = 0 ; i < NUM_SERVERS && server[i]->getRegion() ; i++)
-        cout << "Server " << i << " :: LOAD = " << server[i]->getRegion()->getAbsoluteLoad() << " (W = " << server[i]->getRegion()->getRegionWeight() 
-        << ", OH = " << server[i]->getRegion()->getNeighborsOverhead() << ")" << endl;
-      cout << "Still migrations = " << Avatar::getMigrationStill() << endl;
-      cout << "Walk migrations = " << Avatar::getMigrationWalk() << endl;      
-      for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {      
+
+      cout << time << " " << Avatar::getMigrationWalk(false) << " " << Avatar::getMigrationStill(false) << " " << Server::getUsageDeviation() << " " << NUM_SERVERS << " ";
+      total_mig_walk += Avatar::getMigrationWalk();
+      total_mig_still += Avatar::getMigrationStill();
+      for (int i = 0 ; i < NUM_SERVERS ; i++) {
+        cout << server[i]->getWeight() << " ";
+        sum_weight[i].add(server[i]->getWeight());
+      }
+      for (int i = 0 ; i < NUM_SERVERS ; i++) {
+        cout << server[i]->getOverhead() << " ";
+        sum_oh[i].add(server[i]->getOverhead());
+      }
+      cout << endl;
+      for (int i = 0 ; i < NUM_SERVERS && server[i]->getRegion() ; i++){
+//        cout << "Server " << i << " :: LOAD = " << server[i]->getRegion()->getAbsoluteLoad() << " (W = " << server[i]->getRegion()->getRegionWeight()
+//        << ", OH = " << server[i]->getRegion()->getNeighborsOverhead() << ")" << endl;
+      }
+//      cout << "Still migrations = " << Avatar::getMigrationStill() << endl;
+//      cout << "Walk migrations = " << Avatar::getMigrationWalk() << endl;
+
+
+      for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {
         (*it)->checkBalancing();
       }
       lastbal = time;//SDL_GetTicks();
     }
   }
+  cout << total_mig_walk << " " << total_mig_still << " " << NUM_SERVERS << " ";
+  for (int i = 0 ; i < NUM_SERVERS ; i++) {
+    cout << server[i]->getServerPower() << " ";
+  }
+  for (int i = 0 ; i < NUM_SERVERS ; i++) {
+    cout << sum_weight[i].getAverage() << " ";
+  }
+  for (int i = 0 ; i < NUM_SERVERS ; i++) {
+    cout << sum_oh[i].getAverage() << " ";
+  }
+  cout << endl;
+
+  return 0;
 }
 
 void checkInput() {

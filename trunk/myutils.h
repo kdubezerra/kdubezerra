@@ -13,6 +13,7 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <list>
 #include <map>
 #include <signal.h>
 #include <math.h>
@@ -33,6 +34,8 @@
 #define MAX(A,B) \
           A > B ? A : B
 
+using namespace std;
+
 class coord {
   public:
     int X,Y;
@@ -40,6 +43,51 @@ class coord {
     bool operator==(const coord &other) const;      
     bool operator!=(const coord &other) const;    
     coord& operator=(const coord& c);
+};
+
+class inflong {
+public:
+  
+  inflong():numcount(0){}
+  ~inflong() {}
+
+  double getSum() {
+    list<double> summing;
+    list<double> summed;
+    for (list<long>::iterator it = numbers.begin() ; it != numbers.end() ; it++) {
+      summing.push_back((double)(*it));
+    }    
+    while (summing.size() > 1) {
+      summed.clear();
+      for (list<double>::iterator it = summing.begin() ; it != summing.end() ; it++) {
+        double local_sum = *it;
+        if (++it != summing.end())
+          local_sum += *it;
+        summed.push_back(local_sum);
+      }
+      summing = summed;
+    }
+    return summing.front();
+  }
+
+  double getAverage() {
+    return getSum() / (double)numcount;
+  }
+
+  void add(long num) {
+    numcount++;
+    if (numbers.empty() || LONG_MAX - numbers.front() <= num)
+      numbers.push_front(num);
+    else {
+      long newnum = numbers.front() + num;
+      numbers.pop_front();
+      numbers.push_front(newnum);
+    }
+  }
+
+private:
+  list<long> numbers;
+  long numcount;
 };
 
 typedef struct {
