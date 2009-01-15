@@ -1,5 +1,6 @@
 #include "Server.h"
 #include "Region.h"
+#include "Cell.h"
 
 //===========================================static members
 
@@ -84,4 +85,36 @@ bool Server::isDisbalanced() {
 
 double Server::getPowerFraction() {
   return (double)getServerPower() / (double)getMultiserverPower();
+}
+
+long Server::getWeight() {
+  if (this->getRegion()) {
+    return this->getRegion()->getRegionWeight();
+  }
+  else {
+    return 0;
+  }
+}
+
+double Server::getUsage() {
+  return (double) this->getWeight() / (double) this->getServerPower();
+}
+
+double Server::getUsageDeviation() {
+  double global_usage = double(Cell::getWorldWeight()) / (double)Server::getMultiserverPower();
+  double sum_of_square_diffs = 0.0f;
+  for (list<Server*>::iterator it = serverList.begin() ; it != serverList.end() ; it++) {
+    sum_of_square_diffs += pow((*it)->getUsage() - global_usage, 2);
+  }
+  double mean_sqr_diff = sum_of_square_diffs / (double) serverList.size();
+  return sqrt(mean_sqr_diff);
+}
+
+long Server::getOverhead() {
+  if (this->getRegion()) {
+    return this->getRegion()->getNeighborsOverhead();
+  }
+  else {
+    return 0;
+  }
 }

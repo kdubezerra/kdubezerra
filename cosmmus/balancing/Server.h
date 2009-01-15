@@ -37,6 +37,11 @@ class Server {
     long getLoad();
     bool isDisbalanced();
     double getPowerFraction();
+    
+    long getWeight();
+    double getUsage();
+    static double getUsageDeviation();
+    long getOverhead();
 
   protected:
 
