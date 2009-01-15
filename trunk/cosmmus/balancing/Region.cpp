@@ -458,7 +458,7 @@ void Region::swapCellsRegions(Cell* c1, Cell* c2, bool fast) {
   r2->subscribe(c1);
   if (fast) return;
   Region::checkAllRegionsNeighbors();
-  cout << "check neigh list OK" << endl;
+//  cout << "check neigh list OK" << endl;
   r1->updateAllEdges();
   r2->updateAllEdges();
 }
@@ -586,9 +586,9 @@ bool Region::refineKL_pairwise(Region* r1, Region* r2) {
       swapping = false;
       max_gain = 0;
       for (it_c1 = cell_list_1.begin() ; it_c1 != cell_list_1.end() ; it_c1++) {
-        cout << "C1_desire = " << (*it_c1)->getDesireToSwap(r2) << endl;
+//        cout << "C1_desire = " << (*it_c1)->getDesireToSwap(r2) << endl;
         for (it_c2 = cell_list_2.begin() ; it_c2 != cell_list_2.end() ; it_c2++) {
-          cout << "C2_desire = " << (*it_c2)->getDesireToSwap(r1) << endl;
+//          cout << "C2_desire = " << (*it_c2)->getDesireToSwap(r1) << endl;
           new_gain = Cell::getSwapGain(*it_c1, *it_c2);
           if (new_gain > max_gain  && getBalancingImprovement(*it_c1, *it_c2) >= MIN_BAL_IMPROVEMENT) { //TODO: verificar esse método de pegar o balchange
             max_gain = new_gain;
@@ -862,8 +862,14 @@ void Region::startLocalBalancing() {
     average_overload = (double)total_weight / (double)total_capacity;
     local_group.push_back(next_region);    
   }
-  Region::improveBalancing_repart(local_group);
+  Region::improveBalancing_v2(local_group); //best-fit allocation
+  //Region::improveBalancing_v4(local_group); //progrega-kf
+  //Region::improveBalancing_v3(local_group); //progrega-kh
+  //Region::improveBalancing_repart(local_group); //progrega
   //Region::improveBalancing_kwise(local_group);
+  
+  //K-L:
+  refineKL_kwise(local_group);
 }
 
 Region* Region::getLightestNeighbor(list<Region*> region_list) {

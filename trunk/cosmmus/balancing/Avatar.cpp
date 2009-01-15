@@ -55,13 +55,21 @@ void Avatar::init() {
   B = rand() % 255;      
   if (m_numofhotspots) return;  
   m_numofhotspots = 3;// + rand() % 7;//TODO mudar para ser aleatorio novamente
-  cout << "Number of hot spots: " << m_numofhotspots << endl;
-  for (int index = 0 ; index < m_numofhotspots ; index++) {
+//  cout << "Number of hot spots: " << m_numofhotspots << endl;
+/*  for (int index = 0 ; index < m_numofhotspots ; index++) {
     coord newspot;
     newspot.X = rand() % WW;
     newspot.Y = rand() % WW;
     mv_hotspotlist.push_back(newspot);        
-  }      
+  }     */ 
+// X[0] = 749 ; Y[0] = 266
+// X[1] = 308 ; Y[1] = 19
+// X[2] = 440 ; Y[2] = 401
+  coord newspot;
+  newspot.X = 740; newspot.Y = 270; mv_hotspotlist.push_back(newspot);
+  newspot.X = 310; newspot.Y = 20; mv_hotspotlist.push_back(newspot);
+  newspot.X = 440; newspot.Y = 400; mv_hotspotlist.push_back(newspot);
+
   for (int index = 0 ; index < m_numofhotspots ; index++) {
     cout << "X[" << index << "] = " << mv_hotspotlist[index].X << " ; Y[" << index << "] = " << mv_hotspotlist[index].Y << endl;
   }  
