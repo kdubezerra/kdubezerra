@@ -6,6 +6,7 @@
 #define VIEW_DISTANCE 120
 #define THRESHOLD_DISTANCE 40
 
+using namespace std;
 
 class Avatar {
 
