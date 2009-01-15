@@ -5,7 +5,7 @@
 #endif
 
 #define CORE_COUNT 4
-#define NUM_SERVERS 4
+#define NUM_SERVERS 8
 
 #define REBAL_INTERVAL 1000 // INTERVALO ENTRE REBALANCEAMENTOS, EM MILISEGUNDOS
 
@@ -15,7 +15,7 @@
 #define PLAYER_IMAGE "player.bmp"
 #define PLAYER_ZERO_IMAGE "player0.bmp"
 #define PLAYER_SEEN_IMAGE "seen.bmp"
-#define EXECUTION_TIME 120000
+#define EXECUTION_TIME 1200000u
 
 #include "Avatar.h"
 #include "Cell.h"
@@ -63,15 +63,15 @@ int main (int argc, char* argv[]) {
   setSdl(&screen);
   SDL_EnableKeyRepeat(400, 10);
   
+  Server::releaseAllRegions();
+  Region::initRegions(NUM_SERVERS);
+  list<Region*>::iterator it = Region::getRegionList().begin();
   for (int i = 0 ; i < NUM_SERVERS ; i++) {
-    server[i] = new Server (200*(rand() % 2500));
-    cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
+    server[i] = new Server ((i+1)*20000);
+    server[i]->assignRegion(*(it++));
+    //cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
   }
 
-  server[0]->setServerPower(35000);
-  server[1]->setServerPower(235000);
-  server[2]->setServerPower(235000);
-  server[3]->setServerPower(235000);
 
   SDL_Surface* bg = NULL;
   bg = load_image (BG_IMAGE);
@@ -102,6 +102,10 @@ int main (int argc, char* argv[]) {
   bli.R = 255;
   bli.G = 155;
   bli.B = 100;
+  
+  Cell::updateAllEdgesAndVertexWeights();
+  Region::partitionWorld();
+  Region::checkAllRegionsNeighbors();
 
   while (time < EXECUTION_TIME) { // CICLO PRINCIPAL
     apply_surface(0,0,bg,screen);
