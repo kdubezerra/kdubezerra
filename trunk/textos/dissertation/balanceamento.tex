@@ -159,7 +159,7 @@ Foi definida a carga de trabalho de uma célula como o número de avatares present
 %1.3.1
 %\subsubsection{Seleção adaptativa de servidor}
 
-Um servidor dispara o balanceamento quando a carga atribuída a ele excede sua capacidade. Este servidor seleciona um conjunto de outros servidores para se envolverem com a distribuição. Primeiro, o servidor que iniciou escolhe o menos carregado dentre seus vizinhos e envia um pedido de que ele participe do balanceamento de carga. O vizinho escolhido rejeita o pedido se ele já está envolvido em outro grupo de balanceamento; caso contrário, ele responde ao servidor iniciador com a informação de carga de seus próprios vizinhos. Se o servidor vizinho que está partcipando não for capaz de absorver a carga de trabalho excedente do servidor iniciador, a seleção é executada novamente entre os servidores vizinhos de não apenas o servidor sobrecarregado, como também os vizinhos do vizinho escolhido na primeira fase. A seleção continua até que a carga de trabalho excedente do primeiro servidor possa ser absorvida -- isto é, a carga de trabalho de todos os servidores selecionados torna-se menor que um limite pré-definido. Os autores definiram este limite como sendo 90\% da capacidade total do conjunto de servidores. O critério utilizado foi o de evitar o imediato reinício da balanceamento de carga.
+Um servidor dispara o balanceamento quando a carga atribuída a ele excede sua capacidade. Este servidor seleciona um conjunto de outros servidores para se envolverem com a distribuição. Primeiro, o servidor que iniciou escolhe o menos carregado dentre seus vizinhos e envia um pedido de que ele participe do balanceamento de carga. O vizinho escolhido rejeita o pedido se ele já está envolvido em outro grupo de balanceamento; caso contrário, ele responde ao servidor iniciador com a informação de carga de seus próprios vizinhos. Se o servidor vizinho que está participando não for capaz de absorver a carga de trabalho excedente do servidor iniciador, a seleção é executada novamente entre os servidores vizinhos de não apenas o servidor sobrecarregado, como também os vizinhos do vizinho escolhido na primeira fase. A seleção continua até que a carga de trabalho excedente do primeiro servidor possa ser absorvida -- isto é, a carga de trabalho de todos os servidores selecionados torna-se menor que um limite pré-definido. Os autores definiram este limite como sendo 90\% da capacidade total do conjunto de servidores. O critério utilizado foi o de evitar o imediato reinício da balanceamento de carga.
 
 Sejam SELECIONADOS e CANDIDATOS conjuntos de servidores, ambos inicialmente vazios e seja $CP$ a capacidade de cada servidor. O procedimento para determinar quem serão os servidores envolvidos é o seguinte:
 
@@ -723,28 +723,15 @@ O \textbf{\bfa} (\emph{\bfameaning}) é proposto aqui como uma alternativa ao \gg
 \subsubsection{Refinamento com o algoritmo \kl}
 \label{sec:alg:kl}
 
-Depois de balancear a carga entre os diferentes servidores na fase 2, cada servidor terá uma taxa de uso de seus recursos semelhante à dos outros. No entanto, pela fase dois não considerar a interação entre as células nem o overhead entre regiões, estas podem ter sido fragmentadas, implicando em muitos pares de células vizinhas que não fazem parte da mesma região. Isso aumenta a probabilidade de dois jogadores, cada um em uma dessas células, interagirem entre si, por estarem próximos da mesma fronteira, o que, como foi mostrado em seções anteriores, causa um desperdício de recursos do sistema servidor.
+Depois de balancear a carga entre os diferentes servidores na fase 2, cada servidor terá uma taxa de uso de seus recursos semelhante à dos outros. No entanto, pela fase 2 não considerar a interação entre as células nem o overhead entre regiões, estas podem ter sido fragmentadas, implicando em muitos pares de células vizinhas que não fazem parte da mesma região. Isso aumenta a probabilidade de dois jogadores, cada um em uma dessas células, interagirem entre si, por estarem próximos da mesma fronteira, o que, como foi mostrado em seções anteriores, causa um desperdício de recursos do sistema servidor.
 
-%[TODO:por o mapeamento de grafo aqui? para de usar a terminologia de grafos... só por no começo um comentário de que célula = vértice etc...]
+Para minimizar esse problema, é proposto aqui o uso de uma variante do algoritmo de Kernighan e Lin \cite{kernighan1970ehp}. Embora o algoritmo receba como entrada um grafo, os vértices, arestas, pesos e partições podem ser interpretados, respectivamente, como células, interações, cargas e regiões. Dado um par de regiões, o \kl\ busca pares de células que, se trocados entre essas regiões, diminuirão o overhead.
 
-Para minimizar esse problema, é proposto aqui o uso de uma variante do algoritmo de Kernighan e Lin \cite{kernighan1970ehp}. Como foi mostrado, pode-se mapear as células, regiões e cargas em vértices, partições e pesos, respectivamente, em um grafo. Feito isso, dado um par de partições, o \kl\ busca pares de vértices que, se trocados entre essas partições, diminuirão o corte de aresta.
+Sejam $R_A$ e $R_B$ duas regiões e $a$ uma célula tal que $a \in A$. A interação externa da célula $a$ é definida como $E(a) = \sum_{b \in R_B} Int_c(a,b)$ e a interação interna é definida como $I(a) = \sum_{a' \in R_A} Int_c(a,a')$. A célula $a$ está propensa a trocar de região se sua interação com $R_B$ for maior que sua interação com $R_A$, ou seja $D(a) = E(a) - I(a) > 0$. Supondo que exista uma célula $b \in R_B$, tal que $D(a) + D(b) - 2 \times Int_c(a,b) > 0$, a troca irá reduzir o overhead entre as regiões. A expressão $D(a) + D(b) - 2 \times Int_c(a,b)$ é chamada de $gain(a,b)$, pois representa o ganho (redução do overhead) ao serem trocadas $a$ e $b$ de região.
 
-Sejam $R_A$ e $R_B$ duas regiões e $a$ uma célula tal que $a \in A$. A interação externa da célula $a$ é definida como $E(a) = \sum_{b \in R_B} Int_c(a,b)$ e a interação interna é definida como $I(a) = \sum_{a' \in R_A} Int_c(a,a')$. A célula $a$ está propensa a trocar de região se sua interação com $R_B$ for maior que sua interação com $R_A$, ou seja $D(a) = E(a) - I(a) > 0$. Supondo que exista uma célula $b \in R_B$, tal que $D(a) + D(b) - 2 \times Int_c(a,b) > 0$, a troca irá reduzir o overhead entre as regiões. A expressão $D(a) + D(b) - 2 \times Int_c(a,b)$ é chamada de $gain(a,b)$, pois representa o ganho (redução do corte de aresta) ao serem trocadas $a$ e $b$ de região.
-
-No caso de um ambiente virtual distribuída entre várias regiões, geralmente mais que duas, executa-se o \kl\ para cada par de partições do grafo. Além disso, após cada troca deverá ser mantido o balanceamento entre as regiões -- caso contrário, todas as células poderiam ir para a mesma região, eliminando completamente o overhead. O \kl\ é extensamente conhecido na área de sistemas distribuídos, então não serão dados detalhes aqui. Considera-se apenas que ele retorna um valor de verdadeiro se foi realizada alguma troca e false, se não foi. Ele é executado para todos os pares de regiões até que retorne um valor de falso, indicando que nenhuma troca irá prover ganho adicional.
+No caso de um ambiente virtual distribuída entre várias regiões, geralmente mais que duas, executa-se o \kl\ para cada par de regiões. Além disso, após cada troca deverá ser mantido o balanceamento -- caso contrário, todas as células poderiam ir para a mesma região, eliminando completamente o overhead. O \kl\ é extensamente conhecido na área de sistemas distribuídos, então não serão dados detalhes aqui. Considera-se apenas que ele retorna um valor de verdadeiro se foi realizada alguma troca e falso, se não foi. Ele é executado para todos os pares de regiões até que retorne um valor de falso, indicando que nenhuma troca irá prover ganho adicional.
 O Algoritmo \ref{alg:kl} mostra de que maneira o algoritmo de \kl\ é chamado.
 
-
-%swapped = true;
-%while swapped = true;
-%	swapped = false;
-%  for (each region R_i in reglist) {
-%    for (each region R_j in reglist) {      
-%      if kernighan-lin(R_i, R_j) = true
-				  %swapped = true;
-%    }
-%  }
-%}
 
 \begin{algorithm}
 \caption{\kl}
@@ -857,7 +844,14 @@ Outro detalhe a ser considerado é o da uniformidade de distribuição: todos os se
 
 Mesmo com os servidores apresentando a maior variação da taxa de uso de seus recursos, o \ggp\ foi o que reduziu ao máximo o uso real de recursos ($W_{total} + Overhead$) de todos os algoritmos propostos. Já a sua variante \ggpf\ reduz ao máximo as migrações dos usuários, em troca de um aumento do overhead em 48\%, em média, se comparado à versão original do algoritmo. Qual dos dois seria melhor no geral dependeria muito do jogo sendo utilizado. Em um jogo de tempo-real, usuários migrando constantemente de servidor pode introduzir atraso e prejudicar a interação entre os jogadores, sendo o \ggpf\ o mais indicado, tendo apresentado um número total de migrações 22\% menor que o \ggp. Por outro lado, pode não ser possível o uso de algum tipo de ``degradação graciosa'' para reduzir dinamicamente a qualidade do jogo, precisando economizar ao máximo seus recursos. Neste caso, o \ggp\ seria a melhor opção.
 
-\section{Trabalhos futuros [TODO:move/rename]}
+\section{Conclusões e trabalhos futuros}
+
+Foi proposto aqui um esquema de balanceamento de carga para servidores distribuídos de MMOGs, levando em conta o uso de banda de envio dos nodos servidores. Foram considerados aspectos importantes, como o crescimento quadrático do tráfego quando os avatares estão próximos, e o overhead inerente à distribuição quando jogadores conectados a servidores diferentes têm de interagir. Ao esquema, que é dividido em três fases, foram propostos diferentes algoritmos para a fase 2 (balanceamento em si), sendo que o \ggp\ foi o que apresentou o menor overhead de todos, e o \ggpf\ foi o que apresentou menor número de migrações de usuários.
+
+Como trabalhos futuros, os algoritmos apresentados podem ser ainda mais [further] refinados, se a carga considerada para o balanceamento for uma média da carga em um período -- nos últimos minutos, por exemplo -- ao invés do valor instantâneo. Dessa forma, seriam evitados rebalanceamentos desnecessários que seriam causados por uma carga muito oscilante.
+
+Outro possível trabalho futuro é criar um esquema de balanceamento de carga onde não haverá mais apenas um nodo servidor, mas um grupo de nodos servidores em cada região. Neste caso, podem ser investigadas maneiras de balancear a carga do sistema, considerando essa distribuição em dois níveis. Uma idéia seria a de usar apenas réplicas, com o intuito de prover tolerância a falhas na região. A carga dentro de uma região seria redistribuída apenas quando a mesma estivesse sobrecarregada e não fosse viável reparticioná-la.
+
 %tirar alguma coisa do plano de doutorado!!!
 %o que fazer quando, mesmo pondo apenas uma célula para o servidor mais poderoso, este fica sobrecarregado -> graceful degradation (trabalhos futuros?)
 %comentar a respeito do uso de uma média (ou dizer que usei, tanto faz) de load, ao invés de usar o load instantâneo para o bal. de carga.
