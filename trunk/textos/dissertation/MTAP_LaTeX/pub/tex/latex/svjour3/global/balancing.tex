@@ -125,7 +125,7 @@ grestore
 \begin{abstract}
 MMOGs are applications which require much network bandwidth to function properly. In a distributed MMOG server architecture, with heterogeneous resources, the server nodes may become easily overloaded by the high demand from the players for state updates. In this work, we propose a balancing scheme which has three main goals: cope with the most important load on the servers, which is the network traffic, allocate load on the servers proportionally to the each one's power, and reduce as much as possible the overhead from the distribution. It is is divided in 3 phases: local selection of servers, balancing and refinement. Four algorithms were proposed, from which \ggp\ is the best for overhead reduction and \ggpf\ is the most suited for reducing player migrations between servers.
 
-\keywords{First keyword \and Second keyword \and More}
+\keywords{MMOGs \and load balancing \and distributed server \and graph partitioning}
 % \PACS{PACS code1 \and PACS code2 \and more}
 % \subclass{MSC code1 \and MSC code2 \and more}
 \end{abstract}
@@ -574,7 +574,7 @@ The \textbf{\bfa} (\bfameaning) is proposed here as an alternative to \ggp\ and 
 \end{algorithm}
 
 
-\subsubsection{Refinin with \kl algorithm}
+\subsubsection{Refining with the \kl\ algorithm}
 \label{sec:alg:kl}
 	
 After balancing the load between servers in phase 2, each server will have a usage ratio similar to the others. However, phase 2 does not consider the interaction between cells and the overhead between regions, which may have been fragmented, resulting in many pairs of neighboring cells that are not part of the same region. This increases the probability that two players, each in one of these cells, interact with each other close to the border, which, as was shown in previous sections, causes a waste of resources of the server system.
