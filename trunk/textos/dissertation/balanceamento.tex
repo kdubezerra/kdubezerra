@@ -72,13 +72,23 @@ Por esta razão, não é suficiente apenas dividir os jogadores entre os servidores
 
 Como foi dito, quando existe um número considerável de avatares em um mesmo ponto de interesse, é gerado um tráfego proporcional ao quadrado do número de avatares ali presentes. Também foi mostrado que os servidores recebem as ações enviadas pelos jogadores, calculam seu resultado e o enviam para todos os jogadores interessados, que são, geralmente, aqueles cujos avatares estiverem próximos do avatar do primeiro jogador. Se esses jogadores forem divididos entre diferentes servidores, cada um destes precisará não apenas enviar o estado do mundo resultante das ações para os jogadores conectados a ele, como também deverá enviá-lo para o servidor ao qual os outros jogadores estão conectados. Este, por sua vez, encaminhará este resultado para seus jogadores.
 
-[TODO:por figura do envio de estados através de servidores diferentes. duas figuras: no mesmo servidor, e através de diferentes servidores.]
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/overheadgeneration}
+ \caption{Overhead causado pela interação de jogadores em diferentes servidores}
+ \label{fig:overheadgeneration}
+\end{figure}
 
-Percebe-se, então, que cada estado deverá ser enviado duas vezes, para cada par de jogadores que se comunicam através de servidores diferentes. Esse overhead não apenas causa o desperdício de recursos dos servidores, como também aumenta o atraso para atualização de estado das réplicas do jogo nas máquinas dos jogadores. Isto faz com que o tempo entre o envio de uma ação por um jogador conectado a um servidor e o recebimento do estado resultante por outro jogador, conectado a outro servidor, seja maior, prejudicando a interação entre eles.
+Percebe-se, então, que cada estado deverá ser enviado duas vezes, para cada par de jogadores que se comunicam através de servidores diferentes (Figura \ref{fig:overheadgeneration}). Esse overhead não apenas causa o desperdício de recursos dos servidores, como também aumenta o atraso para atualização de estado das réplicas do jogo nas máquinas dos jogadores. Isto faz com que o tempo entre o envio de uma ação por um jogador conectado a um servidor e o recebimento do estado resultante por outro jogador, conectado a outro servidor, seja maior, prejudicando a interação entre eles.
 
-Assim sendo, jogadores que estão interagindo entre si devem, idealmente, estar conectados ao mesmo servidor. Contudo, é possível que todos os jogadores estejam ligados entre si através de relações transitivas de interação. Por exemplo, dois avatares, de dois jogadores diferentes, podem estar distantes, porém ambos interagindo com um terceiro avatar, entre os dois. A figura [TODO:ref] ilustra melhor este tipo de situação. Contudo, ainda assim será necessário dividí-los entre servidores. A questão é quanto a quais pares de jogadores estarão divididos em servidores diferentes. É necessário, portanto, decidir um critério para agrupar jogadores em um mesmo servidor.
+Assim sendo, jogadores que estão interagindo entre si devem, idealmente, estar conectados ao mesmo servidor. Contudo, é possível que todos os jogadores estejam ligados entre si através de relações transitivas de interação. Por exemplo, dois avatares, de dois jogadores diferentes, podem estar distantes, porém ambos interagindo com um terceiro avatar, entre os dois. A Figura \ref{fig:alllinked} ilustra melhor este tipo de situação. Contudo, ainda assim será necessário dividí-los entre servidores. A questão é quanto a quais pares de jogadores estarão divididos em servidores diferentes. É necessário, portanto, decidir um critério para agrupar jogadores em um mesmo servidor.
 
-[TODO: figura da interação de A, B e C]
+\begin{figure}
+ \centering
+ \includegraphics[width=0.6\textwidth]{images/alllinked}
+ \caption{Dependência transitiva entre os avatares}
+ \label{fig:alllinked}
+\end{figure}
 
 Nas próximas seções, serão apresentados os trabalhos e princípios utilizados nas abordagens de outros autores. Embora apontem direções que se podem tomar para resolver o problema de distribuição e balanceamento de carga dinâmico de MMOGs, não o resolvem por completo, por razões que serão melhor detalhadas ao longo do texto. Com base em alguns desses princípios a seguir, e em pesquisa e implementação realizadas, será definido o esquema de balanceamento de carga aqui proposto.
 
@@ -89,17 +99,27 @@ Nas próximas seções, serão apresentados os trabalhos e princípios utilizados nas
 
 Uma maneira de fazer uso da localidade dos jogadores é agrupá-los de acordo com a posição ocupada por seus avatares no ambiente virtual. A questão seria a de como formar estes grupos. Uma maneira de fazer isto seria dividindo o mundo do jogo em várias células conectadas entre si. Cada célula consistiria em uma parte do mundo, com conteúdo e características próprios, que seria delegada a um nodo servidor. A forma mais simples de fazer isto é com uma grade de células de mesmo tamanho e formato. 
 
-[TODO:footnote?]Porém, o formato e a disposição destas células irá influenciar no tráfego gerado pelas mesmas entre os servidores. Por exemplo, um ambiente bidimensional poderia ser dividido em uma grade de células quadradas. Neste caso, cada uma destas células teria oito vizinhos, em média -- células nas bordas do mapa poderiam ter cinco ou três vizinhos apenas. Um servidor é considerado \textbf{vizinho} de outro quando administra uma célula que é vizinha a uma célula do outro servidor. Quanto mais servidores vizinhos, maior o tráfego entre servidores, e maior o overhead causado por esta comunicação. A distribuição ideal, então, seria utilizando células hexagonais, cada uma com seis vizinhos. Estudos comprovam que esta é a divisão em células iguais que permite o menor número de vizinhos por célula [TODO:ref]. Outra possibilidade seria utilizando fileiras alternadas de células quadradas, onde cada fileira seria deslocada o equivalente à metade do comprimento de uma célula.
+Porém, o formato e a disposição destas células irá influenciar no tráfego gerado pelas mesmas entre os servidores. Por exemplo, um ambiente bidimensional poderia ser dividido em uma grade de células quadradas (Figura \ref{fig:alldivisions}(a)). Neste caso, cada uma destas células teria oito vizinhos, em média -- células nas bordas do mapa poderiam ter cinco ou três vizinhos apenas. Um servidor é considerado \textbf{vizinho} de outro quando administra uma célula que é vizinha a uma célula do outro servidor. Quanto mais servidores vizinhos, maior o tráfego entre servidores, e maior o overhead causado por esta comunicação. A distribuição ideal, então, seria utilizando células hexagonais, cada uma com seis vizinhos (Figura \ref{fig:alldivisions}(b)). Estudos comprovam que esta é a divisão em células iguais que permite o menor número de vizinhos por célula [TODO:ref]. Outra possibilidade seria utilizando fileiras alternadas de células quadradas, onde cada fileira seria deslocada o equivalente à metade do comprimento de uma célula (Figura \ref{fig:alldivisions}(c)).
 
-[TODO:figura com diferentes tipos de divisão:sqr/hex/shift]
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/alldivisions}
+ \caption{Diferentes tipos de divisão em células}
+ \label{fig:alldivisions}
+\end{figure}
 
 Uma questão importante deste design é que o conceito de célula é transparente para os jogadores. Estes visualizam um mundo vasto, único e não fragmentado, mesmo que estejam cruzando repetidamente as fronteiras entre diferentes células. Assim, é possível para eles moverem-se livremente através do ambiente virtual, independente de como é feita a distribuição. Obviamente, isso exige que as células se comuniquem, de maneira a atualizarem-se mutuamente e notificarem-se a respeito de eventos que ocorram próximo à fronteira entre elas, assim como a respeito da migração de jogadores entre uma e outra.
 
 Embora essa abordagem com células distribua a carga entre diversos servidores, não há garantias de que essa distribuição será uniforme, devido à grande mobilidade dos jogadores e à existência de pontos de interesse. Uma das idéias propostas na literatura \cite{devleeschauwer2005dma} também segue o princípio de dividir o ambiente virtual em células de tamanho e posição fixos, porém essas células são relativamente pequenas -- ou \textbf{microcélulas} -- e podem ser agrupadas, formando um espaço contínuo chamado de \textbf{macrocélula}. Cada macrocélula é então designada a um diferente servidor, que passa a administrar não apenas uma grande célula de tamanho e posição fixos, mas um conjunto variável de pequenas células. Estas microcélulas podem então ser transferidas dinamicamente entre diferentes macrocélulas, de maneira a manter a carga em cada um dos diferentes servidores abaixo do limite por ele suportado.
 
-Obviamente, as microcélulas designadas ao mesmo nodo servidor não gerarão tráfego adicional para sincronizarem-se entre si, porém não se poderá conhecer previamente o overhead de sincronização entre diferentes macrocélulas, pois o número de vizinhos que cada macrocélula terá é imprevisível, assim como o seu formato. Contudo, demonstrou-se \cite{devleeschauwer2005dma} que esse overhead é compensado pela melhor distribuição da carga do jogo entre os servidores. A figura [TODO:ref] ilustra a divisão de um ambiente virtual bidimensional em microcélulas e o agrupamento destas em macrocélulas dinâmicas, que podem se adaptar à distribuição de avatares.
+Obviamente, as microcélulas designadas ao mesmo nodo servidor não gerarão tráfego adicional para sincronizarem-se entre si, porém não se poderá conhecer previamente o overhead de sincronização entre diferentes macrocélulas, pois o número de vizinhos que cada macrocélula terá é imprevisível, assim como o seu formato. Contudo, demonstrou-se \cite{devleeschauwer2005dma} que esse overhead é compensado pela melhor distribuição da carga do jogo entre os servidores. A Figura \ref{fig:macromicro} ilustra a divisão de um ambiente virtual bidimensional em microcélulas e o agrupamento destas em macrocélulas dinâmicas, que podem se adaptar à distribuição de avatares.
 
-[TODO: figuraS com microcélulas e macrocélulas - fazer vetorial ou copiar? depende do tempo que tiver depois de terminar o texto. divisao em micro e agrupamento em macro]
+\begin{figure}
+ \centering
+ \includegraphics[width=0.6\textwidth]{images/macromicro}
+ \caption{Microcélulas agrupadas em quatro macrocélulas (R$_\text{1}$, R$_\text{2}$, R$_\text{3}$ e R$_\text{4}$)}
+ \label{fig:macromicro}
+\end{figure}
 
 %\subsection{<dewan ahmed>}
 %save for later... find some holes in it...
@@ -220,7 +240,7 @@ Com o término do reparticionamento das regiões, o servidor que iniciou todo o pr
 
 %Além disso, é proposto um modelo simples de movimentação dos usuários, baseado no \emph{Random Waypoint Mobility Model}, que pode vir a ser útil numa futura simulação em algum trabalho futuro.
 
-\subsection{Uso de grafos em distribuição de tarefas [TODO:rename]}
+\subsection{Uso de grafos em distribuição de tarefas}
 %***princípio do uso de particionamento de grafos para distribuição de tarefas com corte de aresta tão pequeno quanto possível -> tarefas mais independentes
 %    ggp, gggp, spectral bissection, kernighan-lin
 %falar do kernighan-lin e a dependência entre tarefas
@@ -228,9 +248,14 @@ Com o término do reparticionamento das regiões, o servidor que iniciou todo o pr
 
 Um problema clássico de alocação de tarefas em sistemas distribuídos é o da dependência entre tarefas [TODO:refsDEdistGRAPH]. Tarefas dependentes entre si fazem com que os processadores nos quais elas estão sendo executadas tenham que se comunicar para que o processamento possa continuar. Isso gera dois problemas principais: em primeiro lugar, o processamento como um todo é atrasado por causa do tempo de espera de cada transmissão e recebimento de mensagens -- supondo que a comunicação entre os processos seja por meio de mensagens, como é o caso do MPI [TODO:ref] -- e, em segundo lugar, banda de comunicação é ocupada para o envio e recebimento destas mensagens.
 
-Para resolver este problema, são utilizados grafos, da seguinte maneira: o conjunto de tarefas a realizar é mapeado em um grafo com pesos. Cada vértice representa uma tarefa e cada aresta representa a comunicação entre as tarefas. O peso de cada vértice representa o custo de processamento e o peso da aresta representa a carga de comunicação. Para fazer a distribuição, é feito um particionamento do grafo gerado. Cada partição terá um conjunto de tarefas que serão executadas no mesmo nodo e, conseqüentemente, o atraso de comunicação entre estas tarefas será pequeno [TODO:refbli]. No entanto, as arestas do grafo que ligam partições diferentes representam comunicação entre diferentes nodos. A Figura [TODO:ref] ilustra essa situação.
+Para resolver este problema, são utilizados grafos, da seguinte maneira: o conjunto de tarefas a realizar é mapeado em um grafo com pesos. Cada vértice representa uma tarefa e cada aresta representa a comunicação entre as tarefas. O peso de cada vértice representa o custo de processamento e o peso da aresta representa a carga de comunicação. Para fazer a distribuição, é feito um particionamento do grafo gerado. Cada partição terá um conjunto de tarefas que serão executadas no mesmo nodo e, conseqüentemente, o atraso de comunicação entre estas tarefas será pequeno [TODO:refbli]. No entanto, as arestas do grafo que ligam partições diferentes representam comunicação entre diferentes nodos. A Figura \ref{fig:graphs} ilustra essa situação.
 
-[TODO:figura do grafo de tarefas e dependências, assim como particionamento com corte de arestas e diferentes particionamentos levando a diferentes cortes de aresta]
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/graphs}
+ \caption{Divisão de tarefas utilizando grafos}
+ \label{fig:graphs}
+\end{figure}
 
 Os algoritmos de particionamento do grafo de tarefas, geralmente, buscam atingir dois objetivos: gerar partições de peso aproximadamente igual, ou seja, cada nodo terá uma carga computacional semelhante à dos outros; e minimizar o corte de aresta, ou seja, fazer com que a dependência entre os conjuntos de tarefas seja a menor possível, reduzindo a comunicação entre os nodos de processamento. Por corte de aresta, entende-se o somatório dos pesos de todas as arestas que ligam vértices que estão em partições diferentes (Figura [TODO:reffig]).
 
