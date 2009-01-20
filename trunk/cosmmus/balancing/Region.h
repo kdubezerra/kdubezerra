@@ -122,21 +122,21 @@ class Region {
     double getDisbalanceAfterRemovingCell(Cell* c);
     double getBalancingImprovementForTransfering(Cell* c, Region* r);
 
-    //REBALANCEAMENTO v2
+    //REBALANCEAMENTO v2 - bfbct
 
     static void improveBalancing_v2(list<Region*> &regionsToImproveBalancing);
     void alleviateOverload_v2(list<Region*> &regionsToReceive);
     Cell* getCellWithWeightLowerThanButClosestTo(long weight);
 
-    //REBALANCEAMENTO v3
+    //REBALANCEAMENTO v3 - progrega-kh
 
     static void improveBalancing_v3(list<Region*> regionsToImproveBalancing);
 
-    //REBALANCEAMENTO v4
+    //REBALANCEAMENTO v4 - progrega-kf
 
     static void improveBalancing_v4(list<Region*> regionsToImproveBalancing);
 
-    //REBALANCEAMENTO repart (proposta)
+    //REBALANCEAMENTO repart (proposta) - progrega
 
     static void improveBalancing_repart(list<Region*> regionsToImproveBalancing);
     void startLocalBalancing();
