@@ -186,19 +186,19 @@ void checkInput() {
           toggleShowHelp();
           break;
         case SDLK_y:
-          Region::improveBalancing_repart(Region::getRegionList());
+          Region::rebalance_progrega(Region::getRegionList());
           break;
         case SDLK_u:
           Region::improveBalancing_kwise(Region::getRegionList()); //aquele que eu achei que podia ser o melhor... ver comentário
           break;
         case SDLK_i:
-          Region::improveBalancing_v4(Region::getRegionList());
+          Region::rebalance_progrega_kf(Region::getRegionList());
           break;
         case SDLK_o:
-          Region::improveBalancing_v3(Region::getRegionList());
+          Region::rebalance_progrega_kh(Region::getRegionList());
           break;
         case SDLK_t:
-          Region::improveBalancing_v2(Region::getRegionList());
+          Region::rebalance_bfbct(Region::getRegionList());
           break;
         case SDLK_p:
           Avatar::toggleMobility();
