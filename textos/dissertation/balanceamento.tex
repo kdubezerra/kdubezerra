@@ -740,7 +740,7 @@ O Algoritmo \ref{alg:kl} mostra de que maneira o algoritmo de \kl\ é chamado.
 
 
 \begin{algorithm}
-\caption{\kl}
+\caption{Uso do \kl}
 \label{alg:kl}
 \begin{algorithmic}[1]
 
@@ -749,7 +749,7 @@ O Algoritmo \ref{alg:kl} mostra de que maneira o algoritmo de \kl\ é chamado.
 		\STATE $swapped \leftarrow$ \textbf{false}
 		\FOR{cada região $R_i$ em $\rlist$}
 			\FOR{cada região $R_j$ em $\rlist$}
-				\IF{$\kl(R_i, R_j) =$ \textbf{true}}
+				\IF{$Kernighan$--$Lin(R_i, R_j) =$ \textbf{true}}
 					\STATE $swapped \leftarrow$ \textbf{true}
 				\ENDIF
 			\ENDFOR
@@ -788,15 +788,15 @@ O Algoritmo \ref{alg:kl} mostra de que maneira o algoritmo de \kl\ é chamado.
 
 Nesta seção será descrito como foi implementado o protótipo com objetivo de validar o esquema proposto, utilizando a linguagem de programação C++. Avatares, células, regiões e servidores foram modelados como classes, que se relacionavam para formar o ambiente do jogo. Além disso, foi criada uma interface gráfica para visualizar o funcionamento do protótipo, corrigir erros e interferir disparando diferentes algoritmos para verificar como funcionava cada um. As classes implementadas foram: \code{Server}, \code{Region}, \code{Cell} e \code{Avatar}, representando os servidores, regiões, células e avatares.
 
-\subsection{A classe \texttt{Avatar}}
+\subsection{A classe \codetitle{Avatar}}
 
-A classe \code{Avatar} é a mais importante de todas, pois reproduz as ações dos jogadores, é o responsável pela carga imposta ao servidores, além de ser a base de todo o esquema de balanceamento de carga proposto. Cada objeto desta classe possui uma referência para um objeto da classe \code{Cell}, representando a célula onde ele está localizado. Além disso, ele possui duas coordenadas (\code{int posx, posy}), que representam sua posição exata no ambiente virtual. Além deste, a classe Avatar possui outros dois pares ordenandos, \code{int dirx, diry} e \code{int destx, desty}, que representam sua direção e destino atuais, inicializados com valores aleatórios quando o objeto é criado.
+A classe \code{Avatar} é a mais importante de todas, pois reproduz as ações dos jogadores, é a responsável pela carga imposta ao servidores, além de ser a base de todo o esquema de balanceamento de carga proposto. Cada objeto desta classe possui uma referência para um objeto da classe \code{Cell}, representando a célula onde ele está localizado. Além disso, ele possui duas coordenadas (\code{int posx, posy}), que representam sua posição exata no ambiente virtual. Além deste, a classe Avatar possui outros dois pares ordenandos, \code{int dirx, diry} e \code{int destx, desty}, que representam sua direção e destino atuais, inicializados com valores aleatórios quando o objeto é criado.
 
-Em um jogo real, cada ação de um jogador é executa pelo seu avatar, permitindo-lhe interagir com o ambiente virtual e com avatares de outros jogadores. No entanto, aqui todos os avatares foram simulados utilizando o modelo de \emph{random waypoint} [TODO:ref] com \emph{random wait} [TODO:ref]. A cada passo -- \code{void step(unsigned long delay)} --, o avatar verifica se já chegou ao seu destino já definido (\code{distance(posx, posy, destx, desty) < MAX\_TARGET\_DIST}). Se já chegou, define um tempo para espera aleatória e depois calcula seu próximo destino, com uma probabilidade de escolher um dos pontos de interesse pré-definidos. Se ainda não chegou, ele incrementa sua posição, com uma velocidade variável, em direção à posição de destino:
+Em um jogo real, cada ação de um jogador é executa pelo seu avatar, permitindo-lhe interagir com o ambiente virtual e com avatares de outros jogadores. No entanto, aqui todos os avatares foram simulados utilizando o modelo de \emph{random waypoint} [TODO:ref] com \emph{random wait} [TODO:ref]. A cada passo -- \code{void step(unsigned long delay)} --, o avatar verifica se já chegou ao destino que foi definido (\code{distance(posx, posy, destx, desty) < MAX\_TARGET\_DIST}). Se já chegou, define um tempo para espera aleatória e depois calcula seu próximo destino, com uma probabilidade de escolher um dos pontos de interesse pré-definidos. Se ainda não chegou, ele incrementa sua posição, com uma velocidade variável, em direção à posição de destino:
 
 		\code{//(...)}
 
-    \code{int speed = rand() \% MAX\_VEL + 1;}
+    \code{int speed = rand() \% MAX\_SPEED + 1;}
 
     \code{incr\_y =  (desty - posy) / distance(posx, posy, destx, desty);}
 
@@ -808,11 +808,11 @@ Em um jogo real, cada ação de um jogador é executa pelo seu avatar, permitindo-l
     
     \code{//(...)}
 
-Além de mover-se de posição (ou permanecer na mesma, se estiver em espera), o avatar verifica se ele atravessou alguma fronteira entre células. Isso é possível porque as células têm posição estática, bastando verificar se a nova posição do avatar pertence a uma célula diferente. Caso isso tenha ocorrido, ele envia mensagens, através de chamadas de método (\code{my\_cell->unsubscribe(this)} e \code{new\_cell->subscribe(this)}) para os objeto \code{Cell}  que representam sua célula antiga e sua célula nova, notificando a mudança.
+Além de mover-se de posição (ou permanecer na mesma, se estiver em espera), o avatar verifica se ele atravessou alguma fronteira entre células. Isso é possível porque as células têm posição estática, bastando verificar se a nova posição do avatar pertence a uma célula diferente. Caso isso tenha ocorrido, ele envia mensagens, através de chamadas de método (\code{my\_cell->unsubscribe(this)} e \code{new\_cell->subscribe(this)}) para os objetos \code{Cell}  que representam sua célula antiga e sua célula nova, notificando a mudança.
 
-Por fim, a classe \code{Avatar} implementa mais dois métodos. Um objeto \code{Avatar} invoca o método \code{int OtherRelevance(Avatar* other)} quando se quer saber o quão relevente para ele é o avatar \code{*other}. Já o método \code{long getInteraction(Cell* c)} retorna a soma das relevâncias de todos os avatares na célula  \code{*c} em relação ao avatar que o invocou. Para calcular a relevância, decidiu-se utilizar o algoritmo proposto em \cite{bezerra2008a3}.
+Por fim, a classe \code{Avatar} implementa mais dois métodos. Um objeto \code{Avatar} invoca o método \code{int OtherRelevance(Avatar* other)} quando se quer saber o quão relevente para ele é o avatar \code{*other}. Já o método \code{long getInteraction(Cell* c)} retorna a soma das relevâncias de todos os avatares na célula  \code{*c} em relação ao avatar que o invocou. Para calcular a relevância, decidiu-se utilizar um algoritmo semelhante ao que foi proposto em \cite{bezerra2008a3}.
 
-\subsection{A classe \texttt{Cell}}
+\subsection{A classe \codetitle{Cell}}
 
 Cada célula tem uma posição fixa e todas as células tem o mesmo tamanho, estando dipostas em forma de grade. A classe \code{Cell} tem uma matriz estática de ponteiros do tipo \code{Cell*}, sendo que o colunas multiplicado pela largura de cada célula é igual à largura do ambiente virtual. Da mesma forma, o número de linhas multiplicado pelo comprimento de cada célula é igual ao comprimento do ambiente virtual [TODO:reffigmatriz]. Dessa forma, pode-se encontrar os índices do objeto do tipo \code{Cell} na matriz \code{Matrix[i][j]} a partir da posição ocupada pelo avatar em tempo constante e com apenas informações locais, da seguinte forma:
 
@@ -822,7 +822,9 @@ Cada célula tem uma posição fixa e todas as células tem o mesmo tamanho, estando
 
 \end{center}
 	
-	e 
+\begin{flushleft}
+	e
+\end{flushleft} 
 
 \begin{center}	
 
@@ -836,15 +838,33 @@ Para calcular a carga da célula, é utilizado o método \code{long getCellWeight()
 
 A classe \code{Cell} implementa também outros métodos, que são necessários para os algoritmos descritos na seção \ref{sec:algprop}, tais como: \code{long getDesireToSwap(Region* r)}, \code{static Cell* getHighestEdgeFreeNeighbor(list<Cell*> \&cellList)} e \code{static Cell* getHeaviestFreeCell()}.
 
-\subsection{A classe \texttt{Region}}
+\subsection{A classe \codetitle{Region}}
 
-Cada objeto da classe \texttt{Region}, tem uma lista de referências para as células (\texttt{list<Cell*> cells}) que a compõem, além de uma lista das regiões que fazem fronteira com ela (\texttt{list<Region*> neighbors}) e uma referência para o objeto \texttt{Server} que representa seu servidor. É na classe \texttt{Region} que estão implementados os algoritmos que foram apresentados na seção \ref{sec:algprop}
+Cada objeto da classe \code{Region} tem uma lista (\code{list<Cell*> cells}) de referências para as células que a compõem, além de uma lista das regiões que fazem fronteira com ela (\code{list<Region*> neighbors}) e uma referência para o objeto \code{Server} que representa seu servidor. É na classe \code{Region} que estão implementados os algoritmos que foram apresentados na seção \ref{sec:algprop}.
 
-[...descrever o funcionamento (se tiver) e os métodos]
+Para verificar se uma região está balanceada (i.e. $u(s(R)) \leq 1$ ou $u(s(R)) \leq U_{TOTAL}$), a aplicação invoca o método \code{void checkBalancing()} da classe \code{Region}. Se essa condição de balanceamento não estiver satisfeita, é iniciada a seleção local de servidores com o método \code{void startLocalBalancing()}, correspondente à fase 1 do balanceamento (seção \ref{sec:alg:localselect}). Após este método concluir a formação do grupo local de regiões, ele invoca um dos algoritmos da fase 2, que correspondem aos seguinte métodos de \code{Region}:
 
-\subsection{A classe \texttt{Server}}
+\code{rebalance\_progrega(list<Region*> regionsToRebalance)},
 
-Cada objeto da classe \texttt{Server} tem como atributos principais uma referência para um objeto da classe \texttt{Region} e um valor inteiro (\texttt{long}) que representa sua capacidade. No protótipo implementado, sua única função é fornecer o valor de sua capacidade (\texttt{long serverPower}) ao objeto \texttt{Region} associado a cada servidor, além de fornecer o valor de $frac_p(S)$ e $P_{total}$, através dos métodos \texttt{double} \texttt{getPowerFraction()} e \texttt{static long getMultiserverPower()}.
+\code{rebalance\_progrega\_kh(list<Region*> regionsToRebalance)},
+
+\code{rebalance\_progrega\_kf(list<Region*> regionsToRebalance)} e
+
+\code{rebalance\_bfbct(list<Region*> regionsToRebalance)}, todos \code{static} e \code{void}.
+
+Quando a chamada ao algoritmo de fase 2 termina, é invocado o método \code{static bool refineKL\_kwise(list<Region*> regionsToRefine, int passes)} que por sua vez irá invocar o método \code{static bool refineKL\_pairwise(Region* r1, Region* r2)} para cada par de regiões, tal como foi descrito na seção \ref{sec:alg:kl} a respeito do refinamento da divisão (fase 3).
+
+\subsection{A classe \codetitle{Server}}
+
+Cada objeto da classe \code{Server} tem como atributos principais uma referência para um objeto da classe \code{Region} e um valor inteiro (\code{long}) que representa sua capacidade. No protótipo implementado, sua única função é fornecer o valor de sua capacidade (\code{long serverPower}) ao objeto \code{Region} associado a cada servidor, além de fornecer o valor de $frac_p(S)$ e $P_{total}$, através dos métodos \code{double getPowerFraction()} e \code{static long getMultiserverPower()}.
+
+\subsection{Uso de valores inteiros}
+
+Apesar da relevância ter sido definida como um valor real entre 0 e 1 \cite{bezerra2008a3}, o uso de variáveis do tipo \code{float} ou \code{double} mostrou-se propício a erros por causa da precisão flutuante. A carga total do sistema é igual à soma das cargas das regiões, onde cada região tem como carga a soma das cargas das células, e a carga de cada célula é igual à soma das cargas dos avatares e, por fim, a carga de cada avatar é igual à soma das relevâncias de todos os outros avatares em relação a ele.
+
+No entanto, ao ser feito um somatório de centenas de parcelas de precisão flutuante, as últimas parcelas do somatório têm uma probabilidade considerável de serem descartadas, pelo fato de seu valor provavelmente estar abaixo da precisão do resultado parcial. Embora existam maneiras de contornar isso, como somatório em árvore, preferiu-se definir a relevância, as cargas, as interações, a capacidade do servidor, o overhead etc. como inteiros do tipo \code{long}.
+
+Dessa forma, evitaram-se os problemas de imprecisão, porém mantendo o código simples. O valor da relevância de um avatar em relação ao outro foi redefinido, portanto, como um valor \textbf{inteiro}, de 0 a 100, inclusive, o que pode ser considerado suficiente se for levado em conta que, tradicionalmente, há apenas dois níveis de relevância.
 
 \section{Simulações e resultados}
 %definir cada caso da simulação e o porquê dele, em que influenciam os parametros e o que se quer tirar de conclusão

@@ -747,7 +747,7 @@ double Region::getBalancingImprovementForTransfering(Cell* c, Region* r) {
   return bal_change_r1 + bal_change_r2;
 }
 
-void Region::improveBalancing_v2(list<Region*> &regionsToImproveBalancing) {
+void Region::rebalance_bfbct(list<Region*> regionsToImproveBalancing) {
   Region* rmaxload;
   list<Region*> balregions = regionsToImproveBalancing;
   sortByOverload(balregions);
@@ -790,7 +790,7 @@ Cell* Region::getCellWithWeightLowerThanButClosestTo(long weight) {
   return NULL;
 }
 
-void Region::improveBalancing_v3(list<Region*> regionsToImproveBalancing) {
+void Region::rebalance_progrega_kh(list<Region*> regionsToImproveBalancing) {
   long weight_to_divide = 0;
   long free_capacity = 0;
   for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
@@ -807,7 +807,7 @@ void Region::improveBalancing_v3(list<Region*> regionsToImproveBalancing) {
   }
 }
 
-void Region::improveBalancing_v4(list<Region*> regionsToImproveBalancing) {
+void Region::rebalance_progrega_kf(list<Region*> regionsToImproveBalancing) {
   //LIBERANDO O PESO DE SERVIDORES SOBRECARREGADOS
   long weight_to_divide = 0;
   long free_capacity = 0;
@@ -831,7 +831,7 @@ void Region::improveBalancing_v4(list<Region*> regionsToImproveBalancing) {
   }
 }
 
-void Region::improveBalancing_repart(list<Region*> regionsToImproveBalancing) {
+void Region::rebalance_progrega(list<Region*> regionsToImproveBalancing) {
   long weight_to_divide = 0;
   long free_capacity = 0;
   for (list<Region*>::iterator it = regionsToImproveBalancing.begin() ; it != regionsToImproveBalancing.end() ; it++) {
@@ -862,10 +862,10 @@ void Region::startLocalBalancing() {
     average_overload = (double)total_weight / (double)total_capacity;
     local_group.push_back(next_region);    
   }
-  Region::improveBalancing_v2(local_group); //best-fit allocation
-  //Region::improveBalancing_v4(local_group); //progrega-kf
-  //Region::improveBalancing_v3(local_group); //progrega-kh
-  //Region::improveBalancing_repart(local_group); //progrega
+  //Region::rebalance_bfbct(local_group); //best-fit allocation
+  //Region::rebalance_progrega_kf(local_group); //progrega-kf
+  //Region::rebalance_progrega_kh(local_group); //progrega-kh
+  Region::rebalance_progrega(local_group); //progrega
   //Region::improveBalancing_kwise(local_group);
   
   //K-L:

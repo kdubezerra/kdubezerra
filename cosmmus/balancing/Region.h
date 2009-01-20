@@ -124,21 +124,21 @@ class Region {
 
     //REBALANCEAMENTO v2 - bfbct
 
-    static void improveBalancing_v2(list<Region*> &regionsToImproveBalancing);
+    static void rebalance_bfbct(list<Region*> regionsToRebalance);
     void alleviateOverload_v2(list<Region*> &regionsToReceive);
     Cell* getCellWithWeightLowerThanButClosestTo(long weight);
 
     //REBALANCEAMENTO v3 - progrega-kh
 
-    static void improveBalancing_v3(list<Region*> regionsToImproveBalancing);
+    static void rebalance_progrega_kh(list<Region*> regionsToRebalance);
 
     //REBALANCEAMENTO v4 - progrega-kf
 
-    static void improveBalancing_v4(list<Region*> regionsToImproveBalancing);
+    static void rebalance_progrega_kf(list<Region*> regionsToRebalance);
 
     //REBALANCEAMENTO repart (proposta) - progrega
 
-    static void improveBalancing_repart(list<Region*> regionsToImproveBalancing);
+    static void rebalance_progrega(list<Region*> regionsToRebalance);
     void startLocalBalancing();
     Region* getLightestNeighbor(list<Region*> region_list);
     static Region* getHighestCapacityFreeRegion();
