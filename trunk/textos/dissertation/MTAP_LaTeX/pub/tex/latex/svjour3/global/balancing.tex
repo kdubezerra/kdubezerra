@@ -505,7 +505,7 @@ A possible undesirable effect of the \ggp\ algorithm is that by releasing all th
 
 \subsubsection{\ggpf} %v4
 %[TODO: por desvantagens em outra seção posteriores]
-Another way of trying to minimize the migration of players between servers because of the rebalancing is the \textbf{\ggpf}, or \ggpfmeaning\ (Algorithm \ref{alg:ggpf}). In this algorithm, each region will gradatively release its cells in increasing order of weight, until its weight fraction is less than or equal to the power fraction of its server. Thus, the heaviest cells remain on the same server and, therefore, most players do not need to migrate. After that, the cells that were released are redistributed among the regions with lower server resource usage. The disadvantage of this algorithm is, as in \ggpk\, the possibility of fragmenting the regions, with many isolated cells, increasing the overhead.
+Another way of trying to minimize the migration of players between servers because of the rebalancing is the \textbf{\ggpf}, or \ggpfmeaning\ (Algorithm \ref{alg:ggpf}). In this algorithm, each region will gradatively release its cells in increasing order of weight, until its weight fraction is less than or equal to the power fraction of its server. Thus, the heaviest cells remain on the same server and, therefore, most players do not need to migrate. After that, the cells that were released are redistributed among the regions with lowest server resource usage (line \ref{alg:ggpf:usageorder}). The disadvantage of this algorithm is, as in \ggpk\, the possibility of fragmenting the regions, with many isolated cells, increasing the overhead.
 
 \begin{algorithm}
 \caption{\ggpf}
@@ -516,14 +516,14 @@ Another way of trying to minimize the migration of players between servers becau
 	 \FOR{each region $R$ in $\rlist$}
 	 		\STATE $\wtodiv \leftarrow \wtodiv + w_r(R)$
 	 		\STATE $\freecap \leftarrow \freecap + p(s(R))$
-	 		\STATE $\clist \leftarrow $ list of cells from $R$ in decreasing order of weight
+	 		\STATE $\clist \leftarrow $ list of cells from $R$ in increasing order of weight
 	 		\WHILE{$frac_r(R) > frac_p(s(R))$}
 	 			 \STATE $C \leftarrow$ first element from $\clist$
 	 			 \STATE remove $C$ from $R$
 	 			 \STATE remove $C$ from $\clist$
 	 		\ENDWHILE
 	 \ENDFOR
-	 \STATE sort $\rlist$ in increasing order of $u(s(R))$
+	 \STATE sort $\rlist$ in increasing order of $u(s(R))$ \label{alg:ggpf:usageorder}
 	 \FOR{each region $R$ in $\rlist$}
 	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$
 	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggp:whilefraction}

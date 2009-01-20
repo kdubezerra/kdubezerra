@@ -15,7 +15,7 @@
 \newcommand{\ggpfmeaning}{proportional greedy region growing algorithm keeping usage fraction}
 \newcommand{\bfa}{BFBCT}
 \newcommand{\bfameaning}{best-fit based cell transference}
-\newcommand{\kl}{Kernighan\-Lin}
+\newcommand{\kl}{Kernighan-Lin}
 \newcommand{\klalg}{Kernighan-Lin}
 \newcommand{\wtodiv}{carga\_a\_dividir}
 \newcommand{\freecap}{capacidade\_livre}
@@ -38,7 +38,7 @@
 
 A principal característica dos jogos maciçamente multijogador é a grande quantidade de jogadores, chegando a ter dezenas ou centenas de milhares de participantes simultaneamente [TODO:ref]. Essa grande quantidade de jogadores interagindo entre si gera um tráfego na rede de suporte que tem crescimento quadrático em relação ao número de jogadores, no pior caso [TODO:referenciar/provar].
 
-Quando se utiliza uma arquitetura cliente-servidor, é necessário que o servidor intermedie a comunicação entre cada par de jogadores -- supondo que se pretende prover ao jogo garantias de consistência e resistência a trapaça. Obviamente, esse servidor terá uma grande carga de comunicação e, conseqüentemente, deverá ter recursos (largura de banda disponível) proporcional à demanda do jogo.
+Quando se utiliza uma arquitetura cliente-servidor, é necessário que o servidor intermedie a comunicação entre cada par de jogadores -- supondo que se pretende prover ao jogo garantias de consistência e resistência a trapaça. Obviamente, esse servidor terá uma grande carga de comunicação e, consequentemente, deverá ter recursos (largura de banda disponível) proporcional à demanda do jogo.
 
 [TODO:largura de banda X CPU]
 
@@ -65,12 +65,12 @@ Por esta razão, não é suficiente apenas dividir os jogadores entre os servidores
 %necessidade de bal. de carga
 
 
-\section{Trabalhos relacionados [TODO:rename]}
+\section{Trabalhos relacionados}
 %micro/macro-cell
 %esquemas já propostos (ahmed, lee, /*devlechauer*/)
 %o que falta em cada um
 
-Como foi dito, quando existe um número considerável de avatares em um mesmo ponto de interesse, é gerado um tráfego proporcional ao quadrado do número de avatares ali presentes. Também foi mostrado que os servidores recebem as ações enviadas pelos jogadores, calculam seu resultado e o enviam para todos os jogadores interessados, que são, geralmente, aqueles cujos avatares estiverem próximos do avatar do primeiro jogador. Se esses jogadores forem divididos entre diferentes servidores, cada um destes precisará não apenas enviar o estado do mundo resultante das ações para os jogadores controlados por ele, como também deverá enviá-lo para o servidor ao qual os outros jogadores estão conectados. Este, por sua vez, encaminhará este resultado para seus jogadores.
+Como foi dito, quando existe um número considerável de avatares em um mesmo ponto de interesse, é gerado um tráfego proporcional ao quadrado do número de avatares ali presentes. Também foi mostrado que os servidores recebem as ações enviadas pelos jogadores, calculam seu resultado e o enviam para todos os jogadores interessados, que são, geralmente, aqueles cujos avatares estiverem próximos do avatar do primeiro jogador. Se esses jogadores forem divididos entre diferentes servidores, cada um destes precisará não apenas enviar o estado do mundo resultante das ações para os jogadores conectados a ele, como também deverá enviá-lo para o servidor ao qual os outros jogadores estão conectados. Este, por sua vez, encaminhará este resultado para seus jogadores.
 
 [por figura do envio de estados através de servidores diferentes. duas figuras: no mesmo servidor, e através de diferentes servidores.]
 
@@ -89,7 +89,7 @@ Nas próximas seções, serão apresentados os trabalhos e princípios utilizados nas
 
 Uma maneira de fazer uso da localidade dos jogadores é agrupá-los de acordo com a posição ocupada por seus avatares no ambiente virtual. A questão seria a de como formar estes grupos. Uma maneira de fazer isto seria dividindo o mundo do jogo em várias células conectadas entre si. Cada célula consistiria em uma parte do mundo, com conteúdo e características próprios, que seria delegada a um nodo servidor. A forma mais simples de fazer isto é com uma grade de células de mesmo tamanho e formato. 
 
-[TODO:footnote?]Porém, o formato e a disposição destas células irá influenciar no tráfego gerado pelas mesmas entre os servidores. Por exemplo, um ambiente bidimensional poderia ser dividido em uma grade de células quadradas. Neste caso, cada uma destas células teria oito vizinhos, em média -- células nas bordas do mapa poderiam ter cinco ou três vizinhos apenas. Quanto mais servidores vizinhos, maior o tráfego entre servidores, e maior o overhead causado por esta comunicação. A distribuição ideal, então, seria utilizando células hexagonais, cada uma com seis vizinhos. Estudos comprovam que esta é a divisão em células iguais que permite o menor número de vizinhos por célula [TODO:ref]. Outra possibilidade seria utilizando fileiras alternadas de células quadradas, onde cada fileira seria deslocada o equivalente à metade do comprimento de uma célula.
+[TODO:footnote?]Porém, o formato e a disposição destas células irá influenciar no tráfego gerado pelas mesmas entre os servidores. Por exemplo, um ambiente bidimensional poderia ser dividido em uma grade de células quadradas. Neste caso, cada uma destas células teria oito vizinhos, em média -- células nas bordas do mapa poderiam ter cinco ou três vizinhos apenas. Um servidor é considerado \textbf{vizinho} de outro quando administra uma célula que é vizinha a uma célula do outro servidor. Quanto mais servidores vizinhos, maior o tráfego entre servidores, e maior o overhead causado por esta comunicação. A distribuição ideal, então, seria utilizando células hexagonais, cada uma com seis vizinhos. Estudos comprovam que esta é a divisão em células iguais que permite o menor número de vizinhos por célula [TODO:ref]. Outra possibilidade seria utilizando fileiras alternadas de células quadradas, onde cada fileira seria deslocada o equivalente à metade do comprimento de uma célula.
 
 [TODO:figura com diferentes tipos de divisão:sqr/hex/shift]
 
@@ -97,12 +97,12 @@ Uma questão importante deste design é que o conceito de célula é transparente pa
 
 Embora essa abordagem com células distribua a carga entre diversos servidores, não há garantias de que essa distribuição será uniforme, devido à grande mobilidade dos jogadores e à existência de pontos de interesse. Uma das idéias propostas na literatura \cite{devleeschauwer2005dma} também segue o princípio de dividir o ambiente virtual em células de tamanho e posição fixos, porém essas células são relativamente pequenas -- ou \textbf{microcélulas} -- e podem ser agrupadas, formando um espaço contínuo chamado de \textbf{macrocélula}. Cada macrocélula é então designada a um diferente servidor, que passa a administrar não apenas uma grande célula de tamanho e posição fixos, mas um conjunto variável de pequenas células. Estas microcélulas podem então ser transferidas dinamicamente entre diferentes macrocélulas, de maneira a manter a carga em cada um dos diferentes servidores abaixo do limite por ele suportado.
 
-Obviamente, as microcélulas designadas ao mesmo nodo servidor não gerarão tráfego adicional para sincronizarem-se entre si, porém torna-se imprevisível o overhead de sincronização entre diferentes macrocélulas, pois o número de vizinhos que cada macrocélula terá é imprevisível, assim como o seu formato. Porém, demonstrou-se \cite{devleeschauwer2005dma} que esse overhead é compensado pela melhor distribuição da carga do jogo entre os servidores. A figura [TODO:ref] ilustra a divisão de um ambiente virtual bidimensional em microcélulas. É ilustrado em [TODO:ref] o agrupamento destas microcélulas em macrocélulas dinâmicas, que podem se adaptar à distribuição de avatares.
+Obviamente, as microcélulas designadas ao mesmo nodo servidor não gerarão tráfego adicional para sincronizarem-se entre si, porém não se poderá conhecer previamente o overhead de sincronização entre diferentes macrocélulas, pois o número de vizinhos que cada macrocélula terá é imprevisível, assim como o seu formato. Contudo, demonstrou-se \cite{devleeschauwer2005dma} que esse overhead é compensado pela melhor distribuição da carga do jogo entre os servidores. A figura [TODO:ref] ilustra a divisão de um ambiente virtual bidimensional em microcélulas e o agrupamento destas em macrocélulas dinâmicas, que podem se adaptar à distribuição de avatares.
 
 [TODO: figuraS com microcélulas e macrocélulas - fazer vetorial ou copiar? depende do tempo que tiver depois de terminar o texto. divisao em micro e agrupamento em macro]
 
-\subsection{<dewan ahmed>}
-save for later... find some holes in it...
+%\subsection{<dewan ahmed>}
+%save for later... find some holes in it...
 %ele considera apenas a buffer region, enquanto eu uso uma abordagem mais "fine-grained" (A3)
 %load das células está OK, mas não das arestas!
 %algoritmo considera que cada aresta tem peso 1, ao invés de considerar a comunicação entre servidores.
@@ -117,16 +117,16 @@ save for later... find some holes in it...
 %a cada servidor é alocado 90% de sua capacidade. Isso pode não funcionar. Critério ruim.
 %possível loop infinito, se não houverem vizinhos capazes ou disponíveis. Outro critério ruim.
 
-No trabalho de \cite{lee2003sdl}, também é proposto um esquema dinâmico de balanceamento de carga para os servidores de um sistema multi-servidor de ambiente virtual, levando em conta que os usuários podem estar distribuídos através deste mundo de maneira não uniforme. De acordo com o esquema proposto pelos autores, um servidor sobrecarregado inicia o processo selecionando um conjunto de outros servidores para fazerem parte da redistribuição de carga. O conjunto de servidores selecionados dependerá do nível de sobrecarga do servidor inicial, assim como da quantidade de recursos ociosos dos outros servidores. Após a formação desse conjunto, seus elementos repartirão as porções do ambiente virtual que lhes pertencentem utilizando um algoritmo de particionamento de grafo, de forma que os servidores envolvidos tenham carga final de trabalho semelhante.% Após decidir-se quem fica com que trabalho, os servidores envolvidos migram suas cargas entre si de maneira par-a-par.
+No trabalho de \cite{lee2003sdl}, também é proposto um esquema dinâmico de balanceamento de carga para os servidores de um sistema multi-servidor de ambiente virtual, levando em conta que os usuários podem estar distribuídos através deste mundo de maneira não uniforme. De acordo com o esquema proposto pelos autores, um servidor sobrecarregado inicia o processo selecionando um conjunto de outros servidores para fazerem parte da redistribuição de carga. O conjunto de servidores selecionados dependerá do nível de sobrecarga do servidor inicial, assim como da quantidade de recursos ociosos dos outros servidores. Após a formação desse conjunto, seus elementos repartirão as porções do ambiente virtual que lhes pertencem utilizando um algoritmo de particionamento de grafo, de forma que os servidores envolvidos tenham carga final de trabalho semelhante.% Após decidir-se quem fica com que trabalho, os servidores envolvidos migram suas cargas entre si de maneira par-a-par.
 
-O principal aspecto da solução proposta pelos autores foi a utilização de informações locais (do servidor que iniciou o processo de balanceamento e de seus vizinhos), ao invés de informações globais (todos os servidores envolvendo-se no balanceamento). A primeira apresenta pouco overhead, mas pode não resolver o problema de maneira eficiente em poucos passos, já que servidores sobrecarregados tendem a estar adjacentes. Já a abordagem global é capaz de dividir a carga de trabalho da forma mais equilibrada possível, mas sua complexidade cresce exponencialmente com o número de servidores envolvidos. A solução apontada no trabalho então é de o balanceamento de carga envolver apenas um subconjunto de servidores, sendo que sua cardinalidade varia de acordo com a necessidade (se os vizinhos do servidor que disparou o balanceamento de carga estiverem também sobrecarregados, são selecionados mais servidores). Dessa forma, tem-se um pouco mais de informação do que a abordagem local, mas sem o problema da complexidade inerente à abordagem global.
+O principal aspecto da solução proposta pelos autores foi a utilização de informações locais (do servidor que iniciou o processo de balanceamento e de seus vizinhos), ao invés de informações globais (todos os servidores do sistema se envolveriam no balanceamento). A primeira apresenta pouco overhead, mas pode não resolver o problema de maneira eficiente em poucos passos, já que servidores sobrecarregados tendem a estar adjacentes. Já a abordagem global é capaz de dividir a carga de trabalho da forma mais equilibrada possível, mas sua complexidade cresce rapidamente com o aumento do número de servidores envolvidos. A solução apontada no trabalho então é de o balanceamento de carga envolver apenas um subconjunto de servidores, sendo que sua cardinalidade varia de acordo com a necessidade (se os vizinhos do servidor que disparou o balanceamento de carga estiverem também sobrecarregados, são selecionados mais servidores). Dessa forma, tem-se um pouco mais de informação do que a abordagem local, mas sem o problema da complexidade inerente à abordagem global.
 
 %O principal objetivo da distribuição da carga entre os servidores do multi-servidor é manter a qualidade de interação dos usuários em um nível aceitável, reduzindo a carga de servidores sobrecarregados e delegando-a a outros, menos carregados, mantendo o nível de carregamento uniforme, ainda que a distribuição dos usuários no ambiente virtual não o seja. Se um servidor lida com muitos usuários além de sua capacidade computacional, ele não pode enviar mensagens de atualização de estado em tempo satisfatório; como resultado, a interação dos usuários é degradada. Distribuição dinâmica de carga pode evitar tal problema transferindo algumas porções de uma região (células e usuários) de servidores sobrecarregados para servidores menos carregados. No entanto, a migração de células e usuários impõe um novo sobrecusto nos servidores porque a informação de estado atualizada dos usuários que migraram deve ser replicada dos velhos servidores para os novos; consequentemente, a própria distribuição dinâmica da carga também pode degradar a qualidade do jogo. Portanto, um esquema dinâmico de distribuição de carga deve reduzir o número de jogadores prejudicados por servidores sobrecarregados, assim como minimizar o número de migrações necessárias.
 
 %1.1.1
 %\subsubsection{Escalabilidade}
 
-%Um esquema dinâmico de distribuição de carga deve funcionar bem, independente do tamanho do sistema. Em termos de overhead, a abordagem local é adequada para sistemas de larga escala porque seu sobrecusto é limitado à comunicação do servidor com seus vizinhos, sem ser afetado pelo tamanho do sistema. No entanto, a abordagem local, apesar de funcionar bem com um pequeno número de servidores, não funciona de maneira eficiente no caso de um desbalanceamento da carga de trabalho entre os servidores, que pode ser altamente assimétrica. A abordagem global apresenta grande eficácia independentemente do tamanho do sistema, pois todos os servidores no sistema pooperam para balancear suas cargas de trabalho. Porém, a abordagem global não é escalável, pois tem um sobrecusto que aumenta exponencialmente com o número de servidores no sistema multi-servidor. Logo, deve ser encontrada uma nova abordagem que funcione de maneira eficiente, com pequeno sobrecusto, independente do tamanho do sistema.
+%Um esquema dinâmico de distribuição de carga deve funcionar bem, independente do tamanho do sistema. Em termos de overhead, a abordagem local é adequada para sistemas de larga escala porque seu sobrecusto é limitado à comunicação do servidor com seus vizinhos, sem ser afetado pelo tamanho do sistema. No entanto, a abordagem local, apesar de funcionar bem com um pequeno número de servidores, não funciona de maneira eficiente no caso de um desbalanceamento da carga de trabalho entre os servidores, que pode ser altamente assimétrica. A abordagem global apresenta grande eficácia independentemente do tamanho do sistema, pois todos os servidores no sistema cooperam para balancear suas cargas de trabalho. Porém, a abordagem global não é escalável, pois tem um sobrecusto que aumenta exponencialmente com o número de servidores no sistema multi-servidor. Logo, deve ser encontrada uma nova abordagem que funcione de maneira eficiente, com pequeno sobrecusto, independente do tamanho do sistema.
 
 %1.1.2
 %\subsubsection{Adaptatividade}
@@ -136,7 +136,7 @@ O principal aspecto da solução proposta pelos autores foi a utilização de inform
 %1.2
 %\subsection{Modelo do sistema}
 
-Para atacar o problema, os autores também subdividem o ambiente virtual em \textbf{células} -- semelhantes às microcélulas -- retangulares, sendo que o número de servidores é muito menor que o número de células. As células são agrupadas em \textbf{regiões} -- ou macrocélulas -- e cada região é gerenciada por um servidor. Cada servidor mantém atualizadas informações de estado dos usuários e lida com as interações entre avatares na região a ele dedicada. Cada usuário envia e recebe atualizações de estado através do servidor que gerencia a região na qual ele está jogando. Duas células são ditas adjacentes (ou vizinhas) se elas compartilharem uma fronteira. Analogamente, duas regiões, e seus respectivos servidores, são ditos adjacentes se existir um par de células adjacentes, cada uma das quais pertencendo a uma das duas regiões. A Figura \ref{fig:leeA} ilustra o modelo de um sistema multi-servidor consistindo de 16 servidores. O ambiente virtual é dividido em 256 células, que são agrupadas em 16 regiões.
+Para atacar o problema, os autores também subdividem o ambiente virtual em \textbf{células} -- semelhantes às microcélulas -- retangulares, sendo que o número de servidores é muito menor que o número de células. As células são agrupadas em \textbf{regiões} -- ou macrocélulas -- e cada região é gerenciada por um servidor. Cada servidor mantém atualizadas as informações de estado dos usuários e lida com as interações entre avatares na região a ele dedicada. Cada usuário envia e recebe atualizações de estado através do servidor que gerencia a região na qual ele está jogando. Duas células são ditas adjacentes (ou vizinhas) se elas compartilharem uma fronteira. Analogamente, duas regiões, e seus respectivos servidores, são ditos adjacentes se existir um par de células adjacentes, cada uma das quais pertencendo a uma das duas regiões. A Figura \ref{fig:leeA} ilustra o modelo de um sistema multi-servidor consistindo de 16 servidores. O ambiente virtual é dividido em 256 células, que são agrupadas em 16 regiões.
 
 \begin{figure}
  \centering
@@ -159,9 +159,9 @@ Foi definida a carga de trabalho de uma célula como o número de avatares present
 %1.3.1
 %\subsubsection{Seleção adaptativa de servidor}
 
-Um servidor dispara o balanceamento quando a carga atribuída a ele excede sua capacidade. Este servidor seleciona um conjunto de outros servidores para se envolverem com a distribuição. Primeiro, o servidor que iniciou escolhe o menos carregado dentre seus vizinhos e envia um pedido de que ele participe do balanceamento de carga. O vizinho escolhido rejeita o pedido se ele já está envolvido em outro grupo de balanceamento; caso contrário, ele responde ao servidor iniciador com a informação de carga de seus próprios vizinhos. Se o servidor vizinho que está participando não for capaz de absorver a carga de trabalho excedente do servidor iniciador, a seleção é executada novamente entre os servidores vizinhos de não apenas o servidor sobrecarregado, como também os vizinhos do vizinho escolhido na primeira fase. A seleção continua até que a carga de trabalho excedente do primeiro servidor possa ser absorvida -- isto é, a carga de trabalho de todos os servidores selecionados torna-se menor que um limite pré-definido. Os autores definiram este limite como sendo 90\% da capacidade total do conjunto de servidores. O critério utilizado foi o de evitar o imediato reinício da balanceamento de carga.
+Um servidor dispara o balanceamento quando a carga atribuída a ele excede sua capacidade. Este servidor seleciona um conjunto de outros servidores para se envolverem com a distribuição. Primeiro, o servidor que iniciou escolhe o menos carregado dentre seus vizinhos e envia um pedido de que ele participe do balanceamento de carga. O vizinho escolhido rejeita o pedido se ele já está envolvido em outro grupo de balanceamento; caso contrário, ele responde ao servidor iniciador com a informação de carga de seus próprios vizinhos. Se o servidor vizinho que está participando não for capaz de absorver a carga de trabalho excedente do servidor iniciador, a seleção é executada novamente entre os servidores vizinhos de não apenas o servidor sobrecarregado, como também os vizinhos do vizinho escolhido na primeira fase. A seleção continua até que a carga de trabalho excedente do primeiro servidor possa ser absorvida -- isto é, a carga de trabalho de todos os servidores selecionados torna-se menor que um limite pré-definido. Os autores definiram este limite como sendo 90\% da capacidade total do conjunto de servidores. O critério utilizado para esta escolha foi o de evitar o imediato reinício da balanceamento de carga.
 
-Sejam SELECIONADOS e CANDIDATOS conjuntos de servidores, ambos inicialmente vazios e seja $CP$ a capacidade de cada servidor. O procedimento para determinar quem serão os servidores envolvidos é o seguinte:
+Sejam SELECIONADOS e CANDIDATOS dois conjuntos de servidores, ambos inicialmente vazios. Seja $P$ a capacidade de cada servidor. O procedimento para determinar quem serão os servidores envolvidos é o seguinte:
 
 \begin{enumerate}	
 
@@ -177,11 +177,11 @@ Sejam SELECIONADOS e CANDIDATOS conjuntos de servidores, ambos inicialmente vazi
 	
 	\end{enumerate}
 	
-	\item O passo 2 é repetido até que a carga de trabalho média dos servidores selecionados se torne menor que um limite: $0,9 \times CP$.
+	\item O passo 2 é repetido até que a carga de trabalho média dos servidores selecionados se torne menor que um limite: $0,9 \times P$.
 	
 \end{enumerate}
 
-Para exemplificar o funcionamento do algoritmo, pode-se observar a Figura \ref{fig:lee2}. Todos os servidores têm a mesma capacidade, podendo cada um comportar 100 usuários. Primeiro, o servidor iniciador, $S_6$, é inserido em SELECIONADOS e seus vizinhos ($S_2$, $S_5$, $S_7$ e  $S_{10}$) são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(a)). Então, $S_7$, que tem a menor carga de trabalho dentre os servidore em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Quando $S_7$ responde a $S_6$ com a informação de carga de seus vizinhos ($S_3$, $S_6$, $S_8$ e $S_{11}$), $S_7$ é inserido em SELECIONADOS e seus vizinhos, exceto $S_6$, são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(b)). Agora, $S_{11}$, que tem a menor carga de trabalho dentre os servidores em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Porém, $S_{11}$ rejeita o convite, pois já está envolvido em outra distribuição, iniciada por $S_{12}$. Assim, $S_{11}$ é removido de CANDIDATOS e $S_{10}$ é selecionado porque tem agora a menor carga de trabalho dentre os servidores em CANDIDATOS (Figura \ref{fig:lee2}(c)). Até que a carga de trabalho média dos servidores em SELECIONADOS se torne menor que $0,9 \times CP$, ou seja, $90$, o procedimento acima continua (Figura \ref{fig:lee2}(d) e Figura \ref{fig:lee2}(e)).
+Para exemplificar o funcionamento do algoritmo, pode-se observar a Figura \ref{fig:lee2}. Todos os servidores têm a mesma capacidade, podendo cada um comportar 100 usuários. Primeiro, o servidor iniciador, $S_6$, é inserido em SELECIONADOS e seus vizinhos ($S_2$, $S_5$, $S_7$ e  $S_{10}$) são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(a)). Então, $S_7$, que tem a menor carga de trabalho dentre os servidore em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Quando $S_7$ responde a $S_6$ com a informação de carga de seus vizinhos ($S_3$, $S_6$, $S_8$ e $S_{11}$), $S_7$ é inserido em SELECIONADOS e seus vizinhos, exceto $S_6$, são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(b)). Agora, $S_{11}$, que tem a menor carga de trabalho dentre os servidores em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Porém, $S_{11}$ rejeita o convite, pois já está envolvido em outra distribuição, iniciada por $S_{12}$. Assim, $S_{11}$ é removido de CANDIDATOS e $S_{10}$ é selecionado porque tem agora a menor carga de trabalho dentre os servidores em CANDIDATOS (Figura \ref{fig:lee2}(c)). Até que a carga de trabalho média dos servidores em SELECIONADOS se torne menor que $0,9 \times P$, ou seja, $90$, o procedimento acima continua (Figura \ref{fig:lee2}(d) e Figura \ref{fig:lee2}(e)).
 
 \begin{figure}
  \centering
@@ -220,6 +220,32 @@ Com o término do reparticionamento das regiões, o servidor que iniciou todo o pr
 
 %Além disso, é proposto um modelo simples de movimentação dos usuários, baseado no \emph{Random Waypoint Mobility Model}, que pode vir a ser útil numa futura simulação em algum trabalho futuro.
 
+\subsection{Uso de grafos em distribuição de tarefas [TODO:rename]}
+%***princípio do uso de particionamento de grafos para distribuição de tarefas com corte de aresta tão pequeno quanto possível -> tarefas mais independentes
+%    ggp, gggp, spectral bissection, kernighan-lin
+%falar do kernighan-lin e a dependência entre tarefas
+%as tarefas são geralmente estáticas..
+
+Um problema clássico de alocação de tarefas em sistemas distribuídos é o da dependência entre tarefas [TODO:refsDEdistGRAPH]. Tarefas dependentes entre si fazem com que os processadores nos quais elas estão sendo executadas tenham que se comunicar para que o processamento possa continuar. Isso gera dois problemas principais: em primeiro lugar, o processamento como um todo é atrasado por causa do tempo de espera de cada transmissão e recebimento de mensagens -- supondo que a comunicação entre os processos seja por meio de mensagens, como é o caso do MPI [TODO:ref] -- e, em segundo lugar, banda de comunicação é ocupada para o envio e recebimento destas mensagens.
+
+Para resolver este problema, são utilizados grafos, da seguinte maneira: o conjunto de tarefas a realizar é mapeado em um grafo com pesos. Cada vértice representa uma tarefa e cada aresta representa a comunicação entre as tarefas. O peso de cada vértice representa o custo de processamento e o peso da aresta representa a carga de comunicação. Para fazer a distribuição, é feito um particionamento do grafo gerado. Cada partição terá um conjunto de tarefas que serão executadas no mesmo nodo e, conseqüentemente, o atraso de comunicação entre estas tarefas será pequeno [TODO:refbli]. No entanto, as arestas do grafo que ligam partições diferentes representam comunicação entre diferentes nodos. A Figura [TODO:ref] ilustra essa situação.
+
+[TODO:figura do grafo de tarefas e dependências, assim como particionamento com corte de arestas e diferentes particionamentos levando a diferentes cortes de aresta]
+
+Os algoritmos de particionamento do grafo de tarefas, geralmente, buscam atingir dois objetivos: gerar partições de peso aproximadamente igual, ou seja, cada nodo terá uma carga computacional semelhante à dos outros; e minimizar o corte de aresta, ou seja, fazer com que a dependência entre os conjuntos de tarefas seja a menor possível, reduzindo a comunicação entre os nodos de processamento. Por corte de aresta, entende-se o somatório dos pesos de todas as arestas que ligam vértices que estão em partições diferentes (Figura [TODO:reffig]).
+
+O problema de particionamento de grafos é NP-completo [TODO:ref]. Contudo, já foi feita bastante pesquisa nessa área, resultando em heurísticas que obtêm boas soluções, muitas vezes se aproximando de valores ótimos [TODO:ref]. Uma das heurísticas mais conhecidas é a de Kernighan e Lin \cite{kernighan1970ehp}, que tem como objetivo, partindo de duas partições iniciais quaisquer, chegar a duas partições com peso semelhante e corte de aresta reduzido. O algoritmo de Fiduccia e Mattheyses \cite{fiduccia1982lth} incrementa a solução de Kernighan e Lin, generalizando-a para hipergrafos, além de permitir que cada partição tenha uma fração diferente do peso total do hipergrafo.
+
+Existem outros algoritmos mais recentes, como os baseados em divisão espectral [TODO:ref-33-e-20-karypisirreggraphs]. Estes são computacionalmente caros, por envolver complexos cálculos de álgebra linear, precisando do autovetor associado ao menor autovalor da matrix laplaciana associada ao grafo [TODO:ref]. No entanto, o particionamento resultante é considerado excelente para uma vasta gama de problemas [TODO:ref]. Existe também a abordagem em vários níveis [TODO:citemultilevel], através da simplifação do grafo por meio de contração de arestas. Com o grafo mais simples, é aplicado algum algoritmo de particionamente e então ele se desdobra, já particionado, até o grafo original. Eventualmente, refinamentos no particionamento podem ser necessários. Esta última técnica é especialmente útil em grafos com grande número de vértices, na ordem de centenas a milhares, ou mais. Na figura [TODO:ref] é ilustrado esse particionamento em vários níveis.
+
+[TODO:figura do multilevel]
+
+Contudo, MMOGs são geralmente aplicações de tempo-real, além de a carga imposta sobre os servidores mudar constantemente em tempo de execução. Por esse motivo, o algoritmo de particionamento utilizado deve ser rápido, tornando inviável o uso da divisão espectral. É proposto neste trabalho utilizar um algoritmo guloso, mais simples, baseado em [TODO:aOUTRArefdekarypis], que pode não atingir soluções tão boas quanto as da divisão espectral, porém é consideravelmente mais rápido. Além disso, o custo para encontrar uma solução muito próxima do ótimo não se justifica no contexto de MMOGs, pelo fato dos pesos mudarem constantemente, precisando de um novo particionamento em relativamente pouco tempo. Já quanto ao particionamento em vários níveis, seu uso não foi considerado necessário pois o número de vértices do grafo que representará o ambiente virtual é relativamente pequeno.
+
+%TODO:ver esse "definições e parametros"
+Nas próximas seções, será apresentada a solução proposta neste trabalho para balanceamento de carga, começando pelas definições e parâmetros utilizados, assim como será descrito como o problema foi mapeado para grafos e quais os objetivos e critérios do esquema proposto.
+%even
+%uneven
 
 \section{Esquema proposto}
 
@@ -241,7 +267,7 @@ Os trabalhos relacionados que foram descritos na seção anterior buscam resolver 
 
 Outra questão que foi deixada de lado refere-se ao overhead, tanto no atraso para o envio de mensagens, quanto no uso de largura de banda dos servidores, quando jogadores estão interagindo cada um conectado a um servidor diferente. Em \cite{lee2003sdl}, é considerado que os servidores estão todos em uma mesma rede local, de alta velocidade e baixo atraso, e que esse overhead é desprezível. No entanto, ao se considerar um sistema servidor geograficamente distribuído, não se pode partir desse pressuposto. Esse overhead deve ser levado em conta para qualquer que seja o algoritmo de balanceamento a ser utilizado nesse sistema.
 
-Mais um ponto importante que não foi devidamente considerado por outros trabalhos existentes: o critério principal a ser levado em consideração em um balanceamento de carga de servidores de MMOGs é o da largura de banda, e nem tanto o poder de processamento. Diversos jogos eletrônicos incluem simulações de ambientes virtuais, de várias centenas ou milhares de entidades, como é o caso do jogo Age of Empires [TODO:ref], que são efetuadas sem problemas nos computadores pessoais de hoje em dia. No entanto, se esse jogo fosse multijogador e cada uma dessas mesmas entidades fosse controlada por um jogador conectado em rede aos outros jogadores, muito provavelmente seria gerado um tráfego que dificilmente seria suportado por uma conexão doméstica[TODO:ref].
+Mais um ponto importante que não foi devidamente considerado por outros trabalhos existentes foi que o critério principal a ser levado em consideração em um balanceamento de carga de servidores de MMOGs é o da largura de banda, e nem tanto o poder de processamento. Diversos jogos eletrônicos incluem simulações de ambientes virtuais, de várias centenas ou milhares de entidades, como é o caso do jogo Age of Empires [TODO:ref], que são efetuadas sem problemas nos computadores pessoais de hoje em dia. No entanto, se esse jogo fosse multijogador e cada uma dessas mesmas entidades fosse controlada por um jogador conectado em rede aos outros jogadores, muito provavelmente seria gerado um tráfego que dificilmente seria suportado por uma conexão doméstica[TODO:ref].
 
 Além disso, a largura de banda de envio, ou \emph{upload}, deve ser levada em conta, muito mais do que a de recebimento, ou \emph{download}. Isso ocorre por duas razões: em primeiro lugar, o uso da banda de recebimento por cada nodo servidor cresce linearmente com o número de jogadores a ele conectados, enquanto que o uso da banda de envio pode ter um crescimento quadrático, saturando-a muito mais rapidamente; segundo, as conexões domésticas -- pretende-se obter recursos para formar o sistema servidor dos próprios jogadores, pelo menos em parte -- geralmente possuem uma banda de envio pequena em comparação com a banda de recebimento.
 
@@ -260,32 +286,6 @@ Porém, uma idéia importante que foi sugerida é a do uso de grafos para represent
 %possível loop infinito, se não houverem vizinhos capazes ou disponíveis. Outro critério ruim.
 
 %[TODO:isso não deveria ir para os "trabalhos relacionados" deste capítulo?]
-\subsection{Uso de grafos em distribuição de tarefas [TODO:rename]}
-%***princípio do uso de particionamento de grafos para distribuição de tarefas com corte de aresta tão pequeno quanto possível -> tarefas mais independentes
-%    ggp, gggp, spectral bissection, kernighan-lin
-%falar do kernighan-lin e a dependência entre tarefas
-%as tarefas são geralmente estáticas..
-
-Um problema clássico de alocação de tarefas em sistemas distribuídos é o da dependência entre tarefas [TODO:refsDEdistGRAPH]. Tarefas dependentes entre si fazem com que os processadores nos quais elas estão sendo executadas tenham que se comunicar para que o processamento possa continuar. Isso gera dois problemas principais: em primeiro lugar, o processamento como um todo é atrasado por causa do tempo de espera de cada transmissão e recebimento de mensagens -- supondo que a comunicação entre os processos seja por meio de mensagens, como é o caso do MPI [TODO:ref].
-
-Para resolver este problema, são utilizados grafos, da seguinte maneira: o conjunto de tarefas a realizar é mapeado em um grafo com pesos. Cada vértice representa uma tarefa e cada aresta representa a comunicação entre as tarefas. O peso de cada vértice representa o custo de processamento e o peso da aresta a carga de comunicação. Para fazer a distribuição, é feito um particionamento do grafo gerado. Cada partição terá um conjunto de tarefas que serão executadas no mesmo nodo e, conseqüentemente, o atraso de comunicação entre elas será relativamente pequeno [TODO:refbli]. No entanto, as arestas do grafo que ligam partições diferentes representam comunicação entre diferentes nodos. A Figura [TODO:ref] ilustra essa situação.
-
-[TODO:figura do grafo de tarefas e dependências, assim como particionamento com corte de arestas e diferentes particionamentos levando a diferentes cortes de aresta]
-
-Os algoritmos de particionamento do grafo de tarefas, geralmente, buscam atingir dois objetivos: gerar partições de peso aproximadamente igual, ou seja, cada nodo terá uma carga computacional semelhante à dos outros; e minimizar o corte de aresta, ou seja, fazer com que a dependência entre os conjuntos de tarefas seja a menor possível, reduzindo a comunicação entre os nodos de processamento. Por corte de aresta, entende-se o somatório dos pesos de todas as arestas que ligam vértices que estão em partições diferentes. [TODO:reffig]
-
-O problema de particionamento de grafos é NP-completo [TODO:ref]. Contudo, já foi feita bastante pesquisa nessa área, resultando em heurísticas que obtêm boas soluções, muitas vezes se aproximando de valores ótimos [TODO:ref]. Uma das heurísticas mais conhecidas é a de Kernighan e Lin \cite{kernighan1970ehp}, que tem como objetivo, partindo de duas partições iniciais quaisquer, chegar a duas partições com peso semelhante e corte de aresta reduzido. O algoritmo de Fiduccia e Mattheyses \cite{fiduccia1982lth} incrementa a solução de Kernighan e Lin, generalizando-a para hipergrafos, além de permitir que cada partição tenha uma fração diferente do peso total do hipergrafo.
-
-Existem outros algoritmos mais recentes, como os baseados em divisão espectral [TODO:ref-33-e-20-karypisirreggraphs]. Este é computacionalmente caro, por envolver complexos de álgebra linear, precisando autovetor associado ao menor autovalor da matrix laplaciana associada ao grafo [TODO:ref]. No entanto, o particionamento resultante é considerado excelente para uma vasta gama de problemas [TODO:ref]. Existe também a abordagem em vários níveis [TODO:citemultilevel], através da simplifação do grafo por meio de contração dos mesmos e sobreposição das arestas correspondentes. Com o grafo mais simples, é aplicado algum algoritmo de particionamente e então ele se desdobra, já particionado, até o grafo original. Eventualmente, refinamentos no particionamento podem ser necessários. Esta última técnica é especialmente útil em grafos com grande número de vértices, na ordem de centenas a milhares, ou mais. Na figura [TODO:ref] é ilustrado esse particionamento em vários níveis.
-
-[TODO:figura do multilevel]
-
-Contudo, MMOGs são geralmente aplicações de tempo-real, além de a carga imposta sobre os servidores mudar constantemente em tempo de execução. Por esse motivo, o algoritmo de particionamento utilizado deve ser rápido, tornando inviável o uso da divisão espectral. É proposto neste trabalho utilizar um algoritmo guloso, mais simples, definido em [TODO:aOUTRArefdekarypis], que pode não atingir soluções tão boas quanto as da divisão espectral, porém é consideravelmente mais rápido. Além disso, o custo para encontrar uma solução muito próxima do ótimo não se justifica no contexto de MMOGs, pelo fato dos pesos mudarem constantemente, precisando de um novo particionamento em relativamente pouco tempo. Já quanto ao particionamento em vários níveis, seu uso não foi considerado necessário pois o número de vértices do grafo que representará o ambiente virtual é relativamente pequeno.
-
-%TODO:ver esse "definições e parametros"
-Nas próximas seções, será apresentada a solução proposta neste trabalho para balanceamento de carga, começando pelas definições e parâmetros utilizados, assim como será descrito como o problema foi mapeado para grafos e quais os objetivos e critérios do esquema proposto.
-%even
-%uneven
 
 \subsection{Definições e mapeamento para grafo}
 %[TODO:talvez, compactar essa lista, que está detalhada demais]
@@ -321,7 +321,7 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 		
 		Seja o servidor $S$ aquele ao qual está conectado o jogador $P$ que controla o avatar $A$. Será $S$ a enviar para $P$ atualizações de estado de qualquer outro avatar, independente de onde esteja. Se $A$ estiver interagindo com um avatar $A'$, cujo jogador estiver conectado a outro servidor, $S'$, este deverá primeiro enviar o estado de $A'$ para $S$, que então encaminhará para o jogador $P$.
 		
-	\item \textbf{Carga de uma célula}: aqui, carga total da célula (ou uso da banda de envio do servidor) será igual à soma das cargas individuais dos jogadores. Seja a célula $C$, onde estão presentes $n$ avatares $\{A_1, A_2, ..., A_n\}$, sendo que em todo o ambiente virtual existem, no total, $t$ avatares. A carga da célula, $w_c(C)$, é encontrada com o seguinte somatório:
+	\item \textbf{Carga de uma célula}: aqui, carga total da célula (ou uso da banda de envio do servidor) será igual à soma das cargas individuais dos avatares naquela célula. Seja a célula $C$, onde estão presentes $n$ avatares $\{A_1, A_2, ..., A_n\}$, sendo que em todo o ambiente virtual existem, no total, $t$ avatares. A carga da célula, $w_c(C)$, é encontrada com o seguinte somatório:
 	
 		\begin{center}		
 			$\displaystyle w_c(C) = \sum_{i=1}^{n} w(Ai) = \sum_{i=1}^{n} \sum_{j=1}^{t} R(A_i,A_j)$
@@ -374,6 +374,8 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 			
 			onde $C_i \in R_i$ e $C_j \in R_j$.
 	  \end{center}
+	  
+	  O $Int_r(R_i, R_j)$ terá um valor numérico proporcional ao uso de largura de banda de $s(R_j)$ para envio de mensagens para $s(R_i)$.
   	
   \item \textbf{Overhead Total}: o overhead total sobre o sistema servidor é calculado como a soma dos overheads entre cada par de regiões. Sendo assim, temos:
 
@@ -420,12 +422,13 @@ O objetivo do esquema de balanceamento aqui proposto é atribuir a cada servidor 
 
 
 \subsection{Algoritmos propostos}
+\label{sec:algprop}
 
 %[TODO:falar do algoritmo de seleção de regiões do lee]
 
-Considera-se que uma divisão inicial do ambiente virtual já foi feita. Deverá então ser verificado periodicamente se houve um desbalanceamento e disparar o algoritmo. Embora o overhead resultante da distribuição do ambiente virtual faça parte da carga imposta aos servidores, não há como saber qual será esse overhead sem efetuar o reparticionamento primeiro. Por esta razão, a ``carga'' a ser distribuída não incluirá este sobrecusto.
+Considera-se que uma divisão inicial do ambiente virtual já foi feita. Cada servidor deverá então verificar periodicamente se está sobrecarregado o e disparar o algoritmo. Embora o overhead resultante da distribuição do ambiente virtual faça parte da carga imposta aos servidores, não há como saber qual será esse overhead sem efetuar o reparticionamento primeiro. Por esta razão, a ``carga'' a ser distribuída não incluirá este sobrecusto.
 
-Quando se verifica que uma região está desbalanceada, é selecionado um grupo local de regiões, de maneira parecida com o que foi mostrado na seção \ref{lee:regselect}, porém com algumas mudanças (seção \ref{sec:alg:localselect}). Após essa seleção, será utilizado um algoritmo cujos parâmetros são apenas as cargas das células e suas interações (que são os pesos dos vértices e das arestas), pois já se dispõe desses dados. Por último, com as partições do grafo já balanceadas, será utilizado o algoritmo de Kernighan e Lin para refinar o particionamento, reduzindo o corte de aresta, porém mantendo o balanceamento.
+Quando se verifica que uma região está desbalanceada, é selecionado um grupo local de regiões, de maneira parecida com o que foi mostrado na seção \ref{lee:regselect}, porém com algumas mudanças (seção \ref{sec:alg:localselect}). Após essa seleção, será utilizado um algoritmo cujos parâmetros são apenas as cargas das células e suas interações (que são os pesos dos vértices e das arestas), pois estes são os dados de que se dispõe. Por último, com as cargas das regiões já balanceadas, será utilizado o algoritmo de Kernighan e Lin para refinar o particionamento, reduzindo o corte de aresta, porém mantendo o balanceamento.
 
 O esquema proposto se divide então em três fases:
 
@@ -440,18 +443,18 @@ O esquema proposto se divide então em três fases:
 Uma decisão tomada para esse esquema de balanceamento é que uma região $R$ é considerada sobrecarregada apenas quando o uso de seus recursos é maior que o uso total do sistema, considerando também uma certa tolerância, $tol$, para evitar constantes rebalanceamentos. Assim, o servidor de $R$ inicia o balanceamento sempre que, e somente quando, \mbox{$u(s(R)) > U_{total} \times tol$}. Dessa forma, mesmo que o sistema como um todo esteja sobrecarregado, será mantida uma qualidade de jogo semelhante nas diferentes regiões, dividindo o excedente de carga entre todos os servidores de maneira justa. O que pode ser feito quando \mbox{$U_{total} > 1$} é reduzir gradativamente a quantidade de informações enviadas a cada atualização de estado, deixando a aplicação extrapolar as lacunas com base em atualizações anteriores.
 %[TODO:por vantagens e desvantagens depois]
 
-Outro aspecto importante é que cada servidor sempre tem uma região associada. O que pode ocorrer é de uma região ser vazia, ou seja, ela não possui células e o seu servidor não participa da execução do jogo. Isso é útil quando a capacidade total do sistema servidor é muito maior que a carga total do jogo, ou seja, $P_{total} \gg W_{total}$. Neste caso, a introdução de mais servidores aumentaria o overhead de comunicação no sistema, sem melhorar sua qualidade -- salvo quando provesse tolerância a falhas.
+Outro aspecto importante é que cada servidor sempre tem uma região associada. O que pode ocorrer é de uma região ser vazia, ou seja, ela não possui células e o seu servidor não participa da execução do jogo. Isso é útil quando a capacidade total do sistema servidor é muito maior que a carga total do jogo, ou seja, $P_{total} \gg W_{total}$. Neste caso, a introdução de mais servidores apenas aumentaria o overhead de comunicação no sistema, sem melhorar sua qualidade -- salvo quando provesse tolerância a falhas.
 
-Os algoritmos foram desenvolvidos orientados a regiões, ao invés de servidores, para que fossem mais legíveis, levando em conta as constantes transferências de células. Além disso, torna-se mais fácil no futuro estender o modelo de balanceamento utilizado aqui para que mais de um servidor possa administrar a mesma região. Os algoritmos propostos são descritos a seguir, sendo que o da seção \ref{sec:alg:localselect} é para a fase 1; os das seções \ref{sec:alg:ggp} a \ref{sec:alg:bfa} são opções para a fase 2; e o algoritmo da seção \ref{sec:alg:kl} é o refinamento da fase 3.
+Os algoritmos foram desenvolvidos orientados a regiões, ao invés de servidores, para que fossem mais legíveis, levando em conta as constantes transferências de células no código. Além disso, torna-se mais fácil no futuro estender o modelo de balanceamento utilizado aqui para que mais de um servidor possa administrar a mesma região. Os algoritmos propostos são descritos a seguir, sendo que o da seção \ref{sec:alg:localselect} é para a fase 1; os das seções \ref{sec:alg:ggp} a \ref{sec:alg:bfa} são opções para a fase 2; e o algoritmo da seção \ref{sec:alg:kl} é o refinamento da fase 3.
 
 \subsubsection{Seleção local de regiões}
 \label{sec:alg:localselect}
 
 O algoritmo de seleção de regiões (Algoritmo \ref{alg:local}) tem como objetivo formar um conjunto de regiões tal que o uso médio de recursos dos servidores dessas regiões esteja abaixo de um certo limite. Partindo da região do servidor que disparou o balanceamento, as regiões vizinhas com menor uso de recursos vão sendo adicionadas. Quando o uso médio for menor que 1, ou menor que $U_{total}$ (linha \ref{alg:local:condition}), a seleção termina e a fase 2 começa, tendo como entrada o conjunto formado nesta fase. Essas duas condições se justificam porque existem duas possibilidades: $U_{total} \leq 1$ e $U_{total} > 1$.
 
-No caso de $U_{total} \leq 1$, existe capacidade suficiente no sistema para que todos os servidores tenham um uso menor que 100\%. Assim, são adicionadas regiões ao grupo até que todos os servidores envolvidos estejam usando menos recursos do que possuem. No entanto, quando $U_{total} > 1$, não há como todos os servidores estarem usando menos que 100\% de seus recursos ao mesmo tempo. Assim, considera-se suficiente que todos os servidores estejam igualmente sobrecarregados, e que algum tipo de adaptação seja feita, o que provavelmente será uma redução nas informações enviadas aos jogadores a cada atualização de estado.
+No caso de $U_{total} \leq 1$, existe capacidade suficiente no sistema para que todos os servidores tenham um uso menor que 100\%. Assim, são adicionadas regiões ao grupo até que todos os servidores envolvidos estejam usando uma quantidade de recursos menor ou igual à que possuem. No entanto, quando $U_{total} > 1$, não há como todos os servidores estarem usando menos que 100\% de seus recursos ao mesmo tempo. Assim, considera-se suficiente que todos os servidores estejam igualmente sobrecarregados, e que algum tipo de adaptação seja feita, o que provavelmente será uma redução nas informações enviadas aos jogadores a cada atualização de estado.
 
-Se mesmo após serem selecionadas todas as regiões vizinhas, as vizinhas das vizinhas e assim por diante, o critério não for cumprido, regiões vazias -- pertencentes a servidores ociosos -- serão incluídas no grupo (linha \ref{alg:local:idleserver}), pois o overhead de interação entre regiões introduzido por elas se justifica pela necessidade de mais recursos.
+Se mesmo após serem selecionadas todas as regiões vizinhas, as vizinhas das vizinhas e assim por diante, o critério não for cumprido, regiões vazias -- pertencentes a servidores ociosos até então -- serão incluídas no grupo (linha \ref{alg:local:idleserver}), pois o overhead de interação entre regiões introduzido por elas se justifica pela necessidade de mais recursos.
 
 \begin{algorithm}
 \caption{Seleção local de regiões}
@@ -478,6 +481,8 @@ Se mesmo após serem selecionadas todas as regiões vizinhas, as vizinhas das vizi
 \end{algorithmic}
 \end{algorithm}
 
+Após terem sido selecionadas as regiões que serão rebalanceadas, uma lista com as mesmas é passada como parâmetro ao algoritmo da fase 2 que as reparticionará.
+
 %[TODO:]
 
 \subsubsection{\ggp} %repart
@@ -485,7 +490,7 @@ Se mesmo após serem selecionadas todas as regiões vizinhas, as vizinhas das vizi
 
 %O algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph{\ggpmeaning}) busca atribuir as cregiões mais sobrecarregadas aos servidores mais poderosos, embora seja uma heurística e não há garantias de que isso vá acontecer em 100\% dos casos. Para prover um particionamento balanceado, proporcional e com um corte de aresta já reduzido na primeira fase do balanceamento, os servidores são ordenados em ordem decrescente de capacidade. Cada um então toma uma porção do ambiente virtual, que julga-se ser a mais carregada naquele momento, até que seja atingido o limite daquele servidor, e então passa-se para o próximo da lista. Os detalhes do algoritmo estão em [TODO:refEvercomoficaessaref].
 
-O algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph{\ggpmeaning}) busca atribuir as células mais carregadas às regiões gerenciadas pelos servidores mais poderosos. Como entrada do algoritmo, é passada uma lista das regiões a balancear.  Os detalhes estão exibidos no Algoritmo \ref{alg:ggp}.
+Uma opção para a fase 2 é o algoritmo de crescimento proporcional e guloso de região (\textbf{\ggp}, \emph{\ggpmeaning}), que busca atribuir as células mais carregadas às regiões gerenciadas pelos servidores mais poderosos. Os detalhes estão exibidos no Algoritmo \ref{alg:ggp}.
 
 %parametros: lista de regioes, lista de celulas que pertenciam àquelas regiões, capacidade dos servidores
 
@@ -548,7 +553,7 @@ Como foi dito, é passada como parâmetro uma lista das regiões cuja carga será re
 
 Para prover um particionamento balanceado, proporcional e com um corte de aresta já reduzido na primeira fase do balanceamento, as regiões são ordenadas em ordem decrescente de capacidade de seus servidores (linha \ref{alg:ggp:sortregions}). O \ggp\ então percorre essa lista ordenada, buscando atribuir às regiões com mais capacidade as células mais pesadas, enquanto que encarrega as regiões com servidores mais fracos de células menos carregadas.
 
-Na linha \ref{alg:ggp:fraction}, é calculado qual a parcela de carga que cabe a cada região, considerando a carga total que está sendo dividida e a capacidade total daquelas regiões. A fração da capacidade de servidor daquela região, em relação ao conjunto de todas as regiões envolvidas no balanceamento, $\frac{p(s(R))}{\freecap}$, deve ser a mesma fração de carga que deve ser atribuída a ela. Ainda que essa carga seja maior que a capacidade do servidor, resultando em uma sobrecarga, todos os servidores estarão igualmente sobrecarregados, satisfazendo o critério de balanceamento que foi definido. A condição para o término da alocação de novas células a uma região é que a sua carga seja maior ou igual a essa parcela.
+Na linha \ref{alg:ggp:fraction}, é calculado qual a parcela de carga que cabe a cada região, considerando a carga total que está sendo dividida e a capacidade total daquelas regiões. A fração da capacidade de servidor de cada região, em relação ao conjunto de todas as regiões envolvidas no balanceamento, $\frac{p(s(R))}{\freecap}$, deve ser a mesma fração de carga que deve ser atribuída a ela. Ainda que essa carga seja maior que a capacidade do servidor, resultando em uma sobrecarga, todos os servidores estarão igualmente sobrecarregados, satisfazendo o critério de balanceamento que foi definido. A condição para o término da alocação de novas células a uma região é que a sua carga seja maior ou igual a essa parcela.
 
 A escolha de células para incluir na região busca fazer com que cada uma das arestas mais pesadas do grafo $GW$ ligue vértices da mesma partição, reduzindo o corte de aresta e, assim, o overhead. A cada passo é dado preferência a escolher a célula livre que não apenas seja vizinha de uma célula já presente na região, mas também cuja aresta ligando-as seja a mais pesada possível. A Figura [TODO:reffig] mostra um exemplo dos passos do crescimento de uma região até atingir a sua parcela de carga no balanceamento.
 
@@ -600,7 +605,7 @@ Um possível efeito indesejável do algorito \ggp\ é que, ao liberar todas as célu
 
 \subsubsection{\ggpf} %v4
 %[TODO: por desvantagens em outra seção posteriores]
-Outra maneira de tentar minimizar a migração de jogadores entre servidores por causa do rebalanceamento é com o \textbf{\ggpf}, ou \emph{\ggpfmeaning} (Algoritmo \ref{alg:ggpf}). Neste algoritmo, cada região vai liberando suas células em ordem crescente de carga, até que a fração de carga da região seja menor ou igual à fração de capacidade do seu servidor. Dessa forma, mantêm-se as células mais carregadas no mesmo servidor e, portanto, a maior parte dos jogadores não precisará migrar. Após isso, as células que foram liberadas vão sendo distribuídas entre as regiões com menor uso dos recursos de seu servidor. A desvantagem deste algoritmo é, tal como no \ggpk, a possibilidade de fragmentar as regiões em muitas células isoladas por causa da redistribuição das células livres, aumentando o overhead.
+Outra maneira de tentar minimizar a migração de jogadores entre servidores por causa do rebalanceamento é com o \textbf{\ggpf}, ou \emph{\ggpfmeaning} (Algoritmo \ref{alg:ggpf}). Neste algoritmo, cada região vai liberando suas células em ordem crescente de carga, até que a fração de carga da região seja menor ou igual à fração de capacidade do seu servidor. Dessa forma, mantêm-se as células mais carregadas no mesmo servidor e, portanto, a maior parte dos jogadores não precisará migrar. Após isso, as células que foram liberadas vão sendo distribuídas entre as regiões com menor uso dos recursos de seu servidor (linha \ref{alg:ggpf:usageorder}). A desvantagem deste algoritmo é, tal como no \ggpk, a possibilidade de fragmentar as regiões em muitas células isoladas por causa da redistribuição das células livres, aumentando o overhead.
 
 %  weight_to_divide = 0;
 %  free_capacity = 0;
@@ -640,14 +645,14 @@ Outra maneira de tentar minimizar a migração de jogadores entre servidores por c
 	 \FOR{cada região $R$ na $\rlist$}
 	 		\STATE $\wtodiv \leftarrow \wtodiv + w_r(R)$
 	 		\STATE $\freecap \leftarrow \freecap + p(s(R))$
-	 		\STATE $\clist \leftarrow $ lista de celulas de $R$ em ordem decrescente de carga
+	 		\STATE $\clist \leftarrow $ lista de celulas de $R$ em ordem crescente de carga
 	 		\WHILE{$frac_r(R) > frac_p(s(R))$}
 	 			 \STATE $C \leftarrow$ primeiro elemento de $\clist$
 	 			 \STATE remova $C$ de $R$
 	 			 \STATE remova $C$ de $\clist$
 	 		\ENDWHILE
 	 \ENDFOR
-	 \STATE ordene $\rlist$ em ordem crescente de $u(s(R))$
+	 \STATE ordene $\rlist$ em ordem crescente de $u(s(R))$ \label{alg:ggpf:usageorder}
 	 \FOR{cada região $R$ na $\rlist$}
 	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$
 	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggp:whilefraction}
@@ -723,13 +728,14 @@ O \textbf{\bfa} (\emph{\bfameaning}) é proposto aqui como uma alternativa ao \gg
 \subsubsection{Refinamento com o algoritmo \kl}
 \label{sec:alg:kl}
 
-Depois de balancear a carga entre os diferentes servidores na fase 2, cada servidor terá uma taxa de uso de seus recursos semelhante à dos outros. No entanto, pela fase 2 não considerar a interação entre as células nem o overhead entre regiões, estas podem ter sido fragmentadas, implicando em muitos pares de células vizinhas que não fazem parte da mesma região. Isso aumenta a probabilidade de dois jogadores, cada um em uma dessas células, interagirem entre si, por estarem próximos da mesma fronteira, o que, como foi mostrado em seções anteriores, causa um desperdício de recursos do sistema servidor.
+Depois de balancear a carga entre os diferentes servidores na fase 2, cada servidor terá uma taxa de uso de seus recursos semelhante à dos outros. No entanto, a fase 2 pode ter gerado regiões fragmentadas, implicando em muitos pares de células vizinhas que não são gerenciadas pelo mesmo servidor. Isso aumenta a probabilidade de dois jogadores, cada um em uma dessas células, interagirem entre si, por estarem próximos da mesma fronteira, o que, como foi mostrado em seções anteriores, causa um desperdício de recursos do sistema servidor.
 
 Para minimizar esse problema, é proposto aqui o uso de uma variante do algoritmo de Kernighan e Lin \cite{kernighan1970ehp}. Embora o algoritmo receba como entrada um grafo, os vértices, arestas, pesos e partições podem ser interpretados, respectivamente, como células, interações, cargas e regiões. Dado um par de regiões, o \kl\ busca pares de células que, se trocados entre essas regiões, diminuirão o overhead.
 
 Sejam $R_A$ e $R_B$ duas regiões e $a$ uma célula tal que $a \in A$. A interação externa da célula $a$ é definida como $E(a) = \sum_{b \in R_B} Int_c(a,b)$ e a interação interna é definida como $I(a) = \sum_{a' \in R_A} Int_c(a,a')$. A célula $a$ está propensa a trocar de região se sua interação com $R_B$ for maior que sua interação com $R_A$, ou seja $D(a) = E(a) - I(a) > 0$. Supondo que exista uma célula $b \in R_B$, tal que $D(a) + D(b) - 2 \times Int_c(a,b) > 0$, a troca irá reduzir o overhead entre as regiões. A expressão $D(a) + D(b) - 2 \times Int_c(a,b)$ é chamada de $gain(a,b)$, pois representa o ganho (redução do overhead) ao serem trocadas $a$ e $b$ de região.
 
-No caso de um ambiente virtual distribuída entre várias regiões, geralmente mais que duas, executa-se o \kl\ para cada par de regiões. Além disso, após cada troca deverá ser mantido o balanceamento -- caso contrário, todas as células poderiam ir para a mesma região, eliminando completamente o overhead. O \kl\ é extensamente conhecido na área de sistemas distribuídos, então não serão dados detalhes aqui. Considera-se apenas que ele retorna um valor de verdadeiro se foi realizada alguma troca e falso, se não foi. Ele é executado para todos os pares de regiões até que retorne um valor de falso, indicando que nenhuma troca irá prover ganho adicional.
+No caso de um ambiente virtual distribuído entre várias regiões -- geralmente, há mais do que duas regiões -- executa-se o \kl\ para cada par de regiões. Além disso, após cada troca deverá ser mantido o balanceamento -- caso contrário, todas as células poderiam ir para a mesma região, eliminando completamente o overhead. Considera-se que é retornado pelo algoritmo um valor de verdadeiro se foi realizada alguma troca e falso, se não foi. Ele é executado para todos os pares de regiões até que retorne um valor de falso, indicando que não há mais trocas possíveis.
+
 O Algoritmo \ref{alg:kl} mostra de que maneira o algoritmo de \kl\ é chamado.
 
 
@@ -780,7 +786,65 @@ O Algoritmo \ref{alg:kl} mostra de que maneira o algoritmo de \kl\ é chamado.
 %detalhes da implementação: classes, métodos, otimização do IM com células vizinhas e uso de long ao invés de float (pode não ter influenciado, mas é melhor prevenir. float causa SIM erros de precisão, especialmente na soma) e adaptação do valor de relevancia para uma escala de 0 a 100 (antes eram 0 ou 1 ...). uso de float para as frações de load e de power.
 %implementação: falar TUDO que foi feito como implementação, todos os algoritmos criados
 
+Nesta seção será descrito como foi implementado o protótipo com objetivo de validar o esquema proposto, utilizando a linguagem de programação C++. Avatares, células, regiões e servidores foram modelados como classes, que se relacionavam para formar o ambiente do jogo. Além disso, foi criada uma interface gráfica para visualizar o funcionamento do protótipo, corrigir erros e interferir disparando diferentes algoritmos para verificar como funcionava cada um. As classes implementadas foram: \code{Server}, \code{Region}, \code{Cell} e \code{Avatar}, representando os servidores, regiões, células e avatares.
 
+\subsection{A classe \texttt{Avatar}}
+
+A classe \code{Avatar} é a mais importante de todas, pois reproduz as ações dos jogadores, é o responsável pela carga imposta ao servidores, além de ser a base de todo o esquema de balanceamento de carga proposto. Cada objeto desta classe possui uma referência para um objeto da classe \code{Cell}, representando a célula onde ele está localizado. Além disso, ele possui duas coordenadas (\code{int posx, posy}), que representam sua posição exata no ambiente virtual. Além deste, a classe Avatar possui outros dois pares ordenandos, \code{int dirx, diry} e \code{int destx, desty}, que representam sua direção e destino atuais, inicializados com valores aleatórios quando o objeto é criado.
+
+Em um jogo real, cada ação de um jogador é executa pelo seu avatar, permitindo-lhe interagir com o ambiente virtual e com avatares de outros jogadores. No entanto, aqui todos os avatares foram simulados utilizando o modelo de \emph{random waypoint} [TODO:ref] com \emph{random wait} [TODO:ref]. A cada passo -- \code{void step(unsigned long delay)} --, o avatar verifica se já chegou ao seu destino já definido (\code{distance(posx, posy, destx, desty) < MAX\_TARGET\_DIST}). Se já chegou, define um tempo para espera aleatória e depois calcula seu próximo destino, com uma probabilidade de escolher um dos pontos de interesse pré-definidos. Se ainda não chegou, ele incrementa sua posição, com uma velocidade variável, em direção à posição de destino:
+
+		\code{//(...)}
+
+    \code{int speed = rand() \% MAX\_VEL + 1;}
+
+    \code{incr\_y =  (desty - posy) / distance(posx, posy, destx, desty);}
+
+    \code{incr\_x =  (destx - posx) / distance(posx, posy, destx, desty);}
+
+    \code{posy += incr\_y * speed;}
+    
+    \code{posx += incr\_x * speed;}
+    
+    \code{//(...)}
+
+Além de mover-se de posição (ou permanecer na mesma, se estiver em espera), o avatar verifica se ele atravessou alguma fronteira entre células. Isso é possível porque as células têm posição estática, bastando verificar se a nova posição do avatar pertence a uma célula diferente. Caso isso tenha ocorrido, ele envia mensagens, através de chamadas de método (\code{my\_cell->unsubscribe(this)} e \code{new\_cell->subscribe(this)}) para os objeto \code{Cell}  que representam sua célula antiga e sua célula nova, notificando a mudança.
+
+Por fim, a classe \code{Avatar} implementa mais dois métodos. Um objeto \code{Avatar} invoca o método \code{int OtherRelevance(Avatar* other)} quando se quer saber o quão relevente para ele é o avatar \code{*other}. Já o método \code{long getInteraction(Cell* c)} retorna a soma das relevâncias de todos os avatares na célula  \code{*c} em relação ao avatar que o invocou. Para calcular a relevância, decidiu-se utilizar o algoritmo proposto em \cite{bezerra2008a3}.
+
+\subsection{A classe \texttt{Cell}}
+
+Cada célula tem uma posição fixa e todas as células tem o mesmo tamanho, estando dipostas em forma de grade. A classe \code{Cell} tem uma matriz estática de ponteiros do tipo \code{Cell*}, sendo que o colunas multiplicado pela largura de cada célula é igual à largura do ambiente virtual. Da mesma forma, o número de linhas multiplicado pelo comprimento de cada célula é igual ao comprimento do ambiente virtual [TODO:reffigmatriz]. Dessa forma, pode-se encontrar os índices do objeto do tipo \code{Cell} na matriz \code{Matrix[i][j]} a partir da posição ocupada pelo avatar em tempo constante e com apenas informações locais, da seguinte forma:
+
+\begin{center}
+
+	$\text{\code{i}} = \left\lfloor \text{N\_COLUNAS} \times \frac{\text{\code{posx}}}{\text{LARGURA TOTAL}}\right\rfloor$ 
+
+\end{center}
+	
+	e 
+
+\begin{center}	
+
+	$\text{\code{j}} = \left\lfloor \text{N\_LINHAS} \times \frac{\text{\code{posy}}}{\text{COMPRIMENTO TOTAL}}\right\rfloor$ 
+
+\end{center}
+
+Cada objeto da classe \code{Cell} possui a lista dos avatares (\code{list<Avatar*> avatars}) presentes nela, uma referência à região que contém a célula (\code{Region* parentRegion}) e um vetor com os pesos das arestas (interações) ligando-a com as células vizinhas (\code{long edgeWeight[NUM\_NEIGH]}).
+
+Para calcular a carga da célula, é utilizado o método \code{long getCellWeight()}, que é a soma das cargas dos avatares. Uma otimização importante desta implementação foi a definição de células cujo comprimento e largura são ambos maiores que o alcance máximo de visão dos avatares. Dessa forma, avatares que estejam a mais de uma célula de distância terão sempre relevância nula um para o outro. Assim, para se calcular a carga de um avatar, basta ter a lista de avatares das células vizinhas às daquela onde ele está situado, economizando largura de banda e tempo de processamento (Figura [TODO:reffigoptIM]).
+
+A classe \code{Cell} implementa também outros métodos, que são necessários para os algoritmos descritos na seção \ref{sec:algprop}, tais como: \code{long getDesireToSwap(Region* r)}, \code{static Cell* getHighestEdgeFreeNeighbor(list<Cell*> \&cellList)} e \code{static Cell* getHeaviestFreeCell()}.
+
+\subsection{A classe \texttt{Region}}
+
+Cada objeto da classe \texttt{Region}, tem uma lista de referências para as células (\texttt{list<Cell*> cells}) que a compõem, além de uma lista das regiões que fazem fronteira com ela (\texttt{list<Region*> neighbors}) e uma referência para o objeto \texttt{Server} que representa seu servidor. É na classe \texttt{Region} que estão implementados os algoritmos que foram apresentados na seção \ref{sec:algprop}
+
+[...descrever o funcionamento (se tiver) e os métodos]
+
+\subsection{A classe \texttt{Server}}
+
+Cada objeto da classe \texttt{Server} tem como atributos principais uma referência para um objeto da classe \texttt{Region} e um valor inteiro (\texttt{long}) que representa sua capacidade. No protótipo implementado, sua única função é fornecer o valor de sua capacidade (\texttt{long serverPower}) ao objeto \texttt{Region} associado a cada servidor, além de fornecer o valor de $frac_p(S)$ e $P_{total}$, através dos métodos \texttt{double} \texttt{getPowerFraction()} e \texttt{static long getMultiserverPower()}.
 
 \section{Simulações e resultados}
 %definir cada caso da simulação e o porquê dele, em que influenciam os parametros e o que se quer tirar de conclusão
@@ -795,9 +859,9 @@ O Algoritmo \ref{alg:kl} mostra de que maneira o algoritmo de \kl\ é chamado.
 % NÃO ENTRA, É DISPENSÁVEL E NÃO É BONITO OU SIMPLES DE FAZER (teria que ser um para cada tipo de balanceamento) -----> VI: weightXinstante (linhas: wtotal, w1, w2, ..., wnservs)
 
 
-Para realizar a simulação do balanceamento de carga, foi simulado um ambiente virtual com diversos avatares que se movem segundo o modelo de \emph{random waypoint} [TODO:ref] com \emph{random wait}. Porém, a escolha do waypoint ao qual se dirigir não foi completamente aleatória. Foram definidos três pontos de interesse, e havia uma probabilidade de o havatar escolher um desses pontos de interesses como waypoint para seu próximo movimento. O objetivo disso foi tornar a distribuição dos avatares não uniforme no ambiente virtual, pondo à prova os algoritmos da fase 2 propostos. Aqueles que levassem conta a existência de hotspots formariam as regiões com base nisso, reduzindo o overhead da distribuição.
+Para realizar a simulação do balanceamento de carga, foi simulado um ambiente virtual com diversos avatares que se movem segundo o modelo de \emph{random waypoint} [TODO:ref] com \emph{random wait}. Porém, a escolha do waypoint ao qual se dirigir não foi completamente aleatória. Foram definidos três pontos de interesse, e havia uma probabilidade de o havatar escolher um desses pontos de interesses como waypoint para seu próximo movimento. O objetivo disso foi tornar a distribuição dos avatares não uniforme no ambiente virtual, pondo à prova os algoritmos da fase 2 propostos. Aqueles que levassem em conta a existência de pontos de interesse formariam as regiões com base nisso, reduzindo o overhead da distribuição.
 
-O ambiente consistia em um espaço bidimensional, divido em 225 células, formando uma matriz de ordem 15. Nele estavam presente 750 avatares. Todas as células sempre pertenciam a alguma região, embora pudessem ser transferidas de uma para outra. Havia oito servidores ($S_1, S_2, ..., S_8$), cada um com uma região associada, sendo que cada uma podia ter de 0 a todas as 225 células. A capacidade de todos os servidores era diferente, sendo que $p(S_i) = i\times20000$. Assim o servidor $S_1$ tinha capacidade de 20000 e $S_8$, de 160000, por exemplo. Dessa forma, pôde-se testar se a distribuição estava atendendo o critério de balanceamento proporcional de carga. Cada seção de jogo simulada foi de 20 minutos. A carga total do jogo foi propositalmente ajustada de maneira que fosse maior que a capacidade total do sistema, forçando à execução do balanceamento de carga.
+O ambiente consistia em um espaço bidimensional, divido em 225 células, formando uma matriz de ordem 15. Nele estavam presente 750 avatares. Todas as células sempre pertenciam a alguma região, embora pudessem ser transferidas de uma para outra. Havia oito servidores ($S_1, S_2, ..., S_8$), cada um com uma região associada, sendo que cada uma podia ter de 0 a todas as 225 células. A capacidade de todos os servidores era diferente, sendo que $p(S_i) = i\times20000$. Assim o servidor $S_1$ tinha capacidade de 20000 e $S_8$, de 160000, por exemplo. Dessa forma, pôde-se testar se a distribuição estava atendendo o critério de balanceamento proporcional de carga. Cada seção de jogo simulada foi de 20 minutos. A carga total do jogo foi propositalmente ajustada de maneira que fosse maior que a capacidade total do sistema, forçando à execução do balanceamento de carga, devido à sobrecarga dos servidores.
 
 \begin{figure}[!t]
   \centering
@@ -806,9 +870,9 @@ O ambiente consistia em um espaço bidimensional, divido em 225 células, formando
   \label{gra:baloverall}
 \end{figure}
 
-No gráfico da Figura \ref{gra:baloverall}, pode-se ver que todos os algoritmos propostos atendem ao critério de proporcionalidade no balanceamento de carga. No entanto, alguns deles introduzem mais overhead que os outros. A razão disso é a fragmentação que causam nas regiões. Quanto menor o número de fragmentos que tem as regiões, menor será esse overhead, pois haverá menos fronteiras entre regiões.
+No gráfico da Figura \ref{gra:baloverall}, pode-se ver que todos os algoritmos propostos atendem ao critério de proporcionalidade no balanceamento de carga. No entanto, alguns deles introduzem mais overhead que os outros. A razão disso é a fragmentação que causam nas regiões. Quanto menor o número de fragmentos que têm as regiões, menor será a superfície de contato entre elas e, consequentemente, menor será o overhead total.
 
-Observa-se que o algoritmo \ggp\ é o que menos causa overhead, pois ele foi desenvolvido justamente de forma a criar o máximo possível de regiões contíguas, buscando células ligadas pelas interações mais pesadas, objetivando minimizar o overhead.O algoritmo \bfa, no entanto, foi desenvolvido com o intuito de distribuir a carga com base em alocação \emph{best-fit}, procurando balanceá-la tanto quanto possível, ignorando, na fase 2, a existência de interações entre células e regiões. Por esta razão, o \bfa\ foi o que mais gerou fragmentação nas regiões e, consequentemente, overhead entre os servidores.
+Observa-se que o algoritmo \ggp\ é o que menos causa overhead, pois ele foi desenvolvido justamente de forma a criar o máximo possível de regiões contíguas, buscando células ligadas pelas interações mais pesadas. O algoritmo \bfa, no entanto, foi desenvolvido com o intuito de distribuir a carga com base em uma alocação \emph{best-fit}, procurando balanceá-la tanto quanto possível, ignorando, na fase 2, a existência de interações entre células e regiões. Por esta razão, o \bfa\ foi o que mais gerou fragmentação nas regiões e, consequentemente, overhead entre os servidores.
 
 %[TODO: arrumar a parte de grafos etc, pra nao usar mais essa notação. arrumar a seção do k-l pra unificar a terminologia. enxugar as definições]
 
@@ -830,7 +894,7 @@ No entanto, a introdução de overhead não é o único critério considerado. Na figu
   \label{gra:balmigxtb}
 \end{figure}
 
-Podemos observar que o \ggp\ é o que tem menor quantidade de walk migrations, justamente por suas regiões serem contíguas. No entanto, pelo fato de não tentar minimizar as transferências de células -- o \ggp\ tem como principal objetivo minimizar o overhead -- a quantidade de still migrations é a maior de todas as suas variantes, sendo melhor apenas que o \bfa, que também foi o pior algoritmo no critério de migrações. A estratégia do \ggpk\ e, mais fortemente, no \ggpf\, de manter o máximo de células possível quando rebalanceando, tem como resultado os menores números de migrações de jogadores dos algoritmos simulados.
+Podemos observar que o \ggp\ é o que tem menor quantidade de walk migrations, justamente por suas regiões serem contíguas. No entanto, pelo fato de não tentar minimizar as transferências de células -- o \ggp\ tem como principal objetivo minimizar o overhead -- a quantidade de still migrations é a maior de todos os algoritmos, e o número total de migrações é o segundo maior, sendo melhor apenas que o \bfa, que também foi o pior algoritmo neste critério. A estratégia do \ggpk\ e, mais fortemente, do \ggpf\ de manter o máximo de células possível quando é feito o rebalanceamento tem como resultado os menores números de migrações de jogadores dos algoritmos simulados.
 
 %deviation
 Outro detalhe a ser considerado é o da uniformidade de distribuição: todos os servidores devem apresentar uma taxa de uso de seus recursos o mais parecida possível, para que a distribuição seja considerada fair. Para medir essa uniformidade, foi calculado o desvio padrão, $\sigma$, do $u(S)$ de todos os servidores, para cada algoritmo simulado. A figura \ref{gra:baldeviation} mostra a variação de $\sigma$ em função do tempo.
@@ -848,7 +912,7 @@ Mesmo com os servidores apresentando a maior variação da taxa de uso de seus rec
 
 Foi proposto aqui um esquema de balanceamento de carga para servidores distribuídos de MMOGs, levando em conta o uso de banda de envio dos nodos servidores. Foram considerados aspectos importantes, como o crescimento quadrático do tráfego quando os avatares estão próximos, e o overhead inerente à distribuição quando jogadores conectados a servidores diferentes têm de interagir. Ao esquema, que é dividido em três fases, foram propostos diferentes algoritmos para a fase 2 (balanceamento em si), sendo que o \ggp\ foi o que apresentou o menor overhead de todos, e o \ggpf\ foi o que apresentou menor número de migrações de usuários.
 
-Como trabalhos futuros, os algoritmos apresentados podem ser ainda mais [further] refinados, se a carga considerada para o balanceamento for uma média da carga em um período -- nos últimos minutos, por exemplo -- ao invés do valor instantâneo. Dessa forma, seriam evitados rebalanceamentos desnecessários que seriam causados por uma carga muito oscilante.
+Como trabalhos futuros, os algoritmos apresentados podem ser ainda mais refinados, se a carga considerada para o balanceamento for uma média da carga em um período -- nos últimos minutos, por exemplo -- ao invés do valor instantâneo. Dessa forma, seriam evitados rebalanceamentos desnecessários que seriam causados por uma carga muito oscilante.
 
 Outro possível trabalho futuro é criar um esquema de balanceamento de carga onde não haverá mais apenas um nodo servidor, mas um grupo de nodos servidores em cada região. Neste caso, podem ser investigadas maneiras de balancear a carga do sistema, considerando essa distribuição em dois níveis. Uma idéia seria a de usar apenas réplicas, com o intuito de prover tolerância a falhas na região. A carga dentro de uma região seria redistribuída apenas quando a mesma estivesse sobrecarregada e não fosse viável reparticioná-la.
 
