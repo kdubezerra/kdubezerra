@@ -1,11 +1,11 @@
-%\newcommand{\ggp}{ProGReGA} [TODO:mudar esse nome]
+%\newcommand{\ggp}{ProGReGA}
 %\newcommand{\ggpmeaning}{proportional greedy region growing algorithm}
 %\newcommand{\wtodiv}{weight\_to\_divide}
 %\newcommand{\freecap}{free\_capacity}
 %\newcommand{\rlist}{region\_list}
 %\newcommand{\wshare}{weight\_share}
 
-%[TODO:por nomes mais simples e elegantes]
+
 \newcommand{\ggp}{ProGReGA}
 %\newcommand{\ggp}{PGRGA}
 \newcommand{\ggpmeaning}{proportional greedy region growing algorithm}
@@ -32,7 +32,7 @@
 \newcommand{\regcap}{capacidade\_livre}
 \newcommand{\wtoreg}{carga\_para\_esta\_regi\tilde{a}o}
 
-[TODO:cap/lista de termos e definições]
+
 %por figuras para ilustrar o que se está falando
 \chapter {Balanceamento de carga}
 
@@ -72,7 +72,7 @@ Por esta razão, não é suficiente apenas dividir os jogadores entre os servidores
 
 Como foi dito, quando existe um número considerável de avatares em um mesmo ponto de interesse, é gerado um tráfego proporcional ao quadrado do número de avatares ali presentes. Também foi mostrado que os servidores recebem as ações enviadas pelos jogadores, calculam seu resultado e o enviam para todos os jogadores interessados, que são, geralmente, aqueles cujos avatares estiverem próximos do avatar do primeiro jogador. Se esses jogadores forem divididos entre diferentes servidores, cada um destes precisará não apenas enviar o estado do mundo resultante das ações para os jogadores conectados a ele, como também deverá enviá-lo para o servidor ao qual os outros jogadores estão conectados. Este, por sua vez, encaminhará este resultado para seus jogadores.
 
-[por figura do envio de estados através de servidores diferentes. duas figuras: no mesmo servidor, e através de diferentes servidores.]
+[TODO:por figura do envio de estados através de servidores diferentes. duas figuras: no mesmo servidor, e através de diferentes servidores.]
 
 Percebe-se, então, que cada estado deverá ser enviado duas vezes, para cada par de jogadores que se comunicam através de servidores diferentes. Esse overhead não apenas causa o desperdício de recursos dos servidores, como também aumenta o atraso para atualização de estado das réplicas do jogo nas máquinas dos jogadores. Isto faz com que o tempo entre o envio de uma ação por um jogador conectado a um servidor e o recebimento do estado resultante por outro jogador, conectado a outro servidor, seja maior, prejudicando a interação entre eles.
 
