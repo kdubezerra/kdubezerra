@@ -48,9 +48,23 @@ A questão posta aqui é que, quando se faz uso de um servidor distribuído, princi
 
 Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. No entanto, essa distribuição não funcionaria, pelo fato de que a carga causada pelos jogadores depende também do quanto os jogadores estão interagindo entre si. Por exemplo, se os avatares de dois jogadores estiverem muito distantes um do outro, provavelmente não haverá interação entre eles e, portanto, o servidor precisará apenas atualizar cada um a respeito de suas próprias ações. No entanto, se estes avatares estiverem próximos, cada jogador deverá ser atualizado não apenas a respeito de suas próprias ações, como também das ações do outro jogador.
 
-Percebe-se, então, que quando os avatares estão distantes uns dos outros, o tráfego cresce linearmente com o número de jogadores. Porém, se eles estão próximos uns dos outros, o tráfego cresce quadraticamente. Por fim, ambas as funções de crescimento do número de mensagens podem estar presentes no mesmo jogo se, em alguns lugares do ambiente virtual, os avatares estiverem próximos e, em outros lugares, eles estiverem distantes.
+Percebe-se, então, que quando os avatares estão distantes uns dos outros, o tráfego cresce linearmente com o número de jogadores (Figura \ref{fig:playersdistant}). Porém, se eles estão próximos uns dos outros, o tráfego cresce quadraticamente (Figura \ref{fig:playersclose}). Por fim, ambas as funções de crescimento do número de mensagens podem estar presentes no mesmo jogo se, em alguns lugares do ambiente virtual, os avatares estiverem próximos e, em outros lugares, eles estiverem distantes.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/playersdistant}
+ \caption{Crescimento linear do tráfego com avatares distantes}
+ \label{fig:playersdistant}
+\end{figure}
 
 Essa característica de localidade, no que diz respeito à distribuição dos avatares no ambiente virtual, está presente na grande maioria dos jogos multijogador. Existem alguma exceções, como GuildWars [TODO:ref], em que apenas grupos com um número limitado de jogadores podem iniciar uma partida. Este tipo de jogo é baseado no modelo de instâncias, onde todos os avatares dos jogadores se encontram em um espaço social, de interação limitada, menos dinâmica e, portanto, com tráfego de rede algumas ordens de grandeza menor [TODO:ref/prove]. Quando pretende-se iniciar uma partida ``real'', os jogadores requisitam ao servidor que seja criado um grupo de ação. Dessa forma, impede-se que um número teoricamente ilimitado de jogadores interajam entre si, sobrecarregando o servidor.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/playersclose}
+ \caption{Crescimento quadrático do tráfego com avatares próximos}
+ \label{fig:playersclose}
+\end{figure}
 
 Normalmente, porém, os jogadores podem mover seus avatares livremente através do mundo do jogo. Isso torna possível a formação de pontos de interesse -- também conhecidos como \emph{hotspots} [TODO:ref] -- ao redor dos quais os jogadores se concentram mais do que em outras regiões do ambiente virtual. Aliás, muitos jogos de RPG online maciçamente multijogador não só permitem como também estimulam, até certo ponto, a formação destes pontos de interesse. Nestes mundos dos MMORPGs, existem cidades inteiras, onde os jogadores se encontram para conversar, trocar mercadorias virtuais do jogo e/ou duelar, assim como existem também zonas desérticas, sem muitos atrativos para os jogadores, e onde o número de avatares presentes é relativamente pequeno, se comparado com outros lugares no jogo.
 
@@ -419,11 +433,7 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 
 \end{itemize}
 
-[TODO:figura ilustrando a carga de uma célula/regiao]
-
-[TODO:figura com o overhead]
-
-Agora que os conceitos necessários para entender o esquema de balanceamento de carga proposto foram definidos, será descrito como será o mapeamento dos mesmo em um grafo com pesos, para posterior particionamento. Seja $GW =(V,E)$ um grafo que reprenta o mundo do jogo, onde $V$ é o conjunto de vértices e $E$ é o conjunto de arestas entre os vértices. A seguir são listados cada componente desse grafo e o que representam:
+Agora que os conceitos necessários para entender o esquema de balanceamento de carga proposto foram definidos, será descrito como será o mapeamento dos mesmos em um grafo com pesos, para posterior particionamento. Seja $GW =(V,E)$ um grafo que reprenta o mundo do jogo, onde $V$ é o conjunto de vértices e $E$ é o conjunto de arestas entre os vértices. A seguir são listados cada componente desse grafo e o que representam:
 
 \begin{itemize}
 	\item \textbf{Vértice}: cada vértice do grafo representa uma célula no ambiente virtual;
@@ -435,7 +445,14 @@ Agora que os conceitos necessários para entender o esquema de balanceamento de c
 	\item \textbf{Corte de aresta}: o corte de aresta em um particionamento é igual à soma dos pesos de todas as arestas que ligam vértices de diferentes partições. Este valor é igual à soma dos overheads entre todos os pares de regiões. Assim sendo, o corte de aresta do grafo $GW$ é igual ao overhead total sobre o sistema servidor, sendo que reduzí-lo é um dos objetivos deste esquema de balanceamento de carga.
 \end{itemize}
 
-[TODO:figura do mapeamento de cell/region para vertex/partition/edge]
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{images/mapping}
+\caption{Mapeamento do ambiente virtual em um grafo}
+\label{fig:mapping}
+\end{figure}
+
+A Figura \ref{fig:mapping}(a) ilustra como é feito o mapeamento de células quadradas em um grafo e a figura \ref{fig:mapping}(b) mostra como seria com células hexagonais.
 
 O objetivo do esquema de balanceamento aqui proposto é atribuir a cada servidor uma carga proporcional à sua capacidade, reduzindo tanto quanto possível o corte de aresta do grafo que representa o ambiente virtual e, portanto, o overhead intrínseco à distribuição do jogo em vários servidores. Embora este seja um problema NP-completo [TODO:ref, de novo?], serão utilizadas heurísticas eficientes para reduzir esse problema. Nas seções a seguir serão apresentados alguns algoritmos propostos neste trabalho.
 
@@ -448,7 +465,6 @@ O objetivo do esquema de balanceamento aqui proposto é atribuir a cada servidor 
 %definições de: vértice, aresta (o que é comunicação entre servidores, como é feita e o porquê), partição, weight, overhead e load (weight + overhead)
 %\subsubsection{Uso de gerenciamento de interesse}
 %uso do IM para definir os pesos das arestas
-%[TODO:otimização do IM com células vizinhas]
 %granularidade grossa+fina (otimizada) no ger. interesse
 %definição do formato das células, vantagens e desvantagens (quadrado, hexagono, pentagono, etc...) - tessellation graph degree
 %definir/definição de interação
@@ -457,8 +473,6 @@ O objetivo do esquema de balanceamento aqui proposto é atribuir a cada servidor 
 
 \subsection{Algoritmos propostos}
 \label{sec:algprop}
-
-%[TODO:falar do algoritmo de seleção de regiões do lee]
 
 Considera-se que uma divisão inicial do ambiente virtual já foi feita. Cada servidor deverá então verificar periodicamente se está sobrecarregado o e disparar o algoritmo. Embora o overhead resultante da distribuição do ambiente virtual faça parte da carga imposta aos servidores, não há como saber qual será esse overhead sem efetuar o reparticionamento primeiro. Por esta razão, a ``carga'' a ser distribuída não incluirá este sobrecusto.
 
@@ -516,8 +530,6 @@ Se mesmo após serem selecionadas todas as regiões vizinhas, as vizinhas das vizi
 \end{algorithm}
 
 Após terem sido selecionadas as regiões que serão rebalanceadas, uma lista com as mesmas é passada como parâmetro ao algoritmo da fase 2 que as reparticionará.
-
-%[TODO:]
 
 \subsubsection{\ggp} %repart
 \label{sec:alg:ggp}
@@ -589,19 +601,27 @@ Para prover um particionamento balanceado, proporcional e com um corte de aresta
 
 Na linha \ref{alg:ggp:fraction}, é calculado qual a parcela de carga que cabe a cada região, considerando a carga total que está sendo dividida e a capacidade total daquelas regiões. A fração da capacidade de servidor de cada região, em relação ao conjunto de todas as regiões envolvidas no balanceamento, $\frac{p(s(R))}{\freecap}$, deve ser a mesma fração de carga que deve ser atribuída a ela. Ainda que essa carga seja maior que a capacidade do servidor, resultando em uma sobrecarga, todos os servidores estarão igualmente sobrecarregados, satisfazendo o critério de balanceamento que foi definido. A condição para o término da alocação de novas células a uma região é que a sua carga seja maior ou igual a essa parcela.
 
-A escolha de células para incluir na região busca fazer com que cada uma das arestas mais pesadas do grafo $GW$ ligue vértices da mesma partição, reduzindo o corte de aresta e, assim, o overhead. A cada passo é dado preferência a escolher a célula livre que não apenas seja vizinha de uma célula já presente na região, mas também cuja aresta ligando-as seja a mais pesada possível. A Figura [TODO:reffig] mostra um exemplo dos passos do crescimento de uma região até atingir a sua parcela de carga no balanceamento.
+A escolha de células para incluir na região busca fazer com que cada uma das arestas mais pesadas do grafo $GW$ ligue vértices da mesma partição, reduzindo o corte de aresta e, assim, o overhead. A cada passo é dado preferência a escolher a célula livre que não apenas seja vizinha de uma célula já presente na região, mas também cuja aresta ligando-as seja a mais pesada possível. A Figura \ref{fig:ggp} mostra um exemplo dos passos do crescimento de uma região até atingir a sua parcela de carga no balanceamento.
 
-[TODO:figura -> passos do crescimento de uma região]
-
-No primeiro passo do ciclo iniciado na linha \ref{alg:ggp:whilefraction}, quando a região ainda não tem célula nenhuma, o \ggp\ lhe atribui a célula livre mais pesada que houver (linha \ref{alg:ggp:freeheavycell}). O mesmo ocorre quando uma região está comprimida entre as fronteiras de outras regiões (Figura [TODO:ref]), e não possui nenhum vizinho livre, precisando buscar células em outros lugares. Isso pode gerar regiões fragmentadas e possivelmente aumentar o corte de aresta do grafo que representa o ambiente virtual. No entanto, isso acontecerá com mais freqüência nos últimos passos da distribuição, quando a maior parte das células já estaria alocada em regiões. Pelo fato do algoritmo ser guloso, quando se chegasse a essa fase de sua execução, as células que ficariam isoladas seriam, provavelmente, células muito mais leves que as outras, causando pouco overhead.
-
-[TODO: figura região comprimida]
-
-
-
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{images/ggp}
+\caption{Crescimento de uma partição (região) de acordo com o \ggp}
+\label{fig:ggp}
+\end{figure}
 
 
-%falar dos possiveis contras (regiao pode mudar completamente de lugar. pode ser q nao seja necessario + servidores, e isso so aumentar o overhead, assim como ignora a possibilidade de haver novos servidores, livres)
+
+No primeiro passo do ciclo iniciado na linha \ref{alg:ggp:whilefraction}, quando a região ainda não tem célula nenhuma, o \ggp\ lhe atribui a célula livre mais pesada que houver (linha \ref{alg:ggp:freeheavycell}). O mesmo ocorre quando uma região está comprimida entre as fronteiras de outras regiões (Figura \ref{fig:compressed}), e não possui nenhum vizinho livre, precisando buscar células em outros lugares. Isso pode gerar regiões fragmentadas e possivelmente aumentar o corte de aresta do grafo que representa o ambiente virtual. No entanto, isso acontecerá com mais freqüência nos últimos passos da distribuição, quando a maior parte das células já estaria alocada em regiões. Pelo fato do algoritmo ser guloso, quando se chegasse a essa fase de sua execução, as células que ficariam isoladas seriam, provavelmente, células muito mais leves que as outras, causando pouco overhead.
+
+No exemplo da figura \ref{fig:ggp}, há dois servidores, $S_1$ e $S_2$, sendo que $p(S_1) = 30$ e $p(S_2) = 18$. A carga total do ambiente sendo reparticionado é $W_{total} = 32$. Para que a divisão seja proporcional à capacidade dos servidores, as parcelas de carga designadas a $S_1$ e $S_2$ são de 20 e 12, respectivamente. A seleção começa pelo vértice de peso 10 (célula livre com maior carga) e a partir daí, é adicionado a cada passo o vértice ligado pela aresta mais pesada. As arestas selecionadas e os vértices que pertencem à nova partição estão destacados.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{images/compressed}
+\caption{Formação de partição desconexa (região fragmentada)}
+\label{fig:compressed}
+\end{figure}
 
 \subsubsection{\ggpk} %v3
 
@@ -848,7 +868,7 @@ Por fim, a classe \code{Avatar} implementa mais dois métodos. Um objeto \code{Av
 
 \subsection{A classe \codetitle{Cell}}
 
-Cada célula tem uma posição fixa e todas as células tem o mesmo tamanho, estando dipostas em forma de grade. A classe \code{Cell} tem uma matriz estática de ponteiros do tipo \code{Cell*}, sendo que o colunas multiplicado pela largura de cada célula é igual à largura do ambiente virtual. Da mesma forma, o número de linhas multiplicado pelo comprimento de cada célula é igual ao comprimento do ambiente virtual [TODO:reffigmatriz]. Dessa forma, pode-se encontrar os índices do objeto do tipo \code{Cell} na matriz \code{Matrix[i][j]} a partir da posição ocupada pelo avatar em tempo constante e com apenas informações locais, da seguinte forma:
+Cada célula tem uma posição fixa e todas as células tem o mesmo tamanho, estando dipostas em forma de grade. A classe \code{Cell} tem uma matriz estática de ponteiros do tipo \code{Cell*}, sendo que o número de colunas multiplicado pela largura de cada célula é igual à largura do ambiente virtual. Da mesma forma, o número de linhas multiplicado pelo comprimento de cada célula é igual ao comprimento do ambiente virtual (Figura \ref{fig:cellmatrix}). Dessa forma, pode-se encontrar os índices do objeto do tipo \code{Cell} na matriz \code{cellMatrix[i][j]} a partir da posição ocupada pelo avatar em tempo constante e com apenas informações locais, da seguinte forma:
 
 \begin{center}
 
@@ -866,9 +886,24 @@ Cada célula tem uma posição fixa e todas as células tem o mesmo tamanho, estando
 
 \end{center}
 
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{images/cellmatrix}
+\caption{Objetos do tipo \code{Cell} alocados em uma matriz}
+\label{fig:cellmatrix}
+\end{figure}
+
+
 Cada objeto da classe \code{Cell} possui a lista dos avatares (\code{list<Avatar*> avatars}) presentes nela, uma referência à região que contém a célula (\code{Region* parentRegion}) e um vetor com os pesos das arestas (interações) ligando-a com as células vizinhas (\code{long edgeWeight[NUM\_NEIGH]}).
 
-Para calcular a carga da célula, é utilizado o método \code{long getCellWeight()}, que é a soma das cargas dos avatares. Uma otimização importante desta implementação foi a definição de células cujo comprimento e largura são ambos maiores que o alcance máximo de visão dos avatares. Dessa forma, avatares que estejam a mais de uma célula de distância terão sempre relevância nula um para o outro. Assim, para se calcular a carga de um avatar, basta ter a lista de avatares das células vizinhas às daquela onde ele está situado, economizando largura de banda e tempo de processamento (Figura [TODO:reffigoptIM]).
+Para calcular a carga da célula, é utilizado o método \code{long getCellWeight()}, que é a soma das cargas dos avatares. Uma otimização importante desta implementação foi a definição de células cujo comprimento e largura são ambos maiores que o alcance máximo de visão dos avatares. Dessa forma, avatares que estejam a mais de uma célula de distância terão sempre relevância nula um para o outro. Assim, para se calcular a carga de um avatar, basta ter a lista de avatares das células vizinhas às daquela onde ele está situado, economizando largura de banda e tempo de processamento (Figura \ref{fig:imopt}).
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{images/imopt}
+\caption{Objetos do tipo \code{Cell} alocados em uma matriz}
+\label{fig:imopt}
+\end{figure}
 
 A classe \code{Cell} implementa também outros métodos, que são necessários para os algoritmos descritos na seção \ref{sec:algprop}, tais como: \code{long getDesireToSwap(Region* r)}, \code{static Cell* getHighestEdgeFreeNeighbor(list<Cell*> \&cellList)} e \code{static Cell* getHeaviestFreeCell()}.
 
