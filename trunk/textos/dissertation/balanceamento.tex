@@ -248,22 +248,29 @@ Com o término do reparticionamento das regiões, o servidor que iniciou todo o pr
 
 Um problema clássico de alocação de tarefas em sistemas distribuídos é o da dependência entre tarefas [TODO:refsDEdistGRAPH]. Tarefas dependentes entre si fazem com que os processadores nos quais elas estão sendo executadas tenham que se comunicar para que o processamento possa continuar. Isso gera dois problemas principais: em primeiro lugar, o processamento como um todo é atrasado por causa do tempo de espera de cada transmissão e recebimento de mensagens -- supondo que a comunicação entre os processos seja por meio de mensagens, como é o caso do MPI [TODO:ref] -- e, em segundo lugar, banda de comunicação é ocupada para o envio e recebimento destas mensagens.
 
-Para resolver este problema, são utilizados grafos, da seguinte maneira: o conjunto de tarefas a realizar é mapeado em um grafo com pesos. Cada vértice representa uma tarefa e cada aresta representa a comunicação entre as tarefas. O peso de cada vértice representa o custo de processamento e o peso da aresta representa a carga de comunicação. Para fazer a distribuição, é feito um particionamento do grafo gerado. Cada partição terá um conjunto de tarefas que serão executadas no mesmo nodo e, conseqüentemente, o atraso de comunicação entre estas tarefas será pequeno [TODO:refbli]. No entanto, as arestas do grafo que ligam partições diferentes representam comunicação entre diferentes nodos. A Figura \ref{fig:graphs} ilustra essa situação.
+Para resolver este problema, são utilizados grafos, da seguinte maneira: o conjunto de tarefas a realizar é mapeado em um grafo com pesos. Cada vértice representa uma tarefa e cada aresta representa a comunicação entre as tarefas. O peso de cada vértice representa o custo de processamento e o peso da aresta representa a carga de comunicação. Para fazer a distribuição, é feito um particionamento do grafo gerado. Cada partição terá um conjunto de tarefas que serão executadas no mesmo nodo e, conseqüentemente, o atraso de comunicação entre estas tarefas será pequeno [TODO:refbli]. No entanto, as arestas do grafo que ligam partições diferentes representam comunicação entre diferentes nodos.
+
+Os algoritmos de particionamento do grafo de tarefas, geralmente, buscam atingir dois objetivos: gerar partições de peso aproximadamente igual, ou seja, cada nodo terá uma carga computacional semelhante à dos outros; e minimizar o corte de aresta, ou seja, fazer com que a dependência entre os conjuntos de tarefas seja a menor possível, reduzindo a comunicação entre os nodos de processamento. Por corte de aresta, entende-se o somatório dos pesos de todas as arestas que ligam vértices que estão em partições diferentes (Figura \ref{fig:graphs}).
 
 \begin{figure}
  \centering
  \includegraphics[width=0.8\textwidth]{images/graphs}
- \caption{Divisão de tarefas utilizando grafos}
+ \caption{Divisão de tarefas utilizando particionamento de grafos}
  \label{fig:graphs}
 \end{figure}
 
-Os algoritmos de particionamento do grafo de tarefas, geralmente, buscam atingir dois objetivos: gerar partições de peso aproximadamente igual, ou seja, cada nodo terá uma carga computacional semelhante à dos outros; e minimizar o corte de aresta, ou seja, fazer com que a dependência entre os conjuntos de tarefas seja a menor possível, reduzindo a comunicação entre os nodos de processamento. Por corte de aresta, entende-se o somatório dos pesos de todas as arestas que ligam vértices que estão em partições diferentes (Figura [TODO:reffig]).
-
 O problema de particionamento de grafos é NP-completo [TODO:ref]. Contudo, já foi feita bastante pesquisa nessa área, resultando em heurísticas que obtêm boas soluções, muitas vezes se aproximando de valores ótimos [TODO:ref]. Uma das heurísticas mais conhecidas é a de Kernighan e Lin \cite{kernighan1970ehp}, que tem como objetivo, partindo de duas partições iniciais quaisquer, chegar a duas partições com peso semelhante e corte de aresta reduzido. O algoritmo de Fiduccia e Mattheyses \cite{fiduccia1982lth} incrementa a solução de Kernighan e Lin, generalizando-a para hipergrafos, além de permitir que cada partição tenha uma fração diferente do peso total do hipergrafo.
 
-Existem outros algoritmos mais recentes, como os baseados em divisão espectral [TODO:ref-33-e-20-karypisirreggraphs]. Estes são computacionalmente caros, por envolver complexos cálculos de álgebra linear, precisando do autovetor associado ao menor autovalor da matrix laplaciana associada ao grafo [TODO:ref]. No entanto, o particionamento resultante é considerado excelente para uma vasta gama de problemas [TODO:ref]. Existe também a abordagem em vários níveis [TODO:citemultilevel], através da simplifação do grafo por meio de contração de arestas. Com o grafo mais simples, é aplicado algum algoritmo de particionamente e então ele se desdobra, já particionado, até o grafo original. Eventualmente, refinamentos no particionamento podem ser necessários. Esta última técnica é especialmente útil em grafos com grande número de vértices, na ordem de centenas a milhares, ou mais. Na figura [TODO:ref] é ilustrado esse particionamento em vários níveis.
+Existem outros algoritmos mais recentes, como os baseados em divisão espectral [TODO:ref-33-e-20-karypisirreggraphs]. Estes são computacionalmente caros, por envolver complexos cálculos de álgebra linear, precisando do autovetor associado ao menor autovalor da matrix laplaciana associada ao grafo [TODO:ref]. No entanto, o particionamento resultante é considerado excelente para uma vasta gama de problemas [TODO:ref]. Existe também a abordagem em vários níveis [TODO:citemultilevel], através da simplifação do grafo por meio de contração de arestas. Com o grafo mais simples, é aplicado algum algoritmo de particionamente e então ele se desdobra, já particionado, até o grafo original. Eventualmente, refinamentos no particionamento podem ser necessários. Esta última técnica é especialmente útil em grafos com grande número de vértices, na ordem de centenas a milhares, ou mais.
 
-[TODO:figura do multilevel]
+Na Figura \ref{fig:multilevel} é ilustrado um particionamento em vários níveis. As arestas traçejadas são as que foram escolhidas para serem contraídas. Estão em destaque na figura os vértices resultantes da contração de arestas, assim como também estão destacadas as arestas que resultam da soma das arestas que incidiam sobre os antigos vértices.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/multilevel}
+ \caption{Particionamento de grafo simplificado}
+ \label{fig:multilevel}
+\end{figure}
 
 Contudo, MMOGs são geralmente aplicações de tempo-real, além de a carga imposta sobre os servidores mudar constantemente em tempo de execução. Por esse motivo, o algoritmo de particionamento utilizado deve ser rápido, tornando inviável o uso da divisão espectral. É proposto neste trabalho utilizar um algoritmo guloso, mais simples, baseado em [TODO:aOUTRArefdekarypis], que pode não atingir soluções tão boas quanto as da divisão espectral, porém é consideravelmente mais rápido. Além disso, o custo para encontrar uma solução muito próxima do ótimo não se justifica no contexto de MMOGs, pelo fato dos pesos mudarem constantemente, precisando de um novo particionamento em relativamente pouco tempo. Já quanto ao particionamento em vários níveis, seu uso não foi considerado necessário pois o número de vértices do grafo que representará o ambiente virtual é relativamente pequeno.
 
@@ -310,14 +317,9 @@ Porém, uma idéia importante que foi sugerida é a do uso de grafos para represent
 %a cada servidor é alocado 90% de sua capacidade. Isso pode não funcionar. Critério ruim.
 %possível loop infinito, se não houverem vizinhos capazes ou disponíveis. Outro critério ruim.
 
-%[TODO:isso não deveria ir para os "trabalhos relacionados" deste capítulo?]
-
 \subsection{Definições e mapeamento para grafo}
-%[TODO:talvez, compactar essa lista, que está detalhada demais]
 
 Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um grafo, que será então particionado para dividir a carga do jogo entre os diferentes servidores. Para isso, é necessário primeiramente definir o que são vértices, arestas, pesos e partições no grafo que representa o mundo do jogo, além de outros conceitos que serão utilizados ao longo do texto.
-
-%TODO:definir um por um em detalhes, depois enumerá-los no parágrafo acima ^ para o leitor não se perder
 
 \begin{itemize}
 	\item \textbf{Servidor}: aqui, servidor é definido como sendo um nodo pertencente ao sistema distribuído que servirá o jogo. A cada servidor, pode ser atribuída uma única região;
@@ -336,7 +338,7 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 	
 	\item \textbf{Célula}: semelhante às microcélulas do modelo de \cite{devleeschauwer2005dma}, considera-se aqui o ambiente dividido em células pequenas, com tamanho e posições fixas. Se duas células compartilham uma fronteira, elas são ditas adjacentes, ou vizinhas;
 	\item \textbf{Região}:  as células se agrupam, formando o que será chamado de regiões. Geralmente essas regiões são contíguas, embora em alguns casos o subgrafo que as representa pode ser desconexo, resultando na presença de células isoladas umas das outras. Cada região é atribuída a um servidor, e apenas um, sendo $s(R)$ o servidor associado à região $R$. Poderá ser lido ao longo do texto ``capacidade da região'', o que se refere na verdade à capacidade do servidor associado àquela região, ou seja, $p(s(R))$;
-	%[TODO:ver se realmente precisa do item interação, ou se nao eh melhor usar relevancia mesmo]
+	
 	\item \textbf{Relevância}: a relevância de um avatar $A_i$ para outro, $A_j$, determina a freqüência das atualizações do estado de $A_i$ que o servidor deve enviar ao jogador controlando $A_j$ \cite{bezerra2008a3}. Pode ser representada pela função $R(a,b)$, onde $a$ e $b$ são avatares quaisquer;
 	\item \textbf{Carga de um avatar}: a cada avatar estarão associados diversas outras entidades (aqui, considera-se apenas outros avatares) do jogo, cada uma com uma freqüência de atualizações de estado que precisarão ser enviadas para o jogador que controla aquele avatar. Assim sendo, para cada avatar $A$, a sua carga individual -- ou banda de envio que o servidor utilizará para enviar a seu jogador atualizações de estado -- $w_a(A)$ dependerá de quais outras entidades lhe são relevantes, e o quanto. Seja $\{A_1, A_2, ..., A_t\}$ o conjunto de todos os avatares presentes no ambiente virtual, temos:
 	
@@ -392,7 +394,14 @@ Como já foi dito, será utilizada a idéia de mapear o ambiente virtual em um graf
 			onde $A_i \in AvSet_i$ e $A_j \in AvSet_j$.
 		\end{center}
 	
-	\item \textbf{Overhead} entre duas regiões: se houver apenas um servidor e uma região, compreendendo todo o ambiente virtual do jogo, o uso da banda de envio do servidor será proporcional à carga total do jogo. No entanto, devido à distribuição em diversos servidores, surge o problema de haver jogadores de diferentes regiões interagindo um com o outro muito próximos à fronteira entre as regiões (Figura [TODO:ref]). Por causa disso, cada atualização de estado dos avatares desses jogadores será enviada duas vezes. Para exemplificar, seja $A_i$ o avatar do jogador $P_i$, conectado ao servidor $S_i$, e $A_j$ o avatar do jogador $P_j$, conectado ao servidor $S_j$. Para que $P_i$ interaja com $P_j$, é necessário que $S_i$ envie o estado de $A_i$ ao servidor $S_j$, que então encaminha ao computador de $P_j$. O mesmo ocorre no caminho inverso. O overhead entre as regiões $R_i$ e $R_j$ é igual, portanto, à soma das interações entre pares de células onde cada uma está em uma dessas regiões. Se $R_i$ e $R_j$ possuem respectivamente $m$ e $n$ células, temos que a interação -- ou \emph{overhead} -- entre elas é dada por:
+	\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/interactingregions}
+	\caption{Interação próxima à fronteira entre regiões}
+	\label{fig:interactingregions}
+	\end{figure}
+
+	\item \textbf{Overhead} entre duas regiões: se houver apenas um servidor e uma região, compreendendo todo o ambiente virtual do jogo, o uso da banda de envio do servidor será proporcional à carga total do jogo. No entanto, devido à distribuição em diversos servidores, surge o problema de haver jogadores de diferentes regiões interagindo um com o outro muito próximos à fronteira entre as regiões (Figura \ref{fig:interactingregions}). Por causa disso, cada atualização de estado dos avatares desses jogadores será enviada duas vezes. Para exemplificar, seja $A_i$ o avatar do jogador $P_i$, conectado ao servidor $S_i$, e $A_j$ o avatar do jogador $P_j$, conectado ao servidor $S_j$. Para que $P_i$ interaja com $P_j$, é necessário que $S_i$ envie o estado de $A_i$ ao servidor $S_j$, que então encaminha ao computador de $P_j$. O mesmo ocorre no caminho inverso. O overhead entre as regiões $R_i$ e $R_j$ é igual, portanto, à soma das interações entre pares de células onde cada uma está em uma dessas regiões. Se $R_i$ e $R_j$ possuem respectivamente $m$ e $n$ células, temos que a interação -- ou \emph{overhead} -- entre elas é dada por:
 	
 	  \begin{center}
 			$\displaystyle Int_r(R_i,R_j) = \sum_{i=1}^{m} \sum_{j=1}^{n} Int_c(C_i,C_j)$,
@@ -930,7 +939,7 @@ A Figura \ref{gra:baloverhead} mostra a variação do overhead total sobre o siste
   \label{gra:baloverhead}
 \end{figure}
 
-No entanto, a introdução de overhead não é o único critério considerado. Na figura \ref{gra:balmigxtb} é mostrado o quanto de migrações de usuários ocorreram entre servidores durante todo a sessão de jogo simulada, para cada algoritmo utilizado na fase 2. O valor de migração foi dividido em dois: \emph{walk migration}, que ocorre quando um jogador troca de servidor porque moveu-se de uma região para outra; e \emph{still migration}, que ocorrem quando um jogador troca de servidor sem ter se movido. A still migration ocorre porque a célula onde está o avatar do jogador foi transferida para outra região como resultado de um rebalanceamento da carga do jogo. Já a walk migration é mais provável de acontecer quando as regiões não são contíguas.
+No entanto, a introdução de overhead não é o único critério considerado. Na Figura \ref{gra:balmigxtb} é mostrado o quanto de migrações de usuários ocorreram entre servidores durante todo a sessão de jogo simulada, para cada algoritmo utilizado na fase 2. O valor de migração foi dividido em dois: \emph{walk migration}, que ocorre quando um jogador troca de servidor porque moveu-se de uma região para outra; e \emph{still migration}, que ocorrem quando um jogador troca de servidor sem ter se movido. A still migration ocorre porque a célula onde está o avatar do jogador foi transferida para outra região como resultado de um rebalanceamento da carga do jogo. Já a walk migration é mais provável de acontecer quando as regiões não são contíguas.
 
 \begin{figure}[!t]
   \centering
@@ -942,7 +951,7 @@ No entanto, a introdução de overhead não é o único critério considerado. Na figu
 Podemos observar que o \ggp\ é o que tem menor quantidade de walk migrations, justamente por suas regiões serem contíguas. No entanto, pelo fato de não tentar minimizar as transferências de células -- o \ggp\ tem como principal objetivo minimizar o overhead -- a quantidade de still migrations é a maior de todos os algoritmos, e o número total de migrações é o segundo maior, sendo melhor apenas que o \bfa, que também foi o pior algoritmo neste critério. A estratégia do \ggpk\ e, mais fortemente, do \ggpf\ de manter o máximo de células possível quando é feito o rebalanceamento tem como resultado os menores números de migrações de jogadores dos algoritmos simulados.
 
 %deviation
-Outro detalhe a ser considerado é o da uniformidade de distribuição: todos os servidores devem apresentar uma taxa de uso de seus recursos o mais parecida possível, para que a distribuição seja considerada fair. Para medir essa uniformidade, foi calculado o desvio padrão, $\sigma$, do $u(S)$ de todos os servidores, para cada algoritmo simulado. A figura \ref{gra:baldeviation} mostra a variação de $\sigma$ em função do tempo.
+Outro detalhe a ser considerado é o da uniformidade de distribuição: todos os servidores devem apresentar uma taxa de uso de seus recursos o mais parecida possível, para que a distribuição seja considerada fair. Para medir essa uniformidade, foi calculado o desvio padrão, $\sigma$, do $u(S)$ de todos os servidores, para cada algoritmo simulado. A Figura \ref{gra:baldeviation} mostra a variação de $\sigma$ em função do tempo.
 
 \begin{figure}[!t]
   \centering
