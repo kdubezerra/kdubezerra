@@ -4,6 +4,9 @@
 #include "myutils.h"
 #endif
 
+#include <string>
+#include <fstream>
+
 #define CORE_COUNT 4
 #define NUM_SERVERS 8
 
@@ -54,6 +57,7 @@ void checkInput();
 void showHelp();
 void toggleShowHelp();
 int weighter (void* data);
+void plotAllAvatars(string filename);
 
 //AQUI COMECA O PROGRAMA
 
@@ -221,6 +225,9 @@ void checkInput() {
         case SDLK_l:
           Region::refineKL_kwise(Region::getRegionList());
           break;
+        case SDLK_g:
+          plotAllAvatars("avatarspositions.data");
+          break;
         case SDLK_d:
           Server::releaseAllRegions();
           Region::initRegions(NUM_SERVERS);
@@ -287,4 +294,12 @@ void showHelp() {
   }  
   
 
+}
+
+void plotAllAvatars(string filename) {
+  ofstream datafile;
+  datafile.open(filename.c_str());
+  for (int i = 0 ; i < nplayers ; i++) {
+    datafile << player[i]->GetX() << " " << player[i]->GetY() << endl;
+  }
 }
