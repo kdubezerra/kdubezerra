@@ -712,7 +712,7 @@ Outra maneira de tentar minimizar a migração de jogadores entre servidores por c
 	 \STATE ordene $\rlist$ em ordem crescente de $u(s(R))$ \label{alg:ggpf:usageorder}
 	 \FOR{cada região $R$ na $\rlist$}
 	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$
-	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggp:whilefraction}
+	 		\WHILE{$w_r(R) < \wshare$}
 	 		   \IF{existe alguma célula de $R$ vizinha a uma célula livre}
 	 		   		\STATE $R \leftarrow R \cup \{$célula vizinha livre ligada pela aresta mais pesada$\}$
 	 		   \ELSIF{existe alguma célula livre}
@@ -976,7 +976,7 @@ A Figura \ref{gra:baloverhead} mostra a variação do overhead total sobre o siste
   \label{gra:baloverhead}
 \end{figure}
 
-No entanto, a introdução de overhead não é o único critério considerado. Na Figura \ref{gra:balmigxtb} é mostrado o quanto de migrações de usuários ocorreram entre servidores durante todo a sessão de jogo simulada, para cada algoritmo utilizado na fase 2. O valor de migração foi dividido em dois: \emph{walk migration}, que ocorre quando um jogador troca de servidor porque moveu-se de uma região para outra; e \emph{still migration}, que ocorrem quando um jogador troca de servidor sem ter se movido. A still migration ocorre porque a célula onde está o avatar do jogador foi transferida para outra região como resultado de um rebalanceamento da carga do jogo. Já a walk migration é mais provável de acontecer quando as regiões não são contíguas.
+No entanto, a introdução de overhead não é o único critério considerado. Na Figura \ref{gra:balmigxtb} é mostrado o quanto de migrações de usuários ocorreram entre servidores durante toda a sessão de jogo simulada, para cada algoritmo utilizado na fase 2. O valor de migração foi dividido em dois: \emph{walk migration}, que ocorre quando um jogador troca de servidor porque moveu-se de uma região para outra; e \emph{still migration}, que ocorrem quando um jogador troca de servidor sem ter se movido. A still migration ocorre porque a célula onde está o avatar do jogador foi transferida para outra região como resultado de um rebalanceamento da carga do jogo. Já a walk migration é mais provável de acontecer quando as regiões não são contíguas.
 
 \begin{figure}[!t]
   \centering
