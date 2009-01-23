@@ -1,103 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    version="1.0"
    width="1052.3622"
    height="744.09448"
-   id="svg3951"
-   sodipodi:version="0.32"
-   inkscape:version="0.46"
-   sodipodi:docname="cellmatrix.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
-  <metadata
-     id="metadata5023">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <sodipodi:namedview
-     inkscape:window-height="831"
-     inkscape:window-width="1440"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     guidetolerance="10.0"
-     gridtolerance="10.0"
-     objecttolerance="10.0"
-     borderopacity="1.0"
-     bordercolor="#666666"
-     pagecolor="#ffffff"
-     id="base"
-     showgrid="false"
-     inkscape:zoom="0.56568543"
-     inkscape:cx="354.05945"
-     inkscape:cy="285.54638"
-     inkscape:window-x="0"
-     inkscape:window-y="21"
-     inkscape:current-layer="svg3951" />
+   id="svg3951">
   <defs
      id="defs3953">
     <marker
-       inkscape:stockid="StopM"
+       refX="0"
+       refY="0"
        orient="auto"
-       refY="0.0"
-       refX="0.0"
        id="StopM"
        style="overflow:visible">
       <path
+         d="M 0,5.65 L 0,-5.65"
+         transform="scale(0.4,0.4)"
          id="path5907"
-         d="M 0.0,5.65 L 0.0,-5.65"
-         style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
-         transform="scale(0.4)" />
+         style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#000000;stroke-width:1pt" />
     </marker>
     <marker
-       inkscape:stockid="TriangleOutM"
+       refX="0"
+       refY="0"
        orient="auto"
-       refY="0.0"
-       refX="0.0"
        id="TriangleOutM"
        style="overflow:visible">
       <path
+         d="M 5.77,0 L -2.88,5 L -2.88,-5 L 5.77,0 z"
+         transform="scale(0.4,0.4)"
          id="path5880"
-         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
-         transform="scale(0.4)" />
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
     </marker>
     <marker
-       inkscape:stockid="TriangleOutL"
+       refX="0"
+       refY="0"
        orient="auto"
-       refY="0.0"
-       refX="0.0"
        id="TriangleOutL"
        style="overflow:visible">
       <path
+         d="M 5.77,0 L -2.88,5 L -2.88,-5 L 5.77,0 z"
+         transform="scale(0.8,0.8)"
          id="path5877"
-         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
-         transform="scale(0.8)" />
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
     </marker>
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 372.04724 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="1052.3622 : 372.04724 : 1"
-       inkscape:persp3d-origin="526.18109 : 248.03149 : 1"
-       id="perspective5025" />
   </defs>
   <g
-     id="g9716"
-     transform="translate(77.5,87.5)">
+     transform="translate(77.5,87.5)"
+     id="g9716">
     <path
        d="M 102.50001,491.59447 L 102.50001,341.59447 L 252.50001,341.59447 L 252.50001,491.59447 L 102.50001,491.59447 z"
        id="path5083"
@@ -376,122 +327,152 @@
        style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
   </g>
   <text
-     xml:space="preserve"
-     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
      x="-477.72729"
      y="171.05486"
+     transform="matrix(0,-1,1,0,0,0)"
      id="text5176"
-     transform="matrix(0,-1,1,0,0,0)"><tspan
-       sodipodi:role="line"
-       id="tspan5178"
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
        x="-477.72729"
        y="171.05486"
+       id="tspan5178"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Bitstream Vera Sans;-inkscape-font-specification:Bitstream Vera Sans">ambiente virtual</tspan></text>
   <g
-     id="g10020"
-     transform="translate(52.106255,0)">
+     transform="translate(52.106255,0)"
+     id="g10020">
     <text
-       id="text5186"
-       y="617.22101"
        x="256.6875"
-       style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier 10 Pitch;-inkscape-font-specification:Courier 10 Pitch Bold"
+       y="617.22101"
+       id="text5186"
+       xml:space="preserve"
+       style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+         x="256.6875"
          y="617.22101"
-         x="256.6875"
          id="tspan5188"
-         sodipodi:role="line">Cell*** cellMatrix;</tspan><tspan
-         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier 10 Pitch;-inkscape-font-specification:Courier 10 Pitch Bold"
-         id="tspan7032"
-         y="645.97101"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier 10 Pitch;-inkscape-font-specification:Courier 10 Pitch Bold">Cell*** cellMatrix;</tspan><tspan
          x="256.6875"
-         sodipodi:role="line">cellMatrix[i][j]     Ci,j</tspan></text>
+         y="645.97101"
+         id="tspan7032"
+         style="font-size:23px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier 10 Pitch;-inkscape-font-specification:Courier 10 Pitch Bold">cellMatrix[i][j]     Ci,j</tspan></text>
     <path
-       id="path5220"
        d="M 537.93051,640.55195 L 490.2008,640.55195"
+       id="path5220"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
   <g
-     id="g9391"
-     transform="translate(77.5,87.5)">
+     transform="translate(77.5,87.5)"
+     id="g9391">
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#StopM);marker-mid:none;marker-end:url(#StopM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 552.98399,29.090004 L 702.016,29.090004"
-       id="path9234" />
-    <text
-       id="text9236"
-       y="21.774498"
-       x="564.22607"
-       style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:15px"
-         y="21.774498"
-         x="564.22607"
-         id="tspan9238"
-         sodipodi:role="line">largura da célula</tspan></text>
-  </g>
-  <g
-     id="g9359"
-     transform="translate(77.5,87.5)">
-    <path
-       id="path7122"
-       d="M 715.94562,191.11048 L 715.94562,42.07846"
+       id="path9234"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#StopM);marker-mid:none;marker-end:url(#StopM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
-       transform="matrix(0,-1,1,0,0,0)"
+       x="564.22607"
+       y="21.774498"
+       id="text9236"
        xml:space="preserve"
-       style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+         x="564.22607"
+         y="21.774498"
+         id="tspan9238"
+         style="font-size:15px">largura da célula</tspan></text>
+  </g>
+  <g
+     transform="translate(77.5,87.5)"
+     id="g9359">
+    <path
+       d="M 715.94562,191.11048 L 715.94562,42.07846"
+       id="path7122"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#StopM);marker-mid:none;marker-end:url(#StopM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <text
        x="-116.60179"
        y="732.16266"
-       id="text9240"><tspan
-         sodipodi:role="line"
-         id="tspan9242"
+       transform="matrix(0,-1,1,0,0,0)"
+       id="text9240"
+       xml:space="preserve"
+       style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
          x="-116.60179"
          y="732.16266"
+         id="tspan9242"
          style="font-size:15px;text-align:center;text-anchor:middle">comprimento</tspan><tspan
-         id="tspan9244"
-         sodipodi:role="line"
          x="-116.60179"
          y="750.91266"
+         id="tspan9244"
          style="font-size:15px;text-align:center;text-anchor:middle">da célula</tspan></text>
   </g>
+  <path
+     d="M 845.44562,580.09447 L 845.44562,128.09448"
+     id="path9246"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.99999952;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#StopM);marker-mid:none;marker-end:url(#StopM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <text
+     x="-403.80884"
+     y="839.66266"
+     transform="matrix(0,-1,1,0,0,0)"
+     id="text9346"
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="-403.80884"
+       y="839.66266"
+       id="tspan9350"
+       style="font-size:15px;text-align:center;text-anchor:middle">comprimento do ambiente virtual</tspan></text>
   <g
-     id="g9793"
-     transform="translate(77.5,-62.49997)">
+     transform="translate(77.5,87.5)"
+     id="g9386">
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.99999952;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#StopM);marker-mid:none;marker-end:url(#StopM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 767.94562,642.59444 L 767.94562,190.59445"
-       id="path9246" />
-    <text
-       id="text9346"
-       y="784.16266"
-       x="-416.30881"
-       style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       xml:space="preserve"
-       transform="matrix(0,-1,1,0,0,0)"><tspan
-         style="font-size:15px;text-align:center;text-anchor:middle"
-         y="784.16266"
-         x="-416.30881"
-         sodipodi:role="line"
-         id="tspan9350">comprimento do ambiente virtual</tspan></text>
-  </g>
-  <g
-     id="g9386"
-     transform="translate(77.5,87.5)">
-    <path
-       id="path9367"
        d="M 100.01604,-4.3091 L 702.016,-4.3091"
+       id="path9367"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.99999952;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#StopM);marker-mid:none;marker-end:url(#StopM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <text
-       xml:space="preserve"
-       style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
        x="401.0087"
        y="11.907939"
-       id="text9369"><tspan
-         id="tspan9371"
-         sodipodi:role="line"
+       id="text9369"
+       xml:space="preserve"
+       style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
          x="401.0087"
          y="11.907939"
-         style="font-size:15px;text-align:center;text-anchor:middle">comprimento do ambiente virtual</tspan></text>
+         id="tspan9371"
+         style="font-size:15px;text-align:center;text-anchor:middle">largura do ambiente virtual</tspan></text>
   </g>
+  <text
+     x="179.93166"
+     y="78.816238"
+     id="text2659"
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="179.93166"
+       y="78.816238"
+       id="tspan2661"
+       style="font-size:20px">0</tspan></text>
+  <text
+     x="129.42854"
+     y="-850.53644"
+     transform="matrix(0,1,-1,0,0,0)"
+     id="text2663"
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="129.42854"
+       y="-850.53644"
+       id="tspan2665"
+       style="font-size:20px">0</tspan></text>
+  <text
+     x="442.35571"
+     y="71.594482"
+     id="text3458"
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="442.35571"
+       y="71.594482"
+       id="tspan3460"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Courier 10 Pitch;-inkscape-font-specification:Courier 10 Pitch">posx</tspan></text>
+  <text
+     x="318.14417"
+     y="-857.38599"
+     transform="matrix(0,1,-1,0,0,0)"
+     id="text3462"
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="318.14417"
+       y="-857.38599"
+       id="tspan3464"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Courier 10 Pitch;-inkscape-font-specification:Courier 10 Pitch">posy</tspan></text>
 </svg>
