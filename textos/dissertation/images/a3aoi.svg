@@ -174,8 +174,8 @@
   <rect
      width="6.5442915"
      height="6.5442915"
-     x="242.90092"
-     y="310.43961"
+     x="240.90092"
+     y="308.43961"
      id="rect7099"
      style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   <rect
@@ -195,15 +195,15 @@
   <rect
      width="6.5442915"
      height="6.5442915"
-     x="407.83197"
-     y="335.68192"
+     x="345.83197"
+     y="266.68192"
      id="rect7105"
      style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   <rect
      width="6.5442915"
      height="6.5442915"
-     x="182.37546"
-     y="387.06796"
+     x="187.37546"
+     y="375.06796"
      id="rect7107"
      style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   <rect
@@ -231,8 +231,88 @@
      d="M 246.47722,349.04346 L 144.95689,349.04346 L 127.72635,319.19928"
      id="path7119"
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#TriangleInM);marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     width="6.5442915"
+     height="6.5442915"
+     x="350.76913"
+     y="326.0842"
+     id="rect4188"
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  <rect
+     width="6.5442915"
+     height="6.5442915"
+     x="288.50327"
+     y="395.87375"
+     id="rect4210"
+     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  <text
+     x="163.65678"
+     y="334.71381"
+     id="text3013"
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="163.65678"
+       y="334.71381"
+       id="tspan3015"
+       style="font-size:10px">Área próxima</tspan></text>
+  <path
+     d="M 230.00489,410.65959 L 230.00489,350.36567"
+     id="path3021"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3.99999987, 3.99999987;stroke-dashoffset:0;stroke-opacity:1" />
+  <text
+     x="212.33492"
+     y="415.06757"
+     id="text3023"
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="212.33492"
+       y="415.06757"
+       id="tspan3025"
+       style="font-size:10px" /></text>
+  <path
+     d="M 229.86221,416.28953 L 265.87952,416.28953"
+     id="path3017"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#StopM);marker-end:url(#StopM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  <text
+     x="247.69995"
+     y="433.55072"
+     id="text3031"
+     xml:space="preserve"
+     style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="247.69995"
+       y="433.55072"
+       id="tspan3035"
+       style="font-size:10px;text-align:center;text-anchor:middle">Distância</tspan><tspan
+       x="247.69995"
+       y="446.05072"
+       id="tspan3039"
+       style="font-size:10px;text-align:center;text-anchor:middle">crítica</tspan></text>
+  <text
+     x="337.69995"
+     y="431.55072"
+     id="text3049"
+     xml:space="preserve"
+     style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="337.69995"
+       y="431.55072"
+       id="tspan3053"
+       style="font-size:10px;text-align:center;text-anchor:middle">180°</tspan></text>
+  <text
+     x="361.63327"
+     y="389.05417"
+     id="text9870"
+     xml:space="preserve"
+     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
+       x="361.63327"
+       y="389.05417"
+       id="tspan9872"
+       style="font-size:10px">Campo de visão</tspan></text>
+  <path
+     d="M 265.71429,410.65959 L 265.71429,350.36567"
+     id="path3047"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:3.99999987, 3.99999987;stroke-dashoffset:0;stroke-opacity:1" />
   <g
-     transform="translate(6.2102919,-200.42306)"
+     transform="translate(15.09339,-25.16438)"
      id="g12127">
     <rect
        width="68.757515"
@@ -260,18 +340,4 @@
          y="470.24048"
          id="tspan12125">0                  1</tspan></text>
   </g>
-  <rect
-     width="6.5442915"
-     height="6.5442915"
-     x="350.76913"
-     y="326.0842"
-     id="rect4188"
-     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-  <rect
-     width="6.5442915"
-     height="6.5442915"
-     x="274.4007"
-     y="389.89084"
-     id="rect4210"
-     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
 </svg>
