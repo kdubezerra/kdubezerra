@@ -1,0 +1,225 @@
+\chapter {Trabalhos relacionados}
+\label{cap:contexto}
+
+%TERMOS (avatar, etc.)
+
+%falar de modelos de suporte no e.d.a. e deixar para as seções de a3 e bal. o contexto específico? sim.
+
+Neste capítulo, serão apresentados alguns trabalhos relacionados ao tema de pesquisa desta dissertação. Serão apresentadas algumas abordagens propostas na literatura para a distribuição do suporte aos jogos MMOG e o que falta nas abordagens já existentes na literatura (seção \ref{sec:dist}). Além disso, serão apresentados trabalhos relacionados a gerenciamento de interesse (seção \ref{sec:im}) e a balanceamento dinâmico da carga do jogo entre os nodos servidores (seção \ref{sec:bal}).
+
+\section{Distribuição da infra-estrutura de suporte ao MMOG}
+\label{sec:dist}
+
+A \textbf{arquitetura cliente-servidor} supre diversos aspectos necessários para a execução satisfatória de jogos do tipo MMOG, o que inclui um alto nível de controle sobre o sistema como um todo, facilitando tarefas como autenticação, persistência e segurança. Porém isso custa caro, como já foi dito, além de ser um possível gargalo. Objetivando minimizar este problema, foram propostas algumas alternativas. Uma delas é a de usar computação agregada, onde um cluster, ao invés de um computador único, faz o papel de servidor. Tal abordagem tem um ganho expressivo de poder de processamento, mas não resolve todos os problemas dos jogos online maciçamente multijogador. Deve-se prover também a largura de banda necessária para dar suporte ao tráfego intenso entre o servidor e os jogadores.
+
+%TODO: citar o paper sigcomm 2007 que mostra os "Challenges in peer-to-peer gaming"
+
+Outra abordagem possível é a \textbf{arquitetura par-a-par}, onde se divide a simulação entre os computadores envolvidos. Pode-se ter um sistema sem qualquer servidor, onde os pares (antes clientes), que são as máquinas dos jogadores, entram em algum tipo de acordo para os diversos passos da simulação. No que se refere à escalabilidade, tal abordagem não é ótima, pois garantir esse "acordo"{} é custoso em termos de troca de mensagens \cite{lamport1982bgp}. Ainda que seja eleito um dos pares para decidir o andamento da simulação, ainda haverá o problema de que todos os pares precisarão trocar mensagens com todos. Tendo-se $n$ pares, há uma complexidade de O({$n^2$}) trocas de mensagem para cada passo da simulação. É evidente que tal abordagem não é tão escalável quanto se possa querer para um sistema onde se pretende executar um jogo online maciçamente multijogador. Além disso, seria necessário distribuir o armazenamento e a recuperação dos estados do jogo.
+
+%TODO: por mais refs aqui após o ", como"
+Alguns trabalhos já foram realizados no sentido de tornar jogos em redes par-a-par mais escaláveis, como \cite{schiele2007rpp, rieche2007ppb, hampel2006ppa, elrhalibi2005abm, iimura2004zfg, knutsson2004pps}. Por exemplo, para reduzir o tráfego entre os pares, cada par pode enviar atualizações de estado apenas àqueles que tiverem interesse nas mesmas. Para atingir este objetivo, \cite{schiele2007rpp} sugere que o ambiente virtual seja dividido em regiões. O objetivo disto é que cada região funcione como se fosse um jogo independente, de menor escala. Os jogadores cujos avatares estivessem em determinada região poderiam formar uma pequena rede par-a-par, e decidirem entre eles o andamento do jogo naquela área do ambiente virtual. Quando um avatar se movesse de uma região para outra, deixaria o grupo da primeira e se uniria ao grupo da sua nova região. Para que o ambiente seja contíguo, ou seja, para que avatares possam mover-se livremente entre regiões adjacentes, alguns dos pares mantêm conexões com pares das regiões vizinhas, e é através destes pares que se consegue as informações necessárias para que haja essa transferência de grupo.
+
+Ainda na proposta de \cite{schiele2007rpp}, cada região tem um coordenador. O coordenador é eleito entre os pares ali presentes e se encarrega, apenas, de decidir para quem cada atualização de estado interessa -- ele não intermedia as trocas de mensagens entre os pares, que se comunicam diretamente entre si. No entanto, tal abordagem se baseia no fato de que o coordenador é confiável, o que não pode ser garantido, já que o software utilizado pelo jogador pode ter sido alterado de forma a se comportar de maneira incorreta a fim de beneficiá-lo. Outra abordagem seria a de eleger múltiplos coordenadores por região, mas isso implicaria a implementação de algum mecanismo de votação, além de depender da disponibilidade de pares para gerenciarem. Por fim, não seria eliminada a necessidade de cada par enviar atualizações de estado a diversos outros pares. %Outros trabalhos que têm proposta bastante semelhante são \cite{elrhalibi2005abm} e \cite{iimura2004zfg}.
+%TODO: ler o que que é a proposta do elrhalibi2005abm
+
+Existem também as propostas de \textbf{arquiteturas híbridas} \cite{vilanova2008psm, chen2006pch}, que utilizam servidores ao mesmo tempo em que fazem uso de infra-estrutura par-a-par. %Um exemplo disso são os "pares agregados"{} \cite{chen2006pch}. Neste trabalho, é
+Nestas propostas, pares e servidor dividem a simulação do jogo. Em \cite{vilanova2008psm}, o mundo do jogo é divido em espaço social e espaços de ação. O primeiro é voltado para interações sociais, como conversar, trocar objetos do mundo do jogo, formar grupos etc., que são ações que não impõem grande peso sobre o servidor. No entanto, se os jogadores quiserem, por exemplo, lutar -- que é o principal objetivo na maioria dos jogos MMOG --, eles têm de requisitar ao servidor a criação de um espaço de ação, dentro do qual a interação é mais rápida e com pouca tolerância a atrasos de comunicação. Este espaço é uma \emph{instância} do jogo, isolada do resto do mundo, dentro da qual \textbf{um número limitado de jogadores} formam uma pequena rede par-a-par, sendo eles próprios responsáveis por simular o jogo e atualizar seus companheiros daquele espaço de ação. Para resolver inconsistências da simulação devido à falta de ordenação das mensagens, um dos jogadores é eleito como \emph{super-peer}, sendo responsável por ordenar eventos que sejam "fortemente acoplados", cuja ordem interfere de maneira significativa no andamento do jogo. Essa abordagem apresenta alguns problemas, como o fato de não poder haver interações de luta, por exemplo, entre um grande número de jogadores. Além disso, nada garante que o par escolhido para ser o super-peer seja confiável. Se pertencer a um jogador desonesto, ele pode ordenar os eventos de maneira a beneficiar aquele jogador. No mais, o problema de sobrecarregar a banda dos pares é contornado simplesmente estabelecendo um limite para o número de participantes em cada grupo de ação, quando na verdade é desejável que nos MMOGs haja um grande número de jogadores interagindo entre si, não apenas em situações sociais, mas também em situações mais dinâmicas.
+
+Já na proposta de \cite{chen2006pch}, o ambiente virtual é dividido em regiões, cada uma gerenciada por um dos pares, que atua como um sub-servidor. É para ele que cada um dos outros participantes naquela região envia cada atualização de estado, que de lá é encaminhada aos outros pares interessados na mesma. Isto pode gerar problemas de segurança e disponibilidade, já que não há garantias de que aquele par é confiável para servir aquela região, ou que ele irá permanecer no sistema enquanto for necessário. Para prover tolerância a falhas, os autores sugerem o uso dos agregados de pares - que consistem no gerenciador de região, mais pares "reserva"{} - eles recebem do gerenciador da região as ações recebidas de jogadores, que são processadas por estes "reservas"{}, que mantêm uma réplica do estado do jogo contido no gerenciador daquela região. Além de prover robustez ao sistema, no caso do gerenciador sofrer colapso, estes nodos reserva podem detectar falhas na simulação e executar procedimentos de recuperação. Porém, tal abordagem não resolve o problema do par eleito para ser o gerenciador da região não ser confiável, pois não há qualquer tipo de acordo entre ele e seus reservas em relação ao andamento do jogo. Por fim, se um nodo gerenciador estiver sobrecarregado, ele simplesmente devolve ao servidor parte da carga que lhe foi atribuída, mantendo a dependência de uma infra-estrutura centralizada. %Haverá um sobrecusto adicional considerável, se for levado em conta que, para cada passo da simulação a ser executado, eles devem entrar em acordo.% Uma alternativa seria a utilização de validação em bloco dos passos. Periodicamente, os reservas receberiam algum tipo de histórico de eventos e, baseado nisso, verificariam a corretude da simulação que foi feita. No entanto, quanto maior o intervalo entre uma verificação e outra, maior seria a perda por roll-back para o último estado válido da simulação.
+
+Outra arquitetura híbrida é a do FreeMMG \cite{cecin2004fsa}. Nela, os pares se organizam de maneira par-a-par em cada região do ambiente virtual e o servidor intermedia a comunicação entre diferentes regiões. Novamente, tem-se o problema da segurança: os pares dentro de uma região controlam a simulação que ocorre ali, podendo subvertê-la. É feita uma abordagem probabilística, utilizando um par selecionado aleatoriamente de outro ponto do ambiente para verificar a simulação naquela região. Espera-se que, caso os pares naquela região desejem entrar em conluio para subverter o jogo, pelo menos o nodo que foi inserido ali detecte as ações inválidas e reporte ao servidor. No entanto, além de não garantir completamente segurança, persiste o problema de poder haver muitos pares se comunicando com muitos, o que pode comprometer a qualidade do jogo.
+
+Já foram propostos alguns modelos que sugerem o uso de clientes conectados a um servidor distribuído. Em \cite{assiotis2006dam}, por exemplo, é proposta a divisão do mundo virtual em regiões menores, cada uma atribuída a um diferente nodo do sistema servidor. Os autores tratam a questão da consistência utilizando um mecanismo de travas -- a cada entidade presente no jogo é associada uma trava, que precisa ser obtida antes de algum dos servidores fazer quaisquer alterações. Além disso, tentou-se atacar o problema dos \emph{pontos de interesse} (aglomerados de jogadores em uma área relativamente pequena do ambiente virtual) através do particionamento recursivo da área sobrecarregada, até que esta sobrecarga seja eliminada ou não houver mais servidores disponíveis. No entanto, há um limite para este reparticionamento, pois áreas muito pequenas implicam avatares migrando entre regiões com maior freqüência e, conseqüentemente, mais tráfego entre servidores.
+
+Por fim, os autores desse trabalho, assim como em vários outros com propostas semelhantes \cite{ng2002msa, chertov:olb, lee2003sdl}, consideram que os nodos servidores estão conectados através de uma rede de alta velocidade e pouco atraso, sendo que suas soluções são apenas parcialmente aplicáveis em um cenário com recursos altamente dinâmicos e voláteis, como são as redes par-a-par montadas com recursos de voluntários. Tais redes têm como problemas inerentes: nós com baixa disponibilidade e dependabilidade, largura de banda escassa e baixo poder de processamento, quando comparada com servidores dedicados mantidos por empresas fabricantes de MMOGs.
+
+O modelo que se pretende utilizar é o de servidor distribuído. Porém os trabalhos da área ignoram que possa haver atraso ou escassez de largura de banda entre eles, além de não resolverem a questão dos pontos de interesse por completo. Por estas razões, buscou-se revisar na literatura propostas existentes para atacar estas duas questões, a partir das quais foram criadas as propostas deste trabalho. Dividiu-se essa revisão em dois tipos de abordagens principais: gerenciamento de interesse (seção \ref{sec:im}) e balanceamento de carga (seção \ref{sec:bal}).
+
+\section{Gerenciamento de interesse}
+\label{sec:im}
+
+O gerenciamento de interesse inclue técnicas que permitem aos participantes expressarem seu interesse em apenas um subconjunto das informações disponíveis, selecionando o que lhes é relevante \cite{smed2002anm,benford2001cve,morse2000iml}. O objetivo disto é reduzir o número de mensagens transmitidas através da especificação dos destinatários potencialmente interessados. Uma expressão do interesse de um participante é chamada de \textbf{área de interesse}, ou ADI, que geralmente está relacionado com a capacidade do avatar do participante de perceber as entidades do mundo simulado. De maneira simples, uma ADI é um subespaço do ambiente virtual onde a interação ocorre.
+
+No que se refere a gerenciamento de interesse, trabalhos como \cite{morse1996iml, rak1996egb, zou2001egt, morgan2005imm} e \cite{minson2005aim} podem ser citados. Em \cite{rak1996egb}, é proposto um esquema de gerenciamento de interesse baseado em um ambiente virtual divido em células de uma grade. A cada célula está associado um grupo de multicast. Cada participante da simulação se subscreve então no grupo de multicast da célula onde ele se encontra, assim como de células vizinhas se estiverem ao alcance de sua visão. Cada participante envia então suas atualizações de estado ao grupo de multicast da região onde se encontra. %O problema desta abordagem é que não se pode assumir que haverá suporte a multicast sobre a Internet, já que não é amplamente estabelecido. Além disso, uma área de interesse formada por células fixas envolverá um número maior de objetos do que seria realmente necessário do que ocorreria se fosse utilizada uma área completamente dinâmica.
+
+Em \cite{zou2001egt}, também  são considerados esquemas de gerenciamento de interesse baseados em grupos de multicast. É feita uma comparação entre a formação de grupos baseado em célula, onde cada um está associado a uma célula de uma grade que compõe o ambiente virtual, e agrupamento baseado em objetos, onde para cada objeto existe um grupo multicast associado. Verificou-se que há uma compensação -- ou \emph{tradeoff} -- entre o custo das mensagens de controle dos grupos de multicast e o custo das mensagens de atualização de estado propriamente ditas.
+
+Um esquema de gerenciamento de interesse que utiliza um middleware orientado a mensagens é apresentado em \cite{morgan2005imm}. Dentre outros aspectos, este esquema faz uma predição do que será o interesse de determinado participante no futuro, baseado na posição e vetor velocidade do mesmo no ambiente virtual. Dessa forma, cada um começa a receber atualizações de estado de entidades que não estão ainda ao alcance de sua visão, mas que provavelmente estarão em um futuro próximo, tornando seus estados disponíveis assim que elas estiverem dentro do campo de visão.
+
+%por morse por último e justificar baseado nos parâmetros criados por ela.
+
+Em \cite{morse1996iml}, é feito um apanhado de sistemas que utilizam a técnica de gerenciamento de interesse, salientando quais critérios são utilizados por cada um. É apresentada então uma taxonomia de tais sistemas, classificando-os de acordo com: modelo de comunicação, foco da filtragem e domínios de responsabilidade. O modelo pode ser \textit{unicast}, \textit{multicast} ou \textit{broadcast}. %Como supõe-se aqui um sistema distribuído sobre a Internet, sobre a qual o suporte a \textit{multicast} não está ainda amplamente estabelecido, considera-se apenas o modelo de comunicação \textit{unicast}.
+O foco da filtragem refere-se a que tipo de características são observadas de cada objeto para realizar esta filtragem: podem ser \textit{intrínsecas}, como o valor de atributos do objeto (e.g. coordenadas exatas de sua localização), ou \textit{intrínsecas}, como a qual grupo de multicast ele está associado. Por fim, o domínio de responsabilidade atribuída a um gerenciador de interesse, que verifica para quem cada estado é relevante, pode ser \textit{dinâmico} ou \textit{estático}. Por exemplo, se cada gerenciador é designado para controlar uma área fixa do ambiente virtual, seu domínio de responsabilidade é estático, mas se ele controla uma área que possa aumentar ou diminuir de tamanho, ou mover-se, seu domínio de responsabilidade é dinâmico.
+
+%por morse por último e justificar baseado nos parâmetros criados por ela.
+
+Levando em consideração que o modelo de comunicação multicast não é amplamente suportado na Internet \cite{elsayed2004alm}, %tanto por razões técnicas quanto comerciais, 
+neste trabalho optou-se por seguir o modelo unicast, considerando que cada broadcast consiste na verdadem em um conjunto de sucessivas transmissões unicast, uma para cada destino. Além disso, %como o poder de processamento atualmente é maior que há uma década atrás,
+utiliza-se filtragem intrínseca e domínios de responsabilidade dinâmicos, para que haja maior precisão e, consequentemente, uma maior redução no tráfego de atualizações de estado \cite{morse1996iml}.
+
+\section{Balanceamento de carga}
+\label{sec:bal}
+
+Nas próximas seções, serão apresentados os trabalhos e princípios utilizados nas abordagens de outros autores. Embora apontem direções que se podem tomar para resolver o problema de distribuição e balanceamento de carga dinâmico de MMOGs, não o resolvem por completo, por razões que serão melhor detalhadas ao longo do texto. Com base em alguns desses princípios a seguir, e em pesquisa e implementação realizadas, será definido o esquema de balanceamento de carga aqui proposto.
+
+%falar do macrocell/microcell (usar localidade)
+\subsection{Microcélulas e macrocélulas}
+
+%O balanceamento de carga entre servidores de jogos online maciçamente multijogador é fortemente dependente da distribuição dos avatares dos jogadores através do ambiente virtual. Além disso, a depender da concentração de avatares, pode-se alternar entre uma função de crescimento de tráfego linear e uma função quadrática. Sendo assim, é necessário lidar com a localidade dos avatares, de maneira a otimizar o uso de largura de banda do sistema servidor, minimizando, tanto quanto possível, o overhead causado pela comunicação entre jogadores ligados a servidores diferentes.
+
+Uma maneira de fazer uso da localidade dos jogadores é agrupá-los de acordo com a posição ocupada por seus avatares no ambiente virtual. A questão seria a de como formar estes grupos. Uma maneira de fazer isto seria dividindo o mundo do jogo em várias células conectadas entre si. Cada célula consistiria em uma parte do mundo, com conteúdo e características próprios, que seria delegada a um nodo servidor. A forma mais simples de fazer isto é com uma grade de células de mesmo tamanho e formato. 
+
+Porém, o formato e a disposição destas células irá influenciar no tráfego gerado pelas mesmas entre os servidores. Por exemplo, um ambiente bidimensional poderia ser dividido em uma grade de células quadradas (Figura \ref{fig:alldivisions}(a)). Neste caso, cada uma destas células teria oito vizinhos, em média -- células nas bordas do mapa poderiam ter cinco ou três vizinhos apenas. Um servidor é considerado \textbf{vizinho} de outro quando administra uma célula que é vizinha a uma célula do outro servidor. Quanto mais servidores vizinhos, maior o tráfego entre servidores, e maior o overhead causado por esta comunicação. A distribuição ideal, então, seria utilizando células hexagonais, cada uma com seis vizinhos (Figura \ref{fig:alldivisions}(b)). %Estudos comprovam que esta é a divisão em células iguais que permite o menor número de vizinhos por célula [TODO:ref]. 
+Outra possibilidade seria utilizando fileiras alternadas de células quadradas, onde cada fileira seria deslocada o equivalente à metade do comprimento de uma célula (Figura \ref{fig:alldivisions}(c)).
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/alldivisions}
+ \caption{Diferentes tipos de divisão em células}
+ \label{fig:alldivisions}
+\end{figure}
+
+Uma questão importante deste design é que o conceito de célula é transparente para os jogadores. Estes visualizam um mundo vasto, único e não fragmentado, mesmo que estejam cruzando repetidamente as fronteiras entre diferentes células. Assim, é possível para eles moverem-se livremente através do ambiente virtual, independente de como é feita a distribuição. Obviamente, isso exige que as células se comuniquem, de maneira a atualizarem-se mutuamente e notificarem-se a respeito de eventos que ocorram próximo à fronteira entre elas, assim como a respeito da migração de jogadores entre uma e outra.
+
+Embora essa abordagem com células distribua a carga entre diversos servidores, não há garantias de que essa distribuição será uniforme, devido à grande mobilidade dos jogadores e à existência de pontos de interesse. Uma das idéias propostas na literatura \cite{devleeschauwer2005dma} também segue o princípio de dividir o ambiente virtual em células de tamanho e posição fixos, porém essas células são relativamente pequenas -- ou \textbf{microcélulas} -- e podem ser agrupadas, formando um espaço contínuo chamado de \textbf{macrocélula}. Cada macrocélula é então designada a um diferente servidor, que passa a administrar não apenas uma grande célula de tamanho e posição fixos, mas um conjunto variável de pequenas células. Estas microcélulas podem então ser transferidas dinamicamente entre diferentes macrocélulas, de maneira a manter a carga em cada um dos diferentes servidores abaixo do limite por ele suportado.
+
+Obviamente, as microcélulas designadas ao mesmo nodo servidor não gerarão tráfego adicional para sincronizarem-se entre si, porém não se poderá conhecer previamente o overhead de sincronização entre diferentes macrocélulas, pois o número de vizinhos que cada macrocélula terá é imprevisível, assim como o seu formato. Contudo, demonstrou-se \cite{devleeschauwer2005dma} que esse overhead é compensado pela melhor distribuição da carga do jogo entre os servidores. A Figura \ref{fig:macromicro} ilustra a divisão de um ambiente virtual bidimensional em microcélulas e o agrupamento destas em macrocélulas dinâmicas, que podem se adaptar à distribuição de avatares.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.6\textwidth]{images/macromicro}
+ \caption{Microcélulas agrupadas em quatro macrocélulas (R$_\text{1}$, R$_\text{2}$, R$_\text{3}$ e R$_\text{4}$)}
+ \label{fig:macromicro}
+\end{figure}
+
+%\subsection{<dewan ahmed>}
+%save for later... find some holes in it...
+%ele considera apenas a buffer region, enquanto eu uso uma abordagem mais "fine-grained" (A3)
+%load das células está OK, mas não das arestas!
+%algoritmo considera que cada aresta tem peso 1, ao invés de considerar a comunicação entre servidores.
+%nao usa part. de grafos ou refinamento de partição
+
+\subsection{Balanceamento com informações locais}
+%sem detalhes do algoritmo de balanceamento de grafos escolhido, nem faz uso do edge-cut (isso vai pra minha solução proposta)
+%o peso é a quantidade de jogadores
+%servidores com mesmo peso
+%a capacidade do servidor é o poder de processamento, ao invés da banda
+%considera-se que os servidores estejam conectados através de uma rede de alta velocidade. (oh de bal. e oh de intercomunicação)
+%a cada servidor é alocado 90% de sua capacidade. Isso pode não funcionar. Critério ruim.
+%possível loop infinito, se não houverem vizinhos capazes ou disponíveis. Outro critério ruim.
+
+No trabalho de \cite{lee2003sdl}, também é proposto um esquema dinâmico de balanceamento de carga para os servidores de um sistema multi-servidor de ambiente virtual, levando em conta que os usuários podem estar distribuídos através deste mundo de maneira não uniforme. De acordo com o esquema proposto pelos autores, um servidor sobrecarregado inicia o processo selecionando um conjunto de outros servidores para fazerem parte da redistribuição de carga. O conjunto de servidores selecionados dependerá do nível de sobrecarga do servidor inicial, assim como da quantidade de recursos ociosos dos outros servidores. Após a formação desse conjunto, seus elementos repartirão as porções do ambiente virtual que lhes pertencem utilizando um algoritmo de particionamento de grafo, de forma que os servidores envolvidos tenham carga final de trabalho semelhante.% Após decidir-se quem fica com que trabalho, os servidores envolvidos migram suas cargas entre si de maneira par-a-par.
+
+O principal aspecto da solução proposta pelos autores foi a utilização de informações locais (do servidor que iniciou o processo de balanceamento e de seus vizinhos), ao invés de informações globais (todos os servidores do sistema se envolveriam no balanceamento). A primeira apresenta pouco overhead, mas pode não resolver o problema de maneira eficiente em poucos passos, já que servidores sobrecarregados tendem a estar adjacentes. Já a abordagem global é capaz de dividir a carga de trabalho da forma mais equilibrada possível, mas sua complexidade cresce rapidamente com o aumento do número de servidores envolvidos. A solução apontada no trabalho então é de o balanceamento de carga envolver apenas um subconjunto de servidores, sendo que sua cardinalidade varia de acordo com a necessidade (se os vizinhos do servidor que disparou o balanceamento de carga estiverem também sobrecarregados, são selecionados mais servidores). Dessa forma, tem-se um pouco mais de informação do que a abordagem local com um número fixo de servidores envolvidos, mas sem o problema da complexidade inerente à abordagem global.
+
+%O principal objetivo da distribuição da carga entre os servidores do multi-servidor é manter a qualidade de interação dos usuários em um nível aceitável, reduzindo a carga de servidores sobrecarregados e delegando-a a outros, menos carregados, mantendo o nível de carregamento uniforme, ainda que a distribuição dos usuários no ambiente virtual não o seja. Se um servidor lida com muitos usuários além de sua capacidade computacional, ele não pode enviar mensagens de atualização de estado em tempo satisfatório; como resultado, a interação dos usuários é degradada. Distribuição dinâmica de carga pode evitar tal problema transferindo algumas porções de uma região (células e usuários) de servidores sobrecarregados para servidores menos carregados. No entanto, a migração de células e usuários impõe um novo sobrecusto nos servidores porque a informação de estado atualizada dos usuários que migraram deve ser replicada dos velhos servidores para os novos; consequentemente, a própria distribuição dinâmica da carga também pode degradar a qualidade do jogo. Portanto, um esquema dinâmico de distribuição de carga deve reduzir o número de jogadores prejudicados por servidores sobrecarregados, assim como minimizar o número de migrações necessárias.
+
+%1.1.1
+%\subsubsection{Escalabilidade}
+
+%Um esquema dinâmico de distribuição de carga deve funcionar bem, independente do tamanho do sistema. Em termos de overhead, a abordagem local é adequada para sistemas de larga escala porque seu sobrecusto é limitado à comunicação do servidor com seus vizinhos, sem ser afetado pelo tamanho do sistema. No entanto, a abordagem local, apesar de funcionar bem com um pequeno número de servidores, não funciona de maneira eficiente no caso de um desbalanceamento da carga de trabalho entre os servidores, que pode ser altamente assimétrica. A abordagem global apresenta grande eficácia independentemente do tamanho do sistema, pois todos os servidores no sistema cooperam para balancear suas cargas de trabalho. Porém, a abordagem global não é escalável, pois tem um sobrecusto que aumenta exponencialmente com o número de servidores no sistema multi-servidor. Logo, deve ser encontrada uma nova abordagem que funcione de maneira eficiente, com pequeno sobrecusto, independente do tamanho do sistema.
+
+%1.1.2
+%\subsubsection{Adaptatividade}
+
+%Para prover tal solução escalável, o esquema dinâmico de distribuição de carga deve ser executado adptando-se dinamicamente ao estado de sobrecarga dos servidores. Infelizmente, os esquemas existentes - local e global - não se adaptam ao estado de sobrecarga dos servidores. Na abordagem local, servidores sobrecarregados apenas consideram servidores vizinhos como seus parceiros para redistribuição da carga, de forma que não pode haver distribuição da sua carga excessiva de forma eficiente, se todos seus vizinhos estão sobrecarregados também. Por outro lado, a abordagem global reparte o ambiente virtual inteiro com informações de todos os servidores. Isto é desnecessário quando apenas um pequeno subconjunto dos servidores pode resolver de forma satisfatória o problema de desbalanceamento de carga do sistema. Sendo assim, um subconjunto de servidores do sistema deve ser determinado, considerando o estado de sobrecarga dos outros servidores.
+
+%1.2
+%\subsection{Modelo do sistema}
+
+Para atacar o problema, os autores também subdividem o ambiente virtual em \textbf{células} -- semelhantes às microcélulas -- retangulares, sendo que o número de servidores é muito menor que o número de células. As células são agrupadas em \textbf{regiões} -- ou macrocélulas -- e cada região é gerenciada por um servidor. Cada servidor mantém atualizadas as informações de estado dos usuários e lida com as interações entre avatares na região a ele dedicada. Cada usuário envia e recebe atualizações de estado através do servidor que gerencia a região na qual ele está jogando. Duas células são ditas adjacentes (ou vizinhas) se elas compartilharem uma fronteira. Analogamente, duas regiões, e seus respectivos servidores, são ditos adjacentes se existir um par de células adjacentes, cada uma das quais pertencendo a uma das duas regiões. %A Figura \ref{fig:leeA} ilustra o modelo de um sistema multi-servidor consistindo de 16 servidores. O ambiente virtual é dividido em 256 células, que são agrupadas em 16 regiões.
+
+%\begin{figure}
+% \centering
+% \includegraphics[width=0.8\textwidth]{images/LEE_leeA.jpg}
+% \caption{Um modelo multi-servidor para ambiente virtual distribuído}
+% \label{fig:leeA}
+%\end{figure}
+
+Foi definida a carga de trabalho de uma célula como o número de avatares presentes naquela célula. Os autores assumiram que todos avatares atualizam seus estados na mesma frequência, de forma que a carga de processamento (computação e comunicação) que uma célula impõe a um servidor é proporcional ao número de usuários naquela célula. A carga de trabalho de uma região e seu servidor designado é definida como a soma das cargas de trabalho individuais das células que compõem aquela região. Cada servidor periodicamente avalia sua carga de trabalho e troca informações de carga com os servidores vizinhos. Assumiu-se, também, que estes servidores estão conectados através de uma rede de alta velocidade. Dessa forma, o overhead de trocar informações de sobrecarga entre vizinhos é limitada e considerada negligenciável, se comparada com outros custos da distribuição de carga. Pelo mesmo motivo, também assumiu-se como negligenciável o overhead de comunicação entre servidores quando jogadores em diferentes regiões estão interagindo.
+
+%A capacidade de processamento de um servidor é limitada; isto é, uma grande quantidade de carga, além da capacidade de um servidor aumenta o tempo de processamento das mensagens de atualizações de estado dos usuários. Define-se como capacidade de um servidor, representada por CP, o máximo número de usuários que o servidor pode suportar sem prejudicar a performance da interação entre os usuários. Considera-se que todos os servidores têm a mesma capacidade.
+
+%1.3
+%\subsubsection{O esquema de distribuição de carga dinâmico proposto}
+\subsubsection{Seleção de grupo local para balancear a carga}
+\label{lee:regselect}
+
+%o servidor que iniciou reparte as regiões que eram dedicadas a ele entre os servidores envolvidos, de forma que eles terão aproximadamente a mesma carga. Então, os servidores envolvidos migram suas celulas e usuários entre si de maneira par-a-par, de acordo com o resultado do reparticionamento. Nas sessões seguintes, será descrito em detalhes como isso é realizado.
+
+%1.3.1
+%\subsubsection{Seleção adaptativa de servidor}
+
+Um servidor dispara o balanceamento quando a carga atribuída a ele excede sua capacidade. Este servidor seleciona um conjunto de outros servidores para se envolverem com a distribuição. Primeiro, o servidor que iniciou escolhe o menos carregado dentre seus vizinhos e envia um pedido de que ele participe do balanceamento de carga. O vizinho escolhido rejeita o pedido se ele já está envolvido em outro grupo de balanceamento; caso contrário, ele responde ao servidor iniciador com a informação de carga de seus próprios vizinhos. Se o servidor vizinho que está participando não for capaz de absorver a carga de trabalho excedente do servidor iniciador, a seleção é executada novamente entre os servidores vizinhos de não apenas o servidor sobrecarregado, como também os vizinhos do vizinho escolhido na primeira fase. A seleção continua até que a carga de trabalho excedente do primeiro servidor possa ser absorvida -- isto é, a carga de trabalho de todos os servidores selecionados torna-se menor que um limite pré-definido. Os autores definiram este limite como sendo 90\% da capacidade total do conjunto de servidores. O critério utilizado para esta escolha foi o de evitar o imediato reinício da balanceamento de carga.
+
+Sejam SELECIONADOS e CANDIDATOS dois conjuntos de servidores, ambos inicialmente vazios. Seja $P$ a capacidade de cada servidor. O procedimento para determinar quem serão os servidores envolvidos é o seguinte:
+
+\begin{enumerate} 
+
+  \item O servidor que disparou o balanceamento, $S_i$, é inserido em SELECIONADOS, que são os servidores envolvidos na distribuição de carga. Os servidores vizinhos do iniciador são adicionados em CANDIDATOS, que são os servidores que podem vir a participar da seleção.
+  
+  \item De CANDIDATOS, é selecionado o servidor com menor carga de trabalho, $S_v$; então, $S_i$ envia um pedido a ele para participar na distribuição de carga
+  
+  \begin{enumerate}
+  
+    \item Se o servidor $S_v$ não está envolvido em outra distribuição de carga, ele responde ao servidor $S_i$ com a carga de trabalho de seus vizinhos. Quando $S_i$ recebe esta resposta, ele insere $S_v$ em SELECIONADOS e seus vizinhos são inseridos em CANDIDATOS, se eles já não estiverem dentro de SELECIONADOS ou de CANDIDATOS.
+    
+    \item Se $S_v$ já está participando de outra distribuição de carga, ele rejeita o pedido e é removido do conjunto CANDIDATOS.
+  
+  \end{enumerate}
+  
+  \item O passo 2 é repetido até que a carga de trabalho média dos servidores selecionados se torne menor que um limite: $0,9 \times P$.
+  
+\end{enumerate}
+
+Para exemplificar o funcionamento do algoritmo, pode-se observar a Figura \ref{fig:lee2}. Todos os servidores têm a mesma capacidade, podendo cada um comportar 100 usuários. Primeiro, o servidor iniciador, $S_6$, é inserido em SELECIONADOS e seus vizinhos ($S_2$, $S_5$, $S_7$ e  $S_{10}$) são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(a)). Então, $S_7$, que tem a menor carga de trabalho dentre os servidore em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Quando $S_7$ responde a $S_6$ com a informação de carga de seus vizinhos ($S_3$, $S_6$, $S_8$ e $S_{11}$), $S_7$ é inserido em SELECIONADOS e seus vizinhos, exceto $S_6$, são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(b)). Agora, $S_{11}$, que tem a menor carga de trabalho dentre os servidores em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Porém, $S_{11}$ rejeita o convite, pois já está envolvido em outra distribuição, iniciada por $S_{12}$. Assim, $S_{11}$ é removido de CANDIDATOS e $S_{10}$ é selecionado porque tem agora a menor carga de trabalho dentre os servidores em CANDIDATOS (Figura \ref{fig:lee2}(c)). Até que a carga de trabalho média dos servidores em SELECIONADOS se torne menor que $0,9 \times P$, ou seja, $90$, o procedimento acima continua (Figura \ref{fig:lee2}(d) e Figura \ref{fig:lee2}(e)).
+
+\begin{figure}
+ \centering
+ \includegraphics[width=1.0\textwidth]{images/localselection}
+ \caption{Seleção do grupo de servidores para balanceamento local}
+ \label{fig:lee2}
+\end{figure}
+
+%1.3.2
+\subsubsection{Reparticionamento das regiões}
+
+Uma vez que o servidor iniciador seleciona um conjunto de servidores para se envolverem na distribuição de carga, ele reparte as regiões a ele dedicadas com os servidores envolvidos. É sugerido pelos autores, embora não sejam dados detalhes, o uso de alguma técnica de particionamento de grafos para repartir essas regiões. Cada célula seria representada por um vértice adjacente àqueles que correspondessem às células vizinhas. O peso de cada vértice é então ajustado como a carga de trabalho da célula que representa. Eles são agrupados em partições, cada uma das quais representa uma região, e o número de partições deve ser igual ao número de elementos do conjunto SELECIONADOS. Cada uma das partições formadas após a execução do algoritmo de particionamento de grafo deverá ter um conjunto de vértices tal que o peso das partições seja semelhante -- ou seja, cada servidor terá aproximadamente a mesma carga de trabalho.
+
+%1.3.3
+
+Com o término do reparticionamento das regiões, o servidor que iniciou todo o processo de balanceamento de carga dissemina o novo particionamento, que acabou de ser calculado, para os outros servidores envolvidos. Isso inclue a informação de que células devem migrar para quais regiões/servidores. Após receber estas informações, cada servidor inicia o processo de emigração de células e usuários. Primeiro, envia-se o estado dos avatares e das células que serão transferidos para o servidor que os receberá. A informação a ser enviada varia de acordo com as características da aplicação. Por exemplo, pode incluir apenas a localização dos avatares, ou pode conter informações mais detalhadas, como qual é o modelo visual que representa aquele jogador. Depois de enviar esses dados, o servidor notifica cada usuário que migrou, que passa então a comunicar-se apenas com seu novo servidor.
+
+\subsection{Uso de grafos em distribuição de tarefas}
+%***princípio do uso de particionamento de grafos para distribuição de tarefas com corte de aresta tão pequeno quanto possível -> tarefas mais independentes
+%    ggp, gggp, spectral bissection, kernighan-lin
+%falar do kernighan-lin e a dependência entre tarefas
+%as tarefas são geralmente estáticas..
+
+Um problema clássico de alocação de tarefas em sistemas distribuídos é o da dependência entre tarefas \cite{baccelli2004ssm, orsila2007osm, chen2002mpe}. Tarefas dependentes entre si fazem com que os processadores nos quais elas estão sendo executadas tenham que se comunicar para que o processamento possa continuar. Isso gera dois problemas principais: em primeiro lugar, o processamento como um todo é atrasado por causa do tempo de espera de cada transmissão e recebimento de mensagens -- supondo que a comunicação entre os processos seja por meio de mensagens -- e, em segundo lugar, a banda de comunicação é ocupada para o envio e recebimento destas mensagens.
+
+Para resolver este problema, são utilizados grafos, da seguinte maneira: o conjunto de tarefas a realizar é mapeado em um grafo com pesos. Cada vértice representa uma tarefa e cada aresta representa a comunicação entre as tarefas. O peso de cada vértice representa o custo de processamento e o peso da aresta representa a carga de comunicação. Para fazer a distribuição, é feito um particionamento do grafo gerado. Cada partição terá um conjunto de tarefas que serão executadas no mesmo nodo e, conseqüentemente, o atraso de comunicação entre estas tarefas será pequeno. No entanto, as arestas do grafo que ligam partições diferentes representam comunicação entre diferentes nodos.
+
+Os algoritmos de particionamento do grafo de tarefas, geralmente, buscam atingir dois objetivos: gerar partições de peso aproximadamente igual, ou seja, cada nodo terá uma carga computacional semelhante à dos outros; e minimizar o corte de aresta, ou seja, fazer com que a dependência entre os conjuntos de tarefas seja a menor possível, reduzindo a comunicação entre os nodos de processamento. Por corte de aresta, entende-se o somatório dos pesos de todas as arestas que ligam vértices que estão em partições diferentes (Figura \ref{fig:graphs}).
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/graphs}
+ \caption{Divisão de tarefas utilizando particionamento de grafos}
+ \label{fig:graphs}
+\end{figure}
+
+O problema de particionamento de grafos é NP-completo \cite{feder1999cgp}. Contudo, já foi feita bastante pesquisa nessa área, resultando em heurísticas que obtêm boas soluções. Uma das heurísticas mais conhecidas é a de Kernighan e Lin \cite{kernighan1970ehp}, que tem como objetivo, partindo de duas partições iniciais quaisquer, chegar a duas partições com peso semelhante e corte de aresta reduzido. O algoritmo de Fiduccia e Mattheyses \cite{fiduccia1982lth} incrementa a solução de Kernighan e Lin, generalizando-a para hipergrafos, além de permitir que cada partição tenha uma fração diferente do peso total do hipergrafo.
+
+Existem outros algoritmos mais recentes, como os baseados em divisão espectral \cite{hendrickson1995isg}. Estes são computacionalmente caros, por envolver complexos cálculos de álgebra linear. No entanto, o particionamento resultante é considerado bom para uma vasta gama de problemas \cite{karypis1999fah}. Existe também a abordagem em vários níveis \cite{karypis1999pmk}, através da simplifação do grafo por meio de contração de arestas. Com o grafo mais simples, é aplicado algum algoritmo de particionamente e então ele se desdobra, já particionado, até o grafo original. Eventualmente, refinamentos no particionamento podem ser necessários. Esta última técnica é especialmente útil em grafos com grande número de vértices, na ordem de centenas a milhares, ou mais.
+
+Na Figura \ref{fig:multilevel} é ilustrado um particionamento em vários níveis. As arestas traçejadas são as que foram escolhidas para serem contraídas. Estão em destaque na figura os vértices resultantes da contração de arestas, assim como também estão destacadas as arestas que resultam da soma das arestas que incidiam sobre os antigos vértices.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=1.0\textwidth]{images/multilevel}
+ \caption{Particionamento de grafo simplificado}
+ \label{fig:multilevel}
+\end{figure}
+
+Contudo, MMOGs são geralmente aplicações de tempo-real, além de a carga imposta sobre os servidores mudar constantemente em tempo de execução. Por esse motivo, o algoritmo de particionamento utilizado deve ser rápido, tornando inviável o uso da divisão espectral. É proposto neste trabalho utilizar um algoritmo guloso, mais simples, baseado em \cite{karypis1998mam}, que pode não atingir soluções tão boas quanto as da divisão espectral, porém é consideravelmente mais rápido. Além disso, o custo para encontrar uma solução muito próxima do ótimo não se justifica no contexto de MMOGs, pelo fato dos pesos mudarem constantemente, precisando de um novo particionamento em relativamente pouco tempo. Já quanto ao particionamento em vários níveis, seu uso não foi considerado necessário pois o número de vértices do grafo que representará o ambiente virtual é relativamente pequeno.
