@@ -171,6 +171,39 @@
 }
 
 %==============================================================================
+% Definição das english keywords (máx. 10)
+%==============================================================================
+\newcounter{englishkwcounter}
+\newcommand{\englishkeyword}[1]{
+        \addtocounter{englishkwcounter}{1}
+        \expandafter\gdef\csname englishkeyw\alph{englishkwcounter}\endcsname{#1}
+}
+\newcommand{\@cipenglishkw}{%
+        \@ifundefined{englishkeywa}{}{1.~\expandafter\MakeUppercase\englishkeywa\@. }%
+        \@ifundefined{englishkeywb}{}{2.~\expandafter\MakeUppercase\englishkeywb\@. }%
+        \@ifundefined{englishkeywc}{}{3.~\expandafter\MakeUppercase\englishkeywc\@. }%
+        \@ifundefined{englishkeywd}{}{4.~\expandafter\MakeUppercase\englishkeywd\@. }%
+        \@ifundefined{englishkeywe}{}{5.~\expandafter\MakeUppercase\englishkeywe\@. }%
+        \@ifundefined{englishkeywf}{}{6.~\expandafter\MakeUppercase\englishkeywf\@. }%
+        \@ifundefined{englishkeywg}{}{7.~\expandafter\MakeUppercase\englishkeywg\@. }%
+        \@ifundefined{englishkeywh}{}{8.~\expandafter\MakeUppercase\englishkeywh\@. }%
+        \@ifundefined{englishkeywi}{}{9.~\expandafter\MakeUppercase\englishkeywi\@. }%
+        \@ifundefined{englishkeywj}{}{10.~\expandafter\MakeUppercase\englishkeywj\@. }%
+}
+\newcommand{\@englishkeywords}{%
+        \@ifundefined{englishkeywa}{}{\expandafter\MakeUppercase\englishkeywa}%
+        \@ifundefined{englishkeywb}{}{, \englishkeywb}%
+        \@ifundefined{englishkeywc}{}{, \englishkeywc}%
+        \@ifundefined{englishkeywd}{}{, \englishkeywd}%
+        \@ifundefined{englishkeywe}{}{, \englishkeywe}%
+        \@ifundefined{englishkeywf}{}{, \englishkeywf}%
+        \@ifundefined{englishkeywg}{}{, \englishkeywg}%
+        \@ifundefined{englishkeywh}{}{, \englishkeywh}%
+        \@ifundefined{englishkeywi}{}{, \englishkeywi}%
+        \@ifundefined{englishkeywj}{}{, \englishkeywj}%
+}
+
+%==============================================================================
 % Redefinição da data (para ter mês e ano separados)
 %==============================================================================
 \renewcommand{\date}[2]{
@@ -388,7 +421,7 @@
 }
 \newenvironment{englishabstract}[2]{%
         \if@openright\cleardoublepage\else\clearpage\fi%
-        \gdef\@englishkeywords{#2}%
+        %\gdef\@englishkeywords{#2}%
         \iflanguage{english}{
                 \begin{otherlanguage}{brazilian}
         }{
@@ -402,7 +435,7 @@
                 }\vspace{-\baselineskip}\par
 }{
         \par\vfill
-        \noindent\textbf{\keywordsname:} \@englishkeywords.
+        \noindent\textbf{Keywords:} \@englishkeywords.
         \end{otherlanguage}
 }
 
