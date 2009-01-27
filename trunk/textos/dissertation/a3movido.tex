@@ -21,7 +21,7 @@
 Para evitar que o custo de manutenção do sistema distribuído servidor como um todo não se aproxime do custo de manutenção de um servidor central, é necessário realizar algumas otimizações com o intuito de reduzir a largura de banda necessária para cada um dos nodos. Propõe-se aqui uma técnica para reduzir o consumo de largura de banda causado pelo tráfego do jogo entre os servidores e os clientes, diminuindo a quantidade de recursos necessários, através de um refinamento da técnica de gerenciamento de interesse \cite{boulanger2006cim} dos jogadores. O princípio básico desta técnica é que cada participante do jogo receba apenas atualizações de jogadores cujo estado lhes seja relevante. Foram realizadas simulações comparando a proposta deste trabalho com técnicas convencionais, obtendo resultados significativos. %Além disso, propõe-se uma técnica que visa prover qualidade de serviço, adaptando a freqüência de atualizações enviadas pelo servidor à disponibilidade de recursos. [sure?]Outra consiste em um heurística para detecção de aglomerados de jogadores - ou hotspots - de forma a otimizar o balanceamento de carga entre os servidores.[/sure?]
 
 Este capítulo está dividido da seguinte maneira: %na seção \ref{relatedwork} são citados alguns trabalhos relacionados onde buscou-se distribuir o servidor do jogo; na seção \ref{def}, são apresentadas as definições de alguns conceitos utilizados ao longo do texto; na seção \ref{model}, é descrito o modelo de distribuição proposto;
-na seção \ref{aoi} é apresentada a otimização proposta para reduzir o tráfego sem comprometer a qualidade do jogo; nas seções \ref{sim} e \ref{results} é descrita a simulação realizada para validar a técnica proposta e os resultados obtidos, respectivamente e, na seção \ref{conclusion}, são apresentadas as conclusões a que se chegou.
+na seção \ref{aoi} são dados alguns exemplos de áreas de interesse, mostrando como funciona a técnica; na seção \ref{gaoi} é apresentada a otimização proposta para reduzir o tráfego sem comprometer a qualidade do jogo; nas seções \ref{sim} e \ref{results} é descrita a simulação realizada para validar a técnica proposta e os resultados obtidos e, na seção \ref{conclusion}, são apresentadas as conclusões a que se chegou.
 
 
 
@@ -35,7 +35,7 @@ na seção \ref{aoi} é apresentada a otimização proposta para reduzir o tráfego se
 %como há vários servidores, o processamento das áreas de interesse é paralelizado, também, então não é tãaao ruim calcular a distância entre cada par de avatares..
 %explicar uma por uma, como funciona e o porquê.
 
-Para que os diferentes jogadores interajam entre si e com as diversas entidades presentes no ambiente do jogo de maneira adequada, é necessário que disponham de réplicas locais destas entidades, cujo estado deve ser o mesmo para todos. A maneira mais simples de fazer isso seria difundir o estado de todas as entidades para todos os jogadores, mas isso geraria uma quantidade alta de tráfego, a depender do número de jogadores participando. Para economizar largura de banda, tanto dos jogadores, quanto dos servidores que os intermediam, é utilizada uma técnica conhecida como gerenciamento de interesse. Esta técnica reduz o número de atualizações que determinado jogador irá receber - e enviar, no caso de uma arquitetura par-a-par.
+Para que os diferentes jogadores interajam entre si e com as diversas entidades presentes no ambiente do jogo de maneira adequada, é necessário que disponham de réplicas locais destas entidades, cujo estado deve ser o mesmo para todos. A maneira mais simples de fazer isso seria difundir o estado de todas as entidades para todos os jogadores, mas isso geraria uma quantidade alta de tráfego, a depender do número de jogadores participando. Para economizar largura de banda, tanto dos jogadores, quanto dos servidores que os intermediam, é utilizada uma técnica conhecida como gerenciamento de interesse. Esta técnica reduz o número de atualizações que determinado jogador irá receber -- e, do mesmo modo, o número de atualizações enviadas pelo servidor ao qual ele está conectado.
 
 Em resumo, o gerenciamento de interesse funciona da seguinte forma: para cada mudança de estado de cada entidade, é calculado para quem ela será relevante. Por exemplo, se um avatar situa-se a quilômetros de distância de outro, sem nenhum tipo de vínculo (como grupo, guilda etc.) entre eles, é irrelevante para cada um deles o estado mais recente do outro. Assim, não é necessário que eles troquem suas informações de estado. Este princípio, de localidade, é utilizado como critério principal no gerenciamento de interesse.
 
@@ -74,7 +74,7 @@ Uma questão a ser considerada, no entanto, é que o jogador não irá receber atual
 
 %algoritmo
 
-\section{Área com diferentes graus de interesse}
+\section{Utilizando diferentes graus de interesse em uma ADI}
 %\subsection{Círculo com atenuação}
 \label{gaoi}
 
@@ -82,23 +82,23 @@ O princípio por trás da abordagem proposta aqui baseia-se no fato de que, quanto
 
 Para atingir este objetivo, é necessário definir alguns parâmetros:
 
-\textbf{Relevância} - valor real entre 0 e 1, inclusive, que determina o quanto o estado de determinada entidade é relevante para um avatar.
+\textbf{Relevância}: valor real entre 0 e 1, inclusive, que determina o quanto o estado de determinada entidade é relevante para um avatar.
 
-\textbf{Freqüência de atualização} - quantidade de atualizações que cada avatar recebe de cada uma das entidades do ambiente virtual por unidade de tempo.
+\textbf{Freqüência de atualização}: quantidade de atualizações que cada avatar recebe de cada uma das entidades do ambiente virtual por unidade de tempo.
 
-\textbf{Intervalo normal de atualização} - menor intervalo de tempo entre a chegada de duas atualizações de estado consecutivas de uma mesma entidade em um cliente, ou seja, quando a relevância daquela entidade para o avatar daquele cliente é 1. Assim sendo, o intervalo normal determina a freqüência máxima de atualização.
+\textbf{Intervalo normal de atualização}: menor intervalo de tempo entre a chegada de duas atualizações de estado consecutivas de uma mesma entidade em um cliente, ou seja, quando a relevância daquela entidade para o avatar daquele cliente é 1. Assim sendo, o intervalo normal determina a freqüência máxima de atualização.
 
-\textbf{Alcance de visão} - determina a que distância as entidades podem estar do avatar, no máximo, para que o jogador possa visualizá-las.
+\textbf{Alcance de visão}: determina a que distância as entidades podem estar do avatar, no máximo, para que o jogador possa visualizá-las.
 
-\textbf{Distância crítica} - é o raio do círculo, em torno do avatar, onde todas as entidades têm relevância igual a 1.
+\textbf{Distância crítica}: é o raio do círculo, em torno do avatar, onde todas as entidades têm relevância igual a 1.
 
-Para se enviar o estado de uma entidade para determinado cliente, verifica-se primeiro quando foi o último envio. O próximo instante de envio é então escalonado para ocorrer após um determinado intervalo de tempo. Se a relevância daquele estado for 1, será utilizado o intervalo normal de atualização. Se for menor que 1, divide-se o intervalo normal pela relevância. Por exemplo, seja um jogo em que o intervalo normal de atualização seja de 200 ms. Se o avatar $A_i$, que acabou de enviar uma atualização de estado para $A_j$, está a uma distância de $A_j$ tal que sua relevância é 0.5, o próximo envio será depois de um intervalo de 200/0.5, ou seja, 400 ms. Apesar deste intervalo ainda ser uma fração de segundo, representa uma diminuição da freqüência de atualização do estado de $A_i$ em 50\%. Como estão a uma distância maior um do outro, e o intervalo foi aumentado de apenas 200 ms, esta variação deverá ser imperceptível para o jogador que controla $A_j$.
+Para se enviar o estado de uma entidade para determinado cliente, verifica-se primeiro quando foi o último envio. O próximo instante de envio é então escalonado para ocorrer após um determinado intervalo de tempo. Se a relevância daquele estado for 1, será utilizado o intervalo normal de atualização. Se for menor que 1, divide-se o intervalo normal pela relevância. Por exemplo, seja um jogo em que o intervalo normal de atualização seja de 200 ms. Se o avatar $A_i$, que acabou de enviar uma atualização de estado para $A_j$, está a uma distância de $A_j$ tal que sua relevância é $0,5$, o próximo envio será depois de um intervalo de $\frac{200}{0,5}$, ou seja, 400 ms. Apesar deste intervalo ainda ser uma fração de segundo, representa uma diminuição da freqüência de atualização do estado de $A_i$ em 50\%. Como estão a uma distância maior um do outro, e o intervalo foi aumentado de apenas 200 ms, esta variação deverá ser imperceptível para o jogador que controla $A_j$.
 
 É importante perceber que a atenuação da freqüência de atualização das entidades é compatível com outras técnicas mais complexas de gerenciamento de interesse. Em \cite{boulanger2006cim}, são descritos diversos algoritmos de gerenciamento de interesse que poderiam ser ainda melhorados se fosse agregada a idéia de diferentes intervalos de envio baseado na relevância destas atualizações. Geralmente o estado de cada entidade é classificado em um de apenas dois extremos: é relevante ou não é relevante, ignorando-se que há uma vasta gama de valores intermediários. A questão está em como definir esse valor de relevância para cada estado. Nas seções seguintes, serão apresentados dois exemplos de algoritmos que definem o método de se obter esse valor, assim como o tipo de área utilizado. Na seção \ref{csmooth}, é especificado o \malg, que é um algoritmo original de gerenciamento de interesse, que, dentre outros princípios, emprega a atenuação da freqüência de atualização. As simulações e seus resultados são apresentados nas seções \ref{sim} e \ref{results}, respectivamente.
 
 \subsection{Círculo com atenuação}
 
-Um exemplo simples de utilização de intervalos variados de atualização baseado em relevância seria utilizando a área de interesse em formato de círculo. Para obter-se a relevância de uma entidade em relação a um avatar, pode-se fazer com que seu valor seja $1$ quando a entidade estiver na mesma posição do avatar e ir diminuindo gradualmente à medida em que se afasta, até chegar a $0$, quando pára de diminuir não importa o quanto mais se afaste. Essa é uma maneira que, apesar de simples, demonstrou uma significante redução no tráfego entre clientes e servidores. Na figura \ref{graded_circle}, é ilustrado como seria a área de interesse com atenuação gradual da freqüência de atualização das entidades para um determinado avatar.
+Um exemplo simples de utilização de intervalos variados de atualização baseado em relevância seria utilizando a área de interesse em formato de círculo. Para obter-se a relevância de uma entidade em relação a um avatar, pode-se fazer com que seu valor seja $1$ quando a entidade estiver na mesma posição do avatar e ir diminuindo gradualmente à medida em que se afasta, até chegar a $0$. Essa é uma maneira que, apesar de simples, demonstrou uma significante redução no tráfego entre clientes e servidores. Na figura \ref{graded_circle}, é ilustrado como seria a área de interesse com atenuação gradual da freqüência de atualização das entidades para um determinado avatar.
 
 \begin{figure}[!t]
 	\centering
@@ -115,7 +115,7 @@ Um exemplo simples de utilização de intervalos variados de atualização baseado e
 %V    A          C     A         U      F         A
 \label{csmooth}
 
-O algoritmo de gerenciamento de interesse proposto neste artigo, denominado \malg{} (ângulo de visão com área próxima e atenuação de freqüência de atualização), leva em conta três fatores principais:
+O algoritmo de gerenciamento de interesse proposto neste trabalho, denominado \malg{} (ângulo de visão com área próxima e atenuação de freqüência de atualização), leva em conta três fatores principais:
 
 \begin{itemize}
  \item Ângulo de visão do avatar, para determinar quais entidades o jogador tem que ser capaz de perceber imediatamente, por estarem à sua frente, até a distância que seu alcance de visão permita;
@@ -126,23 +126,23 @@ O algoritmo de gerenciamento de interesse proposto neste artigo, denominado \mal
 
 A área de interesse resultante então toma a forma de um setor de círculo, cuja origem é o centro de outro círculo, menor. Este círculo menor é a área próxima do avatar do jogador, que receberá atualizações de estado com intervalo normal de entidades que nela estiverem. Dessa forma, tem-se o estado mais atualizado possível do jogo na região próxima ao avatar. Isso favorece a interação com entidades que estejam perto dele. Mesmo que alguma delas esteja momentaneamente fora do campo de visão do jogador, ela estará disponível caso ele gire seu avatar repentinamente na direção oposta à que está voltado. Na figura \ref{fcsmooth}, é ilustrada a área de interesse que acaba de ser definida.
 
-Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângulo de visão, será calculada sua relevância. Propõe-se que a relevância de cada entidade diminua gradualmente de acordo com a distância entre ela e o avatar do jogador em questão. Quanto mais longe, menos freqüentes serão as atualizações de estado. Isso é possível porque mesmo que o intervalo de atualização seja duplicado, ainda será de uma fração de segundo, o que será dificilmente perceptível por um jogador cujo avatar está situado a uma grande distância da entidade em questão. Além disso, pequenos atrasos entre a chegada das atualizações de estado podem ser facilmente mascarados através de técnicas de interpolação, como dead-reckoning \cite{smed2002rna}. O algoritmo \ref{smalg} define o funcionamento deste gerenciamento de interesse.
+Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângulo de visão, será calculada sua relevância. Propõe-se que a relevância de cada entidade diminua gradualmente de acordo com a distância entre ela e o avatar do jogador em questão. Quanto mais longe, menos freqüentes serão as atualizações de estado. Isso é possível porque mesmo que o intervalo de atualização seja duplicado, provavelmente ainda será de uma fração de segundo, o que será dificilmente perceptível por um jogador cujo avatar está situado a uma grande distância da entidade em questão. Além disso, pequenos atrasos entre a chegada das atualizações de estado podem ser facilmente mascarados através de técnicas de interpolação, como dead-reckoning \cite{smed2002rna}. O Algoritmo \ref{smalg} define o funcionamento deste gerenciamento de interesse.
 
 \begin{algorithm}
-\caption{Calculate relevance of entity E to avatar A}
+\caption{Calcular a relevância da entidade E para o avatar A}
 \label{smalg}
 \begin{algorithmic}
- \STATE $dist \leftarrow distance(A, E)$
+ \STATE $dist \leftarrow dist\hat{a}ncia(A, E)$
  \IF{$dist \le \cridis$}
- \STATE $relevance \leftarrow 1$
+ \STATE $relev\hat{a}ncia \leftarrow 1$
  \ELSE
- \IF{A can see E in its field of view}
- \STATE $relevance \leftarrow 1 - \frac{dist - \cridis}{\viewdis - \cridis}$
- \IF{$relevance < 0$}
- \STATE $relevance \leftarrow 0$
+ \IF{A pode ver E em seu campo de visão}
+ \STATE $relev\hat{a}ncia \leftarrow 1 - \frac{dist - \cridis}{\viewdis - \cridis}$
+ \IF{$relev\hat{a}ncia < 0$}
+ \STATE $relev\hat{a}ncia \leftarrow 0$
  \ENDIF
  \ELSE
- \STATE $relevance \leftarrow 0$
+ \STATE $relev\hat{a}ncia \leftarrow 0$
  \ENDIF
  \ENDIF
 \end{algorithmic}
@@ -163,7 +163,7 @@ Para efetuar a simulação do algoritmo proposto, foi necessário primeiro criar um
 
 Foi utilizado o simulador de rede ns-2 \cite{mccanne:nsn}. Este simulador permite criar código específico da aplicação que será simulada. No caso, foi simulado um servidor, que deveria enviar atualizações de estado para um cliente, responsável por um dos avatares na região. Baseado na localização dos outros avatares e no algoritmo de gerenciamento de interesse escolhido, o servidor decidia quais outros avatares tinham um estado relevante para o cliente em questão. Com isso, obtém-se a ocupação de largura de banda de envio necessária para um único cliente. Não se julgou necessário simular simultaneamente todos os clientes conectados àquele servidor, pois todos os avatares têm o mesmo perfil. Para encontrar a carga total no servidor, basta multiplicar a banda de envio necessária para um cliente pelo número de clientes presentes na região.
 
-Outra questão é que o consumo de largura de banda de envio do servidor é muito maior que o de recepção - se ele recebe $n$ ações, cada uma oriunda de um dos $n$ clientes, é necessário, no pior caso, enviar $O(n^2)$ atualizações de estado, pois cada jogador precisaria do estado de todos os outros. Assim sendo, foi necessário apenas medir a banda de transmissão utilizada.
+Outra questão é que o consumo de largura de banda de envio do servidor é muito maior que o de recepção -- se ele recebe $n$ ações, cada uma oriunda de um dos $n$ clientes, é necessário, no pior caso, enviar $O(n^2)$ atualizações de estado, pois cada jogador precisaria do estado de todos os outros. Assim sendo, foi necessário apenas medir a banda de transmissão utilizada.
 
 %falar do svoboda e do kim??...
 Em trabalhos como \cite{yu2007nas}, \cite{kim2005tcm} e \cite{svoboda2007taa}, é analisado o tráfego de rede gerado por jogos em larga escala. Baseado nestes trabalhos, e adotando uma postura conservadora, foram decididos os seguinte parâmetros para serem utilizados na simulação:
@@ -185,7 +185,7 @@ Foram executadas diversas simulações, com o objetivo de comparar os algoritmos d
 
 Os resultados foram coletados da seguinte maneira: para encontrar a largura de banda utilizada em média para envio, foram somados todos os pacotes de cada sessão e dividido pelo tempo que foi simulado; para determinar a largura de banda máxima utilizada, foi verificado, segundo a segundo, quantos bytes foram enviados e foi selecionado o máximo.
 
-Nas tabelas \ref{tab_max} e \ref{tab_avg}, são apresentados os dados coletados de largura de banda máxima e média, respectivamente, utilizada com os quatro algoritmos simuladas - área em círculo (\circleaoi), área em círculo com atenuação (\circleat), área do campo de visão (\fov) e área do campo de visão mais área próxima mais atenuação (\malg) - além de mostrar quanto seria a largura de banda utilizada se nenhuma técnica fosse empregada (\noaoi). Os valores estão em bytes/s. Nas figuras \ref{fig_max} e \ref{fig_avg} são mostrados os gráficos correspondentes.
+Nas tabelas \ref{tab_max} e \ref{tab_avg}, são apresentados os dados coletados de largura de banda máxima e média, respectivamente, utilizada com os quatro algoritmos simuladas -- área em círculo (\circleaoi), área em círculo com atenuação (\circleat), área do campo de visão (\fov) e área do campo de visão mais área próxima mais atenuação (\malg) -- além de mostrar quanto seria a largura de banda utilizada se nenhuma técnica fosse empregada (\noaoi). Os valores estão em bytes/s. Nas figuras \ref{fig_max} e \ref{fig_avg} são mostrados os gráficos correspondentes.
 
 \begin{table}[ht]
 \caption{Largura de banda máxima utilizada}
@@ -241,9 +241,9 @@ Nas tabelas \ref{tab_max} e \ref{tab_avg}, são apresentados os dados coletados d
 	\label{fig_avg}
 \end{figure}
 
-Apenas usando diferentes freqüências de atualização no gerenciamento de interesse baseado em círculo, reduziu-se em 41.59\% a largura de banda de envio utilizada em média pelo servidor por cliente. A utilização máxima de largura de banda também foi reduzida, em 36.19\%. Estes valores representam a média de redução de uso de largura de banda para os diferentes números de clientes.
+Apenas usando diferentes freqüências de atualização no gerenciamento de interesse baseado em círculo, reduziu-se em 41,59\% a largura de banda de envio utilizada em média pelo servidor por cliente. A utilização máxima de largura de banda também foi reduzida, em 36,19\%. Estes valores representam a média de redução de uso de largura de banda para os diferentes números de clientes.
 
-No que diz respeito ao algoritmo proposto \malg, obteve-se uma redução de uso médio de largura de banda de envio de 63.51\% e 33.58\%, comparado respectivamente com o algoritmo de área de interesse circular e baseado em ângulo de visão. Reduziu-se também o pico de utilização em 52.03\% e 33.10\%, comparado com os mesmos algoritmos. Na tabela \ref{tab_summary}, são mostrados os percentuais médios de economia de largura de banda máxima e média com o algoritmo \malg, em relação aos outros algoritmos apresentados.
+No que diz respeito ao algoritmo \malg, obteve-se uma redução de uso médio de largura de banda de envio de 63,51\% e 33,58\%, comparado respectivamente com o algoritmo de área de interesse circular e baseado em ângulo de visão. Reduziu-se também o pico de utilização em 52,03\% e 33,10\%, comparado com os mesmos algoritmos. Na tabela \ref{tab_summary}, são mostrados os percentuais médios de economia de largura de banda máxima e média com o algoritmo \malg, em relação aos outros algoritmos apresentados.
 
 \begin{table}[ht]
 \caption{Economia de largura de banda com o algoritmo \malg}
