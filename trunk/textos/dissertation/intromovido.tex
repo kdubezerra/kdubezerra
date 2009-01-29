@@ -2,9 +2,10 @@
 
 Jogos online maciçamente multijogador -- ou MMOGs, \emph{massively multiplayer online games} -- são o tema central desta dissertação. Geralmente, utiliza-se uma infra-estrutura com um servidor central para dar suporte a este tipo de jogo. No entanto, existem alternativas descentralizadas que visam a reduzir o custo necessário para a manutenção do jogo. Este trabalho é focado em um modelo de servidor distribuído, porém, diferente da maior parte dos trabalhos da área \cite{rieche2007ppb,assiotis2006dam,ng2002msa}, utilizando nodos de baixo custo e recursos heterogênos distribuídos geograficamente. No entanto, para tornar viável a utilização de tal abordagem, é necessário otimizar o uso de largura de banda e lidar com a não-uniformidade dos recursos disponíveis para servir o jogo.
 
-Neste capítulo serão apresentados o tema e motivação da dissertação, que são os jogos multijogador e o alto custo dos jogos online maciçamente multijogador, os objetivos deste trabalho.
+Neste capítulo serão apresentados o tema e motivação da dissertação, que são os jogos multijogador e o alto custo dos jogos online maciçamente multijogador (seções \ref{intro:mug} e \ref{intro:mmog}), assim como os objetivos deste trabalho (seção \ref{intro:objectives}). Por fim, na seção \ref{intro:organizing}, será dada uma visão geral da estrutura do texto.
 
 \section{Jogos Multijogador}
+\label{intro:mug}
 
 % o que são
 % breve histórico e exemplos
@@ -28,6 +29,7 @@ Como exemplos de jogos multijogador online conhecidos, podem ser citados \emph{Q
 
 
 \section{Jogos Online Maciçamente Multijogador (MMOGs)}
+\label{intro:mmog}
 %TODO: por um monte de referências a MMOGs, do tipo (de maior sucesso são X, Y, Z), outros exemplos são A, B, C
 % requisitos computacionais elevados a 1000
 
@@ -35,25 +37,29 @@ Da mesma forma que jogos de computador evoluíram para jogos multijogador on-line
 
 Uma das principais características destes jogos, presente em quase todos os MMOGs comerciais, são as partidas muito longas. Em alguns MMORTS (MMOGs de estratégia em tempo real), como Travian \cite{travian}, as partidas chegam a durar de seis meses a um ano. Já nos MMORPGs (MMOGs no estilo de RPG), como é o caso do World of Warcraft, as partidas não tem um momento determinado para que acabem. Os mundos destes jogos são tão vastos e populosos -- no que diz respeito a número de jogadores --, que eles passam a evoluir e modificar seu estado independente de parte dos jogadores estarem jogando ou não, pois sempre tem alguém conectado dando continuidade à partida. Por esta razão, espera-se que cada jogador possa desconectar-se e continuar jogando mais tarde, sem ter que recomeçar do zero. Além disso, espera-se que as alterações feitas sobre o próprio mundo do jogo persistam, não importando quantas vezes cada jogador entrou e saiu.
 
-Geralmente, cada jogador controla uma entidade chamada de \emph{avatar}, que nada mais é que sua representação no ambiente virtual - um personagem que executa as ações determinadas pelo jogador, que dessa forma passa a interferir na história e no encaminhamento do jogo. Para que a partida se mantenha consistente para os diferentes participantes, cada ação executada por cada avatar deve ser processada pelo servidor, que calculará o estado resultante dessa ação no jogo. Esse novo estado é então difundido para os outros jogadores. Outras alterações no mundo do jogo, como destruição ou criação de objetos no ambiente, e eventos, como ações de personagens controlados pelo servidor, devem também ser transmitidos aos jogadores envolvidos. É então através destes envios de comandos do jogador e recebimento do novo estado do servidor que os jogadores conseguem interagir entre si e com o mundo simulado no jogo.
+Geralmente, cada jogador controla uma entidade chamada de \emph{avatar}, que nada mais é que sua representação no ambiente virtual -- um personagem que executa as ações determinadas pelo jogador, que dessa forma passa a interferir na história e no encaminhamento do jogo. Para que a partida se mantenha consistente para os diferentes participantes, cada ação executada por cada avatar deve ser processada pelo servidor, que calculará o estado resultante dessa ação no jogo. Esse novo estado é então difundido para os outros jogadores. Outras alterações no mundo do jogo, como destruição ou criação de objetos no ambiente, e eventos, como ações de personagens controlados pelo servidor, devem também ser transmitidos aos jogadores envolvidos. É então através destes envios de comandos do jogador e recebimento do novo estado do servidor que os jogadores conseguem interagir entre si e com o mundo simulado no jogo.
 
 No entanto, percebe-se que tal mecanismo pode facilmente saturar a banda e sobrecarregar o(s) processador(es) do servidor. Geralmente o que se faz é montar uma infra-estrutura que dispõe de um grande servidor central, geralmente um cluster com seus nodos ligados por uma rede local de alta velocidade e baixo atraso, com conexão à Internet de algumas centenas ou milhares de MBps \cite{feng2007wnn}. O maior custo advém da manutenção desta conexão, que visa a enviar para cada jogador o estado mais recente do jogo sempre que este mudar, dentro de um limite estabelecido de atraso, que irá depender do gênero do jogo.
+
+É aí que surge a idéia de utilizar abordagens descentralizadas, com o propósito de desonerar o servidor do jogo. Diversas abordagens foram propostas para prover um suporte distribuído -- e, portanto, mais barato -- para jogos MMOG (capítulo \ref{cap:contexto}, seção \ref{sec:dist}). Para este trabalho, será proposto o uso de um modelo de servidor distribuído, composto por nodos geograficamente dispersos, conectados através da Internet. No entanto, para evitar que o custo do sistema como um todo seja semelhante ao custo de um servidor tradicional, é necessário fazer algumas otimizações, que é o objetivo deste trabalho.
 
 %Jogos dessa natureza têm alguns requisitos \cite{schiele2007rpp}, dentre os quais podem ser citados: \textbf{persistência} do estado do mundo virtual e dos avatares; \textbf{disponibilidade} do serviço; \textbf{consistência} do estado do mundo e dos avatares entre os diferentes participantes; \textbf{resistência a trapaça}, no que se refere a tentativas de subversão das regras do jogo por jogadores desonestos e \textbf{escalabilidade}, tendo em vista que o grande número de jogadores poderá facilmente sobrecarregar a infra-estrutura de suporte se esta não tiver capacidade de processamento e, principalmente, largura de banda suficientes.
 
 \section{Objetivos}
+\label{intro:objectives}
 
-O objetivo deste trabalho é tornar mais viável o uso de um sistema de nodos de baixo custo geograficamente distribuídos como servidor para jogos MMOG. Isto é feito com a introdução de novas técnicas que visam a otimizar o uso dos recursos desse sistema e a gerenciar de maneira mais eficiente, reduzindo o overhead causado pela própria distribuição do servidor do jogo, além de buscar não sobrecarregar nodos que o componham. Mais especificamente, tem-se por objetivo:
+O objetivo deste trabalho é tornar mais viável o uso de um sistema de nodos de baixo custo geograficamente distribuídos como servidor para jogos MMOG. Isto é feito com a introdução de novas técnicas que visam a otimizar o uso dos recursos desse sistema e a gerenciá-los de maneira mais eficiente, reduzindo o overhead causado pela própria distribuição do servidor do jogo, além de buscar não sobrecarregar nodos que o componham. Mais especificamente, tem-se por objetivo:
 
 \begin{itemize}
  \item Criar um algoritmo que reduza o uso de largura de banda pelos nodos servidores;
- \item Criar um mecanismode distribuição e de balanceamento dinâmico de carga que distribua a carga entre os nodos de maneira proporcional e justa, além de reduzir, tanto quanto possível e viável, o overhead causado pela própria distribuição.
+ \item Criar um mecanismo de distribuição e de balanceamento dinâmico de carga que distribua a carga entre os nodos de maneira proporcional e justa, além de reduzir, tanto quanto possível e viável, o overhead causado pela própria distribuição.
 \end{itemize}
 
 Através de simulações em software, como será mostrado ao longo do texto, demonstrou-se que tais objetivos foram alcançados, validando as propostas apresentadas aqui.
 
 \section{Organização do texto}
+\label{intro:organizing}
 
 Para cumprir o objetivo deste trabalho, que é lidar com recursos escassos e heterogêneos no sistema servidor, foram propostas duas abordagens. A primeira consiste em uma otimização do uso de largura de banda do servidor, através de um novo algoritmo de gerenciamento de interesse. A segunda consiste em um esquema de balanceamento de carga que aloca a cada nodo servidor uma carga proporcional à capacidade daquele servidor.
 
-No capítulo \ref{cap:contexto}, serão apresentados trabalhos relacionado à distribuição do suporte de rede a jogos MMOG, assim como o porquê de se decidir por um sistema servidor, ao invés de outras abordagens existentes. Também serão apresentados trabalhos relacionados especificamente com as propostas deste trabalho, que são gerenciamento de interesse e balanceamento dinâmico de carga. No capítulo \ref{cap:a3}, será apresentado o algoritmo proposto para gerenciamento de interesse, assim como as simulações realizadas e os resultados obtidos. No capítulo \ref{cap:balanceamento}, será apresentado em detalhes o esquema de balanceamento de carga e os algoritmos propostos que o compõem, além das simulações realizadas e seus resultados. Por fim, no capítulo \ref{cap:conclusao}, são apresentadas as conclusões deste trabalho e possibilidades para trabalhos futuros.
+No capítulo \ref{cap:contexto}, serão apresentados trabalhos relacionado à distribuição do suporte de rede a jogos MMOG, assim como o porquê de se decidir por um sistema servidor, ao invés de outras abordagens existentes. Também serão apresentados trabalhos relacionados especificamente com as propostas desta dissertação, que são gerenciamento de interesse e balanceamento dinâmico de carga. No capítulo \ref{cap:a3}, será apresentado o algoritmo proposto para gerenciamento de interesse, assim como as simulações realizadas e os resultados obtidos. No capítulo \ref{cap:balanceamento}, será apresentado em detalhes o esquema de balanceamento de carga e os algoritmos propostos que o compõem, além das simulações realizadas e seus resultados. Por fim, no capítulo \ref{cap:conclusao}, são apresentadas as conclusões deste trabalho e possibilidades para trabalhos futuros.
