@@ -4,10 +4,14 @@
 
 %na seção \ref{relatedwork} são citados alguns trabalhos relacionados onde buscou-se distribuir o servidor do jogo; na seção \ref{def}, são apresentadas as definições de alguns conceitos utilizados ao longo do texto; na seção \ref{model}, é descrito o modelo de distribuição proposto;
 
-Tal abordagem possibilita o uso de computadores de menor custo para comporem o sistema distribuído servidor, barateando a infra-estrutura de suporte. Questões como consistência e vulnerabilidade a trapaça podem ser abstraídas, restringindo o conjunto de nodos servidores a computadores comprovadamente confiáveis, o que é plausível, levando em conta que o número de nodos servidores deverá ser algumas ordens de grandeza menor do que o número de jogadores. Além disso, não é necessário exigir que cada jogador envie atualizações de estado para todos os outros jogadores. Com menores exigências de largura de banda e processamento das máquinas clientes, o jogo torna-se acessível para um maior público. P
+Levando em conta o que foi discutido, no capítulo \ref{cap:contexto}, a respeito das arquiteturas utilizadas para prover suporte a MMOGs, acredita-se que a mais adequada seja a arquitetura de servidor distribuído. No entanto, diferente dos trabalhos de outros autores, não será considerado que esse sistema servidor está distribuído entre computadores de uma rede local de alta velocidade e atraso desprezíveis. É proposto neste trabalho, portanto, o uso de recursos voluntários, ligados através da Internet, sem restrições quanto à localização física dos nodos servidores.
 
-\section{Definitions}
-\label{def}
+Tal abordagem possibilita o uso de computadores de menor custo para comporem o sistema distribuído servidor, barateando a infra-estrutura de suporte. Questões como consistência e vulnerabilidade a trapaça podem ser abstraídas, restringindo o conjunto de nodos servidores a computadores comprovadamente confiáveis, o que é plausível, levando em conta que o número de nodos servidores deverá ser algumas ordens de grandeza menor do que o número de jogadores. Além disso, não é necessário exigir que cada jogador envie atualizações de estado para todos os outros jogadores. Com menores exigências de largura de banda e processamento das máquinas clientes, o jogo torna-se acessível para um maior público.
+
+Neste capítulo, será apresentado um modelo abstrato -- não são providos muitos detalhes, como o controle de entrada e saída de nodos servidores, esquema de sincronização etc., pois fogem ao escopo deste trabalho -- sobre o qual serão definidos os algoritmos propostos para otimização do uso de largura de banda e para gerenciamento dos recursos do sistema servidor. Na seção \ref{sec:def}, será apresentada a definição de alguns termos que serão utilizados ao longo do texto e, na seção \ref{sec:model}, serão descritas algumas características do modelo de distribuição que servirá como base para o restante do trabalho.
+
+\section{Definições}
+\label{sec:def}
 
 Será utilizado o termo cliente para referir-se ao computador utilizado por cada jogador para conectar-se a um dos servidores do jogo, assim como o termo servidor fará referência a cada nodo integrante do sistema distribuído que estará servindo o jogo. É necessário descrever o modelo de suporte a jogos maciçamente jogador sobre o qual pretende-se utilizar o algoritmo de gerenciamente de interesse proposto. Ao longo do texto, serão utilizados alguns termos que precisam antes ser definidos: %Define-se avatar como sendo a representação no ambiente virtual do jogador, que, através dele, interage com o mundo do jogo e com outros jogadores. Regiões são divisões do ambiente virtual, cada uma podendo conter jogadores presentes. Assumindo regiões contíguas, define-se fronteira como sendo a divisa entre duas regiões adjacentes.
 
@@ -24,8 +28,8 @@ Os jogadores interagem com o mundo do jogo através de \textbf{ações}. Uma ação é
  
 A \textbf{fronteira} entre duas regiões é a divisa entre as áreas que essas regiões ocupam. Quando um avatar está localizado próximo a uma fronteira, o servidor responsável pela região além desta fronteria é avisado a respeito da presença daquele avatar pelo servidor onde ele se encontra.
 
-\section{Distribution Model}
-\label{model}
+\section{Modelo de distribuição}
+\label{sec:model}
 
 Este trabalho baseia-se em um ambiente virtual particionado em regiões, cada uma gerenciada por um servidor. As regiões são contíguas, explorando a localidade dos avatares dos jogadores. Dessa forma, avatares próximos no jogo provavelmente estarão localizados na mesma região e, por conseguinte, os clientes dos jogadores a eles associados tenderão a estar conectados ao mesmo servidor, fazendo com que sua interação seja mais rápida (Fig. \ref{partitions}). Em situações em que jogadores interagindo entre si estivessem conectados a diferentes servidores implicaria em maior tráfego, pois seria necessário algum tipo de negociação entre os servidores aos quais os diferentes jogadores estão conectados, para que os estados da simulação em ambos fossem idênticos. Além disso seria necessário que cada mensagem entre estes clientes desse mais saltos, passando por mais de um intermediário.
 
