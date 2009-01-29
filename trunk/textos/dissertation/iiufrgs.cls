@@ -315,18 +315,19 @@
         \end{minipage}%
         }%
 }
-\newcommand{\nominataReit}{Prof.~Jos{\'e} Carlos Ferraz Hennemann}
+\newcommand{\nominataReit}{Prof.~Carlos Alexandre Netto}
 \newcommand{\nominataReitname}{Reitor}
-\newcommand{\nominataPRCA}{Prof.~Pedro Cezar Dutra Fonseca}
-\newcommand{\nominataPRCAname}{Pr{\'o}-Reitor de Coordena{\c{c}}{\~a}o Acad{\^e}mica}
+\newcommand{\nominataPRCA}{Prof.~Rui Vicente Oppermann}
+%\newcommand{\nominataPRCAname}{Pr{\'o}-Reitor de Coordena{\c{c}}{\~a}o Acad{\^e}mica}
+\newcommand{\nominataPRCAname}{Vice-Reitor}
 % os dois proximos comandos nao sao mais usados
 \newcommand{\nominataPRE}{Prof.~Jos{\'e} Carlos Ferraz Hennemann}
 \newcommand{\nominataPREname}{Pr{\'o}-Reitor de Ensino}
-\newcommand{\nominataPRAPG}{Prof\textsuperscript{a}.~Valqu{\'\i}ria Linck Bassani}
-\newcommand{\nominataPRAPGname}{Pr{\'o}-Reitora de P{\'o}s-Gradua{\c{c}}{\~a}o}
-\newcommand{\nominataDir}{Prof.~Philippe Olivier Alexandre Navaux}
+\newcommand{\nominataPRAPG}{Prof.~Aldo Bolten Lucion}
+\newcommand{\nominataPRAPGname}{Pr{\'o}-Reitor de P{\'o}s-Gradua{\c{c}}{\~a}o}
+\newcommand{\nominataDir}{Prof.~Fl{\'a}vio Rech Wagner}
 \newcommand{\nominataDirname}{Diretor do Instituto de Inform{\'a}tica}
-\newcommand{\nominataCoord}{Prof.~Carlos Alberto Heuser}
+\newcommand{\nominataCoord}{Prof.~{\'A}lvaro Freitas Moreira}
 \newcommand{\nominataCoordname}{Coordenador do PPGC}
 \newcommand{\nominataBibchefe}{Beatriz Regina Bastos Haro}
 \newcommand{\nominataBibchefename}{Bibliotec{\'a}ria-chefe do
