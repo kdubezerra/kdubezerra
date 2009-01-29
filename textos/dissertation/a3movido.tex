@@ -129,7 +129,7 @@ A área de interesse resultante então toma a forma de um setor de círculo, cuja o
 Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângulo de visão, será calculada sua relevância. Propõe-se que a relevância de cada entidade diminua gradualmente de acordo com a distância entre ela e o avatar do jogador em questão. Quanto mais longe, menos freqüentes serão as atualizações de estado. Isso é possível porque mesmo que o intervalo de atualização seja duplicado, provavelmente ainda será de uma fração de segundo, o que será dificilmente perceptível por um jogador cujo avatar está situado a uma grande distância da entidade em questão. Além disso, pequenos atrasos entre a chegada das atualizações de estado podem ser facilmente mascarados através de técnicas de interpolação, como dead-reckoning \cite{smed2002rna}. O Algoritmo \ref{smalg} define o funcionamento deste gerenciamento de interesse.
 
 \begin{algorithm}
-\caption{Calcular a relevância da entidade E para o avatar A}
+\caption{Cálculo da relevância da entidade E para o avatar A}
 \label{smalg}
 \begin{algorithmic}
  \STATE $dist \leftarrow dist\hat{a}ncia(A, E)$
