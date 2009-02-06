@@ -1,4 +1,5 @@
 \chapter {Modelo base}
+\label{cap:modelo}
 
 %falar como é a comunicação entre os jogadores, as atualizações de estado etc....
 
@@ -23,6 +24,8 @@ Será utilizado o termo \textbf{cliente} para referir-se ao computador utilizado 
 \textbf{Estado} é o conjunto de atributos que podem ser observadas nas diferentes entidades do jogo. O estado global do mundo simulado é constituído dos estados individuais das diferentes entidades nele presentes.
 
 Os jogadores interagem com o mundo do jogo através de \textbf{ações}. Uma ação é um comando do jogador como, por exemplo, mover seu avatar para determinada localização no mundo virtual, atacar outro jogador, tomar para si algum objeto disponível no ambiente e assim por diante. Em geral, ações modificam o estado de uma ou mais entidades presentes no jogo.
+
+Geralmente, o termo ``simulação'' refere-se ao cálculo das variações de estado em um sistema qualquer, podendo utilizar diversos parâmetros, como tempo e interferências externas sobre aquele sistema. No contexto de jogos, \textbf{simulação} refere-se ao cálculo do novo estado do ambiente virtual do jogo, baseado nas ações dos jogadores, em quanto tempo se passou, e no estado anterior.
  
 \textbf{Região} é um partição do ambiente virtual, sob responsabilidade de um único servidor. Dessa forma, jogadores cujos avatares estejam localizados na mesma região terão sua interação beneficiada, pois suas máquinas estarão conectadas ao mesmo servidor.
  
