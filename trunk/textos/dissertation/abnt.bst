@@ -705,7 +705,7 @@ FUNCTION {comma.to.colon}
 	#1 'i :=
 	{s i #1 substring$ "" = not}
 	{
-		s i #1 substring$ duplicate$ "," =
+		s i #1 substring$ duplicate$ ";" =
 			{pop$ t ":" * 't :=}
 			{t swap$ * 't :=}
 		if$
