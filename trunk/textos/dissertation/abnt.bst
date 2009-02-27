@@ -1004,6 +1004,20 @@ FUNCTION {inproceedings}
 	write.item
 }
 
+FUNCTION {revisedpapers}
+{
+	""
+	format.author add.to.item
+	#0 title format.title add.to.item
+	" In: " booktitle add.year add.address add.to.item *
+	" " "Revised Papers" emphasize add.to.item *
+	format.proceedings.publication add.to.item
+	format.complementary.data.with.page.range add.to.item
+	format.note add.to.item
+
+	write.item
+}
+
 FUNCTION {manual}
 {
 	""
