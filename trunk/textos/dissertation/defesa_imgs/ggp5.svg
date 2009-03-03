@@ -43,8 +43,8 @@
      showgrid="false"
      inkscape:window-width="1440"
      inkscape:window-height="814"
-     inkscape:window-x="-4"
-     inkscape:window-y="-4" />
+     inkscape:window-x="0"
+     inkscape:window-y="52" />
   <metadata
      id="metadata9188">
     <rdf:RDF>
@@ -89,7 +89,7 @@
          id="tspan4310"
          y="611.45392"
          x="459.9306"
-         style="stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;fill:#ffffff;fill-opacity:1">10</tspan></text>
+         style="fill:#ffffff;fill-opacity:1;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none">6</tspan></text>
     <path
        style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.37731743;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="path4312"
