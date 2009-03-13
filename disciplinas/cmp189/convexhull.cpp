@@ -70,7 +70,8 @@ progdata getdata (char* inputfilename) {
       input >> p.x >> p.y;
       dataset.push_back(p);
     }
-    dataset.pop_front(); //remove the repeated vertex
+    if (!dataset.empty())
+      dataset.pop_front(); //remove the repeated vertex
     
     if (!input.eof()) {
       int minusone; // read the '-1'
@@ -175,6 +176,8 @@ bool lastthreeok(vertexset &vset) {
 
 
 void formatoutput(vertexset &vset) {
+  if (vset.empty()) return;
+
   vertexset::iterator smallest = vset.begin();
   for (vertexset::iterator it = vset.begin() ; it != vset.end() ; it++) {
     if (it->y < smallest->y)
@@ -185,8 +188,7 @@ void formatoutput(vertexset &vset) {
   
   if (smallest == vset.begin())
     return;
-  
-  vertexset::iterator pred = smallest;
+ 
   vset.insert(vset.end(), vset.begin(), smallest);
   vset.erase(vset.begin(), smallest);
   vset.push_back(*smallest);
