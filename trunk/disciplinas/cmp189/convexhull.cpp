@@ -170,8 +170,9 @@ bool lastthreeok(vertexset &vset) {
   //calculating the cross product
   
   int crossproduct = (vet1.x)*(vet2.y) - (vet1.y)*(vet2.x);
-  
-  return (crossproduct > 0);
+ 
+  //make sure that the 3 last vectors form a "right turn" 
+  return (crossproduct < 0);
 }
 
 
@@ -186,10 +187,10 @@ void formatoutput(vertexset &vset) {
         smallest = it;
   }
   
-  if (smallest == vset.begin())
-    return;
- 
-  vset.insert(vset.end(), vset.begin(), smallest);
-  vset.erase(vset.begin(), smallest);
+  if (smallest != vset.begin()) {
+    vset.insert(vset.end(), vset.begin(), smallest);
+    vset.erase(vset.begin(), smallest);
+  }
+
   vset.push_back(*smallest);
 }
