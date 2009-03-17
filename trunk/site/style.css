@@ -38,6 +38,7 @@ padding-top: 20px;
 height: 80px;
 /*text-transform: uppercase;*/
 background: #333;
+background-image:url(images/headerbg2.jpg);
 }
 .header h1 {
 font-size: 34px;
@@ -117,6 +118,7 @@ font-size: 11px;
 color: #aaa;
 text-align: center;
 background: #333;
+background-image:url(images/footerbg.jpg);
 }
 .footer a {
 color: #aaa;
