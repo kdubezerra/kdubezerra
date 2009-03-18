@@ -135,15 +135,15 @@ MMOGs are applications which require much network bandwidth to function properly
 
 
 
-The main characteristic of massively multiplayer games is the large number of players, having dozens, or even hundreds, of thousands participants simultaneously. This large number of players interacting with one another generates a traffic on the support network which grows quadratically compared to the number of players, in the worst case.
+The main characteristic of massively multiplayer games is the large number of players, having dozens, or even hundreds, of thousands participants simultaneously \cite{schiele2007rpp}. This large number of players interacting with one another generates a traffic on the support network which grows quadratically compared to the number of players, in the worst case.
 
-When using a client-server architecture, it is necessary that the server intermediates the communication between each pair of players -- assuming that the game is intended to provide guarantees of consistency and resistance to cheating. Obviously, this server will have a large communication load, thus, it must have enough resources (available bandwidth) to meet the demand of the game.
+When using a client-server architecture, it is necessary that the server intermediates the communication between each pair of players -- assuming that the game is intended to provide guarantees of consistency and resistance to cheating. Obviously, this server will have a large communication load, thus, it must have enough resources (available bandwidth) to meet the demand of the game. We consider here that the main resource to analyse is the available bandwidht, for this is the current bottleneck for MMOGs \cite{feng2007wnn}.
 
 The question is, when you use a distributed server, you must delegate to each server node a load proportional to its power. Thus, no matter to which server each player is connected, their game experience will be similar, regarding the response time for their actions and the time it takes to be notified of actions from other players as well as of state changes in the virtual environment of the game.
 	
-An initial idea might be to distribute the players between servers, so that the number of players on each server would be proportional to the bandwidth of that server. However, this distribution would not work, for the burden caused by players also depends on how they are interacting with one another. For example, if the avatars of two players are too distant from each other, probably there will be no interaction between them and therefore the server needs only to update each of the result of their own actions. However, if these avatars are close to each other, each player should be updated not only of his own actions, but also of the actions of the other player.
+An initial idea might be to distribute the players between servers, so that the number of players on each server would be proportional to the bandwidth of that server. However, this distribution would not work, for the burden caused by players also depends on how they are interacting with one another. For example, if the avatars of two players are too distant from each other, probably there will be no interaction between them and therefore the server needs only to update each one of them with the result of their own actions. However, if these avatars are close to each other, each player should be updated not only of his own actions, but also of the actions of the other player.
 	
-Normally, players can freely move their avatars throughout the game world. This makes possible the formation of \emph{hotspots}, around which the players are more concentrated than in other regions of the virtual environment. Moreover, many massively multiplayer online RPGs not only permit but also stimulate, to some extent, the formation of these points of interest. In the worlds of these MMORPGs, there are entire cities, where the players meet to chat, exchange virtual goods or even fight, and there are also desertic areas, with few attractions for the players, and where the number of avatars is relatively small compared to other places of the environment.
+Normally, players can freely move their avatars throughout the game world. This makes possible the formation of \emph{hotspots} \cite{ahmed2008mol}, around which the players are more concentrated than in other regions of the virtual environment. Moreover, many massively multiplayer online RPGs not only permit but also stimulate, to some extent, the formation of these points of interest. In the worlds of these MMORPGs, there are entire cities, where the players meet to chat, exchange virtual goods or even fight, and there are also desertic areas, with few attractions for the players, and where the number of avatars is relatively small compared to other places of the environment.
 
 For this reason, it is not enough just to divide the players between servers, even if this division is proportional to the resources of each one of them. First, in some cases the usage of the server's bandwidth is square to the number of players, while in others it is proportional. That reason alone is enough to get another criterion for load balancing. Moreover, there is another important issue: the existence of hotspots, which motivates the creation of a load balancing scheme for MMOGs to prevent that the presence of hotspots degrade the quality of the game beyond the tolerable.
 
@@ -260,7 +260,7 @@ The related works, as described in the previous section, try to solve the proble
 
 Another issue that was left out is the overhead, both in the delay of sending messages, as in the use of bandwidth of the servers, where players connected to different servers are interacting with each other. In \cite{lee2003sdl}, it is considered that the servers are all in the same high-speed and low latency local-area network, and therefore overhead is negligible. However, when considering a geographically distributed server system, this assumption cannot be made. This overhead must be taken into account, no matter which load balancing algorithm is being used.
 
-One more important point that was not properly considered by previous works, is that the main criterion to be considered when balancing the of MMOG servers is the bandwidth, and not much processing power. Several games include simulations of virtual environments of hundreds or thousands of entities, such as the game Age of Empires, which are performed without problems in personal computers today. However, if this game were multiplayer and each of these entities were controlled by a player in a network, connected to other players, it would most likely generate a traffic ammount which would hardly be supported by a domestic connection.
+One more important point that was not properly considered by previous works, is that the main criterion to be considered when balancing the of MMOG servers is the bandwidth, and not much processing power. Several games include simulations of virtual environments of hundreds or thousands of entities, such as the game Age of Empires \cite{ageofempires}, which are performed without problems in personal computers today. However, if this game were multiplayer and each of these entities were controlled by a player in a network, connected to other players, it would most likely generate a traffic ammount which would hardly be supported by a domestic connection \cite{feng2007wnn}.
 
 Moreover, the upload bandwidth must be taken into account, much more than download. This happens for two reasons: first, the usage of the download bandwidht of each server node grows linearly with the number of players connected to it, while the usage of the upload bandwidth may have a quadratic growth, getting quickly overwhelmed; second, the domestic connections -- which are majority in a volunteer peer-to-peer system -- usually have an upload bandwidth much smaller than the download one.
 
@@ -366,6 +366,27 @@ We also use the idea of mapping the virtual environment on a graph, which will t
     \end{center}
 
 \end{itemize}
+
+As the concepts needed to understand the proposed load balancing scheme have been defined, now it will be described how the virtual environment is mapped on a weighted graph, which will then be partitioned. Let $GW = (V,E)$ be a graph that represents the game world, where $V$ is the set of vertices and $E$ is the set of edges connecting vertices. Each component of this graph, and what it represents, is described below:
+
+\begin{itemize}
+	\item \textbf{Vertex}: each vertex in the graph represents a cell in the virtual environment;
+	\item \textbf{Edge}: each edge in the graph connects two vertices that represent adjacent cells;
+	\item \textbf{Partition}: each partition of the graph $GW$ -- a subset of the vertices of $GW$, plus the edges that connect them -- represents a region;
+	\item \textbf{Vertex weight}: the weight of each vertex is equal to the weight of the cell that it represents;
+	\item \textbf{Edge weight}: the weight of the edge connecting two vertices is equal to the interaction between the cells represented by them;
+	\item \textbf{Partition weight}: the weight of a partition is equal to the sum of the weights of its vertices, i.e. the weight of the region that it represents;
+	\item \textbf{Edge-cut}: the edge-cut in a partitioning is equal to the sum of the weights of all the edges which connect vertices from different partitions. This value is equal to the sum of the overheads between each pair of regions. Thus, the edge-cut of the graph $GW$ is equal to the total overhead on the server system.
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{images/mapping}
+\caption{Mapping of the virtual environment on a graph}
+\label{fig:mapping}
+\end{figure}
+
+Figure \ref{fig:mapping}(a) illustrates how the mapping is done with square cells, while figure \ref{fig:mapping}(b) shows how it would be with hexagonal cells. The objective of the balancing scheme proposed here is to assign to each server a weight proportional to its capacity, reducing as much as possible the edge-cut of the graph that represents the virtual environment and, consequently, reduce the overhead inherent to the distribution of the game on multiple servers. Although this is an NP-complete problem \cite{feder1999cgp}, efficient heuristics will be used to reduce this overhead. In the following sections the algorithms proposed in this work will be presented.
 
 \subsection{Proposed algorithms}
 \label{sec:alg}
