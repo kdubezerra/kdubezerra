@@ -1,3 +1,13 @@
+/* 
+   
+   Disciplina: Algoritmos Geométricos
+   Professor: João Luiz Dihl Comba
+   Aluno: Carlos Eduardo Benevides Bezerra
+   
+   Tarefa: Cálculo da Envoltória Convexa (Convex Hull Finding)
+   
+*/ 
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -42,7 +52,7 @@ void showdata(progdata &data);
 
 
 int main(int argc, char** argv) {  
-  progdata setlist = getdata (argv[1]);  
+  progdata setlist = getdata (0);  
   //showdata(setlist);
   progdata hulllist = processdata(setlist);
   //putdata(argv[2], hulllist);
@@ -51,36 +61,35 @@ int main(int argc, char** argv) {
 
 
 progdata getdata (char* inputfilename) {
-  ifstream input;
   int setcount;
   int setindex = 0;
-  input.open (inputfilename);
-  input >> setcount;
+  
+  cin >> setcount;
 
   progdata setlist;
 
-  while (!input.eof() && setindex++ < setcount) {
+  while (setindex++ < setcount) {
     int vertexcount;
     int vertexindex = 0;
-    input >> vertexcount;
+    cin >> vertexcount;
     list<vertex> dataset;
 
-    while (!input.eof() && vertexindex++ < vertexcount) {
+    while (vertexindex++ < vertexcount) {
       vertex p;
-      input >> p.x >> p.y;
+      cin >> p.x >> p.y;
       dataset.push_back(p);
     }
     if (!dataset.empty())
       dataset.pop_front(); //remove the repeated vertex
     
-    if (!input.eof()) {
-      int minusone; // read the '-1'
-      input >> minusone;
+    if (setindex < setcount) { //= this is not the last dataset
+      int minusone;
+      cin >> minusone; // read the '-1'
     }
 
     setlist.push_back(dataset);
   }
-  input.close();
+  //input.close();
   return setlist;
 }
 
@@ -193,4 +202,5 @@ void formatoutput(vertexset &vset) {
   }
 
   vset.push_back(*smallest);
+  vset.reverse(); //change from clockwise to counter-clockwise
 }
