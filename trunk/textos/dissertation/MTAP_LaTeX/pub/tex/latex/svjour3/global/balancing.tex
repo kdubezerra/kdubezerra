@@ -23,6 +23,8 @@
 \newcommand{\destreg}{destination\_regions}
 \newcommand{\regcap}{free\_capacity}
 \newcommand{\wtoreg}{weight\_to\_this\_region}
+\newcommand{\misccite}[2]{Available at: #2}
+\newcommand{\gamecite}[2]{Available at: #2}
 
 %%%%%%%%%%%%%%%%%%%%%%% file template.tex %%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -41,26 +43,26 @@
 % First comes an example EPS file -- just ignore it and
 % proceed on the \documentclass line
 % your LaTeX will extract the file if required
-\begin{filecontents*}{example.eps}
+%\begin{filecontents*}{example.eps}
 %!PS-Adobe-3.0 EPSF-3.0
 %%BoundingBox: 19 19 221 221
 %%CreationDate: Mon Sep 29 1997
 %%Creator: programmed by hand (JK)
 %%EndComments
-gsave
-newpath
-  20 20 moveto
-  20 220 lineto
-  220 220 lineto
-  220 20 lineto
-closepath
-2 setlinewidth
-gsave
-  .4 setgray fill
-grestore
-stroke
-grestore
-\end{filecontents*}
+%gsave
+%newpath
+%  20 20 moveto
+%  20 220 lineto
+%  220 220 lineto
+%  220 20 lineto
+%closepath
+%2 setlinewidth
+%gsave
+%  .4 setgray fill
+%grestore
+%stroke
+%grestore
+%\end{filecontents*}
 %
 \documentclass{svjour3}                     % onecolumn (standard format)
 %\documentclass[smallextended]{svjour3}     % onecolumn (second format)
@@ -143,18 +145,32 @@ The question is, when you use a distributed server, you must delegate to each se
 	
 An initial idea might be to distribute the players between servers, so that the number of players on each server would be proportional to the bandwidth of that server. However, this distribution would not work, for the burden caused by players also depends on how they are interacting with one another. For example, if the avatars of two players are too distant from each other, probably there will be no interaction between them and therefore the server needs only to update each one of them with the result of their own actions. However, if these avatars are close to each other, each player should be updated not only of his own actions, but also of the actions of the other player.
 	
-Normally, players can freely move their avatars throughout the game world. This makes possible the formation of \emph{hotspots} \cite{ahmed2008mol}, around which the players are more concentrated than in other regions of the virtual environment. Moreover, many massively multiplayer online RPGs not only permit but also stimulate, to some extent, the formation of these points of interest. In the worlds of these MMORPGs, there are entire cities, where the players meet to chat, exchange virtual goods or even fight, and there are also desertic areas, with few attractions for the players, and where the number of avatars is relatively small compared to other places of the environment.
+Normally, players can freely move their avatars throughout the game world. This makes possible the formation of \emph{hotspots} \cite{ahmed2008mol}, around which the players are more concentrated than in other regions of the virtual environment (Figure \ref{fig:avatarsdistribution}). Moreover, many massively multiplayer online RPGs not only permit but also stimulate, to some extent, the formation of these points of interest. In the worlds of these MMORPGs, there are entire cities, where the players meet to chat, exchange virtual goods or even fight, and there are also desertic areas, with few attractions for the players, and where the number of avatars is relatively small compared to other places of the environment.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1.0\linewidth]{images/avatarsdistribution}
+  \caption{Distribution of avatars with and without hotspots}
+  \label{fig:avatarsdistribution}
+\end{figure}
 
 For this reason, it is not enough just to divide the players between servers, even if this division is proportional to the resources of each one of them. First, in some cases the usage of the server's bandwidth is square to the number of players, while in others it is proportional. That reason alone is enough to get another criterion for load balancing. Moreover, there is another important issue: the existence of hotspots, which motivates the creation of a load balancing scheme for MMOGs to prevent that the presence of hotspots degrade the quality of the game beyond the tolerable.
+
+
 
 %[TODO:falar das próxima seções]
 
 \section{Related work}
 \label{sec:related}
 
-The servers receive the action performed by a player, calculate its outcome and send it to all interested players, who are usually those whose avatars are close to the avatar of the first player. If two players are split between different servers, each of these need not only to send the state update to the player served by it, but it has also to send the update to the server to which the other player is connected. This server, in turn, forwards that state update to the other player.
+The servers receive the action performed by a player, calculate its outcome and send it to all interested players, who are usually those whose avatars are close to the avatar of the first player. If two players are split between different servers, each of these need not only to send the state update to the player served by it, but it has also to send the update to the server to which the other player is connected. This server, in turn, forwards that state update to the other player (Figure \ref{fig:overheadgeneration}.
 
-%[TODO:por figura do envio de estados através de servidores diferentes. duas figuras: no mesmo servidor, e através de diferentes servidores.]
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/overheadgeneration}
+ \caption{Overhead caused by the interaction of players connected to different servers}
+ \label{fig:overheadgeneration}
+\end{figure}
 
 It is perceived, then, that each state will be sent twice for each pair of players who communicate through different servers. This overhead not only cause the waste of resources of the servers, but it also increases the delay to update the status of the replica of the game in the players' machines, damaging the interaction between them.
 	
@@ -214,8 +230,6 @@ A server starts the balancing when the load assigned to it is beyond its power. 
 
 Figure \ref{fig:lee2} illustrates the operation of the algorithm. All servers have the same capacity, each one being able to handle 100 users. First, the initiator server, $S_6$ is inserted into SELECTED and its neighbors ($S_2, S_5, S_7$ and $S_{10}$) are added to CANDIDATES (Figure \ref{fig:lee2}(a)). So $S_7$, which has the lowest workload among the servers in CANDIDATES, is selected and invited to participate in the load distribution. When $S_7$ sends to $S_6$ the workload information of its neighbors ($S_3, S_6, S_8$ and $S_{11}$), $S_7$ is inserted into SELECTED and its neighbors, except $S_6$, are added to CANDIDATES (Figure \ref{fig:lee2}(b)). Now, $S_{11}$, which has the lowest workload among servers in CANDIDATES, is selected and invited to participate in the load distribution. However, $S_{11}$ rejects the invitation, because it is involved in another distribution, initiated by $S_{12}$. Thus, $S_{11}$ is removed from CANDIDATES and $S_{10}$ is selected because it now has the lowest workload among all servers in CANDIDATES (Figure \ref{fig:lee2}(c)). This process continues until the average workload is under a pre-defined threshold (Figure \ref{fig:lee2}(d) and Figure \ref{fig:lee2}(e)).
 
-Para exemplificar o funcionamento do algoritmo, pode-se observar a Figura \ref{fig:lee2}. Todos os servidores têm a mesma capacidade, podendo cada um comportar 100 usuários. Primeiro, o servidor iniciador, $S_6$, é inserido em SELECIONADOS e seus vizinhos ($S_2$, $S_5$, $S_7$ e  $S_{10}$) são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(a)). Então, $S_7$, que tem a menor carga de trabalho dentre os servidore em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Quando $S_7$ responde a $S_6$ com a informação de carga de seus vizinhos ($S_3$, $S_6$, $S_8$ e $S_{11}$), $S_7$ é inserido em SELECIONADOS e seus vizinhos, exceto $S_6$, são adicionados a CANDIDATOS (Figura \ref{fig:lee2}(b)). Agora, $S_{11}$, que tem a menor carga de trabalho dentre os servidores em CANDIDATOS, é selecionado e convidado a participar da distribuição de carga. Porém, $S_{11}$ rejeita o convite, pois já está envolvido em outra distribuição, iniciada por $S_{12}$. Assim, $S_{11}$ é removido de CANDIDATOS e $S_{10}$ é selecionado porque tem agora a menor carga de trabalho dentre os servidores em CANDIDATOS (Figura \ref{fig:lee2}(c)). Até que a carga de trabalho média dos servidores em SELECIONADOS se torne menor que $0,9 \times CP$, ou seja, $90$, o procedimento acima continua (Figura \ref{fig:lee2}(d) e Figura \ref{fig:lee2}(e)).
-
 %[TODO:pegar a figura em ingles]
 
 \begin{figure}
@@ -262,7 +276,16 @@ Another issue that was left out is the overhead, both in the delay of sending me
 
 One more important point that was not properly considered by previous works, is that the main criterion to be considered when balancing the of MMOG servers is the bandwidth, and not much processing power. Several games include simulations of virtual environments of hundreds or thousands of entities, such as the game Age of Empires \cite{ageofempires}, which are performed without problems in personal computers today. However, if this game were multiplayer and each of these entities were controlled by a player in a network, connected to other players, it would most likely generate a traffic ammount which would hardly be supported by a domestic connection \cite{feng2007wnn}.
 
+%TODO: explicar porque cresce linearmente
 Moreover, the upload bandwidth must be taken into account, much more than download. This happens for two reasons: first, the usage of the download bandwidht of each server node grows linearly with the number of players connected to it, while the usage of the upload bandwidth may have a quadratic growth, getting quickly overwhelmed; second, the domestic connections -- which are majority in a volunteer peer-to-peer system -- usually have an upload bandwidth much smaller than the download one.
+
+%TODO: translate
+Há questões de menor importância, mas que também devem ser levadas em consideração e que não foram consideradas em outros trabalhos. Uma delas é que dificilmente o sistema servidor será homogêneo -- considerando-se que é baseado em recursos voluntários. Portanto, não se pode assumir que os servidores tenham a mesma quantidade de recursos. Outro problema, específico do algoritmo proposto por \cite{lee2003sdl}, é que o critério de alocar para cada servidor uma carga equivalente a 90\% da sua capacidade, com o fim de evitar rebalanceamentos constantes, é fraco. Não há garantias de que o sistema servidor terá 11,11\% a mais de capacidade total do que o necessário. Muito pelo contrário, ele deve se adaptar a situações de sobrecarga generalizada. Além disso, o critério de parada é fraco pois o algoritmo não termina se o sistema todo estiver com carga acima de 90\% da sua capacidade, ou se o servidor sobrecarregado não tiver vizinhos disponíveis para balanceamento.
+
+There are also other issues which must not be overlooked. One of them is that the server system is probably not homogenous -- considering that it is based on volunteer resources. Therefore, one can not assume that the servers have the same amount of cpu power or network bandwidth. Another problem, specific to the algorithm proposed by \cite{lee2003sdl}, is that the criterion to allocate to each server a load equivalent to 90\% of its capacity in order to avoid constant rebalancing is weak. There are no guarantees that the server system has 11.11\% more total capacity than the necessary. On the contrary, it should adapt to situations of widespread overload. Moreover, the criterion for stopping is weak because the algorithm does not stop when the whole system is loaded above 90\% of its capacity, or if the overloaded server has no neighbors capable of receiving more load.
+
+%TODO: translate
+Porém, uma idéia importante que foi sugerida é a do uso de grafos para representar o ambiente virtual e de usar algoritmos de particionamento de grafo para realizar o balanceamento de carga. No capítulo \ref{cap:contexto}, foi feita uma introdução a respeito desse princípio, que é a base do esquema de balanceamento de carga aqui proposto. Na seção seguinte, será mostrado como um ambiente virtual de um MMOG pode ser mapeado em um grafo.
 
 %Há questões de menor importância, mas que também devem ser levadas em consideração e que não foram consideradas em outros trabalhos. Uma delas é que dificilmente o sistema servidor será homogêneo -- considerando-se que é baseado em recursos voluntários. Portanto, não se pode assumir que os servidores tenham a mesma quantidade de recursos. Outro problema, específico do algoritmo proposto por \cite{lee2003sdl}, o critério de alocar para cada servidor uma carga equivalente a 90\% da sua capacidade, com o fim de evitar rebalanceamentos constantes, é fraco. Não há garantias de que o sistema servidor terá 11,11\% a mais de capacidade total do que o necessário. Muito pelo contrário, ele deve se adaptar a situações de sobrecarga generalizada. Além disso, o critério de parada é fraco pois o algoritmo não termina se o sistema todo estiver com carga acima de 90\% da sua capacidade, ou se o servidor sobrecarregado não tiver vizinhos disponíveis para balanceamento.
 
@@ -351,13 +374,20 @@ We also use the idea of mapping the virtual environment on a graph, which will t
 			where $A_i$ is in $C_i$ and $A_j$ is in $C_j$.
 		\end{center}
 	
-	\item \textbf{Overhead between two regions}: if there is only a server and a region, comprising the entire virtual environment of the game, the use of upload bandwidth of the server will be proportional to the $W_{total}$. However, due to its distribution among various servers, there is the problem of having players from different regions interacting with each other very close to the border between the regions. Because of that, each state update of these players' avatars will be sent twice. For example, let $A_i$ be the avatar of the player $P_i$, connected to the server $S_i$, and $A_j$ the avatar of the player $P_j$, connected to the server $S_j$. In order for to $P_i$ interacts with $P_j$, it is necessary that $S_i$ send the state of $A_i$ to $S_j$, which then forwards to $P_j$. The same happens in the other way around. The overhead between regions $R_i$ and $R_j$ is equal, therefore, to the sum of interactions between pairs of cells where each one of them is in one of these regions. If $R_i$ and $R_j$ have respectively $m$ and $n$ cells, we have that the interaction -- or \emph{overhead} -- between them is given by:
+	\item \textbf{Overhead between two regions}: if there is only a server and a region, comprising the entire virtual environment of the game, the use of upload bandwidth of the server will be proportional to the $W_{total}$. However, due to its distribution among various servers, there is the problem of having players from different regions interacting with each other very close to the border between the regions (Figure \ref{fig:interactingregions}). Because of that, each state update of these players' avatars will be sent twice. For example, let $A_i$ be the avatar of the player $P_i$, connected to the server $S_i$, and $A_j$ the avatar of the player $P_j$, connected to the server $S_j$. In order for to $P_i$ interacts with $P_j$, it is necessary that $S_i$ send the state of $A_i$ to $S_j$, which then forwards to $P_j$. The same happens in the other way around. The overhead between regions $R_i$ and $R_j$ is equal, therefore, to the sum of interactions between pairs of cells where each one of them is in one of these regions. If $R_i$ and $R_j$ have respectively $m$ and $n$ cells, we have that the interaction -- or \emph{overhead} -- between them is given by:
 	
 	  \begin{center}
 			$\displaystyle Int_r(R_i,R_j) = \sum_{i=1}^{m} \sum_{j=1}^{n} Int_c(C_i,C_j)$,
 			
 			where $C_i \in R_i$ e $C_j \in R_j$.
 	  \end{center}
+
+	\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{images/interactingregions}
+	\caption{Players interacting across a border between regions}
+	\label{fig:interactingregions}
+	\end{figure}
   	
   \item \textbf{Total Overhead}: the total overhead on the server system is calculated as the sum of overheads between each pair of regions. So we have:
 
@@ -485,7 +515,21 @@ To provide a partitioning which is balanced, proportional and with low edge-cut 
 
 In line \ref{alg:ggp:fraction}, it is calculated the weight share for each region, considering the total weight that is being divided and the total power of the servers of those regions. The server power fraction of a region, $\frac{p(s(R))}{\freecap}$ should be the same fraction of weight that must be attributed to it. Even if this weight is greater than the power of that server, resulting in an overload, all the servers are similarly overloaded, satisfying the criterion of balance that has been defined. The condition for the end of the allocation of new cells in a region is that its weight is greater than or equal to its weight share.
 
-The choice of cells to include in the region tries to put the most interacting pairs of cells in the same regions, reducing the overhead.% In each step, the algorithm not only tries to get a neighbor cell, but also the one with the highest that not only is free from a nearby cell already present in the region, but whose edge linking them is the heaviest possible. %Figure [TODO: reffig] shows an example of the steps of the growth of a region to achieve its share of the load balancing.
+%The choice of cells to include in the region tries to put the most interacting pairs of cells in the same regions, reducing the overhead.% In each step, the algorithm not only tries to get a neighbor cell, but also the one with the highest that not only is free from a nearby cell already present in the region, but whose edge linking them is the heaviest possible. %Figure [TODO: reffig] shows an example of the steps of the growth of a region to achieve its share of the load balancing.
+
+%A escolha de células para incluir na região busca fazer com que cada uma das arestas mais pesadas do grafo $GW$ ligue vértices da mesma partição, reduzindo o corte de aresta e, assim, o overhead. A cada passo é dada preferência a escolher a célula livre que não apenas seja vizinha de uma célula já presente na região, mas também cuja aresta ligando-as seja a mais pesada possível. A Figura \ref{fig:ggp} mostra um exemplo dos passos do crescimento de uma região até atingir a sua parcela de carga no balanceamento.
+
+The criterion to choose a cell to include in the region is to make the heaviest edges on the graph $GW$ connect vertices in the same partition, reducing the edge-cut and, thus, the overhead. In each step, it is selected the cell which not only is adjacent to a cell already present in the region, but whose edge connecting them is the heaviest possible. Figure \ref{fig:ggp} illustrates the steps of growth of a region until it reaches its load share.
+
+%TODO: referenciar karypis e kumar, wow e outros jogos (eve-online, warhammer e cabal)
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{images/ggp}
+\caption{Growth of a partition (region) with \ggp}
+\label{fig:ggp}
+\end{figure}
+
+No exemplo da figura \ref{fig:ggp}, há dois servidores, $S_1$ e $S_2$, sendo que $p(S_1) = 30$ e $p(S_2) = 18$. A carga total do ambiente sendo reparticionado é $W_{total} = 32$. Para que a divisão seja proporcional à capacidade dos servidores, as parcelas de carga designadas a $S_1$ e $S_2$ são de 20 e 12, respectivamente. A seleção começa pelo vértice de peso 6 (célula livre com maior carga) e a partir daí, é adicionado a cada passo o vértice ligado pela aresta mais pesada. As arestas selecionadas e os vértices que pertencem à nova partição estão destacados.
 
 In the first step of the cycle starting in line \ref{alg:ggp:whilefraction}, if the region does not yet have any cell, \ggp\ gets the heaviest free cell (line \ref{alg:ggp:freeheavycell}). The same occurs when a region is compressed between the borders of other regions and has no free neighbor, getting cells from somewhere else. This may generate fragmented regions and possibly increase the overhead of the game. However, this happens more often in the last steps of the distribution, when most of the cells would be already allocated to some region. Because the algorithm is greedy, when it reaches that stage of its execution, the free cells would probably the lightest cells of the environment, causing little overhead.
 
@@ -652,7 +696,7 @@ The Algorithm \ref{alg:kl} shows how the algorithm \kl\ is called.
 % NÃO ENTRA, É DISPENSÁVEL E NÃO É BONITO OU SIMPLES DE FAZER (teria que ser um para cada tipo de balanceamento) -----> VI: weightXinstante (linhas: wtotal, w1, w2, ..., wnservs)
 
 
-To perform the simulation of the load balancing, a virtual environment was simulated with various avatars in it moving according to the random waypoint model with random wait. However, the choice of which waypoint go was not completely random. Three hotspots were defined, and there was a probability for the havatar choose one of these hotspots as its next waypoint. The purpose of this was to force an uneven distribution of avatars in the virtual environment, putting to test the algorithms of the proposed phase 2. Those who take account of the existence of hotspots form the regions on this basis, reducing the distribution overhead.
+To perform the simulation of the load balancing, a virtual environment was simulated with various avatars in it moving according to the random waypoint model \cite{bettstetter2004spr}. However, the choice of which waypoint go was not completely random. Three hotspots were defined, and there was a probability for the havatar choose one of these hotspots as its next waypoint. The purpose of this was to force an uneven distribution of avatars in the virtual environment, putting to test the algorithms of the proposed phase 2. Those who take account of the existence of hotspots form the regions on this basis, reducing the distribution overhead.
 
 The environment consisted of a two-dimensional space, divided into 225 cells, forming a matrix of order 15. There were 750 avatars. All cells always belonged to some region, although they could be transferred between regions. There were eight servers ($S_1, S_2, ..., S_8$), each one of them associated to a region, each of which could have 0 to all 225 cells. The capacity of all servers was different, with $P(S_i) = i \times 20000$. Thus, it was possible to test whether the distribution obeyed the criterion of proportional load balancing. Each session of simulated game was 20 minutes long. The total weight of the game was purposely set in a way that it was greater than the total capacity of the system, forcing the triggering of the load balancing.
 
@@ -760,7 +804,7 @@ Another possible future work is to create a load balancing scheme where there wi
 %\bibliographystyle{spbasic}      % basic style, author-year citations
 \bibliographystyle{spmpsci}      % mathematics and physical sciences
 %\bibliographystyle{spphys}       % APS-like style for physics
-\bibliography{balancing}   % name your BibTeX data base
+\bibliography{dissertation}   % name your BibTeX data base
 
 % Non-BibTeX users please use
 %\begin{thebibliography}{}
