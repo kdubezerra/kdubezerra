@@ -1,0 +1,58 @@
+Traditionally, a central server is utilized to provide support to MMOGs (massively multiplayer online games), where the number of participants is in the order of tens of thousands. Much work has been done trying to create a fully peer-to-peer model to support this kind of application, in order to minimize the maintenance cost of its infrastructure, but critical questions remain. Examples of the problems relative to peer-to-peer MMOG support systems are: vulnerability to cheating, overload of the upload links of the peers and difficulty to maintain consistency of the simulation among the participants. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, working as a distributed game server. The distribution model and some related works are also presented. To address the communication cost imposed to the servers, we specify the A3 algorithm, which is a novel refinement of the area of interest technique, significantly reducing the necessary bandwidth. Simulations have been made with ns-2 and their results demonstrate that our approach achieves the least bandwidth utilization, with a 33.10% maximum traffic reduction and 33.58% average traffic reduction, when compared to other area of interest algorithms.
+
+IEEE DS-RT 2008
+ OpenConf Conference Management System
+OpenConf Home
+Email Chair
+  
+
+
+Paper Submission
+We have processed your submission, however you did not upload a paper. Please be sure to upload your paper soon through the Re-Upload Paper page; do not fill out a new paper submission form.
+
+
+Thank you for your submission. Your paper number is 83. Please write this number down and include it in any communications with the conference committee. 
+
+Below is the information submitted. We have also emailed a copy to the contact author. If you notice any problems or do not receive the email within 24 hours, please contact the Program Chair.
+
+Paper ID: 83
+
+Title: A3: a novel interest management algorithm for distributed simulations of MMOGs
+Student: T
+Author 1 (CONTACT AUTHOR)
+  Name: Carlos Eduardo Benevides Bezerra
+  Org: Federal University of Rio Grande do Sul
+  Country: Brazil
+  Email:carlos.bezerra@inf.ufrgs.br
+Author 2
+  Name: Fábio Reis Cecin
+  Org: Federal University of Rio Grande do Sul
+  Country: Brazil
+  Email:fcecin@inf.ufrgs.br
+Author 3
+  Name: Cláudio Fernando Resin Geyer
+  Org: Federal University of Rio Grande do Sul
+  Country: Brazil
+  Email:geyer@inf.ufrgs.br
+Author 4
+  Name:  
+  Org: 
+  Country: 
+  Email:
+Author 5
+  Name:  
+  Org: 
+  Country: 
+  Email:
+Other Authors: 
+Contact Alt Email: kdubezerra@gmail.com
+Contact Phone: +55 51 8406 5986
+Keywords: Interest management, mmog, distributed simulation.
+Abstract: Traditionally, a central server is utilized to provide support to MMOGs (massively multiplayer online games), where the number of participants is in the order of tens of thousands. Much work has been done trying to create a fully peer-to-peer model to support this kind of application, in order to minimize the maintenance cost of its infrastructure, but critical questions remain. Examples of the problems relative to peer-to-peer MMOG support systems are: vulnerability to cheating, overload of the upload links of the peers and difficulty to maintain consistency of the simulation among the participants. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, working as a distributed game server. The distribution model and some related works are also presented. To address the communication cost imposed to the servers, we specify the A3 algorithm, which is a novel refinement of the area of interest technique, significantly reducing the necessary bandwidth. Simulations have been made with ns-2 and their results demonstrate that our approach achieves the least bandwidth utilization, with a 33.10% maximum traffic reduction and 33.58% average traffic reduction, when compared to other area of interest algorithms.
+Comments: 
+Paper: not included
+
+ 
+
+Powered by OpenConf
+Copyright ©2002-2006 Zakon Group LLC

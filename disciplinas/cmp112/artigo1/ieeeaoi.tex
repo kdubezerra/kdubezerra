@@ -1,0 +1,466 @@
+
+%
+%  $Description: Author guidelines and sample document in LaTeX 2.09$ 
+%
+%  $Author: ienne $
+%  $Date: 1995/09/15 15:20:59 $
+%  $Revision: 1.4 $
+%
+
+\documentclass[times, 10pt,twocolumn]{article} 
+\usepackage{latex8}
+\usepackage{times}
+
+%\usepackage[compact]{titlesec}
+
+\usepackage{graphicx}
+%\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+%\usepackage{algorithmicx}
+\usepackage{amsmath}
+
+%\usepackage[brazil]{babel}
+%\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+
+%\DeclareGraphicsExtensions{eps}
+
+%\newcommand{\malg}{A$^3$}
+\newcommand{\malg}{A$^3$}
+\newcommand{\cridis}{critical\_distance}
+\newcommand{\viewdis}{view\_distance}
+\newcommand{\circleaoi}{C}
+\newcommand{\circleat}{C \& A}
+\newcommand{\fov}{FoV}
+\newcommand{\noaoi}{None}
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+%\documentstyle[times,art10,twocolumn,latex8]{article}
+
+%------------------------------------------------------------------------- 
+% take the % away on next line to produce the final camera-ready version 
+\pagestyle{empty}
+
+%------------------------------------------------------------------------- 
+\begin{document}
+
+\title{\malg: a Novel Interest Management Algorithm for Distributed Simulations of MMOGs}
+
+\author{Carlos Eduardo B. Bezerra, Fábio R. Cecin, Cláudio F. R. Geyer\\
+	Informatics Institute\\
+	Federal University of Rio Grande do Sul\\
+	Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
+	\{carlos.bezerra,fcecin,geyer\}@inf.ufrgs.br\\
+% For a paper whose authors are all at the same institution, 
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'', 
+% just like the second author.
+}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+Traditionally, a central server is utilized to provide support to MMOGs (massively multiplayer online games), where the number of participants is in the order of tens of thousands. Much work has been done trying to create a fully peer-to-peer model to support this kind of application, in order to minimize the maintenance cost of its infrastructure, but critical questions remain. Examples of the problems relative to peer-to-peer MMOG support systems are: vulnerability to cheating, overload of the upload links of the peers and difficulty to maintain consistency of the simulation among the participants. In this work, we propose the utilization of geographically distributed lower-cost nodes, working as a distributed game server. The distribution model and some related works are also presented. To address the communication cost imposed to the servers, we specify the \malg\ algorithm, which is a novel refinement of the interest management technique, significantly reducing the necessary bandwidth. Simulations have been made with ns-2 and their results demonstrate that our approach achieves the least bandwidth utilization, with a 33.10\% maximum traffic reduction and 33.58\% average traffic reduction, when compared to other area of interest algorithms.
+\end{abstract}
+
+
+
+%------------------------------------------------------------------------- 
+\Section{Introduction}
+
+% no \IEEEPARstart
+In the last years, electronic games have become very popular, specially MMOGs (massively multiplayer online games), where the number of simultaneous players is in the order tens of thousands \cite{cecin2004fsa}. World of Warcraft \cite{worldofwarcraft}, Lineage II \cite{lineage2} and Guild Wars \cite{guildwars} are successful examples of MMOGs.
+
+Usually, the network support for this kind of application consists of a central server with plenty of resources (processing power and available bandwidth), which accepts connections from the clients. Each player interacts through one of these clients, which sends his actions to the server, that processes them, calculating their influence over the game, and broadcasts the actions' results to everyone. Due to the number of simultaneous participants that this kind of game usually has, these tasks demand a significant amount of resources from the server, which receives and processes the actions from all the players and broadcasts state updates to all of them.
+
+Recently, some alternatives to the central server approach have been researched. One of them is to distribute among the own participants the game simulation and the task to broadcast the state updates when they perform actions. The communication between them is peer-to-peer, forming a decentralized network \cite{schiele2007rpp}. This approach would be the ideal if it did not have some critical inherent drawbacks. For example, as the player computers participate on the simulation, they need to agree on the resulting state of the game match. If this agreement does not happen, some inconsistency on the game state among the players may occur.
+
+There is another question, concerning the number of transmissions that each peer needs to execute. In the client-server model, each player only needs to send his actions to the server, which processes them and broadcasts the resulting game state to the other players. In the peer-to-peer model, each peer becomes responsible for processing its own player's actions and send the resulting state to everyone else to whom that state change is relevant. The problem is that we cannot assume that every peer has enough bandwidth to do this. Besides, without a central server, the game becomes dependent on the peers' simulation, which may be corrupted in order to result in an invalid state that benefits a player, or even invalidate the whole game session.
+
+Besides the peer-to-peer model, another alternative is to use a distributed server, in which nodes connected to one another divide the game simulation and the state update broadcasts \cite{assiotis2006dam}. Such approach allows the use of lower-cost computers to form the distributed server system, reducing the cost of the support infrastructure. Also, consistency maintenance becomes easier than with the peer-to-peer model, because a single server decides the simulation for its assigned portion of the world, and problems related to malicious players may be abstracted, since the servers are able to verify the simulation and detect cheating. Finally, with less bandwidth and processing power requirements for the clients, the game becomes accessible for a wider public.
+
+%Alguns trabalhos [citações] têm proposto técnicas para reduzir a carga de processamento e comunicação associada a servidores de jogos maciçamente multijogador, sendo uma alternativa a distribuição desta carga entre diversos servidores, cada um com custo de aquisição e manutenção menor do que o de um grande servidor central. Ainda assim, com as atuais técnicas de distribuição e modelo de comunicação entre os servidores e os clientes, têm-se um alto custo para manter o sistema servidor distribuído como um todo.
+However, to avoid the distributed server system maintenance cost to be the same as the central server's, it is necessary to perform some optimizations, in order to reduce the necessary bandwidth for each server node. The present work proposes an algorithm to reduce the bandwidth usage caused by the game traffic between servers and clients, through a refinement of the players' interest management technique \cite{boulanger2006cim}. The basic principle of this technique is that the participants of the game need only to receive state updates that are relevant to them. Simulations have been made, comparing our proposed algorithm to existing ones, obtaining significant results.
+
+This paper is organized as follows: in section \ref{relatedwork}, some related works with proposed distribution models are presented; in section \ref{def}, some necessary definitions are made; in section \ref{model}, we propose a distribution model to be used as basis of our optimization; in section \ref{aoi}, we review the interest management technique; in section \ref{gaoi}, we explain the principle of using variable update intervals; in section \ref{csmooth}, we present in detail the \malg\ algorithm; in sections \ref{sim} and \ref{results}, the simulation and its results, respectively, are described and in section \ref{conclusion}, we make our final considerations.
+
+%------------------------------------------------------------------------- 
+\Section{Related Work}
+\label{relatedwork}
+%talvez deva reduzir esta seção.
+
+In the past few years, many works have been done trying to distribute the network support for massively multiplayer online games. One approach is the peer-to-peer model \cite{crippa2007pps, hampel2006ppa, knutsson2004pps}, which has some issues concerning game state consistency among the participating peers, vulnerability to cheating, and increased bandwidth usage by each peer. There are some proposals that try to minimize these problems. One of them is presented in \cite{schiele2007rpp}, where it is suggested the division of the virtual simulated game environment into regions, and for each region, a peer is chosen to be its coordinator. The function of this peer will be manage the players' interest. It will check who really needs each state update, so each player does not receive every update packet. This way, the peers' bandwidth usage is reduced. However, it will be still higher than with a server performing all the broadcasts. In the peer-to-peer model, each player usually must send updates to more than one other player. Besides, the chosen peer must be trustable to be the region coordinator.
+
+%figura
+
+Another work focused on the peer-to-peer model \cite{iimura2004zfg} uses an approach similar to the one presented in \cite{schiele2007rpp}, but suggests, for each region of the virtual environment, the creation of a ``zoned federation'' formed by peers chosen among the participants in that region. Since different nodes will work together, and thus will need to agree in order to proceed with the game, the simulation becomes more trustable. However, the risk of the chosen peers commit collusion cheating \cite{yan2005scc} is not eliminated. Besides, the agreement itself between the peers - what provides increased reliability - creates a fair amount of extra traffic between the participants of the federation, possibly delaying each simulation step.
+
+%figura
+
+A key problem in the peer-to-peer architectures, in what concerns the use of interest management, is that some peers are responsible for part of the simulation and for deciding to whom each state update interests. Assuming that there are only trustable players, the interest management technique may be useful. However, supposing that a player is malicious, he could hack his client software and avoid sending state updates to certain players, who would be in disadvantage. Consequently, the distributed server model \cite{assiotis2006dam, ng2002msa, fiedler2002cam, rieche2007ppb} is considered more suitable to use the interest management technique.
+
+An example of this kind of model is described in \cite{assiotis2006dam}, where a distributed architecture for MMOGs is proposed. It is also based on the division of the virtual environment into regions, but each one with a server node assigned to it. The player whose avatar is situated in a particular region of the game world should connect to the server responsible for that region. This way, each server would group different players, based on their locality on the virtual space. To achieve consistency between the different server nodes performing the simulation, it is used the concept of locks. When a server node needs to alter the state of some entity of the game, it first needs to obtain exclusive access to that entity. To do that, it negotiates with the other server nodes which might also need to make some change in the same object, and then obtains the lock. When it finishes changing the state, it releases the lock and notifies the other servers
+
+%figura
+
+The first major restriction in the proposal of \cite{assiotis2006dam}, however, is the assumption that all server nodes are connected to one another through a high speed and low latency network, what cannot be assumed when using lower-cost geographically distributed nodes. Another problem is that the scalability question is addressed simply via the expansion of the virtual environment area, supposing that the players will spread over it. Finally, they suggest to solve the hot spot problem through successive recursive environment partitioning, until the number of players per server is below a certain threshold. However, there is a practical limit to the repartitioning of the virtual environment, and they do not suggest what to do when this limit is reached.
+
+%falo de ng?
+
+%No que se refere a gerenciamento de interesse, trabalhos como \cite{morse1996iml, rak1996egb, zou2001egt, morgan2005imm} e \cite{minson2005aim} podem ser citados. Em \cite{rak1996egb}, é proposto um esquema de gerenciamento de interesse baseado em um ambiente virtual divido em células de uma grade. A cada célula está associado um grupo de multicast. Cada participante da simulação se subscreve então no grupo de multicast da célula onde ele se encontra, assim como de células vizinhas se estiverem ao alcance de sua visão. Cada participante envia então suas atualizações de estado ao grupo de multicast da região onde se encontra. %O problema desta abordagem é que não se pode assumir que haverá suporte a multicast sobre a Internet, já que não é amplamente estabelecido. Além disso, uma área de interesse formada por células fixas envolverá um número maior de objetos do que seria realmente necessário do que ocorreria se fosse utilizada uma área completamente dinâmica.
+
+Regarding the interest management technique, works such as \cite{morse1996iml, rak1996egb, zou2001egt, morgan2005imm} and \cite{minson2005aim} may be cited. In \cite{rak1996egb}, it is proposed an interest management scheme based on a virtual environment divided into a grid of cells. Each cell is assigned to a multicast group. Each participant of the simulation subscribes then to the multicast group of the cell where he is, as well as of the neighboring cells if they are within his field of view. Each participant then sends his state updates to the multicast group of the region where he is situated.
+
+%Em \cite{zou2001egt}, também  são considerados esquemas de gerenciamento de interesse baseados em grupos de multicast. É feita uma comparação entre a formação de grupos baseado em célula, onde cada um está associado a uma célula de uma grade que compõe o ambiente virtual, e agrupamento baseado em objetos, onde para cada objeto existe um grupo multicast associado. Verificou-se que há uma compensação (tradeoff) entre o custo das mensagens de controle dos grupos de multicast e o custo das mensagens de atualização de estado propriamente ditas.
+
+In \cite{zou2001egt}, multicast-based interest management schemes are also considered. A comparison is made between cell-based grouping, where each group is associated with a cell of a grid that represents the virtual environment, and grouping based on objects, where there is a multicast group for each object. It was found that there is a tradeoff between the cost of multicast group formation control messages and the cost of the state updates themselves.
+
+%Um esquema de gerenciamento de interesse que utiliza um middleware orientado a mensagens é apresentado em \cite{morgan2005imm}. Dentre outros aspectos, este esquema faz uma predição do que será o interesse de determinado participante no futuro, baseado na posição e vetor velocidade do mesmo no ambiente virtual. Dessa forma, cada um começa a receber atualizações de estado de entidades que não estão ainda ao alcance de sua visão, mas que provavelmente estarão em um futuro próximo, tornando seus estados disponíveis assim que elas estiverem dentro do campo de visão.
+
+An interest management scheme using a message oriented middleware is presented in \cite{morgan2005imm}. This scheme predicts what will be of interest to a participant in the future, based on his current position and velocity vector in the virtual environment. Thus, each participant starts receiving state updates from entities that are not yet within his field of view, but probably will be in the near future, making their status available as soon as they can be seen.
+
+%por morse por último e justificar baseado nos parâmetros criados por ela.
+
+%Em \cite{morse1996iml}, é feito um apanhado de sistemas que utilizam a técnica de gerenciamento de interesse, salientando quais critérios são utilizados por cada um. É apresentada então uma taxonomia de tais sistemas, classificando-os de acordo com: modelo de comunicação, foco da filtragem e domínios de responsabilidade. O modelo pode ser \textit{unicast}, \textit{multicast} ou \textit{broadcast}. %Como supõe-se aqui um sistema distribuído sobre a Internet, sobre a qual o suporte a \textit{multicast} não está ainda amplamente estabelecido, considera-se apenas o modelo de comunicação \textit{unicast}.
+%O foco da filtragem refere-se a que tipo de características são observadas de cada objeto para realizar esta filtragem: podem ser \textit{intrínsecas}, como o valor de atributos do objeto (e.g. coordenadas exatas de sua localização), ou \textit{intrínsecas}, como a qual grupo multicast ele está associado. Por fim, o domínio de responsabilidade atribuída a um gerenciador de interesse, que verifica para quem cada estado é relevante, pode ser \textit{dinâmico} ou \textit{estático}. Por exemplo, se cada gerenciador é designado para controlar uma área fixa do ambiente virtual, seu domínio de responsabilidade é estático, mas se ele controla uma área que possa aumentar ou diminuir de tamanho, seu domínio de responsabilidade é dinâmico.
+
+In \cite{morse1996iml}, it is made a survey of systems that use the interest management technique, describing the purpose, scope and what criteria are used by the management scheme employed by each one of them. A taxonomy of such systems is presented, classifying them according to: communication model, filtering focus and domain of responsibility. The model may be \textit{unicast}, \textit{multicast} or \textit{broadcast}. The filtering focus refers to what characteristics are observed for each object to perform the filtering: they may be \textit{intrinsic}, such as the values of the object's attributes (e.g. the exact coordinates of its location), or \textit{extrinsic}, such as which multicast group it is subscribed to. Finally, the domain of responsibility assigned to an interest manager, which checks for whom each state update is relevant, can be \textit{static} or \textit{dynamic}. For instance, if an interest manager is assigned to a fixed area of the virtual environment, its domain of responsibility is static, but if it controls an area that may increase or decrease in size, its domain of responsibility is dynamic.
+
+%por morse por último e justificar baseado nos parâmetros criados por ela.
+
+%Levando em consideração que o modelo de comunicação multicast não é amplamente suportado na Internet \cite{elsayed2004alm}, tanto por razões técnicas quanto comerciais, neste trabalho optou-se por seguir o modelo unicast, considerando que cada broadcast consiste na verdade em um conjunto de sucessivas transmissões unicast, uma para cada destino. Além disso, %como o poder de processamento atualmente é maior que há uma década atrás, utiliza-se filtragem intrínseca e domínios de responsabilidade dinâmicos, para que haja maior precisão e, consequentemente, uma maior redução no tráfego de atualizações de estado \cite{morse1996iml}.
+
+Taking into consideration that the multicast communication model is not widely supported in the Internet \cite{elsayed2004alm}, %for technical and marketing reasons as well,
+ in this work we opted to follow the unicast model. Each broadcast consists then of a set of unicast transmissions, one for each destination. Moreover, intrinsic filtering and dynamic domain of responsibility were used, in order to increase the precision of the interest management and consequently achieve a greater reduction in the state update traffic \cite{morse1996iml}.
+
+%------------------------------------------------------------------------- 
+\Section{Definitions}
+\label{def}
+
+%Será utilizado o termo cliente para referir-se ao computador utilizado por cada jogador para conectar-se a um dos servidores do jogo, assim como o termo servidor fará referência a cada nodo integrante do sistema distribuído que estará servindo o jogo.
+It is necessary to describe the network support model on which the proposed interest management algorithm is intended to be utilized. For that reason, some terms will be used throughout the text, and their definitions are given here:
+
+%É necessário descrever o modelo de suporte a jogos maciçamente jogador sobre o qual pretende-se utilizar o algoritmo de gerenciamente de interesse proposto. Ao longo do texto, serão utilizados alguns termos que precisam antes ser definidos: %Define-se avatar como sendo a representação no ambiente virtual do jogador, que, através dele, interage com o mundo do jogo e com outros jogadores. Regiões são divisões do ambiente virtual, cada uma podendo conter jogadores presentes. Assumindo regiões contíguas, define-se fronteira como sendo a divisa entre duas regiões adjacentes.
+
+
+\textbf{Avatar} is the player's representation in the virtual environment. Through his avatar, a player interacts with the game world and with the other players. Examples of avatars are the characters in MMORPGs (massively multiplayer online role-playing games), like World of Warcraft \cite{worldofwarcraft}.
+
+\textbf{Entities} are the constituent parts of the virtual world. Examples of entities are the avatars of the players as well as avatars controlled by artificial intelligence of the server - monsters of MMORPGs, for example - and objects in the environment, such as doors, weapons and items with which avatars can interact.
+
+\textbf{State} is the set of properties that can be observed in the various entities of the game. The overall state of the simulated world is composed of the individual states of all the entities present in it.
+	
+The players interact with the game world through \textbf{actions}. An action is a command of the player as, for example, moving his avatar to a particular location in the virtual world, attacking another player, taking some object available in the environment and so on. In general, actions change the state of one or more entities in the game.
+ 	
+A \textbf{region} is a partition of the virtual environment, under the responsibility of a single server. Thus, players whose avatars are located in the same region will have its interaction improved, since their clients are connected to the same server.
+
+The \textbf{border} between two regions is the line that divides the areas that these regions occupy. When an avatar is located near a border, the server responsible for the region beyond this border is notified about its presence by the server of the region where that avatar is situated.
+
+%------------------------------------------------------------------------- 
+\Section{Distribution Model}
+\label{model}
+
+	
+This work is part of the P2PSE \cite{crippa2007pps} project, which is currently based on a peer-to-peer distribution, but still looking for an ideal model. Hence, we propose here an alternative that consists of a virtual environment partitioned into regions - each managed by a different server - on which the \malg\ algorithm is based. The regions are contiguous, exploring the locality of the players' avatars. Thus, avatars next to each other will probably be located in the same region and, therefore, their clients will tend to be connected to the same server, so that their interaction is faster (Figure \ref{partitions}). 
+
+One issue that relates to that type of partitioning of the virtual environment concerns the borders between regions. If an avatar is close to the border between two regions, it will be necessary some exchange of information between the servers which manage them. This information consists of state updates of the entities that are interacting with each other despite being located in different regions. Such situations imply a higher bandwidth usage, as it is also required some sort of negotiation between the servers to which the different players are connected, in order to maintain the states of the simulation identical among all of them. Furthermore, the hop count of each message between the clients will be increased, since there will be two intermediary servers.
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{part}
+	\caption{Distribution model}
+	\label{partitions}
+\end{figure}
+
+For example, let $S_i$ be the server responsible for the region $R_i$ where the avatar of the client $C_i$ is located and let $S_j$ be the server responsible for another region, $R_j$, where the avatar of the client $C_j$ is situated. When the avatar of $C_i$ gets close to the border with $R_j$, $S_i$ sends to $S_j$ a message notifying it about the presence of that avatar near its region's border. If the avatar of $C_j$ also gets close to the border with $R_i$ and to the avatar of $C_i$, $S_j$ sends another message, notifying $S_i$. Then, $C_i$ and $C_j$ start exchanging state updates of their avatars through the servers.
+
+It must then be decided how the simulation of actions performed by players whose avatars are located in different regions will be executed. As the focus of this work is not the simulation itself, but the bandwidth usage optimization through a new interest management algorithm, it was decided that the simulation will simply be performed by the server to which that player is connected. Thus, if the player whose avatar is in region $R_i$ performs an action near the border involving entities in $R_j$, it is the server $S_i$ who will decide the outcome of these actions, forwarding only the already calculated new state to $S_j$. This way, the details of the simulation mechanism will not interfere in the interest management. The server $S_i$, responsible for the player $P_i$, simulates his actions, calculates the resulting state and simply sends it to the neighbor server, $S_j$, as if it was sending to its own clients. Similarly, when $S_j$ receives the resulting state of the action of $P_i$, it forwards the received stated to its clients as if a player in its own region had executed that action.
+
+%figura
+
+%Cada servidor terá uma lista dos endereços e portas dos outros servidores, assim como a região a que cada um está associado. Quando um jogador deseja participar do jogo, deve conectar-se a um servidor qualquer. Se o jogador entrar com um avatar novo, é escolhida alguma região para ele começar a jogar, e o servidor a que ele se conectou irá redirecioná-lo para o servidor correto. O critério de escolha pode ser o número de jogadores em cada região, como também pode ser feita simplesmente uma seleção aleatória da região. Se já tiver jogado antes, será redirecionado para o servidor responsável pela área na qual ele parou de jogar da última vez. Desta forma, aumenta-se a probabilidade do jogador recomeçar a partida com as informações mais recentes a respeito de seu estado.
+
+%------------------------------------------------------------------------- 
+\Section{Interest Management}
+\label{aoi}
+
+%como há vários servidores, o processamento das áreas de interesse é paralelizado, também, então não é tãaao ruim calcular a distância entre cada par de avatares..
+%explicar uma por uma, como funciona e o porquê.
+
+In order to provide an identical sense of the environment among the players, each one of them must maintain a local copy of the entities' states, which must be the same for everyone. The simplest way to do this is to broadcast the states of all entities to everyone. The problem of this approach is that it generates a heavy traffic between the servers and clients, preventing the game to scale well, as the number of participants increase. To save bandwidth, both of the players, as of the servers that intermediate them, a technique known as interest management is employed. This technique reduces the number of updates that the players will receive - and send, in the case of a peer-to-peer architecture.
+
+	
+In short, the interest management technique works as follows: for every state change of each entity, it is calculated to whom it will be relevant. For example, if an avatar is miles away from another one in the virtual environment, it is most likely that their state alterations are irrelevant to each other. Thus, it is not necessary for them to exchange information on their state. This principle - locality - is used as the main criterion in the interest management algorithms.
+
+The algorithms described in the following sections are mainly based on the euclidean distance between each avatar and every other entity in the virtual environment. This could create a scalability problem due to the calculation of the distances, but a distributed architecture is assumed, where the processing can and should be parallelized. In the distribution model defined previously, each server controls a region of the map. Therefore, each one of them manages only a subset of the entities of the game, checking only the distances between each pair of them, in addition to the entities that are in a neighboring region, close to its border.
+	
+In the next sections, some versions of this technique, such as circular area based and avatar's field of view based interest management, will be presented. In section \ref{gaoi}, it is introduced the approach of attenuating the frequency of updates, and in section \ref{csmooth} our proposed algorithm is described in detail.
+
+\SubSection{Circular area of interest}
+\label{circle}
+
+A simple way to execute interest management is to define a circular area, whose center is determined by the coordinates of the avatar's location in the virtual environment. After that, the euclidean distance between the avatar and every other entity in the game world is calculated. Let $A$ be an avatar, whose area of interest is a circle of radius $rad$. If an entity $E$ is at a distance less than $rad$ from $A$, then its state updates will be relevant to $A$. $A$ will not receive state updates from entities which are at a distance greater than $rad$. Figure \ref{fcirc} illustrates this type of area of interest.
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{circle}
+	\caption{Circular area of interest}
+	\label{fcirc}
+\end{figure}
+
+\SubSection{Field of view based area of interest}
+\label{angle}
+ 	
+A more refined method to manage the players' interests is to take into account what each one of them can see. The area within which the player perceives state changes can be defined as a circular sector. This is similar to the circular area of interest described in the previous section, but considers that the player can only see objects that are located in front of his avatar.
+
+%pegar isso pra mim!?... CLARO! fui eu que fiz!
+	
+One issue to be observed, however, is that the player will not receive state updates from entities that are close to his avatar, but behind it. This could cause some problems. For example, if the avatar turns 180 degrees, the player might not be able to see a particular entity that should be there, needing some time to receive its state information. This happens because, though the entity was near the avatar, it was outside the player's field of view. In Figure \ref{fangle}, it is illustrated an area of interest that takes into account the player's view angle.
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{fov}
+	\caption{Field of view based area of interest}
+	\label{fangle}
+\end{figure}
+
+%algoritmo
+
+
+%------------------------------------------------------------------------ 
+\Section{Graded Area of Interest}
+%\SubSection{Círculo com atenuação}
+\label{gaoi}
+
+ 	
+The principle behind the approach proposed here is based on the fact that the more distant an entity is from the avatar in the virtual environment, the lower its update frequency for that avatar may be. Therefore, the state updates from entities which are more distant may be received with a longer interval between them. On the other hand, if an entity is very close, it is desirable that the player receives its most recent state information as soon as possible, to view any alterations quickly.
+
+To achieve this objective, it is necessary to define some parameters:
+
+\textbf{Relevance} - real value ranging from 0 to 1 inclusive, which determines how much an entity's state is relevant to an avatar.
+
+\textbf{Update frequency} - number of state updates, received by a player from each one of the entities in the virtual environment, divided by time.
+
+\textbf{Normal update interval} - lowest time interval between the arrival of two consecutive state updates of the same entity to a client. The normal update interval is used when the state has a relevance value of 1. Thus, it determines the maximum update frequency.
+
+\textbf{View distance} - determines the maximum distance from which an avatar may be from the entities so its player may see them.
+
+\textbf{Critical distance} - it is the radius of the circle around the avatar, inside which all entities have a relevance value of 1.
+
+Before sending the state of an entity to a client, the last transmission time is checked. The next transmission is then scheduled to occur after a certain interval. If the relevance of that state is 1, the normal update interval will be used. If it is less than 1, the normal interval is divided by the relevance. For example, let the normal update interval of a game be \mbox{200 ms}. Also, let $A_i$ be the avatar of a player who just received a state update packet from $A_j$. If $A_j$ is at a distance from $A_i$ such that its relevance is 0.5, the next transmission will only happen after an interval of 200 divided by 0.5. Therefore, the player controlling $A_i$ will only receive another update from $A_j$ after 400 ms. Despite this interval is still less than a half second, it represents a reduction of the state update frequency of $A_j$ in 50\%, to the player of $A_i$. As they are at a greater distance from one another, and the interval was increased only by 200 ms, this variation will probably be imperceptible by the player.
+  
+It is important to note that the reduction of the entities' update frequency may be combined with other interest management techniques. In \cite{boulanger2006cim}, various interest management algorithms are described, and they can be further improved if the idea of different transmission intervals based on the relevance of the updates is used. 
+Generally the state of each entity is classified into one of only two extremes: it is relevant or it is not relevant, ignoring the fact that there is a wide range of intermediate values. The question is how to define the relevance value for each state update.
+
+% \SubSection{Circle with attenuation}
+  
+A simple form of using various update intervals based on the relevance value would be utilizing the circular area of interest. To obtain the relevance of an entity relative to an avatar, the value may be set to 1 when they are at the same position and gradually reduce it as the distance between them increases, until it reaches 0 and stops decreasing no matter how farther the entity goes. This is a way that, although simple, has shown a significant reduction in traffic between clients and servers. In Figure \ref{graded_circle}, it is illustrated how this area of interest would be, with entities' state update frequency attenuation for a given avatar.
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{gcircle}
+	\caption{Circular area of interest with update frequency attenuation}
+	\label{graded_circle}
+\end{figure}
+
+In the next section, it will be presented the proposed \malg\ algorithm, which employs, besides other principles, the update frequency attenuation. The simulations and their results are shown in sections \ref{sim} and \ref{results}, respectively.
+
+
+%------------------------------------------------------------------------- 
+\Section{The \malg\ algorithm}
+%View Angle with close area and update frequency attenuation
+%V    A          C     A         U      F         A
+\label{csmooth}
+
+In the previous sections, we have hinted that filtering based on an avatar's field of view of 180 degrees, for instance, instead of using a full circle around it could result in significant reduction in update traffic from the server to the player's machine. However, that would bring an important drawback, which is the large but temporary inconsistencies that would ensue whenever a player would turn around his avatars quickly to see what remotely-controlled objects are behind it. We have also reminded that reducing update frequencies for objects that are farther away from the observer is a good optimization, especially for large virtual worlds where the avatar may be on an open field with potentially hundreds of other avatars in its sighting distance. In this case, the player will not benefit at all from receiving updates at maximum frequency from objects that are sufficiently distant.
+%from using the maximum update frequency that is granted to objects that are at maximum closeness to the player being updated.
+
+In our envisioned distributed MMOG scenario, the field of view optimization cannot be missed. We need to use the avatar's field of view information to further improve on filtering gains. Furthermore, as it has the mentioned drawback, we combined it with a smaller circle around the avatar. %To achieve this, we propose the \malg\ (view angle with close area and update frequency attenuation) algorithm, which combines a circle area with an area based on the field of view of the avatar, as seen in Figure \ref{fcsmooth}.
+This addresses the field of view blind spot because, even if the game allows players to turn their avatars 180 degrees quasi-instantly, the only objects which will be affected negatively due to abrupt turning will be the more distant ones. %This is the case of most 3D action games such as Quake \cite{quake}, in which distant objects are already less relevant for e.g. aiming and shooting purposes.
+ Some time will be taken for the client to inform the server about the new facing angle of its avatar and to receive the state updates of the entities which were far behind it. Nevertheless, this delay will affect only distant objects, what is acceptable for most games, even action or shooter ones, which are the most demanding in terms of consistency due to presence of long-range hit-scan weapons, for instance.
+
+%The time that it takes for the client to inform the server about the new facing angle of its avatar and to receive the next batch of object updates will be the size of the temporal inconsistency for distant objects behind that avatar, which is acceptable for most games, even action or shooter games which are the most demanding in terms of consistency due to the presence of e.g. long-range hit-scan weapons.
+
+Therefore, the interest management algorithm proposed in this article, \malg\ (view angle with close area and update frequency attenuation), takes into account three main factors:
+
+\begin{itemize}
+ \item Avatar's view angle, to determine which entities the player must be able to see because they are in front of his avatar and within the maximum view distance; 
+ 
+ \item Close area, whose purpose is %evitar que ocorram problemas caso o jogador faça seu avatar girar ao redor do próprio eixo muito rapidamente, além de 
+ to improve the game quality in the space near the avatar. Its radius is the critical distance;
+ \item Update frequency attenuation.
+\end{itemize}
+
+The resulting area of interest then takes the shape of a circular sector, which represents the player's field of view. The origin of this circular sector is also the center of a smaller circle, which defines the area close to the avatar. In the close area, all entities have a relevance value of 1, so their update frequency to that avatar is set to the maximum value. This way, the most up-to-date game state becomes available to the player in the area around his avatar, improving the interaction with entities next to it. Even if some of them are outside the player's field of view, he will be able to see them if his avatar turns rapidly in their direction. Figure \ref{fcsmooth} illustrates the area of interest which has just been described.
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{a3}
+	\caption{\malg\ area of interest}
+	\label{fcsmooth}
+\end{figure}
+
+As for entities that are outside the area nearby, but still within the avatar's field of view, their relevance must be calculated. It is proposed that the relevance of each entity decline gradually as the distance between it and the avatar in question increases. The farther they are, the less frequent will be their state updates. This is possible because even if the interval update is doubled, it will most likely still be a fraction of a second, which is hardly noticeable for a player whose avatar is located at a great distance from that entity. Moreover, short delays between the arrival of state updates can be easily masked by extrapolation techniques, such as dead-reckoning \cite{smed2002rna}. Algorithm \ref{smalg} defines the operation of our interest management technique.
+
+\begin{algorithm}
+\caption{Calculate relevance of entity E to avatar A}
+\label{smalg}
+\begin{algorithmic}
+ \STATE $dist \leftarrow distance(A, E)$
+ \IF{$dist \le \cridis$}
+ \STATE $relevance \leftarrow 1$
+ \ELSE
+ \IF{A can see E in its field of view}
+ \STATE $relevance \leftarrow 1 - \frac{dist - \cridis}{\viewdis - \cridis}$
+ \IF{$relevance < 0$}
+ \STATE $relevance \leftarrow 0$
+ \ENDIF
+ \ELSE
+ \STATE $relevance \leftarrow 0$
+ \ENDIF
+ \ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+%Of course, using field of view based filtering, there will be always some kind of impact, even if just an aesthetic one. However, for our proposed MMOG distribution scheme, with the kind of connectivity we are aiming at, this is a no-issue, since bandwidth savings at the servers not only help the game to scale but also enables the architecture to actually work by lowering the barrier of entry of nodes that wish to volunteer as servers in the proposed MMOG network.
+
+%------------------------------------------------------------------------- 
+\Section{Simulation}
+\label{sim}
+
+In order to perform the simulation of the proposed algorithm, it was first necessary to create a simulated virtual environment, with avatars present on it, since the algorithm is based on locality and view angle information. The environment consists of a two-dimensional space, which corresponds to the region managed by one of the servers. There are various avatars present, whose number varies from one simulation to another. Each one of them randomly chooses a destination point in the environment and then moves there. When it reaches its destination, it stays for a random time value, which may be zero, and then chooses a new destination to move to.
+
+The ns-2 simulator \cite{mccanne:nsn} was used to compare the interest management algorithms described in this paper. This simulator allows the user to create code of the specific application which will be simulated. In our case, it was simulated a server managing a certain region where there was an avatar whose client should receive state updates of the other avatars present in that region.
+%In our case, it was simulated a server which should send state updates to the client responsible for one of the avatars in the region managed by that server.
+Based on their locations and on the chosen interest management algorithm, the server decided which other avatars had a relevant state to the client in question.
+
+Through the simulations, it was obtained the server upload bandwidth usage for one client. It was not considered necessary to simulate every client connected to the server simultaneously because every one of them had the same behavior. To find the total upload bandwidth usage, we just multiply the value measured with the simulation by the number of clients connected to that server. Also, there was no point in simulating or measuring the download bandwidth usage of the server, since it would keep receiving the players' actions at the same rate no matter what interest management algorithm was used.
+
+%Another question is that the upload bandwidth usage by the server is much higher than the download one. If it receives $n$ actions, each from one of the $n$ clients connected to it, it must send, in the worst case, $O(n^2)$ state updates, because each player needs the state of the others. Therefore, it was only necessary to measure the upload traffic from the server.
+
+%falar do svoboda e do kim??...
+
+Some works, such as \cite{yu2007nas}, \cite{kim2005tcm} and \cite{svoboda2007taa}, analyse the network traffic generated by large scale games. Based on these analyses, and adopting a conservative posture, the following parameters have been decided to be used in the simulations:
+
+\begin{itemize}
+ \item Normal update interval: 250 ms;
+ \item State update for one entity: 100 bytes UDP packet;
+ \item Duration of each simulated game session: 20 min;
+ \item Virtual environment area: 750 $\times$ 750 area units;
+ \item View distance: 120 length units;
+ \item Critical distance: 40 length units;
+ \item View angle: 180°.
+\end{itemize}
+
+Several simulations were executed, in order to compare the described interest management algorithms. The number of avatars in the environment was varied in order to measure the scalability. The algorithms compared were the ones with circle, circle with attenuation and field of view based area of interest and the proposed algorithm, \malg. To demonstrate how much traffic reduction each one of these achieve, simulations in which no type of interest management was used - and the server sent to the client state updates of all entities in the environment - were also performed.
+
+\Section{Results}
+\label{results}
+
+The results were collected as follows: to measure the average upload bandwidth usage by the server, the sizes of all packets sent in the session were added up and then divided by the session duration; to determine the maximum usage, it was measured how many bytes had been sent each second and the highest value was selected.
+
+In tables \ref{tab_max} and \ref{tab_avg}, the collected maximum and average upload bandwidth usage data are presented for each number of simulated avatars and interest management algorithm - circular area based (\circleaoi), circular area based with attenuated update frequency (\circleat), field of view based (\fov) and \malg\ algorithm - and it is also shown how much would be the upload bandwidth usage if no technique at all was employed (\noaoi). %The values presented are in bytes per second. 
+In Figure \ref{fig_max} and Figure \ref{fig_avg}, the corresponding graphics are given.
+
+\begin{table}[ht]
+\caption{Maximum bandwidth utilization (bytes/s)}
+\centering
+  \begin{tabular}{ c | c c c c c }  
+    \hline
+   	Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
+		25	&	9400	&	8500	&	5700	&	7100	&	4700 \\
+		50	&	19300	&	17000	&	10300	&	12300	&	8100 \\
+		75	&	29100	&	23600	&	16600	&	17800	&	11300 \\
+		100	&	38800	&	32500	&	20500	&	23000	&	15500 \\
+		125	&	48600	&	37400	&	24300	&	29500	&	19700 \\
+		150	&	58300	&	47400	&	29900	&	32900	&	22700 \\
+		175	&	67700	&	56100	&	34300	&	32400	&	21500 \\
+		200	&	77600	&	62300	&	37500	&	41200	&	28900 \\
+	\hline
+  \end{tabular}
+\label{tab_max}
+\end{table}
+
+\begin{table}[ht]
+\caption{Average bandwidth utilization (bytes/s)}
+\centering
+  \begin{tabular}{ c | c c c c c }  
+    \hline
+   	Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
+		25	&	9221	&	4715	&	2759	&	2534	&	1700 \\
+		50	&	18826	&	9350	&	5442	&	4949	&	3303 \\
+		75	&	28432	&	13963	&	8315	&	7619	&	5137 \\
+		100	&	38037	&	19324	&	11029	&	9928	&	6739 \\
+		125	&	47642	&	23138	&	13871	&	12434	&	8290 \\
+		150	&	57247	&	29031	&	16432	&	15085	&	10062 \\
+		175	&	66853	&	34697	&	19661	&	23060	&	14250 \\
+		200	&	76458	& 	38600	&	23450	&	21491	&	14413 \\
+	\hline
+  \end{tabular}
+\label{tab_avg}
+\end{table}
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{max}
+	\caption{Simulation Results: maximum bandwidth usage}
+	\label{fig_max}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+  %\includegraphics[width=2.5in]{avg}
+	\includegraphics[width=0.9\linewidth]{avg}
+	\caption{Simulation Results: average bandwidth usage}
+	\label{fig_avg}
+\end{figure}
+
+Just by using different update frequencies with circular area based interest management, the average upload bandwidth usage by the server decreased 41.59\%. The maximum upload bandwidth usage was also reduced, decreasing 36.19\%. These values represent the average usage reduction among all different numbers of avatars, compared to the circular area of interest algorithm with no frequency update attenuation.
+  
+Regarding the proposed algorithm, \malg, it has been obtained an average upload bandwidth usage reduction of 63.51\% and 33.58\%, compared to the circular area of interest and the field of view based algorithms, respectively. The maximum upload bandwidth usage was also reduced, decreasing 52.03\% and 33.10\%, compared to the same algorithms. Table \ref{tab_summary} shows the saving percentage of the maximum and average bandwidth usage with the \malg\ algorithm, compared to the other simulated techniques. For example, the maximum bandwidth utilization with \malg\ is 24.81\% less than with a circular area of interest based algorithm with update frequency attenuation.
+
+\begin{table}[ht]
+\caption{Bandwidth saving with \malg\ algorithm}
+\centering
+  \begin{tabular}{ c | c c c c }  
+    \hline
+   	Usage & \noaoi & \circleaoi & \circleat & \fov \\ \hline
+		Maximum	&	60.10\%	&	52.03\%	&	24.81\%	&	33.10\%	\\
+		Average	&	81.64\%	&	63.51\%	&	37.48\%	&	33.58\%	\\
+	\hline
+  \end{tabular}
+\label{tab_summary}
+\end{table}
+
+It was also observed that the average and maximum usage values differ, even when no algorithm is used to manage interest, that is, the client receives state updates of all entities in the game, with maximum frequency. With 200 avatars in the environment, 100 bytes state update packet size and 250 ms normal update interval, the server should send 80000 bytes per second - 200$\times$100$\times$4 - to each client. However, it was observed that the maximum and average usage, with 200 avatars present and no interest management, was 77600 and 76458, respectively. It happens because \mbox{ns-2} is a discrete event simulator, and the simulated server was programmed to check the update schedule every 10 ms. As a result of this, each state update may have had its interval increased by up to 10 ms, which explains the values found.
+
+
+
+%------------------------------------------------------------------------- 
+\Section{Conclusion}
+\label{conclusion}
+In this work, we presented the \malg\ interest management algorithm, whose main idea is to vary the state update frequency of the game entities according to their relevance to each client that will receive the updates. The \malg\ area of interest consists of a circular sector, corresponding to the player field of view, plus a smaller circle, which represents the area close to that player's avatar. The goal of this close area is to maintain the game state inside it the most up-to-date possible, in order to improve the game near the avatar. Joining these characteristics, we obtained an algorithm that achieved a significant reduction of the maximum upload bandwidth utilization by the server, which decreased 52.03\% and 33.10\%, compared to circle and field of view based interest management algorithms, respectively. The average upload bandwidth utilization by the server also decreased 63.51\% and 33.58\%, compared to the same algorithms.
+
+%------------------------------------------------------------------------- 
+\section*{Acknowledgment}
+
+%The development of t
+This work was supported by the Funding for Studies and Projects (FINEP), through the P2PSE project (P2PSE-5849-1), and by the National Research Council (CNPq).% FINEP and CNPq are brazilian research agencies.
+
+%------------------------------------------------------------------------- 
+%\nocite{ex1,ex2}
+\bibliographystyle{latex8}
+\bibliography{dsrt}
+
+\end{document}
+
