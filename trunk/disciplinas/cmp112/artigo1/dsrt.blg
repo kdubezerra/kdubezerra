@@ -1,0 +1,56 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.4)
+The top-level auxiliary file: dsrt.aux
+The style file: IEEEtran.bst
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: dsrt.bib
+Repeated entry---line 225 of file dsrt.bib
+ : @article{assiotis2006dam
+ :                         ,
+I'm skipping whatever remains of this entry
+-- IEEEtran.bst version 1.12 (2007/01/11) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+
+Done.
+You've used 9 entries,
+            4024 wiz_defined-function locations,
+            853 strings with 8739 characters,
+and the built_in function-call counts, 5305 in all, are:
+= -- 418
+> -- 132
+< -- 30
++ -- 68
+- -- 25
+* -- 240
+:= -- 847
+add.period$ -- 18
+call.type$ -- 9
+change.case$ -- 12
+chr.to.int$ -- 78
+cite$ -- 9
+duplicate$ -- 403
+empty$ -- 431
+format.name$ -- 31
+if$ -- 1178
+int.to.chr$ -- 0
+int.to.str$ -- 9
+missing$ -- 74
+newline$ -- 50
+num.names$ -- 9
+pop$ -- 198
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 2
+skip$ -- 399
+stack$ -- 0
+substring$ -- 197
+swap$ -- 286
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 5
+type$ -- 9
+warning$ -- 0
+while$ -- 25
+width$ -- 10
+write$ -- 98
+(There was 1 error message)

@@ -1,0 +1,581 @@
+
+\documentclass[conference]{IEEEtran}
+
+\usepackage{graphicx}
+%\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+%\usepackage{algorithmicx}
+\usepackage{amsmath}
+
+%\usepackage[brazil]{babel}   
+\usepackage[latin1]{inputenc}
+
+%\DeclareGraphicsExtensions{eps}
+
+%\newcommand{\malg}{A$^3$}
+\newcommand{\malg}{A$^3$}
+\newcommand{\cridis}{critical\_distance}
+\newcommand{\viewdis}{view\_distance}
+\newcommand{\circleaoi}{C}
+\newcommand{\circleat}{C \& A}
+\newcommand{\fov}{FoV}
+\newcommand{\noaoi}{None}
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{A novel interest management algorithm for distributed simulations of MMGs}
+
+
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+\author{\IEEEauthorblockN{Carlos Eduardo Benevides Bezerra}
+\IEEEauthorblockA{Federal University of Rio Grande do Sul\\
+Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
+E-mail: carlos.bezerra@inf.ufrgs.br}
+\and
+\IEEEauthorblockN{Cláudio Fernando Resin Geyer}
+\IEEEauthorblockA{Federal University of Rio Grande do Sul\\
+Bento Gonçalves, 9500, Porto Alegre, RS, Brazil\\
+E-mail: geyer@inf.ufrgs.br}
+}
+
+% conference papers do not typically use \thanks and this command
+% is locked out in conference mode. If really needed, such as for
+% the acknowledgment of grants, issue a \IEEEoverridecommandlockouts
+% after \documentclass
+
+% for over three affiliations, or if they all won't fit within the width
+% of the page, use this alternative format:
+% 
+%\author{\IEEEauthorblockN{Michael Shell\IEEEauthorrefmark{1},
+%Homer Simpson\IEEEauthorrefmark{2},
+%James Kirk\IEEEauthorrefmark{3}, 
+%Montgomery Scott\IEEEauthorrefmark{3} and
+%Eldon Tyrell\IEEEauthorrefmark{4}}
+%\IEEEauthorblockA{\IEEEauthorrefmark{1}School of Electrical and Computer Engineering\\
+%Georgia Institute of Technology,
+%Atlanta, Georgia 30332--0250\\ Email: see http://www.michaelshell.org/contact.html}
+%\IEEEauthorblockA{\IEEEauthorrefmark{2}Twentieth Century Fox, Springfield, USA\\
+%Email: homer@thesimpsons.com}
+%\IEEEauthorblockA{\IEEEauthorrefmark{3}Starfleet Academy, San Francisco, California 96678-2391\\
+%Telephone: (800) 555--1212, Fax: (888) 555--1212}
+%\IEEEauthorblockA{\IEEEauthorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
+
+
+
+
+% use for special paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+
+
+
+
+% make the title area
+\maketitle
+
+
+\begin{abstract}
+%\boldmath
+Traditionally, a central server is used to provide support to MMGs (massively multiplayer games), where the number of participants is in the order of tens of thousands. Much work has been done trying to create a fully peer-to-peer model to support this kind of application, in order to minimize the maintenance cost of its infra-structure, but critical questions remain. Examples of the problems relative to peer-to-peer MMG support systems are: vulnerability to cheating, overload of the upload links of the peers and difficulty to maintain consistency of the simulation among the participants. In this work, it is proposed the utilization of geographically distributed lower-cost nodes, working as a distributed server to the game. The distribution model and some related works are also presented. To address the communication cost imposed to the servers, we specify a novell refinement to the area of interest technique, significantly reducing the necessary bandwidth. Simulations have been made with ns-2, comparing different area of interest algorithms. The results show that our approach achieves the least bandwidth utilization, with a 33.10\% maximum traffic reduction and 33.58\% average traffic reduction, when compared to other area of interest algorithms.
+
+\end{abstract}
+% IEEEtran.cls defaults to using nonbold math in the Abstract.
+% This preserves the distinction between vectors and scalars. However,
+% if the conference you are submitting to favors bold math in the abstract,
+% then you can use LaTeX's standard command \boldmath at the very start
+% of the abstract to achieve this. Many IEEE journals/conferences frown on
+% math in the abstract anyway.
+
+% no keywords
+
+
+
+
+% For peer review papers, you can put extra information on the cover
+% page as needed:
+% \ifCLASSOPTIONpeerreview
+% \begin{center} \bfseries EDICS Category: 3-BBND \end{center}
+% \fi
+%
+% For peerreview papers, this IEEEtran command inserts a page break and
+% creates the second title. It will be ignored for other modes.
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+% no \IEEEPARstart
+Atualmente, jogos eletrônicos têm se tornado bastante populares, especialmente os jogos maciçamente multijogador, onde há um número de participantes simultâneos da ordem de dezenas de milhares \cite{cecin2004fsa}. Como exemplos, podemos citar World of Warcraft \cite{worldofwarcraft}, Lineage II \cite{lineage2} e Guild Wars \cite{guildwars}.
+
+Usualmente, o suporte de rede para este tipo de aplicação consiste em um servidor central com recursos - capacidade de processamento e largura de banda para comunicação com os jogadores - super-dimensionados, ao qual se conectam as máquinas clientes. Cada jogador interage através de um destes clientes, que envia suas ações para o servidor, que as processa, verificando que alterações no jogo elas causam, e difunde o resultado para todos os clientes envolvidos. Em virtude do número de participantes simultâneos que este tipo de jogo costuma ter, percebe-se que tais tarefas demandam por uma quantidade de recursos significativa, no que tange a poder de processamento e, principalmente, largura de banda disponível para que sejam recebidas as ações dos jogadores e enviadas as atualizações de estado.
+
+Nos últimos anos, têm-se pesquisado alternativas à abordagem com servidor centralizado. Uma delas é a distribuição, entre os próprios participantes, tanto da simulação do jogo quanto da responsabilidade de atualizarem-se entre si quando realizam ações. A comunicação entre eles ocorre par-a-par, formando uma rede descentralizada \cite{schiele2007rpp}. Esta abordagem seria o ideal, não fossem alguns problemas que lhe são inerentes. Por exemplo, como os jogadores participam do processamento da simulação, é necessário que eles entrem em acordo no que diz respeito ao estado da partida, sob pena de haver inconsistências caso isto não seja feito.
+
+Outra questão se refere ao número de envios que cada participante tem que executar. No modelo cliente-servidor, basta que cada um envie suas ações para o servidor, que se encarrega de simular e difundir o novo estado para os outros jogadores. No caso do modelo par-a-par, cada par envolvido torna-se responsável por processar suas ações e enviar as atualizações de estado para os outros participantes. O problema disto reside no fato de que não se pode garantir que todos os jogadores possuam conexões de rede com largura de banda suficiente. Por fim, sem um servidor central, que poderia atuar como árbitro, o jogo torna-se dependente da simulação que os próprios jogadores executam, que pode ser desvirtuada de forma a chegar a um resultado inválido, que beneficie indevidamente determinado jogador ou mesmo que invalide a sessão de jogo.
+
+Além do modelo par-a-par, existe também a alternativa de utilizar um servidor distribuído, em que diversos nodos conectados entre si dividem a tarefa de simular o jogo, como também de enviar as atualizações de estado aos jogadores \cite{assiotis2006dam}. Tal abordagem possibilita o uso de computadores de menor custo para comporem o sistema distribuído servidor, barateando a infra-estrutura de suporte. Questões como consistência e vulnerabilidade a trapaça podem ser abstraídas, restringindo o conjunto de nodos servidores a computadores comprovadamente confiáveis, o que é plausível, levando em conta que o número de nodos servidores deverá ser algumas ordens de grandeza menor do que o número de jogadores. Além disso, não é necessário exigir que cada jogador envie atualizações de estado para todos os outros jogadores. Com menores exigências de largura de banda e processamento das máquinas clientes, o jogo torna-se acessível para um maior público.
+%Tendo em vista a dificuldade de criar um modelo de suporte par-a-par que ao mesmo tempo garanta consistência, resistência a trapaça e eficiência de comunicação, o modelo de servidor distribuído foi escolhido como objeto deste trabalho.
+
+%Alguns trabalhos [citações] têm proposto técnicas para reduzir a carga de processamento e comunicação associada a servidores de jogos maciçamente multijogador, sendo uma alternativa a distribuição desta carga entre diversos servidores, cada um com custo de aquisição e manutenção menor do que o de um grande servidor central. Ainda assim, com as atuais técnicas de distribuição e modelo de comunicação entre os servidores e os clientes, têm-se um alto custo para manter o sistema servidor distribuído como um todo.
+No entanto, para evitar que o custo de manutenção do sistema distribuído servidor como um todo não se aproxime do custo de manutenção de um servidor central, é necessário realizar algumas otimizações com o intuito de reduzir a largura de banda necessária para cada um dos nodos. O presente trabalho propõe uma técnica para reduzir o consumo de largura de banda causado pelo tráfego do jogo entre os servidores e os clientes, diminuindo a quantidade de recursos necessários, através de um refinamento da técnica de gerenciamento de interesse \cite{boulanger2006cim} dos jogadores. O princípio básico desta técnica é que cada participante do jogo receba apenas atualizações de jogadores cujo estado lhes seja relevante. Foram realizadas simulações comparando a proposta deste trabalho com técnicas convencionais, obtendo resultados significativos. %Além disso, propõe-se uma técnica que visa prover qualidade de serviço, adaptando a freqüência de atualizações enviadas pelo servidor à disponibilidade de recursos. [sure?]Outra consiste em um heurística para detecção de aglomerados de jogadores - ou hotspots - de forma a otimizar o balanceamento de carga entre os servidores.[/sure?]
+
+O artigo está dividido da seguinte maneira: na seção \ref{relatedwork} são citados alguns trabalhos relacionados onde buscou-se distribuir o servidor do jogo; na seção \ref{def}, são apresentadas as definições de alguns conceitos utilizados ao longo do texto; na seção \ref{model}, é descrito o modelo de distribuição proposto; na seção \ref{aoi} é apresentada a otimização proposta para reduzir o tráfego sem comprometer a qualidade do jogo; nas seções \ref{sim} e \ref{results} é descrita a simulação realizada para validar a técnica proposta e os resultados obtidos, respectivamente e, na seção \ref{conclusion}, são apresentadas as conclusões a que se chegou neste trabalho.
+
+\section{Related Work}
+\label{relatedwork}
+%talvez deva reduzir esta seção.
+
+Como já foi dito, alguns trabalhos já foram feitos nos últimos anos visando distribuir o suporte a jogos maciçamente multijogador. Uma das abordagens é o modelo par-a-par, que tem algumas dificuldades, no que se refere a consistência do estado do jogo nos diferentes pares participantes, vulnerabilidade a trapaça e uso eficiente de largura de banda. Alguns autores propõem abordagens cujo objetivo é minimizar estes problemas. Um destes trabalhos \cite{schiele2007rpp} propõe a divisão do ambiente virtual simulado no jogo em regiões, e dentro de cada região é escolhido um par que será eleito coordenador daquela região. Sua função será a de gerenciar o interesse dos jogadores, verificando para quais pares cada atualização realmente precisa ser enviada. Dessa forma, reduz-se o uso de largura de banda de envio dos pares. No entanto, o uso de largura de banda de envio de cada participante ainda tende a ser significativamente superior àquele necessário quando utilizado o modelo cliente-servidor, pois neste é necessário apenas que cada jogador envie suas ações para um único destino. No modelo par-a-par, cada jogador deve atualizar, normalmente, mais de um outro jogador. Além disso, é necessário que o par escolhido para gerenciar o interesse naquela região seja confiável.
+
+%figura
+
+Outro trabalho voltado para o modelo par-a-par \cite{iimura2004zfg} tem uma abordagem semelhante à de \cite{schiele2007rpp}, mas sugere que, para cada região do ambiente virtual, seja criada uma ``federação de servidores", formada por pares escolhidos entre os participantes. A simulação torna-se mais confiável, já que diferentes nodos irão gerenciar aquele lugar no mundo do jogo e precisarão estar em acordo para que a simulação prossiga. Porém, o risco dos nodos escolhidos para gerenciarem aquela região cometerem trapaça de conluio \cite{yan2005scc} não é eliminado. Além disso, o próprio acordo entre os nodos servidores, que provê maior confiabilidade na simulação, implica em grande quantidade de tráfego entre os nodos participantes, além de potencialmente atrasar cada passo da simulação.
+
+%figura
+
+Um grande problema das arquiteturas par-a-par, no que diz respeito à utilização de gerenciamento de interesse é que cada par é responsável por parte da simulação e por decidir para quem sua atualização de estado interessaria. Assumindo que haja apenas jogadores confiáveis, a técnica de gerenciamento de interesse pode ser útil. No entanto, supondo que determinado jogador seja malicioso, ele pode não enviar atualizações de seu próprio estado para algum outro jogador, que ficaria prejudicado no jogo. Sendo assim, o modelo de servidor distribuído é considerado mais adequado para utilização de técnicas de gerenciamento de interesse dos jogadores.
+
+Um exemplo deste tipo de modelo é descrito em \cite{assiotis2006dam}, onde é proposta uma arquitetura distribuída para jogos maciçamente multijogador. Também é baseada na divisão do ambiente virtual do jogo em regiões, porém a cada uma destas estaria associado um nodo servidor. O jogador que estivesse situado em determinado lugar no mundo virtual deveria conectar-se ao servidor responsável por aquela região. Desta forma, cada servidor agruparia diferentes jogadores, baseado em sua localidade no ambiente do jogo. Para alcançar consistência entre os diferentes nodos servidores efetuando a simulação, é utilizado o conceito de travas. Quando um determinado nodo servidor precisa alterar o estado de uma entidade qualquer da partida, primeiro precisa obter acesso exclusivo àquela entidade. Para isso, ele negocia com os outros nodos servidores que possam também querer fazer alguma alteração, para somente então efetuar a mudança. Quando termina, o acesso é liberado, e os outros servidores são avisados através de mensagens.
+
+%figura
+
+A primeira grande restrição no trabalho de \cite{assiotis2006dam}, no entanto, é a premissa de que os nodos servidores estão conectados através de uma rede de alta velocidade e baixa latência, o que não pode ser assumido quando se trata de nodos de mais baixo custo geograficamente distribuídos. Outro problema é que a questão da escalabilidade é tratada através da pura e simples expansão do ambiente virtual, supondo que os jogadores se espalharão por ele. Por último, sugere-se resolver o problema de haver um grande número de jogadores no mesmo lugar através de sucessivos reparticionamentos recursivos das regiões, de forma a dividir os jogadores entre diferentes servidores. No entanto, existe um limite para o reparticionamento do ambiente virtual, e é deixado de lado o que fazer quando é atingido este limite.
+
+%falo de ng?
+
+No que se refere a gerenciamento de interesse, trabalhos como \cite{morse1996iml, rak1996egb, zou2001egt, morgan2005imm} e \cite{minson2005aim} podem ser citados. Em \cite{rak1996egb}, é proposto um esquema de gerenciamento de interesse baseado em um ambiente virtual divido em células de uma grade. A cada célula está associado um grupo de multicast. Cada participante da simulação se subscreve então no grupo de multicast da célula onde ele se encontra, assim como de células vizinhas se estiverem ao alcance de sua visão. Cada participante envia então suas atualizações de estado ao grupo de multicast da região onde se encontra. %O problema desta abordagem é que não se pode assumir que haverá suporte a multicast sobre a Internet, já que não é amplamente estabelecido. Além disso, uma área de interesse formada por células fixas envolverá um número maior de objetos do que seria realmente necessário do que ocorreria se fosse utilizada uma área completamente dinâmica.
+
+Em \cite{zou2001egt}, também  são considerados esquemas de gerenciamento de interesse baseados em grupos de multicast. É feita uma comparação entre a formação de grupos baseado em célula, onde cada um está associado a uma célula de uma grade que compõe o ambiente virtual, e agrupamento baseado em objetos, onde para cada objeto existe um grupo multicast associado. Verificou-se que há uma compensação (tradeoff) entre o custo das mensagens de controle dos grupos de multicast e o custo das mensagens de atualização de estado propriamente ditas.
+
+Um esquema de gerenciamento de interesse que utiliza um middleware orientado a mensagens é apresentado em \cite{morgan2005imm}. Dentre outros aspectos, este esquema faz uma predição do que será o interesse de determinado participante no futuro, baseado na posição e vetor velocidade do mesmo no ambiente virtual. Dessa forma, cada um começa a receber atualizações de estado de entidades que não estão ainda ao alcance de sua visão, mas que provavelmente estarão em um futuro próximo, tornando seus estados disponíveis assim que elas estiverem dentro do campo de visão.
+
+%por morse por último e justificar baseado nos parâmetros criados por ela.
+
+Em \cite{morse1996iml}, é feito um apanhado de sistemas que utilizam a técnica de gerenciamento de interesse, salientando quais critérios são utilizados por cada um. É apresentada então uma taxonomia de tais sistemas, classificando-os de acordo com: modelo de comunicação, foco da filtragem e domínios de responsabilidade. O modelo pode ser \textit{unicast}, \textit{multicast} ou \textit{broadcast}. %Como supõe-se aqui um sistema distribuído sobre a Internet, sobre a qual o suporte a \textit{multicast} não está ainda amplamente estabelecido, considera-se apenas o modelo de comunicação \textit{unicast}.
+O foco da filtragem refere-se a que tipo de características são observadas de cada objeto para realizar esta filtragem: podem ser \textit{intrínsecas}, como o valor de atributos do objeto (e.g. coordenadas exatas de sua localização), ou \textit{intrínsecas}, como a qual grupo multicast ele está associado. Por fim, o domínio de responsabilidade atribuída a um gerenciador de interesse, que verifica para quem cada estado é relevante, pode ser \textit{dinâmico} ou \textit{estático}. Por exemplo, se cada gerenciador é designado para controlar uma área fixa do ambiente virtual, seu domínio de responsabilidade é estático, mas se ele controla uma área que possa aumentar ou diminuir de tamanho, seu domínio de responsabilidade é dinâmico.
+
+%por morse por último e justificar baseado nos parâmetros criados por ela.
+
+Levando em consideração que o modelo de comunicação multicast não é amplamente suportado na Internet \cite{elsayed2004alm}, tanto por razões técnicas quanto comerciais, neste trabalho optou-se por seguir o modelo unicast, considerando que cada broadcast consiste na verdadem em um conjunto de sucessivas transmissões unicast, uma para cada destino. Além disso, %como o poder de processamento atualmente é maior que há uma década atrás,
+utiliza-se filtragem intrínseca e domínios de responsabilidade dinâmicos, para que haja maior precisão e, consequentemente, uma maior redução no tráfego de atualizações de estado \cite{morse1996iml}.
+
+\section{Definitions}
+\label{def}
+
+Será utilizado o termo cliente para referir-se ao computador utilizado por cada jogador para conectar-se a um dos servidores do jogo, assim como o termo servidor fará referência a cada nodo integrante do sistema distribuído que estará servindo o jogo. É necessário descrever o modelo de suporte a jogos maciçamente jogador sobre o qual pretende-se utilizar o algoritmo de gerenciamente de interesse proposto. Ao longo do texto, serão utilizados alguns termos que precisam antes ser definidos: %Define-se avatar como sendo a representação no ambiente virtual do jogador, que, através dele, interage com o mundo do jogo e com outros jogadores. Regiões são divisões do ambiente virtual, cada uma podendo conter jogadores presentes. Assumindo regiões contíguas, define-se fronteira como sendo a divisa entre duas regiões adjacentes.
+
+
+\textbf{Avatar} é a representação do jogador no ambiente virtual. É através dele que o jogador interage com o mundo do jogo e com outros jogadores. Exemplos de avatar são os personagens controlados pelo jogador em jogos MMORPG, como World of Warcraft. 
+
+\textbf{Entidades} são as peças constituintes do mundo virtual. Exemplos de entidades são os próprios avatares dos jogadores, assim como avatares controlados por inteligência artificial do servidor - monstros dos MMORPGs, por exemplo - e dos objetos inanimados presentes no ambiente, tais como portas, armas e itens em geral com que os avatares possam interagir.
+
+\textbf{Estado} é o conjunto de propriedades que podem ser observadas nas diferentes entidades do jogo. O estado global do mundo simulado é constituído dos estados individuais das diferentes entidades nele presentes.
+
+Os jogadores interagem com o mundo do jogo através de \textbf{ações}. Uma ação é um comando do jogador como, por exemplo, mover seu avatar para determinada localização no mundo virtual, atacar outro jogador, tomar para si algum objeto disponível no ambiente e assim por diante. Em geral, ações modificam o estado de uma ou mais entidades presentes no jogo.
+ 
+\textbf{Região} é um partição do ambiente virtual, sob responsabilidade de um único servidor. Dessa forma, jogadores cujos avatares estejam localizados na mesma região terão sua interação beneficiada, pois suas máquinas estarão conectadas ao mesmo servidor.
+ 
+A \textbf{fronteira} entre duas regiões é a divisa entre as áreas que essas regiões ocupam. Quando um avatar está localizado próximo a uma fronteira, o servidor responsável pela região além desta fronteria é avisado a respeito da presença daquele avatar pelo servidor onde ele se encontra.
+
+\section{Distribution Model}
+\label{model}
+
+Este trabalho baseia-se em um ambiente virtual particionado em regiões, cada uma gerenciada por um servidor. As regiões são contíguas, explorando a localidade dos avatares dos jogadores. Dessa forma, avatares próximos no jogo provavelmente estarão localizados na mesma região e, por conseguinte, os clientes dos jogadores a eles associados tenderão a estar conectados ao mesmo servidor, fazendo com que sua interação seja mais rápida (Fig. \ref{partitions}). Em situações em que jogadores interagindo entre si estivessem conectados a diferentes servidores implicaria em maior tráfego, pois seria necessário algum tipo de negociação entre os servidores aos quais os diferentes jogadores estão conectados, para que os estados da simulação em ambos fossem idênticos. Além disso seria necessário que cada mensagem entre estes clientes desse mais saltos, passando por mais de um intermediário.
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{part}
+	\caption{Distribution model}
+	\label{partitions}
+\end{figure}
+
+Uma questão que diz respeito a esse modelo de particionamento do ambiente virtual está relacionada às fronteiras entre as regiões. Se um avatar de um cliente conectado a um servidor está próximo à fronteira de uma região com outra, que está associada a um outro servidor, será necessário haver troca de informações entre os servidores. Essas informações consistirão em atualizações dos estados das entidades que estão interagindo entre si apesar de estarem situadas em regiões diferentes. Por exemplo, seja $S_A$ o servidor responsável pela região $R_A$ onde está situado o avatar do cliente $C_A$ e $S_B$ o servidor responsável por outra região, $R_B$, onde está situado o avatar do cliente $C_B$. Quando o avatar de $C_A$ aproxima-se da fronteira com $R_B$, $S_A$ envia para $S_B$ uma mensagem alertando a respeito da presença daquele avatar próximo da fronteira. Se o avatar de $C_B$ aproximar-se da fronteira com $R_A$, $S_B$ também avisa $S_A$ a respeito, e começa a enviar atualizações de estado de $C_B$ para $S_A$, que então encaminha para $C_A$, e vice-versa.
+
+No que diz respeito à simulação das ações executadas por jogadores cujos avatares estão situados em regiões diferentes, deve-se decidir como será feita a simulação. Como o foco deste trabalho não é a simulação em si, mas sim a otimização do uso de largura de banda através de um novo algoritmo de gerenciamento de interesse, decidiu-se que a simulação será realizada pelo servidor ao qual o cliente daquele jogador está conectado. Dessa forma, se o jogador cujo avatar está em $R_i$ executar uma ação próximo à fronteira, envolvendo entidades em $R_j$, será o servidor $S_i$ quem decidirá o resultado destas ações, repassando a $S_j$ apenas o novo estado já calculado.
+
+Desta maneira, os detalhes deste mecanismo não irão implicar em mudanças relevantes para o gerenciamento de interesse. Quando um jogador $J$ com o avatar próximo à fronteira de determinada região executa ações cujo resultado precisa ser difundido para jogadores com os avatares em outras regiões, o servidor $S$ responsável por $J$ simula suas ações, calcula o estado resultante e simplesmente o envia para o servidor vizinho, como se estivesse enviando para seus próprios clientes. Isso acontece da mesma forma que aconteceria se os outros jogadores também estivessem conectados a $S$. Analogamente, quando $S$ receber o estado resultante de uma ação de um jogador que está na região vizinha à sua, difunde-o para os jogadores a ele conectados como se um jogador dentro de sua própria região tivesse executado a ação.
+
+%figura
+
+%Cada servidor terá uma lista dos endereços e portas dos outros servidores, assim como a região a que cada um está associado. Quando um jogador deseja participar do jogo, deve conectar-se a um servidor qualquer. Se o jogador entrar com um avatar novo, é escolhida alguma região para ele começar a jogar, e o servidor a que ele se conectou irá redirecioná-lo para o servidor correto. O critério de escolha pode ser o número de jogadores em cada região, como também pode ser feita simplesmente uma seleção aleatória da região. Se já tiver jogado antes, será redirecionado para o servidor responsável pela área na qual ele parou de jogar da última vez. Desta forma, aumenta-se a probabilidade do jogador recomeçar a partida com as informações mais recentes a respeito de seu estado.
+
+\section{Area of Interest Algorithms}
+\label{aoi}
+
+%como há vários servidores, o processamento das áreas de interesse é paralelizado, também, então não é tãaao ruim calcular a distância entre cada par de avatares..
+%explicar uma por uma, como funciona e o porquê.
+
+Para que os diferentes jogadores interajam entre si e com as diversas entidades presentes no ambiente do jogo de maneira adequada, é necessário que disponham de réplicas locais destas entidades, cujo estado deve ser o mesmo para todos. A maneira mais simples de fazer isso seria difundir o estado de todas as entidades para todos os jogadores, mas isso geraria uma quantidade alta de tráfego, a depender do número de jogadores participando. Para economizar largura de banda, tanto dos jogadores, quanto dos servidores que os intermediam, é utilizada uma técnica conhecida como gerenciamento de interesse. Esta técnica reduz o número de atualizações que determinado jogador irá receber - e enviar, no caso de uma arquitetura par-a-par.
+
+Em resumo, o gerenciamento de interesse funciona da seguinte forma: para cada mudança de estado de cada entidade, é calculado para quem ela será relevante. Por exemplo, se um avatar situa-se a quilômetros de distância de outro, sem nenhum tipo de vínculo (como grupo, guilda etc.) entre eles, é irrelevante para cada um deles o estado mais recente do outro. Assim, não é necessário que eles troquem suas informações de estado. Este princípio, de localidade, é utilizado como critério principal no gerenciamento de interesse.
+
+Os algoritmos descritos nas próximas seções baseiam-se, entre outras coisas, na distância euclidiana entre cada avatar e todas as outras entidades presentes no ambiente virtual. Isso poderia gerar um problema de escalabilidade, porém está sendo suposta uma arquitetura distribuída, onde tal processamento poderá e deverá ser paralelizado. No modelo de distribuição definido anteriormente, cada servidor controla uma região do mapa. Por conseguinte, cada um deles gerencia apenas um subconjunto das entidades do jogo, verificando somente as distâncias entre cada par delas, além das entidades que estiverem em uma região vizinha, próximos à sua fronteira.
+
+Nas sessões seguintes, serão descritos algumas versões desta técnica, tais como gerenciamento de interesse baseado em área circular e em ângulo de visão do avatar. Na seção \ref{gaoi} é introduzida a abordagem de atenuação da freqüência de atualizações, onde será descrita em detalhes o algoritmo proposto.
+
+\subsection{Área circular}
+\label{circle}
+
+A forma mais simples de executar gerenciamento de interesse consiste em definir uma área em forma de círculo, cujo centro é definido pelas coordenadas da localização do avatar no ambiente virtual. Após isso, é calculada a distância euclidiana entre cada avatar e cada uma das outras entidades presentes no mundo do jogo. Seja o avatar $A_i$, cuja área de interesse é um círculo de raio $rad_i$. Se o avatar $A_j$ estiver a uma distância menor que $rad_i$ de $A_i$, então suas atualizações de estado serão relevantes. $A_i$ não receberá atualizações de estado de entidades que estejam a uma distância maior. A figura \ref{fcirc} ilustra este tipo de área de interesse.
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{circle}
+	\caption{Circular area of interest}
+	\label{fcirc}
+\end{figure}
+
+\subsection{Ângulo de visão}
+\label{angle}
+
+Outra maneira, um pouco mais refinada, de gerenciar o interesse dos avatares consiste em levar em conta o que o jogador pode visualizar, ou seja, seu ângulo de visão. A área dentro de onde esse jogador perceberá mudanças relevantes pode ser definida como um setor de círculo. É similar à área em formato de círculo definida anteriormente, porém leva em consideração que o jogador só pode visualizar objetos que estão situados à frente de seu avatar.
+
+%pegar isso pra mim!?... CLARO! fui eu que fiz!
+Uma questão a ser considerada, no entanto, é que o jogador não irá receber atualizações de estado de entidades imediatamente atrás de seu avatar, podendo compromenter o jogo. Se o avatar girar 180° em torno de seu próprio eixo rapidamente, pode ser que não veja determinada entidade que deveria estar ali, necessitando de certo tempo para receber o estado dela. Isto acontece porque, apesar desta entidade ter estado próximo do avatar, ele não recebeu suas informações ainda pois antes ela estava atrás dele, fora do seu campo de visão. Na figura \ref{fangle} é ilustrado como seria uma área de interesse que levaria em consideração o campo de visão do jogador.
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{fov}
+	\caption{Field of view based area of interest}
+	\label{fangle}
+\end{figure}
+
+%algoritmo
+
+\section{Graded Area of Interest}
+%\subsection{Círculo com atenuação}
+\label{gaoi}
+
+O princípio por trás da abordagem proposta aqui baseia-se no fato de que, quanto mais distante uma entidade se situar do avatar no ambiente virtual, menor será a exigência por rapidez nas suas atualizações, para aquele avatar. Sendo assim, pode-se receber atualizações de estado de entidades que estão mais distantes com maior intervalo entre elas. Por outro lado, se uma entidade está muito próxima, é desejável que o jogador disponha de seu estado mais recente assim que possível, para poder visualizar quaisquer mudanças rapidamente.
+
+Para atingir este objetivo, é necessário definir alguns parâmetros:
+
+\textbf{Relevância} - valor real entre 0 e 1, inclusive, que determina o quanto o estado de determinada entidade é relevante para um avatar.
+
+\textbf{Freqüência de atualização} - quantidade de atualizações que cada avatar recebe de cada uma das entidades do ambiente virtual por unidade de tempo.
+
+\textbf{Intervalo normal de atualização} - menor intervalo de tempo entre a chegada de duas atualizações de estado consecutivas de uma mesma entidade em um cliente, ou seja, quando a relevância daquela entidade para o avatar daquele cliente é 1. Assim sendo, o intervalo normal determina a freqüência máxima de atualização.
+
+\textbf{Alcance de visão} - determina a que distância as entidades podem estar do avatar, no máximo, para que o jogador possa visualizá-las.
+
+\textbf{Distância crítica} - é o raio do círculo, em torno do avatar, onde todas as entidades têm relevância igual a 1.
+
+Para se enviar o estado de uma entidade para determinado cliente, verifica-se primeiro quando foi o último envio. O próximo instante de envio é então escalonado para ocorrer após um determinado intervalo de tempo. Se a relevância daquele estado for 1, será utilizado o intervalo normal de atualização. Se for menor que 1, divide-se o intervalo normal pela relevância. Por exemplo, seja um jogo em que o intervalo normal de atualização seja de 200 ms. Se o avatar $A_i$, que acabou de enviar uma atualização de estado para $A_j$, está a uma distância de $A_j$ tal que sua relevância é 0.5, o próximo envio será depois de um intervalo de 200/0.5, ou seja, 400 ms. Apesar deste intervalo ainda ser uma fração de segundo, representa uma diminuição da freqüência de atualização do estado de $A_i$ em 50\%. Como estão a uma distância maior um do outro, e o intervalo foi aumentado de apenas 200 ms, esta variação deverá ser imperceptível para o jogador que controla $A_j$.
+
+É importante perceber que a atenuação da freqüência de atualização das entidades é compatível com outras técnicas mais complexas de gerenciamento de interesse. Em \cite{boulanger2006cim}, são descritos diversos algoritmos de gerenciamento de interesse que poderiam ser ainda melhorados se fosse agregada a idéia de diferentes intervalos de envio baseado na relevância destas atualizações. Geralmente o estado de cada entidade é classificado em um de apenas dois extremos: é relevante ou não é relevante, ignorando-se que há uma vasta gama de valores intermediários. A questão está em como definir esse valor de relevância para cada estado. Nas seções seguintes, serão apresentados dois exemplos de algoritmos que definem o método de se obter esse valor, assim como o tipo de área utilizado. Na seção \ref{csmooth}, é especificado o \malg, que é um algoritmo original de gerenciamento de interesse, que, dentre outros princípios, emprega a atenuação da freqüência de atualização. As simulações e seus resultados são apresentados nas seções \ref{sim} e \ref{results}, respectivamente.
+
+\subsection{Círculo com atenuação}
+
+Um exemplo simples de utilização de intervalos variados de atualização baseado em relevância seria utilizando a área de interesse em formato de círculo. Para obter-se a relevância de uma entidade em relação a um avatar, pode-se fazer com que seu valor seja 1 quando a entidade estiver na mesma posição do avatar e ir diminuindo gradualmente à medida em que se afasta, até chegar a 0, quando para de diminuir não importa o quanto mais se afaste. Essa é uma maneira que, apesar de simples, demonstrou uma significante redução no tráfego entre clientes e servidores. Na figura \ref{graded_circle}, é ilustrado como seria a área de interesse com atenuação gradual da freqüência de atualização das entidades para um determinado avatar.
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{gcircle}
+	\caption{Circular area of interest with update frequency atenuation}
+	\label{graded_circle}
+\end{figure}
+
+%           A                   A              A 
+%\subsection{Ângulo de visão com área próxima e atenuação da freqüência de atualização}
+\subsection{Algoritmo \malg}
+%View Angle with close area and update frequency atenuation
+%V    A          C     A         U      F         A
+\label{csmooth}
+
+O algoritmo de gerenciamento de interesse proposto neste artigo, denominado \malg{} (ângulo de visão com área próxima e atenuação de freqüência de atualização), leva em conta três fatores principais:
+
+\begin{itemize}
+ \item Ângulo de visão do avatar, para determinar quais entidades o jogador tem que ser capaz de perceber imediatamente, por estarem à sua frente, até a distância que seu alcance de visão permita;
+ \item Área próxima, cujo objetivo é %evitar que ocorram problemas caso o jogador faça seu avatar girar ao redor do próprio eixo muito rapidamente, além de 
+ melhorar a qualidade do jogo no espaço mais perto do avatar. Seu raio é a distância crítica, definido anteriormente; %explicar melhor
+ \item Atenuação da freqüência de atualizações.
+\end{itemize}
+
+A área de interesse resultante então toma a forma de um setor de círculo, cuja origem é o centro de outro círculo, menor. Este círculo menor é a área próxima do avatar do jogador, que receberá atualizações de estado com intervalo normal de entidades que nela estiverem. Dessa forma, tem-se o estado mais atualizado possível do jogo na região próxima ao avatar. Isso favorece a interação com entidades que estejam perto dele. Mesmo que alguma delas esteja momentaneamente fora do campo de visão do jogador, ela estará disponível caso ele gire seu avatar repentinamente na direção oposta à que está voltado. Na figura \ref{fcsmooth}, é ilustrada a área de interesse que acaba de ser definida.
+
+Quanto às entidades que estiverem fora da área próxima, mas ainda dentro do ângulo de visão, será calculada sua relevância. Propõe-se que a relevância de cada entidade diminua gradualmente de acordo com a distância entre ela e o avatar do jogador em questão. Quanto mais longe, menos freqüentes serão as atualizações de estado. Isso é possível porque mesmo que o intervalo de atualização seja duplicado, ainda será de uma fração de segundo, o que será dificilmente perceptível por um jogador cujo avatar está situado a uma grande distância da entidade em questão. Além disso, pequenos atrasos entre a chegada das atualizações de estado podem ser facilmente mascarados através de técnicas de interpolação, como dead-reckoning \cite{smed2002rna}. O algoritmo \ref{smalg} define o funcionamento deste gerenciamento de interesse.
+
+\begin{algorithm}
+\caption{Calculate relevance of entity E to avatar A}
+\label{smalg}
+\begin{algorithmic}
+ \STATE $dist \leftarrow distance(A, E)$
+ \IF{$dist \le \cridis$}
+ \STATE $relevance \leftarrow 1$
+ \ELSE
+ \IF{A can see E in its field of view}
+ \STATE $relevance \leftarrow 1 - \frac{dist - \cridis}{\viewdis - \cridis}$
+ \IF{$relevance < 0$}
+ \STATE $relevance \leftarrow 0$
+ \ENDIF
+ \ELSE
+ \STATE $relevance \leftarrow 0$
+ \ENDIF
+ \ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{a3}
+	\caption{\malg\ area of interest}
+	\label{fcsmooth}
+\end{figure}
+
+\section{Simulation}
+\label{sim}
+
+Para efetuar a simulação do algoritmo proposto, foi necessário primeiro criar um modelo de ambiente virtual a simular, com diversos avatares presentes, pois o algoritmo é baseado nas informações de localização e ângulo de visão. O ambiente consiste em um espaço bidimensional, que corresponde à região gerenciada por um dos servidores. Nela, há diversos avatares presentes, cujo número varia de uma simulação para outra. Cada avatar escolhe aleatoriamente um ponto de destino no ambiente e segue até lá. Ao chegar no destino, permanece parado por um tempo aleatório, que pode ser zero, e então escolhe uma nova localização para se dirigir.
+
+Foi utilizado o simulador de rede ns-2 \cite{mccanne:nsn}. Este simulador permite criar código específico da aplicação que será simulada. No caso, foi simulado um servidor, que deveria enviar atualizações de estado para um cliente, responsável por um dos avatares na região. Baseado na localização dos outros avatares e no algoritmo de gerenciamento de interesse escolhido, o servidor decidia quais outros avatares tinham um estado relevante para o cliente em questão. Com isso, obtém-se a ocupação de largura de banda de envio necessária para um único cliente. Não se julgou necessário simular simultaneamente todos os clientes conectados àquele servidor, pois todos os avatares têm o mesmo perfil. Para encontrar a carga total no servidor, basta multiplicar a banda de envio necessária para um cliente pelo número de clientes presentes na região.
+
+Outra questão é que o consumo de largura de banda de envio do servidor é muito maior que o de recepção - se ele recebe $n$ ações, cada uma oriunda de um dos $n$ clientes, é necessário, no pior caso, enviar $O(n^2)$ atualizações de estado, pois cada jogador precisaria do estado de todos os outros. Assim sendo, foi necessário apenas medir a banda de transmissão utilizada.
+
+%falar do svoboda e do kim??...
+Em trabalhos como \cite{yu2007nas}, \cite{kim2005tcm} e \cite{svoboda2007taa}, é analisado o tráfego de rede gerado por jogos em larga escala. Baseado nestes trabalhos, e adotando uma postura conservadora, foram decididos os seguinte parâmetros para serem utilizados na simulação:
+
+\begin{itemize}
+ \item Intervalo normal de atualização: 250 ms;
+ \item Tamanho do pacote de atualização de estado de uma única entidade: 100 bytes;
+ \item Duração de cada sessão de jogo simulada: 20 min;
+ \item Área do ambiente virtual: 750 x 750 unidades de área;
+ \item Alcance da visão: 120 unidades de comprimento;
+ \item Distância crítica: 40 unidades de comprimento;
+ \item Ângulo de visão: 180°.
+\end{itemize}
+
+Foram executadas diversas simulações, com o objetivo de comparar os algoritmos de gerenciamento de interesse apresentados. O número de avatares presentes no ambiente foi uma das variáves analisadas, para verificar a escalabilidade. Os algoritmos comparados foram os baseados em círculo, círculo com atenuação, ângulo de visão e o algoritmo proposto, \malg. Para demonstrar o quanto cada um destes reduz o tráfego, foram feitas simulações também em que não é empregado nenhum tipo de gerenciamento de interesse, e o servidor envia para o cliente atualizações de estado de todas as outras entidades do jogo.
+
+\section{Results}
+\label{results}
+
+Os resultados foram coletados da seguinte maneira: para encontrar a largura de banda utilizada em média para envio, foram somados todos os pacotes de cada sessão e dividido pelo tempo que foi simulado; para determinar a largura de banda máxima utilizada, foi verificado, segundo a segundo, quantos bytes foram enviados e foi selecionado o máximo.
+
+Nas tabelas \ref{tab_max} e \ref{tab_avg}, são apresentados os dados coletados de largura de banda máxima e média, respectivamente, utilizada com os quatro algoritmos simuladas - área em círculo (\circleaoi), área em círculo com atenuação (\circleat), área do campo de visão (\fov) e área do campo de visão mais área próxima mais atenuação (\malg) - além de mostrar quanto seria a largura de banda utilizada se nenhuma técnica fosse empregada (\noaoi). Os valores estão em bytes/s. Nas figuras \ref{fig_max} e \ref{fig_avg} são mostrados os gráficos correspondentes.
+
+\begin{table}[ht]
+\caption{Largura de banda máxima utilizada}
+\centering
+  \begin{tabular}{ c | c c c c c }  
+    \hline
+   	Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
+		25	&	9400	&	8500	&	5700	&	7100	&	4700 \\
+		50	&	19300	&	17000	&	10300	&	12300	&	8100 \\
+		75	&	29100	&	23600	&	16600	&	17800	&	11300 \\
+		100	&	38800	&	32500	&	20500	&	23000	&	15500 \\
+		125	&	48600	&	37400	&	24300	&	29500	&	19700 \\
+		150	&	58300	&	47400	&	29900	&	32900	&	22700 \\
+		175	&	67700	&	56100	&	34300	&	32400	&	21500 \\
+		200	&	77600	&	62300	&	37500	&	41200	&	28900 \\
+	\hline
+  \end{tabular}
+\label{tab_max}
+\end{table}
+
+\begin{table}[ht]
+\caption{Largura de banda utilizada em média}
+\centering
+  \begin{tabular}{ c | c c c c c }  
+    \hline
+   	Avatars & \noaoi & \circleaoi & \circleat & \fov & \malg{} \\ \hline
+		25	&	9221	&	4715	&	2759	&	2534	&	1700 \\
+		50	&	18826	&	9350	&	5442	&	4949	&	3303 \\
+		75	&	28432	&	13963	&	8315	&	7619	&	5137 \\
+		100	&	38037	&	19324	&	11029	&	9928	&	6739 \\
+		125	&	47642	&	23138	&	13871	&	12434	&	8290 \\
+		150	&	57247	&	29031	&	16432	&	15085	&	10062 \\
+		175	&	66853	&	34697	&	19661	&	23060	&	14250 \\
+		200	&	76458	& 	38600	&	23450	&	21491	&	14413 \\
+	\hline
+  \end{tabular}
+\label{tab_avg}
+\end{table}
+
+\begin{figure}[!t]
+	\centering
+	%\includegraphics[width=2.5in]{max}
+	\includegraphics[width=0.9\linewidth]{max}
+	\caption{Simulation Results: maximum bandwidth usage}
+	\label{fig_max}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+  %\includegraphics[width=2.5in]{avg}
+	\includegraphics[width=0.9\linewidth]{avg}
+	\caption{Simulation Results: average bandwidth usage}
+	\label{fig_avg}
+\end{figure}
+
+Apenas usando diferentes freqüências de atualização no gerenciamento de interesse baseado em círculo, reduziu-se em 41.59\% a largura de banda de envio utilizada em média pelo servidor por cliente. A utilização máxima de largura de banda também foi reduzida, em 36.19\%. Estes valores representam a média de redução de uso de largura de banda para os diferentes números de clientes.
+
+No que diz respeito ao algoritmo proposto \malg, obteve-se uma redução de uso médio de largura de banda de envio de 63.51\% e 33.58\%, comparado respectivamente com o algoritmo de área de interesse circular e baseado em ângulo de visão. Reduziu-se também o pico de utilização em 52.03\% e 33.10\%, comparado com os mesmos algoritmos. Na tabela \ref{tab_summary}, são mostrados os percentuais médios de economia de largura de banda máxima e média com o algoritmo \malg, em relação aos outros algoritmos apresentados.
+
+\begin{table}[ht]
+\caption{Economia de largura de banda com o algoritmo \malg}
+\centering
+  \begin{tabular}{ c | c c c c }  
+    \hline
+   	Utilização & \noaoi & \circleaoi & \circleat & \fov \\ \hline
+		Máxima	&	60.10\%	&	52.03\%	&	24.81\%	&	33.10\%	\\
+		Média	&	81.64\%	&	63.51\%	&	37.48\%	&	33.58\%	\\
+	\hline
+  \end{tabular}
+\label{tab_summary}
+\end{table}
+
+Observou-se também que os valores médio e máximo observados diferem, mesmo quando não é utilizado nenhum algoritmo de gerenciamento de interesse, ou seja, o cliente recebe atualizações de estado de todas as entidades presentes no jogo, com a freqüência normal. Além disso, com 200 avatares no ambiente, com estado de 100 bytes, cuja atualização é enviada a cada 250 ms, o servidor deveria alocar 199$\times$100$\times$4 bytes/s para cada cliente, ou seja, 79600 bytes/s. No entanto, observou-se que a utilização máxima e média, com 200 avatares presentes e nenhum gerenciamento de interesse, foi de 77600 e 76458, respectivamente. Isso acontece porque o ns-2 é um simulador de eventos discreto, e o servidor simulado foi programado para checar o schedule de envios a cada 10 ms. Em conseqüência disto, cada atualização de estado pode ter tido seu intervalo aumentado em até 10 ms, o que explica os valores encontrados.
+
+\section{Conclusion}
+\label{conclusion}
+Foi apresentado um algoritmo de gerenciamento de interesse, o \malg, cuja idéia principal é adaptar a freqüência de atualização de estado das entidades do jogo de acordo com sua relevância para o cliente que receberá as atualizações. O formato da área de interesse utilizada pelo algoritmo \malg{} consiste em um setor de círculo, correspondente ao campo de visão do jogador, mais um círculo de raio menor, que corresponde à área próxima ao avatar daquele jogador. O objetivo deste círculo menor é o de manter o estado naquela região, que é considerada crítica, o mais atualizado possível. Somando-se essas características, chegamos a um algoritmo que obteve redução da utilização máxima da banda de envio do servidor de 52.03\% e 33.10\%, comparados com o gerenciamento de interesse baseado em círculo e em campo de visão, respectivamente, e de 63.51\% e 33.58\% de utilização média, comparados com os mesmos algoritmos.
+
+Criando referências formatadas: \cite{breu2007ogt}, \cite{park2005nta} e \cite{feng2005tcp}.
+
+
+% An example of a floating figure using the graphicx package.
+% Note that \label must occur AFTER (or within) \caption.
+% For figures, \caption should occur after the \includegraphics.
+% Note that IEEEtran v1.7 and later has special internal code that
+% is designed to preserve the operation of \label within \caption
+% even when the captionsoff option is in effect. However, because
+% of issues like this, it may be the safest practice to put all your
+% \label just after \caption rather than within \caption{}.
+%
+% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
+% option should be used if it is desired that the figures are to be
+% displayed while in draft mode.
+%
+%\begin{figure}[!t]
+%\centering
+%\includegraphics[width=2.5in]{myfigure}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+%\caption{Simulation Results}
+%\label{fig_sim}
+%\end{figure}
+
+% Note that IEEE typically puts floats only at the top, even when this
+% results in a large percentage of a column being occupied by floats.
+
+
+% An example of a double column floating figure using two subfigures.
+% (The subfig.sty package must be loaded for this to work.)
+% The subfigure \label commands are set within each subfloat command, the
+% \label for the overall figure must come after \caption.
+% \hfil must be used as a separator to get equal spacing.
+% The subfigure.sty package works much the same way, except \subfigure is
+% used instead of \subfloat.
+%
+%\begin{figure*}[!t]
+%\centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
+%\label{fig_first_case}}
+%\hfil
+%\subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
+%\label{fig_second_case}}}
+%\caption{Simulation results}
+%\label{fig_sim}
+%\end{figure*}
+%
+% Note that often IEEE papers with subfigures do not employ subfigure
+% captions (using the optional argument to \subfloat), but instead will
+% reference/describe all of them (a), (b), etc., within the main caption.
+
+
+% An example of a floating table. Note that, for IEEE style tables, the 
+% \caption command should come BEFORE the table. Table text will default to
+% \footnotesize as IEEE normally uses this smaller font for tables.
+% The \label must come after \caption as always.
+%
+%\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+%\caption{An Example of a Table}
+%\label{table_example}
+%\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+%\begin{tabular}{|c||c|}
+%\hline
+%One & Two\\
+%\hline
+%Three & Four\\
+%\hline
+%\end{tabular}
+%\end{table}
+
+
+% Note that IEEE does not put floats in the very first column - or typically
+% anywhere on the first page for that matter. Also, in-text middle ("here")
+% positioning is not used. Most IEEE journals/conferences use top floats
+% exclusively. Note that, LaTeX2e, unlike IEEE journals/conferences, places
+% footnotes above bottom floats. This can be corrected via the \fnbelowfloat
+% command of the stfloats package.
+
+
+% conference papers do not normally have an appendix
+
+
+% use section* for acknowledgement
+%\section*{Acknowledgment}
+
+%The authors would like to thank...
+
+
+
+
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+\bibliography{dsrt}
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
+% \begin{thebibliography}{1}
+% 
+% \bibitem{IEEEhowto:kopka}
+% H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+%   0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+% 
+% \end{thebibliography}
+
+
+
+
+% that's all folks
+\end{document}
+
+

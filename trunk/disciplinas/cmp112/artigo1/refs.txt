@@ -1,0 +1,31 @@
+AOI
+
+XX morse 96 <-- citar e falar da filtragem extrinseca etc..
+
+	morse 2000 (?) <-- ver o q eh isso
+
+XX rak hook grid-based relevance filtering multicast
+
+zou ammar diot. grouping techniques state dissemination
+
+*** morgan lu storey interest management middleware
+
+	smed e kaukuranta também, eu acho...
+
+------------
+
+DISTRIBUTION MODELS
+
+X endo kawahara takahashi distributed architecture (p2p) 
+
+X hampel bopp hinn peer-to-peer architecture for mmog (p2p)
+
+X knutsson peer support massively (p2p)
+
+	            = = = = = = = =
+
+X ng si lau multi-server architecture for distributed virtual walkthrough (ms)
+
+X fiedler wallner weber communication architecture (ms)
+
+X rieche, wehrle, fouquet, niedermayer, petrak, carle (ms)

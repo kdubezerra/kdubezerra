@@ -1,0 +1,16 @@
+\begin{thebibliography}{1}\setlength{\itemsep}{-1ex}\small
+
+\bibitem{worldofwarcraft}
+Blizzard.
+\newblock World of warcraft, 2004.
+\newblock http://www.worldofwarcraft.com/.
+
+\bibitem{cecin2004fsa}
+F.~Cecin, R.~Real, R.~de~Oliveira~Jannone, C.~Geyer, M.~Martins, and
+  J.~Barbosa.
+\newblock {FreeMMG: A Scalable and Cheat-Resistant Distribution Model for
+  Internet Games}.
+\newblock {\em IEEE Int. Sym. on Distributed Simulation and Real-Time
+  Applications}, pages 83--90, 2004.
+
+\end{thebibliography}
