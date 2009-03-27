@@ -25,6 +25,7 @@
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
+\hyphenation{vi-su-a-li-zan-do}
 
 
 \begin{document}
@@ -38,7 +39,8 @@
 % use a multiple column layout for up to three different
 % affiliations
 \author{\IEEEauthorblockN{Carlos Eduardo Benevides Bezerra}
-\IEEEauthorblockA{Universidade Federal do Rio Grande do Sul\\
+\IEEEauthorblockA{CMP112 - Sistemas de Informação Distribuídos\\
+Universidade Federal do Rio Grande do Sul\\
 Bento Gonçalves, 9500, Porto Alegre, RS, Brasil\\
 E-mail: carlos.bezerra@inf.ufrgs.br}
 }
@@ -109,47 +111,55 @@ E-mail: carlos.bezerra@inf.ufrgs.br}
 
 \section{Introdução}
 % no \IEEEPARstart
-Com o surgimento do computador -- máquina que processa e armazena dados -- em meados do século XX, tornou-se possível guardar uma grande quantidade de informações em espaços cada vez menores. Com o surgimento das redes de computadores (o que levou a sistemas distribuídos [TODO:ref couloris e lamport]) e, posteriormente, das interconexões destas redes com, por fim, o surgimento e popularização da Internet, houve uma revolução na maneira como as pessoas têm acesso a informações. A quantidade de dados que são transmitidos entre pontos distintos do globo, assim como a rapidez com que isso acontece, ajudaram a definir a atual era como Era da Informação.
+Com o surgimento do computador -- máquina que processa e armazena dados -- em meados do século XX, tornou-se possível guardar uma grande quantidade de informações em espaços cada vez menores. Com o surgimento das redes de computadores (o que levou a sistemas distribuídos \cite{buchercouloris2000ds,lamport1978tca}) e, posteriormente, das interconexões destas redes com, por fim, o surgimento e popularização da Internet, houve uma revolução na maneira como as pessoas têm acesso a informações. A quantidade de dados que são transmitidos entre pontos distintos do globo, assim como a rapidez com que isso acontece, ajudaram a definir a atual era como Era da Informação.
 
 Contudo, devido justamente à liberdade com que é criado conteúdo -- e disponibilizado na Internet, por exemplo \mbox{--,} assim como ao crescente número de indivíduos, grupos e organizações que disseminam informações, surgem alguns desafios no que se refere ao tratamento e filtragem dessas informações. Por um lado, tem-se acesso a dados a respeito de praticamente qualquer coisa que se imagine. Devido à enorme quantidade desses dados, é necessário prover alguma ferramenta para buscar as informações onde elas estejam. Além disso, devido à liberdade com que se publica conteúdo na Internet, praticamente não há um padrão para a exibição da informação. Por último, mas não menos importante, após localizar, extrair e normalizar os dados, é mandatório classificar aquelas informações de acordo com algum padrão de qualidade, já que praticamente não há controle sobre o que se publica na Internet.
 
-Este trabalho tem por objetivos: dar uma visão geral sobre as metodologias de coleta, tratamento e classificação das informações extraídas, geralmente, de sistemas distribuídos -- como a Internet -- e fazer uma análise de alguns problemas que merecem atenção dos pesquisadores.
+Este trabalho tem por objetivos: dar uma visão geral sobre as metodologias de coleta, tratamento e classificação das informações extraídas de sistemas distribuídos -- na Internet, geralmente -- e fazer uma análise de alguns problemas que merecem atenção dos pesquisadores.
 
 
-\section{Muitas informações, em muitos locais}
+\section{Muitas informações em muitos locais}
 
-Como foi dito, existe uma enorme quantidade de conteúdo disponível hoje em dia. Para se fazer o melhor uso possível desta grande base de dados, é necessário, primeiramente, localizar e extrair os dados distribuídos em diversos repositórios. Após a extração desses dados, é preciso normalizá-los, de maneira a torná-los adequados com o indivíduo que os está visualizando. Por exemplo, alguém poderia querer informações a respeito de uma cidade, com dados como temperatura e distâncias entre pontos turísticos sendo apresentados em unidades que lhe sejam conhecidas, ou que as informações lhe sejam apresentadas em uma linguagem compatível com sua compreensão e sem detalhamento excessivo. Por último, uma informação só deve ser apresentada, ou recomendada, a um usuário se for de qualidade, o que dependerá de critérios, que por sua vez são verificados através de métricas. Nas seções a seguir, serão dados alguns exemplos e brevemente explicadas essas etapas.
+Como foi dito, existe uma enorme quantidade de conteúdo disponível hoje em dia. Para se fazer o melhor uso possível desta grande base de dados, é necessário, primeiramente, localizar e extrair os dados distribuídos em diversos repositórios. Após a extração desses dados, é preciso normalizá-los, de maneira a torná-los adequados ao indivíduo que os está visualizando. Por exemplo, alguém poderia querer informações a respeito de uma cidade, com dados como temperatura e distâncias entre pontos turísticos sendo apresentados em unidades que lhe sejam conhecidas, ou que as informações lhe sejam apresentadas em uma linguagem compatível com sua compreensão e sem detalhamento excessivo. Por último, uma informação só deve ser apresentada, ou recomendada, a um usuário se for de qualidade, o que dependerá de critérios, que por sua vez são verificados através de métricas. Nas seções a seguir, serão dados alguns exemplos e brevemente explicadas essas etapas.
 
 \subsection{Localização}
 
-Para que as informações possam ser localizadas, podem ser utilizados alguns métodos, como indexação. Ao invés de consultar cada base de dados em busca de um casamento com a chave utilizada para busca, é mantida uma lista de tags que serão utilizadas para busca, formando um índice. Por exemplo, o Google Scholar [TODO: ref googlescholar] tem agentes autônomos -- ou crawlers -- que têm acesso permitido às enormes bases de dados das maiores e mais bem conhecidas editoras de material científico (como IEEE, ACM, Springer e outras). Esses agentes vasculham essas bases de dados e indexam seu conteúdo, baseado em informações relevantes, como nomes de autores, títulos dos trabalhos científicos, abstract etc., o que será enviado aos grandes servidores do Google para serem utilizados nas buscas feitas pelos usuários.
+Para que as informações possam ser localizadas, podem ser utilizados alguns métodos, como indexação. Ao invés de se consultar cada base de dados em busca de um casamento com a chave utilizada para busca, é mantida uma lista de \emph{tags} que serão utilizadas para busca, formando um índice. Por exemplo, o Google Scholar \cite{jacso2005gsp} tem agentes autônomos -- ou \emph{crawlers} -- que têm acesso permitido às enormes bases de dados das maiores e mais bem conhecidas editoras de material científico (como IEEE, ACM, Springer e outras). Esses agentes vasculham essas bases de dados e indexam seu conteúdo, baseado em informações relevantes, como nomes de autores, títulos dos trabalhos científicos, resumo etc., o que será enviado aos grandes servidores do Google para serem utilizados nas buscas feitas pelos usuários.
 
-Outra maneira de buscar conteúdo é através de redes P2P, descentralizadas [TODO: ref P2P]. Quando um dos participantes deseja determinado arquivo, por exemplo, ele envia a requisição a seus pares, que lhe respondem ou encaminha a requisição a outros pares. No entanto, algumas dessas redes tendem a saturar rapidamente a banda dos pares, por basearem as buscas em inundação de mensagens. Existem alternativas comprovadamente mais eficientes, tanto na teoria quanto na prática, que utilizam DHTs (tabelas hash distribuídas), mas em que o pedido é feito com um identificador único (o hash do arquivo que está sendo procurado, por exemplo), e não em palavras-chave. Exemplos dessas redes baseadas em DHT são: Chord[TODO:ref], Pastry[TODO:ref] e Can[TODO:ref].
+Outra maneira de buscar conteúdo é através de redes P2P, descentralizadas \cite{p2p}. Quando um dos participantes deseja determinado arquivo, por exemplo, ele envia a requisição a seus pares, que lhe respondem ou encaminham a requisição a outros pares. No entanto, algumas dessas redes tendem a saturar rapidamente a banda dos pares, por basearem as buscas em inundação de mensagens. Existem alternativas comprovadamente mais eficientes, tanto na teoria quanto na prática, que utilizam DHTs (tabelas \emph{hash} distribuídas), mas em que o pedido é feito com um identificador único (o hash do arquivo que está sendo procurado, por exemplo), e não em palavras-chave. Exemplos dessas redes baseadas em DHT são: Chord \cite{chord}, Pastry \cite{pastry} e CAN \cite{ratnasamy2001sca}.
 
 \subsection{Extração}
 
-Uma vez que os dados são localizados, seja baseado em índices com tags ou em busca por identificador único, como um hash, eles devem ser extraídos e armazenados em um formato padrão, de maneira que conteúdos oriundos de diferentes fontes possam ser agregados ou comparados. O RoadRunner [TODO: ref roadrunner], por exemplo, tem por objetivo extrair porções de informação de páginas em HTML, baseado em casamento de padrões nas suas marcações. Para isso, é definida uma linguagem regular, baseada num exemplo genérico. Casando o padrão dessa linguagem com o código de cada página, são encontradas as estruturas dos dados presentes naquela página.
+Uma vez que os dados são localizados, seja baseado em índices com tags ou em busca por identificador único, como um hash, eles devem ser extraídos e armazenados em um formato padrão, de maneira que conteúdos oriundos de diferentes fontes possam ser agregados ou comparados. O RoadRunner \cite{crescenzi2001rta}, por exemplo, tem por objetivo extrair porções de informação de páginas em HTML, baseado em casamento de padrões nas suas marcações. Para isso, é definida uma linguagem regular, baseada num exemplo genérico. Casando o padrão dessa linguagem com o código de cada página, são encontradas as estruturas dos dados presentes naquela página.
 
-Outras ferramentas para extração de informações são apresentadas em [TODO: ref brief survey]. Algumas delas são: STALKER [TODO: ref no brief], RAPIER [TODO: rnb] e Web-OQL [TODO:].
+Outras ferramentas para extração de informações são apresentadas em \cite{laender2002bsw}. Algumas delas são: STALKER \cite{muslea2001hwi}, XWRAP \cite{liu2000xxe} e Web-OQL \cite{arocena1999wrd}.
 
-Um detalhe importante é que o XML [TODO:ref xml] vem como um facilitador dessa extração de dados. Sendo uma linguagem de marcação, permite que cada bloco de informação seja apresentado com atributos e sua relação com outros pedaços de informação seja representado por um grafo. Um arquivo em XML, ao mesmo tempo que apresenta uma hierarquia e possibilita uma representação rica dos dados e metadados, permite que essa mesma representação não siga uma estrutura rígida, o que é adequado à falta de uniformidade da apresentação dos dados nos diferentes repositórios.
+Um detalhe importante é que o XML \cite{xml} vem como um facilitador dessa extração de dados. Sendo uma linguagem de marcação, permite que cada bloco de informação seja apresentado com atributos e sua relação com outros pedaços de informação seja representado por um grafo. Um arquivo em XML, ao mesmo tempo em que apresenta uma hierarquia e possibilita uma representação rica dos dados e metadados, permite que essa mesma representação não siga uma estrutura rígida, o que é adequado à falta de uniformidade da apresentação dos dados nos diferentes repositórios.
 
 \subsection{Normalização}
 
-Após os dados serem extraídos de suas fontes, é desejável que sejam apresentados de acordo com determinada norma. Isso é mais claro de se entender quando se trata de unidades de medida, como distância e temperatura. Quais unidades de medida serão utilizadas depende, em última análise, de quem as está visualizando. Um brasileiro provavelmente prefira saber a distância entre duas cidades em quilômetros, enquanto um americano deverá querer a distância em milhas.
+Após os dados serem extraídos de suas fontes, é desejável que sejam apresentados de acordo com determinada norma. Isso é mais claro de se entender quando se trata de unidades de medida, como distância e temperatura. Quais unidades de medida serão utilizadas depende, em última análise, de quem as está visualizando. Um brasileiro provavelmente prefira saber a distância entre duas cidades em quilômetros, enquanto um americano preferirá saber a distância em milhas.
 
-No entanto, a normalização também serviria para adequar o conteúdo apresentado, a linguagem e o seu detalhamento ao nível de compreensão e/ou interesse de quem o estivesse visualizando. As informações em uma bula de remédio seriam apresentadas de maneira completamente diferente para um médico e para um paciente com pouca escolaridade, por exemplo.
+No entanto, a normalização também serviria para adequar o conteúdo apresentado, a linguagem e o seu detalhamento ao nível de compreensão e/ou interesse de quem o estivesse visualizando. As informações em uma bula de remédio seriam apresentadas de maneira completamente diferente para uma farmacêutica e para um paciente com pouca escolaridade, por exemplo.
 
 \subsection{Qualidade}
 
-Por fim, é necessário classificar as informações de acordo com sua qualidade. Para determinar a qualidade de cada informação, podem ser utilizadas diversas métricas [TODO:ref arg], atribuindo um ou mais índices de qualidade para cada informação.
+Por fim, é necessário classificar as informações de acordo com sua qualidade. Para determinar a qualidade de cada informação, podem ser utilizadas diversas métricas \cite{extraccion}, atribuindo um ou mais índices de qualidade para cada informação.
 
-Como exemplo, pode ser citado o OrtoQualis [TODO:corrigir nome e por ref do palazzo], que utilizou um conjunto de critérios definidos pela CAPES para avaliar conferências, obtendo uma classificação semelhante àquela realizada pessoalmente pelos membros do comitê de Qualis da instituição.
+Como exemplo, pode ser citado o OntoQualis \cite{souto2007oaq}, que utilizou um conjunto de critérios definidos pela CAPES para avaliar conferências, obtendo uma classificação semelhante àquela realizada pessoalmente pelos membros do comitê de Qualis da instituição.
 
-\section{Problemas}
+\section{Problemas e desafios}
+
+Foi visto que se busca fazer a recuperação de informações relevantes em uma grande base de dados distribuída, com estes dados armazenados sem seguir um determinado padrão de formato ou estrutura, adequá-los a quem os está visualizando e classificá-los de acordo com determinados critérios de qualidade. Embora tenha sido feita vasta pesquisa nesta área, o que pode ser confirmado pela coletânea de referências bibliográficas apresentadas neste trabalho e em trabalhos citados aqui, ainda persistem algumas questões.
+
+Uma das questões mais críticas se refere ao tempo que se leva para que se possa recuperar informações, contado a partir do momento em que são disponibilizadas. Varrer o conteúdo de repositórios -- como \emph{websites}, bancos de dados e bibliotecas digitais -- cada vez que se faz uma busca, ainda que seja mantido um cache, é impraticável, devido ao tempo que se levaria para casar o dado ou padrão procurado com as informações armazenadas nesses repositórios. O que se faz, em geral, é deixar que agentes percorram as bases de dados e as indexem, para posterior uso em uma ferramenta de busca, ou apenas fazer uma busca com base em um identificador único, com tempo de resposta constante ou logarítmico. No caso dos agentes indexadores, podem-se levar dias para que uma determinada informação seja adicionada ao índice, dificultando um dos objetivos desejáveis da recuperação de informações, que é a atualidade das mesmas.
+
+Outro desafio atual é quanto às metodologias para recuperar, normalizar e classificar informações. Para cada área de interesse, é criado todo um conjunto de critérios para realizar as buscas e ordenar os resultados de acordo com a qualidade de cada um. Porém, o ideal seria que isso fosse automatizado. Com uma única ferramenta, deveria ser possível encontrar de maneira automática esses critérios de busca e classificação, independente de qual área de interesse estivesse sendo pesquisada, ou do usuário. Obviamente, isto implicaria a implementação de algum tipo de agente inteligente que pudesse ser treinado para encontrar padrões em conjuntos de dados considerados bons, assim como determinar como esses dados devem ser apresentados a cada usuário diferente, provavelmente baseado em algum tipo de histórico.
+
 
 \section{Conclusão}
 
+Neste trabalho, foi dada uma visão geral de algumas das etapas atualmente utilizadas para a busca e filtragem de informações disponíveis em sistemas de informação distribuídos, sendo algumas: localização, extração, normalização e classificação de acordo com qualidade dessas informações, sendo que foram citados trabalhos existentes e/ou exemplos de como cada uma delas funciona. Por fim, foram apresentadas algumas idéias do que deve ou pode estar por vir na área. Tendo em vista o que foi apresentado neste texto e em suas referências bibliográficas, é possível perceber o quanto a atual era se encaminha para um futuro onde as informações estarão disponíveis em qualquer lugar, de maneira transparente e -- se forem resolvidas as questões referente à velocidade com que as informações são disponibilizadas em ferramentas de busca -- tão cedo quanto elas forem publicadas.
 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
@@ -263,7 +273,7 @@ Como exemplo, pode ser citado o OrtoQualis [TODO:corrigir nome e por ref do pala
 % http://www.michaelshell.org/tex/ieeetran/bibtex/
 \bibliographystyle{IEEEtran}
 % argument is your BibTeX string definitions and bibliography database(s)
-\bibliography{dsrt}
+\bibliography{artigo}
 %
 % <OR> manually copy in the resultant .bbl file
 % set second argument of \begin to the number of references
