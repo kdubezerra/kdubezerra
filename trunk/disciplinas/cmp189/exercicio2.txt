@@ -6,9 +6,9 @@ n^(1/log n)
 ln ln n
 
 *logaritmo*
-ln n
 2log n
 4log n
+ln n
 
 *quadrado do logaritmo*
 (log n)^2
