@@ -1,0 +1,42 @@
+*const*
+1
+
+*loglog*
+ln ln n
+
+*log*
+ln n
+2log n
+4log n
+
+*log^2*
+(log n)^2
+
+*n*
+n
+
+*nlogn*
+nlog n
+
+*n^2*
+n^2
+
+*n^3*
+n^3
+
+*k^n*
+(3/2)^n
+2^n
+e^n
+
+*nk^n*
+n2^n
+
+*n!*
+(log n)!
+n!
+
+
+
+n^(log log n)
+n^(1/log n)
