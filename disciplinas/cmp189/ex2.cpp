@@ -7,6 +7,13 @@
    Tarefa: Em uma faixa no espaço dividida em regiões por segmentos,
    calcular, em O(log(n)), qual a região onde um ponto está situado.
    
+   Descrição da solução:
+   Os segmentos são armazenados em um vetor, ordenados pela sua
+   posição. Para encontrar a região a que um ponto pertence em tempo
+   O(log(n)), é feita uma busca binária neste vetor, até encontrar o
+   par de segmentos que o cercam - ou, no caso de o ponto estar em
+   uma das extremidades, qual o segmento mais próximo.
+   
 */ 
 
 #include <iostream>
@@ -61,6 +68,7 @@ typedef struct strvertex {
 
 void getSegmentList(vector<segment> &slist);
 void getVerticesList(vector<vertex> &vlist);
+int findRegion(vertex v, vector<segment> &slist);
 void locateVerticesRegions(vector<vertex> &vlist, vector<segment> &slist);
 
 int main () {
