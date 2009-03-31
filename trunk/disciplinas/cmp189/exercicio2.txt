@@ -1,41 +1,46 @@
-*constante*
-1
-n^(1/log n)
+   Disciplina: Algoritmos Geométricos
+   Professor: João Luiz Dihl Comba
+   Aluno: Carlos Eduardo Benevides Bezerra
+   
+   Tarefa: Dado um conjunto de funções, ordená-las em
+   ordem crescente de complexidade pessimista.
 
-*logaritmo do logaritmo*
-ln ln n
+Complexidade constante
+	1
+	n^(1/log n)
 
-*logaritmo*
-2log n
-4log n
-ln n
+Logaritmo do logaritmo
+	ln ln n
 
-*quadrado do logaritmo*
-(log n)^2
+Logaritmo
+	2log n
+	4log n
+	ln n
 
-*potencia do logaritmo do logaritmo*
-n^(log log n)
+Quadrado do logaritmo
+	(log n)^2
 
-*linear*
-n
+Linear
+	n
 
-*n·logn*
-nlog n
+Comum em algoritmos de divisão e conquista
+	nlog n
 
-*quadrática*
-n^2
+Quadrática
+	n^2
 
-*cúbica*
-n^3
+Cúbica
+	n^3
 
-*exponencial*
-(3/2)^n
-2^n
-e^n
+Exponencial
+	(3/2)^n
+	2^n
+	e^n
+	n*2^n
 
-*n·k^n*
-n2^n
+Fatorial
+	n!
 
-*fatorial*
-(log n)!
-n!
+*não identifiquei a ordem exata das seguintes na lista de funções*
+superlinear: (log n)!
+exponencial: n^(log log n)
