@@ -1,3 +1,14 @@
+/* 
+   
+   Disciplina: Algoritmos Geométricos
+   Professor: João Luiz Dihl Comba
+   Aluno: Carlos Eduardo Benevides Bezerra
+   
+   Tarefa: Em uma faixa no espaço dividida em regiões por segmentos,
+   calcular, em O(log(n)), qual a região onde um ponto está situado.
+   
+*/ 
+
 #include <iostream>
 #include <fstream>
 #include <vector>
