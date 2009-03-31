@@ -210,15 +210,26 @@ In \cite{lee2003sdl}, it is also proposed a scheme for dynamic load balancing fo
 The main aspect of the solution proposed by the authors was the use of local information (the server that initiated the balancing process and its neighbors), rather than global information (involving all servers in the balance). The former shows small overhead, but it can not solve the problem efficiently in a few steps, as overloaded servers tend to be adjacent. The global approach, in turn, is able to divide the workload in the most balanced way possible, but its complexity grows exponentially with the number of servers involved. The solution is then by involving only a subset of servers, such that its cardinality varies according to the need (if the neighbors of the server which triggered the load balancing are also overburdened, more servers are selected) . Thus, there is a little more information than the local approach, but without the complexity inherent to the global one.
 
 %**	
-To tackle the problem, the authors also subdivide the virtual environment in rectangular \textbf{cells} -- similar to the microcrells. The cells are grouped in \textbf{regions} -- or macrocells -- and each region is managed by one server. Each server keeps its players updated of the state of the virtual environment, while also handling the interactions between avatars in its region. Two cells are adjacent (or neighbors) if they share a border. Similarly, two regions -- and their servers -- are adjacent if there is a pair of adjacent cells, each of which belong to one of the two regions. Figure \ref{fig:leeA} illustrates a distributed server system, consisting of 16 nodes. The virtual environment is divided in 256 cells, which are grouped in 16 regions.
+%To tackle the problem, the authors also subdivide the virtual environment in rectangular \textbf{cells} -- similar to the microcrells. The cells are grouped in \textbf{regions} -- or macrocells -- and each region is managed by one server. Each server keeps its players updated of the state of the virtual environment, while also handling the interactions between avatars in its region. Two cells are adjacent (or neighbors) if they share a border. Similarly, two regions -- and their servers -- are adjacent if there is a pair of adjacent cells, each of which belong to one of the two regions. Figure \ref{fig:leeA} illustrates a distributed server system, consisting of 16 nodes. The virtual environment is divided in 256 cells, which are grouped in 16 regions.
 
-%**
+%Para atacar o problema, os autores também subdividem o ambiente virtual em \textbf{células} -- semelhantes às microcélulas -- retangulares, sendo que o número de servidores é muito menor que o número de células. As células são agrupadas em \textbf{regiões} -- ou macrocélulas -- e cada região é gerenciada por um servidor. Cada servidor mantém atualizadas as informações de estado dos usuários e lida com as interações entre avatares na região a ele dedicada. Cada usuário envia e recebe atualizações de estado através do servidor que gerencia a região na qual ele está jogando. Duas células são ditas adjacentes (ou vizinhas) se elas compartilharem uma fronteira. Analogamente, duas regiões, e seus respectivos servidores, são ditos adjacentes se existir um par de células adjacentes, cada uma das quais pertencendo a uma das duas regiões.
+
+To tackle the problem, the authors also subdivided the virtual environment in rectangular \textbf{cells} -- similar to the microcells --, where the number of servers is much smaller than the number of cells. The cells are grouped into \textbf{regions} -- or macrocells -- and each region is managed by one server (Figure \ref{fig:macromicro}. Each server handles the interaction between avatars in the region dedicated to him. It receives the inputs of the players controlling these avatars and sends back to them the up-to-date game state. Two cells are called adjacent (or neighbors) if they share a border. Similarly, two regions, and the servers assigned to them, are called adjacent (neighbors) if there is a pair of adjacent cells, each of which belonging to one of the two regions.
+
 \begin{figure}
  \centering
- \includegraphics[width=0.8\textwidth]{images/LEE_leeA.jpg}
- \caption{Cells and regions in a distributed server system}
- \label{fig:leeA}
+ \includegraphics[width=0.6\textwidth]{images/macromicro}
+ \caption{Cell grouped into four regions (R$_\text{1}$, R$_\text{2}$, R$_\text{3}$ and R$_\text{4}$)}
+ \label{fig:macromicro}
 \end{figure}
+
+%**
+%\begin{figure}
+% \centering
+% \includegraphics[width=0.8\textwidth]{images/LEE_leeA.jpg}
+% \caption{Cells and regions in a distributed server system}
+% \label{fig:leeA}
+%\end{figure}
 
 %**
 The workload of a cell was defined as the number of avatars present in that cell. The authors assumed that all players receive state updates in the same frequency, so that the burden of processing (computing and communication) that a cell requires from a server is proportional to the number of users in that cell. The workload of a region and its designated server is defined as the sum of the individual workloads of the cells which form the region. Each server periodically evaluates its workload and exchange this information with its neighbors. They have assumed, too, that these servers are connected through a high-speed network. Thus, the overhead to exchange workload information among neighbors is limited and considered negligible compared to other costs of the distribution. For the same reason, they also assumed as negligible the overhead of communication between servers in different regions when players are interacting.
@@ -529,10 +540,16 @@ The criterion to choose a cell to include in the region is to make the heaviest 
 \label{fig:ggp}
 \end{figure}
 
-No exemplo da figura \ref{fig:ggp}, há dois servidores, $S_1$ e $S_2$, sendo que $p(S_1) = 30$ e $p(S_2) = 18$. A carga total do ambiente sendo reparticionado é $W_{total} = 32$. Para que a divisão seja proporcional à capacidade dos servidores, as parcelas de carga designadas a $S_1$ e $S_2$ são de 20 e 12, respectivamente. A seleção começa pelo vértice de peso 6 (célula livre com maior carga) e a partir daí, é adicionado a cada passo o vértice ligado pela aresta mais pesada. As arestas selecionadas e os vértices que pertencem à nova partição estão destacados.
+In the example of Figure \ref{fig:ggp}, there are two servers, $S_1$ and $S_2$, where $p(S_1) = 30$ and $p(S_2) = 18$. The total weight of the environment being repartitioned is $W_{total} = 32$. For the division to be proportional to the capacity of each server, the weights assigned to $S_1 $ and $S_2$ are 20 and 12, respectively. The selection starts with the vertex of weight 6 (free cell with the highest weight) and, after that, at each step the vertex connected by the heaviest edge is added to the partition. The selected edges and the vertices belonging to the new partition are highlighted.
 
-In the first step of the cycle starting in line \ref{alg:ggp:whilefraction}, if the region does not yet have any cell, \ggp\ gets the heaviest free cell (line \ref{alg:ggp:freeheavycell}). The same occurs when a region is compressed between the borders of other regions and has no free neighbor, getting cells from somewhere else. This may generate fragmented regions and possibly increase the overhead of the game. However, this happens more often in the last steps of the distribution, when most of the cells would be already allocated to some region. Because the algorithm is greedy, when it reaches that stage of its execution, the free cells would probably the lightest cells of the environment, causing little overhead.
+In the first step of the cycle starting in line \ref{alg:ggp:whilefraction}, if the region does not have any cell yet, \ggp\ gets the heaviest free cell (line \ref{alg:ggp:freeheavycell}). The same occurs when a region is compressed between the borders of other regions and has no free neighbor, getting cells from somewhere else (Figure \ref{fig:compressed}). This may generate fragmented regions and possibly increase the overhead of the game. However, this happens more often in the last steps of the distribution, when most of the cells would be already allocated to some region. Because the algorithm is greedy, when it reaches that stage of its execution, the free cells would probably the lightest cells of the environment, causing little overhead.
 
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{images/compressed}
+\caption{Formation of disconnected partition (fragmented region)}
+\label{fig:compressed}
+\end{figure}
 
 \subsubsection{\ggpk} %v3
 
