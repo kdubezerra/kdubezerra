@@ -3,10 +3,21 @@
 #include <vector>
 #include <list>
 
-#define MAX(A,B) A>B?A:B
-#define MIN(A,B) A<B?A:B
+//for some reason, these defines didn't work in a long expression
+//#define MAX(A,B) A>B?A:B
+//#define MIN(A,B) A<B?A:B
 
 using namespace std;
+
+double MAX(double A, double B) {
+  if (A>B) return A;
+  else return B;
+}
+
+double MIN(double A, double B) {
+  if (A<B) return A;
+  else return B;
+}
 
 typedef struct strseg {
   double xb, xu;
@@ -28,7 +39,7 @@ typedef struct strvertex {
     return (x < comparable_x);
   }
   
-  bool afterseg(segment s) { //vertex is situated before segment s (from left to right)
+  bool afterseg(segment s) { //vertex is situated after segment s (from left to right)
     double comparable_x;
     if (MIN(s.xb, s.xu) == s.xb) comparable_x = MIN(s.xb, s.xu) + y * (MAX(s.xb, s.xu) - MIN(s.xb, s.xu));
     else comparable_x = MIN(s.xb, s.xu) + (1-y) * (MAX(s.xb, s.xu) - MIN(s.xb, s.xu));
