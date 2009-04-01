@@ -1,0 +1,16 @@
+contribution/novelty: considera a carga como sendo o uso de largura de banda (interações entre avatares/jogadores), e considera um sistema heterogêneo (colocar essas duas coisas de forma que não pareça simples/antigo. destacar a relevância de considerar esses dois aspectos.)
+
+De Vleeschauwer:
+
+considera load como número de usuários
+não usa particionamento de grafo para fazer a divisão
+propõe um "greedy", que só pega as células mais pesadas e as aloca em um servidor tal que a sobrecarga maxima (a carga do servidor mais sobrecarregado) seja a menor possível
+	- não considera interações
+	- considera que o tráfego é linear
+clustering, para lidar com interações entre células
+	- não considera que um hotspot pode ser grande e acabar "merging clusters" que resultam em um cluster de microcells com carga excessivamente alta
+	- não considera heterogeneidade
+	- extremamente pobre, a abordagem
+	- não busca combinar a idéia de clusters de células altamente interdependentes com a restrição de ter uma carga máxima para cada servidor (clusters sem limite de peso pré-definido)
+
+
