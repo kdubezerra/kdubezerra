@@ -1,0 +1,7 @@
+each player interacts in the same way, i.e. it's avatar has the same area of interest, and the same level of influence on the avatars around his avatar
+
+the area of interest of a player is limited to its cell, and its cell's neighbors (mixed IM -> per cell, then per player {não citar [6] do lu2006lbm? mto velho?})
+
+
+
+
