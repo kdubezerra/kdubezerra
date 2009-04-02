@@ -16,4 +16,11 @@ De Vleeschauwer:
 		- boa idéia, que poderia ser feita de maneira melhor se fosse usado um algoritmo mais específico (como o k-l para otimização de partições em um grafo com redução 			de edge-cut)
 	
 
+Fengyun Lu:
+
+	considera um cluster.
+	each players is always connected to the same server, and this one will process its inputs, though it can forward the player's state to other cluster nodes.
+	the load balancing considers the load as the number of players in each cluster node.
+	the load balancing (NAT) simply distribute the players among cluster nodes in a round-robin manner.
+
 
