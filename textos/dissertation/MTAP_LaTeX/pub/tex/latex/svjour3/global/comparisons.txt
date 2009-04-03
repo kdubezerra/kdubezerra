@@ -1,4 +1,8 @@
-contribution/novelty: *considera a carga como sendo o uso de largura de banda* (interações entre avatares/jogadores), e considera um *sistema heterogêneo* (colocar essas duas coisas de forma que não pareça simples/antigo. destacar a relevância de considerar esses dois aspectos.)
+CITAR O Karypis!
+
+contribution/novelty: *considera a carga como sendo o uso de largura de banda* (interações entre avatares/jogadores), e considera um *sistema heterogêneo* (colocar essas duas coisas de forma que não pareça simples/antigo. destacar a relevância de considerar esses dois aspectos.) uso de um algoritmo de geração de partição que busca criar um baixo edge-cut já de início, em tempo v*n, onde v é o número de vizinhos de cada vértice. como o número de vizinhos é constante, tem-se complexidade O(n).
+
+verificar se todos os trabalhos anteriores ÑÃÕ consideram que o sistema deve estar uniformemente sobrecarregado. óbvio que isso vai depender do que se quer da aplicação (jogo específico)
 
 De Vleeschauwer:
 
@@ -22,5 +26,16 @@ Fengyun Lu:
 	each players is always connected to the same server, and this one will process its inputs, though it can forward the player's state to other cluster nodes.
 	the load balancing considers the load as the number of players in each cluster node.
 	the load balancing (NAT) simply distribute the players among cluster nodes in a round-robin manner.
+
+
+Jin Chen: (? simular com seu algoritmo original, e com o ajuste de considerar os thresholds dinamicamente [i.e. apenas modificar o algoritmo de fase 2 para ser o do chen?])
+*semelhante!*
+	é preciso chegar a um meio-termo entre "partition aggregation" e "load shedding"
+	usa a mesma abstração de grafos usadas pelo progrega
+	muito bom! porém considera que o SLA depende de um overload_threshold (e de um safe_threshold), which, in turn, depends solely on the number of players, not considering the different levels of interactions of players in different types of players distributions (i.e. whether they close to one another or distant from one another). the automatic definition of this threshold might be inadequate, considering that the same number of players may cause or not SLA violations in a server.
+	se um servidor está sobrecarregado, e os outros também, ele não distribui sua carga, mesmo que os outros estejam menos sobrecarregados que ele.
+	BFS para formar a partição do grafo
+	para fundir partições, a idéia também é boa, mas o algoritmo utilizado é o BFS, e não um algoritmo mais direcionado ao objetivo, como o GGP (karypis)
+
 
 

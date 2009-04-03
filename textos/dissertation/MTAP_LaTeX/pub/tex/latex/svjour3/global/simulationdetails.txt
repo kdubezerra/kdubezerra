@@ -2,6 +2,6 @@ each player interacts in the same way, i.e. it's avatar has the same area of int
 
 the area of interest of a player is limited to its cell, and its cell's neighbors (mixed IM -> per cell, then per player {não citar [6] do lu2006lbm? mto velho?})
 
+there is a tolerance for disbalance, avoiding constant disbalancing (perhaps I should hide this)
 
-
-
+future work: perform a lower level simulation, considering all traffic between servers and clients, including migration packets, message aggregation when sending state updates to a player etc.
