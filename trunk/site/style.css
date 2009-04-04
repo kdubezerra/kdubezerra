@@ -4,7 +4,7 @@
 } 
 
 body {
-background: #121212;
+background: #121212 url(images/bg.jpg) repeat-y scroll center top;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 12px;
 /*font-stretch: ultra-expanded;*/
@@ -67,12 +67,16 @@ color: #FAF391;
 padding-left: 12px;
 }
 
+.leftsidebar {
+  padding-top : 20px;
+  float : left ;
+  list-style: none;
+  width : 200px ;
+  height : 700px ;
+}
+
 .navigation { 
-padding-top: 20px;
-float : left ;
-list-style: none; 
-width: 200px;
-height: 700px;
+width: inherit;
 }
 .navigation ul { list-style-type: none; }
 .navigation li { 
