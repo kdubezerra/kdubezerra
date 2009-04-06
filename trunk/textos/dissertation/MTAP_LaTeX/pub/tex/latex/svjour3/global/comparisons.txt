@@ -1,8 +1,10 @@
 CITAR O Karypis!
 
-contribution/novelty: *considera a carga como sendo o uso de largura de banda* (interações entre avatares/jogadores), e considera um *sistema heterogêneo* (colocar essas duas coisas de forma que não pareça simples/antigo. destacar a relevância de considerar esses dois aspectos.) uso de um algoritmo de geração de partição que busca criar um baixo edge-cut já de início, em tempo v*n, onde v é o número de vizinhos de cada vértice. como o número de vizinhos é constante, tem-se complexidade O(n).
+contribution/novelty: *considera a carga como sendo o uso de largura de banda* (interações entre avatares/jogadores), e considera um *sistema heterogêneo* (colocar essas duas coisas de forma que não pareça simples/antigo. destacar a relevância de considerar esses dois aspectos.) uso de um algoritmo de geração de partição que busca criar um baixo edge-cut já de início, em tempo v*n, onde v é o número de vizinhos de cada vértice. como o número de vizinhos é constante, tem-se complexidade O(n). ALSO we try to handle widespread overload, and adapting the game quality to the number of players and to the overload of the system as a whole.
 
 verificar se todos os trabalhos anteriores ÑÃÕ consideram que o sistema deve estar uniformemente sobrecarregado. óbvio que isso vai depender do que se quer da aplicação (jogo específico)
+
+usually it does not handle widespread overload, for all of them require the whole system to be not overloaded for their algorithms to work
 
 De Vleeschauwer:
 
@@ -39,3 +41,21 @@ Jin Chen: (? simular com seu algoritmo original, e com o ajuste de considerar os
 
 
 
+Ta Nguyen Binh Duong e Suiping Zhou:
+
+	again the number of clients define the fucking load!
+	evaluation is simplified to homogeneous systems
+	the way they form a local group of server to share the load is a simples breadth-first lookup initiating at the OL'ed server. the lee (and ours) approach is much better, for it tries to find a "coldspot" in the virtual environment, prefferring servers with lower loads and its neighbors.
+	does not handle widespread overload
+	it is good in the sense that it tries to suppress the migration overhead[, which is not treated in our work]
+
+
+
+Ihab Kazem, Dewan Tanvir Ahmed, Shervin Shirmohammadi:
+
+	
+
+
+FUTURE WORK:
+
+our work did not go as deep in the programming level as others works did. in future works, we will try to make more detailed simulations, instead of analytical simulations based on our mathematical overload and overhead model.
