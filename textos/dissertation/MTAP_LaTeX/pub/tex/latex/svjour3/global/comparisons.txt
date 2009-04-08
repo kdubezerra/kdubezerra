@@ -51,7 +51,7 @@ Ta Nguyen Binh Duong e Suiping Zhou:
 
 
 
-Ihab Kazem, Dewan Tanvir Ahmed, Shervin Shirmohammadi:
+nao citar um trabalho que foi mal: Ihab Kazem, Dewan Tanvir Ahmed, Shervin Shirmohammadi:
 
 	usa ALM, which is good++
 	[o fato de a spanning tree de ALM se formar com quem está na zona não pode ser um problema, se jogadores entrarem e saírem com muita frequência? o ALM continua funcionando? ver artigo deles sobre a construção dessa architecture com ALM]
@@ -60,6 +60,10 @@ Ihab Kazem, Dewan Tanvir Ahmed, Shervin Shirmohammadi:
 	though a very detailed work has been done, the authors pre-calculate a maximum number N of players that may be added to the ALM tree, which is statically set to the maximum number of players a hybrid node can manage.
 	partitioning is static. once each zone is allocated to a server, this will not be changed. in a heterogenous server system, this may cause a less powerful server to manage a highly overloaded zone, even with the load shedding. also, the strategy of just reassigning some players in a hotspot to an adjacent hybrid node may, in some cases, not only not decrease the overload of that server, for the HN will still need to send some packets to these reassigned players, who are interested in their close peers in the OLed HN's zone, but also increase the overload on that server, for these packets will be send via unicast -- which happens when a HN sends to a FN --, instead of using the ALM. NOTICE, HOWEVER, that the overload of a zone may be due to the shape of the ALM tree, and not the server itself being overload. In that case -- when not the server, but only the zone's ALM tree is overpopulated --, this approach may work as expected. Thus, simulations are required to verify that behaviour.
 
+Ahmed MOL
+
+	the load is defined as a function of message generation rate, which is a much more realistic measure
+	it is a very realistic and detailed model, though it doesn't consider an heterogeneous system.
 
 FUTURE WORK:
 
