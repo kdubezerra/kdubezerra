@@ -109,9 +109,9 @@ class Region {
     static void getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain = NULL);
     static double getBalancingImprovement(Cell* c1, Cell* c2);
 
-    //REBALANCEAMENTO v1 :: pegar a região mais pesada e ir distribuindo suas células mais leves entre regiões tais que o ganho de balanceamento seja máximo.
-    //mas parece haver um problema nessa definição de ganho de balanceamento: é melhor dar a célula a uma região que se aproxime muito do peso ideal do que
-    //dar a uma região que tenha muitos recursos. Mas isso pode ser bom, porque primeiro entrega as células mais leves pros servidores mais fracos.
+    //REBALANCEAMENTO v1 :: pegar a regiï¿½o mais pesada e ir distribuindo suas cï¿½lulas mais leves entre regiï¿½es tais que o ganho de balanceamento seja mï¿½ximo.
+    //mas parece haver um problema nessa definiï¿½ï¿½o de ganho de balanceamento: ï¿½ melhor dar a cï¿½lula a uma regiï¿½o que se aproxime muito do peso ideal do que
+    //dar a uma regiï¿½o que tenha muitos recursos. Mas isso pode ser bom, porque primeiro entrega as cï¿½lulas mais leves pros servidores mais fracos.
 
     static void improveBalancing_kwise(list<Region*> &regionsToImproveBalancing, int passes = 100);
     static Region* improveBalancing_pairwise(Region* r1, Region* r2);
@@ -146,8 +146,9 @@ class Region {
     
     //REBALANCEAMENTO Ahmed and Shirmohammadi - AS
     
-    static void rebalance_as(list<Region*> regionsToRebalance);
+    void rebalance_as();
     static Region* getLightestRegion();
+    static Region* getLeastOverloadableRegion(Cell* c);
     list<Cell*> getSmallestCluster();
     Cell* getLessInteractingCell(list<Cell*> cluster);
     

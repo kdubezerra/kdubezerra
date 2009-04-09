@@ -162,6 +162,7 @@ int main (int argc, char* argv[]) {
 
       for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {
         (*it)->checkBalancing();
+//         cout << "Checkin Rebalance" << endl;
       }
       lastbal = time;//SDL_GetTicks();
     }
