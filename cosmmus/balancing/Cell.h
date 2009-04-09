@@ -117,6 +117,8 @@ class Cell {
     static void toggleShowEdgeWeight();
     static void setCellSurfaces (string vertex_weight_imgfile, string edge_weight_imgfile);    
     
+    list<Cell*> getCluster();
+    
   protected:
     
     Region* parentRegion;
@@ -132,4 +134,6 @@ class Cell {
     static bool showv, showe;
     static SDL_Surface* surface_vertex_weight;
     static SDL_Surface* surface_edge_weight;
+    
+    list<Cell*> getCluster(list<Cell*> alreadyTaken);
 };

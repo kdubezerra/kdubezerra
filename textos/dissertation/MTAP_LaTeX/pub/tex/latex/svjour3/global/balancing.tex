@@ -89,9 +89,7 @@
 %
 \begin{document}
 %[TODO:ajustar TODAS as \refs]
-\title{A load balancing scheme for MMOGs %\thanks{Grants or other notes
-%about the article that should go on the front page should be
-%placed here. General acknowledgments should be placed at the end of the article.}
+\title{A load balancing scheme for massively multiplayer onlne games \thanks{This work was supported by the National Research Council (CNPq) and by the Coordination of Improvement of Higher Education (CAPES), both brazilian research funding agencies.}
 }
 %\subtitle{Do you have a subtitle?\\ If so, write it here}
 
@@ -176,13 +174,13 @@ It is perceived, then, that each state will be sent twice for each pair of playe
 	
 Therefore, players who are interacting with each other should, ideally, be connected to the same server. However, it is possible that all players are linked through relations of interaction. For example, two avatars of two different players, may be distant from each other, but both could be interacting with a third avatar, between them. However, it is still necessary to divide the players among servers. The question is how many pairs of players and which of them will be divided into different server nodes. It is therefore necessary to decide a criterion to group players. Many works have been done in the past -- such as \cite{devleeschauwer2005dma,lu2006lbm,chen2005lad,duong2003dls,ahmed2008mol} --  trying to find a near optimal, yet fast, load balancing technique.
 
-In \cite{devleeschauwer2005dma}, for example, a few algorithms are proposed. Their idea is to transfer regions managed by an overloaded servers to  lightly loaded ones, in a way such that the maximum overload among the servers is reduced. Some very interesting principles are used, as the concepts of microcells and macrocells, but the authors' model is weak in some aspects. For instance, it considers the number of players as the load to distribute, heterogeneous systems are not supported, and the algorithm they use to refine an existing partitioning is too general (simulated annealing), considering that there are algorithms specific to partitioning, such as \cite{kernighan1970ehp} or \cite{fiduccia1982lth}, which may perform better. Finally, some of the algorithms proposed in \cite{devleeschauwer2005dma} do not consider the communication between servers.
+In \cite{devleeschauwer2005dma}, for example, a few algorithms are proposed. Their idea is to transfer regions managed by an overloaded servers to  lightly loaded ones, in a way such that the maximum overload among the servers is reduced. Some very interesting principles are used, as the concepts of microcells and macrocells, which will be described in the next section. However, their model has some differences to ours. For instance, they consider the number of players as the load to distribute, heterogeneous systems are not supported, and the algorithm they use to refine an existing partitioning is simulated annealing. This one may be a little too general, considering that there are algorithms specific to partitioning, such as \cite{kernighan1970ehp} or \cite{fiduccia1982lth}, which may perform better. Finally, some of the algorithms proposed in \cite{devleeschauwer2005dma} do not consider the communication between servers.
 
-It is proposed in \cite{lu2006lbm} a load balancing of cpu usage among the nodes of a cluster. The load balancing is done by an ``off the shelf'' NAT load balancer, which distributes the players' connections among the cluster nodes in a round-robin manner. Thus, each cluster node will end up with the same number of players, on the average. This approach, although it does balance the number of clients per cluster node, communication between the server nodes is not considered, for they are connected via a high-speed and low latency network.
+It is proposed in \cite{lu2006lbm} a load balancing of cpu usage among the nodes of a cluster. The load balancing is done by an ``off the shelf'' NAT load balancer, which distributes the players' connections among the cluster nodes in a round-robin manner. Thus, each cluster node will end up with the same number of players, on the average. This approach, although it does balance the number of clients per cluster node, communication between the server nodes is not considered, for they are connected via a high-speed and low latency network. Furthermore, in this work we are not concerned with cpu usage, but bandwidth occupation.%OK
 
+Chen et al. propose, in \cite{chen2005lad}, a load shedding technique, in which an overloaded server attempts do shed its load to its neighbors. After finding a lightly loaded neighbor server -- if there is one -- it transfers some of its boundary microcells to that neighbor. To form the group of microcells to transfer, a microcell from the border is chosen, and others are added in a breadth-first search (BFS) order. A very similar work, which also uses BFS, is described in \cite{duong2003dls}. However, these models present a few points which could be improved. For example, a server is considered overloaded when a certain number $N$ of players is reached. As we said before, this is not the best measure, since the load on a server may vary completely, depending on how these $N$ players are distributed across the region managed by the server. Also, the use of BFS to merge two partitions or split one of them may not be ideal. Some other algorithm for graph partitioning applied to distributed systems \cite{kernighan1970ehp,fiduccia1982lth,karypis1999fah,hendrickson1995isg} could be used, for most of these algorithms were designed exactly to balance load and minimize dependence between nodes.
 
-
-
+Ahmed and Shirmohammadi propose a microcell oriented load balancing model \cite{ahmed2008mol}. To balance the load, their algorithm, first, finds all clusters of microcells which are managed by the overloaded server. After that, the smallest cluster (in number of microcells) is selected and then, from that cluster, it is chosen the microcell with the lowest communication with other microcells managed by the same server. The chosen microcell is then transferred to the least loaded server. This process is repeated while the server is still overloaded and there are servers which can handle the extra load of the microcells being transferred. The authors define the load on a server, as opposed to other load balancing schemes, as the summing of the message rate of every player that a server must handle, which is a much more realistic measure than the number of players on the server. Also, their model for load balancing tries to minimize the inter-server communication, improving the overall system performance. Their model will be compared to ours, for it takes into consideration many of the aspects that we consider. The comparison will be performed through some simulations, which are described in section \ref{sec:simulations}.
 
 Next, some principles, defined in previous works, will be presented. Based on some of these principles, and on research and implementation carried out, it will be defined the load balancing scheme proposed here.
 
@@ -218,7 +216,7 @@ To achieve this goal, the authors also subdivided the virtual environment in rec
 \begin{figure}
  \centering
  \includegraphics[width=0.4\textwidth]{images/macromicro}
- \caption{Cells grouped into four regions (R$_\text{1}$, R$_\text{2}$, R$_\text{3}$ and R$_\text{4}$)}
+ \caption{Cells grouped into four regions (R$_1$, R$_2$, R$_3$ and R$_4$)}
  \label{fig:macromicro}
 \end{figure}
 
@@ -685,6 +683,7 @@ The Algorithm \ref{alg:kl} shows how the algorithm \kl\ is called.
 
 
 \section{Simulations and results}
+\label{sec:simulations}
 %definir cada caso da simulação e o porquê dele, em que influenciam os parametros e o que se quer tirar de conclusão
 %mostrar quais parametros foram fixados em cada caso, o seu valor e o porquê destes para destes parâmetros terem sido fixados
 %resultados: analisar, falar em ganhos em %, e buscar razões para estes ganhos/perdas.
@@ -797,6 +796,7 @@ Another possible future work is to create a load balancing scheme where there wi
 %\end{table}
 
 %\begin{acknowledgements}
+% FINEP and
 %If you'd like to thank anyone, place your comments here
 %and remove the percent signs.
 %\end{acknowledgements}

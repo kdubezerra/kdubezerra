@@ -143,6 +143,14 @@ class Region {
     Region* getLightestNeighbor(list<Region*> region_list);
     static Region* getHighestCapacityFreeRegion();
     void checkBalancing();
+    
+    //REBALANCEAMENTO Ahmed and Shirmohammadi - AS
+    
+    static void rebalance_as(list<Region*> regionsToRebalance);
+    static Region* getLightestRegion();
+    list<Cell*> getSmallestCluster();
+    Cell* getLessInteractingCell(list<Cell*> cluster);
+    
 
   protected:
     
