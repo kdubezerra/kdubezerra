@@ -119,7 +119,7 @@ void Region::setRegionCapacity(long cap) {
   regionCapacity = cap;
 }
 
-long Region::getRegionCapacity(void) {
+long Region::(void) {
   //return regionCapacity;
   return getServer()->getServerPower();
 }
@@ -943,4 +943,70 @@ void Region::sortRegionsByServerPower() {
 
 void Region::sortRegionsByServerPower(list<Region*> &region_list) {
   region_list.sort(Region::compareServerPower);
+}
+
+
+
+
+
+    //REBALANCEAMENTO Ahmed and Shirmohammadi - AS
+    
+void Region::rebalance_as(list<Region*> regionsToRebalance) {
+  
+  
+  
+}
+
+Region* Region::getLightestRegion() {
+  Region* lightest = regionList.begin();
+  long freePower = lightest->getRegionCapacity() - lightest->getRegionWeight();
+  long thisPower;
+  
+  for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
+    thisPower =  (*it)->getRegionCapacity() - (*it)->getRegionWeight();
+    if ( thisPower > freePower ) {
+     freePower = thisPower;
+     lightest = *it;
+   }
+  }
+  
+  return lightest;
+}
+
+list<Cell*> Region::getSmallestCluster() {
+  list<Cell*> cell_list = cells;
+  list<list<Cell*>> cluster_list;
+  
+  while (!cell_list.empty()) {
+    list<Cell*> cluster = cell_list.begin()->getCluster();
+    for (list<Cell*>::iterator it = cluster.begin() ; it != cluster.end() ; it++) {
+      cell_list.remove(*it);
+    }
+    cluster_list.push_back(cluster);
+  }
+  
+  
+  int smallest_number = 1000;
+  list<Cell*> smallest_cluster;
+  for (list<list<Cell*>>::iterator it = cluster_list.begin() ; it != cluster_list.end() ; it++) {
+    if (it->size() < smallest_number) {
+      smallest_number = it->size();
+      smallest_cluster = *it;
+    }
+  }
+  
+  return smallest_cluster;
+}
+    
+Cell* Region::getLessInteractingCell(list<Cell*> cluster) {
+  Cell* least_int_cell = cluster.begin();
+  long least_int = least_int_cell->getEWeightToSameRegion();
+  for (list<Cell*>::iterator it = cluster.begin() ; it != cluster.end() ; it++) {
+    if (it->getEWeightToSameRegion() < least_int) {
+      least_int = it->getEWeightToSameRegion();
+      least_int_cell = *it;
+    }
+  }
+  
+  return least_int_cell;
 }

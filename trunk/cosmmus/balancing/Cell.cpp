@@ -66,7 +66,7 @@ void Cell::updateVWeight() {
       weight += (long)(*it1)->OtherRelevance(*it2);    
     }
   vertexWeight = weight;
-  //somar com o peso de todas as arestas. (ou deixar assim porque È mais f·cil e costurar o resto do protÛtipo pra usar VWeight + EWeight como peso das cÈlulas)
+  //somar com o peso de todas as arestas. (ou deixar assim porque ÔøΩ mais fÔøΩcil e costurar o resto do protÔøΩtipo pra usar VWeight + EWeight como peso das cÔøΩlulas)
 }
 
 long Cell::getEWeight(short neighbor) {
@@ -177,7 +177,7 @@ void Cell::updateAllEdgesAndVertexWeights() {
       cellMatrix[i][j]->updateAllEdges();
       //worldWeight += cellMatrix[i][j]->getVWeight();
       //worldWeight += cellMatrix[i][j]->getAllEdgesWeight();
-      //TODO: esse aqui talvez n„o seja necess·rio, se corrigir o VWeight pra conter a interaÁ„o fora da cÈlula
+      //TODO: esse aqui talvez nÔøΩo seja necessÔøΩrio, se corrigir o VWeight pra conter a interaÔøΩÔøΩo fora da cÔøΩlula
       worldWeight += cellMatrix[i][j]->getCellWeight();
     }
 }
@@ -513,4 +513,37 @@ int Cell::getRowLength(void) {
 
 int Cell::getNumNeigh() {
   return NUM_NEIGH;
+}
+
+list<Cell*> Cell::getCluster() {
+  list<Cell*> cluster;
+  return getCluster(cluster);
+}
+
+list<Cell*> Cell::getCluster(list<Cell*> alreadyTaken) {
+  list<Cell*> taken = alreadyTaken;
+  taken.push_back(this);
+  Cell* _cell = NULL;
+  Region* parent = getParentRegion();
+  
+  for (short neigh = 0 ; neigh < 8 ; neigh++) {
+    _cell = getNeighbor(neigh)
+    if (_cell && _cell->getParentRegion() == parent) {
+      
+         // verificando se j√° est√° na lista de taken
+            containsCell = false;
+            for (list<Cell*>::iterator it = taken.begin() ; it != taken.end() ; it++)
+               if (*it == _cell)
+                  containsCell = true;
+         // fim verif.
+      
+      if (!containsCell) {
+        taken.merge(_cell->getCluster(taken));
+      }
+    }
+  }
+  
+  taken.sort();
+  taken.unique();
+  return taken;
 }
