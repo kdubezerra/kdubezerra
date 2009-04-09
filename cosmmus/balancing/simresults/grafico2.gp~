@@ -1,4 +1,4 @@
-set terminal postscript eps enhanced color solid lw 2 "Helvetica" 14
+set terminal postscript eps enhanced color solid lw 2 "Helvetica" 16
 
 set ylabel 'Migrations of players'
 set autoscale
