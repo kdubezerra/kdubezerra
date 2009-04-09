@@ -119,7 +119,7 @@ void Region::setRegionCapacity(long cap) {
   regionCapacity = cap;
 }
 
-long Region::(void) {
+long Region::getRegionCapacity(void) {
   //return regionCapacity;
   return getServer()->getServerPower();
 }
@@ -865,11 +865,13 @@ void Region::startLocalBalancing() {
   //Region::rebalance_bfbct(local_group); //best-fit allocation
   //Region::rebalance_progrega_kf(local_group); //progrega-kf
   //Region::rebalance_progrega_kh(local_group); //progrega-kh
-  Region::rebalance_progrega(local_group); //progrega
+  //Region::rebalance_progrega(local_group); //progrega
   //Region::improveBalancing_kwise(local_group);
+  //cout << "Now rebalancing with Ahmed-Shirmohammadi" << endl;
+  Region::rebalance_as();
   
   //K-L:
-  refineKL_kwise(local_group);
+  //refineKL_kwise(local_group);
 }
 
 Region* Region::getLightestNeighbor(list<Region*> region_list) {
@@ -910,8 +912,10 @@ void Region::checkBalancing() {
   if (!getServer()) return;
   double overload = (double)getRegionWeight() / (double)getServer()->getServerPower();
   double ideal_overload = (double)Cell::getWorldWeight() / (double)Server::getMultiserverPower();
-  if (overload > DISBAL_TOLERANCE && overload > ideal_overload * DISBAL_TOLERANCE)
+  if (overload > DISBAL_TOLERANCE && overload > ideal_overload * DISBAL_TOLERANCE) {
+//     cout << "Rebalancing region " << this << endl;
     startLocalBalancing();
+  }
 }
 
 void Region::getBestCellPair(Region* r1, Region* r2, Cell*& c1, Cell*& c2, long* gain) {
@@ -951,34 +955,48 @@ void Region::sortRegionsByServerPower(list<Region*> &region_list) {
 
     //REBALANCEAMENTO Ahmed and Shirmohammadi - AS
     
-void Region::rebalance_as(list<Region*> regionsToRebalance) {
-  
-  
+void Region::rebalance_as() {
+  double overload = (double)getRegionWeight() / (double)getServer()->getServerPower();
+  double ideal_overload = (double)Cell::getWorldWeight() / (double)Server::getMultiserverPower();
+
+  while (overload > DISBAL_TOLERANCE && overload > ideal_overload * DISBAL_TOLERANCE) {
+    overload = (double)getRegionWeight() / (double)getServer()->getServerPower();
+    Cell* migrating_cell = getLessInteractingCell(getSmallestCluster());
+    Region* destination = getLeastOverloadableRegion(migrating_cell);
+    if (!destination) return;
+    cout << "Found destination " << destination << " to cell " << migrating_cell << endl;
+    this->unsubscribe(migrating_cell);
+    destination->subscribe(migrating_cell);
+  }
   
 }
 
-Region* Region::getLightestRegion() {
-  Region* lightest = regionList.begin();
-  long freePower = lightest->getRegionCapacity() - lightest->getRegionWeight();
-  long thisPower;
+Region* Region::getLeastOverloadableRegion(Cell* c) {
+  long cell_weight = c->getCellWeight();
+  double parent_overload = (double) c->getParentRegion()->getRegionWeight() / (double) c->getParentRegion()->getRegionCapacity();
+  Region* leastol_region = NULL;
+  double smallest_overload = LONG_MAX;
+  double this_overload;
   
   for (list<Region*>::iterator it = regionList.begin() ; it != regionList.end() ; it++) {
-    thisPower =  (*it)->getRegionCapacity() - (*it)->getRegionWeight();
-    if ( thisPower > freePower ) {
-     freePower = thisPower;
-     lightest = *it;
-   }
+    if ((*it) == c->getParentRegion()) continue;
+    this_overload = (double)(*it)->getRegionWeight() + (double)cell_weight / (double)(*it)->getRegionCapacity();
+    if (this_overload < smallest_overload && this_overload < parent_overload) {
+      cout << "Found a non-overloadable region - " << *it << " - for cell " << c << endl;
+      smallest_overload = this_overload;
+      leastol_region = *it;
+    }
   }
   
-  return lightest;
+  return leastol_region;
 }
 
 list<Cell*> Region::getSmallestCluster() {
   list<Cell*> cell_list = cells;
-  list<list<Cell*>> cluster_list;
+  list< list<Cell*> > cluster_list;
   
   while (!cell_list.empty()) {
-    list<Cell*> cluster = cell_list.begin()->getCluster();
+    list<Cell*> cluster = (*(cell_list.begin()))->getCluster();
     for (list<Cell*>::iterator it = cluster.begin() ; it != cluster.end() ; it++) {
       cell_list.remove(*it);
     }
@@ -988,7 +1006,7 @@ list<Cell*> Region::getSmallestCluster() {
   
   int smallest_number = 1000;
   list<Cell*> smallest_cluster;
-  for (list<list<Cell*>>::iterator it = cluster_list.begin() ; it != cluster_list.end() ; it++) {
+  for (list< list<Cell*> >::iterator it = cluster_list.begin() ; it != cluster_list.end() ; it++) {
     if (it->size() < smallest_number) {
       smallest_number = it->size();
       smallest_cluster = *it;
@@ -999,11 +1017,11 @@ list<Cell*> Region::getSmallestCluster() {
 }
     
 Cell* Region::getLessInteractingCell(list<Cell*> cluster) {
-  Cell* least_int_cell = cluster.begin();
+  Cell* least_int_cell = *(cluster.begin());
   long least_int = least_int_cell->getEWeightToSameRegion();
   for (list<Cell*>::iterator it = cluster.begin() ; it != cluster.end() ; it++) {
-    if (it->getEWeightToSameRegion() < least_int) {
-      least_int = it->getEWeightToSameRegion();
+    if ((*it)->getEWeightToSameRegion() < least_int) {
+      least_int = (*it)->getEWeightToSameRegion();
       least_int_cell = *it;
     }
   }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <limits.h>
+
 #ifdef _WIN32
 #include <SDL.h>
 #include <SDL_ttf.h>

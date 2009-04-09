@@ -525,9 +525,9 @@ list<Cell*> Cell::getCluster(list<Cell*> alreadyTaken) {
   taken.push_back(this);
   Cell* _cell = NULL;
   Region* parent = getParentRegion();
-  
+  bool containsCell;  
   for (short neigh = 0 ; neigh < 8 ; neigh++) {
-    _cell = getNeighbor(neigh)
+    _cell = getNeighbor(neigh);
     if (_cell && _cell->getParentRegion() == parent) {
       
          // verificando se já está na lista de taken
@@ -538,7 +538,8 @@ list<Cell*> Cell::getCluster(list<Cell*> alreadyTaken) {
          // fim verif.
       
       if (!containsCell) {
-        taken.merge(_cell->getCluster(taken));
+        list<Cell*> _cluster = _cell->getCluster(taken);
+        taken.merge(_cluster);
       }
     }
   }
