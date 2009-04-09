@@ -982,10 +982,10 @@ Region* Region::getLeastOverloadableRegion(Cell* c) {
     if ((*it) == c->getParentRegion()) continue;
     this_overload = ((double)(*it)->getRegionWeight() + (double)cell_weight) / (double)(*it)->getRegionCapacity();
     if (this_overload < smallest_overload) {
-      cout << "Found a smaller overload <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-      cout << "this_overload = " << this_overload << " ; parent_overload = " << parent_overload << endl;
+//       cout << "Found a smaller overload <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+//       cout << "this_overload = " << this_overload << " ; parent_overload = " << parent_overload << endl;
       if (this_overload < parent_overload) {
-        cout << "Found a non-overloadable region - " << *it << " - for cell " << c << endl;
+//         cout << "Found a non-overloadable region - " << *it << " - for cell " << c << endl;
         smallest_overload = this_overload;
         leastol_region = *it;
       }

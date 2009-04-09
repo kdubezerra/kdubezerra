@@ -5,7 +5,7 @@ set xlabel 'Time (s)'
 #set ylabel 'Total de migra\347\365es de jogadores entre servidoers'
 set ylabel 'Total migrations of players between servers'
 set autoscale
-set xrange [100:1000]
+set xrange [100:1210]
 set yrange [10000:25000]
 set grid
 set key top right

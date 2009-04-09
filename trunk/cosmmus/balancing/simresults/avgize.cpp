@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 		long time;
 		double mw, ms, dev, ns, w[8], oh[8];
 		double amw = 0, ams = 0, adev = 0, ans = 0, aw[8] = {0,0,0,0,0,0,0,0}, aoh[8] = {0,0,0,0,0,0,0,0};
-		for (i = 0 ; i < 9 && !entrada.eof() ; i++) {
+		for (i = 0 ; i < 100 && !entrada.eof() ; i++) {
 			entrada >> time >> mw >> ms >> dev >> ns >> w[0] >> w[1] >> w[2] >> w[3] >> w[4] >> w[5] >> w[6] >> w[7] >> oh[0] >> oh[1] >> oh[2] >> oh[3] >> oh[4] >> oh[5] >> oh[6] >> oh[7];
 			amw += mw;
 			ams += ms;

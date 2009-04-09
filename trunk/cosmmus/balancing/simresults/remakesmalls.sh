@@ -4,6 +4,7 @@ g++ avgize.cpp -o avgize
 ./avgize progregakh_kl.data smallpkhkl.data
 ./avgize progregakf_kl.data smallpkfkl.data
 ./avgize bfa_kl.data smallbfakl.data
+./avgize ahmed.data smallahmed.data
 
 echo << "DONE"
 

@@ -964,7 +964,7 @@ void Region::rebalance_as() {
     Cell* migrating_cell = getLessInteractingCell(getSmallestCluster());
     Region* destination = getLeastOverloadableRegion(migrating_cell);
     if (!destination) return;
-    cout << "Found destination " << destination << " to cell " << migrating_cell << endl;
+//     cout << "Found destination " << destination << " to cell " << migrating_cell << endl;
     this->unsubscribe(migrating_cell);
     destination->subscribe(migrating_cell);
   }
