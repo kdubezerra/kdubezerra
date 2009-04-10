@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.4.10)  10 APR 2009 16:52
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.4.10)  10 APR 2009 17:24
 entering extended mode
  %&-line parsing enabled.
 **balancing.tex
@@ -337,11 +337,8 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 <images/baldeviation_ah.pdf, id=152, 361.35pt x 252.945pt>
 File: images/baldeviation_ah.pdf Graphic file (type pdf)
 
-<use images/baldeviation_ah.pdf>
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [23 <./images/balmigxtb_ah.pdf> <./images/baldeviation_ah.pdf>] (./balancing.b
-bl
+<use images/baldeviation_ah.pdf> [23 <./images/balmigxtb_ah.pdf>]
+(./balancing.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 17--20
 []\OT1/cmr/m/n/8 Feng, W.: What's Next for Net-worked Games? (2007).  Avail-abl
 e at:
@@ -352,7 +349,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[24]
+[24 <./images/baldeviation_ah.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 82--84
 []\OT1/cmr/m/n/8 Microsoft: Age of em-pires (1997).  Avail-able at:
  []
@@ -389,7 +386,7 @@ esky/cm/cmsy5.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy7.pfb></
 usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf-texl
 ive/fonts/type1/bluesky/cm/cmsy9.pfb></usr/share/texmf-texlive/fonts/type1/blue
 sky/cm/cmti9.pfb>
-Output written on balancing.pdf (25 pages, 591880 bytes).
+Output written on balancing.pdf (25 pages, 592423 bytes).
 PDF statistics:
  230 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
