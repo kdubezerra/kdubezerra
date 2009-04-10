@@ -7,7 +7,7 @@
 \newcommand{\ggpfmeaning}{proportional greedy region growing algorithm keeping usage fraction}
 \newcommand{\bfa}{BFBCT}
 \newcommand{\bfameaning}{best-fit based cell transference}
-\newcommand{\kl}{Kernighan\-Lin}
+\newcommand{\kl}{Kernighan-Lin}
 \newcommand{\klalg}{Kernighan-Lin}
 \newcommand{\wtodiv}{weight\_to\_divide}
 \newcommand{\freecap}{free\_capacity}
@@ -96,14 +96,14 @@
 %\titlerunning{Short form of title}        % if too long for running head
 
 \author{Carlos E. B. Bezerra         \and
-        Cláudio F. R. Geyer %etc.
+        Clï¿½udio F. R. Geyer %etc.
 }
 
 %\authorrunning{Short form of author list} % if too long for running head
 
-\institute{Carlos Eduardo Benevides Bezerra, Cláudio Fernando Resin Geyer \at
+\institute{Carlos Eduardo Benevides Bezerra, Clï¿½udio Fernando Resin Geyer \at
 							Universidade Federal do Rio Grande do Sul \\
-              Av. Bento Gonçalves, 9500, Porto Alegre, Brazil \\
+              Av. Bento Gonï¿½alves, 9500, Porto Alegre, Brazil \\
               Tel.: +55-51-84065986\\
               Fax.: +55-51-33087308\\
               \email{carlos.bezerra@inf.ufrgs.br, geyer@inf.ufrgs.br}           %  \\
@@ -421,9 +421,9 @@ Figure \ref{fig:mapping}(a) illustrates how the mapping is done with square cell
 \subsection{Proposed algorithms}
 \label{sec:alg}
 	
-It is considered that an initial division of the virtual environment has already been made. Each server should then check regularly if there is an imbalance and trigger the algorithm. While the overhead resulting from the distribution of virtual environment is part of the workload on servers, there is no way to know it beforehand without executing the repartitioning first. For this reason, the ``weight'' to be distributed does not include this extra overhead.
+It is considered that an initial division of the virtual environment has already been made. Each server should then check regularly if there is an imbalance and trigger the algorithm. Although the overhead resulting from the distribution of the virtual environment is part of the workload on servers, there is no way to know it beforehand without executing the repartitioning first. For this reason, the ``weight'' to be distributed does not include this extra overhead.
 
-When there is an unbalanced region, it is selected a local group of regions, similar to what was shown in section \ref{sec:local}, but with some changes (section \ref{sec:alg:localselect}). After this selection, it will be used an algorithm whose parameters are only the loads of the cells and their interactions, because such data is available. Finally, with the regions already balanced, they will be mapped on a graph and the algorithm of Kernighan and Lin \cite{kernighan1970ehp} will be used to refine the partitioning, reducing the edge-cut and, thus, the overhead, while keeping the balance.
+When there is an unbalanced region, it is selected a local group of regions, similar to what was shown in section \ref{sec:local}, but with some changes (section \ref{sec:alg:localselect}). After this selection, it will be used an algorithm whose parameters are only the loads of the cells and their interactions, for such data is available prior to distribute. Finally, with the regions already balanced, the algorithm of Kernighan and Lin \cite{kernighan1970ehp} will be used to refine the partitioning, reducing the edge-cut and, thus, the overhead, while keeping the balance.
 
 The proposed scheme is then divided into three phases:
 
@@ -440,7 +440,7 @@ A decision to this balancing scheme is that a region $R$ is considered overloade
 
 Another important aspect is that each server always has an associated region. What might happen would be a region being empty -- without any cells -- and its server not participating in the game. This is useful when the total capacity of the server system is much greater than the total load of the game, or $ P_{total} \gg W_{total}$. In this case, the introduction of more servers would only increase the communication overhead of the system, without improving its quality -- except when introduced to provide fault tolerance.
 
-The algorithms were developed oriented to regions, instead of servers, in order to be more legible, becaus of the constant transfers of cells. Moreover, it becomes easier to extend, in the future, the balancing model used here to allow more than one server managing the same region. The proposed algorithms are described as follows. The one in section \ref{sec:alg:localselect} is for phase 1, the sections \ref{sec:alg:ggp} to \ref{sec:alg:bfa} are alternatives for phase 2 and the algorithm in section \ref{sec:alg:kl} is the refinement of phase 3.
+The algorithms were developed oriented to regions, instead of servers, in order to be more legible, because of the constant transfers of cells. Moreover, it becomes easier to extend, in the future, the balancing model used here to allow more than one server managing the same region. The proposed algorithms are described as follows. The one in section \ref{sec:alg:localselect} is for phase 1, the sections \ref{sec:alg:ggp} to \ref{sec:alg:bfa} are alternatives for phase 2 and the algorithm in section \ref{sec:alg:kl} is the refinement of phase 3.
 
 \subsubsection{Local regions selection}
 \label{sec:alg:localselect}
@@ -519,7 +519,7 @@ In line \ref{alg:ggp:fraction}, it is calculated the weight share for each regio
 
 %A escolha de cï¿½lulas para incluir na regiï¿½o busca fazer com que cada uma das arestas mais pesadas do grafo $GW$ ligue vï¿½rtices da mesma partiï¿½ï¿½o, reduzindo o corte de aresta e, assim, o overhead. A cada passo ï¿½ dada preferï¿½ncia a escolher a cï¿½lula livre que nï¿½o apenas seja vizinha de uma cï¿½lula jï¿½ presente na regiï¿½o, mas tambï¿½m cuja aresta ligando-as seja a mais pesada possï¿½vel. A Figura \ref{fig:ggp} mostra um exemplo dos passos do crescimento de uma regiï¿½o atï¿½ atingir a sua parcela de carga no balanceamento.
 
-The criterion to choose a cell to include in the region is to make the heaviest edges on the graph $GW$ connect vertices in the same partition, reducing the edge-cut and, thus, the overhead. In each step, it is selected the cell which not only is adjacent to a cell already present in the region, but whose edge connecting them is the heaviest possible. Figure \ref{fig:ggp} illustrates the steps of growth of a region until it reaches its load share.
+The criterion to choose a cell to include in the region is to make the heaviest edges on the graph $GW$ connect vertices in the same partition, reducing the edge-cut and, thus, the overhead. In each step, it is selected the cell which not only is adjacent to a cell already present in the region, but whose edge connecting them is the heaviest possible. This algorithm is based on a principle similar to the one used in GGGP \cite{karypis1999fah}, a greedy algorithm for graph partitioning. The objective of GGGP is to split a graph in two partitions of the same weight, while reducing the edge-cut with the heaviest edge heuristics. Figure \ref{fig:ggp} illustrates the steps of growth of a region until it reaches its load share.
 
 %TODO: referenciar karypis e kumar, wow e outros jogos (eve-online, warhammer e cabal)
 \begin{figure}
@@ -542,7 +542,7 @@ In the first step of the cycle starting in line \ref{alg:ggp:whilefraction}, if 
 
 \subsubsection{\ggpk} %v3
 
-A possible undesirable effect of the \ggp\ algorithm is that by releasing all the cells and redistributing them, it might happen that one or more regions completely change their place, causing several players to disconnect from their servers and reconnect to a new one. To try to reduce the likelihood of such event, we propose a variation of the algoritgh, called, \textbf{\ggpk} (\ggpkmeaning). This new algorithm (shown in Algorithm \ref{alg:ggpk}) is similar to the original version, except that each region maintains its heaviest cell (lines \ref{alg:ggpk:saveheaviestcell} and \ref{alg:ggpk:getbackheaviestcell}), from which a region similar to the previous one can be formed, so that several players will not need to migrate to other server. However, to keep one of the cells of each region, it might be preventing a better balancing to occur. Also, the fixation of that cell might cause fragmented regions, increasing the overhead.
+A possible undesirable effect of the \ggp\ algorithm is that by releasing all the cells and redistributing them, it might happen that one or more regions completely change their place, causing several players to disconnect from their servers and reconnect to a new one. To try to reduce the likelihood of such event, we propose a variation of the algorithm, called \textbf{\ggpk} (\ggpkmeaning). This new algorithm (shown in Algorithm \ref{alg:ggpk}) is similar to the original version, except that each region maintains its heaviest cell (lines \ref{alg:ggpk:saveheaviestcell} and \ref{alg:ggpk:getbackheaviestcell}), from which a region similar to the previous one can be formed, so that several players will not need to migrate to other server. However, to keep one of the cells of each region, it might be preventing a better balancing to occur. Also, the fixation of that cell might cause fragmented regions, increasing the overhead.
 
 \begin{algorithm}
 %\renewcommand{\ALG}{Algoritmo}
@@ -576,7 +576,7 @@ A possible undesirable effect of the \ggp\ algorithm is that by releasing all th
 
 \subsubsection{\ggpf} %v4
 %[TODO: por desvantagens em outra seï¿½ï¿½o posteriores]
-Another way of trying to minimize the migration of players between servers because of the rebalancing is the \textbf{\ggpf}, or \ggpfmeaning\ (Algorithm \ref{alg:ggpf}). In this algorithm, each region will gradatively release its cells in increasing order of weight, until its weight fraction is less than or equal to the power fraction of its server. Thus, the heaviest cells remain on the same server and, therefore, most players do not need to migrate. After that, the cells that were released are redistributed among the regions with lowest server resource usage (line \ref{alg:ggpf:usageorder}). The disadvantage of this algorithm is, as in \ggpk\, the possibility of fragmenting the regions, with many isolated cells, increasing the overhead.
+Another way of trying to minimize the migration of players between servers because of the rebalancing is the \textbf{\ggpf}, or \ggpfmeaning\ (Algorithm \ref{alg:ggpf}). In this algorithm, each region will gradatively release its cells in increasing order of weight, until its weight fraction is less than or equal to the power fraction of its server. Thus, the heaviest cells remain on the same server and, therefore, most players do not need to migrate. After that, the cells that were released are redistributed among the regions with lowest server resource usage (line \ref{alg:ggpf:usageorder}). The disadvantage of this algorithm is, as in \ggpk, the possibility of fragmenting the regions, with many isolated cells, increasing the overhead.
 
 \begin{algorithm}
 \caption{\ggpf}
@@ -612,7 +612,7 @@ Another way of trying to minimize the migration of players between servers becau
 \subsubsection{\bfa} %v2
 \label{sec:alg:bfa}
 
-The \textbf{\bfa} (\bfameaning) is proposed here as an alternative to \ggp\ and its variants. The objective of the algorithm is to check what is the weight excess in each region and transfer it to free regions whose capacity is the closest to that value. This is done by transferring cells whose weight is the closest to free capacity of the receiving region, observed two restrictions: first, the total weight transferred can not be larger than the free capacity of the destination region and, second, we should not transfer a load greater than the necessary to eliminate the overload. The second restriction is justified because a weight transfer larger than necessary would probably result in a larger amount of migrating players. The exception to this rule is when a cell is heavier than the other, not for having more avatars, but because they are closer, with quadratic traffic growth between them. The Algorithm \ref{alg:bfa} describes in detail the operation of \bfa.
+The \textbf{\bfa} (\bfameaning) is proposed here as an alternative to \ggp\ and its variants. The objective of the algorithm is to check what is the weight excess in each region and transfer it to free regions whose capacity is the closest to that value. This is done by transferring cells whose weight is the closest to free capacity of the receiving region, observed two restrictions: first, the total weight transferred can not be larger than the free capacity of the destination region and, second, we should not transfer a load greater than the necessary to eliminate the overload. The second restriction is justified because a weight transfer larger than necessary would probably result in a larger amount of migrating players. The exception to this rule is when a cell is heavier than the other, not for having more avatars, but because they are closer, with quadratic traffic growth between them. Algorithm \ref{alg:bfa} describes in detail the operation of \bfa.
 
 
 \begin{algorithm}
@@ -678,7 +678,7 @@ The Algorithm \ref{alg:kl} shows how the algorithm \kl\ is called.
 		\STATE $swapped \leftarrow$ \textbf{false}
 		\FOR{each region $R_i$ in $\rlist$}
 			\FOR{each region $R_j$ in $\rlist$}
-				\IF{$\kl(R_i, R_j) =$ \textbf{true}}
+				\IF{$Kernighan$-$Lin(R_i, R_j) =$ \textbf{true}}
 					\STATE $swapped \leftarrow$ \textbf{true}
 				\ENDIF
 			\ENDFOR
