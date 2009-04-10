@@ -749,7 +749,7 @@ We can see that \ggp\ is the one which has fewer walk migrations, precisely beca
 The algorithm proposed by Ahmed had even less migrations than \ggpf. Though the number of walk migrations is the second highest -- as expected from a more fragmented partitioning --, the number of still migrations is almost negligible. We believe that a clever choice of cells to transfer led to this result. Cells which interact less with other cells will, probably, contain less avatars and, then, trasferring them will not cause many player migrations.
 
 % deviation
-Another detail to be considered is the uniformity of distribution: all servers must have a usage rate as similar as possible so that the distribution is considered fair. To measure this uniformity, the standard deviation, $\sigma$, was calculated for $u(S)$ of all servers for each simulated algorithm. Figure \ref{gra:baldeviation} shows the variation of $\sigma$ in time.
+Another detail to be considered is the uniformity of distribution: all servers must have an usage rate as similar as possible so that the distribution is considered fair. To measure this uniformity, the standard deviation, $\sigma$, was calculated for $u(S)$ of all servers for each simulated algorithm. Figure \ref{gra:baldeviation} shows the variation of $\sigma$ in time.
 
 \begin{figure}[!t]
   \centering
@@ -762,7 +762,7 @@ Even with the servers providing the largest variation in the rate of use of its 
 
 \section{Conclusions and future work}
 
-It was proposed here a load balancing scheme for distributed MMOGs servers, taking into account the use of upload bandwidth of the server nodes. We considered important aspects such as quadratic growth in traffic when the avatars are close to one another, and the distribution overhead when players connected to different servers are interacting. The scheme, which is divided into three phases, proposed different algorithms for phase 2 (the balancing phase), and the \ggp\ presented the lowest overhead of all, while \ggpf\ presented the fewest migrations of players between servers.
+It was proposed here a load balancing scheme for distributed MMOG servers, taking into account the use of upload bandwidth of the server nodes. We considered important aspects such as quadratic growth in traffic when the avatars are close to one another, and the distribution overhead when players connected to different servers are interacting. The scheme, which is divided into three phases, proposed different algorithms for phase 2 (the balancing phase), and the \ggp\ presented the lowest overhead of all, while \ggpf\ presented the fewest migrations of players between servers.
 
 As future work, the algorithms can be further refined, if the load balancing is considered for an average of the load in a period -- in the last minutes, for example -- rather than the instantaneous value. Thus, it would avoid unnecessary rebalancing that would be caused by an oscilating weight.
 
