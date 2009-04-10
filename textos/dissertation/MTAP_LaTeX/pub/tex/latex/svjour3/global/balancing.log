@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.1.21)  10 APR 2009 11:13
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.1.21)  10 APR 2009 12:23
 entering extended mode
  %&-line parsing enabled.
 **balancing.tex
@@ -219,12 +219,16 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 123.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 123.
-[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+<images/quadratic.pdf, id=1, 467.7475pt x 363.3575pt>
+File: images/quadratic.pdf Graphic file (type pdf)
+
+<use images/quadratic.pdf> [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
+}]
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/it' in size <9.5> not available
-(Font)              size <9> substituted on input line 146.
+(Font)              size <9> substituted on input line 153.
 
-<images/avatarsdistribution.pdf, id=11, 596.2275pt x 246.9225pt>
+<images/avatarsdistribution.pdf, id=12, 596.2275pt x 246.9225pt>
 File: images/avatarsdistribution.pdf Graphic file (type pdf)
 
 <use images/avatarsdistribution.pdf>
@@ -232,29 +236,30 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[2 <./images/avatarsdistribution.pdf>]
-<images/overheadgeneration.pdf, id=20, 582.175pt x 263.98625pt>
+[2 <./images/quadratic.pdf>]
+<images/overheadgeneration.pdf, id=21, 582.175pt x 263.98625pt>
 File: images/overheadgeneration.pdf Graphic file (type pdf)
 
-<use images/overheadgeneration.pdf> [3 <./images/overheadgeneration.pdf>]
+<use images/overheadgeneration.pdf> [3 <./images/avatarsdistribution.pdf> <./im
+ages/overheadgeneration.pdf>]
 Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[4] <images/macromicro.pdf, id=37, 533.995pt x 534.99875pt>
+[4] [5] <images/macromicro.pdf, id=44, 533.995pt x 534.99875pt>
 File: images/macromicro.pdf Graphic file (type pdf)
 
-<use images/macromicro.pdf> [5]
+<use images/macromicro.pdf>
 Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
 [6 <./images/macromicro.pdf>]
-<images/localselection.pdf, id=51, 700.6175pt x 999.735pt>
+<images/localselection.pdf, id=55, 700.6175pt x 999.735pt>
 File: images/localselection.pdf Graphic file (type pdf)
 
 <use images/localselection.pdf>
-Overfull \hbox (13.87767pt too wide) in paragraph at lines 238--239
+Overfull \hbox (13.87767pt too wide) in paragraph at lines 245--246
  [][] 
  []
 
@@ -268,39 +273,36 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[10] <images/interactingregions.pdf, id=74, 469.755pt x 464.73625pt>
+[10] <images/interactingregions.pdf, id=78, 469.755pt x 464.73625pt>
 File: images/interactingregions.pdf Graphic file (type pdf)
 
 <use images/interactingregions.pdf> [11]
-<images/mapping.pdf, id=79, 1310.8975pt x 750.805pt>
+<images/mapping.pdf, id=82, 1310.8975pt x 750.805pt>
 File: images/mapping.pdf Graphic file (type pdf)
  <use images/mapping.pdf>
 Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[12 <./images/interactingregions.pdf> <./images/mapping.pdf>] [13]
-Underfull \vbox (badness 2173) has occurred while \output is active []
-
-
+[12 <./images/interactingregions.pdf>] [13 <./images/mapping.pdf>]
 Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[14] <images/ggp.pdf, id=102, 565.11125pt x 791.95876pt>
+[14] [15] <images/ggp.pdf, id=109, 565.11125pt x 791.95876pt>
 File: images/ggp.pdf Graphic file (type pdf)
- <use images/ggp.pdf>
-[15]
+
+<use images/ggp.pdf>
 Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
 [16 <./images/ggp.pdf>]
-<images/compressed.pdf, id=112, 550.055pt x 422.57875pt>
+<images/compressed.pdf, id=116, 550.055pt x 422.57875pt>
 File: images/compressed.pdf Graphic file (type pdf)
 
 <use images/compressed.pdf> [17 <./images/compressed.pdf>]
-Underfull \hbox (badness 5147) in paragraph at lines 625--626
+Underfull \hbox (badness 5147) in paragraph at lines 632--633
 [] []$\OML/cmm/m/it/8 C \OMS/cmsy/m/n/8  $ \OT1/cmr/m/n/8 cell from $\OML/cmm/m
 /it/8 R[]$ \OT1/cmr/m/n/8 with weight clos-est to, but not larger than,
  []
@@ -310,27 +312,24 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[18]
-Underfull \vbox (badness 4954) has occurred while \output is active []
-
- [19]
-<images/baloverall_ah.pdf, id=126, 361.35pt x 252.945pt>
-File: images/baloverall_ah.pdf Graphic file (type pdf)
-
-<use images/baloverall_ah.pdf>
+[18] [19]
 Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[20] <images/baloverhead_ah.pdf, id=132, 361.35pt x 252.945pt>
+[20] <images/baloverall_ah.pdf, id=135, 361.35pt x 252.945pt>
+File: images/baloverall_ah.pdf Graphic file (type pdf)
+
+<use images/baloverall_ah.pdf> [21 <./images/baloverall_ah.pdf>]
+<images/baloverhead_ah.pdf, id=143, 361.35pt x 252.945pt>
 File: images/baloverhead_ah.pdf Graphic file (type pdf)
 
-<use images/baloverhead_ah.pdf> [21 <./images/baloverall_ah.pdf>]
-<images/balmigxtb_ah.pdf, id=140, 361.35pt x 252.945pt>
+<use images/baloverhead_ah.pdf>
+<images/balmigxtb_ah.pdf, id=144, 361.35pt x 252.945pt>
 File: images/balmigxtb_ah.pdf Graphic file (type pdf)
 
 <use images/balmigxtb_ah.pdf>
-<images/baldeviation_ah.pdf, id=141, 361.35pt x 252.945pt>
+<images/baldeviation_ah.pdf, id=145, 361.35pt x 252.945pt>
 File: images/baldeviation_ah.pdf Graphic file (type pdf)
 
 <use images/baldeviation_ah.pdf>
@@ -338,19 +337,11 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[22 <./images/baloverhead_ah.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [23 <./images/balmigxtb_ah.pdf> <./images/baldeviation_ah.pdf>] (./balancing.b
-bl
+[22 <./images/baloverhead_ah.pdf>] [23 <./images/balmigxtb_ah.pdf> <./images/ba
+ldeviation_ah.pdf>] (./balancing.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 17--20
 []\OT1/cmr/m/n/8 Feng, W.: What's Next for Net-worked Games? (2007).  Avail-abl
 e at:
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--84
-[]\OT1/cmr/m/n/8 Microsoft: Age of em-pires (1997).  Avail-able at:
  []
 
 
@@ -358,7 +349,12 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [][]
  []
 
-[24]) [25] (./balancing.aux)
+[24]
+Underfull \hbox (badness 10000) in paragraph at lines 82--84
+[]\OT1/cmr/m/n/8 Microsoft: Age of em-pires (1997).  Avail-able at:
+ []
+
+) [25] (./balancing.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
@@ -368,13 +364,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 1453 strings out of 94101
- 18228 string characters out of 1165810
+ 1459 strings out of 94101
+ 18355 string characters out of 1165810
  80954 words of memory out of 1500000
- 4733 multiletter control sequences out of 10000+50000
+ 4738 multiletter control sequences out of 10000+50000
  10391 words of font info for 36 fonts, out of 1200000 for 2000
  637 hyphenation exceptions out of 8191
- 25i,7n,20p,1273b,641s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 25i,8n,20p,1273b,641s stack positions out of 5000i,500n,6000p,200000b,5000s
 </usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbsy10.pfb></usr/share/texm
 f-texlive/fonts/type1/bluesky/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/typ
 e1/bluesky/cm/cmbx8.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmbx9.
@@ -390,9 +386,9 @@ esky/cm/cmsy5.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy7.pfb></
 usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy8.pfb></usr/share/texmf-texl
 ive/fonts/type1/bluesky/cm/cmsy9.pfb></usr/share/texmf-texlive/fonts/type1/blue
 sky/cm/cmti9.pfb>
-Output written on balancing.pdf (25 pages, 543480 bytes).
+Output written on balancing.pdf (25 pages, 590377 bytes).
 PDF statistics:
- 226 PDF objects out of 1000 (max. 8388607)
+ 230 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 61 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 66 words of extra memory for PDF output out of 10000 (max. 10000000)
 
