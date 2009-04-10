@@ -135,7 +135,7 @@ MMOGs are applications which require much network bandwidth to function properly
 
 
 
-The main characteristic of massively multiplayer games is the large number of players, having dozens, or even hundreds, of thousands of participants simultaneously \cite{schiele2007rpp}. This large number of players interacting with one another generates a traffic on the support network which may grow quadratically compared to the number of players, in the worst case (Figure \ref{fig:quadratic}).
+The main characteristic of massively multiplayer games is the large number of players, having dozens, or even hundreds, of thousands of participants simultaneously \cite{schiele2007rpp}. This large number of players interacting with one another generates a traffic on the support network which may grow quadratically compared to the number of players, in the worst case.
 
 \begin{figure}
   \centering
@@ -159,7 +159,9 @@ Normally, players can freely move their avatars throughout the game world. This 
   \label{fig:avatarsdistribution}
 \end{figure}
 
-For this reason, it is not enough just to divide the players between servers, even if this division is proportional to the resources of each one of them. First, in some cases the usage of the server's bandwidth is square to the number of players, while in others it is proportional. This reason alone is enough to define a new criterion for load balancing. Moreover, there is another important issue: the overhead of the distribution. As the servers need to communicate with one another, there must be a way to minimize this traffic, reducing the waste of resources of the server system. The load balancing scheme for MMOGs must, then, prevent the presence of hotspots from degrading the quality of the game beyond a tolerable limit.
+For this reason, it is not enough just to divide the players between servers, even if this division is proportional to the resources of each one of them. First, in some cases the usage of the server's bandwidth may be square to the number of players, while in others it may be linear. It is shown in \cite{chen2006gta} that, in a group of avatars who are neighbors of one another, the rate of packets sent to each player is proportional to the number of avatars in that group (Figure \ref{fig:quadratic}). This reason alone is enough to define a new criterion for load balancing.
+
+Moreover, there is another important issue: the overhead of the distribution. As the servers need to communicate with one another, there must be a way to minimize this traffic, reducing the waste of resources of the server system. The load balancing scheme for MMOGs must, then, prevent the presence of hotspots from degrading the quality of the game beyond a tolerable limit.
 
 
 
