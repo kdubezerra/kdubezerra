@@ -746,10 +746,10 @@ However, the introduction of overhead is not the only criterion considered. Fig.
 	
 We can see that \ggp\ is the one which has fewer walk migrations, precisely because their regions are contiguous. However, the fact of not trying to minimize the transfer of cells -- the \ggp\ main objective is to minimize the overhead -- the number of migrations is still the largest of all its variations, lower only than \bfa, which was also the worst algorithm on the user migration criterion. The strategy of \ggpk, and more strongly in the \ggpf, to maintain the maximum possible number of cells when rebalancing, has as a result the lowest numbers of migration of players of all the proposed algorithms.
 
-The algorithm proposed by Ahmed had even less migrations than \ggpf. Though the number of walk migrations is the second highest -- as expected from a more fragmented partitioning --, the number of still migrations is almost negligible
+The algorithm proposed by Ahmed had even less migrations than \ggpf. Though the number of walk migrations is the second highest -- as expected from a more fragmented partitioning --, the number of still migrations is almost negligible. We believe that a clever choice of cells to transfer led to this result. Cells which interact less with other cells will, probably, contain less avatars and, then, trasferring them will not cause many player migrations.
 
 % deviation
-Another detail to be considered is the uniformity of distribution: all servers must have a usage rate as similar as possible so that the distribution is considered fair. To measure this uniformity, the standard deviation, $\sigma$, was calculated for $u(S)$ of all servers for each simulated algorithm. Figure \ref{gra:baldeviation} shows the variation of $\sigma$ in time.
+Another detail to be considered is the uniformity of distribution: all servers must have an usage rate as similar as possible so that the distribution is considered fair. To measure this uniformity, the standard deviation, $\sigma$, was calculated for $u(S)$ of all servers for each simulated algorithm. Figure \ref{gra:baldeviation} shows the variation of $\sigma$ in time.
 
 \begin{figure}[!t]
   \centering
