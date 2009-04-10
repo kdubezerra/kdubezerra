@@ -764,11 +764,10 @@ Although the servers presented the largest variation in the resources usage rate
 
 \section{Conclusions and future work}
 
-It was proposed here a load balancing scheme for distributed MMOG servers, taking into account the use of upload bandwidth of the server nodes. We considered important aspects such as quadratic growth in traffic when the avatars are close to one another, and the distribution overhead when players connected to different servers are interacting. The scheme, which is divided into three phases, proposed different algorithms for phase 2 (the balancing phase), and the \ggp\ presented the lowest overhead of all, while \ggpf\ presented the fewest migrations of players between servers.
+It was proposed here a load balancing scheme for distributed MMOG servers, taking into account the use of upload bandwidth of the server nodes. We considered important aspects such as the quadratic growth of the traffic when the avatars are close to one another, and the distribution overhead when players connected to different servers are interacting. The scheme, which is divided into three phases, proposed different algorithms for phase 2 (the balancing phase), and \ggp\ presented the lowest overhead of all, while \ggpf\ presented the second fewest migrations of players between servers, along with the second lower overhead introduced and a fair load distribution. For this reason, we recommend the use of \ggpf\ for most cases. However, in some situations where the system load must be reduced as much as possible, \ggp\ would perform better.
 
-As future work, the algorithms can be further refined, if the load balancing is considered for an average of the load in a period -- in the last minutes, for example -- rather than the instantaneous value. Thus, it would avoid unnecessary rebalancing that would be caused by an oscilating weight.
-
-Another possible future work is to create a load balancing scheme where there will be not only one server node, but a group of server nodes in each region. In this case, it can be investigated ways to balance the load of the system, considering this two-level distribution.
+As a future work, %the algorithms can be further refined, if the load balancing is considered for an average of the load in a period -- in the last minutes, for example -- rather than the instantaneous value. Thus, it would avoid unnecessary rebalancing that would be caused by an oscilating weight. Another possible future work is to 
+one could create a load balancing scheme where there will be not only one server node, but a group of server nodes managing each region. In this case, ways to balance the load on the system, considering this two-level distribution, may be investigated.
 
 %\paragraph{Paragraph headings} Use paragraph headings as needed.
 %\begin{equation}
