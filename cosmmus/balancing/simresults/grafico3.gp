@@ -1,7 +1,7 @@
 set terminal postscript eps enhanced color solid lw 2 "Helvetica" 18
 #set title 'title'
 set xlabel 'Time (s)'
-set ylabel 'Mean usage deviation'
+set ylabel 'Mean usage deviation - {/Symbol s}(u(S))'
 #set xtics auto
 #set ytics auto
 set autoscale
