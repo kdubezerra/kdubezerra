@@ -6,7 +6,7 @@ set ylabel 'Mean usage deviation'
 #set ytics auto
 set autoscale
 #set xtics (25,50,75,100,125,150,175,200)
-set xrange [80:1000]
+set xrange [80:1210]
 set yrange [0.1:0.65]
 set grid
 set key top right

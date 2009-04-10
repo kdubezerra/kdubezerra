@@ -1,0 +1,105 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{DOI~\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{DOI~\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem{schiele2007rpp}
+Schiele, G., et~al.: {Requirements of Peer-to-Peer-based Massively Multiplayer
+  Online Gaming}.
+\newblock In: Proceedings of the IEEE International Symposium on Cluster
+  Computing and the Grid, CCGRID, 7., pp. 773--782. Washington, DC: IEEE, Rio
+  de Janeiro (2007)
+
+\bibitem{feng2007wnn}
+Feng, W.: {What's Next for Networked Games?} (2007).
+\newblock \misccite{2007}{http://www.thefengs.com/wuchang/work/}. (NetGames
+  2007 keynote talk, nov. 2007)
+
+\bibitem{ahmed2008mol}
+Ahmed, D., Shirmohammadi, S.: {A Microcell Oriented Load Balancing Model for
+  Collaborative Virtual Environments}.
+\newblock In: Proceedings of the IEEE Conference on Virtual Environments,
+  Human-Computer Interfaces and Measurement Systems, VECIMS, pp. 86--91.
+  Piscataway, NJ: IEEE, Istanbul, Turkey (2008)
+
+\bibitem{devleeschauwer2005dma}
+De~Vleeschau{\-}wer, B., et~al.: {Dynamic microcell assignment for massively
+  multiplayer online gaming}.
+\newblock In: Proceedings of the ACM SIGCOMM workshop on Network and system
+  support for games, NetGames, 4., pp. 1--7. New York: ACM, Hawthorne, NY
+  (2005)
+
+\bibitem{lu2006lbm}
+Lu, F., Parkin, S., Morgan, G.: {Load balancing for massively multiplayer
+  online games}.
+\newblock In: Proceedings of the 5th ACM SIGCOMM workshop on Network and system
+  support for games. ACM New York, NY, USA (2006)
+
+\bibitem{chen2005lad}
+Chen, J., Wu, B., Delap, M., Knutsson, B., Lu, H., Amza, C.: {Locality aware
+  dynamic load management for massively multiplayer games}.
+\newblock In: Proceedings of the 10th ACM SIGPLAN symposium on Principles and
+  practice of parallel programming, pp. 289--300. ACM New York, NY, USA (2005)
+
+\bibitem{duong2003dls}
+Duong, T., Zhou, S.: {A dynamic load sharing algorithm for massively
+  multiplayer online games}.
+\newblock In: Proceedings of the 11th IEEE International Conference on
+  Networks, pp. 131--136
+
+\bibitem{kernighan1970ehp}
+Kernighan, B., Lin, S.: {An efficient heuristic procedure for partitioning
+  graphs}.
+\newblock Bell System Technical Journal \textbf{49}(2), 291--307 (1970)
+
+\bibitem{fiduccia1982lth}
+Fiduccia, C., Mattheyses, R.: {A Linear-Time Heuristic for Improving Network
+  Partitions}.
+\newblock In: Proceedings of the Conference on Design Automation, 19., pp.
+  175--181. New York: ACM, Las Vegas, NV (1982)
+
+\bibitem{karypis1999fah}
+Karypis, G., Kumar, V.: {A Fast and High Quality Multilevel Scheme for
+  Partitioning Irregular Graphs}.
+\newblock SIAM Journal on Scientific Computing \textbf{20}(1), 359--392 (1998)
+
+\bibitem{hendrickson1995isg}
+Hendrickson, B., Leland, R.: {An Improved Spectral Graph Partitioning Algorithm
+  for Mapping Parallel Computations}.
+\newblock SIAM Journal on Scientific Computing \textbf{16}(2), 452--452 (1995)
+
+\bibitem{lee2003sdl}
+Lee, K., Lee, D.: {A scalable dynamic load distribution scheme for multi-server
+  distributed virtual environment systems with highly-skewed user
+  distribution}.
+\newblock In: Proceedings of the ACM symposium on Virtual reality software and
+  technology, pp. 160--168. New York: ACM, Osaka, Japan (2003)
+
+\bibitem{ageofempires}
+Microsoft: Age of empires (1997).
+\newblock \gamecite{1997}{http://www.microsoft.com/games/empires/}
+
+\bibitem{bezerra2008a3}
+Bezerra, C.E.B., Cecin, F.R., Geyer, C.F.R.: A3: a novel interest management
+  algorithm for distributed simulations of mmogs.
+\newblock In: Proceedings of the IEEE/ACM International Symposium on
+  Distributed Simulation and Real-Time Applications, DS-RT, 12., pp. 35--42.
+  Washington, DC: IEEE, Vancouver, Canada (2008)
+
+\bibitem{feder1999cgp}
+Feder, T., et~al.: {Complexity of graph partition problems}.
+\newblock In: Proceedings of the ACM Symposium on Theory of Computing, STOC,
+  31., pp. 464--472. New York: ACM, Atlanta, GA (1999)
+
+\bibitem{bettstetter2004spr}
+Bettstetter, C., Hartenstein, H., P{\'e}rez-Costa, X.: {Stochastic Properties
+  of the Random Waypoint Mobility Model: epoch length, direction distribution,
+  and cell change rate}.
+\newblock In: Proceedings of the ACM international workshop on Modeling
+  analysis and simulation of wireless and mobile systems, 5., pp. 7--14. New
+  York: ACM, Atlanta, GA (2002)
+
+\end{thebibliography}

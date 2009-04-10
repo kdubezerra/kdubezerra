@@ -89,7 +89,7 @@
 %
 \begin{document}
 %[TODO:ajustar TODAS as \refs]
-\title{A load balancing scheme for massively multiplayer online games \thanks{This work was supported by the National Research Council (CNPq) and by the Coordination of Improvement of Higher Education (CAPES), both brazilian research funding agencies.}
+\title{A load balancing scheme for massively multiplayer onlne games \thanks{This work was supported by the National Research Council (CNPq) and by the Coordination of Improvement of Higher Education (CAPES), both brazilian research funding agencies.}
 }
 %\subtitle{Do you have a subtitle?\\ If so, write it here}
 
