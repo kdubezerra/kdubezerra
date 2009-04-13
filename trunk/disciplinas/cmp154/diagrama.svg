@@ -1,0 +1,2138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="diagrama.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="307.50548"
+     inkscape:cy="772.28923"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1440"
+     inkscape:window-height="816"
+     inkscape:window-x="0"
+     inkscape:window-y="34" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Camada 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g6280"
+       transform="matrix(0.877165,0,0,0.877165,470.9527,185.50836)">
+      <g
+         id="g4515">
+        <g
+           id="g4440">
+          <rect
+             y="-142.53383"
+             x="-514.56567"
+             height="474.86301"
+             width="246.29158"
+             id="rect3648"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             id="text3650"
+             y="-126.35285"
+             x="-511.22391"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               y="-126.35285"
+               x="-511.22391"
+               id="tspan3652"
+               sodipodi:role="line">SPARC - Sun UltraSPARC T2</tspan></text>
+        </g>
+        <g
+           id="g4445"
+           transform="translate(0.8289871,0.498909)">
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="234.42133"
+             x="-501.24887"
+             height="28"
+             width="98"
+             id="rect2383" />
+          <rect
+             id="rect3159"
+             width="98"
+             height="98"
+             x="-501.24887"
+             y="136.37444"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="136.37444"
+             x="-501.24887"
+             height="98"
+             width="98"
+             id="rect3169" />
+          <text
+             id="text3243"
+             y="191.36295"
+             x="-470.23764"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             xml:space="preserve"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="191.36295"
+               x="-470.23764"
+               id="tspan3245"
+               sodipodi:role="line">Core</tspan></text>
+          <text
+             id="text3247"
+             y="252.78217"
+             x="-475.68442"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="252.78217"
+               x="-475.68442"
+               id="tspan3249"
+               sodipodi:role="line">Cache L1</tspan></text>
+          <rect
+             id="rect3215"
+             width="98"
+             height="28"
+             x="-501.24887"
+             y="262.42087"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-475.6749"
+             y="280.78168"
+             id="text3251"><tspan
+               sodipodi:role="line"
+               id="tspan3253"
+               x="-475.6749"
+               y="280.78168"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="290.42084"
+             x="-501.24887"
+             height="28"
+             width="98"
+             id="rect3306" />
+          <text
+             id="text3308"
+             y="308.78168"
+             x="-475.64316"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="308.78168"
+               x="-475.64316"
+               id="tspan3310"
+               sodipodi:role="line">Cache L3</tspan></text>
+          <rect
+             id="rect3410"
+             width="98"
+             height="28"
+             x="-381.24887"
+             y="234.42133"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="136.37444"
+             x="-381.24887"
+             height="98"
+             width="98"
+             id="rect3412" />
+          <rect
+             id="rect3414"
+             width="98"
+             height="98"
+             x="-381.24887"
+             y="136.37444"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             x="-350.23764"
+             y="21.362984"
+             id="text3416"><tspan
+               sodipodi:role="line"
+               id="tspan3418"
+               x="-350.23764"
+               y="21.362984"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-355.68442"
+             y="252.78217"
+             id="text3420"><tspan
+               sodipodi:role="line"
+               id="tspan3422"
+               x="-355.68442"
+               y="252.78217"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="262.42087"
+             x="-381.24887"
+             height="28"
+             width="98"
+             id="rect3426" />
+          <text
+             id="text3428"
+             y="280.78168"
+             x="-355.6749"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="280.78168"
+               x="-355.6749"
+               id="tspan3430"
+               sodipodi:role="line">Cache L2</tspan></text>
+          <rect
+             id="rect3432"
+             width="98"
+             height="28"
+             x="-381.24887"
+             y="290.42084"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-355.64316"
+             y="308.78168"
+             id="text3434"><tspan
+               sodipodi:role="line"
+               id="tspan3436"
+               x="-355.64316"
+               y="308.78168"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L3</tspan></text>
+          <g
+             id="g4371">
+            <path
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M -473.56615,99.773099 L -310.93159,99.773099"
+               id="path3442" />
+            <path
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M -311.64587,98.778179 L -311.64587,135.64874"
+               id="path3506" />
+            <path
+               id="path3508"
+               d="M -472.65603,98.778179 L -472.65603,135.64874"
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          </g>
+          <text
+             id="text3547"
+             y="97.686806"
+             x="-421.57504"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:12px"
+               y="97.686806"
+               x="-421.57504"
+               id="tspan3549"
+               sodipodi:role="line">Barramento</tspan></text>
+          <g
+             transform="matrix(-1,0,0,-1,-784.2452,199.54298)"
+             id="g4376">
+            <path
+               id="path4378"
+               d="M -473.56615,99.773099 L -310.93159,99.773099"
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <path
+               id="path4380"
+               d="M -311.64587,98.778179 L -311.64587,135.64874"
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <path
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M -472.65603,98.778179 L -472.65603,135.64874"
+               id="path4382" />
+          </g>
+          <rect
+             id="rect4384"
+             width="98"
+             height="98"
+             x="-501.24887"
+             y="-33.625542"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-33.625542"
+             x="-381.24887"
+             height="98"
+             width="98"
+             id="rect4386" />
+          <rect
+             id="rect4388"
+             width="98"
+             height="28"
+             x="-501.24887"
+             y="-117.62331"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-475.68442"
+             y="-99.262444"
+             id="text4390"><tspan
+               sodipodi:role="line"
+               id="tspan4392"
+               x="-475.68442"
+               y="-99.262444"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L3</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-89.623749"
+             x="-501.24887"
+             height="28"
+             width="98"
+             id="rect4394" />
+          <text
+             id="text4396"
+             y="-71.262939"
+             x="-475.6749"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="-71.262939"
+               x="-475.6749"
+               id="tspan4398"
+               sodipodi:role="line">Cache L2</tspan></text>
+          <rect
+             id="rect4400"
+             width="98"
+             height="28"
+             x="-501.24887"
+             y="-61.623825"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-475.64316"
+             y="-43.262985"
+             id="text4402"><tspan
+               sodipodi:role="line"
+               id="tspan4404"
+               x="-475.64316"
+               y="-43.262985"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-117.62331"
+             x="-381.24887"
+             height="28"
+             width="98"
+             id="rect4406" />
+          <text
+             id="text4408"
+             y="-99.262444"
+             x="-355.68442"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="-99.262444"
+               x="-355.68442"
+               id="tspan4410"
+               sodipodi:role="line">Cache L3</tspan></text>
+          <rect
+             id="rect4412"
+             width="98"
+             height="28"
+             x="-381.24887"
+             y="-89.623749"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-355.6749"
+             y="-71.262939"
+             id="text4414"><tspan
+               sodipodi:role="line"
+               id="tspan4416"
+               x="-355.6749"
+               y="-71.262939"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-61.623825"
+             x="-381.24887"
+             height="28"
+             width="98"
+             id="rect4418" />
+          <text
+             id="text4420"
+             y="-43.262985"
+             x="-355.64316"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="-43.262985"
+               x="-355.64316"
+               id="tspan4422"
+               sodipodi:role="line">Cache L1</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             x="-470.23764"
+             y="21.362984"
+             id="text4424"><tspan
+               sodipodi:role="line"
+               id="tspan4426"
+               x="-470.23764"
+               y="21.362984"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+          <text
+             id="text4428"
+             y="191.36296"
+             x="-350.23764"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             xml:space="preserve"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="191.36296"
+               x="-350.23764"
+               id="tspan4430"
+               sodipodi:role="line">Core</tspan></text>
+        </g>
+      </g>
+      <g
+         transform="translate(276.42858,0)"
+         id="g4582">
+        <g
+           id="g4584">
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="rect4586"
+             width="246.29158"
+             height="474.86301"
+             x="-514.56567"
+             y="-142.53383" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-511.22391"
+             y="-126.35285"
+             id="text4588"><tspan
+               sodipodi:role="line"
+               id="tspan4590"
+               x="-511.22391"
+               y="-126.35285">x86 - intel Core 2 Quad</tspan></text>
+        </g>
+        <g
+           transform="translate(0.8289871,0.498909)"
+           id="g4592">
+          <rect
+             id="rect4594"
+             width="98"
+             height="28"
+             x="-501.24887"
+             y="234.42133"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="136.37444"
+             x="-501.24887"
+             height="98"
+             width="98"
+             id="rect4596" />
+          <rect
+             id="rect4598"
+             width="98"
+             height="98"
+             x="-501.24887"
+             y="136.37444"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             x="-470.23764"
+             y="191.36295"
+             id="text4600"><tspan
+               sodipodi:role="line"
+               id="tspan4602"
+               x="-470.23764"
+               y="191.36295"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-475.68442"
+             y="252.78217"
+             id="text4604"><tspan
+               sodipodi:role="line"
+               id="tspan4606"
+               x="-475.68442"
+               y="252.78217"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="262.42087"
+             x="-501.24887"
+             height="28"
+             width="98"
+             id="rect4608" />
+          <text
+             id="text4610"
+             y="280.78168"
+             x="-475.6749"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="280.78168"
+               x="-475.6749"
+               id="tspan4612"
+               sodipodi:role="line">Cache L2</tspan></text>
+          <rect
+             id="rect4614"
+             width="98"
+             height="28"
+             x="-501.24887"
+             y="290.42084"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-475.64316"
+             y="308.78168"
+             id="text4616"><tspan
+               sodipodi:role="line"
+               id="tspan4618"
+               x="-475.64316"
+               y="308.78168"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L3</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="234.42133"
+             x="-381.24887"
+             height="28"
+             width="98"
+             id="rect4620" />
+          <rect
+             id="rect4622"
+             width="98"
+             height="98"
+             x="-381.24887"
+             y="136.37444"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="136.37444"
+             x="-381.24887"
+             height="98"
+             width="98"
+             id="rect4624" />
+          <text
+             id="text4626"
+             y="21.362984"
+             x="-350.23764"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             xml:space="preserve"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="21.362984"
+               x="-350.23764"
+               id="tspan4628"
+               sodipodi:role="line">Core</tspan></text>
+          <text
+             id="text4630"
+             y="252.78217"
+             x="-355.68442"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="252.78217"
+               x="-355.68442"
+               id="tspan4632"
+               sodipodi:role="line">Cache L1</tspan></text>
+          <rect
+             id="rect4634"
+             width="98"
+             height="28"
+             x="-381.24887"
+             y="262.42087"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-355.6749"
+             y="280.78168"
+             id="text4636"><tspan
+               sodipodi:role="line"
+               id="tspan4638"
+               x="-355.6749"
+               y="280.78168"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="290.42084"
+             x="-381.24887"
+             height="28"
+             width="98"
+             id="rect4640" />
+          <text
+             id="text4642"
+             y="308.78168"
+             x="-355.64316"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="308.78168"
+               x="-355.64316"
+               id="tspan4644"
+               sodipodi:role="line">Cache L3</tspan></text>
+          <g
+             id="g4646">
+            <path
+               id="path4648"
+               d="M -473.56615,99.773099 L -310.93159,99.773099"
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <path
+               id="path4650"
+               d="M -311.64587,98.778179 L -311.64587,135.64874"
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <path
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M -472.65603,98.778179 L -472.65603,135.64874"
+               id="path4652" />
+          </g>
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-421.57504"
+             y="97.686806"
+             id="text4654"><tspan
+               sodipodi:role="line"
+               id="tspan4656"
+               x="-421.57504"
+               y="97.686806"
+               style="font-size:12px">Barramento</tspan></text>
+          <g
+             id="g4658"
+             transform="matrix(-1,0,0,-1,-784.2452,199.54298)">
+            <path
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M -473.56615,99.773099 L -310.93159,99.773099"
+               id="path4660" />
+            <path
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M -311.64587,98.778179 L -311.64587,135.64874"
+               id="path4662" />
+            <path
+               id="path4664"
+               d="M -472.65603,98.778179 L -472.65603,135.64874"
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          </g>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-33.625542"
+             x="-501.24887"
+             height="98"
+             width="98"
+             id="rect4666" />
+          <rect
+             id="rect4668"
+             width="98"
+             height="98"
+             x="-381.24887"
+             y="-33.625542"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-117.62331"
+             x="-501.24887"
+             height="28"
+             width="98"
+             id="rect4670" />
+          <text
+             id="text4672"
+             y="-99.262444"
+             x="-475.68442"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="-99.262444"
+               x="-475.68442"
+               id="tspan4674"
+               sodipodi:role="line">Cache L3</tspan></text>
+          <rect
+             id="rect4676"
+             width="98"
+             height="28"
+             x="-501.24887"
+             y="-89.623749"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-475.6749"
+             y="-71.262939"
+             id="text4678"><tspan
+               sodipodi:role="line"
+               id="tspan4680"
+               x="-475.6749"
+               y="-71.262939"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-61.623825"
+             x="-501.24887"
+             height="28"
+             width="98"
+             id="rect4682" />
+          <text
+             id="text4684"
+             y="-43.262985"
+             x="-475.64316"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="-43.262985"
+               x="-475.64316"
+               id="tspan4686"
+               sodipodi:role="line">Cache L1</tspan></text>
+          <rect
+             id="rect4688"
+             width="98"
+             height="28"
+             x="-381.24887"
+             y="-117.62331"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-355.68442"
+             y="-99.262444"
+             id="text4690"><tspan
+               sodipodi:role="line"
+               id="tspan4692"
+               x="-355.68442"
+               y="-99.262444"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L3</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-89.623749"
+             x="-381.24887"
+             height="28"
+             width="98"
+             id="rect4694" />
+          <text
+             id="text4696"
+             y="-71.262939"
+             x="-355.6749"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="-71.262939"
+               x="-355.6749"
+               id="tspan4698"
+               sodipodi:role="line">Cache L2</tspan></text>
+          <rect
+             id="rect4700"
+             width="98"
+             height="28"
+             x="-381.24887"
+             y="-61.623825"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-355.64316"
+             y="-43.262985"
+             id="text4702"><tspan
+               sodipodi:role="line"
+               id="tspan4704"
+               x="-355.64316"
+               y="-43.262985"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+          <text
+             id="text4706"
+             y="21.362984"
+             x="-470.23764"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             xml:space="preserve"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="21.362984"
+               x="-470.23764"
+               id="tspan4708"
+               sodipodi:role="line">Core</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             x="-350.23764"
+             y="191.36296"
+             id="text4710"><tspan
+               sodipodi:role="line"
+               id="tspan4712"
+               x="-350.23764"
+               y="191.36296"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+        </g>
+      </g>
+      <g
+         id="g4714"
+         transform="translate(552.85716,0)">
+        <g
+           id="g4716">
+          <rect
+             y="-142.53383"
+             x="-514.56567"
+             height="474.86301"
+             width="246.29158"
+             id="rect4718"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             id="text4720"
+             y="-126.35285"
+             x="-511.22391"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               y="-126.35285"
+               x="-511.22391"
+               id="tspan4722"
+               sodipodi:role="line">x86 - AMD Phenom X4</tspan></text>
+        </g>
+        <g
+           id="g4724"
+           transform="translate(0.8289871,0.498909)">
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="234.42133"
+             x="-501.24887"
+             height="28"
+             width="98"
+             id="rect4726" />
+          <rect
+             id="rect4728"
+             width="98"
+             height="98"
+             x="-501.24887"
+             y="136.37444"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="136.37444"
+             x="-501.24887"
+             height="98"
+             width="98"
+             id="rect4730" />
+          <text
+             id="text4732"
+             y="191.36295"
+             x="-470.23764"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             xml:space="preserve"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="191.36295"
+               x="-470.23764"
+               id="tspan4734"
+               sodipodi:role="line">Core</tspan></text>
+          <text
+             id="text4736"
+             y="252.78217"
+             x="-475.68442"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="252.78217"
+               x="-475.68442"
+               id="tspan4738"
+               sodipodi:role="line">Cache L1</tspan></text>
+          <rect
+             id="rect4740"
+             width="98"
+             height="28"
+             x="-501.24887"
+             y="262.42087"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-475.6749"
+             y="280.78168"
+             id="text4742"><tspan
+               sodipodi:role="line"
+               id="tspan4744"
+               x="-475.6749"
+               y="280.78168"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="290.42084"
+             x="-501.24887"
+             height="28"
+             width="98"
+             id="rect4746" />
+          <text
+             id="text4748"
+             y="308.78168"
+             x="-475.64316"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="308.78168"
+               x="-475.64316"
+               id="tspan4750"
+               sodipodi:role="line">Cache L3</tspan></text>
+          <rect
+             id="rect4752"
+             width="98"
+             height="28"
+             x="-381.24887"
+             y="234.42133"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="136.37444"
+             x="-381.24887"
+             height="98"
+             width="98"
+             id="rect4754" />
+          <rect
+             id="rect4756"
+             width="98"
+             height="98"
+             x="-381.24887"
+             y="136.37444"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             x="-350.23764"
+             y="21.362984"
+             id="text4758"><tspan
+               sodipodi:role="line"
+               id="tspan4760"
+               x="-350.23764"
+               y="21.362984"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-355.68442"
+             y="252.78217"
+             id="text4762"><tspan
+               sodipodi:role="line"
+               id="tspan4764"
+               x="-355.68442"
+               y="252.78217"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="262.42087"
+             x="-381.24887"
+             height="28"
+             width="98"
+             id="rect4766" />
+          <text
+             id="text4768"
+             y="280.78168"
+             x="-355.6749"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="280.78168"
+               x="-355.6749"
+               id="tspan4770"
+               sodipodi:role="line">Cache L2</tspan></text>
+          <rect
+             id="rect4772"
+             width="98"
+             height="28"
+             x="-381.24887"
+             y="290.42084"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-355.64316"
+             y="308.78168"
+             id="text4774"><tspan
+               sodipodi:role="line"
+               id="tspan4776"
+               x="-355.64316"
+               y="308.78168"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L3</tspan></text>
+          <g
+             id="g4778">
+            <path
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M -473.56615,99.773099 L -310.93159,99.773099"
+               id="path4780" />
+            <path
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M -311.64587,98.778179 L -311.64587,135.64874"
+               id="path4782" />
+            <path
+               id="path4784"
+               d="M -472.65603,98.778179 L -472.65603,135.64874"
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          </g>
+          <text
+             id="text4786"
+             y="97.686806"
+             x="-421.57504"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:12px"
+               y="97.686806"
+               x="-421.57504"
+               id="tspan4788"
+               sodipodi:role="line">Barramento</tspan></text>
+          <g
+             transform="matrix(-1,0,0,-1,-784.2452,199.54298)"
+             id="g4790">
+            <path
+               id="path4792"
+               d="M -473.56615,99.773099 L -310.93159,99.773099"
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <path
+               id="path4794"
+               d="M -311.64587,98.778179 L -311.64587,135.64874"
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+            <path
+               style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               d="M -472.65603,98.778179 L -472.65603,135.64874"
+               id="path4796" />
+          </g>
+          <rect
+             id="rect4798"
+             width="98"
+             height="98"
+             x="-501.24887"
+             y="-33.625542"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-33.625542"
+             x="-381.24887"
+             height="98"
+             width="98"
+             id="rect4800" />
+          <rect
+             id="rect4802"
+             width="98"
+             height="28"
+             x="-501.24887"
+             y="-117.62331"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-475.68442"
+             y="-99.262444"
+             id="text4804"><tspan
+               sodipodi:role="line"
+               id="tspan4806"
+               x="-475.68442"
+               y="-99.262444"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L3</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-89.623749"
+             x="-501.24887"
+             height="28"
+             width="98"
+             id="rect4808" />
+          <text
+             id="text4810"
+             y="-71.262939"
+             x="-475.6749"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="-71.262939"
+               x="-475.6749"
+               id="tspan4812"
+               sodipodi:role="line">Cache L2</tspan></text>
+          <rect
+             id="rect4814"
+             width="98"
+             height="28"
+             x="-501.24887"
+             y="-61.623825"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-475.64316"
+             y="-43.262985"
+             id="text4816"><tspan
+               sodipodi:role="line"
+               id="tspan4818"
+               x="-475.64316"
+               y="-43.262985"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-117.62331"
+             x="-381.24887"
+             height="28"
+             width="98"
+             id="rect4820" />
+          <text
+             id="text4822"
+             y="-99.262444"
+             x="-355.68442"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="-99.262444"
+               x="-355.68442"
+               id="tspan4824"
+               sodipodi:role="line">Cache L3</tspan></text>
+          <rect
+             id="rect4826"
+             width="98"
+             height="28"
+             x="-381.24887"
+             y="-89.623749"
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             x="-355.6749"
+             y="-71.262939"
+             id="text4828"><tspan
+               sodipodi:role="line"
+               id="tspan4830"
+               x="-355.6749"
+               y="-71.262939"
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+          <rect
+             style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             y="-61.623825"
+             x="-381.24887"
+             height="28"
+             width="98"
+             id="rect4832" />
+          <text
+             id="text4834"
+             y="-43.262985"
+             x="-355.64316"
+             style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+             xml:space="preserve"><tspan
+               style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="-43.262985"
+               x="-355.64316"
+               id="tspan4836"
+               sodipodi:role="line">Cache L1</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             x="-470.23764"
+             y="21.362984"
+             id="text4838"><tspan
+               sodipodi:role="line"
+               id="tspan4840"
+               x="-470.23764"
+               y="21.362984"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+          <text
+             id="text4842"
+             y="191.36296"
+             x="-350.23764"
+             style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+             xml:space="preserve"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+               y="191.36296"
+               x="-350.23764"
+               id="tspan4844"
+               sodipodi:role="line">Core</tspan></text>
+        </g>
+      </g>
+    </g>
+    <g
+       id="g6113"
+       transform="matrix(0.877165,0,0,0.877165,470.9527,247.50836)">
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5319"
+         width="246.29158"
+         height="474.86301"
+         x="-514.56567"
+         y="357.46619" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-511.22391"
+         y="373.64716"
+         id="text5321"><tspan
+           sodipodi:role="line"
+           id="tspan5323"
+           x="-511.22391"
+           y="373.64716">SPARC - Sun UltraSPARC T2</tspan></text>
+      <rect
+         id="rect5327"
+         width="98"
+         height="28"
+         x="-500.41989"
+         y="734.92023"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="636.87335"
+         x="-500.41989"
+         height="98"
+         width="98"
+         id="rect5329" />
+      <rect
+         id="rect5331"
+         width="98"
+         height="98"
+         x="-500.41989"
+         y="636.87335"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="-469.40866"
+         y="691.86188"
+         id="text5333"><tspan
+           sodipodi:role="line"
+           id="tspan5335"
+           x="-469.40866"
+           y="691.86188"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-474.85544"
+         y="753.28107"
+         id="text5337"><tspan
+           sodipodi:role="line"
+           id="tspan5339"
+           x="-474.85544"
+           y="753.28107"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="762.9198"
+         x="-500.41989"
+         height="28"
+         width="98"
+         id="rect5341" />
+      <text
+         id="text5343"
+         y="781.28058"
+         x="-474.84592"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="781.28058"
+           x="-474.84592"
+           id="tspan5345"
+           sodipodi:role="line">Cache L2</tspan></text>
+      <rect
+         id="rect5347"
+         width="218"
+         height="28"
+         x="-500.41989"
+         y="790.91974"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-414.81418"
+         y="809.28058"
+         id="text5349"><tspan
+           sodipodi:role="line"
+           id="tspan5351"
+           x="-414.81418"
+           y="809.28058"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L3</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="734.92023"
+         x="-380.41989"
+         height="28"
+         width="98"
+         id="rect5353" />
+      <rect
+         id="rect5355"
+         width="98"
+         height="98"
+         x="-380.41989"
+         y="636.87335"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="636.87335"
+         x="-380.41989"
+         height="98"
+         width="98"
+         id="rect5357" />
+      <text
+         id="text5359"
+         y="521.86188"
+         x="-349.40866"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="521.86188"
+           x="-349.40866"
+           id="tspan5361"
+           sodipodi:role="line">Core</tspan></text>
+      <text
+         id="text5363"
+         y="753.28107"
+         x="-354.85544"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="753.28107"
+           x="-354.85544"
+           id="tspan5365"
+           sodipodi:role="line">Cache L1</tspan></text>
+      <rect
+         id="rect5367"
+         width="98"
+         height="28"
+         x="-380.41989"
+         y="762.9198"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-354.84592"
+         y="781.28058"
+         id="text5369"><tspan
+           sodipodi:role="line"
+           id="tspan5371"
+           x="-354.84592"
+           y="781.28058"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M -472.73716,600.27201 L -310.1026,600.27201"
+         id="path5381" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M -310.81688,599.27709 L -310.81688,636.14765"
+         id="path5383" />
+      <path
+         id="path5385"
+         d="M -471.82704,599.27709 L -471.82704,636.14765"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-420.74606"
+         y="598.18573"
+         id="text5387"><tspan
+           sodipodi:role="line"
+           id="tspan5389"
+           x="-420.74606"
+           y="598.18573"
+           style="font-size:12px">Barramento</tspan></text>
+      <path
+         id="path5393"
+         d="M -309.85006,600.26879 L -472.48462,600.26879"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         id="path5395"
+         d="M -471.77034,601.26371 L -471.77034,564.39315"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M -310.76018,601.26371 L -310.76018,564.39315"
+         id="path5397" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="466.87338"
+         x="-500.41989"
+         height="98"
+         width="98"
+         id="rect5399" />
+      <rect
+         id="rect5401"
+         width="98"
+         height="98"
+         x="-380.41989"
+         y="466.87338"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="382.87561"
+         x="-500.41989"
+         height="28"
+         width="218"
+         id="rect5403" />
+      <text
+         id="text5405"
+         y="401.23645"
+         x="-414.81418"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="401.23645"
+           x="-414.81418"
+           id="tspan5407"
+           sodipodi:role="line">Cache L3</tspan></text>
+      <rect
+         id="rect5409"
+         width="98"
+         height="28"
+         x="-500.41989"
+         y="410.87515"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-474.84592"
+         y="429.23596"
+         id="text5411"><tspan
+           sodipodi:role="line"
+           id="tspan5413"
+           x="-474.84592"
+           y="429.23596"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="438.87509"
+         x="-500.41989"
+         height="28"
+         width="98"
+         id="rect5415" />
+      <text
+         id="text5417"
+         y="457.23593"
+         x="-474.81418"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="457.23593"
+           x="-474.81418"
+           id="tspan5419"
+           sodipodi:role="line">Cache L1</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="410.87515"
+         x="-380.41989"
+         height="28"
+         width="98"
+         id="rect5427" />
+      <text
+         id="text5429"
+         y="429.23596"
+         x="-354.84592"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="429.23596"
+           x="-354.84592"
+           id="tspan5431"
+           sodipodi:role="line">Cache L2</tspan></text>
+      <rect
+         id="rect5433"
+         width="98"
+         height="28"
+         x="-380.41989"
+         y="438.87509"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-354.81418"
+         y="457.23593"
+         id="text5435"><tspan
+           sodipodi:role="line"
+           id="tspan5437"
+           x="-354.81418"
+           y="457.23593"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+      <text
+         id="text5439"
+         y="521.86188"
+         x="-469.40866"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="521.86188"
+           x="-469.40866"
+           id="tspan5441"
+           sodipodi:role="line">Core</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="-349.40866"
+         y="691.86188"
+         id="text5443"><tspan
+           sodipodi:role="line"
+           id="tspan5445"
+           x="-349.40866"
+           y="691.86188"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+      <rect
+         y="357.46619"
+         x="-238.1371"
+         height="474.86301"
+         width="246.29158"
+         id="rect5451"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text5453"
+         y="373.64716"
+         x="-234.79533"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           y="373.64716"
+           x="-234.79533"
+           id="tspan5455"
+           sodipodi:role="line">x86 - intel Core 2 Quad</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="734.92023"
+         x="-223.9913"
+         height="28"
+         width="98"
+         id="rect5459" />
+      <rect
+         id="rect5461"
+         width="98"
+         height="98"
+         x="-223.9913"
+         y="636.87335"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="636.87335"
+         x="-223.9913"
+         height="98"
+         width="98"
+         id="rect5463" />
+      <text
+         id="text5465"
+         y="691.86188"
+         x="-192.98007"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="691.86188"
+           x="-192.98007"
+           id="tspan5467"
+           sodipodi:role="line">Core</tspan></text>
+      <text
+         id="text5469"
+         y="753.28107"
+         x="-198.42685"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="753.28107"
+           x="-198.42685"
+           id="tspan5471"
+           sodipodi:role="line">Cache L1</tspan></text>
+      <rect
+         id="rect5473"
+         width="98"
+         height="28"
+         x="-223.9913"
+         y="762.9198"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-198.41733"
+         y="781.28058"
+         id="text5475"><tspan
+           sodipodi:role="line"
+           id="tspan5477"
+           x="-198.41733"
+           y="781.28058"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="790.91974"
+         x="-223.9913"
+         height="28"
+         width="218"
+         id="rect5479" />
+      <text
+         id="text5481"
+         y="809.28058"
+         x="-138.38559"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="809.28058"
+           x="-138.38559"
+           id="tspan5483"
+           sodipodi:role="line">Cache L3</tspan></text>
+      <rect
+         id="rect5485"
+         width="98"
+         height="28"
+         x="-103.9913"
+         y="734.92023"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="636.87335"
+         x="-103.9913"
+         height="98"
+         width="98"
+         id="rect5487" />
+      <rect
+         id="rect5489"
+         width="98"
+         height="98"
+         x="-103.9913"
+         y="636.87335"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="-72.980072"
+         y="521.86188"
+         id="text5491"><tspan
+           sodipodi:role="line"
+           id="tspan5493"
+           x="-72.980072"
+           y="521.86188"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-78.426849"
+         y="753.28107"
+         id="text5495"><tspan
+           sodipodi:role="line"
+           id="tspan5497"
+           x="-78.426849"
+           y="753.28107"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="762.9198"
+         x="-103.9913"
+         height="28"
+         width="98"
+         id="rect5499" />
+      <text
+         id="text5501"
+         y="781.28058"
+         x="-78.417328"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="781.28058"
+           x="-78.417328"
+           id="tspan5503"
+           sodipodi:role="line">Cache L2</tspan></text>
+      <path
+         id="path5513"
+         d="M -196.30858,600.27201 L -33.67402,600.27201"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         id="path5515"
+         d="M -34.3883,599.27709 L -34.3883,636.14765"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M -195.39846,599.27709 L -195.39846,636.14765"
+         id="path5517" />
+      <text
+         id="text5519"
+         y="598.18573"
+         x="-144.31747"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:12px"
+           y="598.18573"
+           x="-144.31747"
+           id="tspan5521"
+           sodipodi:role="line">Barramento</tspan></text>
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M -33.42148,600.26879 L -196.05604,600.26879"
+         id="path5525" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M -195.34176,601.26371 L -195.34176,564.39315"
+         id="path5527" />
+      <path
+         id="path5529"
+         d="M -34.3316,601.26371 L -34.3316,564.39315"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         id="rect5531"
+         width="98"
+         height="98"
+         x="-223.9913"
+         y="466.87338"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="466.87338"
+         x="-103.9913"
+         height="98"
+         width="98"
+         id="rect5533" />
+      <rect
+         id="rect5535"
+         width="218"
+         height="28"
+         x="-223.9913"
+         y="382.87561"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-138.38559"
+         y="401.23645"
+         id="text5537"><tspan
+           sodipodi:role="line"
+           id="tspan5539"
+           x="-138.38559"
+           y="401.23645"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L3</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="410.87515"
+         x="-223.9913"
+         height="28"
+         width="98"
+         id="rect5541" />
+      <text
+         id="text5543"
+         y="429.23596"
+         x="-198.41733"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="429.23596"
+           x="-198.41733"
+           id="tspan5545"
+           sodipodi:role="line">Cache L2</tspan></text>
+      <rect
+         id="rect5547"
+         width="98"
+         height="28"
+         x="-223.9913"
+         y="438.87509"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-198.38559"
+         y="457.23593"
+         id="text5549"><tspan
+           sodipodi:role="line"
+           id="tspan5551"
+           x="-198.38559"
+           y="457.23593"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+      <rect
+         id="rect5559"
+         width="98"
+         height="28"
+         x="-103.9913"
+         y="410.87515"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="-78.417328"
+         y="429.23596"
+         id="text5561"><tspan
+           sodipodi:role="line"
+           id="tspan5563"
+           x="-78.417328"
+           y="429.23596"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="438.87509"
+         x="-103.9913"
+         height="28"
+         width="98"
+         id="rect5565" />
+      <text
+         id="text5567"
+         y="457.23593"
+         x="-78.38559"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="457.23593"
+           x="-78.38559"
+           id="tspan5569"
+           sodipodi:role="line">Cache L1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="-192.98007"
+         y="521.86188"
+         id="text5571"><tspan
+           sodipodi:role="line"
+           id="tspan5573"
+           x="-192.98007"
+           y="521.86188"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+      <text
+         id="text5575"
+         y="691.86188"
+         x="-72.980072"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="691.86188"
+           x="-72.980072"
+           id="tspan5577"
+           sodipodi:role="line">Core</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect5583"
+         width="246.29158"
+         height="474.86301"
+         x="38.291485"
+         y="357.46619" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="41.633251"
+         y="373.64716"
+         id="text5585"><tspan
+           sodipodi:role="line"
+           id="tspan5587"
+           x="41.633251"
+           y="373.64716">x86 - AMD Phenom X4</tspan></text>
+      <rect
+         id="rect5591"
+         width="98"
+         height="28"
+         x="52.437279"
+         y="734.92023"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="636.87335"
+         x="52.437279"
+         height="98"
+         width="98"
+         id="rect5593" />
+      <rect
+         id="rect5595"
+         width="98"
+         height="98"
+         x="52.437279"
+         y="636.87335"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="83.448509"
+         y="691.86188"
+         id="text5597"><tspan
+           sodipodi:role="line"
+           id="tspan5599"
+           x="83.448509"
+           y="691.86188"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="78.001732"
+         y="753.28107"
+         id="text5601"><tspan
+           sodipodi:role="line"
+           id="tspan5603"
+           x="78.001732"
+           y="753.28107"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="762.9198"
+         x="52.437279"
+         height="28"
+         width="98"
+         id="rect5605" />
+      <text
+         id="text5607"
+         y="781.28058"
+         x="78.011253"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="781.28058"
+           x="78.011253"
+           id="tspan5609"
+           sodipodi:role="line">Cache L2</tspan></text>
+      <rect
+         id="rect5611"
+         width="218"
+         height="28"
+         x="52.437279"
+         y="790.91974"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="138.043"
+         y="809.28058"
+         id="text5613"><tspan
+           sodipodi:role="line"
+           id="tspan5615"
+           x="138.043"
+           y="809.28058"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L3</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="734.92023"
+         x="172.43729"
+         height="28"
+         width="98"
+         id="rect5617" />
+      <rect
+         id="rect5619"
+         width="98"
+         height="98"
+         x="172.43729"
+         y="636.87335"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="636.87335"
+         x="172.43729"
+         height="98"
+         width="98"
+         id="rect5621" />
+      <text
+         id="text5623"
+         y="521.86188"
+         x="203.44852"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="521.86188"
+           x="203.44852"
+           id="tspan5625"
+           sodipodi:role="line">Core</tspan></text>
+      <text
+         id="text5627"
+         y="753.28107"
+         x="198.00174"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="753.28107"
+           x="198.00174"
+           id="tspan5629"
+           sodipodi:role="line">Cache L1</tspan></text>
+      <rect
+         id="rect5631"
+         width="98"
+         height="28"
+         x="172.43729"
+         y="762.9198"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="198.01126"
+         y="781.28058"
+         id="text5633"><tspan
+           sodipodi:role="line"
+           id="tspan5635"
+           x="198.01126"
+           y="781.28058"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 80.12,600.27201 L 242.75456,600.27201"
+         id="path5645" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 242.04028,599.27709 L 242.04028,636.14765"
+         id="path5647" />
+      <path
+         id="path5649"
+         d="M 81.03012,599.27709 L 81.03012,636.14765"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="132.11111"
+         y="598.18573"
+         id="text5651"><tspan
+           sodipodi:role="line"
+           id="tspan5653"
+           x="132.11111"
+           y="598.18573"
+           style="font-size:12px">Barramento</tspan></text>
+      <path
+         id="path5657"
+         d="M 243.0071,600.26879 L 80.37254,600.26879"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         id="path5659"
+         d="M 81.08682,601.26371 L 81.08682,564.39315"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.28007269;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 242.09698,601.26371 L 242.09698,564.39315"
+         id="path5661" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="466.87338"
+         x="52.437279"
+         height="98"
+         width="98"
+         id="rect5663" />
+      <rect
+         id="rect5665"
+         width="98"
+         height="98"
+         x="172.43729"
+         y="466.87338"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="382.87561"
+         x="52.437279"
+         height="28"
+         width="218"
+         id="rect5667" />
+      <text
+         id="text5669"
+         y="401.23645"
+         x="138.043"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="401.23645"
+           x="138.043"
+           id="tspan5671"
+           sodipodi:role="line">Cache L3</tspan></text>
+      <rect
+         id="rect5673"
+         width="98"
+         height="28"
+         x="52.437279"
+         y="410.87515"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="78.011253"
+         y="429.23596"
+         id="text5675"><tspan
+           sodipodi:role="line"
+           id="tspan5677"
+           x="78.011253"
+           y="429.23596"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L2</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="438.87509"
+         x="52.437279"
+         height="28"
+         width="98"
+         id="rect5679" />
+      <text
+         id="text5681"
+         y="457.23593"
+         x="78.042992"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="457.23593"
+           x="78.042992"
+           id="tspan5683"
+           sodipodi:role="line">Cache L1</tspan></text>
+      <rect
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         y="410.87515"
+         x="172.43729"
+         height="28"
+         width="98"
+         id="rect5691" />
+      <text
+         id="text5693"
+         y="429.23596"
+         x="198.01126"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         xml:space="preserve"><tspan
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="429.23596"
+           x="198.01126"
+           id="tspan5695"
+           sodipodi:role="line">Cache L2</tspan></text>
+      <rect
+         id="rect5697"
+         width="98"
+         height="28"
+         x="172.43729"
+         y="438.87509"
+         style="fill:none;stroke:#000000;stroke-width:2.28007269;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Calibri;-inkscape-font-specification:Calibri"
+         x="198.043"
+         y="457.23593"
+         id="text5699"><tspan
+           sodipodi:role="line"
+           id="tspan5701"
+           x="198.043"
+           y="457.23593"
+           style="font-size:13px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Cache L1</tspan></text>
+      <text
+         id="text5703"
+         y="521.86188"
+         x="83.448509"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri"
+           y="521.86188"
+           x="83.448509"
+           id="tspan5705"
+           sodipodi:role="line">Core</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:19px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="203.44852"
+         y="691.86188"
+         id="text5707"><tspan
+           sodipodi:role="line"
+           id="tspan5709"
+           x="203.44852"
+           y="691.86188"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Calibri;-inkscape-font-specification:Calibri">Core</tspan></text>
+    </g>
+  </g>
+</svg>
