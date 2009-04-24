@@ -42,7 +42,7 @@
      showgrid="false"
      inkscape:zoom="0.94644222"
      inkscape:cx="306.73963"
-     inkscape:cy="410.44325"
+     inkscape:cy="453.5085"
      inkscape:window-x="-4"
      inkscape:window-y="-4"
      inkscape:current-layer="svg2" />
@@ -355,82 +355,40 @@
        id="path10618"
        style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.47099584;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
   </g>
-  <g
-     transform="translate(-118.14151,48.553191)"
-     id="g3019">
-    <path
-       d="M 459.73635,747.06106 C 459.73817,753.57978 454.45421,758.86522 447.93548,758.86522 C 441.41676,758.86522 436.13279,753.57978 436.13461,747.06106 C 436.13279,740.54233 441.41676,735.2569 447.93548,735.2569 C 454.45421,735.2569 459.73817,740.54233 459.73635,747.06106 L 459.73635,747.06106 z"
-       id="path3709"
-       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3.30060387;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-    <path
-       d="M 447.93548,760.68984 C 447.93548,796.81042 447.93548,796.81042 447.93548,796.81042 L 447.93548,796.81042"
-       id="path3711"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       d="M 448.12364,764.88541 L 465.12164,780.02909"
-       id="path3713"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       d="M 448.3964,797.04732 L 465.3944,812.191"
-       id="path3715"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       d="M 447.64939,764.88541 L 430.65138,780.02909"
-       id="path3717"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       d="M 447.37663,797.04732 L 430.37862,812.191"
-       id="path3719"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <text
-       x="447.77621"
-       y="831.88373"
-       id="text3757"
-       xml:space="preserve"
-       style="font-size:60.04455185px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
-         x="447.77621"
-         y="831.88373"
-         id="tspan3759"
-         style="font-size:23.10422707px;text-align:center;text-anchor:middle">B</tspan></text>
-  </g>
-  <g
-     transform="translate(58.382465,-93.066525)"
-     id="g3090">
-    <path
-       d="M 554.58444,635.27581 C 554.58626,641.79453 549.3023,647.07997 542.78357,647.07997 C 536.26485,647.07997 530.98088,641.79453 530.9827,635.27581 C 530.98088,628.75708 536.26485,623.47165 542.78357,623.47165 C 549.3023,623.47165 554.58626,628.75708 554.58444,635.27581 L 554.58444,635.27581 z"
-       id="path3066"
-       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3.30060387;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-    <path
-       d="M 542.78357,648.90459 C 542.78357,685.02517 542.78357,685.02517 542.78357,685.02517 L 542.78357,685.02517"
-       id="path3068"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       d="M 542.97173,653.10016 L 559.96973,668.24384"
-       id="path3070"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       d="M 543.24449,685.26207 L 560.24249,700.40575"
-       id="path3072"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       d="M 542.49748,653.10016 L 525.49947,668.24384"
-       id="path3074"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       d="M 542.22472,685.26207 L 525.22671,700.40575"
-       id="path3076"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <text
-       x="542.62433"
-       y="720.09845"
-       id="text3078"
-       xml:space="preserve"
-       style="font-size:60.04455185px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
-         x="542.62433"
-         y="720.09845"
-         id="tspan3080"
-         style="font-size:23.10422707px;text-align:center;text-anchor:middle">C</tspan></text>
-  </g>
+  <path
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3.30060387;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     id="path3066"
+     d="M 612.96691,542.20929 C 612.96872,548.72801 607.68476,554.01345 601.16604,554.01345 C 594.64732,554.01345 589.36335,548.72801 589.36517,542.20929 C 589.36335,535.69056 594.64732,530.40512 601.16604,530.40512 C 607.68476,530.40512 612.96872,535.69056 612.96691,542.20929 L 612.96691,542.20929 z" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path3068"
+     d="M 601.16604,555.83807 C 601.16604,591.95865 601.16604,591.95865 601.16604,591.95865 L 601.16604,591.95865" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path3070"
+     d="M 601.3542,560.03364 L 618.3522,575.17732" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path3072"
+     d="M 601.62696,592.19555 L 618.62495,607.33923" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path3074"
+     d="M 600.87995,560.03364 L 583.88194,575.17732" />
+  <path
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.3006041;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="path3076"
+     d="M 600.60719,592.19555 L 583.60918,607.33923" />
+  <text
+     style="font-size:60.04455185px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     xml:space="preserve"
+     id="text3078"
+     y="627.03192"
+     x="601.00677"><tspan
+       style="font-size:23.10422707px;text-align:center;text-anchor:middle"
+       id="tspan3080"
+       y="627.03192"
+       x="601.00677">B</tspan></text>
   <path
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-start:url(#TriangleInM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="path3990"
@@ -443,10 +401,6 @@
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="path4031"
      d="M 234.19102,599.97404 L 112.47178,599.97404" />
-  <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path4039"
-     d="M 234.19102,624.11532 L 112.47178,624.11532" />
   <text
      style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
      xml:space="preserve"
@@ -477,16 +431,6 @@
        id="tspan4035"
        y="597.59021"
        x="135.6972">State of B</tspan></text>
-  <text
-     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     id="text4041"
-     y="621.73145"
-     x="135.48114"><tspan
-       style="font-size:15px"
-       id="tspan4043"
-       y="621.73145"
-       x="135.48114">State of C</tspan></text>
   <path
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-start:url(#TriangleInM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="path10661"
@@ -499,10 +443,6 @@
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="path10665"
      d="M 426.47178,599.97404 L 548.19102,599.97404" />
-  <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path10667"
-     d="M 426.47178,624.11532 L 548.19102,624.11532" />
   <text
      style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
      xml:space="preserve"
@@ -512,7 +452,7 @@
        style="font-size:15px"
        id="tspan10671"
        y="549.30768"
-       x="442.46997">Input from C</tspan></text>
+       x="442.46997">Input from B</tspan></text>
   <text
      style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
      xml:space="preserve"
@@ -522,7 +462,7 @@
        style="font-size:15px"
        id="tspan10675"
        y="573.44891"
-       x="452.52612">State of C</tspan></text>
+       x="452.52612">State of B</tspan></text>
   <text
      style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
      xml:space="preserve"
@@ -533,16 +473,6 @@
        id="tspan10679"
        y="597.59021"
        x="452.28809">State of A</tspan></text>
-  <text
-     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     id="text10681"
-     y="621.73145"
-     x="452.74219"><tspan
-       style="font-size:15px"
-       id="tspan10683"
-       y="621.73145"
-       x="452.74219">State of B</tspan></text>
   <path
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-start:url(#TriangleInM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="path10697"
@@ -555,90 +485,9 @@
      style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      id="path10701"
      d="M 426.47178,599.97404 L 548.19102,599.97404" />
-  <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path10703"
-     d="M 426.47178,624.11532 L 548.19102,624.11532" />
-  <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-start:url(#TriangleInM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path10767"
-     d="M 293.19715,648.96614 L 293.19715,770.68538" />
-  <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path10769"
-     d="M 317.33841,648.96614 L 317.33841,770.68538" />
-  <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path10771"
-     d="M 341.47968,648.96614 L 341.47968,770.68538" />
-  <path
-     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.50000024;stroke-linecap:round;stroke-linejoin:miter;marker-end:url(#TriangleOutM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path10773"
-     d="M 365.62096,648.96614 L 365.62096,770.68538" />
-  <text
-     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     id="text10775"
-     y="290.81332"
-     x="-755.51611"
-     transform="matrix(0,-1,1,0,0,0)"><tspan
-       style="font-size:15px"
-       id="tspan10777"
-       y="290.81332"
-       x="-755.51611">Input from B</tspan></text>
-  <text
-     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     id="text10779"
-     y="314.95456"
-     x="-745.45996"
-     transform="matrix(0,-1,1,0,0,0)"><tspan
-       style="font-size:15px"
-       id="tspan10781"
-       y="314.95456"
-       x="-745.45996">State of B</tspan></text>
-  <text
-     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     id="text10783"
-     y="339.09586"
-     x="-745.91406"
-     transform="matrix(0,-1,1,0,0,0)"><tspan
-       style="font-size:15px"
-       id="tspan10785"
-       y="339.09586"
-       x="-745.91406">State of A</tspan></text>
-  <text
-     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-     xml:space="preserve"
-     id="text10787"
-     y="363.23709"
-     x="-745.67603"
-     transform="matrix(0,-1,1,0,0,0)"><tspan
-       style="font-size:15px"
-       id="tspan10789"
-       y="363.23709"
-       x="-745.67603">State of C</tspan></text>
-  <text
-     x="260.1293"
-     y="451.41104"
-     id="text10791"
-     xml:space="preserve"
-     style="font-size:30px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"><tspan
-       x="260.1293"
-       y="451.41104"
-       id="tspan10793">Server</tspan><tspan
-       x="260.1293"
-       y="480.93704"
-       id="tspan10797"
-       style="font-size:22px">Download = k·n</tspan><tspan
-       x="260.1293"
-       y="508.43704"
-       id="tspan10799"
-       style="font-size:22px">Upload = s·n²</tspan></text>
   <g
      id="g3042"
-     transform="translate(-9.5092968,4.2263541)">
+     transform="translate(-9.509297,-226.10995)">
     <text
        x="416.63068"
        y="690.67212"
@@ -665,4 +514,25 @@
        id="rect12269"
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
+  <text
+     xml:space="preserve"
+     style="font-size:16px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+     x="256.75101"
+     y="460.67261"
+     id="text3081"><tspan
+       sodipodi:role="line"
+       id="tspan3083"
+       x="256.75101"
+       y="460.67261"
+       style="font-size:20px">Server</tspan><tspan
+       sodipodi:role="line"
+       x="256.75101"
+       y="481.68561"
+       style="font-size:16px"
+       id="tspan3085">download = k·n</tspan><tspan
+       sodipodi:role="line"
+       x="256.75101"
+       y="501.68561"
+       style="font-size:16px"
+       id="tspan3087">upload = s·n²</tspan></text>
 </svg>
