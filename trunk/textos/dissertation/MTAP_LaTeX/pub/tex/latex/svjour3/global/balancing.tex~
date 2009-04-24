@@ -89,21 +89,21 @@
 %
 \begin{document}
 %[TODO:ajustar TODAS as \refs]
-\title{A load balancing scheme for massively multiplayer online games \thanks{This work was supported by the National Research Council (CNPq) and by the Coordination of Improvement of Higher Education (CAPES), both brazilian research funding agencies.}
+\title{A load balancing scheme for massively multiplayer online games \thanks{This work was supported by the National Research Council (CNPq) and by the Coordination of Improvement of Higher Education (CAPES), both Brazilian research funding agencies.}
 }
 %\subtitle{Do you have a subtitle?\\ If so, write it here}
 
 %\titlerunning{Short form of title}        % if too long for running head
 
 \author{Carlos E. B. Bezerra         \and
-        Clï¿½udio F. R. Geyer %etc.
+        Cláudio F. R. Geyer %etc.
 }
 
 %\authorrunning{Short form of author list} % if too long for running head
 
-\institute{Carlos Eduardo Benevides Bezerra, Clï¿½udio Fernando Resin Geyer \at
+\institute{Carlos Eduardo Benevides Bezerra, Cláudio Fernando Resin Geyer \at
 							Universidade Federal do Rio Grande do Sul \\
-              Av. Bento Gonï¿½alves, 9500, Porto Alegre, Brazil \\
+              Av. Bento Gonçalves, 9500, Porto Alegre, Brazil \\
               Tel.: +55-51-84065986\\
               Fax.: +55-51-33087308\\
               \email{carlos.bezerra@inf.ufrgs.br, geyer@inf.ufrgs.br}           %  \\
@@ -123,7 +123,7 @@
 \maketitle
 
 \begin{abstract}
-MMOGs are applications which require much network bandwidth to function properly. In a distributed MMOG server architecture, with heterogeneous resources, the server nodes may become easily overloaded by the high demand from the players for state updates. Much work has been done in order to distribute the load on the server nodes, but this load is usually defined as the number of players on each server, what is not an ideal measure. Also, the heterogeneity of the system is frequently overlooked. In this work, we propose a balancing scheme which has two main goals: allocate load on the servers proportionally to the each one's power and reduce as much as possible the overhead from the distribution, considering the load as the occupied bandwidth of each server. It is is divided in three phases: local selection of servers, balancing and refinement. Four algorithms were proposed, from which \ggp\ is the best for overhead reduction and \ggpf\ is the most suited for reducing player migrations between servers. We also make a review of related works and some comparisons were made.
+MMOGs are applications which require much network bandwidth to function properly. In a distributed MMOG server architecture, with heterogeneous resources, the server nodes may become easily overloaded by the high demand from the players for state updates. Much work has been done in order to distribute the load on the server nodes, but this load is usually defined as the number of players on each server, what is not an ideal measure. Also, the heterogeneity of the system is frequently overlooked. In this work, we propose a balancing scheme which has two main goals: allocate load on the servers proportionally to the each one's power and reduce as much as possible the overhead from the distribution, considering the load as the occupied bandwidth of each server. It is divided in three phases: local selection of servers, balancing and refinement. Four algorithms were proposed, from which \ggp\ is the best for overhead reduction and \ggpf\ is the most suited for reducing player migrations between servers. We also make a review of related works and some comparisons were made, where our approach performed better.
 
 \keywords{MMOGs \and load balancing \and distributed server \and graph partitioning}
 % \PACS{PACS code1 \and PACS code2 \and more}
@@ -135,7 +135,11 @@ MMOGs are applications which require much network bandwidth to function properly
 
 
 
+<<<<<<< .mine
+The main characteristic of massively multiplayer games is the large number of players, having dozens, or even hundreds, of thousands of participants simultaneously. This large number of players interacting with one another generates a traffic on the support network which may grow quadratically compared to the number of players \cite{chen2006gta}, in the worst case (Figure \ref{fig:quadratic}).
+=======
 The main characteristic of massively multiplayer games is the large number of players, having dozens, or even hundreds, of thousands of participants simultaneously \cite{schiele2007rpp}. This large number of players interacting with one another generates a traffic on the support network which may grow quadratically compared to the number of players, in the worst case.
+>>>>>>> .r602
 
 \begin{figure}
   \centering
@@ -159,10 +163,15 @@ Normally, players can freely move their avatars throughout the game world. This 
   \label{fig:avatarsdistribution}
 \end{figure}
 
+<<<<<<< .mine
+For this reason, it is not enough just to divide the players between servers, even if this division is proportional to the resources of each one of them. First, in some cases the usage of the server's bandwidth may be square to the number of players, while in others it may be linear. It is shown in \cite{chen2006gta} that, in a group of avatars who are neighbors of one another, the rate of packets sent to each player is proportional to the number of avatars in that group (as in Fig. \ref{fig:quadratic}). This reason alone is enough to define a new criterion for load balancing.
+=======
 For this reason, it is not enough just to divide the players between servers, even if this division is proportional to the resources of each one of them. First, in some cases the usage of the server's bandwidth may be square to the number of players, while in others it may be linear. It is shown in \cite{chen2006gta} that, in a group of avatars who are neighbors of one another, the rate of packets sent to each player is proportional to the number of avatars in that group (Figure \ref{fig:quadratic}). This reason alone is enough to define a new criterion for load balancing.
+>>>>>>> .r602
 
 Moreover, there is another important issue: the overhead of the distribution. As the servers need to communicate with one another, there must be a way to minimize this traffic, reducing the waste of resources of the server system. The load balancing scheme for MMOGs must, then, prevent the presence of hotspots from degrading the quality of the game beyond a tolerable limit.
 
+Differently from other works, we propose here a balancing scheme which considers the upload bandwidth occupation of the server as the load to distribute, what is done among servers with different levels of resources, also reducing the inter-server communication overhead by using a greedy graph partition growing algorithm.
 
 
 %[TODO:falar das prï¿½xima seï¿½ï¿½es]
@@ -198,16 +207,17 @@ Next, some principles, defined in previous works, will be presented. Based on so
 
 %O balanceamento de carga entre servidores de jogos online maciï¿½amente multijogador ï¿½ fortemente dependente da distribuiï¿½ï¿½o dos avatares dos jogadores atravï¿½s do ambiente virtual. Alï¿½m disso, a depender da concentraï¿½ï¿½o de avatares, pode-se alternar entre uma funï¿½ï¿½o de crescimento de trï¿½fego linear e uma funï¿½ï¿½o quadrï¿½tica. Sendo assim, ï¿½ necessï¿½rio lidar com a localidade dos avatares, de maneira a otimizar o uso de largura de banda do sistema servidor, minimizando, tanto quanto possï¿½vel, o overhead causado pela comunicaï¿½ï¿½o entre jogadores ligados a servidores diferentes.
 
-One way to explore the locality of the players is by grouping them according to the position occupied by their avatars in the virtual environment. The question would be how to form such groups. One way of doing this would be dividing the world of the game in several cells connected to one another. Each cell would be a part of the world, with its own content and characteristics, which would be assigned to a server node. The easiest way to do this is with a grid of cells of the same size and shape.
-
+One way to explore the locality of the players is by grouping them according to the position occupied by their avatars in the virtual environment. %The question would be how to form such groups. One way of doing this would be dividing the world of the game in several cells connected to one another. Each cell would be a part of the world, with its own content and characteristics, which would be assigned to a server node. The easiest way to do this is with a grid of cells of the same size and shape.
+%
 %[TODO:footnote?]Porï¿½m, o formato e a disposiï¿½ï¿½o destas cï¿½lulas irï¿½ influenciar no trï¿½fego gerado pelas mesmas entre os servidores. Por exemplo, um ambiente bidimensional poderia ser dividido em uma grade de cï¿½lulas quadradas. Neste caso, cada uma destas cï¿½lulas teria oito vizinhos, em mï¿½dia -- cï¿½lulas nas bordas do mapa poderiam ter cinco ou trï¿½s vizinhos apenas. Quanto mais servidores vizinhos, maior o trï¿½fego entre servidores, e maior o overhead causado por esta comunicaï¿½ï¿½o. A distribuiï¿½ï¿½o ideal, entï¿½o, seria utilizando cï¿½lulas hexagonais, cada uma com seis vizinhos. Estudos comprovam que esta ï¿½ a divisï¿½o em cï¿½lulas iguais que permite o menor nï¿½mero de vizinhos por cï¿½lula [TODO:ref]. Outra possibilidade seria utilizando fileiras alternadas de cï¿½lulas quadradas, onde cada fileira seria deslocada o equivalente ï¿½ metade do comprimento de uma cï¿½lula.
-
+%
 %[TODO:figura com diferentes tipos de divisï¿½o:sqr/hex/shift]
-
+%
 %**	
-An important aspect of this design is that the concept of cell is transparent to the players. They see a wide, single and contiguous world, even if they are repeatedly crossing the boundaries between different cells. Obviously, this requires that the cells communicate, updating and notifying each other of events that occurred near the border between them, and of the migration of players from one to the other.
-
-Although this approach with cells distribute the load among several servers, there are no guarantees that this distribution will be uniform, because of the high mobility of players and the existence of hotspots. One of the ideas proposed in the literature \cite{devleeschauwer2005dma} also follows the principle of dividing the virtual environment in cells of fixed size and position, but these cells are relatively small -- or \textbf{microcells} -- and they can be grouped, forming an area called \textbf{macrocell}. Each macrocell is then assigned to a different server, which will manage not a large cell of fixed size and position, but a variable set of small cells. These microcells can then be moved dynamically between different macrocells, maintaining the load on each one of the servers under a tolerable limit.
+%An important aspect of this design is that the concept of cell is transparent to the players. They see a wide, single and contiguous world, even if they are repeatedly crossing the boundaries between different cells. Obviously, this requires that the cells communicate, updating and notifying each other of events that occurred near the border between them, and of the migration of players from one to the other.
+%
+%Although this approach with cells distribute the load among several servers, there are no guarantees that this distribution will be uniform, because of the high mobility of players and the existence of hotspots.
+One of the ideas proposed in the literature \cite{devleeschauwer2005dma} follows the principle of dividing the virtual environment in cells of fixed size and position. These cells are relatively small -- or \textbf{microcells} -- and they can be grouped, forming an area called \textbf{macrocell}. Each macrocell is then assigned to a different server, which will manage not a large cell of fixed size and position, but a variable set of small cells. These microcells can then be moved dynamically between different macrocells, maintaining the load on each one of the servers under a tolerable limit.
 
 %[TODO: tirar todas as contraï¿½ï¿½es!]
 Obviously, the microcells designated to the same server node do not generate additional traffic to synchronize with each other, but the synchronization overhead of the macrocell is unpredictable, because the number of neighbors of each one of them is not foreknown, for its shape is variable. However, it was demonstrated \cite{devleeschauwer2005dma} that this overhead is compensated by a better distribution of the load between servers in the game. %Figure [TODO: ref] illustrates the division of a virtual environment in two-dimensional microcells.
@@ -229,7 +239,7 @@ To achieve this goal, the authors also subdivided the virtual environment in rec
  \label{fig:macromicro}
 \end{figure}
 
-Two cells are called adjacent (or neighbors) if they share a border. Similarly, two regions -- and the servers assigned to them -- are called adjacent (neighbors) if there is a pair of adjacent cells, each of which belonging to one of the two regions. The workload of a cell was defined as the number of avatars present in that cell. The authors assumed that all players receive state updates of the same lenght and in the same frequency, so that the burden of processing (computing and communication) that a cell requires from a server is proportional to the number of users in that cell. The workload of a region and its designated server is defined as the sum of the individual workloads of the cells which form the region. Each server periodically evaluates its workload and exchange this information with its neighbors. They have assumed, too, that these servers are connected through a high-speed network. Thus, the overhead to exchange workload information among neighbors is limited and considered negligible compared to other costs of the distribution. For the same reason, they also assumed as negligible the overhead of communication between servers in different regions when players are interacting.
+Two cells are called adjacent (or neighbors) if they share a border. Similarly, two regions -- and the servers assigned to them -- are called adjacent (neighbors) if there is a pair of adjacent cells, each of which belonging to one of the two regions. The workload of a cell was defined as the number of avatars present in that cell. The authors assumed that all players receive state updates of the same length and in the same frequency, so that the burden of processing (computing and communication) that a cell requires from a server is proportional to the number of users in that cell. The workload of a region and its designated server is defined as the sum of the individual workloads of the cells which form the region. Each server periodically evaluates its workload and exchange this information with its neighbors. They have assumed, too, that these servers are connected through a high-speed network. Thus, the overhead to exchange workload information among neighbors is limited and considered negligible compared to other costs of the distribution. For the same reason, they also assumed as negligible the overhead of communication between servers in different regions when players are interacting.
 
 The main aspect of the solution proposed by the authors was the use of local information (the server that initiated the balancing process and its neighbors), rather than global information (involving all servers in the balance). When a server is overloaded, it searches for lightly loaded servers close to it in the overlay network. A breadth-first lookup for lightly loaded neighbor servers -- as proposed in \cite{duong2003dls} -- causes a small overhead, but it may not solve the problem efficiently in a few steps, as overloaded servers tend to be adjacent. The global approach, in turn, is able to divide the workload in the most balanced way possible, but its complexity may become too high.
 
@@ -276,13 +286,13 @@ After forming the local server set, the initiating server performs a load rebala
 \section{Proposed load balancing scheme}
 \label{sec:scheme}
 
-In the previous section it was presented some existing works regarding load balancing in MMOGs when using multiple servers to provide the support network. The load balancing scheme proposed in this work is based on some of the principles in the literature. One of them is the division of the virtual environment in microcells, for later grouping in macrocells. This is a relatively simple way of addressing the issue of the avatars' movement dynamics through the game world, by transfering the microcells dynamically according to need.
+In the previous section it was presented some existing works regarding load balancing in MMOGs when using multiple servers to provide the support network. The load balancing scheme proposed in this work is based on some of the principles in the literature. One of them is the division of the virtual environment in microcells, for later grouping in macrocells. This is a relatively simple way of addressing the issue of the avatars' movement dynamics through the game world, by transferring the microcells dynamically according to need.
 
 It will also be used the idea of balancing based only on local information -- each server, when needing to reduce its workload, selects only a few other servers to join a local load rebalancing. Thus, we can greatly reduce the complexity of balancing because it will not be necessary that all servers in the game exchange messages among themselves every time that any one of them is overloaded.
 
 To define our load balancing approach, we cannot ignore that, usually, the traffic generated by the players is not simply linear, but square for each cluster of players. Such misunderstanding can generate considerable differences between the actual load of each server and the load estimated by the balancing algorithm. Another point to consider is the overhead, both in the delay of sending messages, as in the use of bandwidth of the servers, when players connected to different servers are interacting with each other. Some works assume that the servers are all in the same high-speed and low latency local-area network, and therefore overhead is negligible. However, when considering a geographically distributed server system, this assumption cannot be made. This overhead must be taken into account, no matter which load balancing algorithm is being used.
 
-Another important point is that the main criterion we use when balancing the load of MMOG servers is the bandwidth, and not processing power. Several games, such as Age of Empires \cite{ageofempires}, include simulations of virtual environments with hundreds or thousands of entities, which are performed smoothly on current personal computers. However, if this game was multiplayer and each of these entities was controlled by a different player on the Internet, it would most likely generate a traffic ammount which would hardly be supported by a domestic connection \cite{feng2007wnn}.
+Another important point is that the main criterion we use when balancing the load of MMOG servers is the bandwidth, and not processing power. Several games, such as Age of Empires \cite{ageofempires}, include simulations of virtual environments with hundreds or thousands of entities, which are performed smoothly on current personal computers. However, if this game was multiplayer and each of these entities was controlled by a different player on the Internet, it would most likely generate a traffic amount which would hardly be supported by a domestic connection \cite{feng2007wnn}.
 
 %TODO: explicar porque cresce linearmente
 Moreover, the upload bandwidth must be taken into account, much more than download. This happens for two reasons: first, the usage of the download bandwidth of each server node grows linearly with the number of players connected to it, while the usage of the upload bandwidth may have a quadratic growth, getting quickly overwhelmed; second, domestic connections -- which are majority in volunteer peer-to-peer systems -- usually have an upload bandwidth much lower than the download one.
@@ -319,7 +329,7 @@ We also use the idea of mapping the virtual environment on a graph. The graph wi
 		\end{center}
 	
 	\item \textbf{Cell}: similar to the microcells, it is considered here the environment being divided into small cells, each one with fixed size and position. If two cells share a border, they are said to be \textbf{adjacent} or \textbf{neighbors};
-	\item \textbf{Region}: the cells are grouped, forming what is called regions. Usually these areas are contiguous, although in some cases the subgraph that represents them may be disconnected, resulting in the presence of cells isolated from each other. Each region is assigned to a server, and only one, and $s(R)$ is the server associated to the region $R$. It may be refered throughout the text to region's ``power'', which in fact refers to the power of the server associated with that region, i.e. $p(s(R))$;
+	\item \textbf{Region}: the cells are grouped, forming what is called regions. Usually these areas are contiguous, although in some cases the subgraph that represents them may be disconnected, resulting in the presence of cells isolated from each other. Each region is assigned to a server, and only one, and $s(R)$ is the server associated to the region $R$. It may be referred throughout the text to region's ``power'', which in fact refers to the power of the server associated with that region, i.e. $p(s(R))$;
 	%[TODO:ver se realmente precisa do item interaï¿½ï¿½o, ou se nao eh melhor usar relevancia mesmo]
 	\item \textbf{Relevance}: the relevance of an avatar $A_j$ to another one, $A_i$, determines the frequency of updates of the state of $A_j$ the server should send to the player controlling $A_i$ \cite{bezerra2008a3}. It may be represented by the function $R(A_i,A_j)$;
 	\item \textbf{Avatar's weight}: to each avatar there are various other entities (here, we only consider avatars) of the game, each with a frequency of state updates that need to be sent to the player who controls that avatar. Thus, for each avatar $A$ , its individual weight -- or of upload bandwidth that the server uses to send state updates to its player -- $w_a(A)$ depends on which other entities are relevant to it, and how much. 
@@ -517,8 +527,13 @@ To provide a partitioning which is balanced, proportional and with low edge-cut 
 
 In line \ref{alg:ggp:fraction}, it is calculated the weight share for each region, considering the total weight that is being divided and the total power of the servers of those regions. The server power fraction of a region, $\frac{p(s(R))}{\freecap}$ should be the same fraction of weight that must be attributed to it. Even if this weight is greater than the power of that server, resulting in an overload, all the servers are similarly overloaded, satisfying the criterion of balance that has been defined. The condition for the end of the allocation of new cells in a region is that its weight is greater than or equal to its weight share.
 
+<<<<<<< .mine
+It is important to notice that the while condition (line \ref{alg:ggp:whilefraction}) may lead to the assignment of a cell whose weight is higher than the weight share left on the region. However, it is very unlikely to assign to a region its exact weight share, so it is preferable to surpass this value, guaranteeing that every cell will be assigned to some region. Also, assigning to a region a weight which is higher than its calculated share does not imply that it will become overloaded. First, the weight share of a region is not equal to the power of its server. When there are enough resources, the region's weight share will be smaller than its capacity. Furthermore, as \ggp\ is a greedy algorithm, the heaviest cells will be assigned first, to the most powerful servers.
+
+=======
 It is important to notice that the while condition (line \ref{alg:ggp:whilefraction}) may lead to the assignment of a cell whose weight is higher than the weight share left on the region. However, it is very unlikely to assign to a region its exact weight share, so it is preferrable to surpass this value, guarateeing that every cell will be assigned to some region. Also, assigning to a region a weight which is higher than its calculated share does not imply that it will become overloaded. First, the weight share of a region is not equal to the power of its server. When there are enough resources, the region's weight share will be smaller than its capacity. Furthermore, as \ggp\ is a greedy algorithm, the heaviest cells will be assigned first, to the most powerful servers.
 
+>>>>>>> .r602
 %The choice of cells to include in the region tries to put the most interacting pairs of cells in the same regions, reducing the overhead.% In each step, the algorithm not only tries to get a neighbor cell, but also the one with the highest that not only is free from a nearby cell already present in the region, but whose edge linking them is the heaviest possible. %Figure [TODO: reffig] shows an example of the steps of the growth of a region to achieve its share of the load balancing.
 
 %A escolha de cï¿½lulas para incluir na regiï¿½o busca fazer com que cada uma das arestas mais pesadas do grafo $GW$ ligue vï¿½rtices da mesma partiï¿½ï¿½o, reduzindo o corte de aresta e, assim, o overhead. A cada passo ï¿½ dada preferï¿½ncia a escolher a cï¿½lula livre que nï¿½o apenas seja vizinha de uma cï¿½lula jï¿½ presente na regiï¿½o, mas tambï¿½m cuja aresta ligando-as seja a mais pesada possï¿½vel. A Figura \ref{fig:ggp} mostra um exemplo dos passos do crescimento de uma regiï¿½o atï¿½ atingir a sua parcela de carga no balanceamento.
@@ -656,7 +671,7 @@ After balancing the load between servers in phase 2, all the servers will have a
 
 To attenuate this problem, it is proposed here to use the algorithm of Kernighan and Lin \cite{kernighan1970ehp}. This algorithm receives as input the graph that represents the virtual environment. Given a pair of regions (partitions), \kl\ searches for pairs of cells (vertices) that, when exchanged between their regions, the overhead (edge-cut) is reduced.
 
-Let $R_A$ and $R_B$ be two regions and $a$ a cell such that $a \in R_A$. The external interaction of $a$ is defined as $E(a) = \sum_{b \in R_b} Int_c (a, b)$ and the internal interaction is defined as $I(a) = \sum_{a' \in R_A} Int_c(a, a')$. The cell $a$ is prone to change regions if its interaction with $R_B$ is greater than its interaction with $R_A$, i.e. $D(a) = E(a) - I(a) > 0$. Assuming that there is a cell $b \in R_B$ such that $D(a) + D(b) - 2 \times Int_c(a, b) > 0 $, the exchange will reduce the overhead between the regions. The term $D(a) + D(b) - 2 \times Int_c(a, b)$ is referred as $gain(a, b)$, because it represents the gain (reduction of overhead) of swapping the regions of $a$ and $b$.
+%Let $R_A$ and $R_B$ be two regions and $a$ a cell such that $a \in R_A$. The external interaction of $a$ is defined as $E(a) = \sum_{b \in R_b} Int_c (a, b)$ and the internal interaction is defined as $I(a) = \sum_{a' \in R_A} Int_c(a, a')$. The cell $a$ is prone to change regions if its interaction with $R_B$ is greater than its interaction with $R_A$, i.e. $D(a) = E(a) - I(a) > 0$. Assuming that there is a cell $b \in R_B$ such that $D(a) + D(b) - 2 \times Int_c(a, b) > 0 $, the exchange will reduce the overhead between the regions. The term $D(a) + D(b) - 2 \times Int_c(a, b)$ is referred as $gain(a, b)$, because it represents the gain (reduction of overhead) of swapping the regions of $a$ and $b$.
 
 In the case of a virtual environment distributed among various regions, generally more than two, \kl\ is run for each pair of regions. Moreover, after each swap performed by the algorithm, the balance must be kept -- otherwise, a completely unbalanced partitioning, with the lowest possible overhead, could be reached. The \kl\ algorithm is widely known in the area of distributed systems, so details will not be provided here. Consider only that it returns a value of $true$ if any change was made and $false$ otherwise. It runs for all pairs of regions. until it returns a value of false, indicating that no exchange will provide additional gain. Algorithm \ref{alg:kl} shows how the \kl\ algorithm is called.
 
@@ -706,13 +721,15 @@ In the case of a virtual environment distributed among various regions, generall
 % Nï¿½O ENTRA, ï¿½ DISPENSï¿½VEL E Nï¿½O ï¿½ BONITO OU SIMPLES DE FAZER (teria que ser um para cada tipo de balanceamento) -----> VI: weightXinstante (linhas: wtotal, w1, w2, ..., wnservs)
 
 
-To perform the simulation of the load balancing, a virtual environment was simulated with various avatars in it moving according to the random waypoint model \cite{bettstetter2004spr}. However, the choice of which waypoint to go was not completely random. Three hotspots were defined, and there was a probability for the avatar to choose one of these hotspots as its next waypoint. The purpose of this was to force an uneven distribution of avatars in the virtual environment, putting to test the load balancing algorithms. Those who take account of the existence of hotspots form the regions on this basis, reducing the distribution overhead.
+To perform the simulation of the load balancing, a virtual environment was simulated with various avatars. At first, the avatars are distributed uniformly throughout the virtual environment. As the simulation begins, they start to move according to the random waypoint model \cite{bettstetter2004spr}. However, the choice of which waypoint to go was not completely random. Three hotspots were defined, and there was a probability for the avatar to choose one of these hotspots as its next waypoint. Although this may be not very realistic, its purpose was to force an uneven distribution of avatars in the virtual environment, putting to test the load balancing algorithms. Those who take account of the existence of hotspots form the regions on this basis, reducing the distribution overhead.
 
 As we said in section \ref{sec:related}, we also compare our algorithms to the one proposed by Ahmed and Shirmohammadi \cite{ahmed2008mol}. However, it is very important to observe that some changes have been made before simulating. First, the authors divide the virtual environment in hexagonal cells, and we simulate their algorithm on a grid-like division, with square cells. Moreover, as we consider an heterogeneous system, each server $S_i$ presents its own message rate threshold, $T_i^m$.
 %
 Nonetheless, we keep what we consider the core of their approach, which is the selection of the smallest cell cluster managed by the overloaded server, followed by the selection of the cell of that cluster which has the lowest interaction with other cells of the same cluster and, finally, the transference of the selected cell to the least loaded server.
 
 The environment consisted of a two-dimensional space, divided into 225 cells, forming a matrix of order 15. There were 750 avatars. Each cell always belonged to some region, although it could be transferred to another region. There were eight servers ($S_1, S_2, ..., S_8$), each one of them associated to a region, each of which could have 0 to all 225 cells. The capacity of all servers was different, with $P(S_i) = i \times 20000$. Thus, it was possible to test whether the distribution obeyed the criterion of proportional load balancing. Each session of simulated game was 20 minutes long. The total weight of the game was purposely set in a way that it was greater than the total capacity of the system, forcing the triggering of the load balancing.
+
+The evaluation of the load balancing algorithms was done in a more abstract level, taking into consideration the formulae defined in section \ref{sec:def}. The results presented here are calculated using those definitions -- the inter-server communication, for example, is the $OverHead$ defined in that section --, while the simulator software puts the avatars in movement, executing the load balancing algorithms as necessary, i.e. when the weight of a region violates the balance criteria defined in section \ref{sec:alg}.
 
 \begin{figure}[!t]
   \centering
@@ -733,7 +750,7 @@ Ahmed's algorithm, in turn, presented the second highest average overhead. The m
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=0.9\linewidth]{images/baloverhead_ah}
+  \includegraphics[width=0.75\linewidth]{images/baloverhead_ah}
   \caption{Overhead introduced by each balancing algorithm during the game session}
   \label{gra:baloverhead}
 \end{figure}
@@ -750,14 +767,14 @@ However, the introduction of overhead is not the only criterion considered. Fig.
 	
 We can see that \ggp\ is the one which has fewer walk migrations, precisely because their regions are contiguous. However, the fact of not trying to minimize the transfer of cells -- the \ggp\ main objective is to minimize the overhead -- the number of migrations is still the largest of all its variations, lower only than \bfa, which was also the worst algorithm on the user migration criterion. The strategy of \ggpk, and more strongly in the \ggpf, to maintain the maximum possible number of cells when rebalancing, has as a result the lowest numbers of migration of players of all the proposed algorithms.
 
-The algorithm proposed by Ahmed had even less migrations than \ggpf. Though the number of walk migrations is the second highest -- as expected from a more fragmented partitioning --, the number of still migrations is almost negligible. We believe that a clever choice of cells to transfer led to this result. Cells which interact less with other cells will, probably, contain less avatars and, then, trasferring them will not cause many player migrations.
+The algorithm proposed by Ahmed had even less migrations than \ggpf. Though the number of walk migrations is the second highest -- as expected from a more fragmented partitioning --, the number of still migrations is almost negligible. We believe that a clever choice of cells to transfer led to this result. Cells which interact less with other cells will, probably, contain less avatars and, then, transferring them will not cause many player migrations.
 
 % deviation
 Another detail to be considered is the uniformity of distribution: all servers must have an usage rate as similar as possible so that the distribution is considered fair. To measure this uniformity, the standard deviation, $\sigma$, was calculated for $u(S)$ of all servers for each simulated algorithm. Figure \ref{gra:baldeviation} shows the variation of $\sigma{}(u(S))$ over time.
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=0.9\linewidth]{images/baldeviation_ah}
+  \includegraphics[width=0.75\linewidth]{images/baldeviation_ah}
   \caption{Deviation of the ideal usage value}
   \label{gra:baldeviation}
 \end{figure}
