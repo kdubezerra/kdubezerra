@@ -64,8 +64,8 @@
 %grestore
 %\end{filecontents*}
 %
-\documentclass{svjour3}                     % onecolumn (standard format)
-%\documentclass[smallextended]{svjour3}     % onecolumn (second format)
+%\documentclass{svjour3}                     % onecolumn (standard format)
+\documentclass[smallextended]{svjour3}     % onecolumn (second format)
 %\documentclass[twocolumn]{svjour3}         % twocolumn
 %
 \smartqed  % flush right qed marks, e.g. at end of proof
@@ -89,7 +89,7 @@
 %
 \begin{document}
 %[TODO:ajustar TODAS as \refs]
-\title{A load balancing scheme for massively multiplayer online games \thanks{This work was supported by the National Research Council (CNPq) and by the Coordination of Improvement of Higher Education (CAPES), both Brazilian research funding agencies.}
+\title{A load balancing scheme for massively multiplayer online games %\thanks{}
 }
 %\subtitle{Do you have a subtitle?\\ If so, write it here}
 
@@ -123,7 +123,7 @@
 \maketitle
 
 \begin{abstract}
-MMOGs are applications which require much network bandwidth to function properly. In a distributed MMOG server architecture, with heterogeneous resources, the server nodes may become easily overloaded by the high demand from the players for state updates. Much work has been done in order to distribute the load on the server nodes, but this load is usually defined as the number of players on each server, what is not an ideal measure. Also, the heterogeneity of the system is frequently overlooked. In this work, we propose a balancing scheme which has two main goals: allocate load on the servers proportionally to the each one's power and reduce as much as possible the overhead from the distribution, considering the load as the occupied bandwidth of each server. It is divided in three phases: local selection of servers, balancing and refinement. Four algorithms were proposed, from which \ggp\ is the best for overhead reduction and \ggpf\ is the most suited for reducing player migrations between servers. We also make a review of related works and some comparisons were made, where our approach performed better.
+MMOGs, or massively multiplayer online games, are applications which require much network bandwidth to function properly. In a distributed MMOG server architecture, with heterogeneous resources, the server nodes may become easily overloaded by the high demand from the players for state updates. Much work has been done in order to distribute the load on the server nodes, but this load is usually defined as the number of players on each server, what is not an ideal measure. Also, the heterogeneity of the system is frequently overlooked. In this work, we propose a balancing scheme which has two main goals: allocate load on the servers proportionally to the each one's power and reduce as much as possible the overhead from the distribution, considering the load as the occupied bandwidth of each server. It is divided in three phases: local selection of servers, balancing and refinement. Four algorithms were proposed, from which \ggp\ is the best for overhead reduction and \ggpf\ is the most suited for reducing player migrations between servers. We also make a review of related works and some comparisons were made, where our approach performed better.
 
 \keywords{MMOGs \and load balancing \and distributed server \and graph partitioning}
 % \PACS{PACS code1 \and PACS code2 \and more}
@@ -135,11 +135,7 @@ MMOGs are applications which require much network bandwidth to function properly
 
 
 
-<<<<<<< .mine
-The main characteristic of massively multiplayer games is the large number of players, having dozens, or even hundreds, of thousands of participants simultaneously. This large number of players interacting with one another generates a traffic on the support network which may grow quadratically compared to the number of players \cite{chen2006gta}, in the worst case (Figure \ref{fig:quadratic}).
-=======
-The main characteristic of massively multiplayer games is the large number of players, having dozens, or even hundreds, of thousands of participants simultaneously \cite{schiele2007rpp}. This large number of players interacting with one another generates a traffic on the support network which may grow quadratically compared to the number of players, in the worst case.
->>>>>>> .r602
+The main characteristic of massively multiplayer online games is the large number of players, having dozens, or even hundreds, of thousands of participants simultaneously. This large number of players interacting with one another generates a traffic on the support network which may grow quadratically compared to the number of players \cite{chen2006gta}, in the worst case (Figure \ref{fig:quadratic}).
 
 \begin{figure}
   \centering
@@ -163,16 +159,11 @@ Normally, players can freely move their avatars throughout the game world. This 
   \label{fig:avatarsdistribution}
 \end{figure}
 
-<<<<<<< .mine
 For this reason, it is not enough just to divide the players between servers, even if this division is proportional to the resources of each one of them. First, in some cases the usage of the server's bandwidth may be square to the number of players, while in others it may be linear. It is shown in \cite{chen2006gta} that, in a group of avatars who are neighbors of one another, the rate of packets sent to each player is proportional to the number of avatars in that group (as in Fig. \ref{fig:quadratic}). This reason alone is enough to define a new criterion for load balancing.
-=======
-For this reason, it is not enough just to divide the players between servers, even if this division is proportional to the resources of each one of them. First, in some cases the usage of the server's bandwidth may be square to the number of players, while in others it may be linear. It is shown in \cite{chen2006gta} that, in a group of avatars who are neighbors of one another, the rate of packets sent to each player is proportional to the number of avatars in that group (Figure \ref{fig:quadratic}). This reason alone is enough to define a new criterion for load balancing.
->>>>>>> .r602
 
 Moreover, there is another important issue: the overhead of the distribution. As the servers need to communicate with one another, there must be a way to minimize this traffic, reducing the waste of resources of the server system. The load balancing scheme for MMOGs must, then, prevent the presence of hotspots from degrading the quality of the game beyond a tolerable limit.
 
 Differently from other works, we propose here a balancing scheme which considers the upload bandwidth occupation of the server as the load to distribute, what is done among servers with different levels of resources, also reducing the inter-server communication overhead by using a greedy graph partition growing algorithm.
-
 
 %[TODO:falar das pr�xima se��es]
 
@@ -527,13 +518,8 @@ To provide a partitioning which is balanced, proportional and with low edge-cut 
 
 In line \ref{alg:ggp:fraction}, it is calculated the weight share for each region, considering the total weight that is being divided and the total power of the servers of those regions. The server power fraction of a region, $\frac{p(s(R))}{\freecap}$ should be the same fraction of weight that must be attributed to it. Even if this weight is greater than the power of that server, resulting in an overload, all the servers are similarly overloaded, satisfying the criterion of balance that has been defined. The condition for the end of the allocation of new cells in a region is that its weight is greater than or equal to its weight share.
 
-<<<<<<< .mine
 It is important to notice that the while condition (line \ref{alg:ggp:whilefraction}) may lead to the assignment of a cell whose weight is higher than the weight share left on the region. However, it is very unlikely to assign to a region its exact weight share, so it is preferable to surpass this value, guaranteeing that every cell will be assigned to some region. Also, assigning to a region a weight which is higher than its calculated share does not imply that it will become overloaded. First, the weight share of a region is not equal to the power of its server. When there are enough resources, the region's weight share will be smaller than its capacity. Furthermore, as \ggp\ is a greedy algorithm, the heaviest cells will be assigned first, to the most powerful servers.
 
-=======
-It is important to notice that the while condition (line \ref{alg:ggp:whilefraction}) may lead to the assignment of a cell whose weight is higher than the weight share left on the region. However, it is very unlikely to assign to a region its exact weight share, so it is preferrable to surpass this value, guarateeing that every cell will be assigned to some region. Also, assigning to a region a weight which is higher than its calculated share does not imply that it will become overloaded. First, the weight share of a region is not equal to the power of its server. When there are enough resources, the region's weight share will be smaller than its capacity. Furthermore, as \ggp\ is a greedy algorithm, the heaviest cells will be assigned first, to the most powerful servers.
-
->>>>>>> .r602
 %The choice of cells to include in the region tries to put the most interacting pairs of cells in the same regions, reducing the overhead.% In each step, the algorithm not only tries to get a neighbor cell, but also the one with the highest that not only is free from a nearby cell already present in the region, but whose edge linking them is the heaviest possible. %Figure [TODO: reffig] shows an example of the steps of the growth of a region to achieve its share of the load balancing.
 
 %A escolha de c�lulas para incluir na regi�o busca fazer com que cada uma das arestas mais pesadas do grafo $GW$ ligue v�rtices da mesma parti��o, reduzindo o corte de aresta e, assim, o overhead. A cada passo � dada prefer�ncia a escolher a c�lula livre que n�o apenas seja vizinha de uma c�lula j� presente na regi�o, mas tamb�m cuja aresta ligando-as seja a mais pesada poss�vel. A Figura \ref{fig:ggp} mostra um exemplo dos passos do crescimento de uma regi�o at� atingir a sua parcela de carga no balanceamento.
@@ -831,11 +817,12 @@ one could create a load balancing scheme where there will be not only one server
 %\end{tabular}
 %\end{table}
 
-%\begin{acknowledgements}
+\begin{acknowledgements}
+This work was supported by the National Research Council (CNPq) and by the Coordination of Improvement of Higher Education (CAPES), both Brazilian research funding agencies.
 % FINEP and
 %If you'd like to thank anyone, place your comments here
 %and remove the percent signs.
-%\end{acknowledgements}
+\end{acknowledgements}
 
 % BibTeX users please use one of
 %\bibliographystyle{spbasic}      % basic style, author-year citations
