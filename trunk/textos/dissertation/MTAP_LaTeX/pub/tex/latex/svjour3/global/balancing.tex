@@ -89,7 +89,7 @@
 %
 \begin{document}
 %[TODO:ajustar TODAS as \refs]
-\title{A load balancing scheme for massively multiplayer online games \thanks{This work was supported by the National Research Council (CNPq) and by the Coordination of Improvement of Higher Education (CAPES), both Brazilian research funding agencies.}
+\title{A load balancing scheme for massively multiplayer online games %\thanks{}
 }
 %\subtitle{Do you have a subtitle?\\ If so, write it here}
 
@@ -123,7 +123,7 @@
 \maketitle
 
 \begin{abstract}
-MMOGs are applications which require much network bandwidth to function properly. In a distributed MMOG server architecture, with heterogeneous resources, the server nodes may become easily overloaded by the high demand from the players for state updates. Much work has been done in order to distribute the load on the server nodes, but this load is usually defined as the number of players on each server, what is not an ideal measure. Also, the heterogeneity of the system is frequently overlooked. In this work, we propose a balancing scheme which has two main goals: allocate load on the servers proportionally to the each one's power and reduce as much as possible the overhead from the distribution, considering the load as the occupied bandwidth of each server. It is divided in three phases: local selection of servers, balancing and refinement. Four algorithms were proposed, from which \ggp\ is the best for overhead reduction and \ggpf\ is the most suited for reducing player migrations between servers. We also make a review of related works and some comparisons were made, where our approach performed better.
+MMOGs, or massively multiplayer online games, are applications which require much network bandwidth to function properly. In a distributed MMOG server architecture, with heterogeneous resources, the server nodes may become easily overloaded by the high demand from the players for state updates. Much work has been done in order to distribute the load on the server nodes, but this load is usually defined as the number of players on each server, what is not an ideal measure. Also, the heterogeneity of the system is frequently overlooked. In this work, we propose a balancing scheme which has two main goals: allocate load on the servers proportionally to the each one's power and reduce as much as possible the overhead from the distribution, considering the load as the occupied bandwidth of each server. It is divided in three phases: local selection of servers, balancing and refinement. Four algorithms were proposed, from which \ggp\ is the best for overhead reduction and \ggpf\ is the most suited for reducing player migrations between servers. We also make a review of related works and some comparisons were made, where our approach performed better.
 
 \keywords{MMOGs \and load balancing \and distributed server \and graph partitioning}
 % \PACS{PACS code1 \and PACS code2 \and more}
@@ -135,7 +135,7 @@ MMOGs are applications which require much network bandwidth to function properly
 
 
 
-The main characteristic of massively multiplayer games is the large number of players, having dozens, or even hundreds, of thousands of participants simultaneously. This large number of players interacting with one another generates a traffic on the support network which may grow quadratically compared to the number of players \cite{chen2006gta}, in the worst case (Figure \ref{fig:quadratic}).
+The main characteristic of massively multiplayer online games is the large number of players, having dozens, or even hundreds, of thousands of participants simultaneously. This large number of players interacting with one another generates a traffic on the support network which may grow quadratically compared to the number of players \cite{chen2006gta}, in the worst case (Figure \ref{fig:quadratic}).
 
 \begin{figure}
   \centering
@@ -817,11 +817,12 @@ one could create a load balancing scheme where there will be not only one server
 %\end{tabular}
 %\end{table}
 
-%\begin{acknowledgements}
+\begin{acknowledgements}
+This work was supported by the National Research Council (CNPq) and by the Coordination of Improvement of Higher Education (CAPES), both Brazilian research funding agencies.
 % FINEP and
 %If you'd like to thank anyone, place your comments here
 %and remove the percent signs.
-%\end{acknowledgements}
+\end{acknowledgements}
 
 % BibTeX users please use one of
 %\bibliographystyle{spbasic}      % basic style, author-year citations
