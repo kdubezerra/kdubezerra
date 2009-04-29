@@ -70,10 +70,18 @@
 %
 \smartqed  % flush right qed marks, e.g. at end of proof
 %
+
 \usepackage{graphicx}
 \usepackage[latin1]{inputenc}
 \usepackage{algorithmic}
 \usepackage{algorithm}
+\usepackage[compact]{titlesec}
+\usepackage{times}
+
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.75}
+
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -123,11 +131,7 @@
 \maketitle
 
 \begin{abstract}
-In a distributed MMOG massively multiplayer online game) server architecture, the server nodes may become easily overloaded by the high demand from the players for state updates. Many works propose algorithms to distribute 
-%51
-the load on the server nodes, but this load is usually defined as the number of players on each server, what is not an ideal measure. Also, the possible heterogeneity of the system is frequently overlooked. We propose a balancing scheme with two main goals: allocate load on server nodes proportionally to the each one's power and 
-%111
-reduce as much as possible the inter-server communication overhead, considering the load as the occupied bandwidth of each server. It is divided in three phases: local selection of servers, balancing and refinement. Four algorithms were proposed, from which \ggp\ is the best for overhead reduction and \ggpf\ is the most suited for reducing player migrations between servers. We also make a review of related works and some comparisons were made, where our approach performed better.
+In a distributed MMOG (massively multiplayer online game) server architecture, the server nodes may become easily overloaded by the high demand from the players for state updates. Many works propose algorithms to distribute the load on the server nodes, but this load is usually defined as the number of players on each server, what is not an ideal measure. Also, the possible heterogeneity of the system is frequently overlooked. We propose a balancing scheme with two main goals: allocate load on server nodes proportionally to the each one's power and reduce the inter-server communication overhead, considering the load as the occupied bandwidth of each server. Four algorithms were proposed, from which \ggp\ is the best for overhead reduction and \ggpf\ is the most suited for reducing player migrations between servers. We also make a review of related works and some comparisons were made, where our approach performed better.
 
 \keywords{MMOGs \and load balancing \and distributed server \and graph partitioning}
 % \PACS{PACS code1 \and PACS code2 \and more}
@@ -154,14 +158,7 @@ The problem is that, when using a distributed server, it must be delegated to ea
 	
 An initial idea might be to distribute the players among servers, so that the number of players on each server would be proportional to that server's bandwidth. However, this distribution would not work, for the burden caused by players also depends on how they are interacting with one another. For example, if the avatars of two players are too distant from each other, probably there will be no interaction between them and therefore the server needs only to update each one of them with the result of their own actions. However, if these avatars are close to each other, each player should be updated not only of his own actions, but also of the actions of the other player.
 	
-Normally, players can freely move their avatars throughout the game world. This makes possible the formation of \emph{hotspots} \cite{ahmed2008mol}, around which the players are more concentrated than in other regions of the virtual environment (Figure \ref{fig:avatarsdistribution}). Moreover, many massively multiplayer online RPGs not only permit but also stimulate, to some extent, the formation of these points of interest. In the worlds of these MMORPGs, there are entire cities, where the players meet to chat, exchange virtual goods or even fight, and there are also desertic areas, with few attractions for the players, and where the number of avatars is relatively small compared to other places of the environment.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=1.0\linewidth]{images/avatarsdistribution}
-  \caption{Distribution of avatars with and without hotspots}
-  \label{fig:avatarsdistribution}
-\end{figure}
+Normally, players can freely move their avatars throughout the game world. This makes possible the formation of \emph{hotspots} \cite{ahmed2008mol}, around which the players are more concentrated than in other regions of the virtual environment. Moreover, many massively multiplayer online RPGs not only permit but also stimulate, to some extent, the formation of these points of interest. In the worlds of these MMORPGs, there are entire cities, where the players meet to chat, exchange virtual goods or even fight, and there are also desertic areas, with few attractions for the players, and where the number of avatars is relatively small compared to other places of the environment.
 
 For this reason, it is not enough just to divide the players between servers, even if this division is proportional to the resources of each one of them. First, in some cases the usage of the server's bandwidth may be square to the number of players, while in others it may be linear. It is shown in \cite{chen2006gta} that, in a group of avatars who are neighbors of one another, the rate of packets sent to each player is proportional to the number of avatars in that group (as in Fig. \ref{fig:quadratic}). This reason alone is enough to define a new criterion for load balancing.
 
@@ -777,8 +774,8 @@ Although the servers presented the largest variation in the resources usage rate
 
 It was proposed here a load balancing scheme for distributed MMOG servers, taking into account the use of upload bandwidth of the server nodes. We considered important aspects such as the quadratic growth of the traffic when the avatars are close to one another, and the distribution overhead when players connected to different servers are interacting. The scheme, which is divided into three phases, proposed different algorithms for phase 2 (the balancing phase), and \ggp\ presented the lowest overhead of all, while \ggpf\ presented the second fewest migrations of players between servers, along with the second lower overhead introduced and a fair load distribution. For this reason, we recommend the use of \ggpf\ for most cases. However, in some situations where the system load must be reduced as much as possible, \ggp\ would perform better.
 
-As a future work, %the algorithms can be further refined, if the load balancing is considered for an average of the load in a period -- in the last minutes, for example -- rather than the instantaneous value. Thus, it would avoid unnecessary rebalancing that would be caused by an oscilating weight. Another possible future work is to 
-one could create a load balancing scheme where there will be not only one server node, but a group of server nodes managing each region. In this case, ways to balance the load on the system, considering this two-level distribution, may be investigated.
+%As a future work, %the algorithms can be further refined, if the load balancing is considered for an average of the load in a period -- in the last minutes, for example -- rather than the instantaneous value. Thus, it would avoid unnecessary rebalancing that would be caused by an oscilating weight. Another possible future work is to 
+%one could create a load balancing scheme where there will be not only one server node, but a group of server nodes managing each region. In this case, ways to balance the load on the system, considering this two-level distribution, may be investigated.
 
 %\paragraph{Paragraph headings} Use paragraph headings as needed.
 %\begin{equation}
@@ -849,7 +846,7 @@ This work was supported by the National Research Council (CNPq) and by the Coord
 %% etc
 %\end{thebibliography}
 
-\begin{figure}
+\begin{figure}[b]
 %% Use the relevant command to insert your figure file.
 %% For example, with the graphicx package use
 	\includegraphics[width=0.2\linewidth]{images/Fig-Bezerra.jpg}
@@ -857,10 +854,9 @@ This work was supported by the National Research Council (CNPq) and by the Coord
 	\textbf{Carlos Eduardo Benevides Bezerra} is a full-time Ph.D. student at UFRGS (Universidade Federal do Rio Grande do Sul). He obtained his M.Sc. from the same university in 2009 and his B.Sc. degree from UFBA (Universidade Federal da Bahia) in 2007. His research interests are massively multiplayer online games, interest management algorithms, parallel and distributed algorithms, peer-to-peer networks and computational geometry.
 %% figure caption is below the figure
 %\caption{Please write your figure caption here}
-\label{fig:cebb}       % Give a unique label
 \end{figure}
 
-\begin{figure}
+\begin{figure}[b]
 %% Use the relevant command to insert your figure file.
 %% For example, with the graphicx package use
   \includegraphics[width=0.2\linewidth]{images/Fig-Geyer.jpg}
@@ -870,7 +866,6 @@ This work was supported by the National Research Council (CNPq) and by the Coord
 
 %% figure caption is below the figure
 %\caption{Please write your figure caption here}
-\label{fig:cebb}       % Give a unique label
 \end{figure}
 
 \end{document}
