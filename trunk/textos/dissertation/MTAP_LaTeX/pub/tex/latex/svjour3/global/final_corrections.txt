@@ -1,0 +1,28 @@
+address (put the number BEFORE the city name):
+Av. Bento Gonçalves, 9500, Porto Alegre, Brazil
+
+line 7: "to each one's power", instead of "to THE each one's power"
+
+line 79: "of two different players may be", instead of "of two different players, may be" (remove the last comma in this line)
+
+line 101: "In this approach", instead of "This approach" (beginning of the line)
+
+line 103: "in our work", instead of "in this work" (to avoid confusing with the approach of [15])
+
+line 199: "it participates", instead of "he participates"
+
+line 200: "otherwise it responds with the load information", instead of "otherwise it responds the server with the load information"
+
+line 208: "First, the initiator server, S6, is inserted", instead of "First, the initiator server, S6 is inserted" (insert a comma after S6)
+
+line 299: "individual weight - or upload bandwidth", instead of "individual weight - or OF upload bandwidth" (remove the "OF")
+
+line 447: "server power (line 8)", instead of "server power (line 10)" (incorrect reference to algorithm line)
+
+line 489: "would probably be the lightest", instead of "would probably the lightest" (insert the missing verb "be")
+
+line 519: "to the free capacity", instead of "to free capacity" (insert "the")
+
+line 600: "presents the lowest overhead at any moment of the game session", instead of "gives the lowest overhead in any moment of the game"
+
+line 649: "the ProGReGA algorithm", instead of "the ProGReGA" (insert "algorithm")
