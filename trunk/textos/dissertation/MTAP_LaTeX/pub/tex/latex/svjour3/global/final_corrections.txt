@@ -26,3 +26,8 @@ line 519: "to the free capacity", instead of "to free capacity" (insert "the")
 line 600: "presents the lowest overhead at any moment of the game session", instead of "gives the lowest overhead in any moment of the game"
 
 line 649: "the ProGReGA algorithm", instead of "the ProGReGA" (insert "algorithm")
+
+Answer to query:
+
+Another, more appropriate, photograph of Carlos Eduardo Benevides Bezerra has been attached.
+
