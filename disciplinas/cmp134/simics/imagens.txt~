@@ -1,0 +1,4 @@
+AMD64: /home/kdubezerra/SIMICS/simics-4.0/simics-x86-440bx-4.0.16/targets/x86-440bx/images/cosmo1-fedora5.craff
+SUN SPARC: ./simics 
+after_boot_sunfire_4cpus4caches.conf
+
