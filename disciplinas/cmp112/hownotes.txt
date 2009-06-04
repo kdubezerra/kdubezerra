@@ -1,0 +1,3 @@
+Query operators -> irrelevante, já que depende do motor, e o Google não foi analisado
+
+fazer paralelo ao final, testando cada uma das conclusões do artigo, e aplicando ao projeto
