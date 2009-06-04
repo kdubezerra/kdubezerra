@@ -1,0 +1,29 @@
+﻿INTERLEAVED
+conf.cpu0.cycles = 36568773000
+conf.cpu0.steps  = 36562077464
+
+conf.cpu0.cycles = 39489357000
+conf.cpu0.steps  = 39468719672
+
+2920584000
+2906642208
+
+L1234
+conf.cpu0.cycles = 28393453000
+conf.cpu0.steps  = 28386375352
+
+conf.cpu0.cycles = 31309392000
+conf.cpu0.steps  = 31274310064
+
+2915939000
+2887934712
+
+L123
+conf.cpu0.cycles = 28508021000
+conf.cpu0.steps  = 28505115864
+
+conf.cpu0.cycles = 31427947000
+conf.cpu0.steps  = 31412326472
+
+2919926000
+2907210608
