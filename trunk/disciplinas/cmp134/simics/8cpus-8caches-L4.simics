@@ -1,0 +1,659 @@
+# CORE/CACHE1
+$num_cpus = 8
+$memory_megs=1024
+$os = "walnut"
+run-command-file "%simics%/targets/sunfire/walnut-common.simics"
+#=============================================
+# Transaction staller for memory
+#=============================================
+@staller = pre_conf_object('staller','trans-staller')
+@staller.stall_time = 0
+#@staller.stall_time = 60
+#
+#=============================================
+# L4 = 16MB, 256 sets, 16-way, 16 cycles.
+#=============================================
+## Memory Cache L4 : l4c0
+@l4c0 = pre_conf_object('l4c0','g-cache')
+@l4c0.cpus = [conf.cpu0,conf.cpu1,conf.cpu4,conf.cpu5,conf.cpu6,conf.cpu7,conf.cpu8,conf.cpu9]
+@l4c0.config_line_number = 131072
+@l4c0.config_line_size = 128
+@l4c0.config_assoc = 16
+@l4c0.config_virtual_index = 0
+@l4c0.config_virtual_tag = 0
+@l4c0.config_write_back = 1
+@l4c0.config_write_allocate = 1
+@l4c0.config_replacement_policy = 'lru'
+@l4c0.penalty_read = 16
+@l4c0.penalty_write = 16
+@l4c0.penalty_read_next = 0
+@l4c0.penalty_write_next = 0
+@l4c0.timing_model = staller
+#======================
+## L3 Cache #0 - 8 MB - shared for each 4 cores
+#======================
+@l3c0 = pre_conf_object('l3c0','g-cache')
+@l3c0.cpus = [conf.cpu0,conf.cpu1,conf.cpu4,conf.cpu5]
+@l3c0.config_line_number = 65536
+@l3c0.config_line_size = 128
+@l3c0.config_assoc = 16
+@l3c0.config_virtual_index = 0
+@l3c0.config_virtual_tag = 0
+@l3c0.config_write_back = 1
+@l3c0.config_write_allocate = 1
+@l3c0.config_replacement_policy = 'lru'
+@l3c0.penalty_read = 16
+@l3c0.penalty_write = 16
+@l3c0.penalty_read_next = 0
+@l3c0.penalty_write_next = 0
+@l3c0.timing_model = l4c0
+#======================
+## L3 Cache #1 - 8 MB - shared for the other 4 cores
+#======================
+@l3c1 = pre_conf_object('l3c1','g-cache')
+@l3c1.cpus = [conf.cpu6,conf.cpu7,conf.cpu8,conf.cpu9]
+@l3c1.config_line_number = 65536
+@l3c1.config_line_size = 128
+@l3c1.config_assoc = 16
+@l3c1.config_virtual_index = 0
+@l3c1.config_virtual_tag = 0
+@l3c1.config_write_back = 1
+@l3c1.config_write_allocate = 1
+@l3c1.config_replacement_policy = 'lru'
+@l3c1.penalty_read = 16
+@l3c1.penalty_write = 16
+@l3c1.penalty_read_next = 0
+@l3c1.penalty_write_next = 0
+@l3c1.timing_model = l4c0
+#================================================================
+##  Processadores 0-1 - Core2Duo 0
+#================================================================
+## Memory Cache L2 : l2c0
+@l2c0= pre_conf_object('l2c0', 'g-cache')
+@l2c0.cpus = [conf.cpu0,conf.cpu1]
+@l2c0.config_line_number = 16384
+@l2c0.config_line_size = 64
+@l2c0.config_assoc = 8
+@l2c0.config_virtual_index = 0
+@l2c0.config_virtual_tag = 0
+@l2c0.config_write_back = 1
+@l2c0.config_write_allocate = 1
+@l2c0.config_replacement_policy = 'lru'
+@l2c0.penalty_read = 0
+@l2c0.penalty_write = 0
+@l2c0.penalty_read_next = 0
+@l2c0.penalty_write_next = 0
+@l2c0.timing_model = l3c0
+#
+#=============================================
+## L1 - Instruction Cache : L1 Inst0
+@ic0 = pre_conf_object('ic0', 'g-cache')
+@ic0.cpus = conf.cpu0
+@ic0.config_line_number = 1024
+@ic0.config_line_size = 32
+@ic0.config_assoc = 2
+@ic0.config_virtual_index = 0
+@ic0.config_virtual_tag = 0
+@ic0.config_write_back = 0
+@ic0.config_write_allocate = 0
+@ic0.config_replacement_policy = 'lru'
+@ic0.penalty_read = 0
+@ic0.penalty_write = 0
+@ic0.penalty_read_next = 0
+@ic0.penalty_write_next = 0
+@ic0.timing_model = l2c0
+#
+#=============================================
+## L1 - Data Cache : L1 Data0
+@dc0 = pre_conf_object('dc0', 'g-cache')
+@dc0.cpus = conf.cpu0
+@dc0.config_line_number = 1024
+@dc0.config_line_size = 32
+@dc0.config_assoc = 2
+@dc0.config_virtual_index = 0
+@dc0.config_virtual_tag = 0
+@dc0.config_write_back = 0
+@dc0.config_write_allocate = 0
+@dc0.config_replacement_policy = 'lru'
+@dc0.penalty_read = 0
+@dc0.penalty_write = 0
+@dc0.penalty_read_next = 0
+@dc0.penalty_write_next = 0
+@dc0.timing_model = l2c0
+#
+#=============================================
+## Transaction splitter for L1 instruction cache
+@ts_i0 = pre_conf_object('ts_i0', 'trans-splitter')
+@ts_i0.cache = ic0
+@ts_i0.timing_model = ic0
+@ts_i0.next_cache_line_size = 64
+#
+#=============================================
+## Transaction splitter for L1 data cache
+@ts_d0 = pre_conf_object('ts_d0', 'trans-splitter')
+@ts_d0.cache = dc0
+@ts_d0.timing_model = dc0
+@ts_d0.next_cache_line_size = 64
+#
+#=============================================
+## ID splitter for L1 cache
+@id0 = pre_conf_object('id0', 'id-splitter')
+@id0.ibranch = ts_i0
+@id0.dbranch = ts_d0
+#
+#=============================================
+## L1 - Instruction Cache : L1 Inst1
+@ic1 = pre_conf_object('ic1', 'g-cache')
+@ic1.cpus = conf.cpu1
+@ic1.config_line_number = 1024
+@ic1.config_line_size = 32
+@ic1.config_assoc = 2
+@ic1.config_virtual_index = 0
+@ic1.config_virtual_tag = 0
+@ic1.config_write_back = 0
+@ic1.config_write_allocate = 0
+@ic1.config_replacement_policy = 'lru'
+@ic1.penalty_read = 0
+@ic1.penalty_write = 0
+@ic1.penalty_read_next = 0
+@ic1.penalty_write_next = 0
+@ic1.timing_model = l2c0
+#
+#=============================================
+## L1 - Data Cache : L1 Data1
+@dc1 = pre_conf_object('dc1', 'g-cache')
+@dc1.cpus = conf.cpu1
+@dc1.config_line_number = 1024
+@dc1.config_line_size = 32
+@dc1.config_assoc = 2
+@dc1.config_virtual_index = 0
+@dc1.config_virtual_tag = 0
+@dc1.config_write_back = 0
+@dc1.config_write_allocate = 0
+@dc1.config_replacement_policy = 'lru'
+@dc1.penalty_read = 0
+@dc1.penalty_write = 0
+@dc1.penalty_read_next = 0
+@dc1.penalty_write_next = 0
+@dc1.timing_model = l2c0
+#
+#=============================================
+## Transaction splitter for L1 instruction cache
+@ts_i1 = pre_conf_object('ts_i1', 'trans-splitter')
+@ts_i1.cache = ic1
+@ts_i1.timing_model = ic1
+@ts_i1.next_cache_line_size = 64
+#
+#=============================================
+## Transaction splitter for L1 data cache
+@ts_d1 = pre_conf_object('ts_d1', 'trans-splitter')
+@ts_d1.cache = dc1
+@ts_d1.timing_model = dc1
+@ts_d1.next_cache_line_size = 64
+#
+#=============================================
+## ID splitter for L1 cache
+@id1 = pre_conf_object('id1', 'id-splitter')
+@id1.ibranch = ts_i1
+@id1.dbranch = ts_d1
+#
+#=============================================
+#Add Configuration
+@SIM_add_configuration([staller,l4c0,l3c0,l3c1,l2c0,ic0,dc0,ts_i0,ts_d0,id0,ic1,dc1,ts_i1,ts_d1,id1],None)
+#
+#=============================================
+#Timing Model
+@conf.cpu0_space.default_target = [conf.phys_mem, 0, 0, conf.phys_mem]
+@conf.cpu0.physical_memory = conf.cpu0_space
+@conf.cpu0_space.timing_model = conf.id0
+@conf.cpu1_space.default_target = [conf.phys_mem, 0, 0, conf.phys_mem]
+@conf.cpu1.physical_memory = conf.cpu1_space
+@conf.cpu1_space.timing_model = conf.id1
+#
+#================================================
+#High Levels
+@l2c0.higher_level_caches = [ic0,dc0,ic1,dc1]
+#=============================================
+#
+#=============================================
+## Processador 4-5 - Core2Duo1
+#=============================================
+## Memory Cache L2 : l2c1
+@l2c1 = pre_conf_object('l2c1', 'g-cache')
+@l2c1.cpus = [conf.cpu4,conf.cpu5]
+@l2c1.config_line_number = 16384
+@l2c1.config_line_size = 64
+@l2c1.config_assoc = 8
+@l2c1.config_virtual_index = 0
+@l2c1.config_virtual_tag = 0
+@l2c1.config_write_back = 1
+@l2c1.config_write_allocate = 1
+@l2c1.config_replacement_policy = 'lru'
+@l2c1.penalty_read = 0
+@l2c1.penalty_write = 0
+@l2c1.penalty_read_next = 0
+@l2c1.penalty_write_next = 0
+@l2c1.timing_model = l3c0
+#=============================================
+## L1 - Instruction Cache : L1 Inst4
+@ic4 = pre_conf_object('ic4', 'g-cache')
+@ic4.cpus = conf.cpu4
+@ic4.config_line_number = 1024
+@ic4.config_line_size = 32
+@ic4.config_assoc = 2
+@ic4.config_virtual_index = 0
+@ic4.config_virtual_tag = 0
+@ic4.config_write_back = 0
+@ic4.config_write_allocate = 0
+@ic4.config_replacement_policy = 'lru'
+@ic4.penalty_read = 0
+@ic4.penalty_write = 0
+@ic4.penalty_read_next = 0
+@ic4.penalty_write_next = 0
+@ic4.timing_model = l2c1
+#=============================================
+## L1 - Data Cache : L1 Data4
+@dc4 = pre_conf_object('dc4', 'g-cache')
+@dc4.cpus = conf.cpu4
+@dc4.config_line_number = 1024
+@dc4.config_line_size = 32
+@dc4.config_assoc = 2
+@dc4.config_virtual_index = 0
+@dc4.config_virtual_tag = 0
+@dc4.config_write_back = 0
+@dc4.config_write_allocate = 0
+@dc4.config_replacement_policy = 'lru'
+@dc4.penalty_read = 0
+@dc4.penalty_write = 0
+@dc4.penalty_read_next = 0
+@dc4.penalty_write_next = 0
+@dc4.timing_model = l2c1
+#=============================================
+## Transaction splitter for L1 instruction cache
+@ts_i4 = pre_conf_object('ts_i4', 'trans-splitter')
+@ts_i4.cache = ic4
+@ts_i4.timing_model = ic4
+@ts_i4.next_cache_line_size = 64
+#=============================================
+## Transaction splitter for L1 data cache
+@ts_d4 = pre_conf_object('ts_d4', 'trans-splitter')
+@ts_d4.cache = dc4
+@ts_d4.timing_model = dc4
+@ts_d4.next_cache_line_size = 64
+#=============================================
+## ID splitter for L1 cache
+@id4 = pre_conf_object('id4', 'id-splitter')
+@id4.ibranch = ts_i4
+@id4.dbranch = ts_d4
+#=============================================
+# Fim Primeiro Conjunto
+#==============================================
+## L1 - Instruction Cache : L1 Inst5
+@ic5 = pre_conf_object('ic5', 'g-cache')
+@ic5.cpus = conf.cpu5
+@ic5.config_line_number = 1024
+@ic5.config_line_size = 32
+@ic5.config_assoc = 2
+@ic5.config_virtual_index = 0
+@ic5.config_virtual_tag = 0
+@ic5.config_write_back = 0
+@ic5.config_write_allocate = 0
+@ic5.config_replacement_policy = 'lru'
+@ic5.penalty_read = 0
+@ic5.penalty_write = 0
+@ic5.penalty_read_next = 0
+@ic5.penalty_write_next = 0
+@ic5.timing_model = l2c1
+#=============================================
+## L1 - Data Cache : L1 Data5
+@dc5 = pre_conf_object('dc5', 'g-cache')
+@dc5.cpus = conf.cpu5
+@dc5.config_line_number = 1024
+@dc5.config_line_size = 32
+@dc5.config_assoc = 2
+@dc5.config_virtual_index = 0
+@dc5.config_virtual_tag = 0
+@dc5.config_write_back = 0
+@dc5.config_write_allocate = 0
+@dc5.config_replacement_policy = 'lru'
+@dc5.penalty_read = 0
+@dc5.penalty_write = 0
+@dc5.penalty_read_next = 0
+@dc5.penalty_write_next = 0
+@dc5.timing_model = l2c1
+#=============================================
+## Transaction splitter for L1 instruction cache
+@ts_i5 = pre_conf_object('ts_i5', 'trans-splitter')
+@ts_i5.cache = ic5
+@ts_i5.timing_model = ic5
+@ts_i5.next_cache_line_size = 64
+#=============================================
+## Transaction splitter for L1 data cache
+@ts_d5 = pre_conf_object('ts_d5', 'trans-splitter')
+@ts_d5.cache = dc5
+@ts_d5.timing_model = dc5
+@ts_d5.next_cache_line_size = 64
+#=============================================
+## ID splitter for L1 cache
+@id5 = pre_conf_object('id5', 'id-splitter')
+@id5.ibranch = ts_i5
+@id5.dbranch = ts_d5
+#
+#Add Configuration
+@SIM_add_configuration([l2c1,ic4,dc4,ts_i4,ts_d4,id4,ic5,dc5,ts_i5,ts_d5,id5],None)
+#=============================================
+#High Levels
+@l2c1.higher_level_caches = [ic4,dc4,ic5,dc5]
+#=============================================
+#Timing Model
+@conf.cpu4_space.default_target = [conf.phys_mem, 0, 0, conf.phys_mem]
+@conf.cpu4.physical_memory = conf.cpu4_space
+@conf.cpu4_space.timing_model = conf.id4
+#
+@conf.cpu5_space.default_target = [conf.phys_mem, 0, 0, conf.phys_mem]
+@conf.cpu5.physical_memory = conf.cpu5_space
+@conf.cpu5_space.timing_model = conf.id5
+#
+#=============================================
+# Processador 6-7 - Core2Duo2
+#=============================================
+#
+## Memory Cache L2 : l2c2
+@l2c2 = pre_conf_object('l2c2', 'g-cache')
+@l2c2.cpus = [conf.cpu6,conf.cpu7]
+@l2c2.config_line_number = 16384
+@l2c2.config_line_size = 64
+@l2c2.config_assoc = 8
+@l2c2.config_virtual_index = 0
+@l2c2.config_virtual_tag = 0
+@l2c2.config_write_back = 1
+@l2c2.config_write_allocate = 1
+@l2c2.config_replacement_policy = 'lru'
+@l2c2.penalty_read = 0
+@l2c2.penalty_write = 0
+@l2c2.penalty_read_next = 0
+@l2c2.penalty_write_next = 0
+@l2c2.timing_model = l3c1
+#
+#=============================================
+## L1 - Instruction Cache : L1 Inst6
+@ic6 = pre_conf_object('ic6', 'g-cache')
+@ic6.cpus = conf.cpu6
+@ic6.config_line_number = 1024
+@ic6.config_line_size = 32
+@ic6.config_assoc = 2
+@ic6.config_virtual_index = 0
+@ic6.config_virtual_tag = 0
+@ic6.config_write_back = 0
+@ic6.config_write_allocate = 0
+@ic6.config_replacement_policy = 'lru'
+@ic6.penalty_read = 0
+@ic6.penalty_write = 0
+@ic6.penalty_read_next = 0
+@ic6.penalty_write_next = 0
+@ic6.timing_model = l2c2
+#
+#=============================================
+## L1 - Data Cache : L1 Data6
+@dc6 = pre_conf_object('dc6', 'g-cache')
+@dc6.cpus = conf.cpu6
+@dc6.config_line_number = 1024
+@dc6.config_line_size = 32
+@dc6.config_assoc = 2
+@dc6.config_virtual_index = 0
+@dc6.config_virtual_tag = 0
+@dc6.config_write_back = 0
+@dc6.config_write_allocate = 0
+@dc6.config_replacement_policy = 'lru'
+@dc6.penalty_read = 0
+@dc6.penalty_write = 0
+@dc6.penalty_read_next = 0
+@dc6.penalty_write_next = 0
+@dc6.timing_model = l2c2
+#
+#=============================================
+## Transaction splitter for L1 instruction cache
+@ts_i6 = pre_conf_object('ts_i6', 'trans-splitter')
+@ts_i6.cache = ic6
+@ts_i6.timing_model = ic6
+@ts_i6.next_cache_line_size = 64
+#
+#=============================================
+## Transaction splitter for L1 data cache
+@ts_d6 = pre_conf_object('ts_d6', 'trans-splitter')
+@ts_d6.cache = dc6
+@ts_d6.timing_model = dc6
+@ts_d6.next_cache_line_size = 64
+#
+#=============================================
+## ID splitter for L1 cache
+@id6 = pre_conf_object('id6', 'id-splitter')
+@id6.ibranch = ts_i6
+@id6.dbranch = ts_d6
+#
+#=============================================
+## L1 - Instruction Cache : L1 Inst7
+@ic7 = pre_conf_object('ic7', 'g-cache')
+@ic7.cpus = conf.cpu7
+@ic7.config_line_number = 1024
+@ic7.config_line_size = 32
+@ic7.config_assoc = 2
+@ic7.config_virtual_index = 0
+@ic7.config_virtual_tag = 0
+@ic7.config_write_back = 0
+@ic7.config_write_allocate = 0
+@ic7.config_replacement_policy = 'lru'
+@ic7.penalty_read = 0
+@ic7.penalty_write = 0
+@ic7.penalty_read_next = 0
+@ic7.penalty_write_next = 0
+@ic7.timing_model = l2c2
+#
+#=============================================
+## L1 - Data Cache : L1 Data7
+@dc7 = pre_conf_object('dc7', 'g-cache')
+@dc7.cpus = conf.cpu7
+@dc7.config_line_number = 1024
+@dc7.config_line_size = 32
+@dc7.config_assoc = 2
+@dc7.config_virtual_index = 0
+@dc7.config_virtual_tag = 0
+@dc7.config_write_back = 0
+@dc7.config_write_allocate = 0
+@dc7.config_replacement_policy = 'lru'
+@dc7.penalty_read = 0
+@dc7.penalty_write = 0
+@dc7.penalty_read_next = 0
+@dc7.penalty_write_next = 0
+@dc7.timing_model = l2c2
+#
+#=============================================
+## Transaction splitter for L1 instruction cache
+@ts_i7 = pre_conf_object('ts_i7', 'trans-splitter')
+@ts_i7.cache = ic7
+@ts_i7.timing_model = ic7
+@ts_i7.next_cache_line_size = 64
+#
+#=============================================
+## Transaction splitter for L1 data cache
+@ts_d7 = pre_conf_object('ts_d7', 'trans-splitter')
+@ts_d7.cache = dc7
+@ts_d7.timing_model = dc7
+@ts_d7.next_cache_line_size = 64
+#
+#=============================================
+## ID splitter for L1 cache
+@id7 = pre_conf_object('id7', 'id-splitter')
+@id7.ibranch = ts_i7
+@id7.dbranch = ts_d7
+#
+#=============================================
+#Add Configuration
+@SIM_add_configuration([l2c2,ic6,dc6,ts_i6,ts_d6,id6,ic7,dc7,ts_i7,ts_d7,id7],None)
+#
+#=============================================
+#Timing Model
+@conf.cpu6_space.default_target = [conf.phys_mem, 0, 0, conf.phys_mem]
+@conf.cpu6.physical_memory = conf.cpu6_space
+@conf.cpu6_space.timing_model = conf.id6
+@conf.cpu7_space.default_target = [conf.phys_mem, 0, 0, conf.phys_mem]
+@conf.cpu7.physical_memory = conf.cpu7_space
+@conf.cpu7_space.timing_model = conf.id7
+#
+#================================================
+#High Levels
+@l2c2.higher_level_caches = [ic6,dc6,ic7,dc7]
+#=============================================
+## Outro Conjunto
+#=============================================
+##  Processador 8-9 Core2Duo3
+#=============================================
+## Memory Cache L2 : l2c3
+@l2c3 = pre_conf_object('l2c3', 'g-cache')
+@l2c3.cpus = [conf.cpu8,conf.cpu9]
+@l2c3.config_line_number = 16384
+@l2c3.config_line_size = 64
+@l2c3.config_assoc = 8
+@l2c3.config_virtual_index = 0
+@l2c3.config_virtual_tag = 0
+@l2c3.config_write_back = 1
+@l2c3.config_write_allocate = 1
+@l2c3.config_replacement_policy = 'lru'
+@l2c3.penalty_read = 0
+@l2c3.penalty_write = 0
+@l2c3.penalty_read_next = 0
+@l2c3.penalty_write_next = 0
+@l2c3.timing_model = l3c1
+#=============================================
+## L1 - Instruction Cache : L1 Inst8
+@ic8 = pre_conf_object('ic8', 'g-cache')
+@ic8.cpus = conf.cpu8
+@ic8.config_line_number = 1024
+@ic8.config_line_size = 32
+@ic8.config_assoc = 2
+@ic8.config_virtual_index = 0
+@ic8.config_virtual_tag = 0
+@ic8.config_write_back = 0
+@ic8.config_write_allocate = 0
+@ic8.config_replacement_policy = 'lru'
+@ic8.penalty_read = 0
+@ic8.penalty_write = 0
+@ic8.penalty_read_next = 0
+@ic8.penalty_write_next = 0
+@ic8.timing_model = l2c3
+#=============================================
+## L1 - Data Cache : L1 Data8
+@dc8 = pre_conf_object('dc8', 'g-cache')
+@dc8.cpus = conf.cpu8
+@dc8.config_line_number = 1024
+@dc8.config_line_size = 32
+@dc8.config_assoc = 2
+@dc8.config_virtual_index = 0
+@dc8.config_virtual_tag = 0
+@dc8.config_write_back = 0
+@dc8.config_write_allocate = 0
+@dc8.config_replacement_policy = 'lru'
+@dc8.penalty_read = 0
+@dc8.penalty_write = 0
+@dc8.penalty_read_next = 0
+@dc8.penalty_write_next = 0
+@dc8.timing_model = l2c3
+#=============================================
+## Transaction splitter for L1 instruction cache
+@ts_i8 = pre_conf_object('ts_i8', 'trans-splitter')
+@ts_i8.cache = ic8
+@ts_i8.timing_model = ic8
+@ts_i8.next_cache_line_size = 64
+#=============================================
+## Transaction splitter for L1 data cache
+@ts_d8 = pre_conf_object('ts_d8', 'trans-splitter')
+@ts_d8.cache = dc8
+@ts_d8.timing_model = dc8
+@ts_d8.next_cache_line_size = 64
+#=============================================
+## ID splitter for L1 cache
+@id8 = pre_conf_object('id8', 'id-splitter')
+@id8.ibranch = ts_i8
+@id8.dbranch = ts_d8
+#=============================================
+## L1 - Instruction Cache : L1 Inst9
+@ic9 = pre_conf_object('ic9', 'g-cache')
+@ic9.cpus = conf.cpu9
+@ic9.config_line_number = 1024
+@ic9.config_line_size = 32
+@ic9.config_assoc = 2
+@ic9.config_virtual_index = 0
+@ic9.config_virtual_tag = 0
+@ic9.config_write_back = 0
+@ic9.config_write_allocate = 0
+@ic9.config_replacement_policy = 'lru'
+@ic9.penalty_read = 0
+@ic9.penalty_write = 0
+@ic9.penalty_read_next = 0
+@ic9.penalty_write_next = 0
+@ic9.timing_model = l2c3
+#=============================================
+## L1 - Data Cache : L1 Data9
+@dc9 = pre_conf_object('dc9', 'g-cache')
+@dc9.cpus = conf.cpu9
+@dc9.config_line_number = 1024
+@dc9.config_line_size = 32
+@dc9.config_assoc = 2
+@dc9.config_virtual_index = 0
+@dc9.config_virtual_tag = 0
+@dc9.config_write_back = 0
+@dc9.config_write_allocate = 0
+@dc9.config_replacement_policy = 'lru'
+@dc9.penalty_read = 0
+@dc9.penalty_write = 0
+@dc9.penalty_read_next = 0
+@dc9.penalty_write_next = 0
+@dc9.timing_model = l2c3
+#=============================================
+## Transaction splitter for L1 instruction cache
+@ts_i9 = pre_conf_object('ts_i9', 'trans-splitter')
+@ts_i9.cache = ic9
+@ts_i9.timing_model = ic9
+@ts_i9.next_cache_line_size = 64
+#=============================================
+## Transaction splitter for L1 data cache
+@ts_d9 = pre_conf_object('ts_d9', 'trans-splitter')
+@ts_d9.cache = dc9
+@ts_d9.timing_model = dc9
+@ts_d9.next_cache_line_size = 64
+#=============================================
+## ID splitter for L1 cache
+@id9 = pre_conf_object('id9', 'id-splitter')
+@id9.ibranch = ts_i9
+@id9.dbranch = ts_d9
+#
+#Add Configuration
+@SIM_add_configuration([l2c3,ic8,dc8,ts_i8,ts_d8,id8,ic9,dc9,ts_i9,ts_d9,id9],None)
+#
+#================================================
+#High Levels
+@l2c3.higher_level_caches = [ic8,dc8,ic9,dc9]
+#=============================================
+#Timing Model
+@conf.cpu8_space.default_target = [conf.phys_mem, 0, 0, conf.phys_mem]
+@conf.cpu8.physical_memory = conf.cpu8_space
+@conf.cpu8_space.timing_model = conf.id8
+#
+@conf.cpu9_space.default_target = [conf.phys_mem, 0, 0, conf.phys_mem]
+@conf.cpu9.physical_memory = conf.cpu9_space
+@conf.cpu9_space.timing_model = conf.id9
+#
+#============================================
+# L3 Para o conjunto de 8 Cores
+#================================================
+#High Levels
+@l3c0.higher_level_caches = [l2c0,l2c1]
+@l3c1.higher_level_caches = [l2c2,l2c3]
+#============================================
+# L4 Para o conjunto de 8 Cores
+#================================================
+@l4c0.higher_level_caches = [l3c0,l3c1]
+#====================================
+## Fim 8 Cores
+#
+#==============================================
