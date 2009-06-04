@@ -1,0 +1,4 @@
+shared cache -> incoherence, contention and access time caused by the big cache size
+
+lower level caches may be shared among more processors, for the contention for the bus will be shorter (less frequent access)
+
