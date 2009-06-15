@@ -20,6 +20,9 @@
 
 \usepackage{times}
 \usepackage[latin1]{inputenc}
+\usepackage[brazil]{babel}
+
+\hyphenation{vo-lu-me}
 
 \begin{document}
 
@@ -59,37 +62,47 @@ Av. Bento Gonçalves, 9500, Porto Alegre, RS\\
 %------------------------------------------------------------------------- 
 \section{Introdução}
 
-Nos últimos anos, a freqüência de relógio dos processadores tem aumentado bastante. Paralelamente a isso, e devido a uma certa estagnação da velocidade dos cores [FIXME:ref], os fabricantes têm optado pela produção de processadores com vários núcleos de processamento (processadores \emph{multicore}, com diversos \emph{cores}). Exemplos disso são as arquitetura da Intel (\emph{Dunnington} [FIXME:ref], \emph{Nehalem} [FIXME:ref] etc.), AMD (\emph{Barcelona} [FIXME:ref], \emph{Budapest} [FIXME:ref], \emph{Deneb} [FIXME:ref] etc.) e Sun (\emph{Niagara} [FIXME:ref], \emph{Victoria Falls} [FIXME:ref] etc.).
+Nos últimos anos, a freqüência de relógio dos processadores tem aumentado bastante [FIXME:ref]. Paralelamente a isso, e devido a uma certa estagnação da velocidade dos cores [FIXME:ref], os fabricantes têm optado pela produção de processadores com vários núcleos de processamento (processadores \emph{multicore}, com diversos \emph{cores}). Exemplos disso são as arquitetura da Intel (\emph{Dunnington} [FIXME:ref], \emph{Nehalem} [FIXME:ref] etc.), AMD (\emph{Barcelona} [FIXME:ref], \emph{Budapest} [FIXME:ref], \emph{Deneb} [FIXME:ref] etc.) e Sun (\emph{Niagara} [FIXME:ref], \emph{Victoria Falls} [FIXME:ref] etc.).
 
 [FIXME:fig.arch.Dunnington]
 
 As memórias cache servem para reduzir o número de ciclos de latência que um processador deve esperar para acessar um determinado dado na memória. Reduzindo o número de ciclos, reduz-se o tempo necessário para acessar um dado. Por esta razão, o tempo de acesso a dados na memória cache é consideravelmente menor do que o tempo necessário para acessar a memória principal, por exemplo.
 
-Contudo, ultimamente as aplicações têm cada vez um volume maior de dados a processar. Essa quantidade maior de dados, se não puderem ser acessados rapidamente pela unidade de processamento, podem implicar um pior desempenho do sistema [FIXME:ref]. Além disso, 
+Contudo, ultimamente as aplicações têm cada vez um volume maior de dados a processar. Essa quantidade maior de dados, se não puderem ser acessados rapidamente pela unidade de processamento, podem implicar um pior desempenho do sistema [FIXME:ref]. Outra questão é que, nas arquiteturas multicore, vários núcleos podem estar utilizando a memória ao mesmo tempo. Por causa dessas razões, é recomendável aumentar o tamanho da memória cache (que tem acesso rápido) proporcionalmente ao aumento do volume de dados das aplicações e ao número de núcleos do processador.
 
-Please follow the steps outlined below when submitting your 
-manuscript to the IEEE Computer Society Press. Note there have 
-been some changes to the measurements from previous instructions. 
+A grande questão é que aumentar a memória cache, pura e simplesmente, pode não ser suficiente para reduzir o tempo de execução das tarefas realizadas pelo processador. Na verdade, um aumento sem critérios do espaço da memória cache pode implicar uma redução da velocidade do sistema. Isso acontece porque quanto maior a memória, maior é o seu tempo de acesso, devido a uma estrutura mais complexa de endereçamento [FIXME:ref]. Além disso, se vários núcleos estão tentando acessar a memória ao mesmo tempo, haverá uma contenção pelo barramento de acesso àquela memória, fazendo com que um ou mais processadores esperem até que o barramento seja liberado. Uma má escolha de estrutura e tamanho de memórias cache pode fazer com que uma arquitetura com mais memória seja mais lenta do que uma arquitetura com menos memória, porém estruturada de maneira mais eficiente.
+
+Tendo esses aspectos em vista, neste trabalho foi feito um breve estudo da influência da estrutura de cache em processadores multicore, comparando o desempenho de uma hierarquia com 3 níveis de memória, comparada com outras duas hierarquias, ambas com 4 níveis, introduzindo um nível L4 compartilhado entre todos os núcleos. Como contribuição, neste trabalho foi testado o uso de uma hierarquia de memória entrelaçada -- o que será descrito nas próximas seções --, com o objetivo de reduzir a profundidade da busca realizada por um núcleo para buscar um dado compartilhado com outro núcleo.
+
+O texto está organizado da seguinte forma: na seção \ref{sec:contmot}, é apresentado um pouco do contexto dentro do qual este trabalho se insere; na seção \ref{sec:prop}, é apresentada em maiores detalhes a proposta deste trabalho, incluindo a idéia de entrelaçar a hierarquia da memória cache; na seção \ref{sec:simul}, são apresentados os detalhes da modelagem e parâmetros das simulações que foram realizadas; na seção \ref{sec:result}, são mostrados os resultados e uma breve análise dos mesmos e, na seção \ref{sec:conc}, são apresentadas as conclusões a que se chegou com este trabalho.
 
 %------------------------------------------------------------------------- 
-\section{Instructions}
+\section{Contexto e motivação}
+\label{sec:contmot}
+
+%------------------------------------------------------------------------- 
+\section{Proposta}
+\label{sec:prop}
 
 Please read the following carefully.
 
 %------------------------------------------------------------------------- 
-\subsection{Language}
+\section{Modelagem e simulações}
+\label{sec:simul}
 
 All manuscripts must be in English.
 
 %------------------------------------------------------------------------- 
-\subsection{Printing your paper}
+\section{Resultados}
+\label{sec:result}
 
 Print your properly formatted text on high-quality, $8.5 \times 11$-inch 
 white printer paper. A4 paper is also acceptable, but please leave the 
 extra 0.5 inch (1.27 cm) at the BOTTOM of the page.
 
 %------------------------------------------------------------------------- 
-\subsection{Margins and page numbering}
+\section{Conclusões}
+\label{sec:conc}
 
 All printed material, including text, illustrations, and charts, must be 
 kept within a print area 6-7/8 inches (17.5 cm) wide by 8-7/8 inches 
@@ -99,140 +112,8 @@ the BACKS of the pages (for example, 1/10, 2/10, or 1 of 10, 2 of 10, and
 so forth). Please do not write on the fronts of the pages, nor on the 
 lower halves of the backs of the pages.
 
-
-%------------------------------------------------------------------------ 
-\subsection{Formatting your paper}
-
-All text must be in a two-column format. The total allowable width of 
-the text area is 6-7/8 inches (17.5 cm) wide by 8-7/8 inches (22.54 cm) 
-high. Columns are to be 3-1/4 inches (8.25 cm) wide, with a 5/16 inch 
-(0.8 cm) space between them. The main title (on the first page) should 
-begin 1.0 inch (2.54 cm) from the top edge of the page. The second and 
-following pages should begin 1.0 inch (2.54 cm) from the top edge. On 
-all pages, the bottom margin should be 1-1/8 inches (2.86 cm) from the 
-bottom edge of the page for $8.5 \times 11$-inch paper; for A4 paper, 
-approximately 1-5/8 inches (4.13 cm) from the bottom edge of the page.
-
 %------------------------------------------------------------------------- 
-\subsection{Type-style and fonts}
-
-Wherever Times is specified, Times Roman may also be used. If neither is 
-available on your word processor, please use the font closest in 
-appearance to Times that you have access to.
-
-MAIN TITLE. Center the title 1-3/8 inches (3.49 cm) from the top edge of 
-the first page. The title should be in Times 14-point, boldface type. 
-Capitalize the first letter of nouns, pronouns, verbs, adjectives, and 
-adverbs; do not capitalize articles, coordinate conjunctions, or 
-prepositions (unless the title begins with such a word). Leave two blank 
-lines after the title.
-
-AUTHOR NAME(s) and AFFILIATION(s) are to be centered beneath the title 
-and printed in Times 12-point, non-boldface type. This information is to 
-be followed by two blank lines.
-
-The ABSTRACT and MAIN TEXT are to be in a two-column format. 
-
-MAIN TEXT. Type main text in 10-point Times, single-spaced. Do NOT use 
-double-spacing. All paragraphs should be indented 1 pica (approx. 1/6 
-inch or 0.422 cm). Make sure your text is fully justified---that is, 
-flush left and flush right. Please do not place any additional blank 
-lines between paragraphs. Figure and table captions should be 10-point 
-Helvetica boldface type as in
-\begin{figure}[h]
-   \caption{Example of caption.}
-\end{figure}
-
-%\noindent
-Long captions should be set as in 
-\begin{figure}[h] 
-   \caption{Example of long caption requiring more than one line. It is 
-     not typed centered but aligned on both sides and indented with an 
-     additional margin on both sides of 1~pica.}
-\end{figure}
-
-\noindent Callouts should be 9-point Helvetica, non-boldface type. 
-Initially capitalize only the first word of section titles and first-, 
-second-, and third-order headings.
-
-FIRST-ORDER HEADINGS. (For example, {\large \bf 1. Introduction}) 
-should be Times 12-point boldface, initially capitalized, flush left, 
-with one blank line before, and one blank line after.
-
-SECOND-ORDER HEADINGS. (For example, {\intermediate \bf 1.1. Database elements}) 
-should be Times 11-point boldface, initially capitalized, flush left, 
-with one blank line before, and one after. If you require a third-order 
-heading (we discourage it), use 10-point Times, boldface, initially 
-capitalized, flush left, preceded by one blank line, followed by a period 
-and your text on the same line.
-
-%------------------------------------------------------------------------- 
-\subsection{Footnotes}
-
-Please use footnotes sparingly%
-\footnote
-   {%
-     Or, better still, try to avoid footnotes altogether.  To help your 
-     readers, avoid using footnotes altogether and include necessary 
-     peripheral observations in the text (within parentheses, if you 
-     prefer, as in this sentence).
-   }
-and place them at the bottom of the column on the page on which they are 
-referenced. Use Times 8-point type, single-spaced.
-
-
-%------------------------------------------------------------------------- 
-\subsection{References}
-
-List and number all bibliographical references in 9-point Times, 
-single-spaced, at the end of your paper. When referenced in the text, 
-enclose the citation number in square brackets, for example~\cite{ex1}. 
-Where appropriate, include the name(s) of editors of referenced books.
-
-%------------------------------------------------------------------------- 
-\subsection{Illustrations, graphs, and photographs}
-
-All graphics should be centered. Your artwork must be in place in the 
-article (preferably printed as part of the text rather than pasted up). 
-If you are using photographs and are able to have halftones made at a 
-print shop, use a 100- or 110-line screen. If you must use plain photos, 
-they must be pasted onto your manuscript. Use rubber cement to affix the 
-images in place. Black and white, clear, glossy-finish photos are 
-preferable to color. Supply the best quality photographs and 
-illustrations possible. Penciled lines and very fine lines do not 
-reproduce well. Remember, the quality of the book cannot be better than 
-the originals provided. Do NOT use tape on your pages!
-
-%------------------------------------------------------------------------- 
-\subsection{Color}
-
-The use of color on interior pages (that is, pages other
-than the cover) is prohibitively expensive. We publish interior pages in 
-color only when it is specifically requested and budgeted for by the 
-conference organizers. DO NOT SUBMIT COLOR IMAGES IN YOUR 
-PAPERS UNLESS SPECIFICALLY INSTRUCTED TO DO SO.
-
-%------------------------------------------------------------------------- 
-\subsection{Symbols}
-
-If your word processor or typewriter cannot produce Greek letters, 
-mathematical symbols, or other graphical elements, please use 
-pressure-sensitive (self-adhesive) rub-on symbols or letters (available 
-in most stationery stores, art stores, or graphics shops).
-
-%------------------------------------------------------------------------ 
-\subsection{Copyright forms}
-
-You must include your signed IEEE copyright release form when you submit 
-your finished paper. We MUST have this form before your paper can be 
-published in the proceedings.
-
-%------------------------------------------------------------------------- 
-\subsection{Conclusions}
-
-Please direct any questions to the production editor in charge of these 
-proceedings at the IEEE Computer Society Press: Phone (714) 821-8380, or 
-Fax (714) 761-1784.
+\section*{Agradecimentos}
 
 %------------------------------------------------------------------------- 
 \nocite{ex1,ex2}
