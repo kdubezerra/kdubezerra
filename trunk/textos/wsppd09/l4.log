@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  15 JUN 2009 13:56
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  15 JUN 2009 15:32
 entering extended mode
  %&-line parsing enabled.
 **l4.tex
@@ -53,88 +53,90 @@ Package: inputenc 2006/05/05 v1.1b Input encoding file
 
 (/usr/share/texmf-texlive/tex/latex/base/latin1.def
 File: latin1.def 2006/05/05 v1.1b Input encoding file
+))
+(/usr/share/texmf-texlive/tex/generic/babel/babel.sty
+Package: babel 2005/11/23 v3.8h The Babel package
+
+(/usr/share/texmf-texlive/tex/generic/babel/portuges.ldf
+Language: portuges 2005/03/31 v1.2p Portuguese support from the babel system
+
+(/usr/share/texmf-texlive/tex/generic/babel/babel.def
+File: babel.def 2005/11/23 v3.8h Babel common definitions
+\babel@savecnt=\count88
+\U@D=\dimen103
+)
+
+Package babel Warning: No hyphenation patterns were loaded for
+(babel)                the language `Portuguese'
+(babel)                I will use the patterns loaded for \language=0 instead.
+
+\l@portuges = a dialect from \language0
+\l@brazil = a dialect from \language\l@portuges 
+Package babel Info: Making " an active character on input line 145.
 )) (./l4.aux)
 \openout1 = `l4.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 24.
-
-(/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 27.
+ (/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 44.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 47.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 44.
+(Font)              <12> on input line 47.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 44.
+(Font)              <8> on input line 47.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 44.
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 44.
+(Font)              <6> on input line 47.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 47.
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 44.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 47.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 47.
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 78.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 85.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 85.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 50.
  [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 141.
-
-
-(/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
-File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
-)
-LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 141.
-
-Underfull \hbox (badness 1436) in paragraph at lines 160--166
-[]\OT1/ptm/m/n/10 SECOND-ORDER HEAD-INGS. (For ex-am-ple, \OT1/ptm/b/n/10.95 1.
-1.
- []
-
-[2] (./l4.bbl) [3
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 99.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 99.
+ (./l4.bbl) [2
 
 ] (./l4.aux) ) 
 Here is how much of TeX's memory you used:
- 522 strings out of 94834
- 6403 string characters out of 1179182
- 54985 words of memory out of 1500000
- 3733 multiletter control sequences out of 10000+50000
- 25800 words of font info for 48 fonts, out of 1200000 for 2000
- 212 hyphenation exceptions out of 8191
- 29i,11n,21p,633b,286s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 793 strings out of 94834
+ 9524 string characters out of 1179182
+ 67242 words of memory out of 1500000
+ 4001 multiletter control sequences out of 10000+50000
+ 18258 words of font info for 38 fonts, out of 1200000 for 2000
+ 213 hyphenation exceptions out of 8191
+ 29i,11n,24p,882b,288s stack positions out of 5000i,500n,6000p,200000b,5000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share
 /texmf-texlive/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf-texlive/font
 s/type1/bluesky/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/c
-msy10.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/s
-hare/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/f
-onts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times
-/utmri8a.pfb>
-Output written on l4.pdf (3 pages, 79315 bytes).
+msy10.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/shar
+e/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/font
+s/type1/urw/times/utmri8a.pfb>
+Output written on l4.pdf (2 pages, 65852 bytes).
 PDF statistics:
- 41 PDF objects out of 1000 (max. 8388607)
+ 34 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
