@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  17 JUN 2009 15:36
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  18 JUN 2009 12:23
 entering extended mode
  %&-line parsing enabled.
 **relat.tex
@@ -253,35 +253,100 @@ Overfull \hbox (4.11212pt too wide) in paragraph at lines 63--64
  mod-e-lagem e par[]ametros das simula[][]oes
  []
 
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 76.
+(/usr/share/texmf-texlive/tex/latex/psnfss/omsptm.fd
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 76.
 
-LaTeX Warning: Citation `ex1' undefined on input line 105.
+<../arq_L123.png, id=10, 534.3162pt x 534.3162pt>
+File: ../arq_L123.png Graphic file (type png)
+ <use ../arq_L123.png>
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 82.
+
+(/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
+File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
+)
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 82.
 
 
-LaTeX Warning: Citation `ex2' undefined on input line 105.
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-(./relat.bbl) [2] (./relat.aux)
+
+Overfull \hbox (1.69167pt too wide) in paragraph at lines 87--88
+[]\OT1/ptm/m/n/12 uma ar-quite-tura mul-ti-core, semel-hante []a an-te-rior, ta
+mb[]em com oito n[]ucleos, por[]em
+ []
+
+
+! LaTeX Error: File `part' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.92   \includegraphics[width=0.5\linewidth]{part}
+                                                  
+I could not locate the file with any of these extensions:
+.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Overfull \hbox (0.9967pt too wide) in paragraph at lines 98--99
+[]\OT1/ptm/m/n/12 comparar o de-sem-penho de uma ar-quite-tura mul-ti-core que 
+dis-punha de uma grande
+ []
+
+
+! LaTeX Error: \begin{itemize} on input line 97 ended by \end{enumerate}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.100 \end{enumerate}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[2]
+
+LaTeX Warning: Citation `ex1' undefined on input line 136.
+
+
+LaTeX Warning: Citation `ex2' undefined on input line 136.
+
+(./relat.bbl) [3 <../arq_L123.png>] [4] (./relat.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 2427 strings out of 94834
- 31377 string characters out of 1179182
- 88282 words of memory out of 1500000
- 5586 multiletter control sequences out of 10000+50000
- 17166 words of font info for 37 fonts, out of 1200000 for 2000
+ 2522 strings out of 94834
+ 32589 string characters out of 1179182
+ 89298 words of memory out of 1500000
+ 5658 multiletter control sequences out of 10000+50000
+ 20011 words of font info for 41 fonts, out of 1200000 for 2000
  213 hyphenation exceptions out of 8191
- 30i,8n,28p,885b,215s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 30i,8n,28p,885b,242s stack positions out of 5000i,500n,6000p,200000b,5000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
 ve/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/blue
 sky/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr8.pfb></us
 r/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf-texli
-ve/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/t
-imes/utmbi8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></u
-sr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on relat.pdf (2 pages, 72936 bytes).
+ve/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/ur
+w/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmbi8a.pfb>
+</usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-te
+xlive/fonts/type1/urw/times/utmri8a.pfb>
+Output written on relat.pdf (4 pages, 206356 bytes).
 PDF statistics:
- 42 PDF objects out of 1000 (max. 8388607)
+ 54 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
