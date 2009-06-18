@@ -78,7 +78,7 @@ Este trabalho teve dois objetivos, que são procurar evidências de que a adição d
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=0.9\linewidth]{../arq_L123}
+  \includegraphics[width=\linewidth]{../arq_L123.png}
   \caption{Arquitetura com 3 níveis de memória cache}
   \label{L3}
 \end{figure}
@@ -89,15 +89,20 @@ Este trabalho teve dois objetivos, que são procurar evidências de que a adição d
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=0.5\linewidth]{../arq_L1234}
+  \includegraphics[width=\linewidth]{../arq_L1234.png}
   \caption{Arquitetura com 4 níveis de memória cache}
   \label{L4}
 \end{figure}
 
+Outra contribuição do trabalho foi que também se propôs o entrelaçamento da hierarquia das memórias cache. Para buscar algum resultado que indique se há algum benefício ao ser utilizado esse tipo de abordagem, foi comparadas as seguintes arquiteturas:
+
 \begin{itemize}
- \item comparar o desempenho de uma arquitetura multicore que dispunha de uma grande cache L3 com o desempenho de uma arquitetura muito semelhante, exceto pelo fato da memória cache L3 ser dividida em dois níveis (L3 e L4), sendo que o nível L3 não é compartilhado entre todos os núcleos de processamento;
- \item comparar uma arquitetura com quatro níveis de cache (L1, L2, L3 e L4), onde cada módulo de cache só tem dois módulos de nível inferior na hierarquia de memória, com outra arquitetura, na qual cada cache L2 tem duas L3 no nível inferior da hierarquia; além disso, a outra mudança com relação à arquitetura 
-\end{enumerate}
+ \item uma arquitetura com quatro níveis de cache (L1, L2, L3 e L4), onde cada módulo de cache só tem um módulo de nível inferior na hierarquia de memória, tal qual na Figura \ref{L4};
+\end{itemize}
+
+\begin{itemize}
+ \item com outra arquitetura, na qual cada cache L2 tem duas L3 no nível inferior da hierarquia; além disso, a outra mudança com relação à arquitetura 
+\end{itemize}
 
 o primeiro era . A razão para isso era 
 
