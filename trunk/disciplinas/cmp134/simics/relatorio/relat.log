@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  18 JUN 2009 12:38
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  18 JUN 2009 15:35
 entering extended mode
  %&-line parsing enabled.
 **relat.tex
@@ -253,29 +253,29 @@ Overfull \hbox (4.11212pt too wide) in paragraph at lines 63--64
  mod-e-lagem e par[]ametros das simula[][]oes
  []
 
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 76.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 78.
 (/usr/share/texmf-texlive/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 76.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 78.
 
 <../arq_L123.png, id=10, 534.3162pt x 534.3162pt>
 File: ../arq_L123.png Graphic file (type png)
  <use ../arq_L123.png>
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 82.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 84.
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 82.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 84.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Overfull \hbox (1.69167pt too wide) in paragraph at lines 87--88
+Overfull \hbox (1.69167pt too wide) in paragraph at lines 89--90
 []\OT1/ptm/m/n/12 uma ar-quite-tura mul-ti-core, semel-hante []a an-te-rior, ta
 mb[]em com oito n[]ucleos, por[]em
  []
@@ -286,26 +286,41 @@ File: ../arq_L1234.png Graphic file (type png)
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[2] [3 <../arq_L123.png>]
+<../arq_L1234Interleaved.png, id=12, 534.3162pt x 534.3162pt>
+File: ../arq_L1234Interleaved.png Graphic file (type png)
 
-LaTeX Warning: Citation `ex1' undefined on input line 141.
+<use ../arq_L1234Interleaved.png>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<../treescompare.pdf, id=13, 587.19376pt x 257.96375pt>
+File: ../treescompare.pdf Graphic file (type pdf)
+
+<use ../treescompare.pdf>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[2] [3 <../arq_L123.png>] [4 <../arq_L1234.png>] [5 <../arq_L1234Interleaved.pn
+g> <../treescompare.pdf>] [6]
+
+LaTeX Warning: Citation `ex1' undefined on input line 215.
 
 
-LaTeX Warning: Citation `ex2' undefined on input line 141.
+LaTeX Warning: Citation `ex2' undefined on input line 215.
 
-(./relat.bbl) [4 <../arq_L1234.png>] (./relat.aux)
+(./relat.bbl) [7] (./relat.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 2517 strings out of 94834
- 32639 string characters out of 1179182
- 90298 words of memory out of 1500000
- 5663 multiletter control sequences out of 10000+50000
+ 2531 strings out of 94834
+ 32956 string characters out of 1179182
+ 91314 words of memory out of 1500000
+ 5675 multiletter control sequences out of 10000+50000
  20011 words of font info for 41 fonts, out of 1200000 for 2000
  213 hyphenation exceptions out of 8191
- 30i,8n,28p,885b,242s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 30i,8n,28p,1079b,242s stack positions out of 5000i,500n,6000p,200000b,5000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
 ve/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/blue
 sky/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr8.pfb></us
@@ -314,9 +329,9 @@ ve/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/ur
 w/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmbi8a.pfb>
 </usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-te
 xlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on relat.pdf (4 pages, 341238 bytes).
+Output written on relat.pdf (7 pages, 509792 bytes).
 PDF statistics:
- 56 PDF objects out of 1000 (max. 8388607)
+ 79 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 
