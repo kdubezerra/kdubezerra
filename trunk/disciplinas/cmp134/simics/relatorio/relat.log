@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  18 JUN 2009 16:34
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  18 JUN 2009 16:55
 entering extended mode
  %&-line parsing enabled.
 **relat.tex
@@ -340,37 +340,27 @@ File: ../cachemiss_cg.png Graphic file (type png)
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [7 <../ciclos_bt.png (PNG copy)> <../steps_bt.png (PNG copy)>] [8 <../ciclos_cg
-.png (PNG copy)> <../steps_cg.png (PNG copy)>]
-
-LaTeX Warning: Citation `ex1' undefined on input line 262.
-
-
-LaTeX Warning: Citation `ex2' undefined on input line 262.
-
-(./relat.bbl) [9 <../cachemiss_bt.png (PNG copy)> <../cachemiss_cg.png (PNG cop
-y)>] (./relat.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+.png (PNG copy)> <../steps_cg.png (PNG copy)>] [9 <../cachemiss_bt.png (PNG cop
+y)> <../cachemiss_cg.png (PNG copy)>] (./relat.bbl) [10] (./relat.aux) ) 
 Here is how much of TeX's memory you used:
- 2571 strings out of 94834
- 33667 string characters out of 1179182
- 91363 words of memory out of 1500000
- 5707 multiletter control sequences out of 10000+50000
+ 2569 strings out of 94834
+ 33657 string characters out of 1179182
+ 91364 words of memory out of 1500000
+ 5705 multiletter control sequences out of 10000+50000
  21770 words of font info for 43 fonts, out of 1200000 for 2000
  213 hyphenation exceptions out of 8191
- 30i,8n,28p,1079b,242s stack positions out of 5000i,500n,6000p,200000b,5000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
-ve/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/bluesk
-y/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb><
-/usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/share/texmf
--texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1
-/urw/times/utmbi8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.p
-fb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on relat.pdf (9 pages, 630718 bytes).
+ 30i,8n,28p,1113b,242s stack positions out of 5000i,500n,6000p,200000b,5000s
+{/usr/s
+hare/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texlive/fonts/
+type1/bluesky/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy
+10.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/shar
+e/texmf-texlive/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/share/texmf-texlive/
+fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/time
+s/utmbi8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/
+share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
+Output written on relat.pdf (10 pages, 632434 bytes).
 PDF statistics:
- 87 PDF objects out of 1000 (max. 8388607)
+ 90 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
  51 words of extra memory for PDF output out of 10000 (max. 10000000)
 
