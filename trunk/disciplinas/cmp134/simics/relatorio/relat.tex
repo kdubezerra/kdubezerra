@@ -184,6 +184,24 @@ Na próxima seção, serão apresentados os resultados encontrados com as simulações
 \section{Resultados}
 \label{sec:result}
 
+Tanto o CG quando o BT buscam estressar os componentes de processamento e memória. O BT tem um tempo de execução maior, permitindo a avaliação do processador, enquanto que o CG visa a estressar as memórias, permitindo o teste de desempenho da estrutura de cache simulada. Foram utilizadas implementações em OpenMP [FIXME.ref.omp] de ambos. Para coletar os dados, foi utilizada a \emph{magic instruction} do Simics, que permite pausar a simulação e extrair o estado de cada um dos componentes de hardware. Os valores extraídos com esse método, para cada programa executado (BT e CG) foram:
+
+\begin{itemize}
+ \item Número de ciclos do processador;
+ \item Número de \emph{steps} do processador;
+ \item L3 cache write miss;
+ \item L3 cache read miss;
+ \item L4 cache write miss e
+ \item L4 cache read miss.
+\end{itemize}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=0.8\linewidth]{../treescompare}
+  \caption{Árvores representando as hierarquias avaliadas}
+  \label{treescompare}
+\end{figure}
+
 
 
 %------------------------------------------------------------------------- 
