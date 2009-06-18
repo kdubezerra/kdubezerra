@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  18 JUN 2009 15:35
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  18 JUN 2009 16:06
 entering extended mode
  %&-line parsing enabled.
 **relat.tex
@@ -158,7 +158,20 @@ Package: inputenc 2006/05/05 v1.1b Input encoding file
 
 (/usr/share/texmf-texlive/tex/latex/base/latin1.def
 File: latin1.def 2006/05/05 v1.1b Input encoding file
-)) (./relat.aux)
+)) (./relat.aux
+
+LaTeX Warning: Label `treescompare' multiply defined.
+
+
+LaTeX Warning: Label `treescompare' multiply defined.
+
+
+LaTeX Warning: Label `treescompare' multiply defined.
+
+
+LaTeX Warning: Label `treescompare' multiply defined.
+
+)
 \openout1 = `relat.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
@@ -174,8 +187,7 @@ LaTeX Font Info:    ... okay on input line 24.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
 LaTeX Font Info:    ... okay on input line 24.
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 24.
-
-(/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
+ (/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 -------------------- Geometry parameters
@@ -301,37 +313,68 @@ File: ../treescompare.pdf Graphic file (type pdf)
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 [2] [3 <../arq_L123.png>] [4 <../arq_L1234.png>] [5 <../arq_L1234Interleaved.pn
-g> <../treescompare.pdf>] [6]
+g> <../treescompare.pdf>]
+Overfull \hbox (4.52367pt too wide) in paragraph at lines 181--182
+[]\OT1/ptm/m/n/12 Na pr[]oxima se[][]ao, ser[]ao ap-re-sen-ta-dos os re-sul-ta-
+dos en-con-tra-dos com as simula[][]oes
+ []
 
-LaTeX Warning: Citation `ex1' undefined on input line 215.
+[6] <../ciclos_bt.png, id=43, 1049.9225pt x 473.77pt>
+File: ../ciclos_bt.png Graphic file (type png)
+ <use ../ciclos_bt.png>
+<../steps_bt.png, id=44, 1049.9225pt x 469.755pt>
+File: ../steps_bt.png Graphic file (type png)
+ <use ../steps_bt.png>
+LaTeX Font Info:    Font shape `OT1/phv/bx/it' in size <10> not available
+(Font)              Font shape `OT1/phv/b/it' tried instead on input line 208.
+LaTeX Font Info:    Font shape `OT1/phv/b/it' in size <10> not available
+(Font)              Font shape `OT1/phv/b/sl' tried instead on input line 208.
+
+<../ciclos_cg.png, id=45, 1049.9225pt x 469.755pt>
+File: ../ciclos_cg.png Graphic file (type png)
+ <use ../ciclos_cg.png>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<../steps_cg.png, id=46, 1049.9225pt x 469.755pt>
+File: ../steps_cg.png Graphic file (type png)
+ <use ../steps_cg.png>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-LaTeX Warning: Citation `ex2' undefined on input line 215.
+LaTeX Warning: Citation `ex1' undefined on input line 242.
 
-(./relat.bbl) [7] (./relat.aux)
+
+LaTeX Warning: Citation `ex2' undefined on input line 242.
+
+(./relat.bbl) [7 <../ciclos_bt.png (PNG copy)> <../steps_bt.png (PNG copy)>]
+[8 <../ciclos_cg.png (PNG copy)> <../steps_cg.png (PNG copy)>] (./relat.aux)
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
  ) 
 Here is how much of TeX's memory you used:
- 2531 strings out of 94834
- 32956 string characters out of 1179182
- 91314 words of memory out of 1500000
- 5675 multiletter control sequences out of 10000+50000
- 20011 words of font info for 41 fonts, out of 1200000 for 2000
+ 2555 strings out of 94834
+ 33375 string characters out of 1179182
+ 91353 words of memory out of 1500000
+ 5693 multiletter control sequences out of 10000+50000
+ 21770 words of font info for 43 fonts, out of 1200000 for 2000
  213 hyphenation exceptions out of 8191
  30i,8n,28p,1079b,242s stack positions out of 5000i,500n,6000p,200000b,5000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
-ve/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/blue
-sky/cm/cmr12.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr8.pfb></us
-r/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf-texli
-ve/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/ur
-w/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmbi8a.pfb>
-</usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-te
-xlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on relat.pdf (7 pages, 509792 bytes).
+ve/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/bluesk
+y/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb><
+/usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvbo8a.pfb></usr/share/texmf
+-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1
+/urw/times/utmbi8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.p
+fb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
+Output written on relat.pdf (8 pages, 587394 bytes).
 PDF statistics:
- 79 PDF objects out of 1000 (max. 8388607)
+ 82 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 
