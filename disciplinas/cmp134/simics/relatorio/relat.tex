@@ -165,7 +165,7 @@ A partir do terceiro nível de cache, as arquiteturas mudam completamente, sendo 
 \end{itemize}
 
 \begin{itemize}
- \item Arquitetura \textbf{InterleavedL4}, com quatro níveis de cache e com entrelaçamento:
+ \item Arquitetura \textbf{L4Interleaved}, com quatro níveis de cache e com entrelaçamento:
  \begin{itemize}
   \item Memória cache L3: 8 megabytes (2 módulos de 8 MB, cada um compartilhado por quatro núcleos, porém o conjunto de núcleos é diferente da arquitetura L1234, entrelaçando os níveis de cache);
   \item Latência da cache L3: 20 ciclos;
@@ -174,11 +174,11 @@ A partir do terceiro nível de cache, as arquiteturas mudam completamente, sendo 
  \end{itemize}
 \end{itemize}
 
-Os motivos para decidir-se por esses parâmetros foram os seguintes: na arquitetura L123, a cache L3 tem 32 megabytes de espaço, causando um tempo de acesso (30 ciclos) maior do que na arquitetura L1234 (15 ciclos), onde cada cache L3 tem apenas 8 megabytes. Já na InterleavedL4, cada cache miss em uma cache L2 pode precisar de duas buscas nas caches L3. Para simular esse comportamento, definiu-se o tempo de acesso às L3 como de 20 ciclos, como uma estimativa de tempo médio de acesso.
+Os motivos para decidir-se por esses parâmetros foram os seguintes: na arquitetura L123, a cache L3 tem 32 megabytes de espaço, causando um tempo de acesso (30 ciclos) maior do que na arquitetura L1234 (15 ciclos), onde cada cache L3 tem apenas 8 megabytes. Já na L4Interleaved, cada cache miss em uma cache L2 pode precisar de duas buscas nas caches L3. Para simular esse comportamento, definiu-se o tempo de acesso às L3 como de 20 ciclos, como uma estimativa de tempo médio de acesso.
 
-O sistema operacional que foi instalado sobre cada uma das arquiteturas simuladas foi o Ubuntu (GNU/Linux, kernel 2.6.15-53). O software utilizado para avaliação das arquiteturas modeladadas, o NAS, consiste de diversos programas de avaliação de desempenho. Dois deles são o \textbf{BT} e o \textbf{CG}. Detalhes a respeito do que fazem podem ser encontrados em [FIXME.ref.NAS] e [FIXME.ref.NAS2]. 
+O sistema operacional que foi instalado sobre cada uma das arquiteturas simuladas foi o Ubuntu (GNU/Linux, kernel 2.6.15-53). O software utilizado para avaliação das arquiteturas modeladadas, o NAS, consiste de diversos programas de avaliação de desempenho. Dois deles são o \textbf{BT} e o \textbf{CG}. Detalhes a respeito do que fazem podem ser encontrados em [FIXME.ref.NAS] e [FIXME.ref.NAS2].
 
-Na próxima seção, serão apresentados os resultados encontrados com as simulações que foram realizadas.
+Para cada combinação testada (arquitetura $\times$ programa), foram executadas três repetições, devido a restrições no tempo que se tinha disponível para realizar os testes. Na média cada repetição da simulação demorava três horas. Estima-se que, apenas executando três vezes cada simulação, tenha-se dispendido 54 horas. Na próxima seção, serão apresentados os resultados encontrados com as simulações que foram realizadas.
 
 %------------------------------------------------------------------------- 
 \section{Resultados}
@@ -199,29 +199,49 @@ Tanto o CG quando o BT buscam estressar os componentes de processamento e memóri
   \centering  
   \includegraphics[width=\linewidth]{../ciclos_bt.png}
   \caption{Números de ciclos necessários para executar o BT}
-  \label{treescompare}
+  \label{ciclos_bt}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
   \includegraphics[width=\linewidth]{../steps_bt.png}
   \caption{Números de \emph{steps} necessários para executar o BT}
-  \label{treescompare}
+  \label{steps_bt}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
   \includegraphics[width=\linewidth]{../ciclos_cg.png}
   \caption{Números de ciclos necessários para executar o CG}
-  \label{treescompare}
+  \label{ciclos_cg}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
   \includegraphics[width=\linewidth]{../steps_cg.png}
   \caption{Números de \emph{steps} necessários para executar o CG}
-  \label{treescompare}
+  \label{steps_cg}
 \end{figure}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=\linewidth]{../cachemiss_bt.png}
+  \caption{Taxa de cache miss ao executar o BT}
+  \label{cachemiss_bt}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=\linewidth]{../cachemiss_cg.png}
+  \caption{Taxa de cache miss ao executar o CG}
+  \label{cachemiss_cg}
+\end{figure}
+
+Antes de se analisar os resultados, deve-se considerar que o desvio-padrão do número de ciclos não ultrapassou, em nenhuma das baterias de testes, o valor de 1000 (0,0001\%); da mesma forma que o desvio-padrão do número de steps não ultrapassou o valor de 1000000, (0,1\%). Levando isso em conta, são consideradas relevantes as diferenças de resultados encontradas nos gráficos apresentados.
+
+Nos gráficos da Figura \ref{ciclos_bt} e da Figura \ref{steps_bt}, verifica-se que houve uma diferença de vários desvios-padrões no número de ciclos e de steps ao se executar o BT nas diferentes arquiteturas. A arquitetura L1234 teve o menor tempo de execução, provavelmente devido à menor contenção pelo acesso a cada cache L3, além do próprio tempo de acesso ser menor. Mesmo cada módulo de cache L3 tendo um quarto da capacidade da L3 da arquitetura L1234, aparentemente a menor contenção e o acesso mais rápido foram determinantes no tempo de execução. A arquitetura L4Interleaved teve um tempo de execução próximo ao da L123, provavelmente devido ao seu maior tempo de acesso à cache L3.
+
+Na Figura \ref{ciclos_cg} e na Figura \ref{steps_cg}, verificamos um comportamento mais interessante: ambas arquiteturas com cache L4 tem desempenho melhor que aquela sem o quarto nível; porém o número de ciclos da L4Interleaved é um pouco maior que o da L1234 e número de steps é menor. A causa mais provável para isto é o entrelaçamento da hierarquia de cache. Provavelmente, o número de acessos à memória, na L4Interleaved, é menor. Contudo, como cada acesso à L3 tem um custo maior, o seu número de ciclos acabou sendo superior. Provavelmente, neste caso, fosse melhor utilizar no processador uma unidade que fosse responsável por fazer as buscas em paralelo nas L3, reduzindo o tempo de acesso para o tempo de acessar apenas uma memória.
 
 %------------------------------------------------------------------------- 
 \section{Conclusões}
