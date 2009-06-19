@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  17 JUN 2009 15:29
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  19 JUN 2009 10:15
 entering extended mode
  %&-line parsing enabled.
 **l4.tex
@@ -73,70 +73,289 @@ Package babel Warning: No hyphenation patterns were loaded for
 \l@portuges = a dialect from \language0
 \l@brazil = a dialect from \language\l@portuges 
 Package babel Info: Making " an active character on input line 145.
-)) (./l4.aux)
+)) (/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks20
+)
+(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/etc/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+(/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
+\Gread@gobject=\count89
+))
+\Gin@req@height=\dimen104
+\Gin@req@width=\dimen105
+)
+(/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
+\Urlmuskip=\muskip10
+Package: url 2005/06/27  ver 3.2  Verb mode for urls, etc.
+) (./l4.aux)
 \openout1 = `l4.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 27.
- (/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 28.
+
+(/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count90
+\scratchdimen=\dimen106
+\scratchbox=\box28
+\nofMPsegments=\count91
+\nofMParguments=\count92
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count93
+\MPscratchDim=\dimen107
+\MPnumerator=\count94
+\everyMPtoPDFconversion=\toks22
+)
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 47.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 48.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 47.
+(Font)              <12> on input line 48.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 47.
+(Font)              <8> on input line 48.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 47.
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 47.
-
-(/usr/share/texmf-texlive/tex/latex/psnfss/omsptm.fd
+(Font)              <6> on input line 48.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 48.
+ (/usr/share/texmf-texlive/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 47.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 48.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 50.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 51.
  [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 99.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 99.
- (./l4.bbl) [2
+Underfull \hbox (badness 2856) in paragraph at lines 90--91
+[]\OT1/ptm/m/n/10 Este tra-balho teve dois ob-je-tivos, que s[]ao procu-
+ []
 
-] (./l4.aux) ) 
-Here is how much of TeX's memory you used:
- 793 strings out of 94834
- 9524 string characters out of 1179182
- 67242 words of memory out of 1500000
- 4001 multiletter control sequences out of 10000+50000
- 18258 words of font info for 38 fonts, out of 1200000 for 2000
- 213 hyphenation exceptions out of 8191
- 29i,11n,24p,882b,288s stack positions out of 5000i,500n,6000p,200000b,5000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share
-/texmf-texlive/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf-texlive/font
-s/type1/bluesky/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/c
-msy10.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/shar
-e/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/font
-s/type1/urw/times/utmri8a.pfb>
-Output written on l4.pdf (2 pages, 65861 bytes).
-PDF statistics:
- 34 PDF objects out of 1000 (max. 8388607)
- 0 named destinations out of 1000 (max. 131072)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 93.
 
+! LaTeX Error: File `../arq_L123' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.98 ...graphics[width=0.8\linewidth]{../arq_L123}
+                                                  
+I could not locate the file with any of these extensions:
+.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 99.
+(/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
+File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
+)
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 99.
+
+Underfull \hbox (badness 5431) in paragraph at lines 99--99
+[]\OT1/phv/b/n/10 Figura 1. Ar-quite-tura com 3 n^^S^^Pveis de
+ []
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 104.
+
+LaTeX Warning: Reference `L4' on page 2 undefined on input line 104.
+
+
+Underfull \hbox (badness 2080) in paragraph at lines 104--105
+[]\OT1/ptm/m/n/10 uma ar-quite-tura mul-ti-core, semel-hante []a an-te-rior,
+ []
+
+
+! LaTeX Error: File `../arq_L1234' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.109 ...aphics[width=0.8\linewidth]{../arq_L1234}
+                                                  
+I could not locate the file with any of these extensions:
+.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Underfull \hbox (badness 5431) in paragraph at lines 110--110
+[]\OT1/phv/b/n/10 Figura 2. Ar-quite-tura com 4 n^^S^^Pveis de
+ []
+
+
+LaTeX Warning: Reference `L4' on page 2 undefined on input line 117.
+
+
+LaTeX Warning: Reference `L4Interleaved' on page 2 undefined on input line 121.
+
+
+
+LaTeX Warning: Reference `treescompare' on page 2 undefined on input line 121.
+
+
+LaTeX Warning: Reference `treescompare' on page 2 undefined on input line 121.
+
+
+LaTeX Warning: Reference `treescompare' on page 2 undefined on input line 121.
+
+
+! LaTeX Error: File `../arq_L1234Interleaved' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.126 ...h=0.8\linewidth]{../arq_L1234Interleaved}
+                                                  
+I could not locate the file with any of these extensions:
+.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Underfull \hbox (badness 5431) in paragraph at lines 127--127
+[]\OT1/phv/b/n/10 Figura 3. Ar-quite-tura com 4 n^^S^^Pveis de
+ []
+
+
+! LaTeX Error: File `../treescompare' not found.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.133 ...ics[width=0.8\linewidth]{../treescompare}
+                                                  
+I could not locate the file with any of these extensions:
+.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: Reference `L4' on page 2 undefined on input line 138.
+
+
+LaTeX Warning: Reference `L4Interleaved' on page 2 undefined on input line 140.
+
+
+
+LaTeX Warning: Reference `L4Interleaved' on page 2 undefined on input line 140.
+
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 148--149
+[]\OT1/ptm/m/n/10 Para re-alizar a simula[][]ao das ar-quite-turas pro-
+ []
+
+
+Underfull \hbox (badness 2401) in paragraph at lines 148--149
+\OT1/ptm/m/n/10 postas na se[][]ao 3[], foi uti-lizado o sim-u-lador Sim-ics
+ []
+
+
+Underfull \hbox (badness 4353) in paragraph at lines 148--149
+\OT1/ptm/m/n/10 [FIXME.ref.simics], vers[]ao 4. Atrav[]es do Sim-ics, []e
+ []
+
+
+Underfull \hbox (badness 3019) in paragraph at lines 148--149
+\OT1/ptm/m/n/10 guagem de mod-e-lagem de dis-pos-i-tivo (DML, \OT1/ptm/m/it/10 
+de-vice
+ []
+
+
+Underfull \hbox (badness 2343) in paragraph at lines 148--149
+\OT1/ptm/m/n/10 grama de avalia[][]ao de de-sem-penho NAS (\OT1/ptm/m/it/10 Nu-
+mer-i-cal
+ []
+
+
+Underfull \hbox (badness 1424) in paragraph at lines 148--149
+\OT1/ptm/m/n/10 sem-penho de ar-quite-turas de com-puta-dores atrav[]es de
+ []
+
+
+Underfull \hbox (badness 1859) in paragraph at lines 183--184
+[]\OT1/ptm/m/n/10 Arquitetura \OT1/ptm/b/n/10 L4Interleaved\OT1/ptm/m/n/10 , co
+m qua-tro n[]^^Pveis de
+ []
+
+
+Underfull \hbox (badness 1769) in paragraph at lines 192--193
+\OT1/ptm/m/n/10 megabytes de espa[]o, cau-sando um tempo de acesso
+ []
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 196.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 196.
+
+Underfull \hbox (badness 2698) in paragraph at lines 196--197
+[]\OT1/ptm/m/n/10 Para cada combina[][]ao tes-tada (ar-quite-tura $\OMS/cmsy/m/
+n/10 ^^B$ \OT1/ptm/m/n/10 pro-
+ []
+
+
+Underfull \hbox (badness 5862) in paragraph at lines 196--197
+\OT1/ptm/m/n/10 grama), foram ex-e-cu-tadas tr[]es repeti[][]oes, de-v-ido a
+ []
+
+
+Underfull \hbox (badness 1755) in paragraph at lines 196--197
+\OT1/ptm/m/n/10 restri[][]oes no tempo que se tinha dispon[]^^Pvel para re-
+ []
+
+
+Underfull \hbox (badness 2181) in paragraph at lines 196--197
+\OT1/ptm/m/n/10 mor-ava tr[]es ho-ras. Estima-se que, ape-nas ex-e-cu-tando
+ []
+
+
+Underfull \hbox (badness 1019) in paragraph at lines 202--203
+\OT1/ptm/m/n/10 de execu[][]ao maior, per-mitindo a avalia[][]ao do pro-ces-
+ []
+
+
+Underfull \hbox (badness 2828) in paragraph at lines 202--203
+\OT1/ptm/m/n/10 u-lada. Foram uti-lizadas implementa[][]oes em OpenMP
+ []
+
+[3]
+
+LaTeX Warning: File `../ciclos_bt.png' not found on input line 215.
+
+
+!pdfTeX error: pdflatex (file ../ciclos_bt.png): cannot find image file
+ ==> Fatal error occurred, no output PDF file produced!
