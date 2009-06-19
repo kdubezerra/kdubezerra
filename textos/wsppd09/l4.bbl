@@ -1,13 +1,47 @@
 \begin{thebibliography}{1}
 
-\bibitem{ex1}
-I.~M. Author.
-\newblock Some related article {I} wrote.
-\newblock {\em Some Fine Journal}, 99(7):1--100, January 1999.
+\bibitem{bailey1995npb}
+D.~Bailey, T.~Harris, W.~Saphir, R.~Van Der~Wijngaart, A.~Woo, and M.~Yarrow.
+\newblock {The NAS parallel benchmarks 2.0}.
+\newblock Technical report, Technical Report NAS-95-020, NASA Ames Research
+  Center, 1995.
 
-\bibitem{ex2}
-A.~N. Expert.
-\newblock {\em A Book He Wrote}.
-\newblock His Publisher, Erewhon, NC, 1999.
+\bibitem{dagum1998ois}
+L.~Dagum, R.~Menon, and S.~Inc.
+\newblock {OpenMP: an industry standard API for shared-memory programming}.
+\newblock {\em IEEE Computational Science \& Engineering}, 5(1):46--55, 1998.
+
+\bibitem{goodman98ucm}
+J.~R. Goodman.
+\newblock Using cache memory to reduce processor-memory traffic.
+\newblock In {\em ISCA '98: 25 years of the international symposia on Computer
+  architecture (selected papers)}, pages 255--262, New York, NY, USA, 1998.
+  ACM.
+
+\bibitem{jin1999oip}
+H.~Jin, M.~Frumkin, and J.~Yan.
+\newblock {The OpenMP implementation of NAS parallel benchmarks and its
+  performance}.
+\newblock {\em NASA Ames Research Center, Technical Report NAS-99-011}, 1999.
+
+\bibitem{li98fem}
+Y.~Li and J.~Henkel.
+\newblock A framework for estimation and minimizing energy dissipation of
+  embedded hw/sw systems.
+\newblock In {\em DAC '98: Proceedings of the 35th annual Design Automation
+  Conference}, pages 188--193, New York, NY, USA, 1998. ACM.
+
+\bibitem{magnusson2002sfs}
+P.~S. Magnusson, M.~Christensson, J.~Eskilson, D.~Forsgren, G.~H{\aa}llberg,
+  J.~H\"{o}gberg, F.~Larsson, A.~Moestedt, and B.~Werner.
+\newblock Simics: A full system simulation platform.
+\newblock {\em Computer}, 35(2):50--58, 2002.
+
+\bibitem{zhao1008scs}
+Y.~Zhao, I.~Raicu, and I.~Foster.
+\newblock Scientific workflow systems for 21st century, new bottle or new wine?
+\newblock In {\em SERVICES '08: Proceedings of the 2008 IEEE Congress on
+  Services - Part I}, pages 467--471, Washington, DC, USA, 2008. IEEE Computer
+  Society.
 
 \end{thebibliography}

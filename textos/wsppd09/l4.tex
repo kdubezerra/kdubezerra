@@ -23,7 +23,7 @@
 \usepackage[brazil]{babel}
 \usepackage{graphicx,url}
 
-\hyphenation{vo-lu-me}
+\hyphenation{vo-lu-me, di-fe-ren-tes con-si-de-rar ci-clos a-tri-bu-tos e-xe-cu-ta-dos hi-e-rar-qui-a a-na-li-sar}
 
 \begin{document}
 
@@ -49,13 +49,7 @@ Av. Bento Gonçalves, 9500, Porto Alegre, RS\\
 \thispagestyle{empty}
 
 \begin{abstract}
-   The ABSTRACT is to be in fully-justified italicized text, at the top 
-   of the left-hand column, below the author and affiliation 
-   information. Use the word ``Abstract'' as the title, in 12-point 
-   Times, boldface type, centered relative to the column, initially 
-   capitalized. The abstract is to be in 10-point, single-spaced type. 
-   The abstract may be up to 3 inches (7.62 cm) long. Leave two blank 
-   lines after the Abstract, then begin the main text. 
+Após uma certa estagnação do aumento da freqüência dos processadores, tem-se investido em arquiteturas \emph{multicore} (com dois ou mais núcleos) para suprir a demanda por capacidade de processamento imposta pelas aplicações cada vez mais pesadas. Estas aplicações também têm uma exigência cada vez maior de espaço de armazenamento em memória principal, o que exige um proporcional aumento da memória cache dos processadores. Contudo, a pura e simples adição de memória cache a um processador pode não apenas não aumentar sua performance, como também diminuir sua eficiência, ao aumentar o tempo de acesso a uma memória muito grande. Neste trabalho, é feita uma comparação entre o desempenho de uma arquitetura multicore com uma cache L3 grande e uma arquitetura com um nível adicional, L4, de memória. Além disso, é proposta uma arquitetura com hierarquia de cache entrelaçada, com o objetivo de diminuir a profundidade de busca na memória quando dois núcleos compartilham uma variável. Verificou-se que uma memória com quatro níveis melhor estruturada executou as tarefas simuladas em menos tempo do que uma arquitetura com uma grande cache L3. Por fim, evidenciou-se que o entrelaçamento da hierarquia de cache pode trazer benefícios significativos.
 \end{abstract}
 
 
@@ -63,25 +57,17 @@ Av. Bento Gonçalves, 9500, Porto Alegre, RS\\
 %------------------------------------------------------------------------- 
 \section{Introdução}
 
-Nos últimos anos, a freqüência de relógio dos processadores tem aumentado bastante [FIXME:ref]. Paralelamente a isso, e devido a uma certa estagnação da velocidade dos cores [FIXME:ref], os fabricantes têm optado pela produção de processadores com vários núcleos de processamento (processadores \emph{multicore}, com diversos \emph{cores}). Exemplos disso são as arquitetura da Intel (\emph{Dunnington} [FIXME:ref], \emph{Nehalem} [FIXME:ref] etc.), AMD (\emph{Barcelona} [FIXME:ref], \emph{Budapest} [FIXME:ref], \emph{Deneb} [FIXME:ref] etc.) e Sun (\emph{Niagara} [FIXME:ref], \emph{Victoria Falls} [FIXME:ref] etc.).
-
-[FIXME:fig.arch.Dunnington]
+Nos últimos anos, devido a uma certa estagnação da freqüência de relógio dos processadores \cite{zhao1008scs}, os fabricantes têm optado pela produção de processadores com vários núcleos de processamento (processadores \emph{multicore}, com diversos \emph{cores}). Exemplos disso são as arquitetura da Intel (\emph{Dunnington}, \emph{Nehalem} etc.), AMD (\emph{Barcelona}, \emph{Budapest}, \emph{Deneb} etc.) e Sun (\emph{Niagara}, \emph{Victoria Falls} etc.).
 
 As memórias cache servem para reduzir o número de ciclos de latência que um processador deve esperar para acessar um determinado dado na memória. Reduzindo o número de ciclos, reduz-se o tempo necessário para acessar um dado. Por esta razão, o tempo de acesso a dados na memória cache é consideravelmente menor do que o tempo necessário para acessar a memória principal, por exemplo.
 
-Contudo, ultimamente as aplicações têm cada vez um volume maior de dados a processar. Essa quantidade maior de dados, se não puderem ser acessados rapidamente pela unidade de processamento, podem implicar um pior desempenho do sistema [FIXME:ref]. Outra questão é que, nas arquiteturas multicore, vários núcleos podem estar utilizando a memória ao mesmo tempo. Por causa dessas razões, é recomendável aumentar o tamanho da memória cache (que tem acesso rápido) proporcionalmente ao aumento do volume de dados das aplicações e ao número de núcleos do processador.
+Contudo, ultimamente as aplicações têm cada vez um volume maior de dados a processar. Essa quantidade maior de dados, se não puderem ser acessados rapidamente pela unidade de processamento, podem implicar um pior desempenho do sistema \cite{li98fem}. Outra questão é que, nas arquiteturas multicore, vários núcleos podem estar utilizando a memória ao mesmo tempo. Por causa dessas razões, é recomendável aumentar o tamanho da memória cache (que tem acesso rápido) proporcionalmente ao aumento do volume de dados das aplicações e ao número de núcleos do processador.
 
-A grande questão é que aumentar a memória cache, pura e simplesmente, pode não ser suficiente para reduzir o tempo de execução das tarefas realizadas pelo processador. Na verdade, um aumento sem critérios do espaço da memória cache pode implicar uma redução da velocidade do sistema. Isso acontece porque quanto maior a memória, maior é o seu tempo de acesso, devido a uma estrutura mais complexa de endereçamento [FIXME:ref]. Além disso, se vários núcleos estão tentando acessar a memória ao mesmo tempo, haverá uma contenção pelo barramento de acesso àquela memória, fazendo com que um ou mais processadores esperem até que o barramento seja liberado. Uma má escolha de estrutura e tamanho de memórias cache pode fazer com que uma arquitetura com mais memória seja mais lenta do que uma arquitetura com menos memória, porém estruturada de maneira mais eficiente.
+A grande questão é que aumentar a memória cache, pura e simplesmente, pode não ser suficiente para reduzir o tempo de execução das tarefas realizadas pelo processador. Na verdade, um aumento sem critérios do espaço da memória cache pode implicar uma redução da velocidade do sistema. Isso acontece porque quanto maior a memória, maior é o seu tempo de acesso, devido a uma estrutura mais complexa de endereçamento \cite{goodman98ucm}. Além disso, se vários núcleos estão tentando acessar a memória ao mesmo tempo, haverá uma contenção pelo barramento de acesso àquela memória, fazendo com que um ou mais processadores esperem até que o barramento seja liberado. Uma má escolha de estrutura e tamanho de memórias cache pode fazer com que uma arquitetura com mais memória seja mais lenta do que uma arquitetura com menos memória, porém estruturada de maneira mais eficiente.
 
 Tendo esses aspectos em vista, neste trabalho foi feito um breve estudo da influência da estrutura de cache em processadores multicore, comparando o desempenho de uma hierarquia com 3 níveis de memória, comparada com outras duas hierarquias, ambas com 4 níveis, introduzindo um nível L4 compartilhado entre todos os núcleos. Como contribuição, neste trabalho foi testado o uso de uma hierarquia de memória entrelaçada -- o que será descrito nas próximas seções --, com o objetivo de reduzir a profundidade da busca realizada por um núcleo para buscar um dado compartilhado com outro núcleo.
 
-O texto está organizado da seguinte forma: na seção \ref{sec:contmot}, é apresentado um pouco do contexto dentro do qual este trabalho se insere; na seção \ref{sec:prop}, é apresentada em maiores detalhes a proposta deste trabalho, incluindo a idéia de entrelaçar a hierarquia da memória cache; na seção \ref{sec:simul}, são apresentados os detalhes da modelagem e parâmetros das simulações que foram realizadas; na seção \ref{sec:result}, são mostrados os resultados e uma breve análise dos mesmos e, na seção \ref{sec:conc}, são apresentadas as conclusões a que se chegou com este trabalho.
-
-%------------------------------------------------------------------------- 
-\section{Contexto e motivação}
-\label{sec:contmot}
-
-%Falar de como funcionam as memórias cache (?)
+O texto está organizado da seguinte forma: na seção \ref{sec:prop}, é apresentada em maiores detalhes a proposta deste trabalho, incluindo a idéia de entrelaçar a hierarquia da memória cache; na seção \ref{sec:simul}, são apresentados os detalhes da modelagem e parâmetros das simulações que foram realizadas; na seção \ref{sec:result}, são mostrados os resultados e uma breve análise dos mesmos e, na seção \ref{sec:conc}, são apresentadas as conclusões a que se chegou com este trabalho.
 
 %------------------------------------------------------------------------- 
 \section{Proposta}
@@ -95,7 +81,7 @@ Este trabalho teve dois objetivos, que são procurar evidências de que a adição d
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=0.8\linewidth]{../arq_L123}
+  \includegraphics[width=0.8\linewidth]{images/arq_L123}
   \caption{Arquitetura com 3 níveis de memória cache}
   \label{L3}
 \end{figure}
@@ -106,7 +92,7 @@ Este trabalho teve dois objetivos, que são procurar evidências de que a adição d
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=0.8\linewidth]{../arq_L1234}
+  \includegraphics[width=0.8\linewidth]{images/arq_L1234}
   \caption{Arquitetura com 4 níveis de memória cache}
   \label{L4}
 \end{figure}
@@ -123,14 +109,14 @@ Outra contribuição do trabalho foi que também se propôs o entrelaçamento da hier
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=0.8\linewidth]{../arq_L1234Interleaved}
+  \includegraphics[width=0.8\linewidth]{images/arq_L1234Interleaved}
   \caption{Arquitetura com 4 níveis de memória cache e hierarquia entrelaçada}
   \label{L4Interleaved}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=0.8\linewidth]{../treescompare}
+  \includegraphics[width=0.8\linewidth]{images/treescompare}
   \caption{Árvores representando as hierarquias avaliadas}
   \label{treescompare}
 \end{figure}
@@ -145,7 +131,7 @@ Na seção a seguir, serão apresentados os detalhes da modelagem das arquiteturas 
 \section{Modelagem e simulações}
 \label{sec:simul}
 
-Para realizar a simulação das arquiteturas propostas na seção \ref{sec:prop}, foi utilizado o simulador Simics [FIXME.ref.simics], versão 4. Através do Simics, é possível modelar e simular diversas arquiteturas de computadores, sobre as quais podem ser executados sistemas operacionais populares, como o Linux [FIXME.ref.linux]. Para modelar a arquitetura e os componentes de hardware, o Simics utiliza arquivos escritos com uma linguagem de modelagem de dispositivo (DML, \emph{device modeling language}), que permite criar componentes, ajustar seus atributos e conectá-los entre si. Após instalado e configurado o sistema operacional, foi instalado o programa de avaliação de desempenho NAS (\emph{Numerical Aerodynamic Simulation}), que permite a avaliação de desempenho de arquiteturas de computadores através de extensos cálculos numéricos [FIXME.ref.NAS].
+Para realizar a simulação das arquiteturas propostas na seção \ref{sec:prop}, foi utilizado o simulador Simics \cite{magnusson2002sfs}, versão 4. Através do Simics, é possível modelar e simular diversas arquiteturas de computadores, sobre as quais podem ser executados sistemas operacionais populares, como o Linux. Para modelar a arquitetura e os componentes de hardware, o Simics utiliza arquivos escritos com uma linguagem de modelagem de dispositivo (DML, \emph{device modeling language}), que permite criar componentes, ajustar seus atributos e conectá-los entre si. Após instalado e configurado o sistema operacional, foi instalado o programa de avaliação de desempenho NAS (\emph{Numerical Aerodynamic Simulation}), que permite a avaliação de desempenho de arquiteturas de computadores através de extensos cálculos numéricos \cite{bailey1995npb}.
 
 A modelagem das arquiteturas propostas foi feita com base em uma arquitetura sparc64 (TI UltraSparc II -- \textit{BlackBird}). Todas têm as seguintes características em comum:
 
@@ -191,7 +177,7 @@ A partir do terceiro nível de cache, as arquiteturas mudam completamente, sendo 
 
 Os motivos para decidir-se por esses parâmetros foram os seguintes: na arquitetura L123, a cache L3 tem 32 megabytes de espaço, causando um tempo de acesso (30 ciclos) maior do que na arquitetura L1234 (15 ciclos), onde cada cache L3 tem apenas 8 megabytes. Já na L4Interleaved, cada cache miss em uma cache L2 pode precisar de duas buscas nas caches L3. Para simular esse comportamento, definiu-se o tempo de acesso às L3 como de 20 ciclos, como uma estimativa de tempo médio de acesso.
 
-O sistema operacional que foi instalado sobre cada uma das arquiteturas simuladas foi o Ubuntu (GNU/Linux, kernel 2.6.15-53). O software utilizado para avaliação das arquiteturas modeladadas, o NAS, consiste de diversos programas de avaliação de desempenho. Dois deles são o \textbf{BT} e o \textbf{CG}. Detalhes a respeito do que fazem podem ser encontrados em [FIXME.ref.NAS] e [FIXME.ref.NAS2].
+O sistema operacional que foi instalado sobre cada uma das arquiteturas simuladas foi o Ubuntu (GNU/Linux, kernel 2.6.15-53). O software utilizado para avaliação das arquiteturas modeladadas, o NAS, consiste de diversos programas de avaliação de desempenho. Dois deles são o \textbf{BT} e o \textbf{CG}. Detalhes a respeito do que fazem podem ser encontrados em \cite{bailey1995npb} e \cite{jin1999oip}.
 
 Para cada combinação testada (arquitetura $\times$ programa), foram executadas três repetições, devido a restrições no tempo que se tinha disponível para realizar os testes. Na média cada repetição da simulação demorava três horas. Estima-se que, apenas executando três vezes cada simulação, tenha-se dispendido 54 horas. Na próxima seção, serão apresentados os resultados encontrados com as simulações que foram realizadas.
 
@@ -199,7 +185,7 @@ Para cada combinação testada (arquitetura $\times$ programa), foram executadas t
 \section{Resultados}
 \label{sec:result}
 
-Tanto o CG quando o BT buscam estressar os componentes de processamento e memória. O BT tem um tempo de execução maior, permitindo a avaliação do processador, enquanto que o CG visa a estressar as memórias, permitindo o teste de desempenho da estrutura de cache simulada. Foram utilizadas implementações em OpenMP [FIXME.ref.omp] de ambos. Para coletar os dados, foi utilizada a \emph{magic instruction} do Simics, que permite pausar a simulação e extrair o estado de cada um dos componentes de hardware. Os valores extraídos com esse método, para cada programa executado (BT e CG) foram:
+Tanto o CG quando o BT buscam estressar os componentes de processamento e memória. O BT tem um tempo de execução maior, permitindo a avaliação do processador, enquanto que o CG visa a estressar as memórias, permitindo o teste de desempenho da estrutura de cache simulada. Foram utilizadas implementações em OpenMP \cite{dagum1998ois} de ambos. Para coletar os dados, foi utilizada a \emph{magic instruction} do Simics, que permite pausar a simulação e extrair o estado de cada um dos componentes de hardware. Os valores extraídos com esse método, para cada programa executado (BT e CG) foram:
 
 \begin{itemize}
  \item Número de ciclos do processador;
@@ -212,42 +198,42 @@ Tanto o CG quando o BT buscam estressar os componentes de processamento e memóri
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=\linewidth]{../ciclos_bt.png}
+  \includegraphics[width=\linewidth]{images/ciclos_bt.png}
   \caption{Números de ciclos necessários para executar o BT}
   \label{ciclos_bt}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=\linewidth]{../steps_bt.png}
+  \includegraphics[width=\linewidth]{images/steps_bt.png}
   \caption{Números de \emph{steps} necessários para executar o BT}
   \label{steps_bt}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=\linewidth]{../ciclos_cg.png}
+  \includegraphics[width=\linewidth]{images/ciclos_cg.png}
   \caption{Números de ciclos necessários para executar o CG}
   \label{ciclos_cg}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=\linewidth]{../steps_cg.png}
+  \includegraphics[width=\linewidth]{images/steps_cg.png}
   \caption{Números de \emph{steps} necessários para executar o CG}
   \label{steps_cg}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=\linewidth]{../cachemiss_bt.png}
+  \includegraphics[width=\linewidth]{images/cachemiss_bt.png}
   \caption{Taxa de cache miss ao executar o BT}
   \label{cachemiss_bt}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
-  \includegraphics[width=\linewidth]{../cachemiss_cg.png}
+  \includegraphics[width=\linewidth]{images/cachemiss_cg.png}
   \caption{Taxa de cache miss ao executar o CG}
   \label{cachemiss_cg}
 \end{figure}
@@ -267,9 +253,8 @@ Por fim, na Figura \ref{cachemiss_bt} e na Figura \ref{cachemiss_cg}, verificamo
 Este trabalho avaliou a diferença de desempenho de arquiteturas de três e quatro níveis de memória cache, além de propor uma hierarquia entrelaçada de memória. Verificou-se que, nas situações simuladas, é mais interessante adicionar um quarto nível de cache e dividir o terceiro em dois módulos do que simplesmente aumentar o tamanho da cache L3. Isso se deve ao menor tempo de acesso e à menor contenção pelo acesso à L3 presente nas arquiteturas com cache L4 simuladas. Fica como possível trabalho futuro avaliar se uma cache L4 com tamanho maior -- 32 megabytes, por exemplo -- teria uma taxa de cache miss tão alta.
 
 %------------------------------------------------------------------------- 
-\nocite{ex1,ex2}
 \bibliographystyle{ieee}
-\bibliography{ieee}
+\bibliography{l4}
 
 \end{document}
 
