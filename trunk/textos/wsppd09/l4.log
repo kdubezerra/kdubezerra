@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  19 JUN 2009 10:15
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.6)  19 JUN 2009 11:27
 entering extended mode
  %&-line parsing enabled.
 **l4.tex
@@ -101,7 +101,14 @@ File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
 (/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
 \Urlmuskip=\muskip10
 Package: url 2005/06/27  ver 3.2  Verb mode for urls, etc.
-) (./l4.aux)
+)
+! Not a letter.
+l.26 \hyphenation{vo-lu-me,
+                            di-fe-ren-tes con-si-de-rar ci-clos a-tri-bu-tos...
+Letters in \hyphenation words must have \lccode>0.
+Proceed; I'll ignore the character I just read.
+
+(./l4.aux)
 \openout1 = `l4.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
@@ -117,8 +124,7 @@ LaTeX Font Info:    ... okay on input line 28.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
 LaTeX Font Info:    ... okay on input line 28.
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 28.
-
-(/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
+ (/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 (/usr/share/texmf/tex/context/base/supp-pdf.tex
@@ -154,208 +160,169 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 
 
 ]
-Underfull \hbox (badness 2856) in paragraph at lines 90--91
+Underfull \hbox (badness 2856) in paragraph at lines 76--77
 []\OT1/ptm/m/n/10 Este tra-balho teve dois ob-je-tivos, que s[]ao procu-
  []
 
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 93.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 79.
+<images/arq_L123.png, id=9, 534.3162pt x 534.3162pt>
+File: images/arq_L123.png Graphic file (type png)
+ <use images/arq_L123.png>
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 85.
 
-! LaTeX Error: File `../arq_L123' not found.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.98 ...graphics[width=0.8\linewidth]{../arq_L123}
-                                                  
-I could not locate the file with any of these extensions:
-.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 99.
 (/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 99.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 85.
 
-Underfull \hbox (badness 5431) in paragraph at lines 99--99
+Underfull \hbox (badness 5431) in paragraph at lines 85--85
 []\OT1/phv/b/n/10 Figura 1. Ar-quite-tura com 3 n^^S^^Pveis de
  []
 
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 104.
 
-LaTeX Warning: Reference `L4' on page 2 undefined on input line 104.
-
-
-Underfull \hbox (badness 2080) in paragraph at lines 104--105
+Underfull \hbox (badness 2080) in paragraph at lines 90--91
 []\OT1/ptm/m/n/10 uma ar-quite-tura mul-ti-core, semel-hante []a an-te-rior,
  []
 
+<images/arq_L1234.png, id=10, 534.3162pt x 534.3162pt>
+File: images/arq_L1234.png Graphic file (type png)
 
-! LaTeX Error: File `../arq_L1234' not found.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.109 ...aphics[width=0.8\linewidth]{../arq_L1234}
-                                                  
-I could not locate the file with any of these extensions:
-.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-Underfull \hbox (badness 5431) in paragraph at lines 110--110
+<use images/arq_L1234.png>
+Underfull \hbox (badness 5431) in paragraph at lines 96--96
 []\OT1/phv/b/n/10 Figura 2. Ar-quite-tura com 4 n^^S^^Pveis de
  []
 
+<images/arq_L1234Interleaved.png, id=11, 534.3162pt x 534.3162pt>
+File: images/arq_L1234Interleaved.png Graphic file (type png)
 
-LaTeX Warning: Reference `L4' on page 2 undefined on input line 117.
-
-
-LaTeX Warning: Reference `L4Interleaved' on page 2 undefined on input line 121.
-
-
-
-LaTeX Warning: Reference `treescompare' on page 2 undefined on input line 121.
-
-
-LaTeX Warning: Reference `treescompare' on page 2 undefined on input line 121.
-
-
-LaTeX Warning: Reference `treescompare' on page 2 undefined on input line 121.
-
-
-! LaTeX Error: File `../arq_L1234Interleaved' not found.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.126 ...h=0.8\linewidth]{../arq_L1234Interleaved}
-                                                  
-I could not locate the file with any of these extensions:
-.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-Underfull \hbox (badness 5431) in paragraph at lines 127--127
+<use images/arq_L1234Interleaved.png>
+Underfull \hbox (badness 5431) in paragraph at lines 113--113
 []\OT1/phv/b/n/10 Figura 3. Ar-quite-tura com 4 n^^S^^Pveis de
  []
 
 
-! LaTeX Error: File `../treescompare' not found.
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.133 ...ics[width=0.8\linewidth]{../treescompare}
-                                                  
-I could not locate the file with any of these extensions:
-.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
+<images/treescompare.pdf, id=12, 587.19376pt x 257.96375pt>
+File: images/treescompare.pdf Graphic file (type pdf)
 
+<use images/treescompare.pdf>
 
-LaTeX Warning: Reference `L4' on page 2 undefined on input line 138.
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-
-LaTeX Warning: Reference `L4Interleaved' on page 2 undefined on input line 140.
-
-
-
-LaTeX Warning: Reference `L4Interleaved' on page 2 undefined on input line 140.
-
-
-[2]
-Underfull \hbox (badness 10000) in paragraph at lines 148--149
-[]\OT1/ptm/m/n/10 Para re-alizar a simula[][]ao das ar-quite-turas pro-
- []
-
-
-Underfull \hbox (badness 2401) in paragraph at lines 148--149
-\OT1/ptm/m/n/10 postas na se[][]ao 3[], foi uti-lizado o sim-u-lador Sim-ics
- []
-
-
-Underfull \hbox (badness 4353) in paragraph at lines 148--149
-\OT1/ptm/m/n/10 [FIXME.ref.simics], vers[]ao 4. Atrav[]es do Sim-ics, []e
- []
-
-
-Underfull \hbox (badness 3019) in paragraph at lines 148--149
-\OT1/ptm/m/n/10 guagem de mod-e-lagem de dis-pos-i-tivo (DML, \OT1/ptm/m/it/10 
-de-vice
- []
-
-
-Underfull \hbox (badness 2343) in paragraph at lines 148--149
-\OT1/ptm/m/n/10 grama de avalia[][]ao de de-sem-penho NAS (\OT1/ptm/m/it/10 Nu-
-mer-i-cal
- []
-
-
-Underfull \hbox (badness 1424) in paragraph at lines 148--149
-\OT1/ptm/m/n/10 sem-penho de ar-quite-turas de com-puta-dores atrav[]es de
- []
-
-
-Underfull \hbox (badness 1859) in paragraph at lines 183--184
+[2 <./images/arq_L123.png> <./images/arq_L1234.png>]
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 151.
+ [3 <./images/arq_L1234Interleaved.png> <./images/treescompare.pdf>]
+Underfull \hbox (badness 1859) in paragraph at lines 169--170
 []\OT1/ptm/m/n/10 Arquitetura \OT1/ptm/b/n/10 L4Interleaved\OT1/ptm/m/n/10 , co
 m qua-tro n[]^^Pveis de
  []
 
 
-Underfull \hbox (badness 1769) in paragraph at lines 192--193
+Underfull \hbox (badness 1769) in paragraph at lines 178--179
 \OT1/ptm/m/n/10 megabytes de espa[]o, cau-sando um tempo de acesso
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 196.
+(Font)              <7> on input line 182.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 196.
+(Font)              <5> on input line 182.
 
-Underfull \hbox (badness 2698) in paragraph at lines 196--197
+Underfull \hbox (badness 2698) in paragraph at lines 182--183
 []\OT1/ptm/m/n/10 Para cada combina[][]ao tes-tada (ar-quite-tura $\OMS/cmsy/m/
 n/10 ^^B$ \OT1/ptm/m/n/10 pro-
  []
 
 
-Underfull \hbox (badness 5862) in paragraph at lines 196--197
+Underfull \hbox (badness 5862) in paragraph at lines 182--183
 \OT1/ptm/m/n/10 grama), foram ex-e-cu-tadas tr[]es repeti[][]oes, de-v-ido a
  []
 
 
-Underfull \hbox (badness 1755) in paragraph at lines 196--197
+Underfull \hbox (badness 1755) in paragraph at lines 182--183
 \OT1/ptm/m/n/10 restri[][]oes no tempo que se tinha dispon[]^^Pvel para re-
  []
 
 
-Underfull \hbox (badness 2181) in paragraph at lines 196--197
+Underfull \hbox (badness 2181) in paragraph at lines 182--183
 \OT1/ptm/m/n/10 mor-ava tr[]es ho-ras. Estima-se que, ape-nas ex-e-cu-tando
  []
 
+<images/ciclos_bt.png, id=32, 1049.9225pt x 473.77pt>
+File: images/ciclos_bt.png Graphic file (type png)
 
-Underfull \hbox (badness 1019) in paragraph at lines 202--203
-\OT1/ptm/m/n/10 de execu[][]ao maior, per-mitindo a avalia[][]ao do pro-ces-
+<use images/ciclos_bt.png>
+Underfull \hbox (badness 1308) in paragraph at lines 202--202
+[]\OT1/phv/b/n/10 Figura 5. N^^Sumeros de ci-clos necess[]arios
+ []
+
+<images/steps_bt.png, id=33, 1049.9225pt x 469.755pt>
+File: images/steps_bt.png Graphic file (type png)
+
+<use images/steps_bt.png>
+LaTeX Font Info:    Font shape `OT1/phv/bx/it' in size <10> not available
+(Font)              Font shape `OT1/phv/b/it' tried instead on input line 209.
+LaTeX Font Info:    Font shape `OT1/phv/b/it' in size <10> not available
+(Font)              Font shape `OT1/phv/b/sl' tried instead on input line 209.
+
+<images/ciclos_cg.png, id=34, 1049.9225pt x 469.755pt>
+File: images/ciclos_cg.png Graphic file (type png)
+
+<use images/ciclos_cg.png>
+Underfull \hbox (badness 1308) in paragraph at lines 216--216
+[]\OT1/phv/b/n/10 Figura 7. N^^Sumeros de ci-clos necess[]arios
  []
 
 
-Underfull \hbox (badness 2828) in paragraph at lines 202--203
-\OT1/ptm/m/n/10 u-lada. Foram uti-lizadas implementa[][]oes em OpenMP
- []
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[3]
+<images/steps_cg.png, id=35, 1049.9225pt x 469.755pt>
+File: images/steps_cg.png Graphic file (type png)
 
-LaTeX Warning: File `../ciclos_bt.png' not found on input line 215.
+<use images/steps_cg.png>
 
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-!pdfTeX error: pdflatex (file ../ciclos_bt.png): cannot find image file
- ==> Fatal error occurred, no output PDF file produced!
+<images/cachemiss_bt.png, id=36, 1049.9225pt x 469.755pt>
+File: images/cachemiss_bt.png Graphic file (type png)
+
+<use images/cachemiss_bt.png>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<images/cachemiss_cg.png, id=37, 1049.9225pt x 469.755pt>
+File: images/cachemiss_cg.png Graphic file (type png)
+
+<use images/cachemiss_cg.png>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[4 <./images/ciclos_bt.png (PNG copy)> <./images/steps_bt.png (PNG copy)>]
+[5 <./images/ciclos_cg.png (PNG copy)> <./images/steps_cg.png (PNG copy)> <./im
+ages/cachemiss_bt.png (PNG copy)> <./images/cachemiss_cg.png (PNG copy)>]
+(./l4.bbl) [6
+
+] (./l4.aux) ) 
+Here is how much of TeX's memory you used:
+ 1655 strings out of 94834
+ 21086 string characters out of 1179182
+ 77566 words of memory out of 1500000
+ 4807 multiletter control sequences out of 10000+50000
+ 23882 words of font info for 45 fonts, out of 1200000 for 2000
+ 220 hyphenation exceptions out of 8191
+ 29i,11n,24p,1277b,288s stack positions out of 5000i,500n,6000p,200000b,5000s
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share
+/texmf-texlive/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf-texlive/font
+s/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/helve
+tic/uhvbo8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></us
+r/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texliv
+e/fonts/type1/urw/times/utmri8a.pfb>
+Output written on l4.pdf (6 pages, 627373 bytes).
+PDF statistics:
+ 68 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
+
