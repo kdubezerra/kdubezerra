@@ -22,7 +22,7 @@ KDTree::KDTree(int _num_servers, list<Avatar*> &_avatar_list) {
 	_avatar_list.sort(Avatar::compareY);
 	sorted_y.insert(sorted_y.begin(), _avatar_list.begin(), avatar_list.end());
 	
-	buildTree(_num_servers, 0, sorted_x, sorted_y, X_NODE);
+	buildTree(_num_servers, 0, 0, sorted_x, sorted_y, X_NODE);
 	
 }
 
@@ -35,9 +35,14 @@ KDTree::~KDTree() {
 	
 	protected:
 	
-void KDTree::buildTree(int _num_servers, int _server_number, int _sorted_x, int _sorted_y, short _split_lvl) {
-
+void KDTree::buildTree(int _num_servers, int _server_number, int _tree_lvl, int _sorted_x, int _sorted_y, short _split_lvl) {
+	if (_server_number + pot(2, _tree_lvl - 1) >= _num_servers) return;
+	schild = new KDTree();	
+	bchild = new KDTree();
+	schild->parent = bchild->parent = this;
+	schild->buildTree(_num_servers, _server_number, _tree_lvl + 1, _sorted_x, _sorted_y, (_split_lvl == X_NODE) ? Y_NODE : X_NODE);
 }
+
 		void reckonCapacity();
 		void reckonLoad();
 		void reckonRects();

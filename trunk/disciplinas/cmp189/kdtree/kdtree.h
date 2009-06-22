@@ -32,7 +32,7 @@ class KDTree {
 		void drawTree();
 	
 	protected:
-		void buildTree(int _num_servers, int _server_number, int _sorted_x, int _sorted_y, short _split_lvl);
+		void buildTree(int _num_servers, int _server_number, int _tree_lvl, int _sorted_x, int _sorted_y, short _split_lvl);
 		void reckonCapacity();
 		void reckonLoad();
 		void reckonRects();
