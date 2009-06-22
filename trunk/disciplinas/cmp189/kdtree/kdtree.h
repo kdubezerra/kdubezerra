@@ -1,5 +1,11 @@
+
 #pragma once
+#ifndef _KDTREE_H_
+#define _KDTREE_H_
 #include <list>
+#include <vector>
+
+using namespace std;
 
 class Avatar;
 
@@ -7,19 +13,18 @@ typedef struct {
 	int x,y;
 } point;
 
-bool comparePointsX(point a, point b) {
-	return a.x < b.x;
-}
+#define X_NODE 0;
+#define Y_NODE 1;
 
-bool comparePointsY(point a, point b) {
-	return a.y < b.y;
-}
+bool comparePointsX(point a, point b);
+
+bool comparePointsY(point a, point b);
 
 class KDTree {
 	
 	public:
 		KDTree();
-		KDTree(int _num_servers, list<Avatar> _avatar_list);
+		KDTree(int _num_servers, list<Avatar*> &_avatar_list);
 		~KDTree();
 		void splitLeaf();
 		void moveSplitCoordinate(); //somente se esse nodo tiver duas sub-árvores
@@ -27,6 +32,7 @@ class KDTree {
 		void drawTree();
 	
 	protected:
+		void buildTree(int _num_servers, int _server_number, int _sorted_x, int _sorted_y, short _split_lvl);
 		void reckonCapacity();
 		void reckonLoad();
 		void reckonRects();
@@ -43,3 +49,4 @@ class KDTree {
 							// filhos, e a capacidade de cada nodo no penúltimo nível
 							// é igual à capacidade do servidor correspondente
 };
+#endif

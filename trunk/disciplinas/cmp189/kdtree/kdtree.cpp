@@ -1,9 +1,6 @@
-#include 'kdtree.h'
-#include 'Avatar.h'
+#include "kdtree.h"
+#include "Avatar.h"
 
-typedef struct {
-	int x,y;
-} point;
 
 bool comparePointsX(point a, point b) {
 	return a.x < b.x;
@@ -13,18 +10,34 @@ bool comparePointsY(point a, point b) {
 	return a.y < b.y;
 }
 
-class KDTree {
+KDTree::KDTree() {
+}
+
+KDTree::KDTree(int _num_servers, list<Avatar*> &_avatar_list) {
+	vector<Avatar*> sorted_x, sorted_y;
 	
-	public:
-		KDTree();
-		KDTree(int _num_servers, list<Avatar> _avatar_list);
-		~KDTree();
+	_avatar_list.sort(Avatar::compareX);
+	sorted_x.insert(sorted_x.begin(), _avatar_list.begin(), avatar_list.end());
+	
+	_avatar_list.sort(Avatar::compareY);
+	sorted_y.insert(sorted_y.begin(), _avatar_list.begin(), avatar_list.end());
+	
+	buildTree(_num_servers, 0, sorted_x, sorted_y, X_NODE);
+	
+}
+
+KDTree::~KDTree() {
+}
 		void splitLeaf();
 		void moveSplitCoordinate(); //somente se esse nodo tiver duas sub-árvores
 		void balanceLoad();
 		void drawTree();
 	
 	protected:
+	
+void KDTree::buildTree(int _num_servers, int _server_number, int _sorted_x, int _sorted_y, short _split_lvl) {
+
+}
 		void reckonCapacity();
 		void reckonLoad();
 		void reckonRects();
@@ -42,3 +55,4 @@ class KDTree {
 							// é igual à capacidade do servidor correspondente
 };
 
+*/

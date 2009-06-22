@@ -1,11 +1,10 @@
 #ifdef _WIN32
-#include "../../myutils.h"
+	#include "../../myutils.h"
 #else
-#include "myutils.h"
+	#include "myutils.h"
 #endif
 
 #include "Avatar.h"
-#include "Cell.h"
 
 SDL_sem* vsem = NULL;
 SDL_sem* esem = NULL;
@@ -44,11 +43,6 @@ void Avatar::init() {
     diry = rand() % WW;
     destx = rand() % WW;
     desty = rand() % WW;
-    coord my_location = getCell();
-    my_cell = Cell::getCell(my_location.X, my_location.Y);
-    old_cell = my_cell;
-    old_region = old_cell->getParentRegion();
-    my_cell->subscribe(this);
   } while (distance(posx, posy, destx, desty) <= 20.0f);      
   R = rand() % 255;
   G = rand() % 255;
@@ -75,8 +69,8 @@ void Avatar::init() {
   }  
   last_move = 0;
   isSeen = false;      
-  surface_vertex_weight = load_image("vweight.bmp");
-  surface_edge_weight = load_image("eweight.bmp");
+  //surface_vertex_weight = load_image("vweight.bmp");
+  //surface_edge_weight = load_image("eweight.bmp");
   vsem = SDL_CreateSemaphore(1);
   vsem = SDL_CreateSemaphore(1);
 }
@@ -89,8 +83,6 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
 
   float distance_ = distance(posx, posy, destx, desty);  
   if (distance_ > 20) {    
-    coord new_cell_coord;
-    Cell* new_cell;        
     int speed = rand() % 5 + 1;   
     incr_y =  speed * (desty - posy) / distance(posx, posy, destx, desty); // sin of the direction angle
     incr_x =  speed * (destx - posx) / distance(posx, posy, destx, desty); // cossin of the direction angle               
@@ -102,14 +94,7 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
     if (posx >= WW - 3) posx = WW - 3;
     if (posy < 3) posy = 3;
     if (posy >= WW - 3) posy = WW - 3;        
-    new_cell_coord.X = int (simpleScale(posx, WW, CELLS_ON_A_ROW));
-    new_cell_coord.Y = int (simpleScale(posy, WW, CELLS_ON_A_ROW));        
-    new_cell = Cell::getCell(new_cell_coord.X, new_cell_coord.Y);
-    if (new_cell != my_cell) {//TODO o problema está aqui!
-      my_cell->unsubscribe(this);
-      new_cell->subscribe(this);
-      my_cell = new_cell;
-    }
+    
     stopped_time = 0;
     last_move = SDL_GetTicks();
     resting_time = rand () % MAX_RESTING_TIME; //just for the case in which this is its last move towards its destination...            
@@ -131,7 +116,7 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
 }
 
 void Avatar::checkMigration() {
-  coord cell_coord = getCell();
+/**  coord cell_coord = getCell();
   Cell* new_cell = Cell::getCell(cell_coord.X, cell_coord.Y);  
   Region* new_region = new_cell->getParentRegion();
   if (new_region != old_region) {
@@ -142,6 +127,7 @@ void Avatar::checkMigration() {
   }
   old_cell = new_cell;
   old_region = new_region;
+*/
 }
 
 long Avatar::getMigrationStill(bool clear_migs) {
@@ -205,39 +191,23 @@ void Avatar::draw() {
 }
 
 coord Avatar::getCell () {
+/**
   coord cell;      
   cell.X = int (simpleScale(posx, WW, CELLS_ON_A_ROW));
   cell.Y = int (simpleScale(posy, WW, CELLS_ON_A_ROW));    
   return cell;
+*/
 }
 
-void Avatar::checkCellWeight (Avatar* other) { //por hora é mto simples, apenas contando q o peso da celula = numero de avatares nela
-  if (!showv && !showe) return;      
-  coord myCell = getCell();
-  coord otherCell = other->getCell();      
-  if (otherCell == myCell) {
-    SDL_SemWait(vsem);    
-    SDL_SemPost(vsem);
-  }
-}
-
-long Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferente: getWeightE(UP_LEFT), por exemplo.
+/**long Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferente: getWeightE(UP_LEFT), por exemplo.
   list<Avatar*>::iterator it;
   long _interaction = 0;
   for (it = _cell->getAvatars().begin() ; it != _cell->getAvatars().end() ; it++)
     _interaction += this->OtherRelevance(*it);
   return _interaction;
-}
+}*/
 
-void Avatar::resetCells () {
-  for (int i = 0 ; i < CELLS_ON_A_ROW ; i++) {
-    for (int j = 0 ; j < CELLS_ON_A_ROW ; j++) {       
-    }
-  }
-  total_weight = 0;
-}
-    
-void Avatar::drawCells (SDL_Surface* output) {  
+/**void Avatar::drawCells (SDL_Surface* output) {  
   coord cell;
   float alpha;  
   for (int i = 0 ; i < Cell::getRowLength() ; i++) {
@@ -254,7 +224,7 @@ void Avatar::drawCells (SDL_Surface* output) {
       }
     }
   }  
-}
+}*/
 
 bool Avatar::toggleVertex() {
   showv = !showv;
@@ -275,4 +245,12 @@ bool Avatar::setMobility(bool value) {
   bool oldstate = isMobile;
   isMobile = value;
   return oldstate;
+}
+
+bool Avatar::compareX(Avatar* a, Avatar* b) {
+	return a->GetX() < b->GetX();
+}
+
+bool Avatar::compareY(Avatar* a, Avatar* b) {
+	return a->GetY() < b->GetY();
 }
