@@ -1,7 +1,5 @@
-#pragma once
-#include <list>
-
-class Avatar;
+#include 'kdtree.h'
+#include 'Avatar.h'
 
 typedef struct {
 	int x,y;
@@ -43,3 +41,4 @@ class KDTree {
 							// filhos, e a capacidade de cada nodo no penúltimo nível
 							// é igual à capacidade do servidor correspondente
 };
+
