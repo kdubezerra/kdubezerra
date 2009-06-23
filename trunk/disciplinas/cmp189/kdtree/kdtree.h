@@ -23,9 +23,10 @@ class KDTree {
 		void splitLeaf();
 		void moveSplitCoordinate(); //somente se esse nodo tiver duas sub-árvores
 		void balanceLoad();
-		void drawTree();
+		void drawTree();		
 	
 	protected:
+		void drawTree(int _xmin, int _xmax, int _ymin, int _ymax, short _split_lvl);
 		void buildTree(int _num_servers, int _server_number, int _tree_lvl, vector<Avatar*> _sorted_x, vector<Avatar*> _sorted_y, short _split_lvl);
 		void reckonCapacity();
 		void reckonLoad();

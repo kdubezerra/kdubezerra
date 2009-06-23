@@ -50,6 +50,33 @@ void KDTree::buildTree(int _num_servers, int _server_number, int _tree_lvl, vect
 	schild->parent = bchild->parent = this;
 	schild->buildTree(_num_servers, _server_number, _tree_lvl + 1, _sorted_x, _sorted_y, (_split_lvl == X_NODE) ? Y_NODE : X_NODE);
 }
+
+void KDTree::drawTree() {
+	drawTree(0, WW, 0, WW, X_NODE);
+}
+
+///TODO: fazer a questão do (min - split-1 ; split - max) não dar pau
+void KDTree::drawTree(int _xmin, int _xmax, int _ymin, int _ymax, short _split_lvl) {
+	if (schild) {
+		swith (_split_lvl) {
+			case X_NODE: {
+				schild->drawTree(_xmin, split_coordinate -1, _ymin, _ymax, Y_NODE);
+				bchild->drawTree(split_coordinate, _xmax, _ymin, _ymax, Y_NODE);
+			}
+			case Y_NODE: {
+				schild->drawTree(_xmin, _xmax, _ymin, split_coordinate - 1, X_NODE);
+				bchild->drawTree(_xmin, _xmax, split_coordinate, _ymax, X_NODE);
+			}
+		}
+	}
+	else {
+		SDL_Rect l_node_area;
+		l_node_area.x = _xmin;
+		l_node_area.y = _ymin;
+		l_node_area.w = _xmax - _xmin + 1;
+		l_node_area.h = _ymax - _ymin + 1;
+	}
+}
 /*
 		void reckonCapacity();
 		void reckonLoad();
