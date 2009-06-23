@@ -31,6 +31,7 @@ int main () {
 	
 	Avatar::toggleMobility();
 	KDTree* kdt = new KDTree(NUM_SERVERS, avatar_list);
+	kdt->setScreen(screen);
 	
 	Uint32 time = 0;
 	Uint32 step_delay = 250;		
@@ -54,7 +55,7 @@ int main () {
 		//time = SDL_GetTicks();
 		time += 100;
 		
-		kdt->
+		kdt->drawTree();
 		for (list<Avatar*>::iterator it = avatar_list.begin() ; it != avatar_list.end() ; it++){
 			(*it)->draw();
 		}

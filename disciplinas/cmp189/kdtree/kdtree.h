@@ -2,6 +2,7 @@
 
 #include <list>
 #include <vector>
+#include "SDL/SDL_gfxPrimitives.h"
 
 using namespace std;
 
@@ -24,6 +25,8 @@ class KDTree {
 		void splitLeaf();
 		void moveSplitCoordinate(); //somente se esse nodo tiver duas sub-árvores
 		void balanceLoad();
+		
+		void setScreen(SDL_Surface* _screen);
 		void drawTree();		
 	
 	protected:
@@ -45,4 +48,5 @@ class KDTree {
 							// a capacidade de um nodo é igual à capacidade de seus
 							// filhos, e a capacidade de cada nodo no penúltimo nível
 							// é igual à capacidade do servidor correspondente
+		SDL_Surface* screen;
 };
