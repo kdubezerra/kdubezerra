@@ -1,7 +1,5 @@
-
 #pragma once
-#ifndef _KDTREE_H_
-#define _KDTREE_H_
+
 #include <list>
 #include <vector>
 
@@ -13,12 +11,8 @@ typedef struct {
 	int x,y;
 } point;
 
-#define X_NODE 0;
-#define Y_NODE 1;
-
-bool comparePointsX(point a, point b);
-
-bool comparePointsY(point a, point b);
+#define X_NODE 0
+#define Y_NODE 1
 
 class KDTree {
 	
@@ -32,12 +26,13 @@ class KDTree {
 		void drawTree();
 	
 	protected:
-		void buildTree(int _num_servers, int _server_number, int _tree_lvl, int _sorted_x, int _sorted_y, short _split_lvl);
+		void buildTree(int _num_servers, int _server_number, int _tree_lvl, vector<Avatar*> _sorted_x, vector<Avatar*> _sorted_y, short _split_lvl);
 		void reckonCapacity();
 		void reckonLoad();
 		void reckonRects();
 		KDTree *parent, *schild, *bchild;
 		int split_coordinate, xmin, xmax, ymin, ymax;
+		list<Avatar*> avList;
 		int load;
 							// a carga (load) de um nodo é igual à soma das cargas de
 							// seus filhos; se forem folhas, os filhos são avatares,
@@ -49,4 +44,3 @@ class KDTree {
 							// filhos, e a capacidade de cada nodo no penúltimo nível
 							// é igual à capacidade do servidor correspondente
 };
-#endif
