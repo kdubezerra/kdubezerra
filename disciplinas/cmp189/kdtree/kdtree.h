@@ -6,6 +6,7 @@
 using namespace std;
 
 class Avatar;
+class Server;
 
 typedef struct {
 	int x,y;

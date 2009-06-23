@@ -1,5 +1,6 @@
 #include "kdtree.h"
 #include "Avatar.h"
+#include "Server.h"
 #include "myutils.h"
 
 
@@ -75,6 +76,12 @@ void KDTree::drawTree(int _xmin, int _xmax, int _ymin, int _ymax, short _split_l
 		l_node_area.y = _ymin;
 		l_node_area.w = _xmax - _xmin + 1;
 		l_node_area.h = _ymax - _ymin + 1;
+		
+		Uint32 color = colorTable(getServer()->getIndex());
+		
+		boxRGBA(SDL_Surface* dst, Sint16 x1, Sint16 y1, Sint16 x2, Sint16 y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+		
+		
 	}
 }
 /*
