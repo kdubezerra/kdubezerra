@@ -221,6 +221,11 @@ float apow(float a, int b) { //power ... only works with non-negative exponnents
   return a * apow(a, b - 1);
 }
 
+int intPow(int a, int b) {
+  if (b == 0) return 1;
+  return a * intPow(a, b - 1);
+}
+
 bool belongsToVisibility (float px, float py, float dx, float dy, float ox, float oy) {
   float hipo = distance (0.0, 0.0, dx, dy);
   float cos_alpha = dx / hipo;

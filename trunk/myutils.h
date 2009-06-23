@@ -108,6 +108,7 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 int approx(float number);
 long approxLong(double number);
 float apow(float a, int b);
+int intPow(int a, int b);
 float distance (float xo, float yo, float xf, float yf);
 void apply_surface( int x, int y, SDL_Surface* source, SDL_Surface* destination );
 SDL_Surface* load_image( string filename );
