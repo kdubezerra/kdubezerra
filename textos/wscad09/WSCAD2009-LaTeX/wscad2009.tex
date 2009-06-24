@@ -1,0 +1,231 @@
+%
+%  $Description: Orientação para autores e exemplo de documento em LaTeX 2.09$ 
+%
+%  $Autor: Gabriel P. Silva $
+%  $Data: 15/04/2009 15:20:59 $
+%  $Revisão: 1.0 $
+%
+
+\documentclass[10pt,twocolumn]{article} 
+\usepackage{wscad2009}
+\usepackage{times}
+\usepackage[portuges]{babel}
+%\usepackage[latin1]{inputenc}
+
+% Se você estiver utilizando uma distribuição Linux Fedora ou Mandriva
+% Use utf8 
+\usepackage[utf8]{inputenc}
+% Para incluir gráficos e figuras use o pacote abaixo
+\usepackage[dvips]{graphicx}
+
+%------------------------------------------------------------------------- 
+\pagestyle{empty}
+%------------------------------------------------------------------------- 
+\begin{document}
+
+\title{\LaTeX\ Orientações para autores do WSCAD-SSC }
+
+\author{Gabriel P. Silva\\
+Universidade Federal do Rio de Janeiro\\ Instituto de Matemática \\ Rio de Janeio, RJ, Brasil \\ gabriel.silva@ufrj.br\\
+% Para autores que pertencem a uma mesma instituição, 
+% omita as seguintes linhas até o último ``}''.
+% Neste caso use $^{1}$ para colocar um sobrescrito nos autores e
+% respectivos endereços de e-mail
+% Para adicionar autores com endereços diferentes coloque um ``\and'', 
+% como no caso do segundo autor a seguir:
+\and
+Segundo Autor\\
+Instituição2\\
+Primeira lina do endereço da instituição2\\ Segunda linha do endereço da instituição2\\ 
+SegundoAutor@institucao2.edu.br\\
+}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+   O RESUMO deve estar totalmente justificado e em itálico, 
+   no topo da coluna à esquerda, abaixo da informação com os autores
+   e filiação.  Use a palavra ``Resumo'' como título, em fonte Times 12, 
+   em negrito, centrado em relação à coluna, com capitalização
+   inicial. O resumo deve ser escrito com fonte com 10 pontos e  
+   espaço simples. O resumo deve ter até 3 pol. (7,63 cm) de 
+   comprimento. Deixe duas linhas em branco antes de começar
+   o texto. 
+\end{abstract}
+
+
+
+%------------------------------------------------------------------------- 
+\Section{Introdução}
+
+Por favor siga as orientações abaixo quando submeter 
+o seu artigo para o WSCAD-SSC. Note que esta é uma adaptação
+do formato utilizado pela IEEE Computer Society Press. 
+
+%------------------------------------------------------------------------- 
+\Section{Instruções}
+
+Por favor leia atentamente as informações a seguir.
+
+%------------------------------------------------------------------------- 
+\SubSection{Idioma}
+
+Todos os manuscritos devem ser em Português. 
+
+%------------------------------------------------------------------------- 
+\SubSection{Imprimindo o seu artigo}
+
+Grave o seu artigo em um arquivo do tipo PDF com formato 
+de página do tamanho carta ($8.5 \times 11$ polegadas)
+com fundo branco. Caso necessário, o formato A4 também 
+pode ser utilizado, desde que haja um espaço adicional de 0,5 
+polegada (1,27 cm) ao FINAL da página. 
+
+%------------------------------------------------------------------------- 
+\SubSection{Margens e numeração das páginas}
+
+Todo o material a ser impresso, incluindo texto, ilustrações e gráficos, 
+devem ser mantidos dentro de uma área de 6-7/8 polegadas (17,5 cm) de
+largura e de  8-7/8 polegadas (22,54 cm) de altura. Não imprima nada fora 
+desta área. Não coloque nenhuma numeração nas páginas do seu artigo. 
+
+%------------------------------------------------------------------------ 
+\SubSection{Formatando seu artigo}
+
+Todo o texto deve ser formatado em duas colunas. As colunas devem ter 3-1/4 polegadas 
+(8,25 cm) de largura com um espaço de 5/16 polegadas (0,8 cm) entre elas.
+O título principal (na primeira página) deve começar uma polegada (2,54 cm) 
+abaixo da borda superior da página. A segunda página em diante devem começar
+uma polegada (2,54 cm) abaixo do topo da página. Em todas as páginas, a margem
+inferior deve estar a 1-1/8 polegadas (2,86 cm) da borda inferior da página 
+para páginas de tamanho carta ($8.5 \times 11$ polegadas); para papel A4, 
+deixe aproximadamente 1-5/8 polegadas (4,13 cm) da borda inferior da página. 
+
+%------------------------------------------------------------------------- 
+\SubSection{Estilo dos fontes}
+
+Quando o tipo Times for especificado, Times Roman pode ser também utilizado. 
+Se nenhum deles estiver disponível no seu processador de textos, por favor
+use a fonte mais próxima em aparência ao Times que você dispuser. 
+
+TÍTULO PRINCIPAL. Centre o título a 1-3/8 polegadas (3,49 cm) da borda 
+superior da página.  O fonte do título deve ser Times 14, em negrito, 
+Capitalize as primeiras letras de nomes, pronomes, verbos, adjetivos 
+e advérbios. Não capitalize artigos, conjunções coordenativas ou preposições
+(a menos que o título comece com uma dessas palavras).
+Deixe duas linhas em branco após o título. 
+
+NOME DOS AUTORES E FILIAÇÃO devem estar centrados após o título e impressos
+em Times 12, sem negrito. Esta informação deve ser seguida por duas linhas 
+em branco. 
+
+O RESUMO e o TEXTO PRINCIAL devem estar em um formato com duas colunas.
+
+TEXTO PRINCIPAL. O texto principal deve impresso em Times 10, espaço simples. 
+NÃO use espaço duplo. Todos os parágrafos devem estar identados com 
+1 pica (aprox. 1/6 de pol. ou 0,422 cm). Assegure-se que o texto
+está completamente justificado, isto é, ajustado tanto à esquerda quanto
+à direita. Por favor não coloque nenhum espaço adicional em branco entre
+os parágrafos. As legendas de figuras e tabelas devem ter um fonte Helvetica
+(ou Arial) de 10 pontos em negrito como a seguir:  
+
+\begin{figure}[h]
+   \caption{Exemplo de legenda.}
+\end{figure}
+
+\noindent Legendas compridas devem ser colocadas como em  
+\begin{figure}[h] 
+   \caption{Exemplo de legenda com mais de uma linha. Ela não é 
+      centrada, mas alinhada em ambos os lados e identada com 
+      uma margem adidicional em ambos os lados de 1 pica.}
+\end{figure}
+
+\noindent Chamadas devem ser em fonte Helvetica (ou Arial) de tamanho 
+9, sem negrito. Capitalize no início apenas a primeira palavra dos 
+títulos das seções e o primeiro, segundo e terceiro nível de cabeçalhos.
+
+CABEÇALHOS DE PRIMEIRO NÍVEL. (Por exemplo, {\large \bf 1. Introdução}) 
+devem ter fonte Times 12 em negrito, com capitalização inicial, 
+alinhados á esquerda, com uma linha em branco antes e uma linha em branco depois. 
+
+CABEÇALHOS DE SEGUNDO NÍVEL. (Por exemplo, {\elvbf 1.1. Elementos do banco de dados}) 
+devem ter fonte Times 11 em negrito, com capitalização inicial, alinhados
+à esquerda, com uma linha em branco antes e uma linha em branco depois. 
+Se for necessário para você usar um cabeçalho de terceiro nível, 
+(nós desencorajamos isso) use fonte Times 10, em negrito, com capitalização inicial,
+alinhado à esquerda, precedido com uma linha em branco e seguido por um ponto e 
+seu texto na mesma linha.
+
+%------------------------------------------------------------------------- 
+\SubSection{Rodapés}
+
+Por favor utilize notas de rodapé com parcimônia%
+\footnote
+   {%
+     Ou, melhor ainda, tente evitar notas de rodapé totalmente.  Para ajudar seus
+     leitores, evte usar notas de rodapé totalmente e inclua observações adicionais
+     no texto (entre parenteses, se você preferir, como nesta sentença). 
+   }
+e coloque-os no pé da coluna na página onde os mesmos são referenciados. 
+Use fonte Times 8, com espaço simples. 
+
+
+%------------------------------------------------------------------------- 
+\SubSection{Referências}
+
+Liste e numere todas as referências bibliográficas em fonte Times 9, 
+com espaço simples, ao final do seu artigo. Quando referenciado no texto, 
+coloque o número da citação entre colchetes, por exemplo ~\cite{ex1}. 
+Quando apropriado,inclua o nome do(s) editor(es) dos livros referenciados. 
+
+%------------------------------------------------------------------------- 
+\SubSection{Ilustrações, gráficos e fotografias}
+
+Todos os gráficos devem estar centrados e incluídos na formatação final 
+ao longo do texto apresentado. Ou seja, os gráficos e figuras NÃO podem 
+ser enviados separadamente ou mesmo colocados ao final do artigo. Tenha 
+especial cuidado para que os seus gráficos estejam legíveis na versão 
+final em PDF. Note que alguns formatos de figuras não permitem 
+que sejam redimensionados sem perda acentuada de resolução, o que poderá
+prejudicar a avaliação do seu artigo. 
+
+%------------------------------------------------------------------------- 
+\SubSection{Cores}
+
+Os artigos serão publicados em preto e branco e tons de cinza. Se você 
+for colocar fotografias, de preferência pelo uso de tons de cinza, 
+pois os resultados da impressão de fotografias coloridas em preto e 
+branco não são prevísiveis.
+NÂO SUBMETA IMAGENS COLORIDAS NO SEU ARTIGO A MENOS QUE VOCÊ TENHA 
+GARANTIA QUE ELAS ESTARÃO LEGÍVEIS QUANDO IMPRESSAS EM TONS DE CINZA. 
+
+%------------------------------------------------------------------------- 
+\SubSection{Símbolos}
+
+Se o seu processador de textos não puder produzir letras gregas, símbolos 
+matemáticos ou outros elementos gráficos, por favor, inclua figuras produzidas
+com uma ferramenta gráfica adequada, certificando-se de que estejam legíveis. 
+
+%------------------------------------------------------------------------ 
+\SubSection{Direitos Autorais}
+
+Ao ter seu artigo aceito para publicação para o WSCAD-SSC você estará automaticamente
+cedendo os seus direitos autorais para a Sociedade Brasileira de Computação (SBC). 
+
+
+%------------------------------------------------------------------------- 
+\SubSection{Conclusões}
+
+Por favor direcione qualquer dúvidas ou comentários adicionais diretamente 
+para os coordenadores atuais do WSCAD-SSC, que são renovados anualmente. O e-mail de
+contato desses coordenadores podem ser encontrados 
+na página do evento deste ano, indicada em http://www.sbc.org.br/wscad. 
+
+%------------------------------------------------------------------------- 
+%\nocite{ex1,ex2}
+\bibliographystyle{wscad2009}
+\bibliography{wscad2009}
+
+\end{document}
+
