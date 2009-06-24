@@ -1,17 +1,15 @@
-This is pdfeTeX, Version 3.141592-1.21a-2.2 (Web2C 7.5.4) (format=pdflatex 2008.5.12)  3 JUN 2008 13:36
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.16)  3 JUN 2009 11:04
 entering extended mode
+ %&-line parsing enabled.
 **semac.tex
 (./semac.tex
-LaTeX2e <2003/12/01>
-Babel <v3.8d> and hyphenation patterns for american, french, german, ngerman, b
-ahasa, basque, bulgarian, catalan, croatian, czech, danish, dutch, esperanto, e
-stonian, finnish, greek, icelandic, irish, italian, latin, magyar, norsk, polis
-h, portuges, romanian, russian, serbian, slovak, slovene, spanish, swedish, tur
-kish, ukrainian, nohyphenation, loaded.
-(/usr/share/texmf-tetex/tex/latex/base/article.cls
-Document Class: article 2004/02/16 v1.4f Standard LaTeX document class
-(/usr/share/texmf-tetex/tex/latex/base/size12.clo
-File: size12.clo 2004/02/16 v1.4f Standard LaTeX file (size option)
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, usenglishmax, dumylang, noh
+yphenation, ukrainian, russian, bulgarian, loaded.
+(/usr/share/texmf-texlive/tex/latex/base/article.cls
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+(/usr/share/texmf-texlive/tex/latex/base/size12.clo
+File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
 )
 \c@part=\count79
 \c@section=\count80
@@ -27,10 +25,10 @@ File: size12.clo 2004/02/16 v1.4f Standard LaTeX file (size option)
 ) (./sbc-template.sty
 Package: sbc-template 2001/06/09
 
-(/usr/share/texmf-tetex/tex/latex/geometry/geometry.sty
+(/usr/share/texmf-texlive/tex/latex/geometry/geometry.sty
 Package: geometry 2002/07/08 v3.2 Page Geometry
 
-(/usr/share/texmf-tetex/tex/latex/graphics/keyval.sty
+(/usr/share/texmf-texlive/tex/latex/graphics/keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks14
 )
@@ -43,7 +41,8 @@ Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \Gm@even@mp=\dimen106
 \Gm@dimlist=\toks15
 
-(/usr/share/texmf-tetex/tex/latex/geometry/geometry.cfg)) (./caption2.sty
+(/usr/share/texmf-texlive/tex/xelatex/xetexconfig/geometry.cfg))
+(./caption2.sty
 Package: caption2 2002/08/03 v2.1 Customising captions (AS)
 \captionmargin=\dimen107
 \captionwidth=\dimen108
@@ -51,13 +50,12 @@ Package: caption2 2002/08/03 v2.1 Customising captions (AS)
 Package caption2 Info: Running in caption2 v2.0 compatibility mode on input lin
 e 147.
 \captionlinewidth=\dimen110
-)
-(/usr/share/texmf-tetex/tex/latex/psnfss/times.sty
-Package: times 2004/09/15 PSNFSS-v9.2 (SPQR) 
+) (/usr/share/texmf-texlive/tex/latex/psnfss/times.sty
+Package: times 2005/04/12 PSNFSS-v9.2a (SPQR) 
 )
 \c@instn=\count90
 
-(/usr/share/texmf-tetex/tex/latex/titlesec/titlesec.sty
+(/usr/share/texmf-texlive/tex/latex/titlesec/titlesec.sty
 Package: titlesec 2005/01/22 v2.6 Sectioning titles
 \ttl@box=\box26
 \beforetitleunit=\skip43
@@ -68,11 +66,11 @@ Package: titlesec 2005/01/22 v2.6 Sectioning titles
 \titlewidthlast=\dimen114
 \titlewidthfirst=\dimen115
 ))
-(/usr/share/texmf-tetex/tex/latex/algorithms/algorithm.sty
+(/usr/share/texmf-texlive/tex/latex/algorithms/algorithm.sty
 Package: algorithm 
 
 Document Style `algorithm' - floating environment
-(/usr/share/texmf-tetex/tex/latex/float/float.sty
+(/usr/share/texmf-texlive/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count91
 \float@exts=\toks16
@@ -80,77 +78,86 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks17
 \@floatcapt=\box28
 )
-(/usr/share/texmf-tetex/tex/latex/base/ifthen.sty
+(/usr/share/texmf-texlive/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
 \@float@every@algorithm=\toks18
 \c@algorithm=\count92
 )
-(/usr/share/texmf-tetex/tex/latex/algorithms/algorithmic.sty
-Package: algorithmic 
+(/usr/share/texmf-texlive/tex/latex/algorithms/algorithmic.sty
+Package: algorithmic 2006/06/02
 
 Document Style `algorithmic' - environment
-(/usr/share/texmf-tetex/tex/latex/tools/calc.sty
-Package: calc 1998/07/07 v4.1b Infix arithmetic (KKT,FJ)
+(/usr/share/texmf-texlive/tex/latex/tools/calc.sty
+Package: calc 2005/08/06 v4.2 Infix arithmetic (KKT,FJ)
 \calc@Acount=\count93
 \calc@Bcount=\count94
 \calc@Adimen=\dimen116
 \calc@Bdimen=\dimen117
 \calc@Askip=\skip45
 \calc@Bskip=\skip46
-LaTeX Info: Redefining \setlength on input line 59.
-LaTeX Info: Redefining \addtolength on input line 60.
-\calc@denominator=\count95
+LaTeX Info: Redefining \setlength on input line 75.
+LaTeX Info: Redefining \addtolength on input line 76.
+\calc@Ccount=\count95
+\calc@Cskip=\skip47
 )
 \c@ALC@line=\count96
 \c@ALC@rem=\count97
 \c@ALC@depth=\count98
-\ALC@tlm=\skip47
+\ALC@tlm=\skip48
+\algorithmicindent=\skip49
 )
-(/usr/share/texmf-tetex/tex/latex/graphics/graphicx.sty
+(/usr/share/texmf-texlive/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-tetex/tex/latex/graphics/graphics.sty
-Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
+(/usr/share/texmf-texlive/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texmf-tetex/tex/latex/graphics/trig.sty
+(/usr/share/texmf-texlive/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/usr/share/texmf-tetex/tex/latex/graphics/graphics.cfg
-File: graphics.cfg 2005/02/03 v1.3 graphics configuration of teTeX/TeXLive
+(/etc/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
-Package graphics Info: Driver file: pdftex.def on input line 80.
+Package graphics Info: Driver file: pdftex.def on input line 90.
 
-(/usr/share/texmf-tetex/tex/latex/graphics/pdftex.def
-File: pdftex.def 2002/06/19 v0.03k graphics/color for pdftex
+(/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
 \Gread@gobject=\count99
 ))
 \Gin@req@height=\dimen118
 \Gin@req@width=\dimen119
 )
-(/usr/share/texmf-tetex/tex/latex/url/url.sty
+(/usr/share/texmf-texlive/tex/latex/ltxmisc/url.sty
 \Urlmuskip=\muskip10
-Package: url 2004/03/15  ver 3.1  Verb mode for urls, etc.
+Package: url 2005/06/27  ver 3.2  Verb mode for urls, etc.
 )
-(/usr/share/texmf-tetex/tex/generic/babel/babel.sty
-Package: babel 2004/11/20 v3.8d The Babel package
+(/usr/share/texmf-texlive/tex/generic/babel/babel.sty
+Package: babel 2005/11/23 v3.8h The Babel package
 
-(/usr/share/texmf-tetex/tex/generic/babel/portuges.ldf
-Language: portuges 2004/02/19 v1.2p Portuguese support from the babel system
+(/usr/share/texmf-texlive/tex/generic/babel/portuges.ldf
+Language: portuges 2005/03/31 v1.2p Portuguese support from the babel system
 
-(/usr/share/texmf-tetex/tex/generic/babel/babel.def
-File: babel.def 2004/11/20 v3.8d Babel common definitions
+(/usr/share/texmf-texlive/tex/generic/babel/babel.def
+File: babel.def 2005/11/23 v3.8h Babel common definitions
 \babel@savecnt=\count100
 \U@D=\dimen120
 )
+
+Package babel Warning: No hyphenation patterns were loaded for
+(babel)                the language `Portuguese'
+(babel)                I will use the patterns loaded for \language=0 instead.
+
+\l@portuges = a dialect from \language0
 \l@brazil = a dialect from \language\l@portuges 
 Package babel Info: Making " an active character on input line 145.
-))
-(/usr/share/texmf-tetex/tex/latex/base/inputenc.sty
-Package: inputenc 2004/02/05 v1.0d Input encoding file
+)) (/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
+Package: inputenc 2006/05/05 v1.1b Input encoding file
+\inpenc@prehook=\toks19
+\inpenc@posthook=\toks20
 
-(/usr/share/texmf-tetex/tex/latex/base/latin1.def
-File: latin1.def 2004/02/05 v1.0d Input encoding file
+(/usr/share/texmf-texlive/tex/latex/base/latin1.def
+File: latin1.def 2006/05/05 v1.1b Input encoding file
 )) (./semac.aux)
 \openout1 = `semac.aux'.
 
@@ -168,7 +175,7 @@ LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 42.
 LaTeX Font Info:    ... okay on input line 42.
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 42.
 
-(/usr/share/texmf-tetex/tex/latex/psnfss/ot1ptm.fd
+(/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 -------------------- Geometry parameters
@@ -211,38 +218,17 @@ driver: pdftex
 (1in=72.27pt, 1cm=28.45pt)
 -----------------------
 
-(/usr/share/texmf-tetex/tex/context/base/supp-pdf.tex
-(/usr/share/texmf-tetex/tex/context/base/supp-mis.tex
-loading : Context Support Macros / Miscellaneous (2004.10.26)
-\protectiondepth=\count101
-\scratchcounter=\count102
-\scratchtoks=\toks19
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count101
 \scratchdimen=\dimen121
-\scratchskip=\skip48
-\scratchmuskip=\muskip11
 \scratchbox=\box29
-\scratchread=\read1
-\scratchwrite=\write3
-\zeropoint=\dimen122
-\onepoint=\dimen123
-\onebasepoint=\dimen124
-\minusone=\count103
-\thousandpoint=\dimen125
-\onerealpoint=\dimen126
-\emptytoks=\toks20
-\nextbox=\box30
-\nextdepth=\dimen127
-\everyline=\toks21
-\!!counta=\count104
-\!!countb=\count105
-\recursecounter=\count106
-)
-loading : Context Support Macros / PDF (2004.03.26)
-\nofMPsegments=\count107
-\nofMParguments=\count108
-\MPscratchCnt=\count109
-\MPscratchDim=\dimen128
-\MPnumerator=\count110
+\nofMPsegments=\count102
+\nofMParguments=\count103
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count104
+\MPscratchDim=\dimen122
+\MPnumerator=\count105
 \everyMPtoPDFconversion=\toks22
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <16> not available
@@ -262,20 +248,32 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <13> not available
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Underfull \hbox (badness 1281) in paragraph at lines 69--71
+\OT1/ptm/m/n/12 dor dis-tribu[]^^Pdo, em que di-ver-sos no-dos conec-ta-dos en-
+tre si di-vi-dem a tarefa de
+ []
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [2]
 [3]
+Underfull \hbox (badness 1184) in paragraph at lines 105--106
+\OT1/ptm/m/n/12 [[]], []e pro-posto um es-quema de geren-ci-a-mento de in-ter-e
+sse
+ []
+
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [4]
-[5] <part.pdf, id=32, 461.725pt x 461.725pt>
+[5] <part.pdf, id=22, 461.725pt x 461.725pt>
 File: part.pdf Graphic file (type pdf)
  <use part.pdf>
 LaTeX Font Info:    Try loading font information for OT1+phv on input line 154.
 
 
-(/usr/share/texmf-tetex/tex/latex/psnfss/ot1phv.fd
+(/usr/share/texmf-texlive/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
@@ -283,19 +281,22 @@ LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
  [6 <./part.pdf>] [7]
 Underfull \hbox (badness 3260) in paragraph at lines 177--178
 []\OT1/ptm/m/n/12 Para evi-tar isso, prop[]oe-se a utiliza[][]ao de di-fus[]ao 
-pro-ba-bil[]^^Pstica des-tas
+prob-a-bil[]^^Pstica destas
  []
 
 [8]
 LaTeX Font Info:    Try loading font information for OMS+ptm on input line 229.
 
- (/usr/share/texmf-tetex/tex/latex/psnfss/omsptm.fd
+ (/usr/share/texmf-texlive/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 229.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
  [9]
-<a3.pdf, id=283, 279.0425pt x 204.765pt>
+<a3.pdf, id=263, 279.0425pt x 204.765pt>
 File: a3.pdf Graphic file (type pdf)
  <use a3.pdf>
 LaTeX Font Info:    External font `cmex10' loaded for size
@@ -303,33 +304,34 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 241.
  [10 <./a3.pdf>] [11]
-<max.pdf, id=314, 361.35pt x 252.945pt>
+<max.pdf, id=290, 361.35pt x 252.945pt>
 File: max.pdf Graphic file (type pdf)
  <use max.pdf>
-<avg.pdf, id=315, 361.35pt x 252.945pt>
+<avg.pdf, id=291, 361.35pt x 252.945pt>
 File: avg.pdf Graphic file (type pdf)
  <use avg.pdf> [12 <./max.pdf> <./avg.pdf>] [13] (./semac.bbl [14] [15]) [16] (
 ./semac.aux) ) 
 Here is how much of TeX's memory you used:
- 2583 strings out of 94500
- 32893 string characters out of 1175788
- 93430 words of memory out of 1000000
- 5715 multiletter control sequences out of 10000+50000
- 20011 words of font info for 41 fonts, out of 500000 for 2000
- 581 hyphenation exceptions out of 8191
- 30i,11n,28p,1992b,542s stack positions out of 1500i,500n,5000p,200000b,5000s
+ 2606 strings out of 94834
+ 33585 string characters out of 1179181
+ 93274 words of memory out of 1500000
+ 5753 multiletter control sequences out of 10000+50000
+ 20011 words of font info for 41 fonts, out of 1200000 for 2000
+ 213 hyphenation exceptions out of 8191
+ 30i,11n,28p,1992b,547s stack positions out of 5000i,500n,6000p,200000b,5000s
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share
+/texmf-texlive/fonts/type1/bluesky/cm/cmmi12.pfb></usr/share/texmf-texlive/font
+s/type1/bluesky/cm/cmmi8.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/c
+mr12.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/
+texmf-texlive/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/t
+ype1/bluesky/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cms
+y8.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/shar
+e/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/font
+s/type1/urw/times/utmbi8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/u
+tmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
+Output written on semac.pdf (16 pages, 241854 bytes).
 PDF statistics:
- 339 PDF objects out of 300000
- 0 named destinations out of 131072
- 21 words of extra memory for PDF output out of 65536
-</usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy8.pfb></usr/sh
-are/texmf-tetex/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf-tetex/fonts/t
-ype1/bluesky/cm/cmr12.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmsy10
-.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmmi8.pfb></usr/share/texmf
--tetex/fonts/type1/bluesky/cm/cmmi12.pfb>{/usr/share/texmf-tetex/fonts/enc/dvip
-s/psnfss/8r.enc}</usr/share/texmf-tetex/fonts/type1/urw/helvetic/uhvb8a.pfb></u
-sr/share/texmf-tetex/fonts/type1/urw/times/utmri8a.pfb></usr/share/texmf-tetex/
-fonts/type1/urw/times/utmbi8a.pfb></usr/share/texmf-tetex/fonts/type1/urw/times
-/utmr8a.pfb></usr/share/texmf-tetex/fonts/type1/bluesky/cm/cmr8.pfb></usr/share
-/texmf-tetex/fonts/type1/urw/times/utmb8a.pfb>
-Output written on semac.pdf (16 pages, 244237 bytes).
+ 355 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+

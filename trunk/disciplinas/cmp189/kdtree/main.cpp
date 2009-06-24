@@ -56,6 +56,8 @@ int main () {
 		time += 100;
 		
 		kdt->drawTree();
+    //boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
+
 		for (list<Avatar*>::iterator it = avatar_list.begin() ; it != avatar_list.end() ; it++){
 			(*it)->draw();
 		}

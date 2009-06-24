@@ -4,19 +4,21 @@
 #include "myutils.h"
 
 
-bool comparePointsX(point a, point b) {
-	return a.x < b.x;
-}
-
-bool comparePointsY(point a, point b) {
-	return a.y < b.y;
-}
+SDL_Surface* KDTree::screen = NULL;
 
 KDTree::KDTree() {
 	parent = schild = bchild = NULL;
+  split_coordinate = -1;
+}
+
+KDTree::KDTree(int _node_id) {
+	parent = schild = bchild = NULL;
+  split_coordinate = -1;
+  node_id = _node_id;
 }
 
 KDTree::KDTree(int _num_servers, list<Avatar*> &_avatar_list) {
+  split_coordinate = -1;
 	parent = schild = bchild = NULL;
 	
 	vector<Avatar*> sorted_x, sorted_y;
@@ -28,6 +30,8 @@ KDTree::KDTree(int _num_servers, list<Avatar*> &_avatar_list) {
 	sorted_y.insert(sorted_y.begin(), _avatar_list.begin(), _avatar_list.end());
 	
 	buildTree(_num_servers, 0, 0, sorted_x, sorted_y, X_NODE);
+  
+  runTree();
 	
 }
 
@@ -45,8 +49,8 @@ KDTree::~KDTree() {
 
 void KDTree::buildTree(int _num_servers, int _server_number, int _tree_lvl, vector<Avatar*> _sorted_x, vector<Avatar*> _sorted_y, short _split_lvl) {
 	if (_server_number + intPow(2, _tree_lvl) >= _num_servers) return;
-	schild = new KDTree();	
-	bchild = new KDTree();
+	schild = new KDTree(_server_number);	
+	bchild = new KDTree(_server_number + intPow(2, _tree_lvl));
 	schild->parent = bchild->parent = this;
 	vector<Avatar*> svector, bvector;
 	int i;
@@ -63,7 +67,7 @@ void KDTree::buildTree(int _num_servers, int _server_number, int _tree_lvl, vect
 		}
 		
 		schild->buildTree(_num_servers, _server_number, _tree_lvl + 1, svector, _sorted_y, Y_NODE);
-		bchild->buildTree(_num_servers, _server_number, _tree_lvl + 1, bvector, _sorted_y, Y_NODE);
+		bchild->buildTree(_num_servers, _server_number + intPow(2, _tree_lvl), _tree_lvl + 1, bvector, _sorted_y, Y_NODE);
 	}
 
 	if (_split_lvl == Y_NODE) {
@@ -77,7 +81,7 @@ void KDTree::buildTree(int _num_servers, int _server_number, int _tree_lvl, vect
 		}
 		
 		schild->buildTree(_num_servers, _server_number, _tree_lvl + 1, _sorted_x, svector, X_NODE);
-		bchild->buildTree(_num_servers, _server_number, _tree_lvl + 1, _sorted_x, bvector, X_NODE);
+		bchild->buildTree(_num_servers, _server_number + intPow(2, _tree_lvl), _tree_lvl + 1, _sorted_x, bvector, X_NODE);
 	}
 
 
@@ -88,7 +92,7 @@ void KDTree::setScreen(SDL_Surface* _screen) {
 }
 
 void KDTree::drawTree() {
-	drawTree(0, WW, 0, WW, X_NODE);
+	drawTree(0, WW - 1, 0, WW - 1, X_NODE);
 }
 
 ///TODO: fazer a questão do (min - split-1 ; split - max) não dar pau
@@ -98,10 +102,12 @@ void KDTree::drawTree(int _xmin, int _xmax, int _ymin, int _ymax, short _split_l
 			case X_NODE: {
 				schild->drawTree(_xmin, split_coordinate -1, _ymin, _ymax, Y_NODE);
 				bchild->drawTree(split_coordinate, _xmax, _ymin, _ymax, Y_NODE);
+        break;
 			}
 			case Y_NODE: {
 				schild->drawTree(_xmin, _xmax, _ymin, split_coordinate - 1, X_NODE);
 				bchild->drawTree(_xmin, _xmax, split_coordinate, _ymax, X_NODE);
+        break;
 			}
 		}
 	}	else {
@@ -112,13 +118,24 @@ void KDTree::drawTree(int _xmin, int _xmax, int _ymin, int _ymax, short _split_l
 		l_node_area.w = _xmax - _xmin + 1;
 		l_node_area.h = _ymax - _ymin + 1;
 		**/
-		//Uint32 color = colorTable(rand()%10);
+		Uint32 color = colorTable(node_id);
 		
 //		cout <<	screen << " " <<	_xmin << " " <<	_ymin << " " <<	_xmax << " " <<	_ymax << " " <<	screen << " " << (Uint8) ((color & 0xFF0000) >> 16) << " " << (Uint8) ((color & 0x00FF00) >> 8) << " " <<	(color & 0x0000FF) << " " << 0xFF << endl;
-		cout <<	screen << " (" <<	_xmin << ", " <<	_ymin <<  ") : (" << _xmax << ", " <<	_ymax << ") " <<	screen << " " << rand()%255 << " " << rand()%255 << " " <<	rand()%255 << " " << 0xFF << endl;
+		//cout <<	screen << " (" <<	_xmin << ", " <<	_ymin <<  ") : (" << _xmax << ", " <<	_ymax << ") " << screen << " " << rand()%255 << " " << rand()%255 << " " <<	rand()%255 << " " << 0xFF << endl;
 		
-		boxRGBA(screen, _xmin, _ymin, _xmax, _ymax, _xmin, _xmax, _ymin + _ymax, 0xFF);
+		boxRGBA(screen, _xmin, _ymin, _xmax, _ymax, (Uint8) ((color & 0xFF0000) >> 16), (Uint8) ((color & 0x00FF00) >> 8), (Uint8) (color & 0x0000FF) , 0xFF);
+//  cout << "Should print the freaking box" << endl;
+//  boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
+
 	}
+}
+
+void KDTree::runTree() {
+  cout << "Node id #" << node_id << ": " << split_coordinate << endl;
+  if (schild) {
+    schild->runTree();
+    bchild->runTree();
+  }
 }
 /*
 		void reckonCapacity();
