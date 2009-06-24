@@ -5,6 +5,7 @@
 
 
 SDL_Surface* KDTree::screen = NULL;
+KDTree* KDTree::root = NULL;
 
 KDTree::KDTree() {
 	parent = schild = bchild = NULL;
@@ -20,6 +21,7 @@ KDTree::KDTree(int _node_id) {
 }
 
 KDTree::KDTree(list<Server*> _server_list, list<Avatar*> &_avatar_list) {
+  KDTree::root = this;
   split_coordinate = -1;
 	parent = schild = bchild = NULL;
   server = NULL;
@@ -160,8 +162,53 @@ list<Avatar*> KDTree::getAvList() {
   return avList;
 }
 
+void KDTree::removeAvatar(Avatar* _av) {
+  avList.remove(_av);
+}
+
+void KDTree::insertAvatar(Avatar* _av, short _split_lvl) {
+  ///*********************************************************
+  ///(INICIO) NOH INTERMEDIARIO: PRECISA DESCER MAIS NA ÁRVORE
+  if (schild) {
+    if (_split_lvl == X_NODE) {
+      if ((int) _av->GetX() < split_coordinate)
+        schild->insertAvatar(_av, Y_NODE);
+      else
+        bchild->insertAvatar(_av, Y_NODE);
+    }
+    else {
+      if ((int) _av->GetY() < split_coordinate)
+        schild->insertAvatar(_av, X_NODE);
+      else
+        bchild->insertAvatar(_av, X_NODE);
+    }
+  }
+  ///(FIM) NOH INTERMEDIARIO
+  ///*********************************************************
+  
+  ///*******************************
+  ///(INICIO) NOH FOLHA: INSIRA AQUI
+  else {
+    _av->setParentNode(this);
+    avList.push_back(_av);
+  }
+  ///(FIM) NOH FOLHA
+  ///*******************************
+}
+
+KDTree* KDTree::getRoot() {
+  return root;
+}
+
 void KDTree::setServer(Server* _server) {
   server = _server;
+}
+
+void KDTree::getLimits(int& _xmin, int& _xmax, int& _ymin, int& _ymax) {
+  _xmin = xmin;
+  _xmax = xmax;
+  _ymin = ymin;
+  _ymax = ymax;
 }
 /*
 		void reckonCapacity();
