@@ -34,8 +34,13 @@ class KDTree {
 		long getWeight();
 		long getCapacity();
 		list<Avatar*> getAvList();
+		void removeAvatar(Avatar* _av);
+		void insertAvatar(Avatar* _av, short _split_lvl = X_NODE);
+		static KDTree* getRoot();
 		
 		void setServer(Server* _server);
+		
+		void getLimits(int& _xmin, int& _xmax, int& _ymin, int& _ymax);
 	
 	protected:		
 		void buildTree(list<Server*> _server_list, int _server_number, int _tree_lvl, list<Avatar*> _avatars, short _split_lvl);
@@ -58,4 +63,5 @@ class KDTree {
 							// filhos, e a capacidade de cada nodo no penúltimo nível
 							// é igual à capacidade do servidor correspondente
 		static SDL_Surface* screen;
+		static KDTree* root;
 };

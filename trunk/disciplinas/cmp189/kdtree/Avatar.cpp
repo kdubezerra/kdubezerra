@@ -118,6 +118,13 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
 }
 
 void Avatar::checkMigration() {
+	int xmin, xmax, ymin, ymax;
+	parentNode->getLimits(xmin, xmax, ymin, ymax);
+	if (posx < xmin ||posx >= xmax || posy < ymin || posy >= ymax) {
+		parentNode->removeAvatar(this);
+		KDTree::getRoot()->insertAvatar(this);
+	}
+	
 /**  coord cell_coord = getCell();
   Cell* new_cell = Cell::getCell(cell_coord.X, cell_coord.Y);  
   Region* new_region = new_cell->getParentRegion();
