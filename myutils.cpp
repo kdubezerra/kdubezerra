@@ -45,16 +45,16 @@ void setSdl(SDL_Surface** screen) {
 
 Uint32 colorTable(int col_index) {
   switch (col_index) {
-    case 0 : return 0xffffff;
-    case 1 : return 0xff0000;
-    case 2 : return 0x00ff00;
-    case 3 : return 0x0000ff;
-    case 4 : return 0xffff00;
-    case 5 : return 0xff00ff;
-    case 6 : return 0x00ffff;
-    case 7 : return 0xcccccc;
-    case 8 : return 0xff9900;
-    case 9 : return 0x9999ff;
+    case 0 : return 0xffffffff;
+    case 1 : return 0xff0000ff;
+    case 2 : return 0x00ff00ff;
+    case 3 : return 0x0000ffff;
+    case 4 : return 0xffff00ff;
+    case 5 : return 0xff00ffff;
+    case 6 : return 0x00ffffff;
+    case 7 : return 0xccccccff;
+    case 8 : return 0xff9900ff;
+    case 9 : return 0x9999ffff;
   }
   return 0x000000;
 }

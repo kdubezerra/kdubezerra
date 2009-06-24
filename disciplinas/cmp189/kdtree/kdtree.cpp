@@ -123,7 +123,7 @@ void KDTree::drawTree(int _xmin, int _xmax, int _ymin, int _ymax, short _split_l
 //		cout <<	screen << " " <<	_xmin << " " <<	_ymin << " " <<	_xmax << " " <<	_ymax << " " <<	screen << " " << (Uint8) ((color & 0xFF0000) >> 16) << " " << (Uint8) ((color & 0x00FF00) >> 8) << " " <<	(color & 0x0000FF) << " " << 0xFF << endl;
 		//cout <<	screen << " (" <<	_xmin << ", " <<	_ymin <<  ") : (" << _xmax << ", " <<	_ymax << ") " << screen << " " << rand()%255 << " " << rand()%255 << " " <<	rand()%255 << " " << 0xFF << endl;
 		
-		boxRGBA(screen, _xmin, _ymin, _xmax, _ymax, (Uint8) ((color & 0xFF0000) >> 16), (Uint8) ((color & 0x00FF00) >> 8), (Uint8) (color & 0x0000FF) , 0xFF);
+		boxColor(screen, _xmin, _ymin, _xmax, _ymax, color);
 //  cout << "Should print the freaking box" << endl;
 //  boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
 
