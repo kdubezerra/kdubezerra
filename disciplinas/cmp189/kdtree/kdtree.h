@@ -20,6 +20,7 @@ class KDTree {
 	
 	public:
 		KDTree();
+		KDTree(int _node_id);
 		KDTree(int _num_servers, list<Avatar*> &_avatar_list);
 		~KDTree();
 		void splitLeaf();
@@ -27,7 +28,8 @@ class KDTree {
 		void balanceLoad();
 		
 		void setScreen(SDL_Surface* _screen);
-		void drawTree();		
+		void drawTree();
+		void runTree();
 	
 	protected:
 		void drawTree(int _xmin, int _xmax, int _ymin, int _ymax, short _split_lvl);
@@ -38,6 +40,7 @@ class KDTree {
 		KDTree *parent, *schild, *bchild;
 		int split_coordinate, xmin, xmax, ymin, ymax;
 		list<Avatar*> avList;
+		int node_id;
 		int load;
 							// a carga (load) de um nodo é igual à soma das cargas de
 							// seus filhos; se forem folhas, os filhos são avatares,
@@ -48,5 +51,5 @@ class KDTree {
 							// a capacidade de um nodo é igual à capacidade de seus
 							// filhos, e a capacidade de cada nodo no penúltimo nível
 							// é igual à capacidade do servidor correspondente
-		SDL_Surface* screen;
+		static SDL_Surface* screen;
 };
