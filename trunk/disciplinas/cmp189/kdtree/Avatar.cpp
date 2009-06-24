@@ -5,6 +5,7 @@
 #endif
 
 #include "Avatar.h"
+#include "kdtree.h"
 
 SDL_sem* vsem = NULL;
 SDL_sem* esem = NULL;
@@ -43,6 +44,7 @@ void Avatar::init() {
     diry = rand() % WW;
     destx = rand() % WW;
     desty = rand() % WW;
+		parentNode = NULL;
   } while (distance(posx, posy, destx, desty) <= 20.0f);      
   R = rand() % 255;
   G = rand() % 255;
@@ -146,9 +148,22 @@ void Avatar::setPlayerId (int i) {
   player_id = i;
 }
 
+void Avatar::setParentNode (KDTree *_parent) {
+	parentNode = _parent;
+}
+
 void Avatar::markAsSeen(int relevance_) {
   relevance = relevance_;
   isSeen = true;      
+}
+
+long Avatar::getWeight() {
+	long wgt = 0;
+	list<Avatar*> companions = parentNode->getAvList();
+	for (list<Avatar*>::iterator it = companions.begin() ; it != companions.end() ; it++) {
+		wgt += OtherRelevance(*it);
+	}
+	return wgt;
 }
 
 int Avatar::OtherRelevance(Avatar* other) {//valor entre 0 e 100, ao invés de 0.0f e 1.0f

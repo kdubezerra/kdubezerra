@@ -1,7 +1,9 @@
 #include <iostream>
+#include <vector>
 #include <list>
 #include "kdtree.h"
 #include "Avatar.h"
+#include "Server.h"
 #include "myutils.h"
 
 #define NUM_PLAYERS 750
@@ -22,15 +24,23 @@ int main () {
 	setSdl(&screen);
 	
 	list<Avatar*> avatar_list;
-	
+	list<Server*> server_list;
 	for (int i = 0 ; i < NUM_PLAYERS ; i++) {
 		Avatar* av = new Avatar();
 		av->setDrawable(PLAYER_IMAGE, PLAYER_SEEN_IMAGE, screen);
 		avatar_list.push_back(av);
 	}
 	
+	for (int i = 0 ; i < NUM_SERVERS ; i++) {
+    //Server* _s = new Server ((i+1)*20000);
+		Server* _s = new Server ((i+1)*25);
+		server_list.push_back(_s);
+    //server[i]->assignRegion(*(it++));
+    cout << "Server " << i << " has power of " << _s->getServerPower() << endl;
+  }
+	
 	Avatar::toggleMobility();
-	KDTree* kdt = new KDTree(NUM_SERVERS, avatar_list);
+	KDTree* kdt = new KDTree(server_list, avatar_list);
 	kdt->setScreen(screen);
 	
 	Uint32 time = 0;

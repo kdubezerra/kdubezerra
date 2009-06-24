@@ -14,8 +14,6 @@
 
 using namespace std;
 
-class Region;
-
 class Server {
 
   public:
@@ -23,11 +21,12 @@ class Server {
     Server(long power = 0);
     ~Server();
 
-    int assignRegion (Region* r);
+///    int assignRegion (Region* r);
     void releaseRegion();
     static void releaseAllRegions();
-    Region* getRegion();
+///    Region* getRegion();
 
+    static Server* getServerById(int _id);
     void setServerPower(long pow);
     long getServerPower();
     static long getMultiserverPower();
@@ -45,9 +44,12 @@ class Server {
 
   protected:
 
-    Region* managedRegion;
+///    Region* managedRegion;
     long serverPower;
+    int serverId;
+    static int lastId;
     static long multiServerPower;
     static list<Server*> serverList;
+    static map<int, Server*> serversMap;
     
 };
