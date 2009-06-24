@@ -14,22 +14,18 @@ using namespace std;
 #define VIEW_DISTANCE 50
 #define THRESHOLD_DISTANCE 10
 
-class Cell;
-class Region;
-
-// class Avatar;//TODO apagar esta linha
-
 class coord;
+class KDTree;
 
 class Avatar {
 
   public:
 
 		
-    Avatar();    
+    Avatar();
     ~Avatar();
     void init();
-        
+    
     void setDrawable(string my_surface_file, string seen_surface_file, SDL_Surface* out_screen);
     
     void step(unsigned long delay);
@@ -39,9 +35,11 @@ class Avatar {
     static long getMigrationWalk(bool clear_migw = true);
 					
     void setPlayerId (int i);
+    void setParentNode (KDTree *_parent);
     
     void markAsSeen(int relevance_);
 		
+    long getWeight();
     int OtherRelevance(Avatar* other);
 	
     float GetX();
@@ -55,8 +53,6 @@ class Avatar {
     
     void checkCellWeight (Avatar* other);
     
-    long getInteraction(Cell* _cell);
-    
     static void resetCells ();    
     static void drawCells (SDL_Surface* output);
         
@@ -66,7 +62,6 @@ class Avatar {
     static bool setMobility(bool value);
     
     static bool compareX(Avatar* a, Avatar* b);
-
     static bool compareY(Avatar* a, Avatar* b);
 		
   protected:
@@ -92,10 +87,8 @@ class Avatar {
     static long total_weight;
     static bool showv, showe, isMobile;
     float my_vweight, my_eweight;
-    Cell* my_cell;
-    Cell* old_cell;
-    Region* old_region;
     SDL_Surface* screen;
     static long migration_walk;
     static long migration_still;
+    KDTree* parentNode;
 };

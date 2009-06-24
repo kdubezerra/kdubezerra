@@ -21,7 +21,7 @@ class KDTree {
 	public:
 		KDTree();
 		KDTree(int _node_id);
-		KDTree(int _num_servers, list<Avatar*> &_avatar_list);
+		KDTree(list<Server*> _server_list, list<Avatar*> &_avatar_list);
 		~KDTree();
 		void splitLeaf();
 		void moveSplitCoordinate(); //somente se esse nodo tiver duas sub-árvores
@@ -30,16 +30,22 @@ class KDTree {
 		void setScreen(SDL_Surface* _screen);
 		void drawTree();
 		void runTree();
+		
+		long getWeight();
+		long getCapacity();
+		list<Avatar*> getAvList();
+		
+		void setServer(Server* _server);
 	
-	protected:
-		void drawTree(int _xmin, int _xmax, int _ymin, int _ymax, short _split_lvl);
-		void buildTree(int _num_servers, int _server_number, int _tree_lvl, vector<Avatar*> _sorted_x, vector<Avatar*> _sorted_y, short _split_lvl);
+	protected:		
+		void buildTree(list<Server*> _server_list, int _server_number, int _tree_lvl, list<Avatar*> _avatars, short _split_lvl);
 		void reckonCapacity();
 		void reckonLoad();
 		void reckonRects();
 		KDTree *parent, *schild, *bchild;
-		int split_coordinate, xmin, xmax, ymin, ymax;
+		Server *server;
 		list<Avatar*> avList;
+		int split_coordinate, xmin, xmax, ymin, ymax;		
 		int node_id;
 		int load;
 							// a carga (load) de um nodo é igual à soma das cargas de
