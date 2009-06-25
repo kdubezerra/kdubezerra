@@ -15,6 +15,8 @@ typedef struct {
 
 #define X_NODE 0
 #define Y_NODE 1
+#define LEAF_NODE 2
+#define RECURSIVE 1
 
 class KDTree {
 	
@@ -25,6 +27,8 @@ class KDTree {
 		~KDTree();
 		void splitLeaf();
 		void moveSplitCoordinate(); //somente se esse nodo tiver duas sub-árvores
+		void checkBalance(short recursive=0);
+		void checkBalanceFromRoot();
 		void balanceLoad();
 		
 		void setScreen(SDL_Surface* _screen);
@@ -32,10 +36,11 @@ class KDTree {
 		void runTree();
 		
 		long getWeight();
-		long getCapacity();
+		long getPower();
 		list<Avatar*> getAvList();
 		void removeAvatar(Avatar* _av);
 		void insertAvatar(Avatar* _av, short _split_lvl = X_NODE);
+		void clearAvList();
 		static KDTree* getRoot();
 		
 		void setServer(Server* _server);
@@ -47,6 +52,7 @@ class KDTree {
 		void reckonCapacity();
 		void reckonLoad();
 		void reckonRects();
+		short split_axis;
 		KDTree *parent, *schild, *bchild;
 		Server *server;
 		list<Avatar*> avList;
