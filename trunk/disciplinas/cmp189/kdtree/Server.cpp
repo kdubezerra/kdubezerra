@@ -51,6 +51,14 @@ Region* Server::getRegion() {
 }
 */
 
+void Server::setNode(KDTree *_node) {
+  treeNode = _node;
+}
+
+KDTree* Server::getNode() {
+  return treeNode;
+}
+
 Server* Server::getServerById(int _id) {
   return serversMap[_id];
 }

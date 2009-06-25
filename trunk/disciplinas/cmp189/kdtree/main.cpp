@@ -31,13 +31,17 @@ int main () {
 		avatar_list.push_back(av);
 	}
 	
+  
+  
 	for (int i = 0 ; i < NUM_SERVERS ; i++) {
-    //Server* _s = new Server ((i+1)*20000);
-		Server* _s = new Server ((i+1)*25);
-		server_list.push_back(_s);
+    //_s = new Server ((i+1)*20000);
+		Server* _server = new Server ((i+1)*25);
+		server_list.push_back(_server);
     //server[i]->assignRegion(*(it++));
-    cout << "Server " << i << " has power of " << _s->getServerPower() << endl;
+    cout << "Server " << i << " has power of " << _server->getServerPower() << endl;
   }
+  
+  list<Server*>::iterator sampleserver = server_list.begin(); sampleserver++; ///servidor 2
 	
 	Avatar::toggleMobility();
 	KDTree* kdt = new KDTree(server_list, avatar_list);
@@ -66,7 +70,8 @@ int main () {
 		time += 100;
 		
 		kdt->drawTree();
-    kdt->checkBalanceFromRoot();
+    //kdt->checkBalanceFromRoot();
+    (*sampleserver)->getNode()->checkBalance();
     //boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
 
 		for (list<Avatar*>::iterator it = avatar_list.begin() ; it != avatar_list.end() ; it++){
