@@ -32,10 +32,53 @@ KDTree::KDTree(list<Server*> _server_list, list<Avatar*> &_avatar_list) {
 KDTree::~KDTree() {
 }
 
-/*
-		void splitLeaf();
-		void moveSplitCoordinate(); //somente se esse nodo tiver duas sub-árvores
-*/
+void KDTree::checkBalance(short recursive) {
+  if (!schild && getWeight() >= DISBAL_TOLERANCE * (float) server->getServerPower())
+    balanceLoad();
+  if (recursive && schild) {
+    schild->checkBalance(RECURSIVE);
+    bchild->checkBalance(RECURSIVE);
+  }
+}
+
+void KDTree::checkBalanceFromRoot() {
+  root->checkBalance(RECURSIVE);
+}
+
+void KDTree::balanceLoad() {
+  if (!parent) return;
+  if (parent->getPower() < parent->getWeight())
+    parent->balanceLoad();
+  
+  float power_share = (float) getPower() / (float) parent->getPower();
+  long weight_share = power_share * (float) parent->getWeight();
+  long current_share = 0l;
+  
+  list<Avatar*>::iterator it;
+  list<Avatar*> avs = parent->getAvList();
+  list<Avatar*> my_share;   
+  avs.sort(parent->split_axis == X_NODE ? Avatar::compareX : Avatar::compareY);
+  list<Avatar*> rest = avs; 
+  
+  if (this == parent->bchild) avs.reverse();
+  ///long new_share = 0l;
+  for (it = avs.begin() ; it != avs.end() && current_share < weight_share ; it++) {
+    ///current_share = new_share;
+    ///new_share = current_share + (*it)->getWeight();
+    my_share.push_back(*it);
+    rest.remove(*it);
+    current_share += (*it)->getWeight();
+  }
+  ///if qual eh o share mais proximo de weight_share? com ou sem o ultimo avatar? nao precisa ser otimo...
+    
+  if (this == parent->bchild) rest.reverse();
+  parent->split_coordinate = X_NODE ? (*rest.begin())->GetX() : (*rest.begin())->GetY();
+  
+  parent->clearAvList();
+  for (it = avs.begin() ; it != avs.end() && current_share < weight_share ; it++) {
+    parent->insertAvatar(*it, parent->split_axis);
+  }
+}
 
 void KDTree::buildTree(list<Server*> _server_list, int _server_number, int _tree_lvl, list<Avatar*> _avatars, short _split_lvl) {
 	///***************************************************************************************************
@@ -76,6 +119,7 @@ void KDTree::buildTree(list<Server*> _server_list, int _server_number, int _tree
     for (list<Avatar*>::iterator it = avList.begin() ; it != avList.end() ; it++)
       (*it)->setParentNode(this);
     setServer(Server::getServerById(_server_number));
+    split_axis = LEAF_NODE;
     return;
   }
   ///(FIM) NOH FOLHA
@@ -83,6 +127,7 @@ void KDTree::buildTree(list<Server*> _server_list, int _server_number, int _tree
   
   ///******************************************************
   ///(INICIO) NOH INTERMEDIARIO + RECURSAO
+  split_axis = _split_lvl;
 	schild = new KDTree(_server_number);	
 	bchild = new KDTree(_server_number + intPow(2, _tree_lvl));
 	schild->parent = bchild->parent = this;
@@ -155,11 +200,26 @@ long KDTree::getWeight() {
   }
 }
 
-long KDTree::getCapacity() {
+long KDTree::getPower() {
+  if (schild) {
+    return schild->getPower() + bchild->getPower();
+  }
+  else {
+    return server->getServerPower();
+  }
 }
 
 list<Avatar*> KDTree::getAvList() {
-  return avList;
+  if (schild) {
+    list<Avatar*> avs, childs;
+    childs = schild->getAvList();
+    avs.insert(avs.end(), childs.begin(), childs.end());
+    childs = bchild->getAvList();
+    avs.insert(avs.end(), childs.begin(), childs.end());
+    return avs;
+  }
+  else
+    return avList;
 }
 
 void KDTree::removeAvatar(Avatar* _av) {
@@ -194,6 +254,14 @@ void KDTree::insertAvatar(Avatar* _av, short _split_lvl) {
   }
   ///(FIM) NOH FOLHA
   ///*******************************
+}
+
+void KDTree::clearAvList() {
+  if (schild) {
+    schild->clearAvList();
+    bchild->clearAvList();
+  }
+  avList.clear();
 }
 
 KDTree* KDTree::getRoot() {
