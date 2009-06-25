@@ -58,6 +58,7 @@ void KDTree::balanceLoad() {
   list<Avatar*> avs = parent->getAvList();
   list<Avatar*> my_share;   
   avs.sort(parent->split_axis == X_NODE ? Avatar::compareX : Avatar::compareY);
+  cout << "parent split node == " << parent->split_axis << endl;
   list<Avatar*> rest = avs; 
   
   if (this == parent->bchild) avs.reverse();
