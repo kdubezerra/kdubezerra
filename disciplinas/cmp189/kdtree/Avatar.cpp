@@ -165,7 +165,11 @@ void Avatar::markAsSeen(int relevance_) {
 }
 
 long Avatar::getWeight() {
-	long wgt = 0;
+  /***/
+  return 1;
+  /***/
+  
+  long wgt = 0;
 	list<Avatar*> companions = parentNode->getAvList();
 	for (list<Avatar*>::iterator it = companions.begin() ; it != companions.end() ; it++) {
 		wgt += OtherRelevance(*it);

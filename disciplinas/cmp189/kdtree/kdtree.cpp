@@ -50,18 +50,19 @@ void KDTree::balanceLoad() {
   if (parent->getPower() < parent->getWeight())
     parent->balanceLoad();
   
+  list<Avatar*>::iterator it;
+  list<Avatar*> avs = parent->getAvList();
+  list<Avatar*> my_share;
+  avs.sort(parent->split_axis == X_NODE ? Avatar::compareX : Avatar::compareY);
+  list<Avatar*> rest = avs; 
+
   float power_share = (float) getPower() / (float) parent->getPower();
   long weight_share = power_share * (float) parent->getWeight();
   long current_share = 0l;
   
-  list<Avatar*>::iterator it;
-  list<Avatar*> avs = parent->getAvList();
-  list<Avatar*> my_share;   
-  avs.sort(parent->split_axis == X_NODE ? Avatar::compareX : Avatar::compareY);
-  cout << "parent split node == " << parent->split_axis << endl;
-  list<Avatar*> rest = avs; 
-  
+  for (it = avs.begin() ; it != avs.end() ; it++) cout << (*it)->GetX() << endl;
   if (this == parent->bchild) avs.reverse();
+  
   ///long new_share = 0l;
   for (it = avs.begin() ; it != avs.end() && current_share < weight_share ; it++) {
     ///current_share = new_share;
@@ -73,7 +74,7 @@ void KDTree::balanceLoad() {
   ///if qual eh o share mais proximo de weight_share? com ou sem o ultimo avatar? nao precisa ser otimo...
     
   if (this == parent->bchild) rest.reverse();
-  parent->split_coordinate = X_NODE ? (*rest.begin())->GetX() : (*rest.begin())->GetY();
+  parent->split_coordinate == X_NODE ? (*rest.begin())->GetX() : (*rest.begin())->GetY();
   
   parent->clearAvList();
   for (it = avs.begin() ; it != avs.end() && current_share < weight_share ; it++) {
@@ -191,13 +192,13 @@ void KDTree::runTree() {
 long KDTree::getWeight() {
   if (schild) {
     return schild->getWeight() + bchild->getWeight();
-  } else {
-///    long _w = 0;
-///    for (list<Avatar*>::iterator it = avList.begin() ; it != avList.end() ; it++) {
-///      _w += (*it)->getWeight();
-///    }
-///    return _w;
-    return avList.size();
+  }
+  else {
+    long _w = 0;
+    for (list<Avatar*>::iterator it = avList.begin() ; it != avList.end() ; it++) {
+      _w += (*it)->getWeight();
+    }
+    return _w;
   }
 }
 
