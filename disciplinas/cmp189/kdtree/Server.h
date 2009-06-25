@@ -14,6 +14,8 @@
 
 using namespace std;
 
+class KDTree;
+
 class Server {
 
   public:
@@ -25,6 +27,9 @@ class Server {
     void releaseRegion();
     static void releaseAllRegions();
 ///    Region* getRegion();
+
+    void setNode(KDTree* _node);
+    KDTree* getNode();
 
     static Server* getServerById(int _id);
     void setServerPower(long pow);
@@ -45,6 +50,7 @@ class Server {
   protected:
 
 ///    Region* managedRegion;
+    KDTree* treeNode;
     long serverPower;
     int serverId;
     static int lastId;

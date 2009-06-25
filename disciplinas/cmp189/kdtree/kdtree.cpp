@@ -270,6 +270,7 @@ KDTree* KDTree::getRoot() {
 
 void KDTree::setServer(Server* _server) {
   server = _server;
+  _server->setNode(this);
 }
 
 void KDTree::getLimits(int& _xmin, int& _xmax, int& _ymin, int& _ymax) {
