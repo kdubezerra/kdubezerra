@@ -27,7 +27,7 @@ class KDTree {
 		~KDTree();
 		void splitLeaf();
 		void moveSplitCoordinate(); //somente se esse nodo tiver duas sub-árvores
-		void checkBalance(short recursive=0);
+		void checkBalance(short recursive = 0);
 		void checkBalanceFromRoot();
 		void balanceLoad();
 		
