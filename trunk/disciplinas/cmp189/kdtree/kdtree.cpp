@@ -213,6 +213,7 @@ void KDTree::drawTree() {
   }
   else{
 		Uint32 color = colorTable(node_id);
+    color = color ? color : 0xFFFFFF;
     color &= 0xFFFFFF88;
     boxColor(screen, xmin, ymin, xmax, ymax, color);    
     string power = longToString(server->getServerPower());

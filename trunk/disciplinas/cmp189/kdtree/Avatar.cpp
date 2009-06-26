@@ -167,14 +167,37 @@ void Avatar::markAsSeen(int relevance_) {
 long Avatar::getWeight() {
   /***/
   ///return 1; //para o caso simples onde peso = numero de avatares
+	return weight;
   /***/
   
   long wgt = 0;
-	list<Avatar*> companions = parentNode->getAvList();
+	//list<Avatar*> companions = parentNode->getAvList();
+	list<Avatar*> companions = parentNode->getRoot()->getAvList();
+	companions.sort(Avatar::compareX); // deve ser posto em algum lugar mais adequado, pois essa lista precisa ser ordenada apenas uma vez, e nao para cada avatar
 	for (list<Avatar*>::iterator it = companions.begin() ; it != companions.end() ; it++) {
+		if ((*it)->GetX() < this->GetX() - VIEW_DISTANCE) continue;
+		if ((*it)->GetX() > this->GetX() + VIEW_DISTANCE) break;
 		wgt += OtherRelevance(*it);
 	}
 	return wgt;
+}
+
+
+void Avatar::calcWeight() {
+	list<Avatar*> avs = KDTree::getRoot()->getAvList();
+	list<Avatar*>::iterator visible_begin = avs.begin();
+	avs.sort(Avatar::compareX);
+	for (list<Avatar*>::iterator this_avatar = avs.begin() ; this_avatar != avs.end() ; this_avatar++) {
+		(*this_avatar)->weight = 0l;
+		for (list<Avatar*>::iterator other_avatar = visible_begin ; other_avatar != avs.end() ; other_avatar++) {
+			if ((*other_avatar)->GetX() < (*this_avatar)->GetX() - VIEW_DISTANCE) {
+				visible_begin++;
+				continue;
+			}
+			if ((*other_avatar)->GetX() > (*this_avatar)->GetX() + VIEW_DISTANCE) break;
+			(*this_avatar)->weight += (*this_avatar)->OtherRelevance(*other_avatar);
+		}
+	}
 }
 
 int Avatar::OtherRelevance(Avatar* other) {//valor entre 0 e 100, ao invés de 0.0f e 1.0f
