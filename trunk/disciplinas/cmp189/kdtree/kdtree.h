@@ -26,7 +26,8 @@ class KDTree {
 		KDTree(list<Server*> _server_list, list<Avatar*> &_avatar_list);
 		~KDTree();
 		void splitLeaf();
-		void moveSplitCoordinate(); //somente se esse nodo tiver duas sub-árvores
+		void setSplitCoordinate(int _coord); //somente se esse nodo tiver duas sub-árvores
+		void setLimits();
 		void checkBalance(short recursive = 0);
 		void checkBalanceFromRoot();
 		void balanceLoad();

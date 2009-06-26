@@ -32,6 +32,42 @@ KDTree::KDTree(list<Server*> _server_list, list<Avatar*> &_avatar_list) {
 KDTree::~KDTree() {
 }
 
+void KDTree::setSplitCoordinate(int _coord) {
+  split_coordinate = _coord;
+  if (schild) {
+    schild->setLimits();
+    bchild->setLimits();
+  }
+}
+
+void KDTree::setLimits() {  
+  xmin = parent->xmin;
+  xmax = parent->xmax;
+  ymin = parent->ymin;
+  ymax = parent->ymax;
+  if (this == parent->schild) {    
+    if (split_axis == X_NODE) {
+      ymax = parent->split_coordinate - 1;
+    }
+    else {
+      xmax = parent->split_coordinate - 1;
+    }
+  }
+  else {
+    if (split_axis == X_NODE) {
+      ymin = parent->split_coordinate;
+    }
+    else {
+      xmin = parent->split_coordinate;
+    }
+  }
+  
+  if (schild) {
+    schild->setLimits();
+    bchild->setLimits();
+  }
+}
+
 void KDTree::checkBalance(short recursive) {
   if (!schild && getWeight() >= DISBAL_TOLERANCE * (float) server->getServerPower())
     balanceLoad();
@@ -60,7 +96,7 @@ void KDTree::balanceLoad() {
   long weight_share = power_share * (float) parent->getWeight();
   long current_share = 0l;
   
-  for (it = avs.begin() ; it != avs.end() ; it++) cout << (*it)->GetX() << endl;
+  ///for (it = avs.begin() ; it != avs.end() ; it++) cout << (int) ((*it)->GetX()) << endl;
   if (this == parent->bchild) avs.reverse();
   
   ///long new_share = 0l;
@@ -74,10 +110,15 @@ void KDTree::balanceLoad() {
   ///if qual eh o share mais proximo de weight_share? com ou sem o ultimo avatar? nao precisa ser otimo...
     
   if (this == parent->bchild) rest.reverse();
-  parent->split_coordinate == X_NODE ? (*rest.begin())->GetX() : (*rest.begin())->GetY();
+  parent->setSplitCoordinate( (parent->split_axis == X_NODE) ? (*rest.begin())->GetX() : (*rest.begin())->GetY() );
+  cout << "split_coordinate: " << parent->split_coordinate << endl;
   
   parent->clearAvList();
-  for (it = avs.begin() ; it != avs.end() && current_share < weight_share ; it++) {
+  for (it = avs.begin() ; it != avs.end() ; it++) {
+    if (parent->split_axis == X_NODE) cout << (int) ((*it)->GetX()) << endl;
+    else cout << (int) ((*it)->GetY()) << endl;
+  }
+  for (it = avs.begin() ; it != avs.end() ; it++) {
     parent->insertAvatar(*it, parent->split_axis);
   }
 }
@@ -173,9 +214,9 @@ void KDTree::drawTree() {
   else{
 		Uint32 color = colorTable(node_id);
     color &= 0xFFFFFF88;
-    boxColor(screen, xmin, ymin, xmax, ymax, color);
-    string load = longToString(getWeight());
+    boxColor(screen, xmin, ymin, xmax, ymax, color);    
     string power = longToString(server->getServerPower());
+    string load = longToString(getWeight());
     stringColor(screen, xmin, ymin, power.c_str(), 0x000000FF);
     stringColor(screen, xmin, ymin+20, load.c_str(), 0x000000FF);
 	}
