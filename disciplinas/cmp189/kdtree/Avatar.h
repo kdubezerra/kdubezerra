@@ -40,6 +40,7 @@ class Avatar {
     void markAsSeen(int relevance_);
 		
     long getWeight();
+    static void calcWeight();
     int OtherRelevance(Avatar* other);
 	
     float GetX();
@@ -71,6 +72,7 @@ class Avatar {
     float posx, posy;
     int dirx, diry;
     int destx, desty;
+    long weight;
     unsigned char R,G,B;
     Uint32 last_move, resting_time;
     bool isSeen;

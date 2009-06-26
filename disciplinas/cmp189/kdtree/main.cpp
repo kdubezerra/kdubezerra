@@ -7,7 +7,7 @@
 #include "myutils.h"
 
 #define NUM_PLAYERS 750
-#define NUM_SERVERS 8
+#define NUM_SERVERS 64
 
 #define BG_IMAGE "bg.bmp"
 #define PLAYER_IMAGE "player.bmp"
@@ -35,7 +35,7 @@ int main () {
   
 	for (int i = 0 ; i < NUM_SERVERS ; i++) {
     //_s = new Server ((i+1)*20000);
-		Server* _server = new Server ((i+1)*25000);
+		Server* _server = new Server ((i+1)*2000);
 		server_list.push_back(_server);
     //server[i]->assignRegion(*(it++));
     cout << "Server " << i << " has power of " << _server->getServerPower() << endl;
@@ -46,6 +46,7 @@ int main () {
 	Avatar::toggleMobility();
 	KDTree* kdt = new KDTree(server_list, avatar_list);
 	kdt->setScreen(screen);
+	server_list.reverse();//* só pra ver se a ordem do checkBalance muda alguma coisa significativamente*//
 	
 	Uint32 time = 0;
 	Uint32 step_delay = 250;		
@@ -74,6 +75,7 @@ int main () {
     //kdt->checkBalanceFromRoot();
     //(*sampleserver)->getNode()->checkBalance();
     //boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
+		Avatar::calcWeight();		
     for (list<Server*>::iterator it = server_list.begin() ; it != server_list.end() ; it++) {
       (*it)->getNode()->checkBalance();
     }
