@@ -166,7 +166,7 @@ void Avatar::markAsSeen(int relevance_) {
 
 long Avatar::getWeight() {
   /***/
-  return 1;
+  ///return 1; //para o caso simples onde peso = numero de avatares
   /***/
   
   long wgt = 0;

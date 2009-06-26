@@ -35,7 +35,7 @@ int main () {
   
 	for (int i = 0 ; i < NUM_SERVERS ; i++) {
     //_s = new Server ((i+1)*20000);
-		Server* _server = new Server ((i+1)*25);
+		Server* _server = new Server ((i+1)*25000);
 		server_list.push_back(_server);
     //server[i]->assignRegion(*(it++));
     cout << "Server " << i << " has power of " << _server->getServerPower() << endl;
@@ -60,24 +60,33 @@ int main () {
 	while (1) {
 		apply_surface(0,0,bg,screen);
 		step_delay = SDL_GetTicks() - time;
-		step_delay = step_delay > 40 ? 40 : step_delay;
+		//step_delay = step_delay > 40 ? 40 : step_delay;
+    time = SDL_GetTicks();
+		//time += 100;
 
 		for (list<Avatar*>::iterator it = avatar_list.begin() ; it != avatar_list.end() ; it++){
 			(*it)->step(100/* * step_delay*/);
 			
 		}
-		//time = SDL_GetTicks();
-		time += 100;
+		
 		
 		kdt->drawTree();
     //kdt->checkBalanceFromRoot();
-    (*sampleserver)->getNode()->checkBalance();
+    //(*sampleserver)->getNode()->checkBalance();
     //boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
+    for (list<Server*>::iterator it = server_list.begin() ; it != server_list.end() ; it++) {
+      (*it)->getNode()->checkBalance();
+    }
 
 		for (list<Avatar*>::iterator it = avatar_list.begin() ; it != avatar_list.end() ; it++){
 			(*it)->draw();
 		}
-		if (!(time % 10000)) cout << "Step no tempo " << time << endl;		
+    
+    stringColor(screen, WW/2, WW/2, longToString(approxLong(1000.0f / (float) step_delay)).c_str(), 0xFFFFFFFF);
+		//if (!(time % 10000)) cout << "Step no tempo " << time << endl;
+    int xi, xj, yi, yj;
+    (*sampleserver)->getNode()->getLimits(xi, xj, yi, yj);
+    if (!(time % 10000)) cout << "x = [" << xi << ", " << xj << "], y = [" << yi << ", " << yj << "]" << endl;
 		SDL_Flip( screen );
 		checkInput();
  }
