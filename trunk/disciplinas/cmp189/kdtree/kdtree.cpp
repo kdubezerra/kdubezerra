@@ -46,7 +46,7 @@ void KDTree::setLimits() {
   ymin = parent->ymin;
   ymax = parent->ymax;
   if (this == parent->schild) {    
-    if (split_axis == X_NODE) {
+    if (parent->split_axis == Y_NODE) {
       ymax = parent->split_coordinate - 1;
     }
     else {
@@ -54,7 +54,7 @@ void KDTree::setLimits() {
     }
   }
   else {
-    if (split_axis == X_NODE) {
+    if (parent->split_axis == Y_NODE) {
       ymin = parent->split_coordinate;
     }
     else {
@@ -89,28 +89,23 @@ void KDTree::balanceLoad() {
   list<Avatar*>::iterator it;
   list<Avatar*> avs = parent->getAvList();
   list<Avatar*> my_share;
-  avs.sort(parent->split_axis == X_NODE ? Avatar::compareX : Avatar::compareY);
-  list<Avatar*> rest = avs; 
-
+  avs.sort((parent->split_axis == X_NODE) ? (Avatar::compareX) : (Avatar::compareY));
+  
   float power_share = (float) getPower() / (float) parent->getPower();
   long weight_share = power_share * (float) parent->getWeight();
   long current_share = 0l;
   
-  ///for (it = avs.begin() ; it != avs.end() ; it++) cout << (int) ((*it)->GetX()) << endl;
   if (this == parent->bchild) avs.reverse();
   
   ///long new_share = 0l;
   for (it = avs.begin() ; it != avs.end() && current_share < weight_share ; it++) {
     ///current_share = new_share;
     ///new_share = current_share + (*it)->getWeight();
-    my_share.push_back(*it);
-    rest.remove(*it);
     current_share += (*it)->getWeight();
   }
   ///if qual eh o share mais proximo de weight_share? com ou sem o ultimo avatar? nao precisa ser otimo...
     
-  if (this == parent->bchild) rest.reverse();
-  parent->setSplitCoordinate( (parent->split_axis == X_NODE) ? (*rest.begin())->GetX() : (*rest.begin())->GetY() );
+  parent->setSplitCoordinate( (parent->split_axis == X_NODE) ? (*it)->GetX() : (*it)->GetY() );
   cout << "split_coordinate: " << parent->split_coordinate << endl;
   
   parent->clearAvList();
@@ -119,7 +114,7 @@ void KDTree::balanceLoad() {
     else cout << (int) ((*it)->GetY()) << endl;
   }
   for (it = avs.begin() ; it != avs.end() ; it++) {
-    parent->insertAvatar(*it, parent->split_axis);
+    parent->insertAvatar(*it);
   }
 }
 
@@ -219,7 +214,7 @@ void KDTree::drawTree() {
     string power = longToString(server->getServerPower());
     string load = longToString(getWeight());
     stringColor(screen, xmin, ymin, power.c_str(), 0x000000FF);
-    stringColor(screen, xmin, ymin+20, load.c_str(), 0x000000FF);
+    stringColor(screen, xmin, ymin+10, load.c_str(), 0x000000FF);
 	}
 }
 
@@ -270,21 +265,21 @@ void KDTree::removeAvatar(Avatar* _av) {
   avList.remove(_av);
 }
 
-void KDTree::insertAvatar(Avatar* _av, short _split_lvl) {
+void KDTree::insertAvatar(Avatar* _av) {
   ///*********************************************************
   ///(INICIO) NOH INTERMEDIARIO: PRECISA DESCER MAIS NA ÁRVORE
   if (schild) {
-    if (_split_lvl == X_NODE) {
+    if (split_axis == X_NODE) {
       if ((int) _av->GetX() < split_coordinate)
-        schild->insertAvatar(_av, Y_NODE);
+        schild->insertAvatar(_av);
       else
-        bchild->insertAvatar(_av, Y_NODE);
+        bchild->insertAvatar(_av);
     }
     else {
       if ((int) _av->GetY() < split_coordinate)
-        schild->insertAvatar(_av, X_NODE);
+        schild->insertAvatar(_av);
       else
-        bchild->insertAvatar(_av, X_NODE);
+        bchild->insertAvatar(_av);
     }
   }
   ///(FIM) NOH INTERMEDIARIO

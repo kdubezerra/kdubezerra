@@ -166,20 +166,9 @@ void Avatar::markAsSeen(int relevance_) {
 
 long Avatar::getWeight() {
   /***/
-  return 1; //para o caso simples onde peso = numero de avatares
+  ///return 1; //para o caso simples onde peso = numero de avatares
 	return weight;
   /***/
-  
-  long wgt = 0;
-	//list<Avatar*> companions = parentNode->getAvList();
-	list<Avatar*> companions = parentNode->getRoot()->getAvList();
-	companions.sort(Avatar::compareX); // deve ser posto em algum lugar mais adequado, pois essa lista precisa ser ordenada apenas uma vez, e nao para cada avatar
-	for (list<Avatar*>::iterator it = companions.begin() ; it != companions.end() ; it++) {
-		if ((*it)->GetX() < this->GetX() - VIEW_DISTANCE) continue;
-		if ((*it)->GetX() > this->GetX() + VIEW_DISTANCE) break;
-		wgt += OtherRelevance(*it);
-	}
-	return wgt;
 }
 
 

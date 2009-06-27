@@ -7,8 +7,8 @@
 #include "myutils.h"
 
 #define NUM_PLAYERS 750
-#define NUM_SERVERS 16
-#define MULTIPLIER 10
+#define NUM_SERVERS 11
+#define MULTIPLIER 10000
 
 #define BG_IMAGE "bg.bmp"
 #define PLAYER_IMAGE "player.bmp"
@@ -75,7 +75,7 @@ int main () {
     //kdt->checkBalanceFromRoot();
     //(*sampleserver)->getNode()->checkBalance();
     //boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
-		///Avatar::calcWeight();		
+		Avatar::calcWeight();		
     for (list<Server*>::iterator it = server_list.begin() ; it != server_list.end() ; it++) {
       (*it)->getNode()->checkBalance();
     }
