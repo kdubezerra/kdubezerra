@@ -75,7 +75,7 @@ int main () {
     //kdt->checkBalanceFromRoot();
     //(*sampleserver)->getNode()->checkBalance();
     //boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
-		Avatar::calcWeight();		
+		///Avatar::calcWeight();		
     for (list<Server*>::iterator it = server_list.begin() ; it != server_list.end() ; it++) {
       (*it)->getNode()->checkBalance();
     }
