@@ -7,7 +7,8 @@
 #include "myutils.h"
 
 #define NUM_PLAYERS 750
-#define NUM_SERVERS 64
+#define NUM_SERVERS 16
+#define MULTIPLIER 10
 
 #define BG_IMAGE "bg.bmp"
 #define PLAYER_IMAGE "player.bmp"
@@ -35,7 +36,7 @@ int main () {
   
 	for (int i = 0 ; i < NUM_SERVERS ; i++) {
     //_s = new Server ((i+1)*20000);
-		Server* _server = new Server ((i+1)*2000);
+		Server* _server = new Server ((i+1)*MULTIPLIER);
 		server_list.push_back(_server);
     //server[i]->assignRegion(*(it++));
     cout << "Server " << i << " has power of " << _server->getServerPower() << endl;
@@ -62,12 +63,11 @@ int main () {
 		apply_surface(0,0,bg,screen);
 		step_delay = SDL_GetTicks() - time;
 		//step_delay = step_delay > 40 ? 40 : step_delay;
-    time = SDL_GetTicks();
+		time = SDL_GetTicks();
 		//time += 100;
 
 		for (list<Avatar*>::iterator it = avatar_list.begin() ; it != avatar_list.end() ; it++){
 			(*it)->step(100/* * step_delay*/);
-			
 		}
 		
 		
@@ -91,7 +91,7 @@ int main () {
     if (!(time % 10000)) cout << "x = [" << xi << ", " << xj << "], y = [" << yi << ", " << yj << "]" << endl;
 		SDL_Flip( screen );
 		checkInput();
- }
+	}
 	
 	return 0;
 }
