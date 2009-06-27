@@ -40,7 +40,7 @@ class KDTree {
 		long getPower();
 		list<Avatar*> getAvList();
 		void removeAvatar(Avatar* _av);
-		void insertAvatar(Avatar* _av, short _split_lvl = X_NODE);
+		void insertAvatar(Avatar* _av);
 		void clearAvList();
 		static KDTree* getRoot();
 		
