@@ -67,12 +67,12 @@
 
 %%%%%% START OF THE PAPER %%%%%%
 
- \begin{document}
- 
-% \teaser{
-%   \includegraphics[width=1.5in]{sample}
-%   \caption{Lookit! Lookit!}
-% }
+\begin{document}
+
+\teaser{
+  \includegraphics[width=1.5in]{sample}
+  \caption{Lookit! Lookit!}
+}
 
 %% The ``\maketitle'' command must be the first command after the
 %% ``\begin{document}'' command. It prepares and prints the title block.
@@ -83,7 +83,7 @@
 
 \begin{abstract}
 
-MMOGs (\emph{massively multiplayer online games}, ou jogos online maciçamente multijogador), são aplicações que requerem conexões com grande largura de banda para funcionarem adequadamente. Essa demanda por largura de banda é maior principalmente nos servidores que hospedam o jogo. Como nesse tipo de jogo costuma haver milhares a dezenas de milhares de jogadores simultâneos, sendo que a interação entre cada par de jogadores é intermediada pelo servidor, é sobre este que recai o maior custo no que se refere a uso de largura de banda para realizar o envio de atualizações de estado do ambiente do jogo para os jogadores. Para contornar este problema, são propostas arquiteturas com vários servidores, onde cada um deles gerencia uma região do ambiente virtual, e cada jogador conecta-se somente ao servidor que gerencia a área onde ele está jogando. No entanto, para distribuir a carga entre os servidores, é necessário um algoritmo de particionamento do ambiente virtual que, para poder reajustar o balanceamento de carga durante o jogo, seja dinâmico. Alguns trabalhos nesse sentido podem ser citados, como \cite{devleeschauwer2005dma,ahmed2008mol,bezerra2009lbs}, mas, utilizando um algoritmo geométrico mais adequado, pode-se alcançar um nível melhor de granularidade da distribuição, sem comprometer o tempo de rebalanceamento, ou mesmo reduzindo-o. Neste trabalho, é proposta a utilização de uma KD-Tree para dividir o ambiente virtual do jogo em regiões, cada uma das quais sendo designada a um dos servidores. As coordenadas de corte das regiões são ajustadas dinamicamente de acordo com a distribuição dos avatares ao longo do ambiente virtual.
+MMOGs (\emph{massively multiplayer online games}, ou jogos online maciçamente multijogador), são aplicações que requerem conexões com grande largura de banda para funcionarem adequadamente. Essa demanda por largura de banda é maior principalmente nos servidores que hospedam o jogo. Como nesse tipo de jogo costuma haver milhares a dezenas de milhares de jogadores simultâneos, sendo que a interação entre cada par de jogadores é intermediada pelo servidor, é sobre este que recai o maior custo no que se refere a uso de largura de banda para realizar o envio de atualizações de estado do ambiente do jogo para os jogadores. Para contornar este problema, são propostas arquiteturas com vários servidores \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}, onde cada um deles gerencia uma região do ambiente virtual, e cada jogador conecta-se somente ao servidor que gerencia a área onde ele está jogando. No entanto, para distribuir a carga entre os servidores, é necessário um algoritmo de particionamento do ambiente virtual que, para poder reajustar o balanceamento de carga durante o jogo, seja dinâmico. Alguns trabalhos nesse sentido podem ser citados, como \cite{devleeschauwer2005dma,ahmed2008mol,bezerra2009lbs}, mas, utilizando um algoritmo geométrico mais adequado, pode-se alcançar um nível melhor de granularidade da distribuição, sem comprometer o tempo de rebalanceamento, ou mesmo reduzindo-o. Neste trabalho, é proposta a utilização de uma KD-Tree para dividir o ambiente virtual do jogo em regiões, cada uma das quais sendo designada a um dos servidores. As coordenadas de corte das regiões são ajustadas dinamicamente de acordo com a distribuição dos avatares ao longo do ambiente virtual.
 
 \end{abstract}
 
@@ -109,42 +109,40 @@ MMOGs (\emph{massively multiplayer online games}, ou jogos online maciçamente mu
 
 %% \copyrightspace
 
-Os MMOGs tem como principal característica a grande quantidade de jogadores interagindo simultaneamente, chegando a ter dezenas até centenas de milhares de participantes simultâneos \cite{schiele2007rpp}. Ao se usar uma arquitetura cliente-servidor para que os jogadores se comuniquem entre si, é necessário que esse servidor intermedie a comunicação entre cada par de jogadores. É fácil perceber que o número de mensagens trocadas entre os jogadores que passam pelo servidor será proporcional ao quadrado no número de jogadores, se todos estiverem interagindo com todos. Obviamente, dependendo desse número de jogadores, o custo de manutenção de uma infra-estrutura centralizada como essa se torna muito alto, restringindo esse mercado de jogos MMOG para grandes empresas com muitos recursos.
-
-Buscando reduzir esse custo, tem-se buscado soluções descentralizadas. Algumas destas utilizam redes par-a-par: \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Outras propõem a utilização de um sistema distribuído composto por nodos servidores de baixo custo, conectados através da Internet, como é proposto em \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. De qualquer forma, o ``mundo'', ou ambiente virtual do jogo, é dividido em regiões e, para cada região, é designado um servidor -- no caso do sistema servidor distribuído -- ou um grupo de pares para administrarem-no em conjunto -- no caso das redes par-a-par.
+A principal característica dos jogos maciçamente multijogador (MMOGS, ou \emph{massively multiplayer online games}) é a grande quantidade de jogadores, chegando a ter dezenas ou centenas de milhares de participantes simultaneamente \cite{schiele2007rpp}. Essa grande quantidade de jogadores interagindo entre si gera um tráfego na rede de suporte que tem crescimento quadrático em relação ao número de jogadores, no pior caso.
 
 Quando se utiliza uma arquitetura cliente-servidor, é necessário que o servidor intermedie a comunicação entre cada par de jogadores -- supondo que se pretende prover ao jogo garantias de consistência e resistência à trapaça. Obviamente, esse servidor terá uma grande carga de comunicação e, conseqüentemente, deverá ter recursos (largura de banda disponível) proporcional à demanda do jogo. Considera-se que o principal recurso a analisar é a largura de banda disponível, pois esse é o atual gargalo para os MMOGs  \cite{feng2007wnn}.
 
-
+A questão posta aqui é que, quando se faz uso de um servidor distribuído, principalmente com recursos escassos, que é a proposta deste trabalho, é necessário otimizar o uso destes recursos, atribuindo a cada servidor uma carga que ele seja capaz de suportar. Dessa forma, não importando a qual servidor cada jogador estiver conectado, sua experiência de jogo será semelhante, no que diz respeito ao tempo de resposta para suas ações e o tempo que leva para ser notificado de ações de outros jogadores, assim como de mudanças de estado no ambiente virtual do jogo.
 
 Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. No entanto, essa distribuição não funcionaria, pelo fato de que a carga causada pelos jogadores depende também do quanto os jogadores estão interagindo entre si. Por exemplo, se os avatares de dois jogadores estiverem muito distantes um do outro, provavelmente não haverá interação entre eles e, portanto, o servidor precisará apenas atualizar cada um a respeito de suas próprias ações. No entanto, se estes avatares estiverem próximos, cada jogador deverá ser atualizado não apenas a respeito do resultado de suas próprias ações, como também das ações do outro jogador.
 
 Percebe-se, então, que quando os avatares estão distantes uns dos outros, o tráfego cresce linearmente com o número de jogadores (Figura \ref{fig:playersdistant}). Porém, se eles estão próximos uns dos outros, o tráfego cresce quadraticamente (Figura \ref{fig:playersclose}). Por fim, ambas as funções de crescimento do número de mensagens podem estar presentes no mesmo jogo se, em alguns lugares do ambiente virtual, os avatares estiverem próximos e, em outros lugares, eles estiverem distantes.
 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=0.8\textwidth]{images/playersdistant}
-%  \caption{Crescimento linear do tráfego com avatares distantes}
-  \label{fig:playersdistant}
-% \end{figure}
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/playersdistant}
+ \caption{Crescimento linear do tráfego com avatares distantes}
+ \label{fig:playersdistant}
+\end{figure}
 
 Essa característica de localidade, no que diz respeito à distribuição dos avatares no ambiente virtual, está presente na grande maioria dos jogos multijogador. Existem algumas exceções, como GuildWars \cite{guildwars}, em que apenas grupos com um número limitado de jogadores podem iniciar uma partida. Este tipo de jogo é baseado no modelo de instâncias, onde todos os avatares dos jogadores se encontram em um espaço social, de interação limitada, menos dinâmica e, portanto, com tráfego de rede algumas ordens de grandeza menor \cite{vilanova2008psm}. Quando pretende-se iniciar uma partida ``real'', os jogadores requisitam ao servidor que seja criado um grupo de ação. Dessa forma, impede-se que um número teoricamente ilimitado de jogadores interajam entre si, sobrecarregando o servidor.
 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=0.8\textwidth]{images/playersclose}
-%  \caption{Crescimento quadrático do tráfego com avatares próximos}
-  \label{fig:playersclose}
-% \end{figure}
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/playersclose}
+ \caption{Crescimento quadrático do tráfego com avatares próximos}
+ \label{fig:playersclose}
+\end{figure}
 
 Normalmente, porém, os jogadores podem mover seus avatares livremente através do mundo do jogo. Isso torna possível a formação de pontos de interesse -- também conhecidos como \emph{hotspots} \cite{ahmed2008mol} -- ao redor dos quais os jogadores se concentram mais do que em outras regiões do ambiente virtual (Figura \ref{fig:avatarsdistribution}). Aliás, muitos jogos de RPG online maciçamente multijogador não só permitem como também estimulam, até certo ponto, a formação destes pontos de interesse. Nestes mundos dos MMORPGs, existem cidades inteiras, onde os jogadores se encontram para conversar, trocar mercadorias virtuais do jogo e/ou duelar, assim como existem também zonas desérticas, sem muitos atrativos para os jogadores, e onde o número de avatares presentes é relativamente pequeno, se comparado com outros lugares no jogo.
 
-% \begin{figure}
-%   \centering
-%   \includegraphics[width=1.0\linewidth]{images/avatarsdistribution}
-%   \caption{Distribuição de avatares com e sem a presença de pontos de interesse}
-   \label{fig:avatarsdistribution}
-% \end{figure}
+\begin{figure}
+  \centering
+  \includegraphics[width=1.0\linewidth]{images/avatarsdistribution}
+  \caption{Distribuição de avatares com e sem a presença de pontos de interesse}
+  \label{fig:avatarsdistribution}
+\end{figure}
 
 
 Por esta razão, não é suficiente apenas dividir os jogadores entre os servidores, mesmo que proporcionalmente aos recursos de cada um destes. Em primeiro lugar, em alguns casos o uso de largura de banda do servidor é quadrático ao número de jogadores, enquanto é linear em outros. Essa razão por si só já é suficiente para buscar outro critério para o balanceamento de carga. Além disso, há outra questão importante: a existência de pontos de interesse. Esta última característica motiva à criação de um esquema de balanceamento de carga para jogos que impeça que a presença de pontos de interesse degrade a qualidade do jogo além do tolerável.
@@ -164,23 +162,23 @@ Por esta razão, não é suficiente apenas dividir os jogadores entre os servidores
 %Como foi dito, quando existe um número considerável de avatares em um mesmo ponto de interesse, é gerado um tráfego proporcional ao quadrado do número de avatares ali presentes. Também foi mostrado que os servidores recebem as ações enviadas pelos jogadores, calculam seu resultado e o enviam para todos os jogadores interessados, que são, geralmente, aqueles cujos avatares estiverem próximos do avatar do primeiro jogador.
 
 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=0.8\textwidth]{images/overheadgeneration}
-%  \caption{Overhead causado pela interação de jogadores em diferentes servidores}
-  \label{fig:overheadgeneration}
-% \end{figure}
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{images/overheadgeneration}
+ \caption{Overhead causado pela interação de jogadores em diferentes servidores}
+ \label{fig:overheadgeneration}
+\end{figure}
 
 Outra questão é que se os jogadores em um mesmo ponto de interesse forem divididos entre diferentes servidores, cada um destes precisará não apenas enviar o estado do mundo resultante das ações para os jogadores conectados a ele, como também deverá enviá-lo para o servidor ao qual os outros jogadores estão conectados. Este, por sua vez, encaminhará este resultado para seus jogadores. Percebe-se, então, que cada estado deverá ser enviado duas vezes, para cada par de jogadores que se comunicam através de servidores diferentes (Figura \ref{fig:overheadgeneration}). Esse overhead não apenas causa o desperdício de recursos dos servidores, como também aumenta o atraso para atualização de estado das réplicas do jogo nas máquinas dos jogadores. Isto faz com que o tempo entre o envio de uma ação por um jogador conectado a um servidor e o recebimento do estado resultante por outro jogador, conectado a outro servidor, seja maior, prejudicando a interação entre eles.
 
 Assim sendo, jogadores que estão interagindo entre si devem, idealmente, estar conectados ao mesmo servidor. Contudo, é possível que todos os jogadores estejam ligados entre si através de relações transitivas de interação. Por exemplo, dois avatares, de dois jogadores diferentes, podem estar distantes um do outro, porém ambos interagindo com um terceiro avatar, entre os dois (Figura \ref{fig:alllinked}). Contudo, ainda assim será necessário dividí-los entre servidores. A questão é quais pares de jogadores estarão divididos em servidores diferentes. É necessário, portanto, decidir um critério para agrupar jogadores em um mesmo servidor.
 
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=0.6\textwidth]{images/alllinked}
-%  \caption{Dependência transitiva entre os avatares}
-  \label{fig:alllinked}
-% \end{figure}
+\begin{figure}
+ \centering
+ \includegraphics[width=0.6\textwidth]{images/alllinked}
+ \caption{Dependência transitiva entre os avatares}
+ \label{fig:alllinked}
+\end{figure}
 
 
 
