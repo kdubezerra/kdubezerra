@@ -33,6 +33,18 @@ KDTree::~KDTree() {
 }
 
 void KDTree::setSplitCoordinate(int _coord) {
+  if (split_axis == X_NODE) {
+    if (xmax - xmin <= 1) return;
+    if (_coord <= xmin) _coord = xmin + 1;
+    if (_coord > xmax) _coord = xmax;    
+  }
+  
+  if (split_axis == Y_NODE) {
+    if (ymax - ymin <= 1) return;
+    if (_coord <= ymin) _coord = ymin + 1;
+    if (_coord > ymax) _coord = ymax;
+  }
+  
   split_coordinate = _coord;
   if (schild) {
     schild->setLimits();
@@ -40,7 +52,7 @@ void KDTree::setSplitCoordinate(int _coord) {
   }
 }
 
-void KDTree::setLimits() {  
+void KDTree::setLimits(int _lvl) {  
   xmin = parent->xmin;
   xmax = parent->xmax;
   ymin = parent->ymin;
@@ -62,9 +74,18 @@ void KDTree::setLimits() {
     }
   }
   
+  if (_lvl > 0) {
+    if (split_axis == X_NODE) {
+      if (split_coordinate <= xmin || split_coordinate > xmax) split_coordinate = (xmin + xmax) / 2;
+    }
+    else {
+      if (split_coordinate <= ymin || split_coordinate > ymax) split_coordinate = (ymin + ymax) / 2;
+    }
+  }
+  
   if (schild) {
-    schild->setLimits();
-    bchild->setLimits();
+    schild->setLimits(_lvl+1);
+    bchild->setLimits(_lvl+1);
   }
 }
 
@@ -106,13 +127,13 @@ void KDTree::balanceLoad() {
   ///if qual eh o share mais proximo de weight_share? com ou sem o ultimo avatar? nao precisa ser otimo...
     
   parent->setSplitCoordinate( (parent->split_axis == X_NODE) ? (*it)->GetX() : (*it)->GetY() );
-  cout << "split_coordinate: " << parent->split_coordinate << endl;
+  ///cout << "split_coordinate: " << parent->split_coordinate << endl;
   
-  parent->clearAvList();
-  for (it = avs.begin() ; it != avs.end() ; it++) {
-    if (parent->split_axis == X_NODE) cout << (int) ((*it)->GetX()) << endl;
-    else cout << (int) ((*it)->GetY()) << endl;
-  }
+  parent->clearAvList();/**
+  for (it = avs.begin() ; it != avs.end() && node_id == 3 ; it++) {
+    if (parent->split_axis == X_NODE) cout << "x = " << (int) ((*it)->GetX()) << endl;
+    else cout << "y = " << (int) ((*it)->GetY()) << endl;
+  }*/
   for (it = avs.begin() ; it != avs.end() ; it++) {
     parent->insertAvatar(*it);
   }
@@ -318,22 +339,3 @@ void KDTree::getLimits(int& _xmin, int& _xmax, int& _ymin, int& _ymax) {
   _ymin = ymin;
   _ymax = ymax;
 }
-/*
-		void reckonCapacity();
-		void reckonLoad();
-		void reckonRects();
-		KDTree *parent, *schild, *bchild;
-		int split_coordinate, xmin, xmax, ymin, ymax;
-		int load;
-							// a carga (load) de um nodo é igual à soma das cargas de
-							// seus filhos; se forem folhas, os filhos são avatares,
-							// cujo peso é calculado pela aplicação.
-		int capacity; 
-							// cada nodo no penúltimo nível da árvore corresponde a um
-							// servidor, e seus filhos são os avatares dos jogadores.
-							// a capacidade de um nodo é igual à capacidade de seus
-							// filhos, e a capacidade de cada nodo no penúltimo nível
-							// é igual à capacidade do servidor correspondente
-};
-
-*/

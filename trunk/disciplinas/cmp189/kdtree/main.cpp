@@ -7,8 +7,8 @@
 #include "myutils.h"
 
 #define NUM_PLAYERS 750
-#define NUM_SERVERS 11
-#define MULTIPLIER 10000
+#define NUM_SERVERS 32
+#define MULTIPLIER 20000
 
 #define BG_IMAGE "bg.bmp"
 #define PLAYER_IMAGE "player.bmp"
