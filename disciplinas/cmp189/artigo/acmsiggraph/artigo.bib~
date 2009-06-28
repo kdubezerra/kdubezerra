@@ -4,7 +4,7 @@
 
 @inproceedings{cecin2004fsa,
   title={FreeMMG: A Scalable and Cheat-Resistant Distribution Model for Internet Games},
-  author={Cecin, FÃ¡bio R. and Real, R. and Jannone, R. and Geyer, ClÃ¡udio F. R. and Martins, M. and Barbosa, J. L. V.},
+  author={Cecin, Fábio R. and Real, R. and Jannone, R. and Geyer, Cláudio F. R. and Martins, M. and Barbosa, J. L. V.},
   booktitle={Proceedings of the IEEE/ACM International Symposium on Distributed Simulation and Real-Time Applications, DS-RT, 8.},
   address={Budapest, Hungary},
   publisher={Washington, DC: IEEE},
@@ -27,7 +27,7 @@
 
 @inproceedings{cecin2006pps,
   title={{A peer-to-peer simulation technique for instanced massively multiplayer games}},
-  author={Cecin, FÃ¡bio R. and Geyer, ClÃ¡udio F. R. and Rabello, S. and Barbosa, J. L. V.},
+  author={Cecin, Fábio R. and Geyer, Cláudio F. R. and Rabello, S. and Barbosa, J. L. V.},
   booktitle={Proceedings of the IEEE/ACM International Symposium on Distributed Simulation and Real-Time Applications, DS-RT, 10.},
   address={Torremolinos, Spain},
   publisher={Washington, DC: IEEE},
@@ -121,7 +121,7 @@
 @Misc{indigente, 
     author = "Indigente",
     title = "Interactive Digital Entertainment",
-    note = "Grupo de pesquisa na Ã¡rea de jogos da UFBA, formado em abril de 2004. http://indigente.dcc.ufba.br/",
+    note = "Grupo de pesquisa na área de jogos da UFBA, formado em abril de 2004. http://indigente.dcc.ufba.br/",
     year = "2004",    
 }
 
@@ -203,7 +203,7 @@
 
 @inproceedings{bezerra2008a3,
   title={A3: a novel interest management algorithm for distributed simulations of MMOGs},
-  author={Bezerra, Carlos Eduardo B. and Cecin, FÃ¡bio R. and Geyer, ClÃ¡udio F. R.},
+  author={Bezerra, Carlos Eduardo B. and Cecin, Fábio R. and Geyer, Cláudio F. R.},
   booktitle={Proceedings of the IEEE/ACM International Symposium on Distributed Simulation and Real-Time Applications, DS-RT, 12.},
   address={Vancouver, Canada},
   publisher={Washington, DC: IEEE},
@@ -215,10 +215,10 @@
 
 @inproceedings{vilanova2008psm,
   title={{P2PSE - A Peer-to-Peer Support for Multiplayer Games}},
-  author={Vilanova, Felipe J. and Bezerra, Carlos Eduardo B. and Crippa, Marcos Rates and Cecin, FÃ¡bio R. and Geyer, ClÃ¡udio F. R.},
+  author={Vilanova, Felipe J. and Bezerra, Carlos Eduardo B. and Crippa, Marcos Rates and Cecin, Fábio R. and Geyer, Cláudio F. R.},
   booktitle={Proceedings of the Brazilian Symposium on Computer Games and Digital Entertainment - Computing Track, SBGames, 7.},
   address={Belo Horizonte},
-  publisher={[S.l.]: Sociedade Brasileira de ComputaÃ§Ã£o - SBC},
+  publisher={[S.l.]: Sociedade Brasileira de Computação - SBC},
   pages={47--53},
   year={2008}
 }
@@ -620,7 +620,7 @@
 @article{rocha2007dmm,
   title={{Desenvolvendo um Motor Multiplataforma para Jogos 3D}},
   author={ROCHA, Rodrigo and BESSA, Aline and BEZERRA, Carlos E. B. and MEDEIROS, Ivan and OLIVEIRA, Caio and BANDEIRA, H.},
-  journal={VI Brazilian Symposium on Computer Games and Digital Entertainment - Computing Track, 2008, SÃ£o Leopoldo, RS, Brasil},
+  journal={VI Brazilian Symposium on Computer Games and Digital Entertainment - Computing Track, 2008, São Leopoldo, RS, Brasil},
   year={2007}
 }
 
@@ -851,7 +851,7 @@
 @article{crippa2007pps,
   title={{Peer-to-peer support for instance-based massively multiplayer games}},
   author={Marcos Crippa and Fabio Cecin and Claudio Geyer},
-  journal={Proceedings of the 6th Brazilian Symposium on Computer Games and Digital Entertainment, SÃ£o Leopoldo, Brazil},
+  journal={Proceedings of the 6th Brazilian Symposium on Computer Games and Digital Entertainment, São Leopoldo, Brazil},
   year={2007}
 }
 
@@ -1066,7 +1066,7 @@
 
 @article{bezerra2009lbs,
   title={{A load balancing scheme for massively multiplayer online games}},
-  author={Carlos Eduardo B. Bezerra and ClÃ¡udio F. R. Geyer},
+  author={Carlos Eduardo B. Bezerra and Cláudio F. R. Geyer},
   journal={Massively Multiuser Online Gaming Systems and Applications, Special Issue of Springer's Multimedia Tools and Applications},
   year={2009}
 }
