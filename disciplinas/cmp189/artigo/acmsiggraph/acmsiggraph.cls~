@@ -450,7 +450,7 @@
 \fi
 \newcommand{\keywordlist}{%
     \vspace{0.5\baselineskip}%
-    \par\noindent \textbf{Palavras-chave: } \acm@keywords%
+    \par\noindent \textbf{Keywords: } \acm@keywords%
 }
 \newenvironment{CRcatlist}{%
     \vspace{0.5\baselineskip}%
