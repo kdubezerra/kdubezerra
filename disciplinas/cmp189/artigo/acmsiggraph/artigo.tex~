@@ -67,8 +67,8 @@
 
 %%%%%% START OF THE PAPER %%%%%%
 
-% \begin{document}
-% 
+ \begin{document}
+ 
 % \teaser{
 %   \includegraphics[width=1.5in]{sample}
 %   \caption{Lookit! Lookit!}
@@ -109,13 +109,20 @@ MMOGs (\emph{massively multiplayer online games}, ou jogos online maciçamente mu
 
 %% \copyrightspace
 
-Os MMOGs tem como principal característica a grande quantidade de jogadores interagindo simultaneamente, chegando a ter dezenas até centenas de milhares de participantes simultâneos \cite{schiele2007rpp}. Ao se usar uma arquitetura cliente-servidor para que os jogadores se comuniquem entre si, é necessário que esse servidor intermedie a comunicação entre cada par de jogadores. É fácil perceber que o número de mensagens trocadas entre os jogadores que passam pelo servidor será proporcional ao quadrado no número de jogadores, se todos estiverem interagindo com todos. Obviamente, dependendo desse número de jogadores, o custo de manutenção de uma infra-estrutura centralizada como essa se torna muito alto, restringindo esse mercado de jogos MMOG para grandes empresas com muitos recursos.
+Os MMOGs têm como principal característica a grande quantidade de jogadores interagindo simultaneamente, chegando a ter dezenas até centenas de milhares de participantes simultâneos \cite{schiele2007rpp}. Ao se usar uma arquitetura cliente-servidor para que os jogadores se comuniquem entre si, é necessário que esse servidor intermedie a comunicação entre cada par de jogadores.
 
-Buscando reduzir esse custo, tem-se buscado soluções descentralizadas. Algumas destas utilizam redes par-a-par: \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Outras propõem a utilização de um sistema distribuído composto por nodos servidores de baixo custo, conectados através da Internet, como é proposto em \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. De qualquer forma, o ``mundo'', ou ambiente virtual do jogo, é dividido em regiões e, para cada região, é designado um servidor -- no caso do sistema servidor distribuído -- ou um grupo de pares para administrarem-no em conjunto -- no caso das redes par-a-par.
+Para permitir que os jogadores interajam, o servidor recebe os comandos de cada jogador, calcula o estado resultante do jogo e envia o novo estado para os jogadores que estejam interagindo com ele. É fácil perceber que o número de mensagens trocadas entre os jogadores que passam pelo servidor será proporcional ao quadrado no número de jogadores, se todos estiverem interagindo com todos. Obviamente, dependendo desse número de jogadores, o custo de manutenção de uma infra-estrutura centralizada como essa se torna muito alto, restringindo esse mercado de jogos MMOG para grandes empresas com muitos recursos.
 
-Quando se utiliza uma arquitetura cliente-servidor, é necessário que o servidor intermedie a comunicação entre cada par de jogadores -- supondo que se pretende prover ao jogo garantias de consistência e resistência à trapaça. Obviamente, esse servidor terá uma grande carga de comunicação e, conseqüentemente, deverá ter recursos (largura de banda disponível) proporcional à demanda do jogo. Considera-se que o principal recurso a analisar é a largura de banda disponível, pois esse é o atual gargalo para os MMOGs  \cite{feng2007wnn}.
+Buscando reduzir esse custo, tem-se buscado soluções descentralizadas. Algumas destas utilizam redes par-a-par: \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Outras propõem a utilização de um sistema distribuído composto por nodos servidores de baixo custo, conectados através da Internet, como é proposto em \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. De qualquer forma, o ``mundo'', ou ambiente virtual do jogo, é dividido em regiões e, para cada região, é designado um servidor -- ou um grupo de pares para administrarem-no em conjunto, no caso das redes par-a-par. Cada uma dessas regiões deve possuir um conteúdo tal que a carga imposta sobre o servidor não seja maior que a sua capacidade. Quando um servidor se torna sobrecarregado, devido a uma mudança na distribuição dos objetos do jogo, a divisão do ambiente virtual deve ser recalculada para aliviar aquele servidor.
 
+Neste trabalho, é proposto o uso de uma kd-tree para realizar o particionamento do ambiente virtual. Quando o movimento das entidades do jogo no ambiente virtual faz com que uma determinada região se sobrecarregue, o servidor daquela região dispara o balanceamento de carga, reajustando os limites de sua região com a ajuda da estrutura de dados kd-tree. O texto está organizado da seguinte maneira: na seção \ref{sec:context}, são apresentados alguns trabalhos relacionados; na seção \ref{sec:proposal}, é apresentada em detalhes o algoritmo proposto aqui; nas seções \ref{sec:simul} e \ref{sec:result} são apresentadas as simulações e os resultados alcançados e, na seção \ref{sec:conc}, são apresentadas algumas conclusões e considerações finais deste trabalho.
 
+\section{Trabalhos relacionados}
+\label{sec:context}
+
+ahmed
+bezerra
+luque
 
 Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. No entanto, essa distribuição não funcionaria, pelo fato de que a carga causada pelos jogadores depende também do quanto os jogadores estão interagindo entre si. Por exemplo, se os avatares de dois jogadores estiverem muito distantes um do outro, provavelmente não haverá interação entre eles e, portanto, o servidor precisará apenas atualizar cada um a respeito de suas próprias ações. No entanto, se estes avatares estiverem próximos, cada jogador deverá ser atualizado não apenas a respeito do resultado de suas próprias ações, como também das ações do outro jogador.
 
@@ -184,67 +191,42 @@ Assim sendo, jogadores que estão interagindo entre si devem, idealmente, estar c
 
 
 
-\section{Exposition}
+\section{Proposta}
+\label{sec:proposal} 
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-invidunt ut labore et dolore magna aliquyam erat, sed diam
-voluptua. At vero eos et accusam et justo duo dolores et ea
-rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-ipsum dolor sit amet.
+definições: por aqui se o artigo ficar pequeno
+sweep para calculo do peso de cada avatar
+kd-tree
+corte dinâmico
+recursao para balanceamento (irmaos, primos, pri-primos etc.)
+ajuste dos limites
+entidade central para balanceamento (necessario calculo dos pesos dos avatares)
 
-\begin{equation}
- \sum_{j=1}^{z} j = \frac{z(z+1)}{2}
-\end{equation}
 
-\begin{eqnarray}
-x & \ll & y_{1} + \cdots + y_{n} \\
-  & \leq & z
-\end{eqnarray}
 
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse
-molestie consequat, vel illum dolore eu feugiat nulla facilisis at
-vero eros et accumsan et iusto odio dignissim qui blandit praesent
-luptatum zzril delenit augue duis dolore te feugait nulla
-facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna
-aliquam erat volutpat.
+A proposta para balanceamento de carga dinâmico para MMOGs apresentada aqui tem como base dois critérios: primeiramente, deve-se considerar a possibilidade do sistema ser heterogêneo, ou seja, de que cada servidor tenha uma quantidade diferente de recursos. Aqui se define como ``recursos'' a largura de banda envio que aquele servidor tem disponível para enviar atualizações de estado para os jogadores. Essa escolha se deve ao fato de que cada jogador envia comandos para o servidor a uma taxa constante, logo o número de mensagens recebidas pelo servidor por unidade de tempo cresce linearmente em relação ao número de jogadores, enquanto que, como foi discutido, o número de atualizações de estado enviadas pelo servidor pode ser quadrático, no pior caso.
 
-Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper
-suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem
-vel eum iriure dolor in hendrerit in vulputate velit esse molestie
-consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et
-accumsan et iusto odio dignissim qui blandit praesent luptatum zzril
-delenit augue duis dolore te feugait nulla facilisi.
 
-\begin{figure*}[ht]
-\centering
-\includegraphics[width=2.5in]{sample}
-\caption{Sample illustration.}
-\end{figure*}
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit
-amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-invidunt ut labore et dolore magna aliquyam erat, sed diam
-voluptua. At vero eos et accusam et justo duo dolores et ea
-rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-ipsum dolor sit amet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{A New Section}
 
