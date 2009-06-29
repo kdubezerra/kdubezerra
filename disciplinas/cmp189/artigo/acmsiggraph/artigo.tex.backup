@@ -197,7 +197,7 @@ Assim sendo, jogadores que estão interagindo entre si devem, idealmente, estar c
 definições: por aqui se o artigo ficar pequeno
 sweep para calculo do peso de cada avatar
 kd-tree
-balanceamento automatico
+balanceamento automatico ($2^{lallaa}$)
 corte dinâmico
 recursao para balanceamento (irmaos, primos, pri-primos etc.)
 ajuste dos limites
@@ -211,10 +211,49 @@ Essa escolha se deve ao fato de que cada jogador envia comandos para o servidor 
 
 Como foi dito na introdução, para dividir o ambiente do jogo em regiões propõe-se utilizar uma estrutura de dados conhecida, que é a kd-tree. A grande maioria dos MMOGs, como World of Warcraft \cite{worldofwarcraft}, Ragnarok \cite{ragnarok} e Lineage \cite{lineage}, apesar de ter gráficos em 3D, o mundo simulado -- cidades, florestas, pântanos e pontos de interesse em geral -- nestes jogos é mapeado em duas dimensões. Por esse motivo, propõe-se o uso de uma kd-tree com \mbox{k = 2}.
 
+A cada nodo da árvore corresponde uma região do espaço e, além disso, neste nodo é armazenada um valor correspondente a uma coordenada de corte. Cada um dos dois filhos daquele nodo representarão uma subdivisão da região representada pelo nodo pai, sendo que um deles representa a sub-região com coordenada menor do que a coordenada de corte, e o outro, a região com coordenada maior ou igual à coordenada de corte. Cada nó folha também representa uma região do espaço, porém não armazenam nenhuma coordenada de corte. A cada nível da árvore, alterna-se o eixo da coordenada de corte (no caso de duas dimensões, os eixos $x$ e $y$).
+
+\subsection{Construção da kd-tree}
+
+%TODO:BEGIN: deixar esse algoritmo aqui? nao foge do escopo?
+A cada nodo folha da kd-tree corresponde um servidor do sistema servidor. Dessa forma, a região representada por aquele nodo folha será administrada pelo servidor associado a ele. Para se dividir o espaço inicialmente, é construída uma kd-tree balanceada (tanto quanto possível, pois depende do número de servidores, ou nós folha, ser igual a alguma potência de 2). Para isto foi utilizada a seguinte função recursiva para criação da árvore:
 
 
+void KDTree::buildTree(int nodeId, int treeLvl) \{
+
+	if (nodeId + 2$^{treeLvl}$ $>=$ NUM\_SERVERS) \{
+
+		smallerChild = biggerChild = NULL;
+
+		return;
+
+	\}
+
+	else \{
+
+		smallerChild = new KDTree();
 
 
+		smallerChild.parent = this;
+
+		smallerChild.buildTree(nodeId, treeLvl + 1);
+
+		biggerChild = new KDTree();
+
+		biggerChild.parent = this;
+
+		biggerChild.buildTree(nodeId + 2$^{treeLvl}$, treeLvl + 1);
+		
+	\}
+
+\}
+
+FIGURA DE UMA KD-TREE COM OS IDS ASSOCIADOS
+
+No algoritmo acima, o nodeId serve para calcular quantos filhos cada nodo deve ter e, nos nodos folha, pode ser usado para determinar qual o servidor associado à região representada por aquela folha da árvore. O objetivo com isso é tentar criar uma árvore balanceada, onde cada nodo tem duas sub-árvores com pesos semelhantes.
+%TODO:END: deixar esse algoritmo aqui? nao foge do escopo?
+
+Uma vez criada a árvore, cada servidor é associado a um nó folha, que determina um subespaço. Todas as atualizações de estado que devem ser enviadas a jogadores cujos avatares estejam naquela região deverão ser enviadas pelo servidor correspondente. Quando um servidor fica sobrecarregado, ele 
 
 
 

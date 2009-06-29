@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.4.10)  28 JUN 2009 21:25
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.4.10)  28 JUN 2009 23:09
 entering extended mode
  %&-line parsing enabled.
 **artigo.tex
@@ -203,88 +203,59 @@ LaTeX Warning: Reference `sec:conc' on page 1 undefined on input line 118.
 
 
 ]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 200.
+
 
 LaTeX Warning: Citation 'ragnarok' on page 2 undefined on input line 212.
 
 
 LaTeX Warning: Citation 'lineage' on page 2 undefined on input line 212.
 
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 214.
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 239.
+(Font)              scaled to size 9.19998pt on input line 216.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 239.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 216.
 LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
-(Font)              scaled to size 9.19998pt on input line 239.
-LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 8.27998pt on input line 251.
-LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <9> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 251.
-LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
-(Font)              scaled to size 8.27998pt on input line 251.
-[2]
-Underfull \hbox (badness 1205) in paragraph at lines 269--283
-[]\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr
-, sed
- []
+(Font)              scaled to size 9.19998pt on input line 216.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 222.
 
-
-Underfull \hbox (badness 1205) in paragraph at lines 303--317
-\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr, 
-sed
- []
-
-
-Underfull \hbox (badness 1205) in paragraph at lines 333--347
-[]\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr
-, sed
- []
-
-
-Underfull \hbox (badness 1205) in paragraph at lines 363--377
-[]\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr
-, sed
- []
-
-
-Underfull \hbox (badness 1205) in paragraph at lines 395--409
-\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr, 
-sed
- []
-
-
-Underfull \vbox (badness 4429) has occurred while \output is active []
-
- [3]
-(./artigo.bbl
+(/usr/share/texmf-texlive/tex/latex/psnfss/omsptm.fd
+File: omsptm.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <9> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 222.
+ [2] (./artigo.bbl
 Underfull \hbox (badness 3158) in paragraph at lines 14--17
 []\OT1/ptm/m/sc/9 ArenaNet\OT1/ptm/m/n/9 , 2005.  Guild wars.  2005. Dis-pon[]^
 ^Pvel em:
  []
 
-) [4] (./artigo.aux)
+) [3] (./artigo.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 1904 strings out of 94101
- 27369 string characters out of 1165810
+ 1919 strings out of 94101
+ 27643 string characters out of 1165810
  92138 words of memory out of 1500000
- 5164 multiletter control sequences out of 10000+50000
- 27148 words of font info for 51 fonts, out of 1200000 for 2000
+ 5177 multiletter control sequences out of 10000+50000
+ 24909 words of font info for 48 fonts, out of 1200000 for 2000
  637 hyphenation exceptions out of 8191
  35i,12n,38p,1694b,286s stack positions out of 5000i,500n,6000p,200000b,5000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
-ve/fonts/type1/bluesky/cm/cmmi9.pfb></usr/share/texmf-texlive/fonts/type1/blues
-ky/cm/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy7.pfb></us
-r/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-tex
-live/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw
-/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on artigo.pdf (4 pages, 86681 bytes).
+ve/fonts/type1/bluesky/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/blues
+ky/cm/cmmi9.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr9.pfb></usr
+/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy6.pfb></usr/share/texmf-texlive
+/fonts/type1/bluesky/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts/type1/bluesky
+/cm/cmsy9.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></u
+sr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texli
+ve/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/t
+imes/utmri8a.pfb>
+Output written on artigo.pdf (3 pages, 92101 bytes).
 PDF statistics:
- 44 PDF objects out of 1000 (max. 8388607)
+ 53 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
