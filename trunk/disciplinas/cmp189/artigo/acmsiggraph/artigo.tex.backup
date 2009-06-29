@@ -109,7 +109,9 @@ MMOGs (\emph{massively multiplayer online games}, ou jogos online maciçamente mu
 
 %% \copyrightspace
 
-Os MMOGs têm como principal característica a grande quantidade de jogadores interagindo simultaneamente, chegando a ter dezenas até centenas de milhares de participantes simultâneos \cite{schiele2007rpp}. Ao se usar uma arquitetura cliente-servidor para que os jogadores se comuniquem entre si, é necessário que esse servidor intermedie a comunicação entre cada par de jogadores. É fácil perceber que o número de mensagens trocadas entre os jogadores que passam pelo servidor será proporcional ao quadrado no número de jogadores, se todos estiverem interagindo com todos. Obviamente, dependendo desse número de jogadores, o custo de manutenção de uma infra-estrutura centralizada como essa se torna muito alto, restringindo esse mercado de jogos MMOG para grandes empresas com muitos recursos.
+Os MMOGs têm como principal característica a grande quantidade de jogadores interagindo simultaneamente, chegando a ter dezenas até centenas de milhares de participantes simultâneos \cite{schiele2007rpp}. Ao se usar uma arquitetura cliente-servidor para que os jogadores se comuniquem entre si, é necessário que esse servidor intermedie a comunicação entre cada par de jogadores.
+
+Para permitir que os jogadores interajam, o servidor recebe os comandos de cada jogador, calcula o estado resultante do jogo e envia o novo estado para os jogadores que estejam interagindo com ele. É fácil perceber que o número de mensagens trocadas entre os jogadores que passam pelo servidor será proporcional ao quadrado no número de jogadores, se todos estiverem interagindo com todos. Obviamente, dependendo desse número de jogadores, o custo de manutenção de uma infra-estrutura centralizada como essa se torna muito alto, restringindo esse mercado de jogos MMOG para grandes empresas com muitos recursos.
 
 Buscando reduzir esse custo, tem-se buscado soluções descentralizadas. Algumas destas utilizam redes par-a-par: \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Outras propõem a utilização de um sistema distribuído composto por nodos servidores de baixo custo, conectados através da Internet, como é proposto em \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. De qualquer forma, o ``mundo'', ou ambiente virtual do jogo, é dividido em regiões e, para cada região, é designado um servidor -- ou um grupo de pares para administrarem-no em conjunto, no caso das redes par-a-par. Cada uma dessas regiões deve possuir um conteúdo tal que a carga imposta sobre o servidor não seja maior que a sua capacidade. Quando um servidor se torna sobrecarregado, devido a uma mudança na distribuição dos objetos do jogo, a divisão do ambiente virtual deve ser recalculada para aliviar aquele servidor.
 
@@ -195,13 +197,19 @@ Assim sendo, jogadores que estão interagindo entre si devem, idealmente, estar c
 definições: por aqui se o artigo ficar pequeno
 sweep para calculo do peso de cada avatar
 kd-tree
+balanceamento automatico
 corte dinâmico
 recursao para balanceamento (irmaos, primos, pri-primos etc.)
 ajuste dos limites
 entidade central para balanceamento (necessario calculo dos pesos dos avatares)
 
-A proposta para balanceamento de carga dinâmico para MMOGs apresentada aqui tem como base dois critérios: primeiramente, deve-se considerar a possibilidade do sistema ser heterogêneo, ou seja, de que cada servidor tenha uma quantidade diferente de recursos.
 
+
+A proposta para balanceamento de carga dinâmico para MMOGs apresentada aqui tem como base dois critérios: primeiramente, deve-se considerar a possibilidade do sistema ser heterogêneo, ou seja, de que cada servidor tenha uma quantidade diferente de recursos. Aqui se define como ``recursos'' a largura de banda envio que aquele servidor tem disponível para enviar atualizações de estado para os jogadores.
+
+Essa escolha se deve ao fato de que cada jogador envia comandos para o servidor a uma taxa constante, logo o número de mensagens recebidas pelo servidor por unidade de tempo cresce linearmente em relação ao número de jogadores, enquanto que, como foi discutido, o número de atualizações de estado enviadas pelo servidor pode ser quadrático, no pior caso.
+
+Como foi dito na introdução, para dividir o ambiente do jogo em regiões propõe-se utilizar uma estrutura de dados conhecida, que é a kd-tree. A grande maioria dos MMOGs, como World of Warcraft \cite{worldofwarcraft}, Ragnarok \cite{ragnarok} e Lineage \cite{lineage}, apesar de ter gráficos em 3D, o mundo simulado -- cidades, florestas, pântanos e pontos de interesse em geral -- nestes jogos é mapeado em duas dimensões. Por esse motivo, propõe-se o uso de uma kd-tree com \mbox{k = 2}.
 
 
 
