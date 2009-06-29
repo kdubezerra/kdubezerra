@@ -253,6 +253,8 @@ FIGURA DE UMA KD-TREE COM OS IDS ASSOCIADOS
 No algoritmo acima, o nodeId serve para calcular quantos filhos cada nodo deve ter e, nos nodos folha, pode ser usado para determinar qual o servidor associado à região representada por aquela folha da árvore. O objetivo com isso é tentar criar uma árvore balanceada, onde cada nodo tem duas sub-árvores com pesos semelhantes.
 %TODO:END: deixar esse algoritmo aqui? nao foge do escopo?
 
+\subsection{Cálculo do peso das regiões}
+
 \subsection{Balanceamento dinâmico}
 
 Uma vez criada a árvore, cada servidor é associado a um nó folha, que determina um subespaço. Todas as atualizações de estado que devem ser enviadas a jogadores cujos avatares estejam naquela região deverão ser enviadas pelo servidor correspondente. Quando um servidor fica sobrecarregado, ele tem a possibilidade de transferir parte da carga designada a ele para algum outro servidor. Para fazer isso, é utilizada a kd-tree, através do reajuste das coordenadas de corte dos nodos das regiões.
