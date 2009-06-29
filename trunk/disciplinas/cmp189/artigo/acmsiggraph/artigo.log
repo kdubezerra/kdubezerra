@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.4.10)  28 JUN 2009 19:30
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.4.10)  28 JUN 2009 21:00
 entering extended mode
  %&-line parsing enabled.
 **artigo.tex
@@ -189,97 +189,93 @@ LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
 (Font)              scaled to size 11.03998pt on input line 84.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 101.
- [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+
+
+LaTeX Warning: Reference `sec:simul' on page 1 undefined on input line 118.
+
+
+LaTeX Warning: Reference `sec:result' on page 1 undefined on input line 118.
+
+
+LaTeX Warning: Reference `sec:conc' on page 1 undefined on input line 118.
+
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
-Underfull \hbox (badness 1205) in paragraph at lines 189--203
-\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr, 
-sed
- []
-
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 204.
-<sample.pdf, id=11, 102.3825pt x 102.3825pt>
-File: sample.pdf Graphic file (type pdf)
- <use sample.pdf>
-Underfull \hbox (badness 1205) in paragraph at lines 234--248
-[]\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr
-, sed
- []
-
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 251.
+(Font)              scaled to size 9.19998pt on input line 233.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 251.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 233.
 LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
-(Font)              scaled to size 9.19998pt on input line 251.
+(Font)              scaled to size 9.19998pt on input line 233.
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 8.27998pt on input line 263.
+(Font)              scaled to size 8.27998pt on input line 245.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <9> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 263.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 245.
 LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
-(Font)              scaled to size 8.27998pt on input line 263.
+(Font)              scaled to size 8.27998pt on input line 245.
 
-Underfull \hbox (badness 1205) in paragraph at lines 281--295
+Underfull \hbox (badness 1205) in paragraph at lines 263--277
 []\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr
 , sed
  []
 
 [2]
-Underfull \hbox (badness 1205) in paragraph at lines 315--329
+Underfull \hbox (badness 1205) in paragraph at lines 297--311
 \OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr, 
 sed
  []
 
 
-Underfull \hbox (badness 1205) in paragraph at lines 345--359
-[]\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr
-, sed
- []
-
-[3 <./sample.pdf>]
-Underfull \hbox (badness 1205) in paragraph at lines 375--389
+Underfull \hbox (badness 1205) in paragraph at lines 327--341
 []\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr
 , sed
  []
 
 
-Underfull \hbox (badness 1205) in paragraph at lines 407--421
+Underfull \hbox (badness 1205) in paragraph at lines 357--371
+[]\OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr
+, sed
+ []
+
+
+Underfull \hbox (badness 1205) in paragraph at lines 389--403
 \OT1/ptm/m/n/9 Lorem ip-sum do-lor sit amet, con-se-te-tur sa-dips-cing elitr, 
 sed
  []
 
 (./artigo.bbl
+Underfull \vbox (badness 1478) has occurred while \output is active []
+
+ [3]
 Underfull \hbox (badness 3158) in paragraph at lines 14--17
 []\OT1/ptm/m/sc/9 ArenaNet\OT1/ptm/m/n/9 , 2005.  Guild wars.  2005. Dis-pon[]^
 ^Pvel em:
  []
 
-[4]) [5
+) [4] (./artigo.aux)
 
-] (./artigo.aux) ) 
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 1904 strings out of 94101
- 27377 string characters out of 1165810
+ 1894 strings out of 94101
+ 27264 string characters out of 1165810
  92138 words of memory out of 1500000
- 5162 multiletter control sequences out of 10000+50000
- 27148 words of font info for 51 fonts, out of 1200000 for 2000
+ 5157 multiletter control sequences out of 10000+50000
+ 26236 words of font info for 48 fonts, out of 1200000 for 2000
  637 hyphenation exceptions out of 8191
  35i,12n,38p,1694b,286s stack positions out of 5000i,500n,6000p,200000b,5000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/s
-hare/texmf-texlive/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf-texlive/
-fonts/type1/bluesky/cm/cmmi6.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/
-cm/cmmi9.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmr6.pfb></usr/sh
-are/texmf-texlive/fonts/type1/bluesky/cm/cmr9.pfb></usr/share/texmf-texlive/fon
-ts/type1/bluesky/cm/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/
-cmsy7.pfb></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy9.pfb></usr/shar
-e/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/f
-onts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times
-/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on artigo.pdf (5 pages, 99386 bytes).
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
+ve/fonts/type1/bluesky/cm/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/blues
+ky/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvb8a.pfb><
+/usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-tex
+live/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw
+/times/utmri8a.pfb>
+Output written on artigo.pdf (4 pages, 81606 bytes).
 PDF statistics:
- 72 PDF objects out of 1000 (max. 8388607)
+ 40 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
