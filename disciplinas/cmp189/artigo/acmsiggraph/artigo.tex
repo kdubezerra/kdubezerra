@@ -197,6 +197,7 @@ Assim sendo, jogadores que estão interagindo entre si devem, idealmente, estar c
 definições: por aqui se o artigo ficar pequeno
 sweep para calculo do peso de cada avatar
 kd-tree
+balanceamento automatico
 corte dinâmico
 recursao para balanceamento (irmaos, primos, pri-primos etc.)
 ajuste dos limites
@@ -204,14 +205,17 @@ entidade central para balanceamento (necessario calculo dos pesos dos avatares)
 
 
 
-A proposta para balanceamento de carga dinâmico para MMOGs apresentada aqui tem como base dois critérios: primeiramente, deve-se considerar a possibilidade do sistema ser heterogêneo, ou seja, de que cada servidor tenha uma quantidade diferente de recursos. Aqui se define como ``recursos'' a largura de banda envio que aquele servidor tem disponível para enviar atualizações de estado para os jogadores. Essa escolha se deve ao fato de que cada jogador envia comandos para o servidor a uma taxa constante, logo o número de mensagens recebidas pelo servidor por unidade de tempo cresce linearmente em relação ao número de jogadores, enquanto que, como foi discutido, o número de atualizações de estado enviadas pelo servidor pode ser quadrático, no pior caso.
+A proposta para balanceamento de carga dinâmico para MMOGs apresentada aqui tem como base dois critérios: primeiramente, deve-se considerar a possibilidade do sistema ser heterogêneo, ou seja, de que cada servidor tenha uma quantidade diferente de recursos. Aqui se define como ``recursos'' a largura de banda envio que aquele servidor tem disponível para enviar atualizações de estado para os jogadores.
 
+Essa escolha se deve ao fato de que cada jogador envia comandos para o servidor a uma taxa constante, logo o número de mensagens recebidas pelo servidor por unidade de tempo cresce linearmente em relação ao número de jogadores, enquanto que, como foi discutido, o número de atualizações de estado enviadas pelo servidor pode ser quadrático, no pior caso.
 
+Como foi dito na introdução, para dividir o ambiente do jogo em regiões propõe-se utilizar uma estrutura de dados conhecida, que é a kd-tree. A grande maioria dos MMOGs, como World of Warcraft \cite{worldofwarcraft}, Ragnarok \cite{ragnarok} e Lineage \cite{lineage}, apesar de ter gráficos em 3D, o mundo simulado -- cidades, florestas, pântanos e pontos de interesse em geral -- nestes jogos é mapeado em duas dimensões. Por esse motivo, propõe-se o uso de uma kd-tree com \mbox{k = 2}.
 
+A cada nodo da árvore corresponde uma região do espaço e, além disso, neste nodo é armazenada um valor correspondente a uma coordenada de corte. Cada um dos dois filhos daquele nodo representarão uma subdivisão da região representada pelo nodo pai, sendo que um deles representa a sub-região com coordenada menor do que a coordenada de corte, e o outro, a região com coordenada maior ou igual à coordenada de corte. Cada nó folha também representa uma região do espaço, porém não armazenam nenhuma coordenada de corte. A cada nível da árvore, alterna-se o eixo da coordenada de corte (no caso de duas dimensões, os eixos $x$ e $y$).
 
+FIGURA DE UMA KD-TREE
 
-
-
+A cada nodo folha da kd-tree corresponde um servidor do sistema servidor. Dessa forma, a região representada por aquele nodo folha será administrada pelo servidor associado a ele. Para se dividir o espaço inicialmente, é construída uma kd-tree balanceada (tanto quanto possível, pois depende do número de servidores, ou nós folha, ser igual a alguma potência de 2). Para 
 
 
 

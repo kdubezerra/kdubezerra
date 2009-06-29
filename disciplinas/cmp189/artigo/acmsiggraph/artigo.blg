@@ -2,6 +2,8 @@ This is BibTeX, Version 0.99c (Web2C 7.5.6)
 The top-level auxiliary file: artigo.aux
 The style file: acmsiggraph.bst
 Database file #1: artigo.bib
+Warning--I didn't find a database entry for "ragnarok"
+Warning--I didn't find a database entry for "lineage"
 Warning--empty organization in ahmed2008mol
 Warning--empty organization in assiotis2006dam
 Warning--empty organization in chertov:olb
@@ -14,45 +16,45 @@ Warning--empty organization in ng2002msa
 Warning--empty organization in rieche2007ppb
 Warning--empty organization in schiele2007rpp
 Warning--empty organization in vilanova2008psm
-You've used 15 entries,
+You've used 16 entries,
             2748 wiz_defined-function locations,
-            689 strings with 7759 characters,
-and the built_in function-call counts, 6232 in all, are:
-= -- 635
-> -- 238
+            695 strings with 7862 characters,
+and the built_in function-call counts, 6502 in all, are:
+= -- 660
+> -- 247
 < -- 0
-+ -- 79
-- -- 91
-* -- 495
-:= -- 1045
-add.period$ -- 59
-call.type$ -- 15
-change.case$ -- 89
-chr.to.int$ -- 15
-cite$ -- 27
-duplicate$ -- 263
-empty$ -- 532
-format.name$ -- 100
-if$ -- 1278
++ -- 81
+- -- 94
+* -- 510
+:= -- 1088
+add.period$ -- 62
+call.type$ -- 16
+change.case$ -- 94
+chr.to.int$ -- 16
+cite$ -- 28
+duplicate$ -- 274
+empty$ -- 559
+format.name$ -- 103
+if$ -- 1335
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 14
-newline$ -- 92
-num.names$ -- 45
-pop$ -- 113
+newline$ -- 97
+num.names$ -- 48
+pop$ -- 123
 preamble$ -- 1
-purify$ -- 74
+purify$ -- 78
 quote$ -- 0
-skip$ -- 129
+skip$ -- 139
 stack$ -- 0
-substring$ -- 308
-swap$ -- 45
+substring$ -- 313
+swap$ -- 48
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 120
+type$ -- 128
 warning$ -- 12
-while$ -- 66
-width$ -- 18
-write$ -- 233
-(There were 12 warnings)
+while$ -- 69
+width$ -- 19
+write$ -- 245
+(There were 14 warnings)

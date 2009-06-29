@@ -29,6 +29,11 @@
 \newblock {\em Massively Multiuser Online Gaming Systems and Applications,
   Special Issue of Springer's Multimedia Tools and Applications\/}.
 
+\bibitem[\protect\citename{Blizzard }2004]{worldofwarcraft}
+{\sc Blizzard}, 2004.
+\newblock World of warcraft.
+\newblock \gamecite{2004}{http://www.worldofwarcraft.com/}.
+
 \bibitem[\protect\citename{Chertov and Fahmy }2006]{chertov:olb}
 {\sc Chertov, R., and Fahmy, S.}
 \newblock 2006.
