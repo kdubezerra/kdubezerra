@@ -1,0 +1,113 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: J2kDemo - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Release/J2kDemo.res" /d "NDEBUG" /d "_AFXDLL" "E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\J2kDemo.rc"" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP8C6.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/J2kDemo.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\BmpDoc.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\BmpView.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\ChildFrm.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\DIB.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\J2kDemo.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\Jp2Doc.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\Jp2View.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\JpcDoc.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\JpcView.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\Jpegfile.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\JpgDoc.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\JpgView.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\JppDoc.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\JppView.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\MainFrm.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\MiniJpegDec.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\MiniJpegEnc.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\OptionDlg.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\QualityDlg.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\RateDlg.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\TonyJpegDecoder.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\TonyJpegEncoder.cpp"
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\UsageDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP8C6.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP8C7.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Release/J2kDemo.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"E:\other-work\j2k\lin\J2kDemo\ver11\J2kDemo\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP8C7.tmp" 
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP8C8.tmp" with contents
+[
+J2kDll.lib jpeglib.lib /nologo /subsystem:windows /incremental:no /pdb:"Release/J2kDemo.pdb" /machine:I386 /out:"J2kDemo.exe" 
+".\Release\BmpDoc.obj"
+".\Release\BmpView.obj"
+".\Release\ChildFrm.obj"
+".\Release\DIB.obj"
+".\Release\J2kDemo.obj"
+".\Release\Jp2Doc.obj"
+".\Release\Jp2View.obj"
+".\Release\JpcDoc.obj"
+".\Release\JpcView.obj"
+".\Release\Jpegfile.obj"
+".\Release\JpgDoc.obj"
+".\Release\JpgView.obj"
+".\Release\JppDoc.obj"
+".\Release\JppView.obj"
+".\Release\MainFrm.obj"
+".\Release\MiniJpegDec.obj"
+".\Release\MiniJpegEnc.obj"
+".\Release\OptionDlg.obj"
+".\Release\QualityDlg.obj"
+".\Release\RateDlg.obj"
+".\Release\StdAfx.obj"
+".\Release\TonyJpegDecoder.obj"
+".\Release\TonyJpegEncoder.obj"
+".\Release\UsageDlg.obj"
+".\Release\J2kDemo.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP8C8.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+BmpDoc.cpp
+BmpView.cpp
+ChildFrm.cpp
+DIB.cpp
+J2kDemo.cpp
+Jp2Doc.cpp
+Jp2View.cpp
+JpcDoc.cpp
+JpcView.cpp
+Jpegfile.cpp
+JpgDoc.cpp
+JpgView.cpp
+JppDoc.cpp
+JppView.cpp
+MainFrm.cpp
+MiniJpegDec.cpp
+MiniJpegEnc.cpp
+OptionDlg.cpp
+QualityDlg.cpp
+RateDlg.cpp
+Generating Code...
+Compiling...
+TonyJpegDecoder.cpp
+TonyJpegEncoder.cpp
+UsageDlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+J2kDemo.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
