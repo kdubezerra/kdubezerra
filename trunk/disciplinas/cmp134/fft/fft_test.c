@@ -20,6 +20,8 @@
 #include <stdlib.h>
 #include "fft.c"
 
+#define TAM_MATRIX 1024
+
 int main()
 {
   int i;                    /* generic index */
@@ -37,7 +39,7 @@ int main()
   /* Read through entire file to get number N of points in FFT. */
   if(!(fp = fopen(file, "r")))
     {
-      printf("   File \'%s\' could not be opened!", file);
+      printf("   File \'%s\' could not be opened!\n", file);
       exit(EXIT_FAILURE);
     }
   N=0;
