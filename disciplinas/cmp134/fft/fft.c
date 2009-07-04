@@ -27,6 +27,7 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <omp.h>
 
 /* macros */
 #define TWO_PI (6.2831853071795864769252867665590057683943L)
@@ -44,7 +45,14 @@ void fft(int N, double (*x)[2], double (*X)[2])
   double (*XX)[2] = malloc(2 * N * sizeof(double));
 
   /* Calculate FFT by a recursion. */
-  fft_rec(N, 0, 1, x, X, XX);
+
+  #pragma omp parallel
+  {
+    #pragma omp single
+    {
+      fft_rec(N, 0, 1, x, X, XX);
+    }
+  }
 
   /* Free memory. */
   free(XX);
@@ -63,8 +71,14 @@ void fft_rec(int N, int offset, int delta,
   if(N != 2)  /* Perform recursive step. */
     {
       /* Calculate two (N/2)-point DFT's. */
+
+      #pragma omp task
       fft_rec(N2, offset, 2*delta, x, XX, X);
+
+      #pragma omp task
       fft_rec(N2, offset+delta, 2*delta, x, XX, X);
+
+      #pragma omp taskwait
 
       /* Combine the two (N/2)-point DFT's into one N-point DFT. */
       for(k=0; k<N2; k++)
