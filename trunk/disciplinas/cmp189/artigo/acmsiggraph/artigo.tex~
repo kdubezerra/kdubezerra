@@ -18,6 +18,7 @@
 
 \usepackage[scaled=.92]{helvet}
 \usepackage{times}
+\usepackage{textcomp}
 \usepackage[brazil]{babel}
 
 %% The 'graphicx' package allows for the inclusion of EPS figures.
@@ -35,7 +36,7 @@
 \usepackage[labelfont=bf,textfont=it]{caption}
 \usepackage[latin1]{inputenc}
 
-\newcommand{\misccite}[2]{#1. Disponível em: <#2>. Acesso em: 26 jun. 2009}
+\newcommand{\misccite}[2]{#1. Disponível em: \textless#2\textgreater. Acesso em: 26 jun. 2009}
 \newcommand{\gamecite}[2]{\misccite{#1}{#2}}
 
 %\input{comms_and_hyphs.tex}
@@ -48,7 +49,7 @@
 
 %% Paper title.
 
-\title{Balanceamento de carga utilizando kd-trees para particionar dinamicamente o ambiente virtual de MMOGs}
+\title{Balanceamento de carga utilizando kd-trees para\\ particionar dinamicamente o ambiente virtual de MMOGs}
 
 %% Author and Affiliation (single author).
 
@@ -56,7 +57,10 @@
 
 %% Author and Affiliation (multiple authors).
 
-\author{Carlos Eduardo B. Bezerra\thanks{e-mail: carlos.bezerra@inf.ufrgs.br}\\Grupo de Processamento Paralelo e Distribuído\\ Instituto de Informática - UFRGS %
+\author{Carlos Eduardo B. Bezerra\thanks{e-mail: carlos.bezerra@inf.ufrgs.br}\\
+Grupo de Processamento Paralelo e Distribuído\\
+Instituto de Informática - UFRGS\\
+Av. Bento Gonçalves, 9500, Porto Alegre %
 %\and Ed Grimley\thanks{e-mail:ed.grimley@aol.com}\\Nigel Mansell\thanks{nigelf1@msn.com}\\ Grimley Widgets, Inc. %
 %\and Martha Stewart\thanks{e-mail:martha.stewart@marthastewart.com}\\ Martha Stewart Enterprises \\ Microsoft Research
 }
@@ -83,7 +87,7 @@
 
 \begin{abstract}
 
-MMOGs (\emph{massively multiplayer online games}, ou jogos online maciçamente multijogador), são aplicações que requerem conexões com grande largura de banda para funcionarem adequadamente. Essa demanda por largura de banda é maior principalmente nos servidores que hospedam o jogo. Como nesse tipo de jogo costuma haver milhares a dezenas de milhares de jogadores simultâneos, sendo que a interação entre cada par de jogadores é intermediada pelo servidor, é sobre este que recai o maior custo no que se refere a uso de largura de banda para realizar o envio de atualizações de estado do ambiente do jogo para os jogadores. Para contornar este problema, são propostas arquiteturas com vários servidores, onde cada um deles gerencia uma região do ambiente virtual, e cada jogador conecta-se somente ao servidor que gerencia a área onde ele está jogando. No entanto, para distribuir a carga entre os servidores, é necessário um algoritmo de particionamento do ambiente virtual que, para poder reajustar o balanceamento de carga durante o jogo, seja dinâmico. Alguns trabalhos nesse sentido podem ser citados, como \cite{devleeschauwer2005dma,ahmed2008mol,bezerra2009lbs}, mas, utilizando um algoritmo geométrico mais adequado, pode-se alcançar um nível melhor de granularidade da distribuição, sem comprometer o tempo de rebalanceamento, ou mesmo reduzindo-o. Neste trabalho, é proposta a utilização de uma KD-Tree para dividir o ambiente virtual do jogo em regiões, cada uma das quais sendo designada a um dos servidores. As coordenadas de corte das regiões são ajustadas dinamicamente de acordo com a distribuição dos avatares ao longo do ambiente virtual.
+MMOGs (\emph{massively multiplayer online games}, ou jogos online maciçamente multijogador), são aplicações que requerem conexões com grande largura de banda para funcionarem adequadamente. Essa demanda por largura de banda é maior principalmente nos servidores que hospedam o jogo. Como nesse tipo de jogo costuma haver milhares a dezenas de milhares de jogadores simultâneos, sendo que a interação entre cada par de jogadores é intermediada pelo servidor, é sobre este que recai o maior custo no que se refere a uso de largura de banda para realizar o envio de atualizações de estado do ambiente do jogo para os jogadores. Para contornar este problema, são propostas arquiteturas com vários servidores, onde cada um deles gerencia uma região do ambiente virtual, e cada jogador conecta-se somente ao servidor que gerencia a área onde ele está jogando. No entanto, para distribuir a carga entre os servidores, é necessário um algoritmo de particionamento do ambiente virtual. Para que se possa reajustar a distribuição de carga durante o jogo, esse algoritmo deve ser dinâmico. Alguns trabalhos nesse sentido podem ser citados, como \cite{devleeschauwer2005dma}, mas, utilizando um algoritmo geométrico mais adequado, deve ser possível alcançar um nível melhor de granularidade da distribuição, sem comprometer o tempo de rebalanceamento, ou mesmo reduzindo-o. Neste trabalho, é proposta a utilização de uma KD-Tree para dividir o ambiente virtual do jogo em regiões, cada uma das quais sendo designada a um dos servidores. As coordenadas de divisão das regiões são ajustadas dinamicamente de acordo com a distribuição dos avatares ao longo do ambiente virtual.
 
 \end{abstract}
 
@@ -111,11 +115,17 @@ MMOGs (\emph{massively multiplayer online games}, ou jogos online maciçamente mu
 
 Os MMOGs têm como principal característica a grande quantidade de jogadores interagindo simultaneamente, chegando a ter dezenas até centenas de milhares de participantes simultâneos \cite{schiele2007rpp}. Ao se usar uma arquitetura cliente-servidor para que os jogadores se comuniquem entre si, é necessário que esse servidor intermedie a comunicação entre cada par de jogadores.
 
-Para permitir que os jogadores interajam, o servidor recebe os comandos de cada jogador, calcula o estado resultante do jogo e envia o novo estado para os jogadores que estejam interagindo com ele. É fácil perceber que o número de mensagens trocadas entre os jogadores que passam pelo servidor será proporcional ao quadrado no número de jogadores, se todos estiverem interagindo com todos. Obviamente, dependendo desse número de jogadores, o custo de manutenção de uma infra-estrutura centralizada como essa se torna muito alto, restringindo esse mercado de jogos MMOG para grandes empresas com muitos recursos.
+Para permitir que os jogadores interajam, o servidor recebe os comandos de cada jogador, calcula o estado resultante do jogo e envia o novo estado para todos os jogadores que estiverem interagindo com o primeiro. É fácil perceber que o número de mensagens de atualização de estado enviadas pelo servidor será proporcional ao quadrado no número de jogadores, se todos estiverem interagindo com todos. Obviamente, dependendo desse número de jogadores, o custo de manutenção de uma infra-estrutura centralizada como essa se torna muito alto, restringindo esse mercado de jogos MMOG a grandes empresas, que disponham de recursos suficientes para tal.
 
-Buscando reduzir esse custo, tem-se buscado soluções descentralizadas. Algumas destas utilizam redes par-a-par: \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Outras propõem a utilização de um sistema distribuído composto por nodos servidores de baixo custo, conectados através da Internet, como é proposto em \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. De qualquer forma, o ``mundo'', ou ambiente virtual do jogo, é dividido em regiões e, para cada região, é designado um servidor -- ou um grupo de pares para administrarem-no em conjunto, no caso das redes par-a-par. Cada uma dessas regiões deve possuir um conteúdo tal que a carga imposta sobre o servidor não seja maior que a sua capacidade. Quando um servidor se torna sobrecarregado, devido a uma mudança na distribuição dos objetos do jogo, a divisão do ambiente virtual deve ser recalculada para aliviar aquele servidor.
+Buscando reduzir esse custo, tem-se buscado soluções descentralizadas. Algumas destas utilizam redes par-a-par: \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Outras propõem a utilização de um sistema distribuído composto por nodos servidores de baixo custo, conectados através da Internet, como é proposto em \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. De qualquer forma, em todas essas abordagens, o ``mundo'', ou ambiente virtual do jogo, é dividido em regiões e, para cada região, é designado um servidor -- ou um grupo de pares para administrarem-no em conjunto, no caso das redes par-a-par. Cada uma dessas regiões deve possuir um conteúdo tal que a carga imposta sobre o servidor correspondente não seja maior que a sua capacidade.
 
-Neste trabalho, é proposto o uso de uma kd-tree para realizar o particionamento do ambiente virtual. Quando o movimento das entidades do jogo no ambiente virtual faz com que uma determinada região se sobrecarregue, o servidor daquela região dispara o balanceamento de carga, reajustando os limites de sua região com a ajuda da estrutura de dados kd-tree. O texto está organizado da seguinte maneira: na seção \ref{sec:context}, são apresentados alguns trabalhos relacionados; na seção \ref{sec:proposal}, é apresentada em detalhes o algoritmo proposto aqui; nas seções \ref{sec:simul} e \ref{sec:result} são apresentadas as simulações e os resultados alcançados e, na seção \ref{sec:conc}, são apresentadas algumas conclusões e considerações finais deste trabalho.
+Quando um \emph{avatar} (representação do jogador no ambiente virtual) é posicionado em uma determinada região, o jogador daquele avatar conecta-se ao servidor a ela associado e é dele que o jogador receberá as mensagens de atualização para que o ambiente virtual seja visualizado no seu computador com o estado mais recente do jogo. Quando um servidor se torna sobrecarregado, devido a uma maior concentração de avatares em sua região e, consequentemente, mais jogadores a serem atualizados, a divisão do ambiente virtual deve ser recalculada de maneira a aliviar aquele servidor.
+
+Geralmente, é feita uma divisão do ambiente virtual em grades de células, com posterior agrupamento das mesmas, formando regiões que são distribuídas entre os servidores. No entanto, tal abordagem tem uma limitação severa em sua granularidade, já que as células têm tamanho e posição fixos. Utilizando um algoritmo geométrico mais adequado, deve ser possível conseguir uma melhor distribuição dos jogadores entre os diferentes servidores, fazendo uso de técnicas tradicionais que geralmente são utilizadas na área de computação gráfica \cite{luque2005bpc}.
+
+Neste trabalho, é proposto o uso de uma kd-tree para realizar o particionamento do ambiente virtual. Quando um servidor fica sobrecarregado, ele dispara dispara o balanceamento de carga, reajustando os limites de sua região com a ajuda da estrutura de dados kd-tree. Foi feita a implementação de um protótipo, que foi utilizado para realizar simulações. Os resultados encontrados através das simulações serão comparados com resultados anteriores obtidos ao se utilizar a técnica de divisão do ambiente virtual do jogo em células estáticas.
+
+O texto está organizado da seguinte forma: na seção \ref{sec:context}, são apresentados alguns trabalhos relacionados; na seção \ref{sec:proposal}, é apresentado em detalhes o algoritmo proposto aqui; nas seções \ref{sec:simul} e \ref{sec:result} são apresentadas as simulações e os resultados alcançados e, na seção \ref{sec:conc}, são apresentadas as conclusões a que se chegou com este trabalho.
 
 \section{Trabalhos relacionados}
 \label{sec:context}
@@ -123,6 +133,8 @@ Neste trabalho, é proposto o uso de uma kd-tree para realizar o particionamento 
 ahmed
 bezerra
 luque
+
+Diferentes autores já atacaram o problema de particionamento do ambiente virtual em MMOGs para distribuição entre vários servidores \cite{ahmed2008mol,bezerra2009lbs}. Geralmente, é feita uma divisão em células estáticas, de posição e tamanho fixos. As células são então agrupadas em regiões (Figura \ref{fig:cells}, e cada região é delegada a um dos servidores. Quando um deles está sobrecarregado, ele busca outros servidores, que possam absorver seu excesso carga. Isso é feito distribuindo uma ou mais células do servidor sobrecarregado a outros servidores.
 
 Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. No entanto, essa distribuição não funcionaria, pelo fato de que a carga causada pelos jogadores depende também do quanto os jogadores estão interagindo entre si. Por exemplo, se os avatares de dois jogadores estiverem muito distantes um do outro, provavelmente não haverá interação entre eles e, portanto, o servidor precisará apenas atualizar cada um a respeito de suas próprias ações. No entanto, se estes avatares estiverem próximos, cada jogador deverá ser atualizado não apenas a respeito do resultado de suas próprias ações, como também das ações do outro jogador.
 
@@ -253,6 +265,8 @@ FIGURA DE UMA KD-TREE COM OS IDS ASSOCIADOS
 No algoritmo acima, o nodeId serve para calcular quantos filhos cada nodo deve ter e, nos nodos folha, pode ser usado para determinar qual o servidor associado à região representada por aquela folha da árvore. O objetivo com isso é tentar criar uma árvore balanceada, onde cada nodo tem duas sub-árvores com pesos semelhantes.
 %TODO:END: deixar esse algoritmo aqui? nao foge do escopo?
 
+\subsection{Cálculo do peso das regiões}
+
 \subsection{Balanceamento dinâmico}
 
 Uma vez criada a árvore, cada servidor é associado a um nó folha, que determina um subespaço. Todas as atualizações de estado que devem ser enviadas a jogadores cujos avatares estejam naquela região deverão ser enviadas pelo servidor correspondente. Quando um servidor fica sobrecarregado, ele tem a possibilidade de transferir parte da carga designada a ele para algum outro servidor. Para fazer isso, é utilizada a kd-tree, através do reajuste das coordenadas de corte dos nodos das regiões.
@@ -264,7 +278,14 @@ Uma vez criada a árvore, cada servidor é associado a um nó folha, que determina 
 
 
 
+\section{Simulações}
+\label{sec:simul}
 
+\section{Resultados}
+\label{sec:result}
+
+\section{Conclusões}
+\label{sec:conc}
 
 
 \section*{Acknowledgements}
