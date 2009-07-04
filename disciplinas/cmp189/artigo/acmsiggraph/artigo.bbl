@@ -89,6 +89,13 @@
 \newblock In {\em Proceedings of the ACM symposium on Virtual reality software
   and technology}, New York: ACM, Osaka, Japan, 160--168.
 
+\bibitem[\protect\citename{Luque et~al\mbox{.} }2005]{luque2005bpc}
+{\sc Luque, R., Comba, J., and Freitas, C.}
+\newblock 2005.
+\newblock {Broad-phase collision detection using semi-adjusting BSP-trees}.
+\newblock In {\em Proceedings of the 2005 symposium on Interactive 3D graphics
+  and games}, ACM New York, NY, USA, 179--186.
+
 \bibitem[\protect\citename{Ng et~al\mbox{.} }2002]{ng2002msa}
 {\sc Ng, B., et~al.}
 \newblock 2002.

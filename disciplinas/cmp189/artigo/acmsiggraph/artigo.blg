@@ -16,45 +16,45 @@ Warning--empty organization in ng2002msa
 Warning--empty organization in rieche2007ppb
 Warning--empty organization in schiele2007rpp
 Warning--empty organization in vilanova2008psm
-You've used 16 entries,
+You've used 17 entries,
             2748 wiz_defined-function locations,
-            695 strings with 7862 characters,
-and the built_in function-call counts, 6502 in all, are:
-= -- 660
-> -- 247
+            701 strings with 8088 characters,
+and the built_in function-call counts, 6949 in all, are:
+= -- 706
+> -- 265
 < -- 0
-+ -- 81
-- -- 94
-* -- 510
-:= -- 1088
-add.period$ -- 62
-call.type$ -- 16
-change.case$ -- 94
-chr.to.int$ -- 16
-cite$ -- 28
-duplicate$ -- 274
-empty$ -- 559
-format.name$ -- 103
-if$ -- 1335
++ -- 87
+- -- 100
+* -- 546
+:= -- 1160
+add.period$ -- 66
+call.type$ -- 17
+change.case$ -- 101
+chr.to.int$ -- 17
+cite$ -- 29
+duplicate$ -- 291
+empty$ -- 597
+format.name$ -- 110
+if$ -- 1428
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 14
-newline$ -- 97
-num.names$ -- 48
-pop$ -- 123
+missing$ -- 15
+newline$ -- 103
+num.names$ -- 51
+pop$ -- 131
 preamble$ -- 1
-purify$ -- 78
+purify$ -- 84
 quote$ -- 0
-skip$ -- 139
+skip$ -- 148
 stack$ -- 0
-substring$ -- 313
-swap$ -- 48
+substring$ -- 343
+swap$ -- 51
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 128
+type$ -- 136
 warning$ -- 12
-while$ -- 69
-width$ -- 19
-write$ -- 245
+while$ -- 73
+width$ -- 20
+write$ -- 260
 (There were 14 warnings)
