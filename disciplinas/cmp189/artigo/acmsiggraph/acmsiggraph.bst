@@ -1039,7 +1039,7 @@ FUNCTION {format.lab.names}
         { nameptr numnames =
             { s nameptr "{ff }{vv }{ll}{ jj}" format.name$ "others" =
                 { " et~al\mbox{.}" * }
-                { " and " * s nameptr "{vv~}{ll}" format.name$ * }
+                { " e " * s nameptr "{vv~}{ll}" format.name$ * }
               if$
             }
             { ", " * s nameptr "{vv~}{ll}" format.name$ * }
