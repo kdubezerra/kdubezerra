@@ -6,6 +6,7 @@ Warning--I didn't find a database entry for "ragnarok"
 Warning--I didn't find a database entry for "lineage"
 Warning--empty organization in ahmed2008mol
 Warning--empty organization in assiotis2006dam
+Warning--empty journal in bentley1975mbs
 Warning--empty organization in bezerra2008a3
 Warning--empty organization in chertov:olb
 Warning--empty organization in hampel2006ppa
@@ -16,45 +17,45 @@ Warning--empty organization in ng2002msa
 Warning--empty organization in rieche2007ppb
 Warning--empty organization in schiele2007rpp
 Warning--empty organization in vilanova2008psm
-You've used 17 entries,
+You've used 18 entries,
             2748 wiz_defined-function locations,
-            702 strings with 8157 characters,
-and the built_in function-call counts, 6986 in all, are:
-= -- 708
-> -- 268
+            706 strings with 8257 characters,
+and the built_in function-call counts, 7236 in all, are:
+= -- 734
+> -- 277
 < -- 0
-+ -- 88
-- -- 100
-* -- 553
-:= -- 1164
-add.period$ -- 66
-call.type$ -- 17
-change.case$ -- 103
-chr.to.int$ -- 17
-cite$ -- 29
-duplicate$ -- 291
-empty$ -- 599
-format.name$ -- 111
-if$ -- 1435
++ -- 90
+- -- 103
+* -- 568
+:= -- 1210
+add.period$ -- 69
+call.type$ -- 18
+change.case$ -- 108
+chr.to.int$ -- 18
+cite$ -- 31
+duplicate$ -- 302
+empty$ -- 617
+format.name$ -- 114
+if$ -- 1484
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 15
-newline$ -- 103
-num.names$ -- 51
-pop$ -- 133
+missing$ -- 16
+newline$ -- 108
+num.names$ -- 54
+pop$ -- 137
 preamble$ -- 1
-purify$ -- 86
+purify$ -- 90
 quote$ -- 0
-skip$ -- 147
+skip$ -- 155
 stack$ -- 0
-substring$ -- 349
-swap$ -- 51
+substring$ -- 354
+swap$ -- 53
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 136
-warning$ -- 12
-while$ -- 72
-width$ -- 20
-write$ -- 260
-(There were 14 warnings)
+type$ -- 144
+warning$ -- 13
+while$ -- 75
+width$ -- 21
+write$ -- 271
+(There were 15 warnings)

@@ -21,6 +21,12 @@
 \newblock In {\em Proceedings of the ACM SIGCOMM workshop on Network and system
   support for games, NetGames, 5.}, New York: ACM, Singapore, 4.
 
+\bibitem[\protect\citename{Bentley }1975]{bentley1975mbs}
+{\sc Bentley, J.}
+\newblock 1975.
+\newblock {Multidimensional binary search trees used for associative
+  searching}.
+
 \bibitem[\protect\citename{Bezerra e Geyer }2009]{bezerra2009lbs}
 {\sc Bezerra, C. E.~B., and Geyer, C. F.~R.}
 \newblock 2009.
