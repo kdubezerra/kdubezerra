@@ -154,74 +154,14 @@ Embora essa abordagem funcione, há uma séria limitação na granularidade da distr
 
 %falar do que é a kd-tree? muita enrolação.
 
-Esse tipo de estrutura de dados costuma ser usado na computação gráfica. No entanto, como em MMOGs também há informação geométrica -- como a posição de cada avatar no espaço do ambiente virtual --, árvores de particionamento do espaço podem ser utilizadas. Além disso, já existem técnicas de distribuição de objetos no espaço, buscando manter o balanceamento entre as diferentes regiões definidas pela árvore. Em \cite{luque2005bpc}, por exemplo, busca-se reduzir o tempo necessário para calcular as colisões entre pares de objetos se movendo no espaço. Para isso, é utilizada uma árvore BSP (\emph{binary space partitioning}, ou particionamento binário do espaço) para distribuir os objetos da cena. Obviamente, se cada objeto de um par está completamente contido em uma partição diferente, eles não colidem e não é necessário fazer um teste mais demorado para esse par. Partindo de uma divisão inicial, é proposto pelos autores que a árvore se ajuste dinamicamente à medida que os objetos se deslocam, balanceando a distribuição dos mesmos na árvore, evitando que o tempo necessário para o cálculo das colisões se eleve em demasia.
+Esse tipo de estrutura de dados costuma ser usado na computação gráfica. No entanto, como em MMOGs também há informação geométrica -- como a posição de cada avatar no espaço do ambiente virtual --, árvores de particionamento do espaço podem ser utilizadas. Além disso, já existem técnicas de distribuição de objetos no espaço, buscando manter o balanceamento entre as diferentes regiões definidas pela árvore. Em \cite{luque2005bpc}, por exemplo, busca-se reduzir o tempo necessário para calcular as colisões entre pares de objetos se movendo no espaço. Para isso, é utilizada uma árvore BSP (\emph{binary space partitioning}, ou particionamento binário do espaço) para distribuir os objetos da cena (Figura \ref{fig:bsp}). Obviamente, se cada objeto de um par está completamente contido em uma partição diferente, eles não colidem e não é necessário fazer um teste mais demorado para esse par. Partindo de uma divisão inicial, é proposto pelos autores que a árvore se ajuste dinamicamente à medida que os objetos se deslocam, balanceando a distribuição dos mesmos na árvore, evitando que o tempo necessário para o cálculo das colisões se eleve muito. Algumas das idéias propostas pelos autores podem ser utilizadas para o contexto de balanceamento de carga entre servidores de um MMOG.
 
-Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. No entanto, essa distribuição não funcionaria, pelo fato de que a carga causada pelos jogadores depende também do quanto os jogadores estão interagindo entre si. Por exemplo, se os avatares de dois jogadores estiverem muito distantes um do outro, provavelmente não haverá interação entre eles e, portanto, o servidor precisará apenas atualizar cada um a respeito de suas próprias ações. No entanto, se estes avatares estiverem próximos, cada jogador deverá ser atualizado não apenas a respeito do resultado de suas próprias ações, como também das ações do outro jogador.
-
-Percebe-se, então, que quando os avatares estão distantes uns dos outros, o tráfego cresce linearmente com o número de jogadores (Figura \ref{fig:playersdistant}). Porém, se eles estão próximos uns dos outros, o tráfego cresce quadraticamente (Figura \ref{fig:playersclose}). Por fim, ambas as funções de crescimento do número de mensagens podem estar presentes no mesmo jogo se, em alguns lugares do ambiente virtual, os avatares estiverem próximos e, em outros lugares, eles estiverem distantes.
-
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=0.8\textwidth]{images/playersdistant}
-%  \caption{Crescimento linear do tráfego com avatares distantes}
-  \label{fig:playersdistant}
-% \end{figure}
-
-Essa característica de localidade, no que diz respeito à distribuição dos avatares no ambiente virtual, está presente na grande maioria dos jogos multijogador. Existem algumas exceções, como GuildWars \cite{guildwars}, em que apenas grupos com um número limitado de jogadores podem iniciar uma partida. Este tipo de jogo é baseado no modelo de instâncias, onde todos os avatares dos jogadores se encontram em um espaço social, de interação limitada, menos dinâmica e, portanto, com tráfego de rede algumas ordens de grandeza menor \cite{vilanova2008psm}. Quando pretende-se iniciar uma partida ``real'', os jogadores requisitam ao servidor que seja criado um grupo de ação. Dessa forma, impede-se que um número teoricamente ilimitado de jogadores interajam entre si, sobrecarregando o servidor.
-
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=0.8\textwidth]{images/playersclose}
-%  \caption{Crescimento quadrático do tráfego com avatares próximos}
-  \label{fig:playersclose}
-% \end{figure}
-
-Normalmente, porém, os jogadores podem mover seus avatares livremente através do mundo do jogo. Isso torna possível a formação de pontos de interesse -- também conhecidos como \emph{hotspots} \cite{ahmed2008mol} -- ao redor dos quais os jogadores se concentram mais do que em outras regiões do ambiente virtual (Figura \ref{fig:avatarsdistribution}). Aliás, muitos jogos de RPG online maciçamente multijogador não só permitem como também estimulam, até certo ponto, a formação destes pontos de interesse. Nestes mundos dos MMORPGs, existem cidades inteiras, onde os jogadores se encontram para conversar, trocar mercadorias virtuais do jogo e/ou duelar, assim como existem também zonas desérticas, sem muitos atrativos para os jogadores, e onde o número de avatares presentes é relativamente pequeno, se comparado com outros lugares no jogo.
-
-% \begin{figure}
-%   \centering
-%   \includegraphics[width=1.0\linewidth]{images/avatarsdistribution}
-%   \caption{Distribuição de avatares com e sem a presença de pontos de interesse}
-   \label{fig:avatarsdistribution}
-% \end{figure}
-
-
-Por esta razão, não é suficiente apenas dividir os jogadores entre os servidores, mesmo que proporcionalmente aos recursos de cada um destes. Em primeiro lugar, em alguns casos o uso de largura de banda do servidor é quadrático ao número de jogadores, enquanto é linear em outros. Essa razão por si só já é suficiente para buscar outro critério para o balanceamento de carga. Além disso, há outra questão importante: a existência de pontos de interesse. Esta última característica motiva à criação de um esquema de balanceamento de carga para jogos que impeça que a presença de pontos de interesse degrade a qualidade do jogo além do tolerável.
-
-
-%\section{Introdução (nao precisa por "introdução"}
-%dinamica dos avatares
-%heterogeneidade dos servidores
-%necessidade de bal. de carga
-
-
-%\section{Trabalhos relacionados}
-%micro/macro-cell
-%esquemas já propostos (ahmed, lee, /*devlechauer*/)
-%o que falta em cada um
-
-%Como foi dito, quando existe um número considerável de avatares em um mesmo ponto de interesse, é gerado um tráfego proporcional ao quadrado do número de avatares ali presentes. Também foi mostrado que os servidores recebem as ações enviadas pelos jogadores, calculam seu resultado e o enviam para todos os jogadores interessados, que são, geralmente, aqueles cujos avatares estiverem próximos do avatar do primeiro jogador.
-
-
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=0.8\textwidth]{images/overheadgeneration}
-%  \caption{Overhead causado pela interação de jogadores em diferentes servidores}
-  \label{fig:overheadgeneration}
-% \end{figure}
-
-Outra questão é que se os jogadores em um mesmo ponto de interesse forem divididos entre diferentes servidores, cada um destes precisará não apenas enviar o estado do mundo resultante das ações para os jogadores conectados a ele, como também deverá enviá-lo para o servidor ao qual os outros jogadores estão conectados. Este, por sua vez, encaminhará este resultado para seus jogadores. Percebe-se, então, que cada estado deverá ser enviado duas vezes, para cada par de jogadores que se comunicam através de servidores diferentes (Figura \ref{fig:overheadgeneration}). Esse overhead não apenas causa o desperdício de recursos dos servidores, como também aumenta o atraso para atualização de estado das réplicas do jogo nas máquinas dos jogadores. Isto faz com que o tempo entre o envio de uma ação por um jogador conectado a um servidor e o recebimento do estado resultante por outro jogador, conectado a outro servidor, seja maior, prejudicando a interação entre eles.
-
-Assim sendo, jogadores que estão interagindo entre si devem, idealmente, estar conectados ao mesmo servidor. Contudo, é possível que todos os jogadores estejam ligados entre si através de relações transitivas de interação. Por exemplo, dois avatares, de dois jogadores diferentes, podem estar distantes um do outro, porém ambos interagindo com um terceiro avatar, entre os dois (Figura \ref{fig:alllinked}). Contudo, ainda assim será necessário dividí-los entre servidores. A questão é quais pares de jogadores estarão divididos em servidores diferentes. É necessário, portanto, decidir um critério para agrupar jogadores em um mesmo servidor.
-
-% \begin{figure}
-%  \centering
-%  \includegraphics[width=0.6\textwidth]{images/alllinked}
-%  \caption{Dependência transitiva entre os avatares}
-  \label{fig:alllinked}
-% \end{figure}
-
-
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.5\linewidth]{images/bsp}
+	\caption{Particionamento do espaço com uma árvore BSP}
+	\label{fig:bsp}
+\end{figure}
 
 \section{Proposta}
 \label{sec:proposal} 
@@ -285,7 +225,25 @@ FIGURA DE UMA KD-TREE COM OS IDS ASSOCIADOS
 No algoritmo acima, o nodeId serve para calcular quantos filhos cada nodo deve ter e, nos nodos folha, pode ser usado para determinar qual o servidor associado à região representada por aquela folha da árvore. O objetivo com isso é tentar criar uma árvore balanceada, onde cada nodo tem duas sub-árvores com pesos semelhantes.
 %TODO:END: deixar esse algoritmo aqui? nao foge do escopo?
 
-\subsection{Cálculo do peso das regiões}
+\subsection{FIXME: Cálculo do peso das regiões}
+
+Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. Para calcular a coordenada de divisão da nodo da kd-tree, bastaria ordenar em um vetor os avatares de acordo com o eixo usado para divisão ($x$ ou $y$) pelo nodo da árvore e, então, calcular o índice, no vetor, tal que o número de elementos até esse índice fosse proporcional à capacidade de um dos servidores e o número de elementos a partir desse índice fosse proporcional à capacida do outro servidor (Figura \ref{fig:vector}). A complexidade dessa operação seria $O(nlogn)$, por causa da ordenação.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{images/vector}
+  \caption{Cálculo simples da coordenada de divisão}
+  \label{fig:vector}
+\end{figure}
+
+ Contudo, essa distribuição não funcionaria, pelo fato de que a carga imposta pelos jogadores depende também do quanto eles estão interagindo entre si. Por exemplo, se os avatares de dois jogadores estiverem muito distantes um do outro, provavelmente não haverá interação entre eles e, portanto, o servidor precisará apenas atualizar cada um a respeito de suas próprias ações -- para estes, o crescimento do número de mensagens será linear em relação ao número de jogadores. No entanto, se estes avatares estiverem próximos, cada jogador deverá ser atualizado não apenas a respeito do resultado de suas próprias ações, como também das ações do outro jogador -- neste caso, o crescimento do número de mensagens pode ser quadrático (Figura \ref{fig:carga}). Por esta razão, não é suficiente apenas dividir os jogadores entre os servidores, mesmo que proporcionalmente aos recursos de cada um destes.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/carga}
+  \caption{Relação entre avatares e carga}
+  \label{fig:carga}
+\end{figure}
 
 \subsection{Balanceamento dinâmico}
 
