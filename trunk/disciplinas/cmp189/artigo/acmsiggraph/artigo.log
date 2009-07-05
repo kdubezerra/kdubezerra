@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.16)  4 JUL 2009 21:29
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.16)  5 JUL 2009 02:28
 entering extended mode
  %&-line parsing enabled.
 **artigo.tex
@@ -282,13 +282,10 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
 <images/macromicro.pdf, id=11, 533.995pt x 358.33875pt>
 File: images/macromicro.pdf Graphic file (type pdf)
 
-<use images/macromicro.pdf>
+<use images/macromicro.pdf> [2 <./images/macromicro.pdf>]
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <9> on input line 223.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [2 <./images/macromicro.pdf>]
 
 LaTeX Warning: Citation 'ragnarok' on page 3 undefined on input line 235.
 
@@ -328,7 +325,7 @@ Pvel em:
 Here is how much of TeX's memory you used:
  2675 strings out of 94834
  38705 string characters out of 1179181
- 91370 words of memory out of 1500000
+ 92370 words of memory out of 1500000
  5820 multiletter control sequences out of 10000+50000
  24909 words of font info for 48 fonts, out of 1200000 for 2000
  212 hyphenation exceptions out of 8191
@@ -342,7 +339,7 @@ ts/type1/bluesky/cm/cmsy9.pfb></usr/share/texmf-texlive/fonts/type1/urw/helveti
 c/uhvb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/s
 hare/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-texlive/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on artigo.pdf (4 pages, 102373 bytes).
+Output written on artigo.pdf (4 pages, 102994 bytes).
 PDF statistics:
  60 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
