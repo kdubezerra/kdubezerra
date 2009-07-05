@@ -1070,3 +1070,19 @@
   journal={Massively Multiuser Online Gaming Systems and Applications, Special Issue of Springer's Multimedia Tools and Applications},
   year={2009}
 }
+
+@conference{luque2005bpc,
+  title={{Broad-phase collision detection using semi-adjusting BSP-trees}},
+  author={Luque, R.G. and Comba, J.L.D. and Freitas, C.M.D.S.},
+  booktitle={Proceedings of the 2005 symposium on Interactive 3D graphics and games},
+  pages={179--186},
+  year={2005},
+  organization={ACM New York, NY, USA}
+}
+
+@article{bentley1975mbs,
+  title={{Multidimensional binary search trees used for associative searching}},
+  author={Bentley, J.L.},
+  year={1975},
+  publisher={ACM New York, NY, USA}
+}

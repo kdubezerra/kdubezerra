@@ -130,10 +130,6 @@ O texto está organizado da seguinte forma: na seção \ref{sec:context}, são apres
 \section{Trabalhos relacionados}
 \label{sec:context}
 
-ahmed
-bezerra
-luque
-
 Diferentes autores já atacaram o problema de particionamento do ambiente virtual em MMOGs para distribuição entre vários servidores \cite{ahmed2008mol,bezerra2009lbs}. Geralmente, é feita uma divisão em células estáticas, de posição e tamanho fixos. As células são então agrupadas em regiões (Figura \ref{fig:cells}, e cada região é delegada a um dos servidores. Quando um deles está sobrecarregado, ele busca outros servidores, que possam absorver seu excesso carga. Isso é feito distribuindo uma ou mais células do servidor sobrecarregado a outros servidores.
 
 \begin{figure}[!t]
@@ -145,7 +141,16 @@ Diferentes autores já atacaram o problema de particionamento do ambiente virtual
 
 \cite{ahmed2008mol} propõem um modelo de balanceamento de carga orientado a células. Para balancear a carga, seu algoritmo encontra, primeiro, todos os agrupamentos de células que são gerenciadas pelo servidor sobrecarregado. Seleciona-se o agrupamento que contiver o menor número de células e, deste agrupamento, é escolhida a célula que tiver menor interação com outras -- considerando apenas células gerenciadas pelo servidor sobrecarregado que disparou o balanceamento e que a interação entre duas células A e B é definida como o número de pares de avatares interagindo um com outro, estando um em A e o outro em B. A célula escolhida é, então, transferida para o servidor menos carregado, sendo que a ``carga'' é definida como o uso de largura de banda para enviar atualizações de estado aos avatares posicionados em células gerenciadas por aquele servidor. Esse processo se repete até que o servidor não esteja mais sobrecarregado ou que não haja mais servidores capazes de absorver a carga excedente -- neste caso, uma opção seria diminuir a freqüência de envio das atualizações de estado \cite{bezerra2008a3}.
 
-Em \cite{bezerra2009lbs}, é proposta a divisão <grafos etc.>
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.5\linewidth]{images/grafo}
+	\caption{Representação do ambiente em um grafo}
+	\label{fig:grafo}
+\end{figure}
+
+Em \cite{bezerra2009lbs}, também é proposta a divisão em células. Para realizar a divisão, o ambiente é representado por um grafo (Figura \ref{fig:grafo}), onde cada vértice representa uma célula. Cada aresta no grafo liga dois vértices que representam células vizinhas. O peso de um vértice equivale ao uso de largura de banda do servidor para enviar atualizações de estado aos jogadores cujos avatares estão na célula representada por aquele vértice. A interação entre cada duas células definirá o peso da aresta que liga os vértices correspondentes, sendo o valor da interação entre células está relacionado ao número de pares de avatares interagindo, cada um deles em uma célula diferente. Para formar as regiões, o grafo é particionado, utilizando um algoritmo guloso: começando do vértice mais pesado, a cada passo adiciona-se o vértice ligado pelas aresta mais pesada a algum dos vértices já selecionados, até que o peso total da partição do grafo (soma dos pesos dos vértices) atinja um determinado limite relacionado à capacidade total do servidor que receberá a região representada por aquela partição do grafo.
+
+Embora essa abordagem funcione, há uma séria limitação na granularidade da distribuição que pode ser feita. Se for desejada uma granularidade fina, é necessário definir as células como sendo muito pequenas, aumentando o número de vértices no grafo que representa o ambiente virtual e, conseqüentemente, o tempo necessário para executar o balanceamento. Sendo assim, pode ser melhor utilizar uma outra abordagem para o particionamento do ambiente virtual, que utilize uma estrutura de dados mais adequada, como é o caso das árvores de particionamento de espaço, tais como a kd-tree \
 
 Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. No entanto, essa distribuição não funcionaria, pelo fato de que a carga causada pelos jogadores depende também do quanto os jogadores estão interagindo entre si. Por exemplo, se os avatares de dois jogadores estiverem muito distantes um do outro, provavelmente não haverá interação entre eles e, portanto, o servidor precisará apenas atualizar cada um a respeito de suas próprias ações. No entanto, se estes avatares estiverem próximos, cada jogador deverá ser atualizado não apenas a respeito do resultado de suas próprias ações, como também das ações do outro jogador.
 
