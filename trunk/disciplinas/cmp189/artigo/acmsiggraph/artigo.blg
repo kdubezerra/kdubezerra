@@ -6,8 +6,8 @@ Warning--I didn't find a database entry for "ragnarok"
 Warning--I didn't find a database entry for "lineage"
 Warning--empty organization in ahmed2008mol
 Warning--empty organization in assiotis2006dam
+Warning--empty organization in bezerra2008a3
 Warning--empty organization in chertov:olb
-Warning--empty organization in devleeschauwer2005dma
 Warning--empty organization in hampel2006ppa
 Warning--empty organization in iimura2004zfg
 Warning--empty organization in knutsson2004pps
@@ -18,43 +18,43 @@ Warning--empty organization in schiele2007rpp
 Warning--empty organization in vilanova2008psm
 You've used 17 entries,
             2748 wiz_defined-function locations,
-            701 strings with 8088 characters,
-and the built_in function-call counts, 6949 in all, are:
-= -- 706
-> -- 265
+            702 strings with 8157 characters,
+and the built_in function-call counts, 6986 in all, are:
+= -- 708
+> -- 268
 < -- 0
-+ -- 87
++ -- 88
 - -- 100
-* -- 546
-:= -- 1160
+* -- 553
+:= -- 1164
 add.period$ -- 66
 call.type$ -- 17
-change.case$ -- 101
+change.case$ -- 103
 chr.to.int$ -- 17
 cite$ -- 29
 duplicate$ -- 291
-empty$ -- 597
-format.name$ -- 110
-if$ -- 1428
+empty$ -- 599
+format.name$ -- 111
+if$ -- 1435
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 15
 newline$ -- 103
 num.names$ -- 51
-pop$ -- 131
+pop$ -- 133
 preamble$ -- 1
-purify$ -- 84
+purify$ -- 86
 quote$ -- 0
-skip$ -- 148
+skip$ -- 147
 stack$ -- 0
-substring$ -- 343
+substring$ -- 349
 swap$ -- 51
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 136
 warning$ -- 12
-while$ -- 73
+while$ -- 72
 width$ -- 20
 write$ -- 260
 (There were 14 warnings)

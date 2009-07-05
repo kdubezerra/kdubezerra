@@ -1,7 +1,6 @@
-\begin{thebibliography}{\protect\citename{De~Vleeschau{\-}wer et~al\mbox{.}
-  }2005}
+\begin{thebibliography}{\protect\citename{Ahmed e Shirmohammadi }2008}
 
-\bibitem[\protect\citename{Ahmed and Shirmohammadi }2008]{ahmed2008mol}
+\bibitem[\protect\citename{Ahmed e Shirmohammadi }2008]{ahmed2008mol}
 {\sc Ahmed, D., and Shirmohammadi, S.}
 \newblock 2008.
 \newblock {A Microcell Oriented Load Balancing Model for Collaborative Virtual
@@ -15,26 +14,35 @@
 \newblock Guild wars.
 \newblock \gamecite{2005}{http://www.guildwars.com/}.
 
-\bibitem[\protect\citename{Assiotis and Tzanov }2006]{assiotis2006dam}
+\bibitem[\protect\citename{Assiotis e Tzanov }2006]{assiotis2006dam}
 {\sc Assiotis, M., and Tzanov, V.}
 \newblock 2006.
 \newblock {A distributed architecture for MMORPG}.
 \newblock In {\em Proceedings of the ACM SIGCOMM workshop on Network and system
   support for games, NetGames, 5.}, New York: ACM, Singapore, 4.
 
-\bibitem[\protect\citename{Bezerra and Geyer }2009]{bezerra2009lbs}
+\bibitem[\protect\citename{Bezerra e Geyer }2009]{bezerra2009lbs}
 {\sc Bezerra, C. E.~B., and Geyer, C. F.~R.}
 \newblock 2009.
 \newblock {A load balancing scheme for massively multiplayer online games}.
 \newblock {\em Massively Multiuser Online Gaming Systems and Applications,
   Special Issue of Springer's Multimedia Tools and Applications\/}.
 
+\bibitem[\protect\citename{Bezerra et~al\mbox{.} }2008]{bezerra2008a3}
+{\sc Bezerra, C. E.~B., Cecin, F.~R., and Geyer, C. F.~R.}
+\newblock 2008.
+\newblock A3: a novel interest management algorithm for distributed simulations
+  of mmogs.
+\newblock In {\em Proceedings of the IEEE/ACM International Symposium on
+  Distributed Simulation and Real-Time Applications, DS-RT, 12.}, Washington,
+  DC: IEEE, Vancouver, Canada, 35--42.
+
 \bibitem[\protect\citename{Blizzard }2004]{worldofwarcraft}
 {\sc Blizzard}, 2004.
 \newblock World of warcraft.
 \newblock \gamecite{2004}{http://www.worldofwarcraft.com/}.
 
-\bibitem[\protect\citename{Chertov and Fahmy }2006]{chertov:olb}
+\bibitem[\protect\citename{Chertov e Fahmy }2006]{chertov:olb}
 {\sc Chertov, R., and Fahmy, S.}
 \newblock 2006.
 \newblock {Optimistic Load Balancing in a Distributed Virtual Environment}.
@@ -42,16 +50,7 @@
   Operating Systems Support for Digital Audio and Video, NOSSDAV, 16.}, New
   York: ACM, Newport, USA, 1--6.
 
-\bibitem[\protect\citename{De~Vleeschau{\-}wer et~al\mbox{.}
-  }2005]{devleeschauwer2005dma}
-{\sc De~Vleeschau{\-}wer, B., et~al.}
-\newblock 2005.
-\newblock {Dynamic microcell assignment for massively multiplayer online
-  gaming}.
-\newblock In {\em Proceedings of the ACM SIGCOMM workshop on Network and system
-  support for games, NetGames, 4.}, New York: ACM, Hawthorne, NY, 1--7.
-
-\bibitem[\protect\citename{El~Rhalibi and Merabti }2005]{elrhalibi2005abm}
+\bibitem[\protect\citename{El~Rhalibi e Merabti }2005]{elrhalibi2005abm}
 {\sc El~Rhalibi, A., and Merabti, M.}
 \newblock 2005.
 \newblock {Agents-based modeling for a peer-to-peer MMOG architecture}.
@@ -80,7 +79,7 @@
   Computer and Communications Societies, INFOCOM, 23.}, [S.l.]: IEEE, Hong
   Kong, 96--107.
 
-\bibitem[\protect\citename{Lee and Lee }2003]{lee2003sdl}
+\bibitem[\protect\citename{Lee e Lee }2003]{lee2003sdl}
 {\sc Lee, K., and Lee, D.}
 \newblock 2003.
 \newblock {A scalable dynamic load distribution scheme for multi-server
