@@ -213,15 +213,15 @@ Para fazer uma divisão inicial do espaço, é construída uma kd-tree balanceada (t
 \label{alg:buildtree}
 \begin{algorithmic}
 	\IF{id + $2^{n\acute{\imath}vel} \ge num\_servidores$ }
-		\STATE $filho\_menor \leftarrow filho\_maior \leftarrow NIL$
-		\STATE retorne
+		\STATE $filho\_menor \leftarrow filho\_maior \leftarrow NIL$;
+		\STATE retorne;
 	\ELSE
-		\STATE $filho\_menor \leftarrow$ novo\_nodo()
-		\STATE $filho\_menor.pai \leftarrow$ \textbf{this}
-		\STATE $filho\_maior \leftarrow$ novo\_nodo()
-		\STATE $filho\_maior.pai \leftarrow$ \textbf{this}
-		\STATE $filho\_menor$.constr\'oi\_árvore\\$(id, n\'ivel + 1, num\_servidores)$
-		\STATE $filho\_maior$.constrói\_\'arvore\\$(id + 2^{n\acute{\imath}vel},$ $n\'ivel + 1,$ $num\_servidores)$
+		\STATE $filho\_menor \leftarrow$ novo\_nodo();
+		\STATE $filho\_menor.pai \leftarrow$ \textbf{this};
+		\STATE $filho\_maior \leftarrow$ novo\_nodo();
+		\STATE $filho\_maior.pai \leftarrow$ \textbf{this};
+		\STATE $filho\_menor$.constr\'oi\_\'arvore\\$(id, n\acute{\imath}vel + 1, num\_servidores)$;
+		\STATE $filho\_maior$.constrói\_\'arvore\\$(id + 2^{n\acute{\imath}vel},$ $n\acute{\imath}vel + 1,$ $num\_servidores)$;
 	\ENDIF
 \end{algorithmic}
 \end{algorithm}
