@@ -18,6 +18,19 @@
   <defs
      id="defs2468">
     <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow2Mend"
+       style="overflow:visible;">
+      <path
+         id="path3505"
+         style="font-size:12.0;fill-rule:evenodd;stroke-width:0.62500000;stroke-linejoin:round;"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(0.6) rotate(180) translate(0,0)" />
+    </marker>
+    <marker
        inkscape:stockid="Arrow2Lend"
        orient="auto"
        refY="0.0"
@@ -47,7 +60,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
      inkscape:cx="251.51268"
-     inkscape:cy="907.61055"
+     inkscape:cy="893.03404"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -202,22 +215,6 @@
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="104.04571"
-       y="108.87971"
-       id="text4640"><tspan
-         sodipodi:role="line"
-         id="tspan4642"
-         x="104.04571"
-         y="108.87971"
-         style="font-size:12px">c(nesq) = capacidade do nó filho à esquerda</tspan><tspan
-         sodipodi:role="line"
-         x="104.04571"
-         y="123.87971"
-         id="tspan4646"
-         style="font-size:12px">c(ndir) = capacidade do nó filho à direita</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
        x="103.57696"
        y="150.35342"
        id="text4654"><tspan
@@ -226,21 +223,6 @@
          id="tspan4656"
          x="103.57696"
          y="150.35342" /></text>
-    <text
-       xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="104.05743"
-       y="139.93361"
-       id="text4681"><tspan
-         sodipodi:role="line"
-         id="tspan4683"
-         x="104.05743"
-         y="139.93361"
-         style="font-size:12px">coordenada de divisão := avatar[i].getX() <tspan
-   style="font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
-   id="tspan4775">(ou getY)<tspan
-   style="font-weight:normal;-inkscape-font-specification:Bitstream Vera Sans"
-   id="tspan11761">, onde i é tal que:</tspan></tspan></tspan></text>
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -255,145 +237,195 @@
            id="tspan11079">a</tspan><tspan
            style="font-size:15px"
            id="tspan11075">i-1</tspan></tspan></text>
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 351.94906,222.86299 L 455.29239,222.86299"
-       id="path4648" />
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="352.78479"
-       y="235.08662"
-       id="text4650"><tspan
+       x="95.980751"
+       y="138.8797"
+       id="text4640"><tspan
          sodipodi:role="line"
-         id="tspan4652"
-         x="352.78479"
-         y="235.08662"
-         style="font-size:12px">c(nesq) + c(ndir)</tspan></text>
+         id="tspan4642"
+         x="95.980751"
+         y="138.8797"
+         style="font-size:12px">c(nesq) = capacidade do nó filho à esquerda</tspan><tspan
+         sodipodi:role="line"
+         x="95.980751"
+         y="153.8797"
+         id="tspan4646"
+         style="font-size:12px">c(ndir) = capacidade do nó filho à direita</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="381.37854"
-       y="218.16277"
-       id="text4658"><tspan
+       x="95.99247"
+       y="169.93361"
+       id="text4681"><tspan
          sodipodi:role="line"
-         id="tspan4660"
-         x="381.37854"
-         y="218.16277"
-         style="font-size:12px">c(nesq)</tspan></text>
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 218.37525,175.47566 L 198.37525,175.47566 L 208.72495,187.73587 L 198.37525,199.58281 L 218.37525,199.58281"
-       id="path11643"
-       sodipodi:nodetypes="ccccc" />
-    <text
-       xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="209.01245"
-       y="211.97751"
-       id="text11665"><tspan
-         sodipodi:role="line"
-         id="tspan11667"
-         x="209.01245"
-         y="211.97751"
-         style="font-size:12px">j = 0</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="208.36426"
-       y="171.62032"
-       id="text11669"><tspan
-         sodipodi:role="line"
-         id="tspan11671"
-         x="208.36426"
-         y="171.62032"
-         style="font-size:12px">i - 1</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="251.44667"
-       y="190.83392"
-       id="text11673"><tspan
-         sodipodi:role="line"
-         id="tspan11675"
-         x="251.44667"
-         y="190.83392"
-         style="font-size:15px"><tspan
+         id="tspan4683"
+         x="95.99247"
+         y="169.93361"
+         style="font-size:12px">coordenada de divisão := avatar[i].getX() <tspan
+   style="font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
+   id="tspan4775">(ou getY)<tspan
+   style="font-weight:normal;-inkscape-font-specification:Bitstream Vera Sans"
+   id="tspan11761">, onde i é tal que:</tspan></tspan></tspan></text>
+    <g
+       id="g15102"
+       transform="translate(8.0649578,0)">
+      <path
+         id="path4648"
+         d="M 343.8841,252.86299 L 447.22743,252.86299"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <text
+         id="text4650"
+         y="265.08661"
+         x="344.71982"
+         style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
            style="font-size:12px"
-           id="tspan11763">carga(a</tspan><tspan
-           style="font-size:10px"
-           id="tspan11677">j</tspan><tspan
+           y="265.08661"
+           x="344.71982"
+           id="tspan4652"
+           sodipodi:role="line">c(nesq) + c(ndir)</tspan></text>
+      <text
+         id="text4658"
+         y="248.16277"
+         x="373.31357"
+         style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
            style="font-size:12px"
-           id="tspan11765">)</tspan></tspan></text>
+           y="248.16277"
+           x="373.31357"
+           id="tspan4660"
+           sodipodi:role="line">c(nesq)</tspan></text>
+      <path
+         sodipodi:nodetypes="ccccc"
+         id="path11643"
+         d="M 210.31029,205.47566 L 190.31029,205.47566 L 200.65999,217.73587 L 190.31029,229.58281 L 210.31029,229.58281"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <text
+         id="text11665"
+         y="241.97751"
+         x="200.94749"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:12px"
+           y="241.97751"
+           x="200.94749"
+           id="tspan11667"
+           sodipodi:role="line">j = 0</tspan></text>
+      <text
+         id="text11669"
+         y="201.62032"
+         x="200.2993"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:12px"
+           y="201.62032"
+           x="200.2993"
+           id="tspan11671"
+           sodipodi:role="line">i - 1</tspan></text>
+      <text
+         id="text11673"
+         y="220.83392"
+         x="243.38171"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:15px"
+           y="220.83392"
+           x="243.38171"
+           id="tspan11675"
+           sodipodi:role="line"><tspan
+             id="tspan11763"
+             style="font-size:12px">carga(a</tspan><tspan
+             id="tspan11677"
+             style="font-size:10px">j</tspan><tspan
+             id="tspan11765"
+             style="font-size:12px">)</tspan></tspan></text>
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="M 164.92836,253.32001 L 300.81394,253.32001"
+         id="path11697" />
+      <text
+         id="text11719"
+         y="256.02216"
+         x="322.349"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:15px"
+           y="256.02216"
+           x="322.349"
+           id="tspan11721"
+           sodipodi:role="line">~</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="322.349"
+         y="260.02216"
+         id="text11723"><tspan
+           sodipodi:role="line"
+           id="tspan11725"
+           x="322.349"
+           y="260.02216"
+           style="font-size:15px">~</tspan></text>
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 210.31029,273.47566 L 190.31029,273.47566 L 200.65999,285.73587 L 190.31029,297.58281 L 210.31029,297.58281"
+         id="path11824"
+         sodipodi:nodetypes="ccccc" />
+      <text
+         xml:space="preserve"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="200.94749"
+         y="309.97748"
+         id="text11826"><tspan
+           sodipodi:role="line"
+           id="tspan11828"
+           x="200.94749"
+           y="309.97748"
+           style="font-size:12px">j = 0</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="200.2993"
+         y="269.62033"
+         id="text11830"><tspan
+           sodipodi:role="line"
+           id="tspan11832"
+           x="200.2993"
+           y="269.62033"
+           style="font-size:12px">n - 1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="243.38171"
+         y="288.83392"
+         id="text11834"><tspan
+           sodipodi:role="line"
+           id="tspan11836"
+           x="243.38171"
+           y="288.83392"
+           style="font-size:15px"><tspan
+             style="font-size:12px"
+             id="tspan11838">carga(a</tspan><tspan
+             style="font-size:10px"
+             id="tspan11840">j</tspan><tspan
+             style="font-size:12px"
+             id="tspan11842">)</tspan></tspan></text>
+    </g>
     <path
-       id="path11697"
-       d="M 172.99332,223.32001 L 308.8789,223.32001"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker-start:none;marker-mid:none;marker-end:url(#Arrow2Mend);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 97.64286,92.93362 L 240.68238,92.93362"
+       id="path12934" />
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="330.41397"
-       y="226.02216"
-       id="text11719"><tspan
+       x="125.68778"
+       y="105.93362"
+       id="text15022"><tspan
          sodipodi:role="line"
-         id="tspan11721"
-         x="330.41397"
-         y="226.02216"
-         style="font-size:15px">~</tspan></text>
-    <text
-       id="text11723"
-       y="230.02216"
-       x="330.41397"
-       style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:15px"
-         y="230.02216"
-         x="330.41397"
-         id="tspan11725"
-         sodipodi:role="line">~</tspan></text>
-    <path
-       sodipodi:nodetypes="ccccc"
-       id="path11824"
-       d="M 218.37525,243.47566 L 198.37525,243.47566 L 208.72495,255.73587 L 198.37525,267.58281 L 218.37525,267.58281"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <text
-       id="text11826"
-       y="279.97748"
-       x="209.01245"
-       style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:12px"
-         y="279.97748"
-         x="209.01245"
-         id="tspan11828"
-         sodipodi:role="line">j = 0</tspan></text>
-    <text
-       id="text11830"
-       y="239.62033"
-       x="208.36426"
-       style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:12px"
-         y="239.62033"
-         x="208.36426"
-         id="tspan11832"
-         sodipodi:role="line">n - 1</tspan></text>
-    <text
-       id="text11834"
-       y="258.83392"
-       x="251.44667"
-       style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:15px"
-         y="258.83392"
-         x="251.44667"
-         id="tspan11836"
-         sodipodi:role="line"><tspan
-           id="tspan11838"
-           style="font-size:12px">carga(a</tspan><tspan
-           id="tspan11840"
-           style="font-size:10px">j</tspan><tspan
-           id="tspan11842"
-           style="font-size:12px">)</tspan></tspan></text>
+         id="tspan15024"
+         x="125.68778"
+         y="105.93362"
+         style="font-size:12px">varredura</tspan></text>
   </g>
 </svg>

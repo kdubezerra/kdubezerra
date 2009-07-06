@@ -46,7 +46,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="290.36705"
+     inkscape:cx="218.89876"
      inkscape:cy="913.66083"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -216,7 +216,7 @@
          sodipodi:role="line"
          id="tspan4656"
          x="103.57696"
-         y="150.35342">i := n x</tspan></text>
+         y="150.35342">i      n x</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="M 154.07382,145.79484 L 257.41715,145.79484"
@@ -256,5 +256,31 @@
          style="font-size:12px">coordenada de divisão := avatar[i].getX() <tspan
    style="font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
    id="tspan4775">(ou getY)</tspan></tspan></text>
+    <g
+       id="g12908"
+       transform="translate(92,-96.178503)">
+      <text
+         id="text12900"
+         y="244.24014"
+         x="25.75889"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:12px"
+           y="244.24014"
+           x="25.75889"
+           id="tspan12902"
+           sodipodi:role="line">~</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:20px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="25.75889"
+         y="247.22998"
+         id="text12904"><tspan
+           sodipodi:role="line"
+           id="tspan12906"
+           x="25.75889"
+           y="247.22998"
+           style="font-size:12px">~</tspan></text>
+    </g>
   </g>
 </svg>
