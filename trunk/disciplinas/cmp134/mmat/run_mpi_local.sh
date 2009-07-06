@@ -1,4 +1,4 @@
-RUN=1
+RUN=4
 while [ $RUN -le 4 ]
 do
 	echo ===============================
@@ -12,9 +12,7 @@ do
 		while [ $ITER -le 10 ]  
 		do
 			echo EXECUTANDO COM $RUN PROCESSOS, MATRIZ DE ORDEM $RANK, ITERACAO $ITER
-			export OMP_NUM_THREADS=${RUN}
-			./ompmmrec $RANK >> testes/tempo_rec_t${RUN}_o${RANK}.txt
-			./ompmmit  $RANK >> testes/tempo_it_t${RUN}_o${RANK}.txt
+			mpirun -np $RUN ./mm $RANK >> testesmpi/tempo_p${RUN}_o${RANK}.txt
 			ITER=$((ITER+1))
 		done
 		if [ $RANK -lt 256 ]; then			
