@@ -24,6 +24,23 @@
 %% The 'graphicx' package allows for the inclusion of EPS figures.
 
 \usepackage{graphicx}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
+\floatname{algorithm}{Algoritmo}
+\renewcommand{\algorithmicrequire}{\textbf{Pr\'e-requisito:}}
+\renewcommand{\algorithmicensure}{\textbf{Garante:}}
+\renewcommand{\algorithmicend}{\textbf{fim}}
+\renewcommand{\algorithmicif}{\textbf{se}}
+\renewcommand{\algorithmicthen}{\textbf{ent\~ao}}
+\renewcommand{\algorithmicelse}{\textbf{sen\~ao}}
+\renewcommand{\algorithmicelsif}{\algorithmicelse\ \algorithmicif}
+\renewcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif}
+\renewcommand{\algorithmicfor}{\textbf{para}}
+\renewcommand{\algorithmicforall}{\textbf{para todo}}
+\renewcommand{\algorithmicdo}{\textbf{fa\'ca}}
+\renewcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor}
+\renewcommand{\algorithmicwhile}{\textbf{enquanto}}
 
 %% use this for zero \parindent and non-zero \parskip, intelligently.
 
@@ -166,66 +183,55 @@ Esse tipo de estrutura de dados costuma ser usado na computação gráfica. No enta
 \section{Proposta}
 \label{sec:proposal} 
 
-definições: avatar, coordenada de corte, região
-sweep para calculo do peso de cada avatar
-kd-tree
 balanceamento automatico ($2^{lallaa}$)
-corte dinâmico
+divisão dinâmica
 recursao para balanceamento (irmaos, primos, pri-primos etc.)
 ajuste dos limites
 entidade central para balanceamento (necessario calculo dos pesos dos avatares)
 
 
 
-A proposta para balanceamento de carga dinâmico para MMOGs apresentada aqui tem como base dois critérios: primeiramente, deve-se considerar a possibilidade do sistema ser heterogêneo, ou seja, de que cada servidor tenha uma quantidade diferente de recursos. Aqui se define como ``recursos'' a largura de banda envio que aquele servidor tem disponível para enviar atualizações de estado para os jogadores.
+A proposta para balanceamento de carga dinâmico para MMOGs apresentada aqui tem como base dois critérios: primeiramente, deve-se considerar a possibilidade do sistema ser heterogêneo, ou seja, de que cada servidor tenha uma quantidade diferente de recursos. Aqui se define como ``recursos'' a largura de banda de envio que aquele servidor tem disponível para enviar atualizações de estado para os jogadores a ele conectados.
 
 Essa escolha se deve ao fato de que cada jogador envia comandos para o servidor a uma taxa constante, logo o número de mensagens recebidas pelo servidor por unidade de tempo cresce linearmente em relação ao número de jogadores, enquanto que, como foi discutido, o número de atualizações de estado enviadas pelo servidor pode ser quadrático, no pior caso.
 
-Como foi dito na introdução, para dividir o ambiente do jogo em regiões propõe-se utilizar uma estrutura de dados conhecida, que é a kd-tree. A grande maioria dos MMOGs, como World of Warcraft \cite{worldofwarcraft}, Ragnarok \cite{ragnarok} e Lineage \cite{lineage}, apesar de ter gráficos em 3D, o mundo simulado -- cidades, florestas, pântanos e pontos de interesse em geral -- nestes jogos é mapeado em duas dimensões. Por esse motivo, propõe-se o uso de uma kd-tree com \mbox{k = 2}.
+Como foi dito na introdução, para dividir o ambiente do jogo em regiões propõe-se utilizar uma estrutura de dados conhecida, que é a kd-tree. A grande maioria dos MMOGs, como World of Warcraft \cite{worldofwarcraft}, Ragnarök \cite{ragnarok} e Lineage II \cite{lineage2}, apesar de possuir gráficos em três dimensões, o mundo simulado -- cidades, florestas, pântanos e pontos de interesse em geral -- nestes jogos é mapeado em duas dimensões. Por esse motivo, propõe-se o uso de uma kd-tree com \mbox{k = 2}.
 
-A cada nodo da árvore corresponde uma região do espaço e, além disso, neste nodo é armazenada um valor correspondente a uma coordenada de corte. Cada um dos dois filhos daquele nodo representarão uma subdivisão da região representada pelo nodo pai, sendo que um deles representa a sub-região com coordenada menor do que a coordenada de corte, e o outro, a região com coordenada maior ou igual à coordenada de corte. Cada nó folha também representa uma região do espaço, porém não armazenam nenhuma coordenada de corte. A cada nível da árvore, alterna-se o eixo da coordenada de corte (no caso de duas dimensões, os eixos $x$ e $y$).
+A cada nodo da árvore corresponde uma região do espaço e, além disso, neste nodo é armazenada um valor correspondente a uma coordenada de divisão. Cada um dos dois filhos daquele nodo representarão uma subdivisão da região representada pelo nodo pai, sendo que um deles representa a sub-região com coordenada menor do que a coordenada de divisão, e o outro, a região com coordenada maior ou igual à coordenada de divisão. A cada nível da árvore, alterna-se o eixo da coordenada de divisão (no caso de duas dimensões, os eixos $x$ e $y$). Cada nó folha também representa uma região do espaço, porém não armazena nenhuma coordenada de divisão, além de apontar para uma lista de avatares presentes naquela região. Por fim, cada nó folha é associado a um dos servidores do jogo. Quando um servidor fica sobrecarregado, ele dispara o balanceamento de carga, que utiliza a estrutura de dados kd-tree, reajustando as coordenadas de divisão que definem as regiões e, assim, diminuindo a quantidade de conteúdo gerenciada por ele.
+
+A cada nó da árvore estão também associados dois valores: capacidade e carga da sub-árvore. A carga de um nó da árvore é igual à soma da carga de seus filhos. Da mesma forma, a capacidade de um nó intermediário é igual à soma da capacidade de seus nós filhos. No caso do nó folha, esses valores são os mesmos do servidor associado a ele. A raiz da árvore, por outro lado, tem como carga o tráfego total de mensagens de atualização de estado do jogo e, como capacidade, a soma das capacidades individuais dos servidores.
+
+Nas seções a seguir, serão descritos a construção da árvore, o cálculo da carga associada a cada servidor e o algoritmo de balanceamento proposto.
 
 \subsection{Construção da kd-tree}
 
 %TODO:BEGIN: deixar esse algoritmo aqui? nao foge do escopo?
-A cada nodo folha da kd-tree corresponde um servidor do sistema servidor. Dessa forma, a região representada por aquele nodo folha será administrada pelo servidor associado a ele. Para se dividir o espaço inicialmente, é construída uma kd-tree balanceada (tanto quanto possível, pois depende do número de servidores, ou nós folha, ser igual a alguma potência de 2). Para isto foi utilizada a seguinte função recursiva para criação da árvore:
+Para fazer uma divisão inicial do espaço, é construída uma kd-tree balanceada (tanto quanto possível, pois depende do número de servidores -- ou nós folha -- ser igual uma potência de 2). Para isto, foi utilizada a seguinte função recursiva para criação da árvore:
 
-
-void KDTree::buildTree(int nodeId, int treeLvl) \{
-
-	if (nodeId + 2$^{treeLvl}$ $>=$ NUM\_SERVERS) \{
-
-		smallerChild = biggerChild = NULL;
-
-		return;
-
-	\}
-
-	else \{
-
-		smallerChild = new KDTree();
-
-
-		smallerChild.parent = this;
-
-		smallerChild.buildTree(nodeId, treeLvl + 1);
-
-		biggerChild = new KDTree();
-
-		biggerChild.parent = this;
-
-		biggerChild.buildTree(nodeId + 2$^{treeLvl}$, treeLvl + 1);
-		
-	\}
-
-\}
+\begin{algorithm}
+\caption{nodo::constrói\_árvore(id, nível, num\_servidores)}
+\label{alg:buildtree}
+\begin{algorithmic}
+	\IF{id + $2^{n\acute{\imath}vel} \ge num\_servidores$ }
+		\STATE $filho\_menor \leftarrow filho\_maior \leftarrow NIL$
+		\STATE retorne
+	\ELSE
+		\STATE $filho\_menor \leftarrow$ novo\_nodo()
+		\STATE $filho\_menor.pai \leftarrow$ \textbf{this}
+		\STATE $filho\_maior \leftarrow$ novo\_nodo()
+		\STATE $filho\_maior.pai \leftarrow$ \textbf{this}
+		\STATE $filho\_menor$.constr\'oi\_árvore\\$(id, n\'ivel + 1, num\_servidores)$
+		\STATE $filho\_maior$.constrói\_\'arvore\\$(id + 2^{n\acute{\imath}vel},$ $n\'ivel + 1,$ $num\_servidores)$
+	\ENDIF
+\end{algorithmic}
+\end{algorithm}
 
 FIGURA DE UMA KD-TREE COM OS IDS ASSOCIADOS
 
 No algoritmo acima, o nodeId serve para calcular quantos filhos cada nodo deve ter e, nos nodos folha, pode ser usado para determinar qual o servidor associado à região representada por aquela folha da árvore. O objetivo com isso é tentar criar uma árvore balanceada, onde cada nodo tem duas sub-árvores com pesos semelhantes.
 %TODO:END: deixar esse algoritmo aqui? nao foge do escopo?
 
-\subsection{FIXME: Cálculo do peso das regiões}
+\subsection{FIXME: Distribuindo os avatares nas regiões}
 
 Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. Para calcular a coordenada de divisão da nodo da kd-tree, bastaria ordenar em um vetor os avatares de acordo com o eixo usado para divisão ($x$ ou $y$) pelo nodo da árvore e, então, calcular o índice, no vetor, tal que o número de elementos até esse índice fosse proporcional à capacidade de um dos servidores e o número de elementos a partir desse índice fosse proporcional à capacida do outro servidor (Figura \ref{fig:vector}). A complexidade dessa operação seria $O(nlogn)$, por causa da ordenação.
 
@@ -245,9 +251,22 @@ Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de 
   \label{fig:carga}
 \end{figure}
 
+Uma maneira mais adequada de se dividir o conjunto de avatares é de acordo com a carga que cada um gera sobre o servidor. O método força-bruta para fazer essa verificação seria utilizar dois laços aninhados para calcular a distância de cada avatar para cada um dos outros avatares e, baseado na interação entre cada par de avatares, chegar ao número de mensagens que cada jogador deve receber por unidade de tempo. Essa abordagem tem complexidade $O(n^2)$. Porém, se os avatares forem ordenados de acordo com a sua coordenada no eixo usado para divisão do espaço na kd-tree, pode-se realizar esse cálculo em um tempo menor.
+
+Para isso, são também utilizados dois laços para varredura do vetor de avatares, cada um destes com uma carga inicializada com o valor de zero. Como o vetor está ordenado, o laço interno pode começar de um índice antes do qual sabe-se que nenhum avatar $a_j$ terá relevância para aquele que está sendo indicado no laço externo, $a_i$. É utilizada uma variável $begin$, com valor inicial de zero: quando a coordenada de $a_j$ é menor que a de $a_i$, com uma diferença maior que o alcance máximo de visão dos avatares, a variável $begin$ é incrementada. Para cada $a_j$ que está a uma distância menor que o alcance máximo de visão, a carga de $a_i$ é incrementada segundo a relevância de $a_j$ para $a_i$. Ao se chegar a um avatar $a_j$, tal que a sua coordenada é maior que a de $a_i$, com uma diferença maior que o alcance de visão, o laço externo avança imediatamente para o próximo passo, incrementando $a_i$ e atribuindo a $a_j$ o valor armazenado em $begin$ (Figura \ref{fig:sweep}).
+
+Sejam $width$ a extensão do ambiente virtual no eixo usado para divisão; $radius$, o alcance máximo de visão dos avatares e $n$, o número de avatares. O número de vezes em que é calculada a relevância de um avatar para o outro, considerando que eles estejam distribuídos uniformemente no ambiente virtual é de \mbox{$O(m \times n)$}, onde $m$ é o número de avatares comparados no laço interno, ou seja, \mbox{$m = \frac{2 \times radius \times n}{width}$}. A complexidade da ordenação dos avatares em um dos eixos é de $O(nlogn)$. Embora ainda seja quadrático, o tempo de execução é reduzido significativamente, a depender do tamanho do ambiente virtual e do alcance da visão dos avatares. O algoritmo poderia seguir adiante e ordenar cada conjunto de avatares $a_j$ que estão próximos (em um dos eixos de coordenadas) de $a_i$ de acordo com o outro eixo de coordenadas e, novamente, fazer uma varredura eliminando os que estivessem distantes, agora nas duas dimensões. O número de cálculos de relevância seria de \mbox{$O(p \times n)$}, com $p$ sendo o número de avatares próximos a $a_i$, considerando os dois eixos de coordenadas, ou seja, \mbox{$p = \frac{(2 \times radius \times n)^2}{width \times height}$}. Nesse caso, $height$ é a extensão do ambiente no segundo eixo tomado como referência. Porém, embora haja uma redução considerável do número de cálculos de relevância, isso não compensa o tempo que se gasta ordenando o subvetor de avatares selelecionados para cada $a_i$. Somando-se todo o tempo gasto com ordenações, seria obtida uma complexidade de: \mbox{$O(nlogn + n \times mlogm)$}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/sweep}
+  \caption{Varredura do vetor ordenado de avatares}
+   \label{fig:sweep}
+\end{figure}
+
 \subsection{Balanceamento dinâmico}
 
-Uma vez criada a árvore, cada servidor é associado a um nó folha, que determina um subespaço. Todas as atualizações de estado que devem ser enviadas a jogadores cujos avatares estejam naquela região deverão ser enviadas pelo servidor correspondente. Quando um servidor fica sobrecarregado, ele tem a possibilidade de transferir parte da carga designada a ele para algum outro servidor. Para fazer isso, é utilizada a kd-tree, através do reajuste das coordenadas de corte dos nodos das regiões.
+Uma vez criada a árvore, cada servidor é associado a um nó folha, que determina um subespaço. Todas as atualizações de estado que devem ser enviadas a jogadores cujos avatares estejam naquela região deverão ser enviadas pelo servidor correspondente. Quando um servidor fica sobrecarregado, ele tem a possibilidade de transferir parte da carga designada a ele para algum outro servidor. Para fazer isso, é utilizada a kd-tree, através do reajuste das coordenadas de divisão dos nodos das regiões.
 
 
 
