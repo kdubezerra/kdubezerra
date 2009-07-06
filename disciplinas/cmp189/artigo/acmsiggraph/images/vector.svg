@@ -45,9 +45,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="405.47837"
-     inkscape:cy="920.69435"
+     inkscape:zoom="1.979899"
+     inkscape:cx="290.36705"
+     inkscape:cy="913.66083"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -200,56 +200,49 @@
          id="tspan4642"
          x="104.04571"
          y="108.87971"
-         style="font-size:12">c(s1) = capacidade do servidor s1</tspan><tspan
+         style="font-size:12px">c(nesq) = capacidade do nó filho à esquerda</tspan><tspan
          sodipodi:role="line"
          x="104.04571"
-         y="158.8797"
+         y="123.87971"
          id="tspan4646"
-         style="font-size:12">c(s2) = capacidade do servidor s2</tspan></text>
-    <g
-       id="g4715"
-       transform="translate(1.7410812,-5.481842)">
-      <text
-         id="text4654"
-         y="155.83527"
-         x="101.83588"
-         style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-         xml:space="preserve"><tspan
-           y="155.83527"
-           x="101.83588"
-           id="tspan4656"
-           sodipodi:role="line"
-           style="font-size:12px">i := n *</tspan></text>
-      <g
-         id="g4708">
-        <path
-           style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="M 155.07509,151.27668 L 237.95716,151.27668"
-           id="path4648" />
-        <text
-           xml:space="preserve"
-           style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-           x="157.97316"
-           y="163.50032"
-           id="text4650"><tspan
-             sodipodi:role="line"
-             id="tspan4652"
-             x="157.97316"
-             y="163.50032"
-             style="font-size:12px">c(s1) + c(s2)</tspan></text>
-        <text
-           xml:space="preserve"
-           style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-           x="181.76222"
-           y="146.57646"
-           id="text4658"><tspan
-             sodipodi:role="line"
-             id="tspan4660"
-             x="181.76222"
-             y="146.57646"
-             style="font-size:12px">c(s1)</tspan></text>
-      </g>
-    </g>
+         style="font-size:12px">c(ndir) = capacidade do nó filho à direita</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="103.57696"
+       y="150.35342"
+       id="text4654"><tspan
+         style="font-size:12px"
+         sodipodi:role="line"
+         id="tspan4656"
+         x="103.57696"
+         y="150.35342">i := n x</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 154.07382,145.79484 L 257.41715,145.79484"
+       id="path4648" />
+    <text
+       xml:space="preserve"
+       style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="154.90955"
+       y="158.01848"
+       id="text4650"><tspan
+         sodipodi:role="line"
+         id="tspan4652"
+         x="154.90955"
+         y="158.01848"
+         style="font-size:12px">c(nesq) + c(ndir)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="183.5033"
+       y="141.09462"
+       id="text4658"><tspan
+         sodipodi:role="line"
+         id="tspan4660"
+         x="183.5033"
+         y="141.09462"
+         style="font-size:12px">c(nesq)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"

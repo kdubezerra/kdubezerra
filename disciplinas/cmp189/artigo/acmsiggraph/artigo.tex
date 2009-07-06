@@ -206,7 +206,7 @@ Nas seções a seguir, serão descritos a construção da árvore, o cálculo da carga 
 \subsection{Construção da kd-tree}
 
 %TODO:BEGIN: deixar esse algoritmo aqui? nao foge do escopo?
-Para fazer uma divisão inicial do espaço, é construída uma kd-tree balanceada (tanto quanto possível, pois depende do número de servidores -- ou nós folha -- ser igual uma potência de 2). Para isto, foi utilizada a seguinte função recursiva para criação da árvore:
+Para fazer uma divisão inicial do espaço, é construída uma kd-tree balanceada (tanto quanto possível, pois depende do número de servidores -- ou nós folha -- ser igual uma potência de 2). Para isto, foi utilizada a função recursiva exibida no Algoritmo \ref{alg:buildtree} a para criação da árvore:
 
 \begin{algorithm}
 \caption{nodo::constrói\_árvore(id, nível, num\_servidores)}
@@ -226,14 +226,19 @@ Para fazer uma divisão inicial do espaço, é construída uma kd-tree balanceada (t
 \end{algorithmic}
 \end{algorithm}
 
-FIGURA DE UMA KD-TREE COM OS IDS ASSOCIADOS
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.75\linewidth]{images/kdtree}
+	\caption{Construção de kd-tree balanceada}
+	\label{fig:kdtree}
+\end{figure}
 
-No algoritmo acima, o nodeId serve para calcular quantos filhos cada nodo deve ter e, nos nodos folha, pode ser usado para determinar qual o servidor associado à região representada por aquela folha da árvore. O objetivo com isso é tentar criar uma árvore balanceada, onde cada nodo tem duas sub-árvores com pesos semelhantes.
+No algoritmo acima, o $id$ serve para calcular quantos filhos cada nodo deve ter e, nos nós folha, determina qual o servidor associado à região representada por aquela folha da árvore. O objetivo com isso é tentar criar uma árvore balanceada, onde o número de nós folha de cada uma das duas sub-árvores de cada nó difere de no máximo um. Na Figura \ref{fig:kdtree} (a), temos uma kd-tree completa formada com esse algoritmo simples e, em (b), como seria uma kd-tree não completa com seis nós-folha. Como se pode perceber, cada nodo tem duas sub-árvores cujos números de nós folha diferem, no máximo, de um.
 %TODO:END: deixar esse algoritmo aqui? nao foge do escopo?
 
-\subsection{FIXME: Distribuindo os avatares nas regiões}
+\subsection{Definindo as coordenadas de divisão}
 
-Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. Para calcular a coordenada de divisão da nodo da kd-tree, bastaria ordenar em um vetor os avatares de acordo com o eixo usado para divisão ($x$ ou $y$) pelo nodo da árvore e, então, calcular o índice, no vetor, tal que o número de elementos até esse índice fosse proporcional à capacidade de um dos servidores e o número de elementos a partir desse índice fosse proporcional à capacida do outro servidor (Figura \ref{fig:vector}). A complexidade dessa operação seria $O(nlogn)$, por causa da ordenação.
+A maneira como serão definidas as coordenadas de divisão das regiões nos nodos intermediários da kd-tree dependem de como será feita a distribuição dos avatares nas regiões. Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de maneira que o número de jogadores em cada servidor fosse proporcional à largura de banda daquele servidor. Para calcular a coordenada de divisão, bastaria ordenar em um vetor os avatares de acordo com o eixo usado para divisão ($x$ ou $y$) pelo nodo da árvore e, então, calcular o índice, no vetor, tal que o número de elementos até esse índice fosse proporcional à capacidade do filho à esquerda e o número de elementos a partir desse índice fosse proporcional à capacida do filho à direita do nó cuja coordenada de divisão está sendo calculada (Figura \ref{fig:vector}). A complexidade dessa operação seria $O(nlogn)$, devido à ordenação dos avatares.
 
 \begin{figure}
   \centering
@@ -242,7 +247,7 @@ Uma idéia inicial poderia ser a de distribuir os jogadores entre servidores, de 
   \label{fig:vector}
 \end{figure}
 
- Contudo, essa distribuição não funcionaria, pelo fato de que a carga imposta pelos jogadores depende também do quanto eles estão interagindo entre si. Por exemplo, se os avatares de dois jogadores estiverem muito distantes um do outro, provavelmente não haverá interação entre eles e, portanto, o servidor precisará apenas atualizar cada um a respeito de suas próprias ações -- para estes, o crescimento do número de mensagens será linear em relação ao número de jogadores. No entanto, se estes avatares estiverem próximos, cada jogador deverá ser atualizado não apenas a respeito do resultado de suas próprias ações, como também das ações do outro jogador -- neste caso, o crescimento do número de mensagens pode ser quadrático (Figura \ref{fig:carga}). Por esta razão, não é suficiente apenas dividir os jogadores entre os servidores, mesmo que proporcionalmente aos recursos de cada um destes.
+ Contudo, essa distribuição não funcionaria, pelo fato de que a carga imposta pelos jogadores depende também do quanto eles estão interagindo entre si. Por exemplo, se os avatares de dois jogadores estiverem muito distantes um do outro, provavelmente não haverá interação entre eles e, portanto, o servidor precisará apenas atualizar cada um a respeito de suas próprias ações -- para estes, o crescimento do número de mensagens será linear em relação ao número de jogadores. No entanto, se esses avatares estiverem próximos um do outro, cada jogador deverá ser atualizado não apenas a respeito do resultado de suas próprias ações, como também das ações do outro jogador -- neste caso, o crescimento do número de mensagens pode ser quadrático (Figura \ref{fig:carga}). Por esta razão, não é suficiente apenas dividir os jogadores entre os servidores, mesmo que proporcionalmente aos recursos de cada um destes.
 
 \begin{figure}
   \centering
