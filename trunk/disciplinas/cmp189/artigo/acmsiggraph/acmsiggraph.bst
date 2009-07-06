@@ -195,7 +195,7 @@ FUNCTION {format.names}
 	    { ", " * t * }
 	    { t "others" =
 		{ ", et~al." * }
-		{ ", and " * t * }
+		{ ", e " * t * }
 	      if$
 	    }
 	  if$
