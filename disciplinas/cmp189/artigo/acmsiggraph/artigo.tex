@@ -66,7 +66,7 @@
 
 %% Paper title.
 
-\title{Balanceamento de carga utilizando kd-trees para\\ particionar dinamicamente o ambiente virtual de MMOGs}
+\title{Utilizando kd-trees para particionar o ambiente virtual e balancear dinamicamente a carga sobre servidores de MMOGs}
 
 %% Author and Affiliation (single author).
 
@@ -269,18 +269,14 @@ Uma vez criada a árvore, cada servidor é associado a um nó folha -- que determin
 
 Cada servidor mantém um vetor dos avatares localizados na região por ele administrada, ordenados ao longo do eixo $x$, sendo que cada posição desse vetor contém também um apontador para um índice, formando uma lista, que é ordenada de acordo com a coordenada $y$ dos avatares (Figura \ref{fig:vectorxlisty}). Isso permite reduzir um pouco o tempo necessário para o balanceamento, diminuindo o tempo gasto com envio e recebimento de listas de avatares, além de economizar o tempo que seria gasto com ordenação no nodo que iniciou o balanceamento. 
 
-Quando o servidor sobrecarregado dispara o balanceamento, ele percorre a kd-tree a partir do nó que define sua região, subindo nos nível da árvore e verificando se a capacidade de seu nó pai é maior ou igual à carga. Enquanto não for encontrado um nó ancestral que tenha uma capacidade maior ou igual à carga, o algoritmo continua subindo na árvore recursivamente, até chegar à raiz. A cada nó visitado, é enviada uma requisição do conjunto de avatares e dos valores de carga e capacidade aos servidores representados pelos nós folha das sub-árvores filhas desse nó (Figura \ref{fig:ancestors}). Dispondo desses dados, e da sua própria lista de avatares e valores de carga e capacidade, o servidor sobrecarregado pode calcular a carga e a capacidade do seu nó ancestral visitado na kd-tree.
-
-Chegando a um nó ancestral com capacidade maior ou igual à sua carga -- ou à raiz da árvore, caso não encontre --, o servidor que iniciou o balanceamento reajusta as coordenadas de divisão dos nós da kd-tree. Para cada nível, ele divide os avatares de acordo com a capacidade dos nós filhos. Para isso, calcula-se a fração da carga daquele nó que deve caber para cada um dos seus filhos. Percorre-se a estrutura de dados que contém os avatares ordenados até que a soma das cargas dos avatares nas posições percorridas atinja o valor definido para a carga do filho à esquerda do nó cuja coordenada de divisão está sendo calculada (Figura \ref{fig:balancenode}). Os filhos desse nó têm também, por sua vez, suas coordenadas de divisão reajustadas, para que estas estejam dentro da região do nó pai. Nesse momento, já é feito um balanceamento dos nós filhos do nó de nível mais alto que teve sua coordenada de divisão reajustada.
-
-Como os vetores de avatares recebidos dos outros servidores já estão ordenados em ambos os eixos de coordenadas, basta fazer um \emph{merge} dessas estruturas de dados com a lista de avatares do servidor que iniciou o balanceamento. O tempo para reajustar toda a árvore é, no pior caso, $O(nlogS)$, onde $n$ é o numero de avatares no jogo e $S$ é o número de servidores. Essa complexidade se deve ao \emph{merge} executado em cada nível da árvore -- $O(n)$ --, seguido da busca seqüencial no vetor pelo índice que divide a carga dos avatares da maneira adequada -- $O(n)$ -- também em cada nível da kd-tree. Como se trata de uma árvore balanceada com $S$ nós folha, tem-se uma altura de, no máximo, $\lceil logS \rceil$.
- 
 \begin{figure}
   \centering
   \includegraphics[width=0.9\linewidth]{images/vectorxlisty}
   \caption{Vetor ordenado em x contendo lista ordenada em y}
    \label{fig:vectorxlisty}
 \end{figure}
+
+Quando o servidor sobrecarregado dispara o balanceamento, ele percorre a kd-tree a partir do nó que define sua região, subindo nos nível da árvore e verificando se a capacidade de seu nó pai é maior ou igual à carga. Enquanto não for encontrado um nó ancestral que tenha uma capacidade maior ou igual à carga, o algoritmo continua subindo na árvore recursivamente, até chegar à raiz. A cada nó visitado, é enviada uma requisição do conjunto de avatares e dos valores de carga e capacidade aos servidores representados pelos nós folha das sub-árvores filhas desse nó (Figura \ref{fig:ancestors}). Dispondo desses dados, e da sua própria lista de avatares e valores de carga e capacidade, o servidor sobrecarregado pode calcular a carga e a capacidade do seu nó ancestral visitado na kd-tree.
 
 \begin{figure}
   \centering
@@ -289,12 +285,22 @@ Como os vetores de avatares recebidos dos outros servidores já estão ordenados e
    \label{fig:ancestors}
 \end{figure}
 
+Chegando a um nó ancestral com capacidade maior ou igual à sua carga -- ou à raiz da árvore, caso não encontre --, o servidor que iniciou o balanceamento reajusta as coordenadas de divisão dos nós da kd-tree. Para cada nível, ele divide os avatares de acordo com a capacidade dos nós filhos. Para isso, calcula-se a fração da carga daquele nó que deve caber para cada um dos seus filhos. Percorre-se a estrutura de dados que contém os avatares ordenados até que a soma das cargas dos avatares nas posições percorridas atinja o valor definido para a carga do filho à esquerda do nó cuja coordenada de divisão está sendo calculada (Figura \ref{fig:balancenode}). Os filhos desse nó têm também, por sua vez, suas coordenadas de divisão reajustadas, para que estas estejam dentro da região do nó pai. Nesse momento, já é feito um balanceamento dos nós filhos do nó de nível mais alto que teve sua coordenada de divisão reajustada.
+
 \begin{figure}
   \centering
   \includegraphics[width=0.9\linewidth]{images/balancenode}
   \caption{Divisão do conjunto de avatares entre dois nós irmãos}
    \label{fig:balancenode}
 \end{figure}
+
+Como os vetores de avatares recebidos dos outros servidores já estão ordenados em ambos os eixos de coordenadas, basta fazer um \emph{merge} dessas estruturas de dados com a lista de avatares do servidor que iniciou o balanceamento. O tempo para reajustar toda a árvore é, no pior caso, $O(nlogS)$, onde $n$ é o numero de avatares no jogo e $S$ é o número de servidores. Essa complexidade se deve ao \emph{merge} executado em cada nível da árvore -- $O(n)$ --, seguido da busca seqüencial no vetor pelo índice que divide a carga dos avatares da maneira adequada -- $O(n)$ -- também em cada nível da kd-tree. Como se trata de uma árvore balanceada com $S$ nós folha, tem-se uma altura de $\lceil logS \rceil$.
+ 
+
+
+
+
+
 
 
 
