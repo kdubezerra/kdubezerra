@@ -273,9 +273,11 @@ Sejam $width$ a extensão do ambiente virtual no eixo usado para divisão; $radius
 
 Uma vez criada a árvore, cada servidor é associado a um nó folha -- que determina uma região. Todas as atualizações de estado que devem ser enviadas a jogadores cujos avatares estejam naquela região deverão ser enviadas pelo servidor correspondente. Quando um servidor fica sobrecarregado, ele tem a possibilidade de transferir parte da carga designada a ele para algum outro servidor. Para fazer isso, é utilizada a kd-tree, através do reajuste das coordenadas de divisão das regiões.
 
-Cada servidor mantém um vetor dos avatares localizados na região por ele administrada, ordenados ao longo do eixo $x$, sendo que cada posição desse vetor contém também um apontador para um índice, formando uma lista, que é ordenada de acordo com a coordenada $y$ dos avatares (Figura \ref{fig:vectorxlisty}). Quando o servidor sobrecarregado dispara o balanceamento, ele percorre a kd-tree a partir do nó que define sua região, subindo um nível na árvore e verificando se a capacidade de seu nó pai é maior ou igual à carga. Enquanto não for encontrado um nó ancestral que tenha uma capacidade maior ou igual à carga, o algoritmo continua subindo na árvore recursivamente, até chegar à raiz. A cada nó visitado, é enviada uma requisição do conjunto de avatares aos servidores representados pelos nós folha das sub-árvores filhas desse nó (Figura \ref{fig:ancestors}. Dispondo desse vetor, e da sua própria lista de avatares, o servidor sobrecarregado pode calcular a carga e a capacidade do seu nó ancestral visitado na kd-tree.
+Cada servidor mantém um vetor dos avatares localizados na região por ele administrada, ordenados ao longo do eixo $x$, sendo que cada posição desse vetor contém também um apontador para um índice, formando uma lista, que é ordenada de acordo com a coordenada $y$ dos avatares (Figura \ref{fig:vectorxlisty}). Quando o servidor sobrecarregado dispara o balanceamento, ele percorre a kd-tree a partir do nó que define sua região, subindo nos nível da árvore e verificando se a capacidade de seu nó pai é maior ou igual à carga. Enquanto não for encontrado um nó ancestral que tenha uma capacidade maior ou igual à carga, o algoritmo continua subindo na árvore recursivamente, até chegar à raiz. A cada nó visitado, é enviada uma requisição do conjunto de avatares e dos valores de carga e capacidade aos servidores representados pelos nós folha das sub-árvores filhas desse nó (Figura \ref{fig:ancestors}). Dispondo desses dados, e da sua própria lista de avatares e valores de carga e capacidade, o servidor sobrecarregado pode calcular a carga e a capacidade do seu nó ancestral visitado na kd-tree.
 
-Como os vetores já estão ordenados em ambos os eixos.....
+Chegando a um nó ancestral com capacidade maior ou igual à sua carga -- ou à raiz da árvore, caso não encontre --, o servidor que iniciou o balanceamento reajusta as coordenadas de divisão dos nós da kd-tree. Para cada nível, ele divide os avatares de acordo com a capacidade dos nós filhos. Para isso, calcula-se a fração da carga daquele nó que deve caber para cada um dos seus filhos. Percorre-se a estrutura de dados que contém os avatares ordenados até que a soma das cargas dos avatares nas posições percorridas atinja o valor definido para a carga do filho à esquerda do nó cuja coordenada de divisão está sendo calculada (Figura \ref{fig:balancenode}). Os filhos desse nó têm também, por sua vez, suas coordenadas de divisão reajustadas, para que estas estejam dentro da região do nó pai.
+
+Como os vetores já estão ordenados em ambos os eixos de coordenadas
  
 \begin{figure}
   \centering
@@ -286,9 +288,16 @@ Como os vetores já estão ordenados em ambos os eixos.....
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.9\linewidth]{images/vectorxlisty}
+  \includegraphics[width=0.9\linewidth]{images/ancestors}
   \caption{Percurso das folhas à raiz da árvore}
    \label{fig:ancestors}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\linewidth]{images/balancenode}
+  \caption{Divisão do conjunto de avatares entre dois nós irmãos}
+   \label{fig:balancenode}
 \end{figure}
 
 
