@@ -269,11 +269,20 @@ Sejam $width$ a extensão do ambiente virtual no eixo usado para divisão; $radius
    \label{fig:sweep}
 \end{figure}
 
-\subsection{Balanceamento dinâmico}
+\subsection{Balanceamento dinâmico de carga}
 
-Uma vez criada a árvore, cada servidor é associado a um nó folha, que determina um subespaço. Todas as atualizações de estado que devem ser enviadas a jogadores cujos avatares estejam naquela região deverão ser enviadas pelo servidor correspondente. Quando um servidor fica sobrecarregado, ele tem a possibilidade de transferir parte da carga designada a ele para algum outro servidor. Para fazer isso, é utilizada a kd-tree, através do reajuste das coordenadas de divisão dos nodos das regiões.
+Uma vez criada a árvore, cada servidor é associado a um nó folha -- que determina uma região. Todas as atualizações de estado que devem ser enviadas a jogadores cujos avatares estejam naquela região deverão ser enviadas pelo servidor correspondente. Quando um servidor fica sobrecarregado, ele tem a possibilidade de transferir parte da carga designada a ele para algum outro servidor. Para fazer isso, é utilizada a kd-tree, através do reajuste das coordenadas de divisão das regiões.
+
+Cada servidor mantém um vetor dos avatares localizados na região por ele administrada, ordenados ao longo do eixo $x$, sendo que cada posição desse vetor contém também um apontador para um índice, formando uma lista, que é ordenada de acordo com a coordenada $y$ dos avatares (Figura \ref{fig:vectorxlisty}). Quando o servidor sobrecarregado dispara o balanceamento, ele percorre a kd-tree a partir do nó que define sua região, subindo um nível na árvore e verificando se a capacidade de seu nó pai é maior ou igual à carga. Enquanto não for encontrado um nó ancestral que tenha uma capacidade maior ou igual à carga, o algoritmo continua subindo na árvore recursivamente, até chegar à raiz. A cada nó visitado, é enviada uma requisição do conjunto de avatares aos servidores representados pelos nós folha das sub-árvores filhas desse nó. Dispondo desse vetor, e da sua própria lista de avatares, o servidor sobrecarregado pode calcular a carga e a capacidade do seu nó ancestral visitado na kd-tree.
 
 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\linewidth]{images/vectorxlisty}
+  \caption{Vetor ordenado em x contendo lista ordenada em y}
+   \label{fig:vectorxlisty}
+\end{figure}
 
 
 
