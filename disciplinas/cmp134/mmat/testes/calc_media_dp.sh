@@ -7,17 +7,19 @@ do
 	NP=0
 	while [ $NP -le 3 ]
 	do
-    NP=$((NP+1))
+    		NP=$((NP+1))
 		echo CALCULANDO A MEDIA E O DESVIO-PADRAO PARA $NP PROCESSADORES E MATRIZ DE ORDEM $RANK...
-#    echo ${NP} >> resumo_it_t${NP}.txt
-    ./mdp tempo_it_t${NP}_o${RANK}.txt 10 >> resumo_it_o${RANK}.txt
+		echo -n ${NP} >> resumo_it_o${RANK}.txt
+		echo -n " " >> resumo_it_o${RANK}.txt
+    		./mdp tempo_it_t${NP}_o${RANK}.txt 10 >> resumo_it_o${RANK}.txt
 
-   	if [ $RANK -eq 768 ]; then
-      continue
-    fi
+   		if [ $RANK -eq 768 ]; then
+     	 		continue
+    		fi
     
-#    echo ${NP} >> resumo_rec_t${NP}.txt
-  	./mdp tempo_rec_t${NP}_o${RANK}.txt 10 >> resumo_rec_o${RANK}.txt
+    		echo -n ${NP} >> resumo_rec_o${RANK}.txt
+		echo -n " " >> resumo_rec_o${RANK}.txt
+  		./mdp tempo_rec_t${NP}_o${RANK}.txt 5 >> resumo_rec_o${RANK}.txt
 	done
 	echo FIM DA EXECUCAO
 	echo ===============================
