@@ -1,7 +1,7 @@
 set terminal postscript eps enhanced color solid lw 2 "Helvetica" 13
 set title 'Speed-up para a matriz de ordem 512'
 set xlabel 'Quantidade de Processos/Threads'
-set ylabel 'Tempo ({/Symbol m}s)'
+set ylabel 'Fator'
 
 set autoscale
 set xtics (1,2,3,4)
