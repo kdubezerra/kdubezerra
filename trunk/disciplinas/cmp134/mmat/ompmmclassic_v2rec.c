@@ -6,8 +6,6 @@
 #define MIN_RANK 2
 #define E(X,i,j) (* el(X,i,j))
 
-matriz recursive_multv2 (matriz A, matriz B);
-
 int my_rank, nprocs;
 
 int my_log2 (int x) {
@@ -30,11 +28,11 @@ typedef struct _matriz {
 	int ordem, start_x, start_y;	
 } matriz;
 
-
 float* el (matriz m, int i, int j) {
 	return &(m.array[i + m.start_x][j + m.start_y]);
 }
 
+matriz recursive_multv2 (matriz A, matriz B);
 
 matriz new_matrix (int x) {
 	int i;
@@ -279,6 +277,8 @@ matriz recursive_mult (matriz A, matriz B) {
 		return C;		
 	}	
 }
+
+
 
 matriz recursive_multv2 (matriz A, matriz B) {
 	int i,j,k, ordem;
