@@ -6,6 +6,8 @@
 #define MIN_RANK 2
 #define E(X,i,j) (* el(X,i,j))
 
+matriz recursive_multv2 (matriz A, matriz B);
+
 int my_rank, nprocs;
 
 int my_log2 (int x) {
