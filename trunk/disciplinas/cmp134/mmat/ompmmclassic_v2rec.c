@@ -301,21 +301,21 @@ matriz recursive_multv2 (matriz A, matriz B) {
     matriz M_111, M_112, M_121, M_122, M_211, M_212, M_221, M_222;
     
 	
-    M_111 = recursive_mult (A_11, B_11);
+    M_111 = recursive_multv2 (A_11, B_11);
 		
-    M_112 = recursive_mult (A_12, B_21);
+    M_112 = recursive_multv2 (A_12, B_21);
 		
-    M_121 = recursive_mult (A_11, B_12);
+    M_121 = recursive_multv2 (A_11, B_12);
 		
-    M_122 = recursive_mult (A_12, B_22);
+    M_122 = recursive_multv2 (A_12, B_22);
 		
-    M_211 = recursive_mult (A_21, B_11);
+    M_211 = recursive_multv2 (A_21, B_11);
 		
-    M_212 = recursive_mult (A_22, B_21);
+    M_212 = recursive_multv2 (A_22, B_21);
 		
-    M_221 = recursive_mult (A_21, B_12);
+    M_221 = recursive_multv2 (A_21, B_12);
 		
-    M_222 = recursive_mult (A_22, B_12);
+    M_222 = recursive_multv2 (A_22, B_12);
 
 
 		matriz C_11 = some (M_111, M_112);
