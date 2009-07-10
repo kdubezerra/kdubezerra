@@ -1,0 +1,258 @@
+%
+%  $Description: Orientação para autores e exemplo de documento em LaTeX 2.09$ 
+%
+%  $Autor: Gabriel P. Silva $
+%  $Data: 15/04/2009 15:20:59 $
+%  $Revisão: 1.0 $
+%
+
+\documentclass[10pt,twocolumn]{article} 
+\usepackage{wscad2009}
+\usepackage{times}
+\usepackage[portuges]{babel}
+%\usepackage[latin1]{inputenc}
+
+% Se você estiver utilizando uma distribuição Linux Fedora ou Mandriva
+% Use utf8 
+\usepackage[latin1]{inputenc}
+% Para incluir gráficos e figuras use o pacote abaixo
+\usepackage{graphicx}
+
+%------------------------------------------------------------------------- 
+\pagestyle{empty}
+%------------------------------------------------------------------------- 
+\begin{document}
+
+\title{Um Estudo da Adição de um Quarto\\ Nível de Cache em Processadores Multicore}
+
+\author{Carlos Eduardo B. Bezerra$^{1}$, Cláudio F. R. Geyer$^{2}$\\
+Universidade Federal do Rio Grande do Sul\\
+Instituto de Informática\\
+Porto Alegre, RS, Brasil\\
+\{$^{1}$carlos.bezerra, $^{2}$geyer\}@inf.ufrgs.br\\
+% Para autores que pertencem a uma mesma instituição, 
+% omita as seguintes linhas até o último ``}''.
+% Neste caso use $^{1}$ para colocar um sobrescrito nos autores e
+% respectivos endereços de e-mail
+% Para adicionar autores com endereços diferentes coloque um ``\and'', 
+% como no caso do segundo autor a seguir:
+}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+   Após uma certa estagnação do aumento da freqüência dos processadores, tem-se investido em arquiteturas \emph{multicore} (com dois ou mais núcleos) para suprir a demanda por capacidade de processamento imposta pelas aplicações cada vez mais pesadas. Estas aplicações também têm uma exigência cada vez maior de espaço de armazenamento em memória principal, o que exige um proporcional aumento da memória cache dos processadores. Contudo, a pura e simples adição de memória cache a um processador pode não apenas não aumentar sua performance, como também diminuir sua eficiência, ao aumentar o tempo de acesso a uma memória muito grande. Neste trabalho, é feita uma comparação entre o desempenho de uma arquitetura multicore com uma cache L3 grande e uma arquitetura com um nível adicional, L4, de memória. Além disso, é proposta uma arquitetura com hierarquia de cache entrelaçada, com o objetivo de diminuir a profundidade de busca na memória quando dois núcleos compartilham uma variável. Verificou-se que uma memória com quatro níveis melhor estruturada executou as tarefas simuladas em menos tempo do que uma arquitetura com uma grande cache L3. Por fim, evidenciou-se que o entrelaçamento da hierarquia de cache pode trazer benefícios significativos.
+\end{abstract}
+
+%------------------------------------------------------------------------- 
+
+\Section{Introdução}
+
+Nos últimos anos, devido a uma certa estagnação da freqüência de relógio dos processadores \cite{zhao1008scs}, os fabricantes têm optado pela produção de processadores com vários núcleos de processamento (processadores \emph{multicore}, com diversos \emph{cores}). Exemplos disso são as arquitetura da Intel (\emph{Dunnington}, \emph{Nehalem} etc.), AMD (\emph{Barcelona}, \emph{Budapest}, \emph{Deneb} etc.) e Sun (\emph{Niagara}, \emph{Victoria Falls} etc.).
+
+As memórias cache servem para reduzir o número de ciclos de latência que um processador deve esperar para acessar um determinado dado na memória. Reduzindo o número de ciclos, reduz-se o tempo necessário para acessar um dado. Por esta razão, o tempo de acesso a dados na memória cache é consideravelmente menor do que o tempo necessário para acessar a memória principal, por exemplo.
+
+Contudo, ultimamente as aplicações têm cada vez um volume maior de dados a processar. Essa quantidade maior de dados, se não puderem ser acessados rapidamente pela unidade de processamento, podem implicar um pior desempenho do sistema \cite{li98fem}. Outra questão é que, nas arquiteturas multicore, vários núcleos podem estar utilizando a memória ao mesmo tempo. Por causa dessas razões, é recomendável aumentar o tamanho da memória cache (que tem acesso rápido) proporcionalmente ao aumento do volume de dados das aplicações e ao número de núcleos do processador.
+
+A grande questão é que aumentar a memória cache, pura e simplesmente, pode não ser suficiente para reduzir o tempo de execução das tarefas realizadas pelo processador. Na verdade, um aumento sem critérios do espaço da memória cache pode implicar uma redução da velocidade do sistema. Isso acontece porque quanto maior a memória, maior é o seu tempo de acesso, devido a uma estrutura mais complexa de endereçamento \cite{goodman98ucm}. Além disso, se vários núcleos estão tentando acessar a memória ao mesmo tempo, haverá uma contenção pelo barramento de acesso àquela memória, fazendo com que um ou mais processadores esperem até que o barramento seja liberado. Uma má escolha de estrutura e tamanho de memórias cache pode fazer com que uma arquitetura com mais memória seja mais lenta do que uma arquitetura com menos memória, porém estruturada de maneira mais eficiente.
+
+Tendo esses aspectos em vista, neste trabalho foi feito um breve estudo da influência da estrutura de cache em processadores multicore, comparando o desempenho de uma hierarquia com 3 níveis de memória, comparada com outras duas hierarquias, ambas com 4 níveis, introduzindo um nível L4 compartilhado entre todos os núcleos. Como contribuição, neste trabalho foi testado o uso de uma hierarquia de memória entrelaçada -- o que será descrito nas próximas seções --, com o objetivo de reduzir a profundidade da busca realizada por um núcleo para buscar um dado compartilhado com outro núcleo.
+
+O texto está organizado da seguinte forma: na seção \ref{sec:prop}, é apresentada em maiores detalhes a proposta deste trabalho, incluindo a idéia de entrelaçar a hierarquia da memória cache; na seção \ref{sec:simul}, são apresentados os detalhes da modelagem e parâmetros das simulações que foram realizadas; na seção \ref{sec:result}, são mostrados os resultados e uma breve análise dos mesmos e, na seção \ref{sec:conc}, são apresentadas as conclusões a que se chegou com este trabalho. 
+
+%------------------------------------------------------------------------- 
+
+\Section{Proposta}
+\label{sec:prop}
+
+Este trabalho teve dois objetivos, que são procurar evidências de que a adição de um quarto nível de memória cache é mais benéfico do que aumentar a memória cache L3 e avaliar o ganho de desempenho conseguido ao se entrelaçar a hierarquia de memórias cache. Para analisar a diferença de desempenho com uma cache L3 grande, contra a adição de um módulo de memória L4, foram comparadas as arquiteturas seguintes:
+
+\begin{itemize}
+ \item uma arquitetura multicore, inspirada na arquitetura Dunnington, utilizada no Intel Xeon, que dispunha de 8 núcleos de processamento, com quatro módulos de memória cache L2, cada um compartilhado por um par de núcleos, e uma grande memória L3 (com 32 megabytes de espaço), compartilhada entre todos os oito núcleos, como mostrado na Figura \ref{L3} -- nas figuras, \emph{dc} e \emph{ic} referem-se, respectivamente, a cache de dados e cache de instruções, que compõem a cache L1;
+\end{itemize}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=0.8\linewidth]{images/arq_L123}
+  \caption{Arquitetura com 3 níveis de memória cache}
+  \label{L3}
+\end{figure}
+
+\begin{itemize} 
+\item uma arquitetura multicore, semelhante à anterior, também com oito núcleos, porém os 32 megabytes que eram da L3 foram dividos em: duas memórias L3 de 8 megabytes, cada uma compartilhada por metade dos núcleos, e uma memória L4 de 16 megabytes, compartilhada por todos (Figura \ref{L4}).
+\end{itemize}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=0.8\linewidth]{images/arq_L1234}
+  \caption{Arquitetura com 4 níveis de memória cache}
+  \label{L4}
+\end{figure}
+
+Outra contribuição do trabalho foi que também se propôs o entrelaçamento da hierarquia das memórias cache. Para buscar algum resultado que indique se há algum benefício ao ser utilizado esse tipo de abordagem, foi comparadas as seguintes arquiteturas:
+
+\begin{itemize}
+ \item uma arquitetura com quatro níveis de cache (L1, L2, L3 e L4), onde cada módulo de cache só tem um módulo de nível inferior na hierarquia de memória, tal qual na Figura \ref{L4};
+\end{itemize}
+
+\begin{itemize}
+ \item com outra arquitetura, na qual cada módulo de cache L2 pode ter uma ou duas memórias L3 no nível inferior da hierarquia. A Figura \ref{L4Interleaved} ilustra essa arquitetura de hierarquia entrelaçada, e a Figura \ref{treescompare} apresenta de maneira mais clara essa diferença das hierarquias -- na Figura \ref{treescompare} (a), temos a arquitetura sem entrelaçamento e, na Figura \ref{treescompare} (b), com entrelaçamento.
+\end{itemize}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=0.8\linewidth]{images/arq_L1234Interleaved}
+  \caption{Arquitetura com 4 níveis de memória cache e hierarquia entrelaçada}
+  \label{L4Interleaved}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=0.8\linewidth]{images/treescompare}
+  \caption{Árvores representando as hierarquias avaliadas}
+  \label{treescompare}
+\end{figure}
+
+O objetivo de fazer esse entrelaçamento é tentar reduzir o problema de poder haver buscas muito profundas na hierarquia das memórias cache quando dois núcleos de processamento compartilham uma variável. Seja uma situação em que os núcleos \emph{CPU\_0} e \emph{CPU\_7} (Figura \ref{L4}) lêem e escrevem na mesma variável \emph{x}. Sem o entrelaçamento,  quando um deles escrevesse nessa variável, o valor possivelmente armazenado na cache L1 do outro estaria incoerente e aquele núcleo teria que fazer uma busca até a primeira área de memória comum entre os dois núcleos -- no caso, a memória L4, que é mais distante dos núcleos e teria um tempo de acesso provavelmente maior, reduzindo o desempenho do sistema.
+
+No entanto, considerando a arquitetura com hierarquia entrelaçada, apresentada na Figura \ref{L4Interleaved}, bastaria que o dado estivesse atualizado na cache de terceiro nível \emph{L3\_1}, que não seria necessário fazer uma busca tão profunda quanto mergulhar na árvore até o nível das caches L4. Utilizando essa abordagem, diminui-se a maior profundidade mínima de busca para que os núcleos compartilhem dados nas memórias cache. Contudo, esse mecanismo tem alguns detalhes a serem considerados numa implementação real da arquitetura. Por exemplo, quando ocorre um \emph{cache miss} em uma cache L2, pode ser necessário fazer busca em duas caches L3 -- no exemplo da Figura \ref{L4Interleaved}, isso acontece quando ocorre um cache miss nos módulos \emph{L2\_0} e \emph{L2\_2}. Isso se refletirá em um tempo maior de acesso, se as buscas forem seqüenciais, ou em maior custo de fabricação do hardware, se houver no processador uma unidade responsável por realizar as buscas em paralelo e retornar aquela que encontrar o dado procurado primeiro.
+
+Na seção a seguir, serão apresentados os detalhes da modelagem das arquiteturas propostas e dos testes executados através de simulação.
+
+%------------------------------------------------------------------------- 
+
+\Section{Modelagem e simulações}
+\label{sec:simul}
+
+Para realizar a simulação das arquiteturas propostas na seção \ref{sec:prop}, foi utilizado o simulador Simics \cite{magnusson2002sfs}, versão 4. Através do Simics, é possível modelar e simular diversas arquiteturas de computadores, sobre as quais podem ser executados sistemas operacionais populares, como o Linux. Para modelar a arquitetura e os componentes de hardware, o Simics utiliza arquivos escritos com uma linguagem de modelagem de dispositivo (DML, \emph{device modeling language}), que permite criar componentes, ajustar seus atributos e conectá-los entre si. Após instalado e configurado o sistema operacional, foi instalado o programa de avaliação de desempenho NAS (\emph{Numerical Aerodynamic Simulation}), que permite a avaliação de desempenho de arquiteturas de computadores através de extensos cálculos numéricos \cite{bailey1995npb}.
+
+A modelagem das arquiteturas propostas foi feita com base em uma arquitetura sparc64 (TI UltraSparc II -- \textit{BlackBird}). Todas têm as seguintes características em comum:
+
+\begin{itemize}
+ \item Número de núcleos de processamento: 8;
+ \item Freqüência de clock de cada núcleo: 168 MHz;
+ \item Memória cache L1 de dados: 32 kilobytes;
+ \item Memória cache L1 de instruções: 32 kilobytes;
+ \item Latência da cache L1: 2 ciclos;
+ \item Memória cache L2: 1 megabyte (4 módulos de 1 MB, cada um compartilhado por um par de núcleos);
+ \item Latência da cache L2: 5 ciclos.
+\end{itemize}
+
+A partir do terceiro nível de cache, as arquiteturas mudam completamente, sendo que três propostas foram modeladas:
+
+\begin{itemize}
+ \item Arquitetura \textbf{L123}, com três níveis de cache:
+ \begin{itemize}
+  \item Memória cache L3: 32 megabytes (compartilhados por todos os núcleos);
+  \item Latência da cache L3: 30 ciclos;
+ \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+ \item Arquitetura \textbf{L1234}, com quatro níveis de cache (sem entrelaçamento):
+ \begin{itemize}
+  \item Memória cache L3: 8 megabytes (2 módulos de 8 MB, cada um compartilhado por quatro núcleos);
+  \item Latência da cache L3: 15 ciclos;
+  \item Memória cache L4: 16 megabytes (compartilhados por todos os núcleos);
+  \item Latência da cache L4: 30 ciclos.
+ \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+ \item Arquitetura \textbf{L4Interleaved}, com quatro níveis de cache e com entrelaçamento:
+ \begin{itemize}
+  \item Memória cache L3: 8 megabytes (2 módulos de 8 MB, cada um compartilhado por quatro núcleos, porém o conjunto de núcleos é diferente da arquitetura L1234, entrelaçando os níveis de cache);
+  \item Latência da cache L3: 20 ciclos;
+  \item Memória cache L4: 16 megabytes (compartilhados por todos os núcleos);
+  \item Latência da cache L4: 30 ciclos.
+ \end{itemize}
+\end{itemize}
+
+Os motivos para decidir-se por esses parâmetros foram os seguintes: na arquitetura L123, a cache L3 tem 32 megabytes de espaço, causando um tempo de acesso (30 ciclos) maior do que na arquitetura L1234 (15 ciclos), onde cada cache L3 tem apenas 8 megabytes. Já na L4Interleaved, cada cache miss em uma cache L2 pode precisar de duas buscas nas caches L3. Para simular esse comportamento, definiu-se o tempo de acesso às L3 como de 20 ciclos, como uma estimativa de tempo médio de acesso.
+
+O sistema operacional que foi instalado sobre cada uma das arquiteturas simuladas foi o Ubuntu (GNU/Linux, kernel 2.6.15-53). O software utilizado para avaliação das arquiteturas modeladadas, o NAS, consiste de diversos programas de avaliação de desempenho. Dois deles são o \textbf{BT} e o \textbf{CG}. Detalhes a respeito do que fazem podem ser encontrados em \cite{bailey1995npb} e \cite{jin1999oip}.
+
+Para cada combinação testada (arquitetura $\times$ programa), foram executadas três repetições, devido a restrições no tempo que se tinha disponível para realizar os testes. Na média cada repetição da simulação demorava três horas. Estima-se que, apenas executando três vezes cada simulação, tenha-se dispendido 54 horas. Na próxima seção, serão apresentados os resultados encontrados com as simulações que foram realizadas.
+
+%------------------------------------------------------------------------- 
+
+\Section{Resultados}
+\label{sec:result}
+
+Tanto o CG quando o BT buscam estressar os componentes de processamento e memória. O BT tem um tempo de execução maior, permitindo a avaliação do processador, enquanto que o CG visa a estressar as memórias, permitindo o teste de desempenho da estrutura de cache simulada. Foram utilizadas implementações em OpenMP \cite{dagum1998ois} de ambos. Para coletar os dados, foi utilizada a \emph{magic instruction} do Simics, que permite pausar a simulação e extrair o estado de cada um dos componentes de hardware. Os valores extraídos com esse método, para cada programa executado (BT e CG) foram:
+
+\begin{itemize}
+ \item Número de ciclos do processador;
+ \item Número de instruções executadas pelo processador -- no Simics, é utilizado para este valor o termo \emph{steps}, que também será usado no texto daqui por diante;
+ \item L3 cache write miss;
+ \item L3 cache read miss;
+ \item L4 cache write miss e
+ \item L4 cache read miss.
+\end{itemize}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=\linewidth]{images/ciclos_bt.png}
+  \caption{Números de ciclos necessários para executar o BT}
+  \label{ciclos_bt}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=\linewidth]{images/steps_bt.png}
+  \caption{Números de steps necessários para executar o BT}
+  \label{steps_bt}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=\linewidth]{images/ciclos_cg.png}
+  \caption{Números de ciclos necessários para executar o CG}
+  \label{ciclos_cg}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=\linewidth]{images/steps_cg.png}
+  \caption{Números de steps necessários para executar o CG}
+  \label{steps_cg}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=\linewidth]{images/cachemiss_bt.png}
+  \caption{Taxa de cache miss ao executar o BT}
+  \label{cachemiss_bt}
+\end{figure}
+
+\begin{figure}[!h]
+  \centering  
+  \includegraphics[width=\linewidth]{images/cachemiss_cg.png}
+  \caption{Taxa de cache miss ao executar o CG}
+  \label{cachemiss_cg}
+\end{figure}
+
+Antes de se analisar os resultados, deve-se considerar que o desvio-padrão do número de ciclos não ultrapassou, em nenhuma das baterias de testes, o valor de 1000 (0,0001\%); da mesma forma que o desvio-padrão do número de steps não ultrapassou o valor de 1000000, (0,1\%). Levando isso em conta, são consideradas relevantes as diferenças de resultados encontradas nos gráficos apresentados.
+
+Nos gráficos da Figura \ref{ciclos_bt} e da Figura \ref{steps_bt}, verifica-se que houve uma diferença de vários desvios-padrões no número de ciclos e de steps ao se executar o BT nas diferentes arquiteturas. A arquitetura L1234 teve o menor tempo de execução, provavelmente devido à menor contenção pelo acesso a cada cache L3, além do próprio tempo de acesso ser menor. Mesmo cada módulo de cache L3 tendo um quarto da capacidade da L3 da arquitetura L1234, aparentemente a menor contenção e o acesso mais rápido foram determinantes no tempo de execução. A arquitetura L4Interleaved teve um tempo de execução próximo ao da L123, provavelmente devido ao seu maior tempo de acesso à cache L3.
+
+Na Figura \ref{ciclos_cg} e na Figura \ref{steps_cg}, verificamos um comportamento mais interessante: ambas arquiteturas com cache L4 tem desempenho melhor que aquela sem o quarto nível; porém o número de ciclos da L4Interleaved é um pouco maior que o da L1234 e número de steps é menor. A causa mais provável para isto é o entrelaçamento da hierarquia de cache. Provavelmente, o número de acessos à memória, na L4Interleaved, é menor. Contudo, como cada acesso à L3 tem um custo maior, o seu número de ciclos acabou sendo superior. Provavelmente, neste caso, fosse melhor utilizar no processador uma unidade que fosse responsável por fazer as buscas em paralelo em ambos os módulos de cache L3, reduzindo o tempo de acesso para o tempo de acessar apenas uma memória.
+
+Por fim, na Figura \ref{cachemiss_bt} e na Figura \ref{cachemiss_cg}, verificamos que a taxa de cache miss das memórias L3 aumentou -- o que era esperado de uma memória quatro vezes menor. Também percebeu-se que a taxa de cache miss no programa CG é maior que no BT, o que também era esperado, considerando que o CG visa justamente a estressar as memórias cache. Por último, observou-se um valor muito alto para a taxa de cache miss da memória L4. Considerando que o intervalo entre dois acessos consecutivos é relativamente longo -- já que é necessário ocorrer miss nas memórias L1, L2 e L3, para então a L4 ser acessada --, provavelmente o que acontecesse entre dois acessos consecutivos é a sobrescrita do dado que estava armazenado naquela cache, o que explicaria esse comportamento. Outra possível explicação seria o fato da cache L4 ser compartilhada por oito núcleos, escrevendo nela continuamente. O que difere essa situação de quando havia uma L3 compartilhada entre os oito núcleos é que a L4 compartilhada tem 16 MB de memória, metade da L3 compartilhada na arquitetura L123.
+
+%------------------------------------------------------------------------- 
+
+\Section{Conclusões}
+\label{sec:conc}
+
+Este trabalho avaliou a diferença de desempenho de arquiteturas de três e quatro níveis de memória cache, além de propor uma hierarquia entrelaçada de memória. Verificou-se que, nas situações simuladas, é mais interessante adicionar um quarto nível de cache e dividir o terceiro em dois módulos do que simplesmente aumentar o tamanho da cache L3. Isso se deve ao menor tempo de acesso e à menor contenção pelo acesso à L3 presente nas arquiteturas com cache L4 simuladas. Fica como possível trabalho futuro avaliar se uma cache L4 com tamanho maior -- 32 megabytes, por exemplo -- teria uma taxa de cache miss tão alta.
+
+%------------------------------------------------------------------------- 
+
+%\nocite{ex1,ex2}
+\bibliographystyle{wscad2009}
+\bibliography{interleaving}
+
+\end{document}
+
