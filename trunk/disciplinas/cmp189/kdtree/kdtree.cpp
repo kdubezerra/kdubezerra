@@ -333,6 +333,10 @@ void KDTree::setServer(Server* _server) {
   _server->setNode(this);
 }
 
+Server* KDTree::getServer() {
+  return server;
+}
+
 void KDTree::getLimits(int& _xmin, int& _xmax, int& _ymin, int& _ymax) {
   _xmin = xmin;
   _xmax = xmax;

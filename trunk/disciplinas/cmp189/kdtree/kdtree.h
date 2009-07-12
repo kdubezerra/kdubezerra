@@ -45,6 +45,7 @@ class KDTree {
 		static KDTree* getRoot();
 		
 		void setServer(Server* _server);
+    Server* getServer();
 		
 		void getLimits(int& _xmin, int& _xmax, int& _ymin, int& _ymax);
 	
