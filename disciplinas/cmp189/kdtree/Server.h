@@ -45,7 +45,10 @@ class Server {
     long getWeight();
     double getUsage();
     static double getUsageDeviation();
+    
+    static void clearOverhead();
     long getOverhead();
+    void incOverhead(long value);
 
   protected:
 
@@ -53,6 +56,7 @@ class Server {
     KDTree* treeNode;
     long serverPower;
     int serverId;
+    long overHead;
     static int lastId;
     static long multiServerPower;
     static list<Server*> serverList;

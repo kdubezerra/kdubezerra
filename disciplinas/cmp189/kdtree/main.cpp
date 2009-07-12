@@ -6,14 +6,19 @@
 #include "Server.h"
 #include "myutils.h"
 
+
 #define NUM_PLAYERS 750
-#define NUM_SERVERS 32
+#define NUM_SERVERS 8
 #define MULTIPLIER 20000
 
 #define BG_IMAGE "bg.bmp"
 #define PLAYER_IMAGE "player.bmp"
 #define PLAYER_ZERO_IMAGE "player0.bmp"
 #define PLAYER_SEEN_IMAGE "seen.bmp"
+
+#define REBAL_INTERVAL 1000 // INTERVALO ENTRE REBALANCEAMENTOS, EM MILISEGUNDOS
+#define EXECUTION_TIME 1200000u
+
 
 void checkInput();
 
@@ -25,10 +30,11 @@ int main () {
 	setSdl(&screen);
 	
 	list<Avatar*> avatar_list;
-	list<Server*> server_list;
+  list<Server*> server_list;
+	Server* server[NUM_SERVERS];
 	for (int i = 0 ; i < NUM_PLAYERS ; i++) {
 		Avatar* av = new Avatar();
-		av->setDrawable(PLAYER_IMAGE, PLAYER_SEEN_IMAGE, screen);
+		//av->setDrawable(PLAYER_IMAGE, PLAYER_SEEN_IMAGE, screen);
 		avatar_list.push_back(av);
 	}
 	
@@ -36,21 +42,22 @@ int main () {
   
 	for (int i = 0 ; i < NUM_SERVERS ; i++) {
     //_s = new Server ((i+1)*20000);
-		Server* _server = new Server ((i+1)*MULTIPLIER);
-		server_list.push_back(_server);
+		server[i] = new Server ((i+1)*MULTIPLIER);
+    server_list.push_back(server[i]);
     //server[i]->assignRegion(*(it++));
-    cout << "Server " << i << " has power of " << _server->getServerPower() << endl;
+    cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
   }
   
-  list<Server*>::iterator sampleserver = server_list.begin(); sampleserver++; ///servidor 2
+  Server* sampleserver = server[1]; ///servidor 2
 	
-	Avatar::toggleMobility();
+	//Avatar::toggleMobility();
 	KDTree* kdt = new KDTree(server_list, avatar_list);
 	kdt->setScreen(screen);
-	server_list.reverse();//* só pra ver se a ordem do checkBalance muda alguma coisa significativamente*//
+	//server_list.reverse();//* só pra ver se a ordem do checkBalance muda alguma coisa significativamente*//
 	
 	Uint32 time = 0;
-	Uint32 step_delay = 250;		
+	Uint32 step_delay = 250;
+  Uint32 lastbal = 0;
 	SDL_EnableKeyRepeat(400, 10);
 	SDL_Surface* bg = NULL;
 	TTF_Font *font = NULL;	
@@ -58,41 +65,75 @@ int main () {
 	if (!bg) cerr << "\nErro setando a imagem de plano de fundo: " << BG_IMAGE << endl;
 	font = TTF_OpenFont( "FreeSansBold.ttf", 10 );
 	if (!font) cerr << "Erro carregando a fonte" << endl;
-	
-	while (1) {
-		apply_surface(0,0,bg,screen);
-		step_delay = SDL_GetTicks() - time;
+	long total_mig_walk = 0;
+  long total_mig_still = 0;
+  inflong sum_weight[NUM_SERVERS];
+  inflong sum_oh[NUM_SERVERS];
+  
+	while (time < EXECUTION_TIME) {
+		//apply_surface(0,0,bg,screen);
+		//step_delay = SDL_GetTicks() - time;
 		//step_delay = step_delay > 40 ? 40 : step_delay;
-		time = SDL_GetTicks();
-		//time += 100;
+		//time = SDL_GetTicks();
+		time += 100;
 
 		for (list<Avatar*>::iterator it = avatar_list.begin() ; it != avatar_list.end() ; it++){
 			(*it)->step(100/* * step_delay*/);
 		}
 		
 		
-		kdt->drawTree();
+		//kdt->drawTree();
     //kdt->checkBalanceFromRoot();
     //(*sampleserver)->getNode()->checkBalance();
     //boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
-		Avatar::calcWeight();		
-    for (list<Server*>::iterator it = server_list.begin() ; it != server_list.end() ; it++) {
-      (*it)->getNode()->checkBalance();
+    Server::clearOverhead();
+		Avatar::calcWeight();
+    
+    if (time > lastbal + REBAL_INTERVAL) {
+
+      for (int i = 0 ; i < NUM_SERVERS ; i++) {
+        server[i]->getNode()->checkBalance();
+      }
+
+      cout << time << " " << Avatar::getMigrationWalk(false) << " " << Avatar::getMigrationStill(false) << " " << Server::getUsageDeviation() << " " << NUM_SERVERS << " ";
+      total_mig_walk += Avatar::getMigrationWalk();
+      total_mig_still += Avatar::getMigrationStill();
+      
+      for (int i = 0 ; i < NUM_SERVERS ; i++) {
+        cout << server[i]->getWeight() << " ";
+        sum_weight[i].add(server[i]->getWeight());
+      }
+      
+      for (int i = 0 ; i < NUM_SERVERS ; i++) {
+        cout << server[i]->getOverhead() << " ";
+        sum_oh[i].add(server[i]->getOverhead());
+      }
+      cout << endl;
+
+      lastbal = time;
     }
 
 		for (list<Avatar*>::iterator it = avatar_list.begin() ; it != avatar_list.end() ; it++){
-			(*it)->draw();
+			//(*it)->draw();
 		}
     
-    stringColor(screen, WW/2, WW/2, longToString(approxLong(1000.0f / (float) step_delay)).c_str(), 0xFFFFFFFF);
-		//if (!(time % 10000)) cout << "Step no tempo " << time << endl;
-    int xi, xj, yi, yj;
-    (*sampleserver)->getNode()->getLimits(xi, xj, yi, yj);
-    if (!(time % 10000)) cout << "x = [" << xi << ", " << xj << "], y = [" << yi << ", " << yj << "]" << endl;
-		SDL_Flip( screen );
-		checkInput();
+    //stringColor(screen, WW/2, WW/2, longToString(approxLong(1000.0f / (float) step_delay)).c_str(), 0xFFFFFFFF);
+		//SDL_Flip( screen );
+		//checkInput();
 	}
-	
+
+  cout << total_mig_walk << " " << total_mig_still << " " << NUM_SERVERS << " ";
+  for (int i = 0 ; i < NUM_SERVERS ; i++) {
+    cout << server[i]->getServerPower() << " ";
+  }
+  for (int i = 0 ; i < NUM_SERVERS ; i++) {
+    cout << sum_weight[i].getAverage() << " ";
+  }
+  for (int i = 0 ; i < NUM_SERVERS ; i++) {
+    cout << sum_oh[i].getAverage() << "  ";
+  }
+  cout << endl;
+  
 	return 0;
 }
 

@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <string>
+#include <list>
 
 using namespace std;
 
@@ -93,4 +94,5 @@ class Avatar {
     static long migration_walk;
     static long migration_still;
     KDTree* parentNode;
+    static list<Avatar*> avList;
 };

@@ -1,4 +1,5 @@
 #include "Server.h"
+#include "kdtree.h"
 
 //===========================================static members
 
@@ -13,6 +14,8 @@ Server::Server(long power) : serverPower(power) {
   serverId = lastId++;
   serversMap[serverId] = this;
   serverList.push_back(this);
+  treeNode = NULL;
+  overHead = 0;
 }
 
 Server::~Server() {
@@ -102,22 +105,22 @@ bool Server::isDisbalanced() {
 double Server::getPowerFraction() {
   return (double)getServerPower() / (double)getMultiserverPower();
 }
-/*
+
 long Server::getWeight() {
-  if (this->getRegion()) {
-    return this->getRegion()->getRegionWeight();
+  if (this->treeNode) {
+    return this->treeNode->getWeight();
   }
   else {
     return 0;
   }
 }
-*//*
+
 double Server::getUsage() {
   return (double) this->getWeight() / (double) this->getServerPower();
 }
-*//*
+
 double Server::getUsageDeviation() {
-  double global_usage = double(Cell::getWorldWeight()) / (double)Server::getMultiserverPower();
+  double global_usage = (double) (KDTree::getRoot()->getWeight()) / (double) Server::getMultiserverPower();
   double sum_of_square_diffs = 0.0f;
   for (list<Server*>::iterator it = serverList.begin() ; it != serverList.end() ; it++) {
     sum_of_square_diffs += pow((*it)->getUsage() - global_usage, 2);
@@ -126,12 +129,16 @@ double Server::getUsageDeviation() {
   return sqrt(mean_sqr_diff);
 }
 
-long Server::getOverhead() {
-  if (this->getRegion()) {
-    return this->getRegion()->getNeighborsOverhead();
-  }
-  else {
-    return 0;
+void Server::clearOverhead() {
+  for (list<Server*>::iterator it = serverList.begin() ; it != serverList.end() ; it++) {
+    (*it)->overHead = 0;
   }
 }
-*/
+
+long Server::getOverhead() {
+  return overHead;
+}
+
+void Server::incOverhead(long value) {
+  overHead += value;
+}

@@ -4,6 +4,7 @@
 	#include "myutils.h"
 #endif
 
+#include "Server.h"
 #include "Avatar.h"
 #include "kdtree.h"
 
@@ -20,11 +21,13 @@ bool Avatar::isMobile = true;
 long Avatar::total_weight = 0;
 long Avatar::migration_walk = 0;
 long Avatar::migration_still = 0;
+list<Avatar*> Avatar::avList;
 
 Avatar::Avatar() {
   init();
   isDrawable = false;
   player_id = 555;
+  avList.push_back(this);
 }    
 
 void Avatar::setDrawable(string my_surface_file, string seen_surface_file, SDL_Surface* out_screen) {     
@@ -34,7 +37,9 @@ void Avatar::setDrawable(string my_surface_file, string seen_surface_file, SDL_S
   screen = out_screen;
 }
 
-Avatar::~Avatar() {}
+Avatar::~Avatar() {
+  avList.remove(this);  
+}
 
 void Avatar::init() {          
   do {
@@ -123,6 +128,7 @@ void Avatar::checkMigration() {
 	if (posx < xmin ||posx >= xmax || posy < ymin || posy >= ymax) {
 		parentNode->removeAvatar(this);
 		KDTree::getRoot()->insertAvatar(this);
+    migration_still++;
 	}
 	
 /**  coord cell_coord = getCell();
@@ -173,7 +179,8 @@ long Avatar::getWeight() {
 
 
 void Avatar::calcWeight() {
-	list<Avatar*> avs = KDTree::getRoot()->getAvList();
+	//list<Avatar*> avs = KDTree::getRoot()->getAvList();
+  list<Avatar*> avs = avList;
 	list<Avatar*>::iterator visible_begin = avs.begin();
 	avs.sort(Avatar::compareX);
 	for (list<Avatar*>::iterator this_avatar = avs.begin() ; this_avatar != avs.end() ; this_avatar++) {
@@ -190,16 +197,26 @@ void Avatar::calcWeight() {
 }
 
 int Avatar::OtherRelevance(Avatar* other) {//valor entre 0 e 100, ao invés de 0.0f e 1.0f
+  int relevance;
   float ox = other->GetX();
-  float oy = other->GetY();                        
-  float dist = distance (posx, posy, ox, oy);                        
+  float oy = other->GetY();
+  float dist = distance (posx, posy, ox, oy);
+  
   if (dist < THRESHOLD_DISTANCE) {
-    return 100;
+    relevance = 100;
   }
-  if (dist < VIEW_DISTANCE && belongsToVisibility(posx, posy, incr_x, incr_y, ox, oy)) {
-    return approx(convertToScale(dist, THRESHOLD_DISTANCE, VIEW_DISTANCE, 0, 100));
-  }                        
-  return 0;
+  else if (dist < VIEW_DISTANCE && belongsToVisibility(posx, posy, incr_x, incr_y, ox, oy)) {
+    relevance = approx(convertToScale(dist, THRESHOLD_DISTANCE, VIEW_DISTANCE, 0, 100));
+  }
+  else {
+    relevance = 0;
+  }
+  
+  if (this->parentNode != other->parentNode) {
+    other->parentNode->getServer()->incOverhead(relevance);
+  }
+  
+  return relevance;
 }
 
 float Avatar::GetX() { 
