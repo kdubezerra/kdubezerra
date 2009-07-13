@@ -1,3 +1,38 @@
+Set 750x750 at 32 bits-per-pixel mode
+SDL_ttf inicializado com sucesso
+X[0] = 740 ; Y[0] = 270
+X[1] = 310 ; Y[1] = 20
+X[2] = 440 ; Y[2] = 400
+Server 0 has power of 20000
+Server 1 has power of 40000
+Server 2 has power of 60000
+Server 3 has power of 80000
+Server 4 has power of 100000
+Server 5 has power of 120000
+Server 6 has power of 140000
+Server 7 has power of 160000
+xmin = 0; xmax = 749; ymin = 0; ymax = 749.
+xmin = 0; xmax = 376; ymin = 0; ymax = 749.
+xmin = 0; xmax = 376; ymin = 0; ymax = 367.
+xmin = 0; xmax = 376; ymin = 368; ymax = 749.
+xmin = 377; xmax = 749; ymin = 0; ymax = 749.
+xmin = 377; xmax = 749; ymin = 0; ymax = 352.
+xmin = 377; xmax = 749; ymin = 353; ymax = 749.
+Node id #0: 377
+Node id #0: 368
+Node id #0: 173
+Node id #0: -1
+Node id #4: -1
+Node id #2: 190
+Node id #2: -1
+Node id #6: -1
+Node id #1: 353
+Node id #1: 565
+Node id #1: -1
+Node id #5: -1
+Node id #3: 554
+Node id #3: -1
+Node id #7: -1
 1100 0 62 0.307954 8 14001 47886 40217 44006 66887 43519 41502 40018 2845 7856 3488 4142 5707 3774 6465 1831 
 2200 0 70 0.171876 8 11229 24362 41161 46734 76522 72329 42913 41696 1388 7081 2656 5298 9494 3381 6235 1752 
 3300 0 79 0.177774 8 7536 22765 38929 49010 79786 75609 44555 41145 912 6181 2585 6320 7956 3580 7428 2303 
