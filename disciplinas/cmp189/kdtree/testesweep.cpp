@@ -15,7 +15,7 @@ int width, num, reach, threshold;
 void calc_weight_sortxandy ();
 
 typedef struct {
-  int x,y,dx,dy;
+  float x,y,dx,dy;
 } point;
 
 bool compareX (point a, point b) {

@@ -54,22 +54,41 @@ public:
   ~inflong() {}
 
   double getSum() {
-    list<double> summing;
-    list<double> summed;
+    
+    if (!numcount) return 0.0f;
+    
+    long max = numbers.size();
+    double return_value;
+    double* sum_array = new double[max];
+
+    long i = 0;
+
     for (list<long>::iterator it = numbers.begin() ; it != numbers.end() ; it++) {
-      summing.push_back((double)(*it));
-    }    
-    while (summing.size() > 1) {
-      summed.clear();
-      for (list<double>::iterator it = summing.begin() ; it != summing.end() ; it++) {
-        double local_sum = *it;
-        if (++it != summing.end())
-          local_sum += *it;
-        summed.push_back(local_sum);
-      }
-      summing = summed;
+      sum_array[i++] = (double) (*it);
     }
-    return summing.front();
+    
+    while (max > 1) {
+      ///se o último elemento de índice par não tiver sucessor para somar,
+      ///ou seja, o vetor tem um número ímpar de elementos,
+      ///nesse caso, some o último elemento ao menor dos outros elementos presentes no array
+      ///e desconsidere o último elemento, passando a ter um número par de elementos no array
+      if (max%2) {
+        int smallest = 0;
+        for (int j = 0 ; j < max-1 ; j++) {
+          if (sum_array[j] < sum_array[smallest]) smallest = j;
+        }
+        sum_array[smallest] += sum_array[max - 1];
+        max--;
+      }
+      for (i = 0 ; i < max ; i+=2 ) {
+        sum_array[i/2] = sum_array[i] + sum_array[i+1];
+      }
+      max /= 2;
+    }
+    
+    return_value = sum_array[0];
+    delete [] sum_array;
+    return return_value;
   }
 
   double getAverage() {
@@ -88,6 +107,7 @@ public:
   }
 
 private:
+
   list<long> numbers;
   long numcount;
 };

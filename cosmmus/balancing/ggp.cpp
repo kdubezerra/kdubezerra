@@ -62,7 +62,7 @@ void plotAllAvatars(string filename);
 //AQUI COMECA O PROGRAMA
 
 int main (int argc, char* argv[]) {
-  srand(time(NULL));
+  ///srand(time(NULL));
   
   setSdl(&screen);
   SDL_EnableKeyRepeat(400, 10);
@@ -111,8 +111,10 @@ int main (int argc, char* argv[]) {
   Region::partitionWorld();
   Region::checkAllRegionsNeighbors();
 
+  //Avatar::toggleMobility();
+
   while (time < EXECUTION_TIME) { // CICLO PRINCIPAL
-    apply_surface(0,0,bg,screen);
+    apply_surface(0,0,bg,screen);///***
 
     step_delay = SDL_GetTicks() - time;
     step_delay = step_delay > 40 ? 40 : step_delay;
@@ -120,19 +122,19 @@ int main (int argc, char* argv[]) {
     //time = SDL_GetTicks();
     time += 100;
     
-    if (/*SDL_GetTicks()*/ time - dtime >= 25) {
+//    if (/*SDL_GetTicks()*/ time - dtime >= 25) {
       Cell::updateAllEdgesAndVertexWeights();
-      dtime = time;
-    }    
-    Cell::drawCells(screen);
-    Region::drawAllRegions(screen);
-    Region::drawAllRegionsWeights(screen, font);
+//      dtime = time;
+//    }    
+    Cell::drawCells(screen);///***
+    Region::drawAllRegions(screen);///***
+    Region::drawAllRegionsWeights(screen, font);///***
     
-    for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();
+    for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();///***
 
     //time = SDL_GetTicks();
-    showHelp();
-    SDL_Flip( screen );
+    //showHelp();
+    SDL_Flip( screen );///***
     count++;
     checkInput();
     
@@ -178,6 +180,19 @@ int main (int argc, char* argv[]) {
     cout << sum_oh[i].getAverage() << " ";
   }
   cout << endl;
+
+  long pesototaldosservidores = 0;
+  for (int i = 0 ; i < NUM_SERVERS ; i++) {  
+    pesototaldosservidores += server[i]->getWeight();
+  }
+  
+  cout << "Peso total (servidores) no último instante = " << pesototaldosservidores << endl;
+  
+  long pesototaldosavatares = 0l;
+  for (int i = 0 ; i < nplayers ; i ++) {
+    pesototaldosavatares += player[i]->getWeight();
+	}
+  cout << "Peso total (avatares) no último instante = " << pesototaldosavatares << endl;
 
   return 0;
 }

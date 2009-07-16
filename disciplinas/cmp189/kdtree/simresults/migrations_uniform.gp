@@ -1,6 +1,6 @@
 set terminal postscript eps enhanced color solid lw 2 "Helvetica" 18
 set encoding iso_8859_1
-set title 'Migra\347\365es de jogadores entre servidores (sem pontos de interesse)'
+#set title 'Migra\347\365es de jogadores entre servidores (sem pontos de interesse)'
 set ylabel 'Migra\347\365es'
 set autoscale
 set grid

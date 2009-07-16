@@ -1,6 +1,6 @@
 set terminal postscript eps enhanced color solid lw 2 "Helvetica" 18
 set encoding iso_8859_1
-set title 'Desvio m\351dio da taxa de uso ideal dos servidores (sem hotspots)'
+#set title 'Desvio m\351dio da taxa de uso ideal dos servidores (sem hotspots)'
 set xlabel 'Instante (s)'
 set ylabel 'Desvio'
 #set xtics auto
