@@ -95,4 +95,5 @@ class Avatar {
     static long migration_still;
     KDTree* parentNode;
     static list<Avatar*> avList;
+    static Avatar* first;
 };

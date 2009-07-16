@@ -8,6 +8,8 @@
 #include "Avatar.h"
 #include "kdtree.h"
 
+#define USE_HOTSPOTS true
+
 SDL_sem* vsem = NULL;
 SDL_sem* esem = NULL;
     
@@ -22,12 +24,14 @@ long Avatar::total_weight = 0;
 long Avatar::migration_walk = 0;
 long Avatar::migration_still = 0;
 list<Avatar*> Avatar::avList;
+Avatar* Avatar::first = NULL;
 
 Avatar::Avatar() {
   init();
   isDrawable = false;
   player_id = 555;
   avList.push_back(this);
+  if (!first) first = this;
 }    
 
 void Avatar::setDrawable(string my_surface_file, string seen_surface_file, SDL_Surface* out_screen) {     
@@ -87,6 +91,10 @@ void Avatar::init() {
 void Avatar::step(unsigned long delay) { // delay in microseconds  
   Uint32 elapsed_time = SDL_GetTicks() - last_move;
   if (!isMobile) return;
+  
+  ///cout << "First: " << posx << ", " << posy << endl;
+  
+  if (!parentNode) cout << "ALARM !!! ALARM !!! Avatar without parent node!!!" << endl;
 
   float distance_ = distance(posx, posy, destx, desty);  
   if (distance_ > 20) {    
@@ -108,7 +116,7 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
   } else {
     stopped_time += delay;  
     if (stopped_time < resting_time) return; //only chooses a new destination with a 0.05 probability
-    if (rand() % 100 < 30) { //selects a random spot
+    if (!USE_HOTSPOTS || rand() % 100 < 30) { //selects a random spot
       destx = rand() % WW;
       desty = rand() % WW;
       last_move = SDL_GetTicks();
@@ -182,15 +190,15 @@ void Avatar::calcWeight() {
 	//list<Avatar*> avs = KDTree::getRoot()->getAvList();
   list<Avatar*> avs = avList;
 	list<Avatar*>::iterator visible_begin = avs.begin();
-	avs.sort(Avatar::compareX);
+	//avs.sort(Avatar::compareX);
 	for (list<Avatar*>::iterator this_avatar = avs.begin() ; this_avatar != avs.end() ; this_avatar++) {
 		(*this_avatar)->weight = 0l;
 		for (list<Avatar*>::iterator other_avatar = visible_begin ; other_avatar != avs.end() ; other_avatar++) {
-			if ((*other_avatar)->GetX() < (*this_avatar)->GetX() - VIEW_DISTANCE) {
+/*			if ((*other_avatar)->GetX() < (*this_avatar)->GetX() - VIEW_DISTANCE) {
 				visible_begin++;
 				continue;
 			}
-			if ((*other_avatar)->GetX() > (*this_avatar)->GetX() + VIEW_DISTANCE) break;
+			if ((*other_avatar)->GetX() > (*this_avatar)->GetX() + VIEW_DISTANCE) break;*/
 			(*this_avatar)->weight += (*this_avatar)->OtherRelevance(*other_avatar);
 		}
 	}

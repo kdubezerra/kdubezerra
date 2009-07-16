@@ -22,6 +22,7 @@ SDL_Surface* Cell::surface_edge_weight = NULL;
 //================================cons/des-truction methods
 
 Cell::Cell(){
+  cellposition = new coord();
 }
 
 Cell::Cell(int coord_x, int coord_y) {
@@ -62,11 +63,11 @@ void Cell::updateVWeight() {
   long weight = 0;
   for (it1 = avatars.begin() ; it1 != avatars.end() ; it1++)
     for (it2 = avatars.begin() ; it2 != avatars.end() ; it2++) {
-      if (*it1 == *it2) continue;
-      weight += (long)(*it1)->OtherRelevance(*it2);    
+      if (*it1 == *it2) weight += 100;
+      else weight += (long)(*it1)->OtherRelevance(*it2);    
     }
   vertexWeight = weight;
-  //somar com o peso de todas as arestas. (ou deixar assim porque � mais f�cil e costurar o resto do prot�tipo pra usar VWeight + EWeight como peso das c�lulas)
+  //somar com o peso de todas as arestas. (ou deixar assim porque eh mais facil e costurar o resto do prototipo pra usar VWeight + EWeight como peso das celulas)
 }
 
 long Cell::getEWeight(short neighbor) {
@@ -155,7 +156,7 @@ long Cell::updateEWeight(short neighbor) {
   long edgew = 0;
   Cell* neighborCell = getNeighbor(neighbor);
   if (!neighborCell)
-    return -1;
+    return 0;
   for (list<Avatar*>::iterator it = avatars.begin() ; it != avatars.end() ; it++) {
     edgew += (*it)->getInteraction(neighborCell);
   }

@@ -1,6 +1,6 @@
 set terminal postscript eps enhanced color solid lw 1 "Helvetica" 14
 set encoding iso_8859_1
-set title 'Carga m\351dia em cada servidor (por algoritmo, sem hotspots)'
+#set title 'Carga m\351dia em cada servidor (por algoritmo, sem hotspots)'
 set ylabel 'Carga'
 set autoscale
 set grid

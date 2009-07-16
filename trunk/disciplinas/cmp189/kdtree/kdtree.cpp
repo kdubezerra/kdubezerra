@@ -90,6 +90,7 @@ void KDTree::setLimits(int _lvl) {
 }
 
 void KDTree::checkBalance(short recursive) {
+  if (getRoot()->getAvList().size() != 750) cout << "ALARM !!! ALARM !!! KDTree with less than 750 players!!!" << endl;
   if (!schild && getWeight() >= DISBAL_TOLERANCE * (float) server->getServerPower())
     balanceLoad();
   if (recursive && schild) {

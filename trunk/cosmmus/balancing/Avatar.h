@@ -56,6 +56,8 @@ class Avatar {
     void checkCellWeight (Avatar* other);
     
     long getInteraction(Cell* _cell);
+    long getWeight();
+    long getWeightBruteForce();
     
     static void resetCells ();    
     static void drawCells (SDL_Surface* output);
@@ -94,4 +96,6 @@ class Avatar {
     SDL_Surface* screen;
     static long migration_walk;
     static long migration_still;
+    static Avatar* first;
+    static list<Avatar*> avList;
 };

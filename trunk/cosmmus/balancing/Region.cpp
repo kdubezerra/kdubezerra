@@ -381,10 +381,12 @@ void Region::initRegions(int num_reg) {
   numRegions = num_reg;
   Uint32 color;
   for (int r = 0 ; r < num_reg ; r++) {
-    if (r < NUM_COLORS)
+    if (r < NUM_COLORS) {
       color = colorTable(r);
+      color = color >> 8;
+    }
     else
-      color = rand() % (255*255*255);      
+      color = 0;///rand() % (255*255*255);      
     regionList.push_back(new Region(color));
   }
 }

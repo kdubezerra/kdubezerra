@@ -134,6 +134,19 @@ int main () {
   }
   cout << endl;
   
+  long pesototaldosservidores = 0;
+  for (int i = 0 ; i < NUM_SERVERS ; i++) {  
+    pesototaldosservidores += server[i]->getWeight();
+  }
+  
+  cout << "Peso total (servidores) no último instante = " << pesototaldosservidores << endl;
+  
+  long pesototaldosavatares = 0l;
+  for (list<Avatar*>::iterator it = avatar_list.begin() ; it != avatar_list.end() ; it++){
+    pesototaldosavatares += (*it)->getWeight();
+	}
+  cout << "Peso total (avatares) no último instante = " << pesototaldosavatares << endl;
+  
 	return 0;
 }
 

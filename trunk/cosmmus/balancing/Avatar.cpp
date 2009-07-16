@@ -1,11 +1,14 @@
 #ifdef _WIN32
-#include "../../myutils.h"
+  #include "../../myutils.h"
 #else
-#include "myutils.h"
+  #include "myutils.h"
 #endif
 
 #include "Avatar.h"
 #include "Cell.h"
+
+
+#define USE_HOTSPOTS true
 
 SDL_sem* vsem = NULL;
 SDL_sem* esem = NULL;
@@ -20,11 +23,15 @@ bool Avatar::isMobile = true;
 long Avatar::total_weight = 0;
 long Avatar::migration_walk = 0;
 long Avatar::migration_still = 0;
+Avatar* Avatar::first = NULL;
+list<Avatar*> Avatar::avList;
 
 Avatar::Avatar() {
   init();
   isDrawable = false;
   player_id = 555;
+  if (!first) first = this;
+  avList.push_back(this);
 }    
 
 void Avatar::setDrawable(string my_surface_file, string seen_surface_file, SDL_Surface* out_screen) {     
@@ -34,7 +41,9 @@ void Avatar::setDrawable(string my_surface_file, string seen_surface_file, SDL_S
   screen = out_screen;
 }
 
-Avatar::~Avatar() {}
+Avatar::~Avatar() {
+  avList.remove(this);
+}
 
 void Avatar::init() {          
   do {
@@ -86,6 +95,8 @@ void Avatar::init() {
 void Avatar::step(unsigned long delay) { // delay in microseconds  
   Uint32 elapsed_time = SDL_GetTicks() - last_move;
   if (!isMobile) return;
+  
+  ///cout << "First: " << posx << ", " << posy << endl;
 
   float distance_ = distance(posx, posy, destx, desty);  
   if (distance_ > 20) {    
@@ -116,7 +127,7 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
   } else {
     stopped_time += delay;  
     if (stopped_time < resting_time) return; //only chooses a new destination with a 0.05 probability
-    if (rand() % 100 < 30) { //selects a random spot
+    if (!USE_HOTSPOTS || rand() % 100 < 30) { //selects a random spot
       destx = rand() % WW;
       desty = rand() % WW;
       last_move = SDL_GetTicks();
@@ -227,6 +238,18 @@ long Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferent
   for (it = _cell->getAvatars().begin() ; it != _cell->getAvatars().end() ; it++)
     _interaction += this->OtherRelevance(*it);
   return _interaction;
+}
+
+long Avatar::getWeight() {
+  return getWeightBruteForce();
+}
+
+long Avatar::getWeightBruteForce() {
+  long _w = 0l;
+  for (list<Avatar*>::iterator it = avList.begin() ; it != avList.end() ; it++) {
+    _w += this->OtherRelevance(*it);
+  }
+  return _w;
 }
 
 void Avatar::resetCells () {

@@ -56,6 +56,8 @@
 \newcommand{\misccite}[2]{#1. Disponível em: \textless#2\textgreater. Acesso em: 26 jun. 2009}
 \newcommand{\gamecite}[2]{\misccite{#1}{#2}}
 
+\hyphenation{des-cen-tra-li-za-das ba-lan-ce-a-men-to li-mi-te gra-nu-la-ri-da-de a-ninha-dos a-ta-car ge-ra-do ou-tros re-ba-lan-ce-a-men-to}
+
 %\input{comms_and_hyphs.tex}
 %% If you are submitting a paper to the annual conference, please replace 
 %% the value ``0'' below with the numeric value of your OnlineID. 
@@ -299,27 +301,91 @@ Como os vetores de avatares recebidos dos outros servidores já contêm informação
 \section{Simulações}
 \label{sec:simul}
 
-Para avaliar a eficácia (e eficiêcia, em tempo) da proposta de balanceamento dinâmico com o uso de uma kd-tree, foi simulado um ambiente virtual com vários avatares em movimento. Partindo de um ponto aleatório no ambiente, cada avatar desloca-se segundo o modelo \emph{random waypoint} \cite{bettstetter2004spr}. Para provocar um desbalanceamento e estressar o algoritmo definido na seção anterior, são definidos, para cada conjunto de testes, um determinado número de pontos de interesse, para os quais os avatares se deslocam com maior probabilidade do que para outros pontos do mapa. Com isso, forma-se uma concentração maior de avatares ao redor dos pontos de interesse definidos. Embora o modelo de movimentação utilizado possa não ser muito realístico no que tange à maneira como os jogadores movimentam seus avatares em jogos reais, ele foi usado apenas para forçar um desbalanceamento da carga sobre os servidores.
+Para avaliar a eficácia (e eficiêcia, em tempo) da proposta de balanceamento dinâmico com o uso de uma kd-tree, foi simulado um ambiente virtual com vários avatares em movimento. Partindo de um ponto aleatório no ambiente, cada avatar desloca-se segundo o modelo \emph{random waypoint} \cite{bettstetter2004spr}. Para provocar um desbalanceamento e estressar o algoritmo definido na seção anterior, são definidos alguns \emph{hotspots} -- pontos de interesse para os quais os avatares se deslocam com maior probabilidade do que para outros pontos do mapa. Com isso, forma-se uma concentração maior de avatares ao redor dos pontos de interesse definidos. Embora o modelo de movimentação utilizado possa não ser muito realístico no que tange à maneira como os jogadores movimentam seus avatares em jogos reais, ele foi usado apenas para forçar um desbalanceamento da carga sobre os servidores. Para cada algoritmo testado, foram simulados dois tipos de situações: uma com a presença de hotspots e outra sem.
 
-São feitas comparações com as duas abordagens de balanceamento de carga pra MMOGs apresentadas na seção \ref{sec:context}. Porém, deve ser feita a observação de que o modelo empregado por \cite{ahmed2008mol} considera células hexagonais, enquanto na simulação foram utilizadas células retangulares. Além disso, os autores consideraram que existe um limite para a taxa de envio de mensagens e que este limite é o mesmo para todos os servidores. Como aqui considera-se um sistema heterogêneo, o algoritmo foi simulado considerando o limite da taxa de envio de mensagens como sendo diferente para cada servidor, a depender da largura de banda de envio de cada um. Contudo, foi mantido o que se considera a idéia central da abordagem, que é a seleção do menor agrupamento de células gerenciadas pelo servidor sobrecarregado, seguida pela seleção daquela que tem a menor interação com outras células do mesmo servidor e, finalmente, a transferência dessa célula para o servidor menos carregado.
+São feitas comparações com as abordagens de balanceamento de carga pra MMOGs apresentadas na seção \ref{sec:context}. Porém, deve ser feita a observação de que o modelo empregado por \cite{ahmed2008mol} considera células hexagonais, enquanto na simulação foram utilizadas células retangulares. Além disso, os autores consideraram que existe um limite para a taxa de envio de mensagens e que este limite é o mesmo para todos os servidores. Como aqui considera-se um sistema heterogêneo, o algoritmo foi simulado considerando o limite da taxa de envio de mensagens como sendo diferente para cada servidor, a depender da largura de banda de envio de cada um. Contudo, foi mantido o que se considera a idéia central da abordagem, que é a seleção do menor agrupamento de células gerenciadas pelo servidor sobrecarregado, seguida pela seleção daquela que tem a menor interação com outras células do mesmo servidor e, finalmente, a transferência dessa célula para o servidor menos carregado. Além deste algoritmo, foram testados os algoritmos Progrega e BFBCT, apresentados em \cite{bezerra2009lbs}.
 
 O ambiente virtual simulado consistia de um espaço bidimensional, por onde transitavam 750 avatares, cujos jogadores estavam divididos entre 8 servidores ($S_1, S_2, ..., S_8$), cada um dos quais associados a uma das regiões determinadas pelo algoritmo de balanceamento. No caso da simulação das abordagens baseadas em células, considerou-se que o espaço estava dividido em uma grade de células de ordem 15, ou seja, o ambiente estava dividido em 225 células. A capacidade de cada servidor $S_i$ era igual a $i \times 20000$, criando um sistema heterogêneo. Isso permitiria avaliar os algoritmos de balanceamento de carga simulados segundo o critério de proporcionalidade da distribuição de carga entre os servidores.
 
-Além de avaliar os algoritmos segundo a proporcionalidade da distribuição da carga, será considerado também o número de vezes em que haveria transferência de jogadores entre servidores. Cada uma dessas transferências implicaria uma conexão do jogador ao novo servidor e uma desconexão do antigo. Esse tipo de situação pode ocorrer em dois casos: o avatar se moveu, mudando de região e, conseqüentemente, mudando o jogador de servidor; ou o jogador estava com seu avatar parado e teve de mudar de servidor. Neste último caso, obviamente a transferência do jogador ocorreu devido a um rebalanceamento. Um algoritmo de balanceamento ideal realiza a redistribuição de carga necessitando do mínimo possível de transferência de jogadores entre servidores, ao mesmo tempo em que mantém a carga sobre cada servidor proporcional à sua capacidade.
+Além de avaliar os algoritmos segundo a proporcionalidade da distribuição da carga, foi considerado também o número de vezes em que haveria transferência de jogadores entre servidores. Cada uma dessas transferências implica uma conexão do jogador ao novo servidor e uma desconexão do antigo. Esse tipo de situação pode ocorrer em dois casos: o avatar se moveu, mudando de região e, conseqüentemente, mudando o jogador de servidor; ou o jogador estava com seu avatar parado e teve de mudar de servidor. Neste último caso, obviamente a transferência do jogador ocorreu devido a um rebalanceamento. Um algoritmo de balanceamento ideal realiza a redistribuição de carga necessitando do mínimo possível de transferências de jogadores entre servidores, ao mesmo tempo em que mantém a carga sobre cada servidor proporcional à sua capacidade.
 
-Por último, será avaliado também o tempo gasto por cada uma das propostas simuladas para executar o algoritmo de balanceamento. Esse critério é importante pois jogos são aplicações de tempo-real e o tempo gasto com o rebalanceamento será um tempo durante o qual pelo menos uma das regiões do ambiente virtual estará prejudicada devido à sobrecarga de um ou mais servidores.
+Por último, será avaliado também o sobrecusto de comunicação entre servidores, que ocorre quando dois jogadores estão interagindo, porém cada um conectado a um servidor diferente. Embora o algoritmo de balanceamento proposto neste trabalho não busque atacar diretamente esse problema, é interessante avaliar o quanto a distribuição de carga efetuada por ele influencia na comunicação entre os servidores.
 
 \section{Resultados}
 \label{sec:result}
 
-(...)
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/distribution_uniform}
+	\caption{Carga média em cada servidor (por algoritmo, sem hotspots)}
+	\label{fig:distribution:uniform}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/distribution_hotspots}
+	\caption{Carga média em cada servidor (por algoritmo, com hotspots)}
+	\label{fig:distribution:hotspots}
+\end{figure}
+
+As figuras \ref{fig:distribution:uniform} e \ref{fig:distribution:hotspots} apresentam a carga média (mais o overhead da comunicação entre servidores) sobre cada servidor, para cada algoritmo testado. A primeira figura mostra esses valores em uma situação sem aglomerações de jogadores e, portanto, com menor carga total. A segunda, por sua vez, mostra a distribuição da carga em uma situação de sobrecarga do sistema servidor. Observa-se, na figura \ref{fig:distribution:uniform}, que todos os algoritmos testados cumpriram com o objetivo de manter a carga sobre cada servidor menor ou igual à sua capacidade, quando o sistema dispõe de recursos suficientes para tal. Na figura \ref{fig:distribution:hotspots}, que representa uma situação de sobrecarga do sistema, percebe-se que todos os algoritmos conseguiram diluir de maneira aproximadamente proporcional a sobrecarga entre os servidores.
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/usagedeviation_uniform}
+	\caption{Desvio médio da taxa de uso ideal dos servidores (sem hotspots)}
+	\label{fig:usagedeviation:uniform}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/usagedeviation_hotspots}
+	\caption{Desvio médio da taxa de uso ideal dos servidores (com hotspots)}
+	\label{fig:usagedeviation:hotspots}
+\end{figure}
+
+Nas figuras \ref{fig:usagedeviation:uniform} e \ref{fig:usagedeviation:hotspots}, é apresentado o quanto o balanceamento gerado por cada algoritmo desvia de um balanceamento ideal -- isto é, o quanto, em média, a carga sobre os servidores desviam do valor exatamente proporcional à sua capacidade -- ao longo do tempo. O que se descobre é que, em ambas as situações -- com e sem hotspots -- o algoritmo que utiliza a kd-tree tem o menor desvio. Isso se deve à granularidade mais fina da sua distribuição, que, diferentemente das outras abordagens testadas, não é limitada por um tamanho de célula. Na situação com hotspots, o algoritmo que utiliza a kd-tree é especialmente eficaz, pelo fato de balanceamentos serem necessários. Numa situação em que o sistema dispõe de muito mais recursos que o necessário, a proporcionalidade da distribuição não é tão importante, bastando que cada servidor administre uma carga inferior à sua capacidade.
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/migrations_uniform}
+	\caption{Migrações de jogadores entre servidores (sem hotspots)}
+	\label{fig:migrations:uniform}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/migrations_hotspots}
+	\caption{Migrações de jogadores entre servidores (com hotspots)}
+	\label{fig:migrations:hotspots}
+\end{figure}
+
+No quesito migrações de jogadores, todos os algoritmos testados -- exceto o BFBCT -- causaram um número semelhante de migrações de usuários na ausência de hotspots (Figura \ref{fig:migrations:uniform}). Isso se deve ao fato da carga do jogo ser inferior à capacidade total do sistema servidor, o que exigia poucos rebalanceamentos e, consequentemente, poucas migrações de jogadores entre servidores. Na Figura \ref{fig:migrations:hotspots}, porém, percebe-se que o algoritmo que utiliza a kd-tree teve um número significativamente menor de migrações de usuários do que as outras abordagens. Isso se deve, primeiro, ao fato de que as regiões definidas pelos nós folhas da kd-tree são necessariamente contíguas, e cada servidor estava associado a apenas um desses nós folha. Um avatar movendo-se por um ambiente com regiões muito fragmentadas atravessaria constantemente fronteiras entre essas regiões e faria, consequentemente, com que seu jogador trocasse de servidor repetidas vezes. Outra razão para este resultado é que cada rebalanceamento de carga executado com a kd-tree aproxima bastante a carga sobre os servidores do valor ideal, exigindo menos rebalanceamentos futuros e, consequentemente, causando menos migrações de jogadores do que nas abordagens com células.
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/overhead_uniform}
+	\caption{Comunicação entre servidores para cada algoritmo ao longo do tempo (sem hotspots)}
+	\label{fig:overhead:uniform}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/overhead_hotspots}
+	\caption{Comunicação entre servidores para cada algoritmo ao longo do tempo (com hotspots)}
+	\label{fig:overhead:hotspots}
+\end{figure}
+
+Por fim, é mostrada a comunicação entre servidores, para cada algoritmo simulado, ao longo do tempo. Na Figura \ref{fig:overhead:uniform}, todos os algoritmos têm um resultado semelhante, sendo que o que utiliza a kd-tree tem um pouco menos de overhead do que os outros. Isso também se explica pelo fato das regiões serem contíguas, minimizando o número de fronteiras entre as mesmas e, consequentemte, reduzindo a probabilidade de haver interações entre pares de avatares em que cada um está em uma região diferente. Na Figura \ref{fig:overhead:hotspots}, percebe-se que o algoritmo Progrega causou uma comunicação entre servidores significativamente menor que os outros em uma situação de sobrecarga. A razão para isto é que o objetivo principal -- além de balancear a carga -- do Progrega é de justamente reduzir a comunicação entre servidores. No entanto, mesmo não considerando esse sobrecusto, o algoritmo que utiliza a kd-tree ficou em segundo lugar nesse critério.
 
 \section{Conclusões}
 \label{sec:conc}
 
-Neste trabalho, foi proposto o uso de kd-trees para particionar o ambiente virtual de MMOGs e permitir o balanceamento de carga dos servidores com ajustes recursivos das coordenadas de divisão armazenadas nessa estrutura de dados. Uma das conclusões a que se chegou foi que o uso de kd-trees para fazer este particionamento permite uma granularidade fina na distribuição do espaço, ao mesmo tempo em que o reajuste das partições se torna mais simples -- percorrendo recursivamente a árvore -- do que as abordagens mais comuns, baseadas em células e/ou particionamento de grafos.
+Neste trabalho, foi proposto o uso de kd-trees para particionar o ambiente virtual de MMOGs e permitir o balanceamento de carga dos servidores com ajustes recursivos das coordenadas de divisão armazenadas nessa estrutura de dados. Uma das conclusões a que se chegou foi que o uso de kd-trees para fazer este particionamento permite uma granularidade fina na distribuição do espaço, ao mesmo tempo em que o reajuste das partições se torna mais simples -- percorrendo recursivamente a árvore -- do que as abordagens mais comuns, baseadas em células e/ou particionamento de grafos. 
 
-Além disso, pode-se reduzir significativamente o número de operações de cálculo da relevância entre os pares de avatares ao se fazer uma varredura da lista de avatares ordenados de acordo com sua posição no espaço.
+Essa granularidade mais fina permite um balanceamento melhor, fazendo com que a carga designada a cada servidor seja mais próxima do valor ideal que deveria delegado a cada um. Essa melhor balanceamento também permitiu reduzir o número de migrações, ao se fazer menos operações repetidas de rebalanceamento. O fato de que as regiões definidas pela kd-tree são necessariamente contíguas foi um dos fatores que contribuiu para os bons resultados do algoritmo proposto, tendo sido melhor que os outros algoritmos simulados na maior parte das medições realizadas.
+
+Para concluir, foi possível utilizar métodos que podem reduzir a complexidade de cada operação de rebalanceamento. Isso se deve, em primeiro lugar, à diminuição do número de operações de cálculo da relevância entre os pares de avatares ao se fazer uma varredura da lista de avatares ordenados de acordo com sua posição no espaço e, em segundo lugar, ao se manter em cada servidor a lista de avatares já ordenada em ambas as dimensões, reduzindo o tempo de envio e economizando o tempo que seria gasto com ordenação dos avatares quando estes fossem recebidos pelo servidor que disparou o rebalanceamento.
 
 \section*{Agradecimentos}
 
