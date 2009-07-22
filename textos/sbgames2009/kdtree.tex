@@ -1,0 +1,228 @@
+\documentclass[a4paper]{sbgames}               % final
+%\usepackage[scaled=.92]{helvet}
+\usepackage{times}
+\usepackage{graphicx}
+
+%% use this for zero \parindent and non-zero \parskip, intelligently.
+\usepackage{parskip}
+
+%% the 'caption' package provides a nicer-looking replacement
+\usepackage[labelfont=bf,textfont=it]{caption}
+
+\usepackage{url}
+
+\usepackage[latin1]{inputenc}
+
+%% Paper title.
+\title{Utilizando kd-trees para particionar o ambiente virtual e balancear dinamicamente a carga sobre servidores de MMOGs}
+
+%% Author and Affiliation (multiple authors). Use: and between authors
+
+\author{Carlos Eduardo B. Bezerra, João L. D. Comba, Cláudio F. R. Geyer\\
+				Instituto de Informática\\
+				Universidade Federal do Rio Grande do Sul\\
+				Av. Bento Gonçalves, 9500, Porto Alegre
+}
+\contactinfo{\{carlos.bezera, comba, geyer\}@inf.ufrgs.br
+}
+%% Keywords that describe your work.
+\keywords{MMOGs, load balancing, distributed server, kd-trees.}
+
+%% Start of the paper
+% Attention: As you need to insert EPS images in Postscript, 
+% you need to insert PDF images into PDFs. 
+% In the text, extensions cancbe omitted (latex use .eps, pdflatex get .pdf) 
+% To convert them: epstopdf myimage.eps
+\begin{document}
+
+%\teaser{
+%  \includegraphics[width=\linewidth]{sample.pdf}
+%  \caption{Optional image}
+%}
+
+%% The ``\maketitle'' command must be the first command after the
+%% ``\begin{document}'' command. It prepares and prints the title block.
+
+\maketitle
+
+%% Abstract section.
+
+\begin{abstract}
+MMOGs (massively multiplayer online games) are applications that require high bandwidth connections to work properly. This demand for bandwidth is specially critical on the servers that host the game. This happens because the typical number of simultaneous participants in this kind of game varies from a few hundreds to several tens of thousands, and the server is the one responsible for mediating the interaction between every pair of players connected to it. To deal with this problem, decentralized architectures with multiple servers have been proposed, where each server manages a region of the virtual environment of the game. Each player, then, connects only to the server that manages the region where he is playing. However, to distribute the load among the servers, it is necessary to devise an algorithm for partitioning the virtual environment. In order to readjust the load distribution during the game, this algorithm must be dynamic. Some work has already been made in this direction, but using a geometric algorithm, more appropriate than those found in the literature, it should be possible to reduce the distribution granularity without compromising the rebalancing time, or even reducing it. In this work, we propose the use of a kd-tree for dividing the virtual environment of the game in regions, each of which being designated to one of the servers. The split coordinates of the regions are adjusted dynamically according to the distribution of avatars in the virtual environment. We compared our algorithm to some approaches found in the literature and the simulation results show that our algorithm performed better in most aspects we analysed.
+\end{abstract}
+
+%% The ``\keywordlist'' command prints out the keywords.
+\keywordlist
+\contactlist
+
+\section{Introduction}
+
+The main characteristic of MMOGs is the large number of players interacting simultaneously, reaching the number of tens of thousands \cite{schiele2007rpp}. When using a client-server architecture for the players to communicate with one another, the server intermediates the communication between each pair of players.
+
+Para permitir que os jogadores interajam, o servidor recebe os comandos de cada jogador, calcula o estado resultante do jogo e envia o novo estado para todos os jogadores que estiverem interagindo com o primeiro. É fácil perceber que o número de mensagens de atualização de estado enviadas pelo servidor será proporcional ao quadrado no número de jogadores, se todos estiverem interagindo com todos. Obviamente, dependendo desse número de jogadores, o custo de manutenção de uma infra-estrutura centralizada como essa se torna muito alto, restringindo esse mercado de jogos MMOG a grandes empresas, que disponham de recursos suficientes para tal.
+
+Buscando reduzir esse custo, tem-se buscado soluções descentralizadas. Algumas destas utilizam redes par-a-par: \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Outras propõem a utilização de um sistema distribuído composto por nodos servidores de baixo custo, conectados através da Internet, como é proposto em \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. De qualquer forma, em todas essas abordagens, o ``mundo'', ou ambiente virtual do jogo, é dividido em regiões e, para cada região, é designado um servidor -- ou um grupo de pares para administrarem-no em conjunto, no caso das redes par-a-par. Cada uma dessas regiões deve possuir um conteúdo tal que a carga imposta sobre o servidor correspondente não seja maior que a sua capacidade.
+
+Quando um \emph{avatar} (representação do jogador no ambiente virtual) é posicionado em uma determinada região, o jogador daquele avatar conecta-se ao servidor associado àquela região e é dele que o jogador receberá as mensagens de atualização para que o ambiente virtual seja visualizado no seu computador com o estado mais recente do jogo. Quando um servidor se torna sobrecarregado, devido a uma maior concentração de avatares em sua região e, consequentemente, mais jogadores a serem atualizados, a divisão do ambiente virtual deve ser recalculada de maneira a aliviar aquele servidor.
+
+Geralmente, é feita uma divisão do ambiente virtual em grades de células, com posterior agrupamento das mesmas, formando regiões que são distribuídas entre os servidores. No entanto, tal abordagem tem uma limitação severa em sua granularidade, já que as células têm tamanho e posição fixos. Utilizando um algoritmo geométrico mais adequado, deve ser possível conseguir uma melhor distribuição dos jogadores entre os diferentes servidores, fazendo uso de técnicas tradicionais que geralmente são utilizadas na área de computação gráfica.
+
+Neste trabalho, é proposto o uso de uma kd-tree para realizar o particionamento do ambiente virtual. Quando um servidor fica sobrecarregado, ele dispara o balanceamento de carga, reajustando os limites de sua região com a ajuda da estrutura de dados kd-tree. Foi feita a implementação de um protótipo, que foi utilizado para realizar simulações. Os resultados encontrados através das simulações serão comparados com resultados anteriores obtidos ao se utilizar a técnica de divisão do ambiente virtual do jogo em células estáticas.
+
+O texto está organizado da seguinte forma: na seção \ref{sec:context}, são apresentados alguns trabalhos relacionados; na seção \ref{sec:proposal}, é apresentado em detalhes o algoritmo proposto aqui; nas seções \ref{sec:simul} e \ref{sec:result} são apresentadas as simulações e os resultados alcançados e, na seção \ref{sec:conc}, são apresentadas as conclusões a que se chegou com este trabalho.
+
+\section{Related Work}
+\label{sec:related-work}
+It is strongly recommended that your paper has a section named Related
+Work. This is a tradition in the most important international
+conferences.
+
+
+\section{General Recommendations}
+\label{sec:gener-recomm}
+
+Avoid to leave a section or subsection head isolated in the previous
+column or page.
+
+Only the first paragraph of a section starts with no tab; any other
+paragraph starts with a tab of 0.5 cm. Every paragraph and head has a
+blank line before them. You should avoid writing a subsection
+immediately after a section head; trying to have at least a sentence
+explaining the section.
+
+
+\subsection{Citations and References}
+
+SBGames citation format is the familiar 'author year' format (quite
+similar to the one used by the SIGGRAPH conferences), also called
+Harvard notation. Although the Harvard notation uses parentheses,
+SBGames citation format uses brackets. Detailed information about the
+Harvard notation can be found elsewhere~\cite{Holland:2006:CRH}.
+
+The Harvard notation can be summarized as follows. The year is
+separated from the author by a single space. If the article has two
+authors, their last names are used, separated by the word \emph{and}. If
+the article has three or more authors, the primary authorss name,
+followed by et al. are used. Multiple citations are separated by
+semicolons:~\cite{Park:2006:DSI,kartch:2000:ERA}.
+
+The reference list must be unnumbered, alphabetized by primary
+author last name, with the author list set in small caps, followed
+by the year of publication, followed by other information. The page
+number, if any, appears last in the reference. The second and
+successive lines of each entry are indented 0.5cm. Journal, book,
+thesis, and conference proceeding titles are set in italic type. See
+examples in the section References below. File \emph{sbgames.bst}
+refereced below, perform automatic bibliography formatting.
+
+
+\subsection{Figures, Images, and Tables}
+\label{sec:figur-imag-tabl}
+
+You may have figures crossing the columns. However, large images
+should be placed at the very end of the paper or poster. You should
+avoid framing the figure with a visible line (unless the border is
+part of the figure). Figure~\ref{fig:example} illustrates this situation.  
+
+\begin{figure} 
+  \centering 
+  \includegraphics[width=0.8\linewidth]{example.pdf}
+ \caption{Example of image} 
+ \label{fig:example} 
+\end{figure}
+
+
+In order to know if an image has sufficient resolution to be
+faithfully reproduced, you should multiply the size in cm by the
+factor 120. For example, an image of 5 cm x 7.5 cm in your document
+should have a resolution of no less than 600 pixels x 900 pixels.
+Another example: a screenshot of your entire 1024 x 768 display
+monitor should be no larger than 8.5 cm x 6.4 cm when positioned in
+your document.
+
+Table titles should be centered above the tables.
+
+As specified in CFP, papers must be in PDF format. So, the best way to
+generate PDF from .tex is using \emph{pdflatex} (Unix), directly.
+Then, figures include into the text must be in PDF format. EPS format
+is employed, when latex, and dvips are adopted. But, using these
+programs, a ps-to-pdf conversion is required and can introduce quality
+loss. Please: use \emph{pdflatex} to achieve high quality.
+ 
+
+\section{Generating the paper in PDF file format}
+\label{sec:generating-pdf-file}
+
+Use \emph{template.tex} and  \emph{template.tex} to write your paper and enumerate bibliographic references. So, run:
+
+\begin{description}
+\item pdflatex template
+\item bibtex template
+\item pdflatex template
+\item pdflatex template
+\end{description}
+
+That's it. You can rename template.tex and .bib. So, keep
+\emph{sbgames.cls} and \emph{sbgames.bst} without modifications. They
+are required to format text and bibliography according to SBGAMES
+format.
+
+
+\section{How to submit}
+\label{sec:how-submit}
+
+Each manuscript must be submitted electronically using the JEMS
+submission site at \url{https://submissoes.sbc.org.br/sbgames2007} ONLY PDF
+file format is accepted. An additional 10 MB will be available for the
+(optional) ZIP file with the supplementary material.
+
+Every co-author of a manuscript must also be registered as a user of
+JEMS before the manuscript is submitted. Instructions on how to
+register new JEMS users and how to retrieve forgotten JEMS passwords
+are available at the same URL above. PLEASE MAKE SURE THAT EVERY
+CO-AUTHOR IS INCLUDED AT THE TIME OF SUBMISSION. WE CANNOT LATER ON
+ADD AND/OR REMOVE AUTHORS FROM SUBMITTED PAPERS.
+
+Upon logging on at \url{https://submissoes.sbc.org.br/sbgames2007}
+select the icon ``submit paper'' for the track ``Computing - Full
+Papers'', in order to submit a full paper. You will then be taken to a
+page with the title "Submit a paper to SBGAMES 2007 - Computing
+Track". Fill in the paper registration information requested in that
+page (don't forget to chose the keywords for your paper at the bottom
+of the page) and then click on the ``submit'' icon, in order to
+complete your paper's registration. After doing so, you will view a
+page called "Registering Paper". The first line after the title of
+this page should say ``Paper $<$5digits$>$ created'', where
+$<$5digits$>$ is a five-digit number assigned by JEMS to your
+manuscript. Before you upload your manuscript, include this five-digit
+number in the place where you would normally put the author names (for
+instance, by including the command
+$\backslash$\emph{author}\{Manuscript number $<$5digits$>$\} in your
+LaTeX source file).
+
+After you have generated the final PDF file containing the manuscript
+number (which should be renamed as $<$5digits$>$.pdf), you can upload
+it immediately by following the "upload" link available on the page
+"Registering Paper", or log out of the JEMS site and return later to
+upload your paper.  If you choose the latter option, an "Upload" icon
+for each registered manuscript will be accessible from your SBGAMES
+2007 home page within JEMS. In any case, please upload the PDF file
+with your manuscript first and then, if desired, return to the
+manuscript upload page (either using your browser's "Back" button or
+through your SBGAMES 2007 JEMS home) and upload the optional ZIP file
+with the supplementary material.  You should receive an e-mail
+confirmation every time you perform an upload.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+The final sections of your work are: acknowledgements and references.
+These final sections are not numbered.
+
+\section*{Acknowledgements}
+
+To Robert, for all the bagels.
+
+\bibliographystyle{sbgames}
+\bibliography{kdtree}
+\end{document}

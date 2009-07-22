@@ -411,7 +411,7 @@
 \fi
 \newcommand{\keywordlist}{%
     \vspace{0.5\baselineskip}%
-    \par\noindent \textbf{Keywords:: } \sbc@keywords%
+    \par\noindent \textbf{Keywords: } \sbc@keywords%
 }
 
 \newcommand{\contactlist}{%
