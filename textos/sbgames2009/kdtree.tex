@@ -12,6 +12,12 @@
 \usepackage{url}
 
 \usepackage[latin1]{inputenc}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
+
+\newcommand{\misccite}[2]{#1. Disponível em: \textless#2\textgreater. Acesso em: 26 jun. 2009}
+\newcommand{\gamecite}[2]{\misccite{#1}{#2}}
 
 %% Paper title.
 \title{Utilizando kd-trees para particionar o ambiente virtual e balancear dinamicamente a carga sobre servidores de MMOGs}
@@ -61,7 +67,7 @@ The main characteristic of MMOGs is the large number of players interacting simu
 
 To allow the interaction of players, each one of them sends his commands to the server, which calculates the resulting game state and sends it to all the players to whom the state change is relevant. We can see that the number of state update messages sent by the server may grow proportionally to the square of the number of players, if all players are interacting with one another. Obviously, depending on the number of players, the cost of maintaining a centralized infrastructure like this is too high, restricting the MMOG market to large companies with enough resources to pay the upkeep of the server.
 
-In order to reduce this cost, several decentralized solutions have been proposed. Some of them use peer-to-peer networks, such as \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Others propose the use of a distributed server composed of low-cost nodes connected through the Internet, as in \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. Anyway, in all these approaches, the ``world'', or virtual environment of the game is divided into regions and for each region is assigned a server -- or a group of peers to manage it, when usign peer-to-peer networks. Each of these regions must have a content such that the load imposed on the corresponding server is not greater than its capacity.
+In order to reduce this cost, several decentralized solutions have been proposed. Some of them use peer-to-peer networks, such as \cite{schiele2007rpp,rieche2007ppb,hampel2006ppa,elrhalibi2005abm,iimura2004zfg,knutsson2004pps}. Others propose the use of a distributed server composed of low-cost nodes connected through the Internet, as in \cite{ng2002msa,chertov:olb,lee2003sdl,assiotis2006dam}. Anyway, in all these approaches, the ``world'', or virtual environment of the game is divided into regions and for each region is assigned a server -- or a group of peers to manage it, when using peer-to-peer networks. Each of these regions must have a content such that the load imposed on the corresponding server is not greater than its capacity.
 
 When an \emph{avatar} (representation of the player in the virtual environment) is located in a region, the player controlling that avatar connects to the server associated to that region. That server, then, is responsible for receiving the input from that player and for sending, in response, the update messages. When a server becomes overloaded due to an excessive number of avatars in its region and, therefore, more players to be updated, the division of the virtual environment must be recalculated in order to alleviate the overloaded server.
 
@@ -86,67 +92,73 @@ Different authors have attacked the problem of partitioning the virtual environm
 	\label{fig:cells}
 \end{figure}
 
-\cite{ahmed2008mol} propõem um modelo de balanceamento de carga orientado a células. Para balancear a carga, seu algoritmo encontra, primeiro, todos os agrupamentos de células que são gerenciadas pelo servidor sobrecarregado. Seleciona-se o agrupamento que contiver o menor número de células e, deste agrupamento, é escolhida a célula que tiver menor interação com outras células do mesmo servidor -- considerando que a interação entre duas células A e B é definida como o número de pares de avatares interagindo um com outro, estando um em A e o outro em B. A célula escolhida é, então, transferida para o servidor menos carregado, sendo que a ``carga'' é definida como o uso de largura de banda para enviar atualizações de estado aos avatares posicionados em células gerenciadas por aquele servidor. Esse processo se repete até que o servidor não esteja mais sobrecarregado ou que não haja mais servidores capazes de absorver a carga excedente -- neste caso, uma opção seria diminuir a freqüência de envio das atualizações de estado \cite{bezerra2008a3}.
+\cite{ahmed2008mol}, for example, propose a cell-oriented load balancing model. To balance the load, their algorithm finds, first, all clusters of cells that are managed by the overloaded server. The smallest cluster is selected and, from this cluster, it is chosen the cell which has the least interaction with other cells of the same server -- the interaction between two cells A and B is defined by the authors as the number of pairs of avatars interacting with each other, one of them in A and the other one in B. The selected cell is then transferred to the least loaded server, considering ``load'' as the bandwidth used to send send state updates to the players whose avatars are positioned in the cells managed by that server. This process is repeated until the server is no longer overloaded or there is no more servers capable of absorbing more load -- in this case, one option could be to reduce the frequency at which state update messages are sent to the players, as suggested by \cite{bezerra2008a3}.
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.5\linewidth]{images/grafo}
-	\caption{Representação do ambiente em um grafo}
-	\label{fig:grafo}
+	\caption{Graph representation of the virtual environment}
+	\label{fig:graph}
 \end{figure}
 
-Em \cite{bezerra2009lbs}, também é proposta a divisão em células. Para realizar a divisão, o ambiente é representado por um grafo (Figura \ref{fig:grafo}), onde cada vértice representa uma célula. Cada aresta no grafo liga dois vértices que representam células vizinhas. O peso de um vértice equivale ao uso de largura de banda do servidor para enviar atualizações de estado aos jogadores cujos avatares estão na célula representada por aquele vértice. A interação entre cada duas células definirá o peso da aresta que liga os vértices correspondentes. Para formar as regiões, o grafo é particionado, utilizando um algoritmo guloso: começando do vértice mais pesado, a cada passo adiciona-se o vértice ligado pelas aresta mais pesada a algum dos vértices já selecionados, até que o peso total da partição do grafo (soma dos pesos dos vértices) atinja um determinado limite relacionado à capacidade total do servidor que receberá a região representada por aquela partição do grafo.
+In \cite{bezerra2009lbs}, it is also proposed the division into cells. To perform the division, the environment is represented by a graph (Figure \ref{fig:graph}), where each vertex represents a cell. Each edge in the graph connects two vertices representing neighboring cells. The weight of a vertex is the server's bandwidth occupied to send state updates to the players whose avatars are in the cell represented by that vertex. The interaction between any two cells define the weight of the edge connecting the corresponding vertices. To form the regions, the graph is partitioned using a greedy algorithm: starting from the heaviest vertex, at each step it is added the vertex connected by the heaviest edge to any of the vertices already selected, until the total weight of the partition of the graph -- defined as the sum of the vertices' weights -- reaches a certain threshold related to the total capacity of the server that will receive the region represented by that partition of the graph.
 
-Embora essa abordagem funcione, há uma séria limitação na granularidade da distribuição que pode ser feita. Se for desejada uma granularidade fina, é necessário definir as células como sendo muito pequenas, aumentando o número de vértices no grafo que representa o ambiente virtual e, conseqüentemente, o tempo necessário para executar o balanceamento. Sendo assim, pode ser melhor utilizar uma outra abordagem para o particionamento do ambiente virtual que utilize uma estrutura de dados mais adequada, tal como a kd-tree \cite{bentley1975mbs}.
+Although this approach works, there is a serious limitation on the distribution granularity it can achieve. If a finer granularity is desired, it is necessary to use very small cells, increasing the number of vertices in the graph that represents the virtual environment and, consequently, the time required to perform the balancing. Besides, the control message containing the of cells designated to each server also become larger. Thus, it may be better to use another approach to perform the partitioning of the virtual environment, possiby using a data structure more suitable, such as a kd-tree \cite{bentley1975mbs}.
 
-%falar do que é a kd-tree? muita enrolação.
-
-Esse tipo de estrutura de dados costuma ser usado na computação gráfica. No entanto, como em MMOGs também há informação geométrica -- como a posição de cada avatar no ambiente --, árvores de particionamento do espaço podem ser utilizadas. Além disso, já existem técnicas de distribuição de objetos no espaço, buscando manter o balanceamento entre as diferentes regiões definidas pela árvore. Em \cite{luque2005bpc}, por exemplo, busca-se reduzir o tempo necessário para calcular as colisões entre pares de objetos se movendo no espaço. Para isso, é utilizada uma árvore BSP (\emph{binary space partitioning}, ou particionamento binário do espaço) para distribuir os objetos da cena (Figura \ref{fig:bsp}). Obviamente, se cada objeto de um par está completamente contido em uma partição diferente, eles não colidem e não é necessário fazer um teste mais demorado para esse par. Partindo de uma divisão inicial, é proposto pelos autores que a árvore se ajuste dinamicamente à medida que os objetos se deslocam, balanceando a distribuição dos mesmos na árvore, evitando que o tempo necessário para o cálculo das colisões se eleve muito. Algumas das idéias propostas pelos autores podem ser utilizadas para o contexto de balanceamento de carga entre servidores de um MMOG.
+This kind of data structure is generally used in computer graphics. However, as in MMOGs there is geometric information -- such as the position of each avatar in the environment --, space partitioning trees could be used. Moreover, we cand find in the literature techniques for keeping the partitions defined by the tree with a similar ``load''. In \cite{luque2005bpc}, for example, it is sought to reduce the time needed to calculate the collisions between pairs of objects moving through space. The authors propose the use of a BSP (binary space partitioning) tree to distribute the objects in the scene (Figure \ref{fig:bsp}). Obviously, if each object of one pair is completely inserted in a different partition, they do not collide and there is no need to perform a more complex test for this pair. Assuming an initial division, it is proposed by the authors a dynamic readjustment of the tree as objects move, balancing their distribution on the leaf-nodes of the tree and, therefore, minimizing the time required to perform the collision detection. Some of the ideas proposed by the authors may be used in the context of load balancing between servers in MMOGs.
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.5\linewidth]{images/bsp}
-	\caption{Particionamento do espaço com uma árvore BSP}
+	\caption{Space partitioning using a BSP tree}
 	\label{fig:bsp}
 \end{figure}
 
-\section{General Recommendations}
-\label{sec:gener-recomm}
+\section{FIXME:changetitle Proposed approach}
+\label{sec:proposal}
 
-Avoid to leave a section or subsection head isolated in the previous
-column or page.
+The load balancing approach proposed here is based on two criteria: first, the system should be considere heterogeneous (i.e. each server has a different amount of resources) and, second, the load on each server is \emph{not} proportional to the number of players connected to it, but to the amount of bandwidth required to send state update messages to them.
 
-Only the first paragraph of a section starts with no tab; any other
-paragraph starts with a tab of 0.5 cm. Every paragraph and head has a
-blank line before them. You should avoid writing a subsection
-immediately after a section head; trying to have at least a sentence
-explaining the section.
+This choice is due to the fact that each player sends commands to the server at a constant rate, so the number of messages received by the server per unit time grows linearly to the number of players, whereas the number of state update messages sent by the server may be quadratic, in the worst case.
 
+As mentioned in the introduction, to divide the environment of the game into regions, we propose the utilization of a data structure known as kd-tree. The vast majority of MMOGs, such as World of Warcraft \cite{worldofwarcraft}, Ragnarok \cite{ragnarok} and \mbox{Lineage II} \cite{lineage2}, despite having three-dimensional graphics, the simulated world -- cities, forests, swamps and points of interest in general -- in these games is mapped in two dimensions. Therefore, we propose to use a kd-tree with \mbox{k = 2}.
 
-\subsection{Citations and References}
+Each node of the tree represents a region of the space and, moreover, in this node it is stored a split coordinate. Each one of the two children of that node represent a subdivision of the region represented by the parent node, and one of them represents the sub-region before the split coordinate and the other one, the sub-region containing points whose coordinates are greter than or equal to the split coordinate. The split axis (in the case of two dimensions, the axis $x$ and $y$) of the coordinate stored alternates for each level of the tree -- if the first level node store x-coordinates, the second level nodes store an y-coordinates and so on. Each leaf node also represents a region of the space, but it does not store any split coordinate. Instead, it stores a list of the avatars present in that region. Finally, each leaf node is associated to a server of the game. When a server is overloaded, it triggers the load balancing, which uses the kd-tree to readjust the split coordinates that define its region, reducing the amount of content managed by it.
 
-SBGames citation format is the familiar 'author year' format (quite
-similar to the one used by the SIGGRAPH conferences), also called
-Harvard notation. Although the Harvard notation uses parentheses,
-SBGames citation format uses brackets. Detailed information about the
-Harvard notation can be found elsewhere~\cite{Holland:2006:CRH}.
+Each node of the tree also stores two other values: capacity and load of the subtree. The load of a node is equal to the sum of the load of its children. Similarly, the capacity of a non-leaf node is equal to the sum of the capacity of its children nodes. For the leaf node, these values are the same as the server associated to each one of them. The tree root stores, therefore, the total weight of the game and the total capacity of the server system.
 
-The Harvard notation can be summarized as follows. The year is
-separated from the author by a single space. If the article has two
-authors, their last names are used, separated by the word \emph{and}. If
-the article has three or more authors, the primary authorss name,
-followed by et al. are used. Multiple citations are separated by
-semicolons:~\cite{Park:2006:DSI,kartch:2000:ERA}.
+In the following sections, it will be described the construction of the tree, the calculation of the load associated with each server and the proposed balancing algorithm.
 
-The reference list must be unnumbered, alphabetized by primary
-author last name, with the author list set in small caps, followed
-by the year of publication, followed by other information. The page
-number, if any, appears last in the reference. The second and
-successive lines of each entry are indented 0.5cm. Journal, book,
-thesis, and conference proceeding titles are set in italic type. See
-examples in the section References below. File \emph{sbgames.bst}
-refereced below, perform automatic bibliography formatting.
+\subsection{Building the kd-tree}
 
+To make an initial space division, it is constructed a balanced kd-tree (as far as possible, for it depends on the number of servers -- or leaf nodes -- being equal to a power of 2). For this, we used the recursive function shown in Algorithm \ref{alg:buildtree} to create the tree. criação da árvore.
+
+\begin{algorithm}
+\caption{nó::constrói\_árvore(id, nível, num\_servidores)}
+\label{alg:buildtree}
+\begin{algorithmic}
+	\IF{id + $2^{n\acute{\imath}vel} \ge num\_servidores$ }
+		\STATE $filho\_menor \leftarrow filho\_maior \leftarrow NIL$;
+		\STATE retorne;
+	\ELSE
+		\STATE $filho\_menor \leftarrow$ novo\_nó();
+		\STATE $filho\_menor.pai \leftarrow$ \textbf{this};
+		\STATE $filho\_maior \leftarrow$ novo\_nó();
+		\STATE $filho\_maior.pai \leftarrow$ \textbf{this};
+		\STATE $filho\_menor$.constr\'oi\_\'arvore\\$(id, n\acute{\imath}vel + 1, num\_servidores)$;
+		\STATE $filho\_maior$.constrói\_\'arvore\\$(id + 2^{n\acute{\imath}vel},$ $n\acute{\imath}vel + 1,$ $num\_servidores)$;
+	\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=0.75\linewidth]{images/kdtree}
+	\caption{Construção de kd-tree balanceada}
+	\label{fig:kdtree}
+\end{figure}
+
+No Algoritmo 1, o $id$ serve para calcular quantos filhos cada nodo deve ter e, nos nós folha, determina qual o servidor associado à região representada por aquela folha da árvore. O objetivo com isso é tentar criar uma árvore balanceada, onde o número de nós folha de cada uma das duas sub-árvores de cada nó difere de no máximo um. Na Figura \ref{fig:kdtree} (a), temos uma kd-tree completa formada com esse algoritmo simples e, em (b), como seria uma kd-tree não completa com seis nós-folha. Como se pode perceber, cada nodo da árvore de (b) tem duas sub-árvores cujos números de nós folha diferem, no máximo, de um.
 
 \subsection{Figures, Images, and Tables}
 \label{sec:figur-imag-tabl}
