@@ -1,7 +1,6 @@
 \documentclass[a4paper]{sbgames}               % final
 %\usepackage[scaled=.92]{helvet}
 \usepackage{times}
-\usepackage{graphicx}
 
 %% use this for zero \parindent and non-zero \parskip, intelligently.
 \usepackage{parskip}
@@ -10,10 +9,12 @@
 \usepackage[labelfont=bf,textfont=it]{caption}
 
 \usepackage{url}
-
+\usepackage{graphicx}
 \usepackage[latin1]{inputenc}
+\usepackage{amsmath}
 \usepackage{algorithmic}
 \usepackage{algorithm}
+
 
 
 \newcommand{\misccite}[2]{#1. Disponível em: \textless#2\textgreater. Acesso em: 26 jun. 2009}
@@ -131,22 +132,22 @@ In the following sections, it will be described the construction of the tree, th
 
 \subsection{Building the kd-tree}
 
-To make an initial space division, it is constructed a balanced kd-tree (as far as possible, for it depends on the number of servers -- or leaf nodes -- being equal to a power of 2). For this, we used the recursive function shown in Algorithm \ref{alg:buildtree} to create the tree. criação da árvore.
+To make an initial space division, it is constructed a balanced kd-tree. For this, we use the recursive function shown in Algorithm \ref{alg:buildtree} to create the tree.
 
 \begin{algorithm}
-\caption{nó::constrói\_árvore(id, nível, num\_servidores)}
+\caption{node::build\_tree(id, level, num\_servers)}
 \label{alg:buildtree}
 \begin{algorithmic}
-	\IF{id + $2^{n\acute{\imath}vel} \ge num\_servidores$ }
-		\STATE $filho\_menor \leftarrow filho\_maior \leftarrow NIL$;
-		\STATE retorne;
+	\IF{id + $2^{level} \ge num\_servers$ }
+		\STATE $left\_child \leftarrow right\_child \leftarrow NIL$;
+		\STATE return;
 	\ELSE
-		\STATE $filho\_menor \leftarrow$ novo\_nó();
-		\STATE $filho\_menor.pai \leftarrow$ \textbf{this};
-		\STATE $filho\_maior \leftarrow$ novo\_nó();
-		\STATE $filho\_maior.pai \leftarrow$ \textbf{this};
-		\STATE $filho\_menor$.constr\'oi\_\'arvore\\$(id, n\acute{\imath}vel + 1, num\_servidores)$;
-		\STATE $filho\_maior$.constrói\_\'arvore\\$(id + 2^{n\acute{\imath}vel},$ $n\acute{\imath}vel + 1,$ $num\_servidores)$;
+		\STATE $left\_child \leftarrow$ new\_node();
+		\STATE $left\_child.parent \leftarrow$ \textbf{this};
+		\STATE $right\_child \leftarrow$ new\_node();
+		\STATE $right\_child.parent \leftarrow$ \textbf{this};
+		\STATE $left\_child$.build\_tree$(id, level + 1, num\_servers)$;
+		\STATE $right\_child$.build\_tree$(id + 2^{level}, level + 1, num\_servers)$;
 	\ENDIF
 \end{algorithmic}
 \end{algorithm}
@@ -154,45 +155,48 @@ To make an initial space division, it is constructed a balanced kd-tree (as far 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=0.75\linewidth]{images/kdtree}
-	\caption{Construção de kd-tree balanceada}
+	\caption{Balanced kd-trees built with the described algorithm}
 	\label{fig:kdtree}
 \end{figure}
 
-No Algoritmo 1, o $id$ serve para calcular quantos filhos cada nodo deve ter e, nos nós folha, determina qual o servidor associado à região representada por aquela folha da árvore. O objetivo com isso é tentar criar uma árvore balanceada, onde o número de nós folha de cada uma das duas sub-árvores de cada nó difere de no máximo um. Na Figura \ref{fig:kdtree} (a), temos uma kd-tree completa formada com esse algoritmo simples e, em (b), como seria uma kd-tree não completa com seis nós-folha. Como se pode perceber, cada nodo da árvore de (b) tem duas sub-árvores cujos números de nós folha diferem, no máximo, de um.
+In Algorithm \ref{alg:buildtree}, the $id$ value is used to calculate whether each node has children or not and, in the leaf nodes, it determines the server associated to the region represented by each leaf of the tree. The purpose of this is to create a balanced tree, where the number of leaf nodes on each of the two sub-trees of any node differs, in the maximum, by one. In Figure \ref{fig:kdtree} (a), we have a full kd-tree formed with this simple algorithm and, in Figure \ref{fig:kdtree} (b), an incomplete kd-tree with six-leaf nodes. As we can see, each node of the tree of (b) has two sub-trees whose number of leaf nodes differs by one in the worst case.
 
-\subsection{Figures, Images, and Tables}
-\label{sec:figur-imag-tabl}
+\subsection{Calculating the load of avatars and tree nodes}
 
-You may have figures crossing the columns. However, large images
-should be placed at the very end of the paper or poster. You should
-avoid framing the figure with a visible line (unless the border is
-part of the figure). Figure~\ref{fig:example} illustrates this situation.  
+The definition of the split coordinate for every non-leaf node of the tree depends on how the avatars distribution among the regions will be made. An initial idea might be to distribute the players among servers, so that the number of players on each server is proportional to the bandwidth of that server. To calculate the split coordinate, it would be enough to simply sort the avatars in an array along the axis used ($x$ or $y$) by the tree node to split the space and, then, calculate the index in the vector, such that the number of elements before this index is proportional to the capacity of the left child and the number of elements from that index to the end of the array is proportional to the capacity of the right child (Figure \ref{fig:vector}). The complexity of this operation is $O(nlogn)$, due to the sorting of avatars.
 
-\begin{figure} 
-  \centering 
-  \includegraphics[width=0.8\linewidth]{example.pdf}
- \caption{Example of image} 
- \label{fig:example} 
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{images/vector}
+  \caption{A load splitting considering only the number os avatars}
+  \label{fig:vector}
 \end{figure}
 
+However, this distribution is not optimal, for the load imposed by the players depends on how they are interacting with one another. For example, if the avatars of two players are distant from each other, there will be probably no interaction between them and, therefore, the server will need only to update each one of them about the outcome of his own actions -- for these, the growth in the number of messages is linear to the number of players. On the other hand, if the avatars are close to each other, each player should be updated not only about the outcome of his own actions but also about the actions of every other player -- in this case, the number of messages may grow quadratically to the number of players (Figure \ref{fig:load}). For this reason, it is not sufficient only to consider the number of players to divide them among the servers.
 
-In order to know if an image has sufficient resolution to be
-faithfully reproduced, you should multiply the size in cm by the
-factor 120. For example, an image of 5 cm x 7.5 cm in your document
-should have a resolution of no less than 600 pixels x 900 pixels.
-Another example: a screenshot of your entire 1024 x 768 display
-monitor should be no larger than 8.5 cm x 6.4 cm when positioned in
-your document.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/carga}
+  \caption{Relation between avatars and load}
+  \label{fig:load}
+\end{figure}
 
-Table titles should be centered above the tables.
+A more appropriate way to divide the avatars is by considering the load imposed by each one of them on the server. A brute-force method for calculating the loads would be to get the distance separating each pair of avatars and, based on their interaction, calculate the number of messages that each player should receive by unit of time. This approach has complexity $O(n^2)$. However, if the avatars are sorted according to their coordinate on the axis used to divide the space in the kd-tree, this calculation may be performed in less time.
 
-As specified in CFP, papers must be in PDF format. So, the best way to
-generate PDF from .tex is using \emph{pdflatex} (Unix), directly.
-Then, figures include into the text must be in PDF format. EPS format
-is employed, when latex, and dvips are adopted. But, using these
-programs, a ps-to-pdf conversion is required and can introduce quality
-loss. Please: use \emph{pdflatex} to achieve high quality.
- 
+For this, two loops are also used to sweep the avatars array, where each of the avatars contains a $load$ variable initialized with zero. As the vector is sorted, the inner loop may start from an index before which it is known that no avatar $a_j$ has relevance to that being referenced in the outter loop, $a_i$. It is used a variable $begin$, with initial value of zero: if the coordinate of $a_j$ is smaller than the $a_i$, with a difference greater than the maximum view range of the avatars, the variable $begin$ is incremented. For each $a_j$ which is at a distance smaller than the maximum view range, the $load$ of $a_i$ is increased according to the relevance of $a_j$ to $a_i$. When the inner loop reaches an avatar $a_j$, such that its coordinate is greater than the one of $a_i$, with a difference greater than the view range, the outer loop moves immediately to the next step, incrementing $a_i$ and setting the value of $a_j$ to that stored in $begin$ (Figure \ref{fig:sweep}).
+
+Let $width$ be the length of the virtual environment along the axis used for the splitting; let also $radius$ be the maximum view range of the avatars, and $n$, the number of avatars. The number of relevance calculations, assuming that they are uniformly distributed in the virtual environment is \mbox{$O(m \times n)$}, where $m$ is the number of avatars compared in the internal loop, i.e. \mbox{$m = \frac{2 \times radius \times n}{width}$}. The complexity of the avatars sorting along one of the axes is $O(nlogn)$. Although it is still quadratic, the execution time is reduced significantly, depending on the size of the virtual environment and on the view range of the avatars. The algorithm could go further and sort each set of avatars $a_j$ which are close (in one of the axes) to $a_i$ according to the other axis and, again, perform a sweep eliminating those which are too far away, in both dimensions. The number of relevance calculations would be \mbox{$O(p \ times n)$}, where $p$ is the number of avatars close to $a_i$, considering the two axes of coordinates, i.e. \mbox{$p = \frac{(2 \times radius)^2 \times n}{width \times height}$}. In this case, $height$ is the extension of the environment in the second axis taken as reference. Although there is a considerable reduction of the number of relevance calculations, it does not pay the time spent in sorting the sub-array of the avatars selected for each $a_i$. Adding up all the time spent on sort operations, it would be obtained a complexity of: \mbox{$O(nlogn + n \times mlogm)$}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{images/sweep}
+  \caption{Sweep of the sorted array of avatars}
+   \label{fig:sweep}
+\end{figure}
+
+After calculating the load generated by each avatar, this value is used to define the load on each leaf node and, recursively, on the other nodes of the kd-tree. To each leaf node a server and a region of the virtual environment are assigned. The load of this node is equal to the server's bandwidth used to send state updates to the players controlling the avatars located in its associated region. This way, the load of each leaf node is equal to the sum of the weights of the avatars located in the region represented by it.
+
+\subsection{Dynamic load balancing}
 
 \section{Generating the paper in PDF file format}
 \label{sec:generating-pdf-file}
