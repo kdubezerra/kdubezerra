@@ -234,13 +234,13 @@ As the avatar lists received from the other servers are already sorted along bot
 
 To evaluate the proposed dynamic balancing algorithm proposed, it was simulated a virtual environment across which many avatars moved. Starting from a random point in the environment, each avatar moved according to the random waypoint model \cite{bettstetter2004spr}. To force a load imbalance and stress the algorithm defined in the previous section, we defined some \emph{hotspots} -- points of interest to which the avatars move with a higher probability than to other parts of the map. This way, it is formed a higher avatars concentration in some areas. Although the used movement model is not very realistic in terms of the way the players move their avatars in real games, it was only used to put to test the load balance algorithms simulated. For each algorithm tested, we simulated two situations: one with the presence of hotspots and one without hotspots.
 
-The proposed approach was compared to the ones presented in section \ref{context}, from other authors. However, it is important to observe that the model employed by \cite{ahmed2008mol} considers hexagonal cells, whereas in our simulation we used rectangular cells. Furthermore, the authors considered that there is a trasmission rate threshold, which is the same for all servers in the system. As we assume a heterogenous system, their algorithm was simulated considering that each server has its own transmission rate threshold, depending on the upload bandwidth available in each one of them. However, we kept what we consider the core idea of the authors' approach, which is the selection of the smallest cell cluster managed by the overload server, then chosing that cell with the lowest interaction with other cells of the same server, and finally the transfering of this cell to the least loaded server. Besides this algorithm, we also simulated some of the ones proposed in \cite{bezerra2009lbs}.
+The proposed approach was compared to the ones presented in section \ref{context}, from other authors. However, it is important to observe that the model employed by \cite{ahmed2008mol} considers hexagonal cells, whereas in our simulation we used rectangular cells. Furthermore, the authors considered that there is a trasmission rate threshold, which is the same for all servers in the system. As we assume a heterogenous system, their algorithm was simulated considering that each server has its own transmission rate threshold, depending on the upload bandwidth available in each one of them. However, we kept what we consider the core idea of the authors' approach, which is the selection of the smallest cell cluster managed by the overload server, then chosing that cell with the lowest interaction with other cells of the same server, and finally the transfering of this cell to the least loaded server. Besides Ahmed's algorithm, we also simulated some of the ones proposed in \cite{bezerra2009lbs} -- Progrega and BFBCT.
 
 The simulated virtual environment consisted of a two-dimensional space, with 750 moving avatars, whose players were divided among eight servers ($S_1, S_2, ..., S_8$), each of which related to one of the regions determined by the balancing algorithm. For the cell-oriented approaches simulated, the space was divided into a \mbox{15 $\times$ 15} cell grid, or 225 cells. The capacity of each server $S_i$ was equal to $i \times 20000$, forming a heterogeneous system. This heterogeneity allowed us to evaluate the load balancing algorithms simulated according to the criterion of proportionality of the load distribution on the servers.
 
 In addition to evaluate the algorithms according to the proportionality of the load distribution, it was also considered the number of player migrations between servers. Each migration involves a player connecting to the new server and disconnecting from the old one. This kind of situation may occur in two cases: the avatar moved, changing the region in which it is located and, consequently, changing the server to which its player is connected, or the avatar was not moving and still its player had to migrate to a new server. In the latter case, obviously the player's transfer was due to a rebalancing. An ideal balancing algorithm performs the load redistribution requiring the minimum possible number of player transfers between servers, while keeping the load on each server proportional to its capacity.
 
-Finally, the intra-server communication overhead will also be evaluated. It occurs when two players are interacting, but each one of them is connected to a different server. Although the algorithm proposed in this work does not address this problem directly, it would be interesting to evaluate how the load distribution performed by it influences the communication between the servers.
+Finally, the inter-server communication overhead will also be evaluated. It occurs when two players are interacting, but each one of them is connected to a different server. Although the algorithm proposed in this work does not address this problem directly, it would be interesting to evaluate how the load distribution performed by it influences the communication between the servers.
 
 \section{Results}
 \label{sec:result}
@@ -259,130 +259,68 @@ Finally, the intra-server communication overhead will also be evaluated. It occu
 	\label{fig:distribution:hotspots}
 \end{figure}
 
-Figures \ ref (fig: distribution: uniform) and \ ref (fig: distribution:) hotspots have the average load (plus the overhead of communication between servers) on each server for each algorithm tested. The first figure shows the values in a situation without agglomerations of players and therefore less total load. The second, in turn, shows the distribution of the load in a situation of overloading the server system. There is, in Figure \ ref (fig: distribution: uniform), that all algorithms have met with the goal of keeping the load on each server less than or equal to its capacity, when the system has sufficient resources to do so. In figure \ ref (fig: distribution: hotspots), which represents a situation of overloading the system, we find that all the algorithms managed to dilute a manner roughly proportional to overloading of the servers.
-
-As figuras \ref{fig:distribution:uniform} e \ref{fig:distribution:hotspots} apresentam a carga média (mais o overhead da comunicação entre servidores) sobre cada servidor, para cada algoritmo testado. A primeira figura mostra esses valores em uma situação sem aglomerações de jogadores e, portanto, com menor carga total. A segunda, por sua vez, mostra a distribuição da carga em uma situação de sobrecarga do sistema servidor. Observa-se, na figura \ref{fig:distribution:uniform}, que todos os algoritmos testados cumpriram com o objetivo de manter a carga sobre cada servidor menor ou igual à sua capacidade, quando o sistema dispõe de recursos suficientes para tal. Na figura \ref{fig:distribution:hotspots}, que representa uma situação de sobrecarga do sistema, percebe-se que todos os algoritmos conseguiram diluir de maneira aproximadamente proporcional a sobrecarga entre os servidores.
+Figures \ref{fig:distribution:uniform} and \ref{fig:distribution:hotspots} present the average load (plus the inter-server communication overhead) on each server, for each algorithm tested. The first figure shows the values in a situation without hotspots and, therefore, a smaller total load. The second, in turn, presents the load distribution when the server system is overloaded. We can see, in Figure \ref{fig:distribution:uniform}, that all algorithms have met the objective of keeping the load on each server less than or equal to its capacity, when the system has sufficient resources to do so. In figure \ref{fig:distribution:hotspots}, it is demonstrated that all the algorithms managed to dilute -- in a more or less proportional manner -- the load excess on the servers. It is important to observer, however, that the load shown in Figure \ref{fig:distribution:hotspots} is only theoretical. Each server will perform some kind of ``graceful degradation'' in order to keep the load under its capacity. For example, the update frequency might be reduced and access to the game could be denied for new players attempting to join, which is a common practice in most MMOGs.
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=\linewidth]{images/usagedeviation_uniform}
-	\caption{Desvio médio da taxa de uso ideal dos servidores (sem hotspots)}
+	\caption{Average deviation of the ideal balance of the servers (without hotspots)}
 	\label{fig:usagedeviation:uniform}
 \end{figure}
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=\linewidth]{images/usagedeviation_hotspots}
-	\caption{Desvio médio da taxa de uso ideal dos servidores (com hotspots)}
+	\caption{Average deviation of the ideal balance of the servers (with hotspots)}
 	\label{fig:usagedeviation:hotspots}
 \end{figure}
 
-Nas figuras \ref{fig:usagedeviation:uniform} e \ref{fig:usagedeviation:hotspots}, é apresentado o quanto o balanceamento gerado por cada algoritmo desvia de um balanceamento ideal -- isto é, o quanto, em média, a carga sobre os servidores desviam do valor exatamente proporcional à sua capacidade -- ao longo do tempo. O que se descobre é que, em ambas as situações -- com e sem hotspots -- o algoritmo que utiliza a kd-tree tem o menor desvio. Isso se deve à granularidade mais fina da sua distribuição, que, diferentemente das outras abordagens testadas, não é limitada por um tamanho de célula. Na situação com hotspots, o algoritmo que utiliza a kd-tree é especialmente eficaz, pelo fato de balanceamentos serem necessários. Numa situação em que o sistema dispõe de muito mais recursos que o necessário, a proporcionalidade da distribuição não é tão importante, bastando que cada servidor administre uma carga inferior à sua capacidade.
+In figures \ref{fig:usagedeviation:uniform} and \ref{fig:usagedeviation:hotspots}, it is shown how much the balance generated by each algorithm deviates from an ideal balance -- that is, how much, on average, the load on the servers deviate from an exactly proportional to the value of its capacity in the server system -- over time. It is possible to observe that, in both situations -- with and without hotspots -- the algorithm that uses the kd-tree has the least deviation. This is the due to the fine granularity of its distribution, which, unlike the other approaches tested, is not limited by the size of a cell. In the situation with hotspots, the algorithm that uses the kd-tree is particularly effective, because rebalance is needed. In a situation where the system has more resources than necessary, the proportionality of the distribution is not as important: it is enough that each server manages a load smaller than its capacity.
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=\linewidth]{images/migrations_uniform}
-	\caption{Migrações de jogadores entre servidores (sem hotspots)}
+	\caption{Player migrations between servers (without hotspots)}
 	\label{fig:migrations:uniform}
 \end{figure}
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=\linewidth]{images/migrations_hotspots}
-	\caption{Migrações de jogadores entre servidores (com hotspots)}
+	\caption{Player migrations between servers (with hotspots)}
 	\label{fig:migrations:hotspots}
 \end{figure}
 
-No quesito migrações de jogadores, todos os algoritmos testados -- exceto o BFBCT -- causaram um número semelhante de migrações de usuários na ausência de hotspots (Figura \ref{fig:migrations:uniform}). Isso se deve ao fato da carga do jogo ser inferior à capacidade total do sistema servidor, o que exigia poucos rebalanceamentos e, consequentemente, poucas migrações de jogadores entre servidores. Na Figura \ref{fig:migrations:hotspots}, porém, percebe-se que o algoritmo que utiliza a kd-tree teve um número significativamente menor de migrações de usuários do que as outras abordagens. Isso se deve, primeiro, ao fato de que as regiões definidas pelos nós folhas da kd-tree são necessariamente contíguas, e cada servidor estava associado a apenas um desses nós folha. Um avatar movendo-se por um ambiente com regiões muito fragmentadas atravessaria constantemente fronteiras entre essas regiões e faria, consequentemente, com que seu jogador trocasse de servidor repetidas vezes. Outra razão para este resultado é que cada rebalanceamento de carga executado com a kd-tree aproxima bastante a carga sobre os servidores do valor ideal, exigindo menos rebalanceamentos futuros e, consequentemente, causando menos migrações de jogadores do que nas abordagens com células.
+Regarding player migrations between servers, all the algorithms -- except BFBCT -- had a similar number of migration of users in the absence of hotspots (Figure \ref{fig:migrations:uniform}). This happens because the load of the game is less than the total capacity of the server system, which required less rebalancing and, thus, caused less migrations of players between servers. Figure \ref{fig:migrations:hotspots}, however, demonstrates that the algorithm that uses the kd-tree had a significantly lower number of user migrations than the other approaches. This is due, in the first place, to the fact that the regions defined by the leaf nodes of the kd-tree are necessarily contiguous, and each server was linked to only one leaf node. An avatar moving across the environment divided into very fragmented regions constantly crosses the borders between these regions and causes, therefore, its player to migrate from server to server repeatedly. Another reason for this result is that each rebalancing executed with the kd-tree gets much closer to an ideal distribution than the cell-based algorithms -- again, thanks to the finer granularity of the kd-tree based distribution --, requiring less future rebalancing and, thus, causing less player migrations.
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=\linewidth]{images/overhead_uniform}
-	\caption{Comunicação entre servidores para cada algoritmo ao longo do tempo (sem hotspots)}
+	\caption{Inter-server communication for each algorithm over time (without hotspots)}
 	\label{fig:overhead:uniform}
 \end{figure}
 
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=\linewidth]{images/overhead_hotspots}
-	\caption{Comunicação entre servidores para cada algoritmo ao longo do tempo (com hotspots)}
+	\caption{Inter-server communication for each algorithm over time (with hotspots)}
 	\label{fig:overhead:hotspots}
 \end{figure}
 
-Por fim, é mostrada a comunicação entre servidores, para cada algoritmo simulado, ao longo do tempo. Na Figura \ref{fig:overhead:uniform}, todos os algoritmos têm um resultado semelhante, sendo que o que utiliza a kd-tree tem um pouco menos de overhead do que os outros. Isso também se explica pelo fato das regiões serem contíguas, minimizando o número de fronteiras entre as mesmas e, consequentemte, reduzindo a probabilidade de haver interações entre pares de avatares em que cada um está em uma região diferente. Na Figura \ref{fig:overhead:hotspots}, percebe-se que o algoritmo Progrega causou uma comunicação entre servidores significativamente menor que os outros em uma situação de sobrecarga. A razão para isto é que o objetivo principal -- além de balancear a carga -- do Progrega é de justamente reduzir a comunicação entre servidores. No entanto, mesmo não considerando esse sobrecusto, o algoritmo que utiliza a kd-tree ficou em segundo lugar nesse critério.
+Finally, it is shown the communication between servers for each simulated algorithm, over time. In Figure \ref{fig:overhead:uniform}, all algorithms have similar results, and the one which uses the kd-tree is slightly better than the others. This is also explained by the fact that the regions are contiguous, minimizing the number of boundaries between them and, consequently, reducing the probability of occuring interactions between pairs of avatars, each one in a different region. In Figure \ref{fig:overhead:hotspots}, it is possible to see that the inter-server communication caused by Progrega was considerably lower than the others in a situation of overload. The reason for this is that its main goal -- besides balancing the load -- is precisely to reduce the communication between servers. However, even not considering the additional cost, the algorithm that uses the kd-tree got second place in this criterion.
 
 \section{Conclusions}
 \label{sec:conc}
 
-Use \emph{template.tex} and  \emph{template.tex} to write your paper and enumerate bibliographic references. So, run:
+In this work, we proposed the use of a kd-tree to partition the virtual environment of MMOGs and perform the load balancing of servers by recursively adjusting the split coordinates stored in its nodes. One of the conclusions reached was that the use of kd-trees to make this partitioning allows a fine granularity of the load distribution, while the readjustment of the regions becomes simpler, by recursively traversing the tree, than the common approaches, based on cells and/or graph partitioning.
 
-\begin{description}
-\item pdflatex template
-\item bibtex template
-\item pdflatex template
-\item pdflatex template
-\end{description}
+The finer granularity allows for a better balancing, so that the load assigned to each server is close to the ideal value that should be assigned to it. This better balance also helped to reduce the number of migrations, by performing less rebalancing operations. The fact that the regions defined by the kd-tree are necessarily contiguous was one of the factors that contributed to the results of the proposed algorithm, which was better than the other algorithms simulated in most of the criteria considered.
 
-That's it. You can rename template.tex and .bib. So, keep
-\emph{sbgames.cls} and \emph{sbgames.bst} without modifications. They
-are required to format text and bibliography according to SBGAMES
-format.
-
-
-\section{How to submit}
-\label{sec:how-submit}
-
-Each manuscript must be submitted electronically using the JEMS
-submission site at \url{https://submissoes.sbc.org.br/sbgames2007} ONLY PDF
-file format is accepted. An additional 10 MB will be available for the
-(optional) ZIP file with the supplementary material.
-
-Every co-author of a manuscript must also be registered as a user of
-JEMS before the manuscript is submitted. Instructions on how to
-register new JEMS users and how to retrieve forgotten JEMS passwords
-are available at the same URL above. PLEASE MAKE SURE THAT EVERY
-CO-AUTHOR IS INCLUDED AT THE TIME OF SUBMISSION. WE CANNOT LATER ON
-ADD AND/OR REMOVE AUTHORS FROM SUBMITTED PAPERS.
-
-Upon logging on at \url{https://submissoes.sbc.org.br/sbgames2007}
-select the icon ``submit paper'' for the track ``Computing - Full
-Papers'', in order to submit a full paper. You will then be taken to a
-page with the title "Submit a paper to SBGAMES 2007 - Computing
-Track". Fill in the paper registration information requested in that
-page (don't forget to chose the keywords for your paper at the bottom
-of the page) and then click on the ``submit'' icon, in order to
-complete your paper's registration. After doing so, you will view a
-page called "Registering Paper". The first line after the title of
-this page should say ``Paper $<$5digits$>$ created'', where
-$<$5digits$>$ is a five-digit number assigned by JEMS to your
-manuscript. Before you upload your manuscript, include this five-digit
-number in the place where you would normally put the author names (for
-instance, by including the command
-$\backslash$\emph{author}\{Manuscript number $<$5digits$>$\} in your
-LaTeX source file).
-
-After you have generated the final PDF file containing the manuscript
-number (which should be renamed as $<$5digits$>$.pdf), you can upload
-it immediately by following the "upload" link available on the page
-"Registering Paper", or log out of the JEMS site and return later to
-upload your paper.  If you choose the latter option, an "Upload" icon
-for each registered manuscript will be accessible from your SBGAMES
-2007 home page within JEMS. In any case, please upload the PDF file
-with your manuscript first and then, if desired, return to the
-manuscript upload page (either using your browser's "Back" button or
-through your SBGAMES 2007 JEMS home) and upload the optional ZIP file
-with the supplementary material.  You should receive an e-mail
-confirmation every time you perform an upload.
-
-\section{Conclusion}
-\label{sec:conclusion}
-
-The final sections of your work are: acknowledgements and references.
-These final sections are not numbered.
+In conclusion, it was possible to use methods that can reduce the complexity of each rebalancing operation. This is due, first, to the reduction of the number of operations for calculating the relevance between pairs of avatars by sweeping a sorted avatar list and, secondly, to keep at each server an avatar list already sorted in both dimensions, saving the time that would be spent on sorting the avatars when they were received by the server executing the rebalance.
 
 \section*{Acknowledgements}
 
-To Robert, for all the bagels.
+The development of this work has been supported by the National Research Council (CNPq) and by the Coordination for Improvement of the Higher Education Personnel (CAPES).
 
 \bibliographystyle{sbgames}
 \bibliography{kdtree}
