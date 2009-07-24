@@ -129,10 +129,10 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1432"
-     inkscape:window-height="814"
+     inkscape:window-width="1280"
+     inkscape:window-height="725"
      inkscape:window-x="0"
-     inkscape:window-y="33" />
+     inkscape:window-y="25" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -178,12 +178,12 @@
          id="tspan3167"
          x="-20.110422"
          y="-1147.9734"
-         style="font-size:10px;text-align:center;text-anchor:middle">área de</tspan><tspan
+         style="font-size:10px;text-align:center;text-anchor:middle">area of</tspan><tspan
          sodipodi:role="line"
          x="-20.110422"
          y="-1135.4734"
          id="tspan3169"
-         style="font-size:10px;text-align:center;text-anchor:middle">Interesse</tspan></text>
+         style="font-size:10px;text-align:center;text-anchor:middle">Interest</tspan></text>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#ff0000;stroke-width:0.99999982px;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#TriangleInS);marker-end:url(#TriangleOutS);stroke-opacity:1"
        d="M 63.790711,-1009.5297 L 61.980164,-1018.5688"
@@ -373,12 +373,12 @@
          id="tspan16121"
          x="-191.92899"
          y="-928.7995"
-         style="font-size:10px">Avatares: 5</tspan><tspan
+         style="font-size:10px">Avatars: 5</tspan><tspan
          sodipodi:role="line"
          x="-191.92899"
          y="-916.2995"
          style="font-size:10px"
-         id="tspan16123">Carga: 7 (3x1 + 2x2)</tspan></text>
+         id="tspan16123">Load: 7 (3x1 + 2x2)</tspan></text>
     <text
        id="text16125"
        y="-928.7995"
@@ -389,11 +389,11 @@
          y="-928.7995"
          x="-11.928993"
          id="tspan16127"
-         sodipodi:role="line">Avatares: 5</tspan><tspan
+         sodipodi:role="line">Avatars: 5</tspan><tspan
          id="tspan16129"
          style="font-size:10px"
          y="-916.2995"
          x="-11.928993"
-         sodipodi:role="line">Carga: 17 (1x1 + 4x4)</tspan></text>
+         sodipodi:role="line">Load: 17 (1x1 + 4x4)</tspan></text>
   </g>
 </svg>

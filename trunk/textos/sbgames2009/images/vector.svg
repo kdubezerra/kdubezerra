@@ -46,15 +46,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="218.89876"
+     inkscape:cx="307.28871"
      inkscape:cy="913.66083"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="818"
+     inkscape:window-width="1280"
+     inkscape:window-height="725"
      inkscape:window-x="0"
-     inkscape:window-y="32" />
+     inkscape:window-y="25" />
   <metadata
      id="metadata2471">
     <rdf:RDF>
@@ -187,9 +187,9 @@
          x="314.16043"
          y="32.006577"
          id="tspan4615"
-         style="font-size:12px;text-align:center;text-anchor:middle">vetor com os avatares ordenados de acordo com a coordenada x <tspan
-   style="font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
-   id="tspan4777">(ou y)</tspan></tspan></text>
+         style="font-size:12px;text-align:center;text-anchor:middle">avatar array sorted according to the x <tspan
+   style="font-weight:bold"
+   id="tspan3803">(or y)</tspan> coordinate</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -200,12 +200,12 @@
          id="tspan4642"
          x="104.04571"
          y="108.87971"
-         style="font-size:12px">c(nesq) = capacidade do nó filho à esquerda</tspan><tspan
+         style="font-size:12px">c(left) = capacity of the node's left child</tspan><tspan
          sodipodi:role="line"
          x="104.04571"
          y="123.87971"
          id="tspan4646"
-         style="font-size:12px">c(ndir) = capacidade do nó filho à direita</tspan></text>
+         style="font-size:12px">c(right) = capacity of the node's right child</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -224,25 +224,25 @@
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="154.90955"
+       x="157.27673"
        y="158.01848"
        id="text4650"><tspan
          sodipodi:role="line"
          id="tspan4652"
-         x="154.90955"
+         x="157.27673"
          y="158.01848"
-         style="font-size:12px">c(nesq) + c(ndir)</tspan></text>
+         style="font-size:12px">c(left) + c(right)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="183.5033"
+       x="188.22595"
        y="141.09462"
        id="text4658"><tspan
          sodipodi:role="line"
          id="tspan4660"
-         x="183.5033"
+         x="188.22595"
          y="141.09462"
-         style="font-size:12px">c(nesq)</tspan></text>
+         style="font-size:12px">c(left)</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:20px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -253,9 +253,9 @@
          id="tspan4683"
          x="104.05743"
          y="177.93361"
-         style="font-size:12px">coordenada de divisão := avatar[i].getX() <tspan
+         style="font-size:12px">split coordinate := avatar[i].getX() <tspan
    style="font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
-   id="tspan4775">(ou getY)</tspan></tspan></text>
+   id="tspan4775">(or getY)</tspan></tspan></text>
     <g
        id="g12908"
        transform="translate(92,-96.178503)">

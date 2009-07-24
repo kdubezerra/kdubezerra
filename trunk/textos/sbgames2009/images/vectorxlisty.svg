@@ -165,10 +165,10 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1440"
-     inkscape:window-height="818"
+     inkscape:window-width="1280"
+     inkscape:window-height="725"
      inkscape:window-x="0"
-     inkscape:window-y="32" />
+     inkscape:window-y="25" />
   <metadata
      id="metadata2471">
     <rdf:RDF>
@@ -371,11 +371,13 @@
          sodipodi:role="line"
          id="tspan9437"
          x="613.74823"
-         y="-5.4055195">início da lista</tspan><tspan
+         y="-5.4055195">begin of the</tspan><tspan
          sodipodi:role="line"
          x="613.74823"
          y="9.5944805"
-         id="tspan12294">ordenada em y</tspan></text>
+         id="tspan12294">list sorted in y<tspan
+   style="font-style:italic"
+   id="tspan5384" /></tspan></text>
     <path
        sodipodi:nodetypes="cccc"
        id="path9974"
@@ -420,6 +422,6 @@
          id="tspan12252"
          x="418.74884"
          y="80.732529"
-         style="font-size:12px">fim</tspan></text>
+         style="font-size:12px">end</tspan></text>
   </g>
 </svg>
