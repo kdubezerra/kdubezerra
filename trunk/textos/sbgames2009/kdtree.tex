@@ -21,7 +21,7 @@
 \newcommand{\gamecite}[2]{\misccite{#1}{#2}}
 
 %% Paper title.
-\title{Utilizando kd-trees para particionar o ambiente virtual e balancear dinamicamente a carga sobre servidores de MMOGs}
+\title{[FIXME] A fine granularity load balancing technique for MMOG servers using a kd-tree to partition the space}
 
 %% Author and Affiliation (multiple authors). Use: and between authors
 
@@ -231,6 +231,18 @@ As the avatar lists received from the other servers are already sorted along bot
 
 \section{Simulations}
 \label{sec:simul}
+
+To evaluate the proposed dynamic balancing algorithm proposed, it was simulated a virtual environment across which many avatars moved. Starting from a random point in the environment, each avatar moved according to the random waypoint model \cite{bettstetter2004spr}. To force a load imbalance and stress the algorithm defined in the previous section, we defined some \emph{hotspots} -- points of interest to which the avatars move with a higher probability than to other parts of the map. This way, it is formed a higher avatars concentration in some areas. Although the used movement model is not very realistic in terms of the way the players move their avatars in real games, it was only used to put to test the load balance algorithms simulated. For each algorithm tested, we simulated two situations: one with the presence of hotspots and one without hotspots.
+
+The proposed approach was compared to the ones presented in section \ref{context}, from other authors. However, it is important to observe that the model employed by \cite{ahmed2008mol} considers hexagonal cells, whereas in our simulation we used rectangular cells. Furthermore, the authors considered that there is a trasmission rate threshold, which is the same for all servers in the system. As we assume a heterogenous system, their algorithm was simulated considering that each server has its own transmission rate threshold, depending on the upload bandwidth available in each one of them. However, we kept what we consider the core idea of the authors' approach, which is the selection of the smallest cell cluster managed by the overload server, then chosing that cell with the lowest interaction with other cells of the same server, and finally the transfering of this cell to the least loaded server. Besides this algorithm, we also simulated some of the ones proposed in \cite{bezerra2009lbs}.
+
+The simulated virtual environment consisted of a two-dimensional space, with 750 moving avatars, whose players were divided among eight servers ($S_1, S_2, ..., S_8$), each of which related to one of the regions determined by the balancing algorithm. For the cell-oriented approaches simulated, the space was divided into a \mbox{15 $\times$ 15} cell grid, or 225 cells. The capacity of each server $S_i$ was equal to $i \times 20000$, forming a heterogeneous system. This heterogeneity allowed us to evaluate the load balancing algorithms simulated according to the criterion of proportionality of the load distribution on the servers.
+
+O ambiente virtual simulado consistia de um espaço bidimensional, por onde transitavam 750 avatares, cujos jogadores estavam divididos entre 8 servidores ($S_1, S_2, ..., S_8$), cada um dos quais associados a uma das regiões determinadas pelo algoritmo de balanceamento. No caso da simulação das abordagens baseadas em células, considerou-se que o espaço estava dividido em uma grade de células de ordem 15, ou seja, o ambiente estava dividido em 225 células. A capacidade de cada servidor $S_i$ era igual a $i \times 20000$, criando um sistema heterogêneo. Isso permitiria avaliar os algoritmos de balanceamento de carga simulados segundo o critério de proporcionalidade da distribuição de carga entre os servidores.
+
+Além de avaliar os algoritmos segundo a proporcionalidade da distribuição da carga, foi considerado também o número de vezes em que haveria transferência de jogadores entre servidores. Cada uma dessas transferências implica uma conexão do jogador ao novo servidor e uma desconexão do antigo. Esse tipo de situação pode ocorrer em dois casos: o avatar se moveu, mudando de região e, conseqüentemente, mudando o jogador de servidor; ou o jogador estava com seu avatar parado e teve de mudar de servidor. Neste último caso, obviamente a transferência do jogador ocorreu devido a um rebalanceamento. Um algoritmo de balanceamento ideal realiza a redistribuição de carga necessitando do mínimo possível de transferências de jogadores entre servidores, ao mesmo tempo em que mantém a carga sobre cada servidor proporcional à sua capacidade.
+
+Por último, será avaliado também o sobrecusto de comunicação entre servidores, que ocorre quando dois jogadores estão interagindo, porém cada um conectado a um servidor diferente. Embora o algoritmo de balanceamento proposto neste trabalho não busque atacar diretamente esse problema, é interessante avaliar o quanto a distribuição de carga efetuada por ele influencia na comunicação entre os servidores.
 
 \section{Results}
 \label{sec:result}
