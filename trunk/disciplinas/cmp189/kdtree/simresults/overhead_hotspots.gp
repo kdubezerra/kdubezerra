@@ -1,7 +1,7 @@
 set terminal postscript eps enhanced color solid lw 2 "Helvetica" 18
 #set title 'Overhead total para cada algoritmo ao longo do tempo (com hotspots)'
-set xlabel 'Instante (s)'
-set ylabel 'Overhead'
+set xlabel 'Time (s)'
+set ylabel 'Inter-server communication overhead'
 #set xtics auto
 #set ytics auto
 set autoscale
