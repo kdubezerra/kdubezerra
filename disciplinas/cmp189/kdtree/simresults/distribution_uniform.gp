@@ -1,7 +1,7 @@
 set terminal postscript eps enhanced color solid lw 1 "Helvetica" 14
 set encoding iso_8859_1
-#set title 'Carga m\351dia em cada servidor (por algoritmo, sem hotspots)'
-set ylabel 'Carga'
+#set title 'Carga m\351dia em cada Server (por algoritmo, sem hotspots)'
+set ylabel 'Load'
 set autoscale
 set grid
 set output "distribution_uniform.eps"
@@ -20,11 +20,11 @@ set xtic rotate #by 90 border 100
 set yrange [0:350000]
 set bmargin 10
 
-plot newhistogram "Servidor 1", 'load_s1_uniform.data' using 2:xtic(1) t "Carga" lc rgb '#333333', '' using 3 t "Overhead" lc rgb '#888888', \
-     newhistogram "Servidor 2", 'load_s2_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
-     newhistogram "Servidor 3", 'load_s3_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
-     newhistogram "Servidor 4", 'load_s4_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
-     newhistogram "Servidor 5", 'load_s5_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
-     newhistogram "Servidor 6", 'load_s6_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
-     newhistogram "Servidor 7", 'load_s7_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
-     newhistogram "Servidor 8", 'load_s8_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888'
+plot newhistogram "Server 1", 'load_s1_uniform.data' using 2:xtic(1) t "Load" lc rgb '#333333', '' using 3 t "Overhead" lc rgb '#888888', \
+     newhistogram "Server 2", 'load_s2_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
+     newhistogram "Server 3", 'load_s3_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
+     newhistogram "Server 4", 'load_s4_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
+     newhistogram "Server 5", 'load_s5_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
+     newhistogram "Server 6", 'load_s6_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
+     newhistogram "Server 7", 'load_s7_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888', \
+     newhistogram "Server 8", 'load_s8_uniform.data' using 2:xtic(1) notitle lc rgb '#333333', '' using 3 notitle lc rgb '#888888'

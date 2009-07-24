@@ -24,14 +24,15 @@
 \title{A fine granularity load balancing technique for MMOG servers using a kd-tree to partition the space}
 
 %% Author and Affiliation (multiple authors). Use: and between authors
-
-\author{Carlos Eduardo B. Bezerra, João L. D. Comba, Cláudio F. R. Geyer\\
-				Instituto de Informática\\
-				Universidade Federal do Rio Grande do Sul\\
-				Av. Bento Gonçalves, 9500, Porto Alegre
-}
-\contactinfo{\{carlos.bezera, comba, geyer\}@inf.ufrgs.br
-}
+\author{Manuscript number 60381}
+%\author{Carlos Eduardo B. Bezerra, João L. D. Comba, Cláudio F. R. Geyer\\
+%				Instituto de Informática\\
+%				Universidade Federal do Rio Grande do Sul\\
+%				Av. Bento Gonçalves, 9500, Porto Alegre
+%}
+\contactinfo{60381@jems}
+%\contactinfo{\{carlos.bezera, comba, geyer\}@inf.ufrgs.br
+%}
 %% Keywords that describe your work.
 \keywords{MMOGs, load balancing, distributed server, kd-trees.}
 
@@ -55,7 +56,7 @@
 %% Abstract section.
 
 \begin{abstract}
-MMOGs (massively multiplayer online games) are applications that require high bandwidth connections to work properly. This demand for bandwidth is specially critical on the servers that host the game. This happens because the typical number of simultaneous participants in this kind of game varies from a few hundreds to several tens of thousands, and the server is the one responsible for mediating the interaction between every pair of players connected to it. To deal with this problem, decentralized architectures with multiple servers have been proposed, where each server manages a region of the virtual environment of the game. Each player, then, connects only to the server that manages the region where he is playing. However, to distribute the load among the servers, it is necessary to devise an algorithm for partitioning the virtual environment. In order to readjust the load distribution during the game, this algorithm must be dynamic. Some work has already been made in this direction, but using a geometric algorithm, more appropriate than those found in the literature, it should be possible to reduce the distribution granularity without compromising the rebalancing time, or even reducing it. In this work, we propose the use of a kd-tree for dividing the virtual environment of the game in regions, each of which being designated to one of the servers. The split coordinates of the regions are adjusted dynamically according to the distribution of avatars in the virtual environment. We compared our algorithm to some approaches found in the literature and the simulation results show that our algorithm performed better in most aspects we analysed.
+MMOGs (massively multiplayer online games) are applications that require high bandwidth connections to work properly. This demand for bandwidth is specially critical on the servers that host the game. This happens because the typical number of simultaneous participants in this kind of game varies from a few hundreds to several tens of thousands, and the server is the one responsible for mediating the interaction between every pair of players connected to it. To deal with this problem, decentralized architectures with multiple servers have been proposed, where each server manages a region of the virtual environment of the game. Each player, then, connects only to the server that manages the region where he is playing. However, to distribute the load among the servers, it is necessary to devise an algorithm for partitioning the virtual environment. In order to readjust the load distribution during the game, this algorithm must be dynamic. Some work has already been made in this direction, but using a geometric algorithm, more appropriate than those found in the literature, it should be possible to reduce the distribution granularity without compromising the rebalancing time, or even reducing it. In this work, we propose the use of a kd-tree for dividing the virtual environment of the game in regions, each of which being designated to one of the servers. The split coordinates of the regions are adjusted dynamically according to the distribution of avatars in the virtual environment. We compared our algorithm to some approaches found in the literature and the simulation results show that our algorithm performed better in most aspects we analyzed.
 \end{abstract}
 
 %% The ``\keywordlist'' command prints out the keywords.
