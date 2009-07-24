@@ -238,14 +238,78 @@ The proposed approach was compared to the ones presented in section \ref{context
 
 The simulated virtual environment consisted of a two-dimensional space, with 750 moving avatars, whose players were divided among eight servers ($S_1, S_2, ..., S_8$), each of which related to one of the regions determined by the balancing algorithm. For the cell-oriented approaches simulated, the space was divided into a \mbox{15 $\times$ 15} cell grid, or 225 cells. The capacity of each server $S_i$ was equal to $i \times 20000$, forming a heterogeneous system. This heterogeneity allowed us to evaluate the load balancing algorithms simulated according to the criterion of proportionality of the load distribution on the servers.
 
-O ambiente virtual simulado consistia de um espaço bidimensional, por onde transitavam 750 avatares, cujos jogadores estavam divididos entre 8 servidores ($S_1, S_2, ..., S_8$), cada um dos quais associados a uma das regiões determinadas pelo algoritmo de balanceamento. No caso da simulação das abordagens baseadas em células, considerou-se que o espaço estava dividido em uma grade de células de ordem 15, ou seja, o ambiente estava dividido em 225 células. A capacidade de cada servidor $S_i$ era igual a $i \times 20000$, criando um sistema heterogêneo. Isso permitiria avaliar os algoritmos de balanceamento de carga simulados segundo o critério de proporcionalidade da distribuição de carga entre os servidores.
+In addition to evaluate the algorithms according to the proportionality of the load distribution, it was also considered the number of player migrations between servers. Each migration involves a player connecting to the new server and disconnecting from the old one. This kind of situation may occur in two cases: the avatar moved, changing the region in which it is located and, consequently, changing the server to which its player is connected, or the avatar was not moving and still its player had to migrate to a new server. In the latter case, obviously the player's transfer was due to a rebalancing. An ideal balancing algorithm performs the load redistribution requiring the minimum possible number of player transfers between servers, while keeping the load on each server proportional to its capacity.
 
-Além de avaliar os algoritmos segundo a proporcionalidade da distribuição da carga, foi considerado também o número de vezes em que haveria transferência de jogadores entre servidores. Cada uma dessas transferências implica uma conexão do jogador ao novo servidor e uma desconexão do antigo. Esse tipo de situação pode ocorrer em dois casos: o avatar se moveu, mudando de região e, conseqüentemente, mudando o jogador de servidor; ou o jogador estava com seu avatar parado e teve de mudar de servidor. Neste último caso, obviamente a transferência do jogador ocorreu devido a um rebalanceamento. Um algoritmo de balanceamento ideal realiza a redistribuição de carga necessitando do mínimo possível de transferências de jogadores entre servidores, ao mesmo tempo em que mantém a carga sobre cada servidor proporcional à sua capacidade.
-
-Por último, será avaliado também o sobrecusto de comunicação entre servidores, que ocorre quando dois jogadores estão interagindo, porém cada um conectado a um servidor diferente. Embora o algoritmo de balanceamento proposto neste trabalho não busque atacar diretamente esse problema, é interessante avaliar o quanto a distribuição de carga efetuada por ele influencia na comunicação entre os servidores.
+Finally, the intra-server communication overhead will also be evaluated. It occurs when two players are interacting, but each one of them is connected to a different server. Although the algorithm proposed in this work does not address this problem directly, it would be interesting to evaluate how the load distribution performed by it influences the communication between the servers.
 
 \section{Results}
 \label{sec:result}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/distribution_uniform}
+	\caption{Average load on each server (by algorithm, without hotspots)}
+	\label{fig:distribution:uniform}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/distribution_hotspots}
+	\caption{Average load on each server (by algorithm, with hotspots)}
+	\label{fig:distribution:hotspots}
+\end{figure}
+
+Figures \ ref (fig: distribution: uniform) and \ ref (fig: distribution:) hotspots have the average load (plus the overhead of communication between servers) on each server for each algorithm tested. The first figure shows the values in a situation without agglomerations of players and therefore less total load. The second, in turn, shows the distribution of the load in a situation of overloading the server system. There is, in Figure \ ref (fig: distribution: uniform), that all algorithms have met with the goal of keeping the load on each server less than or equal to its capacity, when the system has sufficient resources to do so. In figure \ ref (fig: distribution: hotspots), which represents a situation of overloading the system, we find that all the algorithms managed to dilute a manner roughly proportional to overloading of the servers.
+
+As figuras \ref{fig:distribution:uniform} e \ref{fig:distribution:hotspots} apresentam a carga média (mais o overhead da comunicação entre servidores) sobre cada servidor, para cada algoritmo testado. A primeira figura mostra esses valores em uma situação sem aglomerações de jogadores e, portanto, com menor carga total. A segunda, por sua vez, mostra a distribuição da carga em uma situação de sobrecarga do sistema servidor. Observa-se, na figura \ref{fig:distribution:uniform}, que todos os algoritmos testados cumpriram com o objetivo de manter a carga sobre cada servidor menor ou igual à sua capacidade, quando o sistema dispõe de recursos suficientes para tal. Na figura \ref{fig:distribution:hotspots}, que representa uma situação de sobrecarga do sistema, percebe-se que todos os algoritmos conseguiram diluir de maneira aproximadamente proporcional a sobrecarga entre os servidores.
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/usagedeviation_uniform}
+	\caption{Desvio médio da taxa de uso ideal dos servidores (sem hotspots)}
+	\label{fig:usagedeviation:uniform}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/usagedeviation_hotspots}
+	\caption{Desvio médio da taxa de uso ideal dos servidores (com hotspots)}
+	\label{fig:usagedeviation:hotspots}
+\end{figure}
+
+Nas figuras \ref{fig:usagedeviation:uniform} e \ref{fig:usagedeviation:hotspots}, é apresentado o quanto o balanceamento gerado por cada algoritmo desvia de um balanceamento ideal -- isto é, o quanto, em média, a carga sobre os servidores desviam do valor exatamente proporcional à sua capacidade -- ao longo do tempo. O que se descobre é que, em ambas as situações -- com e sem hotspots -- o algoritmo que utiliza a kd-tree tem o menor desvio. Isso se deve à granularidade mais fina da sua distribuição, que, diferentemente das outras abordagens testadas, não é limitada por um tamanho de célula. Na situação com hotspots, o algoritmo que utiliza a kd-tree é especialmente eficaz, pelo fato de balanceamentos serem necessários. Numa situação em que o sistema dispõe de muito mais recursos que o necessário, a proporcionalidade da distribuição não é tão importante, bastando que cada servidor administre uma carga inferior à sua capacidade.
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/migrations_uniform}
+	\caption{Migrações de jogadores entre servidores (sem hotspots)}
+	\label{fig:migrations:uniform}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/migrations_hotspots}
+	\caption{Migrações de jogadores entre servidores (com hotspots)}
+	\label{fig:migrations:hotspots}
+\end{figure}
+
+No quesito migrações de jogadores, todos os algoritmos testados -- exceto o BFBCT -- causaram um número semelhante de migrações de usuários na ausência de hotspots (Figura \ref{fig:migrations:uniform}). Isso se deve ao fato da carga do jogo ser inferior à capacidade total do sistema servidor, o que exigia poucos rebalanceamentos e, consequentemente, poucas migrações de jogadores entre servidores. Na Figura \ref{fig:migrations:hotspots}, porém, percebe-se que o algoritmo que utiliza a kd-tree teve um número significativamente menor de migrações de usuários do que as outras abordagens. Isso se deve, primeiro, ao fato de que as regiões definidas pelos nós folhas da kd-tree são necessariamente contíguas, e cada servidor estava associado a apenas um desses nós folha. Um avatar movendo-se por um ambiente com regiões muito fragmentadas atravessaria constantemente fronteiras entre essas regiões e faria, consequentemente, com que seu jogador trocasse de servidor repetidas vezes. Outra razão para este resultado é que cada rebalanceamento de carga executado com a kd-tree aproxima bastante a carga sobre os servidores do valor ideal, exigindo menos rebalanceamentos futuros e, consequentemente, causando menos migrações de jogadores do que nas abordagens com células.
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/overhead_uniform}
+	\caption{Comunicação entre servidores para cada algoritmo ao longo do tempo (sem hotspots)}
+	\label{fig:overhead:uniform}
+\end{figure}
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=\linewidth]{images/overhead_hotspots}
+	\caption{Comunicação entre servidores para cada algoritmo ao longo do tempo (com hotspots)}
+	\label{fig:overhead:hotspots}
+\end{figure}
+
+Por fim, é mostrada a comunicação entre servidores, para cada algoritmo simulado, ao longo do tempo. Na Figura \ref{fig:overhead:uniform}, todos os algoritmos têm um resultado semelhante, sendo que o que utiliza a kd-tree tem um pouco menos de overhead do que os outros. Isso também se explica pelo fato das regiões serem contíguas, minimizando o número de fronteiras entre as mesmas e, consequentemte, reduzindo a probabilidade de haver interações entre pares de avatares em que cada um está em uma região diferente. Na Figura \ref{fig:overhead:hotspots}, percebe-se que o algoritmo Progrega causou uma comunicação entre servidores significativamente menor que os outros em uma situação de sobrecarga. A razão para isto é que o objetivo principal -- além de balancear a carga -- do Progrega é de justamente reduzir a comunicação entre servidores. No entanto, mesmo não considerando esse sobrecusto, o algoritmo que utiliza a kd-tree ficou em segundo lugar nesse critério.
 
 \section{Conclusions}
 \label{sec:conc}
