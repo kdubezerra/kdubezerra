@@ -50,7 +50,8 @@ Av. Bento Gonçalves, 9500, Porto Alegre, RS\\
 \thispagestyle{empty}
 
 \begin{abstract}
-After a certain stagnation of the processor clock increase rate, it has been invested in multicore architectures to meet the demand for processing capacity required by applications increasingly heavy. These applications have a requirement for increased storage space in main memory, which requires a proportional increase in the processor cache memory. However, just increasing cache memory to a processor can not only not increase its performance, but also reduce its efficiency by increasing the memory access time. In this work, a comparison is made between the performance of a multicore architecture with a large L3 cache and an architecture with an additional cache memory level, L4. It is also proposed an architecture with an interleaved cache hierarchy, with the objective of reducing the memory search depth when two cores share a variable. It was found that a better structured memory with four levels hierarchy performed the simulated tasks in less time than an architecture with a large L3 cache. Finally, it has been shown that interleaving the cache hierarchy may bring significant benefits.
+%After a certain stagnation of the processor clock increase rate, it has been invested in multicore architectures to meet the demand for processing capacity required by applications increasingly heavy. These applications have a requirement for increased storage space in main memory, which requires a proportional increase in the processor cache memory. However, just increasing cache memory to a processor can not only not increase its performance, but also reduce its efficiency by increasing the memory access time.
+In this work, a comparison is made between the performance of a multicore architecture with a large L3 cache and an architecture with an additional cache memory level, L4. It is also proposed an architecture with an interleaved cache hierarchy, for reducing the memory search depth when two cores share a variable. It was found that a better structured memory with four levels hierarchy performed the simulated tasks in less time than an architecture with a large L3 cache. Finally, it has been shown that interleaving the cache hierarchy may bring significant benefits.
 \end{abstract}
 
 
@@ -61,15 +62,15 @@ After a certain stagnation of the processor clock increase rate, it has been inv
 In the past few years, due to a stagnation of the processor clock frequency \cite{zhao1008scs}, manufacturers have opted for the production of processors with multiple processing cores -- or multicore processors. Examples are the architectures of Intel (\emph{Dunnington}, \emph{Nehalem} etc.), AMD (\emph{Barcelona}, \emph{Budapest}, \emph{Deneb} etc.) and Sun (\emph{Niagara}, \emph{Victoria Falls} etc.).
 
 	
-The cache are used to reduce the number of latency cycles that a processor must wait to access a given memory block. Reducing the number of cycles, it reduces the time required to access the data. For this reason, the time to access data in the cache memory is considerably less than the time required to access the main memory, for example.
+The cache are used to reduce the number of latency cycles that a processor must wait to access a given memory block. Reducing the number of cycles, it reduces the time required to access the data. For this reason, the time to access data in the cache memory is considerably shorter than the time required to access the main memory, for example.
 
-However, recent applications have an increasingly large volume of data to process. This large amount of data, if not accessed quickly by the processing unit, can lead to a worse system performance \cite{li98fem}. Another issue is that in multicore architectures, multiple cores may be using the memory at the same time. Because of these reasons, it is recommendable to increase the size of the cache (which is faster) at the proportion of the increase of application data and the number of processor cores.
+However, recent applications have an increasingly large volume of data to process. This large amount of data, if not accessed quickly by the processing unit, can lead to a poor system performance \cite{li98fem}. Another issue is that in multicore architectures, multiple cores may be using the memory at the same time. Because of these reasons, it is recommendable to increase the size of the cache (which is faster) at the proportion of the increase of application data and the number of processor cores.
 
 The question is that the simple increase of the cache may not be sufficient to reduce the execution time of tasks performed by the processor. Actually, a careless increase of the memory size may even reduce the speed of the system. This happens because the larger the memory, the greater the time of access, due to a more complex structure of addressing \cite{goodman98ucm}. Moreover, if several cores are trying to access the memory at the same time, there will be a contention for the access to the bus to that memory, so that one or more processors have to wait until the bus is released. A poor structure design for the cache memory may lead an architecture with more memory to be slower than an architecture with less memory, but with a more efficient structure
 
-Considering these aspects, this work has done a short study of the influence of the cache structure in multicore processors, comparing the performance of a hierarchy with 3 memory levels to two other hierarchies, each with 4 levels, introducing an L4 cache shared between all cores. As a contribution, this work proposed and tested an interleaved memory hierarchy -- which will be described in the next sections -- with the objective of reducing the depth of the search that a core must perform to get the latest value of a shared variable.
+Considering these aspects, this work has done a study of the influence of the cache structure in multicore processors, comparing the performance of a hierarchy with 3 memory levels to two other hierarchies, each with 4 levels, introducing an L4 cache shared between all cores. As a contribution, this work proposed and tested an interleaved memory hierarchy -- which will be described in the next sections -- with the objective of reducing the depth of the search that a core must perform to get the latest value of a shared variable.
 
-The text is organized as follows: in section \ref{sec:prop}, we describe in more detail the proposal of this work, including the idea of interleaving the hierarchy of the cache memory; in section \ref{sec:simul}, we present the details of modeling and the parameters of the simulations carried out; in section \ref{sec:result}, we show the results and a brief analysis and, in section \ref{sec:conc}, the conclusions of this work a presented.
+The text is organized as follows: in section \ref{sec:prop}, we describe in more detail the proposal of this work, including the idea of interleaving the hierarchy of the cache memory; in section \ref{sec:simul}, we present the details of modeling and the parameters of the simulations carried out; in section \ref{sec:result}, we show the results and a brief analysis and, in section \ref{sec:conc}, the conclusions of this work are presented.
 
 %------------------------------------------------------------------------- 
 \section{Proposal}
@@ -78,35 +79,35 @@ The text is organized as follows: in section \ref{sec:prop}, we describe in more
 This study had two goals, which are: seek evidence that the addition of a fourth level of cache memory is more beneficial than increasing the L3 cache and evaluate the performance gain that is achieved by interlacing the hierarchy of cache memories. To examine the difference in performance with a large L3 cache, compared to the addition of an L4 cache memory module, we compared the following architectures:
 
 \begin{itemize}
- \item a multicore architecture, simlar to the Dunnington architecture used in Intel Xeon, which had eight cores, with four modules of L2 cache, each shared by a pair of cores, and a large L3 memory (with 32 megabytes of space), shared among all eight cores (Figure \ref{L3});
+ \item a multicore architecture, simlar to the Dunnington architecture used in Intel Xeon, which had eight cores, with four modules of L2 cache, each shared by a pair of cores, and a large L3 memory (with 32 megabytes of space), shared among all eight cores;% (Figure \ref{L3});
 \end{itemize}
 
-\begin{figure}[!h]
-  \centering  
-  \includegraphics[width=0.8\linewidth]{images/arq_L123.pdf}
-  \caption{Architecture with three cache levels}
-  \label{L3}
-\end{figure}
+% \begin{figure}[!h]
+%   \centering  
+%   \includegraphics[width=0.8\linewidth]{images/arq_L123.pdf}
+%   \caption{Architecture with three cache levels}
+%   \label{L3}
+% \end{figure}
 
 \begin{itemize} 
-\item a multicore architecture, similar to the previous one, also with eight cores, but the 32 megabytes of L3 memory were divided into: two 8 megabytes L3 memory modules, each shared by half of the cores, and a 16 megabytes L4 memory, shared by all cores (Figure \ref{L4}).
+\item a multicore architecture, similar to the previous one, also with eight cores, but the 32 megabytes of L3 memory were divided into: two 8 megabytes L3 memory modules, each shared by half of the cores, and a 16 megabytes L4 memory, shared by all cores;% (Figure \ref{L4}).
 \end{itemize}
 
-\begin{figure}[!h]
-  \centering  
-  \includegraphics[width=0.8\linewidth]{images/arq_L1234.pdf}
-  \caption{Architecture with four cache levels}
-  \label{L4}
-\end{figure}
+% \begin{figure}[!h]
+%   \centering  
+%   \includegraphics[width=0.8\linewidth]{images/arq_L1234.pdf}
+%   \caption{Architecture with four cache levels}
+%   \label{L4}
+% \end{figure}
 
 Another contribution of this work was also the proposal of an hierarchy interleaving of the hierarchy of cache memories. To get a result indicating whether there is any benefit by using this kind of approach, we compared the following architectures:
 
 \begin{itemize}
- \item an architecture with four cache levels (L1, L2, L3 and L4), where each module has only one lower level cache module in the memory hierarchy of memory, as in Figure \ref{L4};
+ \item an architecture with four cache levels (L1, L2, L3 and L4), where each module has only one lower level cache module in the memory hierarchy;
 \end{itemize}
 
 \begin{itemize}
- \item another architecture, in which each L2 cache module can be linked to one or two memories in the L3 level of the hierarchy. Figure \ref{L4Interleaved} illustrates the architecture of interleaved hierarchy, and Figure \ref{treescompare} presents more clearly the difference between these hierarchies -- in Figure \ref{treescompare} (a), we have the architecture without interleaving and, in Figure \ref{treescompare} (b), with interleaving.
+ \item another architecture, in which each L2 cache module can be linked to one or two memories in the L3 level of the hierarchy. Figure \ref{L4Interleaved} illustrates the interleaved memory hierarchy architecture.
 \end{itemize}
 
 \begin{figure}[!h]
@@ -116,14 +117,14 @@ Another contribution of this work was also the proposal of an hierarchy interlea
   \label{L4Interleaved}
 \end{figure}
 
-\begin{figure}[!h]
-  \centering  
-  \includegraphics[width=0.8\linewidth]{images/treescompare}
-  \caption{Trees representing the evaluated hierarchies}
-  \label{treescompare}
-\end{figure}
+% \begin{figure}[!h]
+%   \centering  
+%   \includegraphics[width=0.8\linewidth]{images/treescompare}
+%   \caption{Trees representing the evaluated hierarchies}
+%   \label{treescompare}
+% \end{figure}
 
-The objective of this interleaving is to reduce the problem of having to perform very deep searches in the cache memory hierarchy when two processing cores share a variable. Consider a situation in which the cores \emph{CPU\_0} and \emph{CPU\_7} (Figure \ref{L4}) read and write the same variable \emph{x}. Without interleaving, when \emph{CPU\_0} writes in the variable, the value stored in the L1 cache of \emph{CPU\_7} would be incoherent and it would have to search the cache until the first memory area common to both cores -- in this case the L4 memory, which is more distant from the cores and probably has a longer access latency, reducing the system performance.
+The objective of this interleaving is to reduce the problem of having to perform very deep searches in the cache memory hierarchy when two processing cores share a variable. Consider a situation in which the cores \emph{CPU\_0} and \emph{CPU\_7}, whose only common cache memory block is the L4 one, read and write the same variable \emph{x}. Without interleaving, when \emph{CPU\_0} writes in the variable, the value stored in the L1 cache of \emph{CPU\_7} would be incoherent and it would have to search the cache until the first memory area common to both cores -- in this case the L4 memory, which is more distant from the cores and probably has a longer access latency, reducing the system performance.
 
 However, considering the architecture with interleave hierarchy shown in Figure \ref{L4Interleaved}, it would be enough to have the up-to-date value of \emph{x} stored in the third level cache \emph{L3\_1}. This way, it would not be necessary to perform a deep four levels search. Using this approach reduces the average search depth necessary for the cores to share data in cache memories. However, this mechanism has some details to be considered in a real implementation of the architecture. For example, when a \emph{cache-miss} occurs in a L2 cache, it may be necessary to search in two L3 caches -- in the example of Figure \ref{L4Interleaved}, this happens when a there is a cache miss in modules \emph{L2\_0} and \emph{L2\_2}. This may cause a longer access time, if the searches are sequential, or in a higher cost of manufacturing the hardware, if there is in the processor an unit responsible for conducting two searches in parallel and, when a result is found by one of them, returning it and aborting the other search.
 
@@ -154,28 +155,28 @@ Both CG and BT seek to stress the components of processing and memory. BT has a 
 \begin{figure}[!h]
   \centering  
   \includegraphics[width=\linewidth]{images/ciclos_bt.png}
-  \caption{Number of cycles necessary to run BT}
+  \caption{Cycles necessary to run BT}
   \label{ciclos_bt}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
   \includegraphics[width=\linewidth]{images/steps_bt.png}
-  \caption{Number of steps necessary tos run BT}
+  \caption{Steps necessary to run BT}
   \label{steps_bt}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
   \includegraphics[width=\linewidth]{images/ciclos_cg.png}
-  \caption{Number of cycles necessary to run CG}
+  \caption{Cycles necessary to run CG}
   \label{ciclos_cg}
 \end{figure}
 
 \begin{figure}[!h]
   \centering  
   \includegraphics[width=\linewidth]{images/steps_cg.png}
-  \caption{Number of steps necessary tos run CG}
+  \caption{Steps necessary to run CG}
   \label{steps_cg}
 \end{figure}
 
