@@ -232,7 +232,7 @@ However, it is perceived that such a mechanism can easily saturate the bandwidth
 
 
 
-\chapter{Motivação e estado da arte}
+\chapter{Motivation and state of the art}
 
 %O que é comum a qualquer um dos gêneros de jogos online multijogador é o fato de serem simulações interativas de tempo-real. São simulações no sentido de que simulam um mundo tão parecido quanto possível com o mundo real -- embora alguns jogos se distanciem propositalmente do realismo. A interatividade vem do fato de que há vários participantes executando ações que modificarão o andamento do jogo. Por fim, são de tempo-real porque diversas ações executadas por um jogador devem ter efeito imediato, sob pena de prejudicar alguém. Em um jogo FPS, por exemplo, espera-se que após um jogador enviar o comando de puxar o gatilho, arma de seu personagem dispare o mais rápido possível. Além disso, é necessário manter a consistência da simulação entre os jogadores, para que estes visualizem o jogo no mesmo estado.
 
@@ -273,7 +273,7 @@ The \textbf{client-server architecture} meets various aspects necessary for the 
 
 %TODO: citar o paper sigcomm 2007 que mostra os "Challenges in peer-to-peer gaming"
 
-Another approach is the \textbf{peer-to-peer architecture}, where the simulation is divided among the computers involved. There can be a system without any server, where the peers, which are the machines of the players, come into some kind of agreement for the various steps of the simulation. Regarding scalability, this approach is not optimal, since ensuring such "agreement"{} is costly in terms of message exchange \cite{lamport1982bgp}. Even if one of the peers is elected to decide the course of the simulation, still persists the problem of all peers needing to exchange messages with one another. Having $n$ pairs, there is a complexity of O({$n^2$}) message exchanges for each step of the simulation. Clearly, this approach is not as scalable as should be a system to support a massively multiplayer online game. Moreover, it would be necessary to distribute the storage and retrieval of the states of the game.
+Another approach is the \textbf{peer-to-peer architecture}, where the simulation is divided among the computers involved. There can be a system without any server, where the peers, which are the machines of the players, come into some kind of agreement for the various steps of the simulation. Regarding scalability, this approach is not optimal, since ensuring such "agreement"{} is costly in terms of message exchange \cite{lamport1982bgp}. Even if one of the peers is elected to decide the course of the simulation, still persists the problem of all peers needing to exchange messages with one another. Having $n$ peers, there is a complexity of O({$n^2$}) message exchanges for each step of the simulation. Clearly, this approach is not as scalable as should be a system to support a massively multiplayer online game. Moreover, it would be necessary to distribute the storage and retrieval of the states of the game.
 
 Some studies -- such as \cite{schiele2007rpp, rieche2007ppb, hampel2006ppa, elrhalibi2005abm, iimura2004zfg, knutsson2004pps} -- have been done to make games on peer-to-peer networks more scalable, . For example, to reduce traffic between the peers, each peer can send state updates only to whom the state changes are relevant. To achieve this goal, \cite{schiele2007rpp} suggests the division of the virtual environment into regions. The purpose of this is for each region to act as an independent set of smaller scale. Players whose avatars were in a given region could form a small peer-to-peer group and their own computers would decide the outcome of the players' actions in that area of the virtual environment. When an avatar moved from one region to another, it would leave the first group and join the group of its new region. Since the environment is considered contiguous, i.e. the avatars could move freely across adjacent regions, some of the peers in a group would keep connections to peers from groups of neighboring regions and, through these connection between adjacent groups, the necessary information for transfering a player could be obtained.
 
@@ -291,46 +291,33 @@ Some models that suggest the use of clients connected to a distributed server ha
 
 Finally, the authors of \cite{assiotis2006dam}, as well as several others with similar proposals \cite{ng2002msa, chertov:olb, lee2003sdl}, consider that the nodes are servers connected through a high speed and low latency network, what make their solutions only partially applicable in a scenario with highly dynamic and volatile resources, such as the peer-to-peer networks formed with volunteer resources. Such networks have some inherent problems: nodes with low availability and dependability, low bandwidth and low processing power compared to current dedicated MMOG servers maintained by MMOG developers.
 
-Por fim, os autores desse trabalho, assim como em vários outros com propostas semelhantes \cite{ng2002msa, chertov:olb, lee2003sdl}, consideram que os nodos servidores estão conectados através de uma rede de alta velocidade e pouco atraso, sendo que suas soluções são apenas parcialmente aplicáveis em um cenário com recursos altamente dinâmicos e voláteis, como são as redes par-a-par montadas com recursos de voluntários. Tais redes têm como problemas inerentes: nós com baixa disponibilidade e dependabilidade, largura de banda escassa e baixo poder de processamento, quando comparada com servidores dedicados mantidos por empresas fabricantes de MMOGs.
 
+\section{Research questions}
 
+In a completely decentralized MMOG deployed on a peer-to-peer network, each peer is responsible for deciding the outcome of the actions of its player. Although this makes the system less dependent on a single point of failure -- if a player is disconnected from the game, only the state regarding its avatar will be lost -- and to make the game independent of central servers, this approach proved to be very vulnerable to cheating precisely because at least part of the simulation is relied on the peers. Besides, this approach is prone to saturation of the upload bandwidth of the participants, who must send state updates to their fellow players.
 
+The aim is to investigate the use of a server system consisting of geographically distributed volunteer nodes. This system would be heterogeneous, where each node could be anything from a home computer to a cluster belonging to some company that had interest in serving the game. Some minimum processing power and communication bandwidth would be required for being part of the server, and it would be necessary to ensure somehow that each node is trusted. However, taking into account that the number of server nodes would be much smaller than the number players, it would be more feasible to ensure its reliability regarding the possibility of cheating than in a fully decentralized peer-to-peer architecture. Furthermore, the server nodes do not necessarily belong to players. They could be small local Internet service providers (ISPs), for example, who would profit by putting their resources available for a game. That would be interesting to these companies for the resources -- at least communication bandwidth -- of the ISP would be used anyway, for all the traffic from players who were also its subscribers would pass over there regardless of which server each player was connected to.
 
-\section{Questões de pesquisa}
+Nevertheless, as the simulation would be distributed among the server nodes, it is not necessary that all they have the same processing power or communication bandwidth owned by the huge central servers commonly used for MMOG games. To make this distribution, the game world could be divided into regions, each managed by at least one of these server nodes. More than one server node should be assigned to each region, so that the simulation would be distributed on two levels: first into regions, then within each one of them among the nodes managing it. Thus, each player would send his actions to one of these nodes, which would process them, then synchronize with other nodes in the same region and, finally, make the resulting game state persistent in a distributed way and send it to the players to whom it is relevant. Thus, it would also be provided a better availability, as each region of the virtual world would be served by a set of servers holding a synchronized game state. If any of these servers fail, one of the others could take on the players who were connected to the server that is no longer available.
 
-Em um MMOG completamente descentralizado e montado sobre uma arquitetura par-a-par, cada par é responsável por decidir o resultado das ações de seu jogador. Apesar disto tornar o sistema menos dependente de cada um deles -- se um jogador se desconectar do jogo, apenas o estado referente a seu avatar será perdido -- e de tornar o jogo independente de servidores centrais, tal abordagem se mostrou muito vulnerável a trapaça, justamente por cada par executar parte da simulação, além dessa abordagem ser propícia à saturação da banda de upload dos participantes, que tem que enviar atualizações de estado da simulação para seus companheiros de jogo.
-
-%\textbf{... por esses motivos, decidiu-se utiliza o msoi (ver \emph{"discussao autista.txt"})}
-O que se pretende investigar é o uso de um sistema servidor composto de nodos voluntários distribuídos geograficamente. Esse sistema seria heterogêneo, onde cada nodo poderia ser desde um computador doméstico até um cluster pertencente a alguma empresa que tivesse interesse em servir o jogo. Seria exigida uma capacidade de processamento e link de comunicação mínimos para poder fazer parte do sistema servidor, além de ser necessário garantir de alguma forma que cada um desses nodos seja confiável. Porém, levando-se em consideração que o número de nodos servidores seria muito menor que o de jogadores, seria muito mais viável garantir a sua confiabilidade em relação à possibilidade de haver trapaça do que em uma rede par-a-par completamenet descentralizada, onde essa tarefa é praticamente impossível. Além do que os nodos servidores não pertenceriam necessariamente a jogadores. Poderiam ser pequenos provedores locais de serviço de Internet, por exemplo, que lucrariam ao disponibilizarem recursos para um jogo. Isso seria interessante para essas empresas, pois os recursos -- pelo menos banda de comunicação -- do provedor seriam utilizados de qualquer forma pelos jogos, pois todo o tráfego de jogadores que também fossem seus assinantes passaria por lá, independente de a qual servidor cada jogador estivesse conectado.
-
-De qualquer forma, como a simulação seria distribuída entre os nodos servidores, não seria necessário que cada um destes tivesse a mesma capacidade de processamento ou comunicação possuída pelos grandes servidores centrais usados comumente para jogos MMOG. Para fazer essa distribuição, o mundo do jogo poderia ser dividido em regiões, cada uma gerenciada por, pelo menos, um destes nodos. Mais de um nodo servidor deverá ser usado por região, de maneira que a simulação seria distribuída em dois níveis: primeiro em regiões, depois dentro de cada uma delas, entre os nodos que a estivessem gerenciando. Dessa forma, cada jogador enviaria suas ações a um destes nodos, que as processaria, em seguida se sincronizaria com os outros nodos da mesma região, e por fim, persistiria de maneira distribuída o novo estado do jogo e enviaria para os jogadores a ele conectados. Assim, também seria provida melhor disponibilidade, pois cada região do mundo virtual estaria sendo servida por um conjunto de servidores com estado do jogo sincronizado. Caso algum destes falhasse, o(s) outro(s) poderia(m) tomar para si os jogadores que estavam conectados ao servidor que não está mais disponível.  %Isto é mais desejável do que designar cada região a um par controlado por jogador, como sugerido em alguns trabalhos, pois jogadores saem e entram de volta no jogo de maneira imprevisível.%, o que poderia ser um ponto fraco da abordagem destes autores.
-
-Para atingir o objetivo de distribuir um servidor de MMOG sobre uma rede dinâmica, com recursos voláteis, mais escassos, e com menor dependabilidade, como são as redes par-a-par formadas por nodos voluntários, surgem algumas questões que ou tem sido objeto de pesquisa nos últimos anos, ou que ainda estão por resolver. Algumas delas são:
-%TODO: refs
+To achieve the goal of distributing an MMOG server on a dynamic network, with few and volatile resources and less dependability, as are the peer-to-peer networks formed by volunteer nodes, some questions that either have been the subject of research in recent years or that are still unresolved arise. Some of them are:
 
 \begin{itemize}
 
-\item Atribuir a cada nodo servidor uma porção do mundo virtual, de maneira que a carga seja balanceada dinamicamente, levando em conta a existência de \emph{hotspots} (aglomerados de avatares em uma área relativamente pequena);%  mapeando cada região a um conjunto de nodos servidores, de forma que nodos com boa comunicação entre si estejam próximos na topologia lógica da rede, ao mesmo tempo em que é feito um balanceamento dinâmico da carga atribuída a cada servidor, levando em consideração a existência de ;
+\item Assign to each server node a portion of the virtual world, so that the load is dynamically balanced, taking into account the existence of \emph{hotspots} (clusters of avatars in a relatively small area);
 
-\item Manter consistente a simulação nas diferentes regiões e entre servidores da mesma região;
+\item Maintain the simulation consistent among the different regions and among servers managing the same region;
 
-\item	Coordenar a entrada, a saída e a detecção de colapso de nodos do sistema, provendo tolerância a falhas;
+\item Coordinate the entry, exit and the crash detection of nodes of the system, providing fault tolerance;
 
-\item	Distribuir e armazenar de maneira persistente o estado do mundo e dos jogadores, de forma a poder recuperá-lo sempre que necessário;
+\item Distribute and store in a persistent manner the state of the world and of the players, so that they can be retrieved when necessary;
 
-\item	Otimizar a comunicação entre clientes e servidores, de forma a economizar o máximo possível de largura de banda, sem que isso seja perceptível pelos jogadores.
-
-%\item	Como cada nodo tem recursos mais limitados que os de um grande servidor central, deve-se buscar algoritmos adaptativos que tornem a simulação (atualizações de estado e sincronização da simulação entre os clientes) coerente com os recursos disponíveis no momento.
-
-%\item	Tornar o sistema como um todo o mais escalável possível, mesmo que para isso seja necessário relaxar algumas restrições, como consistência global, por exemplo;
-%
-%\item	Tornar esse sistema tolerante a falhas, pois ele será dinâmico (entrada e saída de nodos do sistema) e conterá diversos pontos passíveis de terem problemas.
+\item Optimize the communication between clients and servers in order to save the maximum possible bandwidth, without this being perceptible by the players.
 
 \end{itemize}
 
-Pretende-se, durante o curso de doutorado, pesquisar e desenvolver novas soluções para estes problemas, buscando as que forem mais adequadas em um contexto de jogos online maciçamente multijogador. Com tais questões resolvidas, poderão ser providos a MMOGs disponibilidade e tolerância a falhas -- devido à replicação de nodos servidores em uma mesma região -- e escalabilidade, mantendo o atraso de comunicação dentro de um limite aceitável para o jogo, tudo isso por um baixo custo.
+It is intended, during graduate school, research and develop new solutions to these problems, seeking those that are most appropriate in a context of massively multiplayer online games. With these issues resolved, it may be provided to MMOGs availability and fault tolerance -- due to the replication of server nodes in the same region -- and scalability, while maintaining the communication delay within an acceptable range for the game and the a lower financial cost, compared to traditional MMOG servers.
 
-%
 %\begin{figure}
 % \centering
 % \includegraphics[width=0.50\textwidth]{imagens/www}
@@ -350,37 +337,37 @@ Pretende-se, durante o curso de doutorado, pesquisar e desenvolver novas soluçõe
 %explicar onde o CoSMMuS se encaixa na literatura: o que que vai contribuir?
 %enfiar tantas referências quanto for possível, porém evitando dizer que já existe algo pronto
 
-\chapter{Objetivo}
-\section{Objetivo geral}
-%TODO: ponto de vista ... visto... consertar/melhorar
+\chapter{Objective}
+	
+The main objective of this doctoral plan is to create a decentralized architectural model to support massively multiplayer online games. Following this model, it should be possible to form a system of geographically distributed server nodes, using the Internet as a means of connection between them. This distribution should be transparent to the players, to whom the system will be seen as a single MMOG server, which maintains the game world consistent, available and with a good quality of service.
 
-O objetivo é criar um modelo arquitetural de suporte a jogos online maciçamente multijogador. Seguindo este modelo, deverá ser possível formar um sistema geograficamente distribuído de nodos servidores, utilizando a Internet como meio de ligação entre os mesmos. Essa distribuição deverá ser transparente aos jogadores, que verão o sistema como um único servidor de MMOGs, que conseguirá manter o mundo do jogo consistente, disponível e com boa qualidade de serviço. %Além de distribuir as cargas computacionais (comunicação e processamento) impostas pelo grande número de pessoas jogando, este modelo deverá incluir técnicas com o fim de reduzir o tráfego entre os componentes deste sistema (nodos servidores e máquinas clientes dos jogadores), economizando largura de banda. Tais técnicas são o foco deste trabalho, tendo em vista que se considera um cenário com recursos voláteis e limitados, já que a ligação entre os nodos será feita através da Internet.
+%Além de distribuir as cargas computacionais (comunicação e processamento) impostas pelo grande número de pessoas jogando, este modelo deverá incluir técnicas com o fim de reduzir o tráfego entre os componentes deste sistema (nodos servidores e máquinas clientes dos jogadores), economizando largura de banda. Tais técnicas são o foco deste trabalho, tendo em vista que se considera um cenário com recursos voláteis e limitados, já que a ligação entre os nodos será feita através da Internet.
 
 %Existem outros aspectos relevantes, além da distribuição do servidor e da economia de largura de banda, que poderão ser acrescentados ao modelo, dependo da disponibilidade de tempo para realizar tal tarefa.
 
-\section{Objetivos específicos}
+\section{Detailed objectives}
 %TODO: por aqui as referências de gerenciamento de interesse e de topologia, difusao etc. (ver slide "em andamento" da semac)
 
 %A função deste middleware será de abstrair para a camada do jogo, que ficará acima dele, o sistema geograficamente distribuído servidor. distribuir as cargas de processamento e comunicação entre 
 %
 %sistema distribuído sobre a Internet, que funcionará como um grande servidor para jogos online maciçamente multijogador. Pode ser utilizado o conceito de "super-nodo", que nada mais é que um computador conectado à Internet, com capacidade de processamento e comunicação acima da média de usuários comuns, mas que, ainda assim, é bem mais limitado que os grandes servidores que costumam servir os jogos MMOG mais conhecidos. A idéia é que diversos destes super-nodos, conectados à Internet, formem um sistema distribuído que aceitará e repartirá conexões oriundas de jogadores. Eles então dividirão a carga de processamento e de comunicação dos diferentes jogadores conectados, assim como a simulação do ambiente virtual do jogo.
 
-Para atingir este objetivo geral, algumas metas foram traçadas:
+To achieve this general objective, some goals were established:
 
 \begin{enumerate}
 
 %TODO: mecanismo -> outra palavra
 %TODO: dividir este item em 2: distribuiçao e rede overlay parecida com a real.
-\item Desenvolver um mecanismo que lide com entrada, saída e colapso destes, provendo tolerância a falhas, ao mesmo tempo em que busca manter próximos na rede \emph{overlay} nodos servidores que estejam próximos geograficamente;
+\item Develop a mechanism to deal with entry, exit and crash of server nodes, providing fault tolerance, while trying to keep the nodes which are geographically close to each other adjacent in the overlay network of the server system;
 
 %TODO: dividir este item em 2
-\item Criar um algoritmo de balanceamento da carga do MMOG, que ao mesmo tempo em que mantém a carga em cada servidor proporcional à sua capacidade, leva em consideração a existência de \emph{hotspots}, evitando que algum destes seja particionado entre regiões diferentes, dado que isto causaria forte dependência entre elas;
+\item Create an algorithm for balancing the load of the game, maintaining the load on each server proportional to its capacity, while avoiding the splitting of a hotspot into different regions, as this would cause a strong dependence between these regions \cite{bezerra2009lbs};
 
-\item Definir um esquema de sincronização do estado da simulação entre os diferentes nodos servidores designados para a mesma região do mundo do jogo, assim como sincronizar periodicamente, ou quando necessário, os estados das diferentes regiões, de forma a manter consistência global;
+\item Define a scheme for synchronizing the simulation state among different server nodes assigned to the same region of the gaming world, as well as synchronize periodically, or when necessary, the states in different regions, in order to maintain global consistency;
 
-\item Definir um mecanismo de persistência distribuída dos estados dos jogadores e do mundo virtual do jogo como um todo, de maneira que estejam sempre disponíveis para qualquer nodo servidor, ainda que alguns destes inesperadamente se tornem indisponíveis;
+\item Build a distributed persistence mechanism to store the states of the players and of the virtual game world as a whole, so they are always available for any server node, even if some of these become unexpectedly unavailable;
 
-\item Pesquisar e desenvolver técnicas e algoritmos que visem a reduzir o tráfego no sistema, de maneira a economizar recursos dos nodos servidores, diminuir atraso na comunicação entre eles e ampliar o público do jogo devido à redução do requisito de largura de banda para jogá-lo, além de diminuir os requisitos para que um computador possa fazer parte do sistema servidor, porém sem prejudicar a experiência dos jogadores.
+\item Design techniques and algorithms that aim to reduce intra-server and server-client communication, in order to save resources of the server nodes, reduce delays in the communication between them and expand the audience of the game due to the reduction in the bandwidth required to play it and, besides, reducing the requirements for a computer to be part of the server system, without undermining the game experience of the players.
 
 %\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
 %
