@@ -293,6 +293,7 @@ Finally, the authors of \cite{assiotis2006dam}, as well as several others with s
 
 
 \section{Research questions}
+\label{researchquestions}
 
 In a completely decentralized MMOG deployed on a peer-to-peer network, each peer is responsible for deciding the outcome of the actions of its player. Although this makes the system less dependent on a single point of failure -- if a player is disconnected from the game, only the state regarding its avatar will be lost -- and to make the game independent of central servers, this approach proved to be very vulnerable to cheating precisely because at least part of the simulation is relied on the peers. Besides, this approach is prone to saturation of the upload bandwidth of the participants, who must send state updates to their fellow players.
 
@@ -380,7 +381,7 @@ To achieve this general objective, some goals were established:
 \end{enumerate}
 
 
-\chapter{Modelo preliminar: CoSMMuS}
+\chapter{Preliminary model: Cosmmus}
 % as refs vão aqui
 % divisão em regiões
 % distribuição em dois níveis -> porque usar mais de um servidor seria melhor do que um só (menor tráfego entre eles e processamento distribuído)
@@ -392,18 +393,19 @@ To achieve this general objective, some goals were established:
 % Como os jogadores interagem!!!
 % otimização do uso de largura de banda com IM (citar dewan, eu, etc.)
 
-Como parte do mestrado, definiu-se um modelo preliminar, que visa justamente ao particionamento do ambiente virtual em regiões, cada uma atribuída a um servidor, sobre o qual foi definido um esquema de balanceamento de carga. O Cosmmus -- \emph{Cooperative System for Massive Multiplayer Service} -- será um novo modelo, a ser definido durante o doutorado, que também utilizará o princípio usado no mestrado de distribuição do jogo através de particionamento do ambiente virtual em regiões, porém atacando problemas mais críticos, que foram deixados de lado até então.
+In a previous work \cite{bezerra2009lre}, it was set up a preliminary model -- which aimed to partition the virtual environment into regions, each assigned to a single server -- on which a load balancing scheme was defined. The Cosmmus -- Cooperative System for Massive Multiplayer Service -- is a new model to be defined during the doctorate course, which will also uses the principle of partitioning the virtual environment of the game into regions, but addressing the most critical problems (as referred in section \ref{researchquestions}), which were left out so far.
 
-O Cosmmus deverá incluir soluções para os principais aspectos relacionados a MMOGs, como distribuição de tarefas, sincronização da simulação, persistência distribuída e assim por diante. Embora este modelo não esteja definido ainda, já há algumas idéias de como ele poderá ser e que tipo de abordagens ele deve utilizar, baseado em pesquisa relacionada. Nas seções seguintes, serão apresentadas estas idéias iniciais, que virão a ser melhor desenvolvidas durante o curso de doutorado.
+Cosmmus should include solutions to the major aspects of MMOGs, such as task distribution, synchronization of the simulation, distributed persistence and so on. Although this model is not defined yet, there are already some ideas on how it could be and what kind of approach it should use, based on related research. In the following sections it will be presented these initial ideas, which will be better developed during the doctoral course.
 % Como os jogadores interagem!!!
 
-\section{Distribuição da carga do jogo}
+\section{Load distribution}
 
-Já foram feitos alguns trabalhos relacionados ao particionamento do ambiente virtual do jogo \cite{devleeschauwer2005dma, morillo2006spp, lui2002epa}. Para o Cosmmus, pensa-se em fazer a distribuição da carga do jogo entre os nodos servidores em dois níveis:
+Some studies have been done concerning the partitioning of the virtual environment of the game, as \cite{devleeschauwer2005dma, morillo2006spp, lui2002epa}. For Cosmmus, it is intended to make the load distribution among the game servers in two levels:
 
 \begin{enumerate}
-	\item Assim como no mestrado, será utilizada a idéia de células de mesmo tamanho e posição fixa, que são áreas do ambiente. Essas células então serão agrupadas em regiões, cujo tamanho e formato irão depender da maneira como os avatares dos jogadores estão mais ou menos concentrados em determinados lugares. Isto deverá ser feito de maneira transparente para o jogador, que verá um mundo grande e contíguo através do qual poderá mover-se livremente;	
-	\item Cada região poderá ser designada a mais de um nodo servidor, com dois objetivos principais: primeiramente, prover tolerância a falhas por meio de replicação e, em segundo lugar, permitir que regiões que já estão muito sobrecarregadas sejam gerenciadas por mais de um nodo servidor.	
+	\item It will be used the idea of regions (portions of the virtual world), whose size will be adjusted dynamically depending on how the avatars of the players are more or less concentrated in certain places. This should be done transparently to the player, who will see a large contiguous world through which he can move freely;
+
+	\item Cada região poderá ser designada a mais de um nodo servidor, com dois objetivos principais: primeiramente, prover tolerância a falhas por meio de replicação e, em segundo lugar, permitir que regiões que já estão muito sobrecarregadas sejam gerenciadas por mais de um nodo servidor.
 \end{enumerate}
 
 No caso de uma região estar muito sobrecarregada, poderia-se pensar em fazer um novo particionamento, em duas ou mais novas regiões, mas isto poderia ser contraproducente em determinadas situações, como no caso em que a região engloba um hotspot e sua divisão resultaria em duas regiões excessivamente dependentes entre si. Para isso deverá ser criado também um algoritmo, métrica ou heurística que determine se uma região deve ou não ser subdividida em novas regiões.
