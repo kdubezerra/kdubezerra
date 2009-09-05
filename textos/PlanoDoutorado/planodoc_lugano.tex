@@ -318,7 +318,7 @@ To achieve the goal of distributing an MMOG server on a dynamic network, with fe
 
 \end{itemize}
 
-It is intended, during the doctoral course, to research and develop new solutions to these problems, seeking those that are most appropriate in a context of massively multiplayer online games. With these issues resolved, it may be provided to MMOGs availability and fault tolerance -- due to the replication of server nodes in the same region -- and scalability, while maintaining the communication delay within an acceptable range for the game and the a lower financial cost, compared to traditional MMOG servers.
+It is intended, during the doctoral course, to research and develop new solutions to these problems, seeking those that are most appropriate in a context of massively multiplayer online games. With these issues resolved, it may be provided to MMOGs availability and fault tolerance -- due to the replication of server nodes in the same region -- and scalability, while maintaining the communication delay within an acceptable range for the game, all this for a low cost for the player, compared to traditional MMOG servers.
 
 These solutions will be wrapped together in a middleware, which will provide them as services. These services will be accessible via an API (application programming interface) to allow an easier development of a massively multiplayer game. The game programmer will be able to use these services without needing to have a deep understanding of the distribution model used by the middleware. To the application developer, a high-level interface will be provided, while the middleware will take care of the tasks performed in lower levels. The communication abstraction provided to the game developer may be: publish-subscribe, as in PADRES \cite{fidler2005padres}, distributed shared memory, as in Sinfonia \cite{aguilera2007sinfonia}, message passing or any other that best suits the development of an MMOG.
 
@@ -373,7 +373,7 @@ To achieve this general objective, some goals were established:
 
 \item Design techniques and algorithms that aim to reduce intra-server and server-client communication, in order to save resources of the server nodes, reduce delays in the communication between them and expand the audience of the game due to the reduction in the bandwidth required to play it and, besides, reducing the requirements for a computer to be part of the server system, without undermining the game experience of the players;
 
-\item Create a middleware containing the desired services, along with an high-level API to make them accessible to the game developer.
+\item Create a middleware containing the desired services, along with a high-level API to make them accessible to the game developer.
 
 %\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
 %
