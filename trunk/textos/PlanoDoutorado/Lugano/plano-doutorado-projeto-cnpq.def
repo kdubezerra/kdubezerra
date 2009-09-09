@@ -1,0 +1,2 @@
+\ProvidesFile{plano-doutorado-projeto-cnpq.def}[2002/11/14 Plano de Doutorado]
+\newcommand{\titlepagespecificinfo}{\planodoutoradoprojetocnpqspecificinfo}

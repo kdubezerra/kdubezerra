@@ -1,0 +1,96 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
+The top-level auxiliary file: planodoc_lugano.aux
+The style file: abnt.bst
+Database file #1: planodoc.bib
+Warning--entry type for "cecin2004fsa" isn't style-file defined
+--line 9 of file planodoc.bib
+Repeated entry---line 463 of file planodoc.bib
+ : @article{lee2003sdl
+ :                    ,
+I'm skipping whatever remains of this entry
+Warning--entry type for "wang2004gem" isn't style-file defined
+--line 647 of file planodoc.bib
+Warning--entry type for "dutt1993nfk" isn't style-file defined
+--line 769 of file planodoc.bib
+Warning--entry type for "karypis1998mam" isn't style-file defined
+--line 789 of file planodoc.bib
+Warning--entry type for "han2005tao" isn't style-file defined
+--line 829 of file planodoc.bib
+Warning--entry type for "muller2006csm" isn't style-file defined
+--line 893 of file planodoc.bib
+Warning--entry type for "zhou2007cmh" isn't style-file defined
+--line 937 of file planodoc.bib
+Warning--entry type for "stoica2001csp" isn't style-file defined
+--line 1001 of file planodoc.bib
+Warning--entry type for "baumgart2007ofo" isn't style-file defined
+--line 1045 of file planodoc.bib
+Warning--entry type for "adler2007cdr" isn't style-file defined
+--line 1147 of file planodoc.bib
+Warning--": a new paradigm for building scalable distributed systems}" isn't a brace-balanced string for entry aguilera2007sinfonia
+while executing--line 2683 of file abnt.bst
+Warning--": A Flexible Overlay Network Simulation Framework}" isn't a brace-balanced string for entry baumgart2007ofo
+while executing--line 2683 of file abnt.bst
+Warning--": a novel interest management algorithm for distributed simulations of MMOGs}" isn't a brace-balanced string for entry bezerra2008a3
+while executing--line 2683 of file abnt.bst
+Warning--": A Large Scale And Highly Reconfigurable Experimental Grid Testbed}" isn't a brace-balanced string for entry bolze2006gls
+while executing--line 2683 of file abnt.bst
+Warning--": A Scalable and Cheat-Resistant Distribution Model for Internet Games}" isn't a brace-balanced string for entry cecin2004fsa
+while executing--line 2683 of file abnt.bst
+Warning--": a hybrid approach to distributed virtual environments}" isn't a brace-balanced string for entry chen2006pch
+while executing--line 2683 of file abnt.bst
+Warning--": powering next-generation gaming with on-demand computing}" isn't a brace-balanced string for entry butterfly
+while executing--line 2683 of file abnt.bst
+Warning--": a peer-to-peer approach to scalable multi-player online games}" isn't a brace-balanced string for entry iimura2004zfg
+while executing--line 2683 of file abnt.bst
+Warning--": A Simple Degree-Optimal Distributed Hash Table}" isn't a brace-balanced string for entry kaashoek2003ksd
+while executing--line 2683 of file abnt.bst
+Warning--": Scalable, distributed object location and routing for large-scale peer-to-peer systems}" isn't a brace-balanced string for entry rowstron2001psd
+while executing--line 2683 of file abnt.bst
+Warning--": A scalable peer-to-peer lookup service for internet applications}" isn't a brace-balanced string for entry stoica2001csp
+while executing--line 2683 of file abnt.bst
+Warning--": mOverlay and its performance}" isn't a brace-balanced string for entry zhang2004cla
+while executing--line 2683 of file abnt.bst
+Warning--": a resilient global-scale overlay for service deployment}" isn't a brace-balanced string for entry zhao2004trg
+while executing--line 2683 of file abnt.bst
+You've used 60 entries,
+            2364 wiz_defined-function locations,
+            866 strings with 15013 characters,
+and the built_in function-call counts, 72719 in all, are:
+= -- 8019
+> -- 119
+< -- 1163
++ -- 5201
+- -- 232
+* -- 3651
+:= -- 6425
+add.period$ -- 201
+call.type$ -- 60
+change.case$ -- 955
+chr.to.int$ -- 1
+cite$ -- 60
+duplicate$ -- 10459
+empty$ -- 2851
+format.name$ -- 1231
+if$ -- 14763
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 0
+newline$ -- 123
+num.names$ -- 300
+pop$ -- 941
+preamble$ -- 1
+purify$ -- 60
+quote$ -- 0
+skip$ -- 4227
+stack$ -- 0
+substring$ -- 4007
+swap$ -- 6917
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 302
+warning$ -- 0
+while$ -- 387
+width$ -- 0
+write$ -- 62
+(There was 1 error message)
