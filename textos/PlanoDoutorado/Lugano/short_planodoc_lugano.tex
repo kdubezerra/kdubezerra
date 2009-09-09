@@ -214,7 +214,7 @@ Each player interacts with the virtual environment -- or game world -- by contro
 
 It is easy to observe that the central server, receiving actions from thousands of players and broadcasting the resulting state of each of these actions to, potentially, every player, is prone to have its processing power and, specially, its bandwidth saturated by the game. The machine serving the game is, usually, a cluster consisting of nodes connected via a fast and low-latency local network, providing the necessary processing power, and with a very fast Internet connection \cite{feng2007wnn}, whose transmission rate ranges from hundreds of MBps to several GBps, or more. Obviously, such infrastructure is highly expensive, preventing small game developing companies or independent groups with low financial resources to enter the MMOG market.
 
-The purpose of this study plan is, therefore, to develop an innovative solution with a decentralized approach. More specifically, it is intended to use a decentralized overlay network such as those used for resource sharing -- e.g. Pastry \cite{rowstron2001psd}, Tapestry \cite{zhao2004trg}, Koord \cite{kaashoek2003ksd} and others -- to create a geographically distributed system composed of low-cost volunteer nodes. This system will then act as a geographically distributed server to which the players connect via a gateway. Obviously, this model brings several questions, which were trivial to solve when using the traditional server architecture, but that become much more complex in a geographically distributed server scenario, such as: state consistency among the server nodes; coordination of entry, exit and crash of some of them, in order to keep the service available as much as possible; distributed persistence; optimal management of the scarce resources of the server system; and so on.
+The purpose of this study plan is, therefore, to develop an innovative solution with a decentralized approach. More specifically, it is intended to create a middleware which uses a decentralized overlay network such as those used for resource sharing -- e.g. Pastry \cite{rowstron2001psd}, Tapestry \cite{zhao2004trg}, Koord \cite{kaashoek2003ksd} and others -- to create a geographically distributed system composed of low-cost volunteer nodes. This system will then act as a geographically distributed server to which the players connect via a gateway. Obviously, this model brings several questions, which were trivial to solve when using the traditional server architecture, but that become much more complex in a geographically distributed server scenario, such as: state consistency among the server nodes; coordination of entry, exit and crash of some of them, in order to keep the service available as much as possible; distributed persistence; optimal management of the scarce resources of the server system; and so on.
 
 %=============================================================================
 %POR QUE A SUÍÇA.
@@ -230,6 +230,31 @@ Dr. Fernando Pedone, associate professor at USI (Universittà della Svizzera ital
 %CRONOGRAMA
 %=============================================================================
 \section*{Work schedule}
+
+To achieve the goals outlined for the research project, a schedule has been designed, considering a nine-month academic year. This period has been chosen to fit the length of the scholarship to which this application refers. In Switzerland, it is intended to execute some of the essencial parts of the research project designed for a Ph.D. course in UFRGS (Brazil). This project will, therefore, result in an international cooperation between both UFRGS and the Swiss university. The tasks to be performed in Switzerland are:
+
+\begin{enumerate}
+ 
+  \item Detailed definition of the services to be provided by the MMOG decentralized support middleware, which are, mainly:
+
+    \begin{enumerate}
+      \item Develop an algorithm or technique to manage the consistency of the game world simulation among the server nodes of the system;
+
+      \item Design Store and retrieve the persistent state of the game in a distributed manner, using replication and providing reliability, while 
+    \end{enumerate}
+
+
+  \item Research and development of innovative solutions to deliver these services, considering the needs of MMOGs;
+
+  \item Create a prototype which implements these services;
+
+  \item Validate the proposed middleware by simulating a game on the developed prototype.
+ 
+\end{enumerate}
+
+
+
+%todas as etapas irão gerar produções bibliográficas
 
 
 %=============================================================================
