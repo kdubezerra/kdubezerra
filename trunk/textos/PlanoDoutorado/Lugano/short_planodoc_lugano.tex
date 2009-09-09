@@ -195,7 +195,7 @@
 %=============================================================================
 %PARÁGRAFO INICIAL
 %=============================================================================
-\chapter*{Study plan summary}
+\chapter*{Study plan}
 
 This study plan proposes a research project focused on the theme of massively multiplayer online games (MMOGs). Although this kind of games is usually deployed on a client-server infrastructure, with a large and expensive central server, it is possible to use a network with a decentralized architecture. Therefore, ways of providing such decentralized support should be investigated, reducing the maintenance cost of these games, while still providing the basic requirements of MMOGs.
 
@@ -231,27 +231,59 @@ Dr. Fernando Pedone, associate professor at USI (Universittà della Svizzera ital
 %=============================================================================
 \section*{Work schedule}
 
-To achieve the goals outlined for the research project, a schedule has been designed, considering a nine-month academic year. This period has been chosen to fit the length of the scholarship to which this application refers. In Switzerland, it is intended to execute some of the essencial parts of the research project designed for a Ph.D. course in UFRGS (Brazil). This project will, therefore, result in an international cooperation between both UFRGS and the Swiss university. The tasks to be performed in Switzerland are:
+To achieve the goals outlined for the research project, a schedule has been designed, considering a nine-month academic year. This period has been chosen to fit the length of the scholarship to which this application refers. %In Switzerland, it is intended to execute some of the essencial parts of the research project designed for a Ph.D. course in UFRGS (Brazil). This project will, therefore, result in an international cooperation between both UFRGS and the Swiss university.
+The tasks to be performed in Switzerland are:
 
 \begin{enumerate}
  
-  \item Detailed definition of the services to be provided by the MMOG decentralized support middleware, which are, mainly:
+  \item Detailed definition of the services to be provided by the MMOG decentralized support middleware, such as:   
 
-    \begin{enumerate}
-      \item Develop an algorithm or technique to manage the consistency of the game world simulation among the server nodes of the system;
-
-      \item Design Store and retrieve the persistent state of the game in a distributed manner, using replication and providing reliability, while 
+    \begin{enumerate}     
+     \item Synchronization of the virtual environment simulation among the server nodes;
+     \item State storage and retrieval;
+     \item Management of the entrance and exit of nodes in the server system;
+     \item Fault-tolerance, by allowing the system to keep working correctly even upon unexpected disconnection or crash of some servers;
     \end{enumerate}
 
+  \item Research and development of innovative solutions to deliver these services, considering the needs of MMOGs:
 
-  \item Research and development of innovative solutions to deliver these services, considering the needs of MMOGs;
+    \begin{enumerate}
+      \item Develop algorithms or techniques to manage the consistency of the game world simulation among the server nodes of the system;
+
+      \item Build a distribute persitence scheme, to store and retrieve the persistent state of the game, using replication and providing reliability, while minimizing the delay of each operation;
+
+      \item Design algorithms to reduce the inter-server communication overhead, preventing state-related network messages from overloading the server system;
+
+      \item Create an abstraction for these services, so that the game developer who uses the intended middleware will not have to consider questions regarding the distribution of the server;
+    \end{enumerate}
 
   \item Create a prototype which implements these services;
 
-  \item Validate the proposed middleware by simulating a game on the developed prototype.
- 
+  \item Validate the proposed middleware by simulations.
+
 \end{enumerate}
 
+Also, besides attending to a local language course, publications are expected. The work schedule for the period in Switzerland is intended to be as follows:
+
+\begin{table}[h]
+\begin{center}
+%\caption{Créditos a obter}
+\label{tab:creditos}
+\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|}
+\hline
+Task   & Sep & Oct & Nov & Dec & Jan & Fev & Mar & Apr & May \\ \hline \hline
+Language course & X & X & X &   &   &   &   &   &  \\ \hline
+1       & X &   &   &   &   &   &   &   &   \\ \hline
+2 (a)   &   & X & X &   &   &   &   &   &   \\ \hline
+2 (b)   &   &   &   & X & X &   &   &   &   \\ \hline
+2 (c and d) & & &   &   &   & X & X &   &   \\ \hline
+3           & & &   &   &   & X & X & X &   \\ \hline
+4           & & &   &   &   &   &   &   & X \\ \hline
+Writing of papers     & & & X & X & X & X & X & X & X \\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
 
 
 %todas as etapas irão gerar produções bibliográficas
