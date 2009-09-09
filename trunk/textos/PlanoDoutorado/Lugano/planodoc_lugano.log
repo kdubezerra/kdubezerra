@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.16)  9 SEP 2009 00:42
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2009.5.16)  9 SEP 2009 09:38
 entering extended mode
  %&-line parsing enabled.
 **planodoc_lugano.tex
@@ -170,19 +170,19 @@ LaTeX Info: Redefining \addtolength on input line 76.
 ) (./planodoc_lugano.aux)
 \openout1 = `planodoc_lugano.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 134.
-LaTeX Font Info:    ... okay on input line 134.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 134.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 135.
+LaTeX Font Info:    ... okay on input line 135.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 135.
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/t1ptm.fd
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
@@ -201,22 +201,22 @@ File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 \everyMPtoPDFconversion=\toks21
 )
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 140.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 141.
 
-Underfull \hbox (badness 10000) in paragraph at lines 140--140
+Underfull \hbox (badness 10000) in paragraph at lines 141--141
 
  []
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for T1+phv on input line 156.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 157.
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <16> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 156.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 157.
  (./planodoc_lugano.toc
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 2.
@@ -278,13 +278,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 26--26
 ] [3
 
 ]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 206.
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 207.
 
  (/usr/share/texmf-texlive/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 206.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 207.
 
 Underfull \hbox (badness 10000) has occurred while \output is active
 \T1/ptm/m/n/10.95 4
@@ -342,19 +342,19 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 [18
 
 ]
-Overfull \hbox (9.30962pt too wide) in paragraph at lines 525--526
+Overfull \hbox (9.30962pt too wide) in paragraph at lines 526--527
 []\T1/ptm/m/n/12 Implementação do mó-dulo de dis-tribuição de carga e ge-ren-ci
 a-mento de hotspots; 
  []
 
 [19]
-Overfull \hbox (4.47305pt too wide) in paragraph at lines 544--545
+Overfull \hbox (4.47305pt too wide) in paragraph at lines 545--546
 []\T1/ptm/m/n/12 Escrita de ar-ti-gos para pub-li-cação na-cional (SBGames) e i
 n-ter-na-cional ([],
  []
 
 
-Overfull \hbox (6.62608pt too wide) in paragraph at lines 629--641
+Overfull \hbox (6.62608pt too wide) in paragraph at lines 630--642
  [] 
  []
 
@@ -362,7 +362,7 @@ Overfull \hbox (6.62608pt too wide) in paragraph at lines 629--641
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Overfull \hbox (3.59468pt too wide) in paragraph at lines 668--669
+Overfull \hbox (3.59468pt too wide) in paragraph at lines 669--670
 []\T1/ptm/m/n/12 Tem-se man-tido con-tato com o pro-fes-sor Fer-nando Pe-done, 
 da Uni-ver-si-dade de Lugano
  []
@@ -378,13 +378,13 @@ Underfull \hbox (badness 10000) has occurred while \output is active
  []
 
 [22]
-Overfull \hbox (2.10883pt too wide) in paragraph at lines 772--773
+Overfull \hbox (2.10883pt too wide) in paragraph at lines 773--774
 \T1/ptm/m/n/12 um dos re-spon-sáveis pelo de-sen-volvi-mento da fun-cional-i-da
 de de multi-servidor, uti-lizando
  []
 
 
-Overfull \hbox (21.18544pt too wide) in paragraph at lines 784--785
+Overfull \hbox (21.18544pt too wide) in paragraph at lines 785--786
 []\T1/ptm/b/n/12 A$[]$: a novel in-ter-est man-age-ment al-go-rithm for dis-tri
 buted sim-u-la-tions of MMOGs\T1/ptm/m/n/12 ,
  []
@@ -418,7 +418,7 @@ Underfull \hbox (badness 10000) has occurred while \output is active
 Here is how much of TeX's memory you used:
  2463 strings out of 94834
  29946 string characters out of 1179181
- 99202 words of memory out of 1500000
+ 99221 words of memory out of 1500000
  5583 multiletter control sequences out of 10000+50000
  34244 words of font info for 43 fonts, out of 1200000 for 2000
  228 hyphenation exceptions out of 8191
@@ -430,7 +430,7 @@ b></usr/share/texmf-texlive/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf
 -texlive/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf-texlive/fonts/ty
 pe1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a
 .pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on planodoc_lugano.pdf (29 pages, 150039 bytes).
+Output written on planodoc_lugano.pdf (29 pages, 150026 bytes).
 PDF statistics:
  124 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
