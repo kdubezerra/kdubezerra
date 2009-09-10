@@ -198,40 +198,39 @@
 \chapter*{Study plan}
 
 This study plan proposes a research project focused on the theme of massively multiplayer online games (MMOGs). Although this kind of games is usually deployed on a client-server infrastructure, with a large and expensive central server, it is possible to use a network with a decentralized architecture. Therefore, ways of providing such decentralized support should be investigated, reducing the maintenance cost of these games, while still providing the basic requirements of MMOGs.
+%
+This document presents the research plan to be followed by the applicant, Carlos Eduardo Bezerra, during his stay at the University of Lugano (USI). This work is part of the applicant's PhD thesis.
 
 %=============================================================================
 %CONTEXTO
 %=============================================================================
 \section*{Context}
 
-Some years ago, with the broader access to the Internet, the traditional computer games have evolved to multiplayer online games, but with no much more than ten or twenty players in a single match. After that, in the past few years, with faster, cheaper -- when compared to a decade ago --, and more reliable Internet connections, a new game genre has arised as a new trend, which is the MMOG, with potentially tens of thousans of simultaneous players. Some studies demonstrate that the market share of these massively multiplayer games will keep growing at a considerable rate -- according to \cite{intelligence2006online}, the online games market will grow from US\$ 3.4 billion in 2005 to US\$ 13 billion in 2011.
+In the past few years, thanks to widespread Internet access, traditional computer games have evolved into multiplayer online games. Initially involving a few players, these environments have grown quickly. Faster, cheaper, and more reliable Internet connections have started a new trend in Massively Multiplayer Online Games (MMOG), with potentially tens of thousans of simultaneous players. Moreover, studies show that massively multiplayer games will keep growing at a considerable rate.
 
-The main reason for the success of these games is the kind of interaction they allow. Usually, such games contain a virtual environment, where its numerous players may interact in many different ways, from fighting -- cooperatively, against artificial intelligence controlled monsters, or even dueling, and fighting each other -- to trading in-game objects -- like weapons and armor in medieval fantasy games -- or just chatting in some place of the game virtual world. This game world, besides, is persistent, i.e. the changes resulting from the player actions will persist, no matter if they keep playing continuously or if they disconnect from the game for a while.
+The main reason for the success of these games is the kind of interaction they allow. Usually, such games contain a virtual environment where numerous players may interact in many different ways, both collaboratively and individually. Each player interacts with the virtual environment---or game world---by controlling an entity called an \emph{avatar}, a representation of the player in the virtual environment. The avatar performs the actions requested by the player, interfering in the game world and potentially changing its state and the state of other avatars. Additionally, the game state should be durable, i.e., the changes resulting from a player's actions should persist, no matter if the player keeps playing continuously or disconnects from the game for a while.
 
-This persitence constitutes one of the main features of these games, whose matches usually do not have any predetermined time to end. There are some exceptions, such as MMORTS (real-time strategy MMOGs), with matches lasting from six months to one year \cite{travian}, what is still considerably long for a game. Most MMOGs, however, have no such time to finish, creating the illusion of a parallel world into which the players may transport themselves when they so desire.
+Designing and implementing an MMOG poses a number of scientific challenges. In the traditional central server model, each player sends his (or her) desired actions to a single server, which processes them, calculating their outcome, represented as new states for the world and for some avatars. These new states are then broadcast to other players, so they can perceive the changes. The server also acts as an arbiter, who decides the actions performed by non-playable characters (e.g., an object), whose state is also sent to the players.
 
-Each player interacts with the virtual environment -- or game world -- by controlling an entity called \emph{avatar}. Each avatar is a representation of a player in the virtual environment -- e.g. a sniper in a war game, a medieval knight in a fantasy game, a gangster or any other controllable character. The avatar performs the actions requested by the player, interfering in the game world and potentially changing its state and the state of other avatars. In the traditional central server model, each player sends his desired actions to the server, which processes them, calculating their outcome, represented as new states for the world and for some avatars. These new states are then broadcast to other players, so they can perceive the changes. The server also acts as an arbiter, who decides the actions performed by non-playable characters -- such as dungeon inhabitants, who might attack anyone who enters there --, whose state is also sent to the players.
+It is easy to observe that the central server eventually becomes a scalability and an availability bottleneck. Receiving and treating actions from thousands of players, and broadcasting the resulting state of each of these actions to every player will eventually saturate the server's processing power and, specially, its bandwidth. To address this problem, some systems replace the single server by a cluster of nodes connected by a high throughput and low-latency local network~\cite{feng2007wnn}. Obviously, such an infrastructure is highly expensive, preventing small game-developing companies or independent groups with low financial resources to enter the MMOG market.
 
-It is easy to observe that the central server, receiving actions from thousands of players and broadcasting the resulting state of each of these actions to, potentially, every player, is prone to have its processing power and, specially, its bandwidth saturated by the game. The machine serving the game is, usually, a cluster consisting of nodes connected via a fast and low-latency local network, providing the necessary processing power, and with a very fast Internet connection \cite{feng2007wnn}, whose transmission rate ranges from hundreds of MBps to several GBps, or more. Obviously, such infrastructure is highly expensive, preventing small game developing companies or independent groups with low financial resources to enter the MMOG market.
-
-The purpose of this study plan is, therefore, to develop an innovative solution with a decentralized approach. More specifically, it is intended to create a middleware which uses a decentralized overlay network such as those used for resource sharing -- e.g. Pastry \cite{rowstron2001psd}, Tapestry \cite{zhao2004trg}, Koord \cite{kaashoek2003ksd} and others -- to create a geographically distributed system composed of low-cost volunteer nodes. This system will then act as a geographically distributed server to which the players connect via a gateway. Obviously, this model brings several questions, which were trivial to solve when using the traditional server architecture, but that become much more complex in a geographically distributed server scenario, such as: state consistency among the server nodes; coordination of entry, exit and crash of some of them, in order to keep the service available as much as possible; distributed persistence; optimal management of the scarce resources of the server system; and so on.
+The purpose of this research is to develop an innovative solution to MMOGs based on a decentralized approach. More specifically, it is intended to create a middleware which uses a decentralized overlay network such as those used for resource sharing (e.g., Pastry \cite{rowstron2001psd}, Tapestry \cite{zhao2004trg}, Koord \cite{kaashoek2003ksd}) to create a geographically distributed system composed of low-cost volunteer nodes. This system will then act as a geographically distributed server to which the players connect via a gateway. Obviously, this model brings several questions, which were trivial to solve when using the traditional server architecture, but become much more complex in a geographically distributed scenario, such as: state consistency among the server nodes; coordination of entry, exit and crash of some of them, in order to keep the service available as much as possible; distributed persistence; optimal management of the scarce resources of the server system; and so on.
 
 %=============================================================================
 %POR QUE A SUÍÇA.
 %=============================================================================
 \section*{Studying in Switzerland}
 
-Dr. Fernando Pedone, associate professor at USI (Universittà della Svizzera italiana), in Lugano, heads a research group working on the area of distributed systems and distributed data management systems. His work has addressed issues related to reliability, as well as replication in such systems by using group communication abstractions. These research topics are closely related to the MMOG study plan outlined here, for the intended MMOG server system has reliability as one of its critical questions to solve. Also, the distributed state persistence and consistency fit on the definition of replicated distributed data management system, only adding some requirements specific to MMOGs (such as timeliness on the retrieval and storage of parts of the game state).
+Prof. Fernando Pedone from the University of Lugano (USI) heads a research group working on the area of distributed systems and distributed data management systems. His work has addressed issues related to reliability, as well as replication in such systems by using group communication abstractions. These research topics are closely related to the MMOG study plan outlined here, for the intended MMOG server system has reliability as one of its critical questions to solve. Also, the distributed state persistence and consistency fit on the definition of replicated distributed data management system, only adding some requirements specific to MMOGs (such as timeliness on the retrieval and storage of parts of the game state).
 
- As another reason for studying in Switzerland, it may be mentioned that the close interaction with researchers from the University of Lugano, working on a closely related area, will provide a good environment to the conception of new ideas regarding the research project presented here. Besides, Prof. Pedone has accepted to work with me in this project and, after several personal meetings and discussions via e-mail, many details of the research plan have already been discussed, and the granting of a scholarship would be a final need to execute this project.
-
+In addition to developing the ideas that will eventually become part of the applicant's PhD thesis, spending one year in Switzerland will strengthen the collaboration between researchers from USI and UFRGS, the Brazilian institution where the applicant is currently doing his PhD. The close interaction between researchers from both institutions, working on related areas, will provide a good environment to the conception of new ideas regarding the research project presented here. Prof. Pedone has already started discussing with the applicant the ideas in this project. After a few personal meetings and several exchanges via e-mail, many details of the research plan have been detailed. The granting of a scholarship would be a final step to execute this project.
 
 %=============================================================================
 %CRONOGRAMA
 %=============================================================================
 \section*{Work schedule}
 
-To achieve the goals outlined for the research project, a schedule has been designed, considering a nine-month academic year. This period has been chosen to fit the length of the scholarship to which this application refers. %In Switzerland, it is intended to execute some of the essencial parts of the research project designed for a Ph.D. course in UFRGS (Brazil). This project will, therefore, result in an international cooperation between both UFRGS and the Swiss university.
+To achieve the goals outlined in the research project, a schedule has been designed, considering a nine-month academic year. This period has been chosen to fit the length of the scholarship. %In Switzerland, it is intended to execute some of the essencial parts of the research project designed for a Ph.D. course in UFRGS (Brazil). This project will, therefore, result in an international cooperation between both UFRGS and the Swiss university.
 The tasks to be performed in Switzerland are:
 
 \begin{enumerate}
@@ -241,29 +240,29 @@ The tasks to be performed in Switzerland are:
     \begin{enumerate}     
      \item Synchronization of the virtual environment simulation among the server nodes;
      \item State storage and retrieval;
-     \item Management of the entrance and exit of nodes in the server system;
-     \item Fault-tolerance, by allowing the system to keep working correctly even upon unexpected disconnection or crash of some servers;
+     \item Management of the entrance and exit of nodes in the server system; and
+     \item Fault-tolerance, by allowing the system to keep working correctly even upon unexpected disconnection or crash of some servers.
     \end{enumerate}
 
   \item Research and development of innovative solutions to deliver these services, considering the needs of MMOGs:
 
     \begin{enumerate}
-      \item Develop algorithms or techniques to manage the consistency of the game world simulation among the server nodes of the system;
+      \item Developing algorithms or techniques to manage the consistency of the game world simulation among the server nodes of the system;
 
-      \item Build a distribute persitence scheme, to store and retrieve the persistent state of the game, using replication and providing reliability, while minimizing the delay of each operation;
+      \item Building a distribute persitence scheme to store and retrieve the persistent state of the game, using replication and providing reliability, while minimizing the delay of each operation;
 
-      \item Design algorithms to reduce the inter-server communication overhead, preventing state-related network messages from overloading the server system;
+      \item Designing algorithms to reduce the inter-server communication overhead, preventing state-related network messages from overloading the server system; and
 
-      \item Create an abstraction for these services, so that the game developer who uses the intended middleware will not have to consider questions regarding the distribution of the server;
+      \item Creating an abstraction for these services so that the game developer who uses the intended middleware will not have to consider questions regarding the distribution of the server.
     \end{enumerate}
 
-  \item Create a prototype which implements these services;
+  \item Creation of a prototype implementing these services.
 
-  \item Validate the proposed middleware by simulations.
+  \item Validation of the proposed middleware by simulations.
 
 \end{enumerate}
 
-Also, besides attending to a local language course, publications are expected. The work schedule for the period in Switzerland is intended to be as follows:
+Also, besides attending a local language course, publications are expected. The work schedule for the period in Switzerland is intended to be as follows:
 
 \begin{table}[h]
 \begin{center}
