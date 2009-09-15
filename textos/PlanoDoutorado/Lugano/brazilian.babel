@@ -22,7 +22,7 @@
 	\def\theoremname{Teorema}%
 	\def\proofname{Prova}%
 	\def\figurename{Figura}%
-	\def\tablename{Tabela}%
+	\def\tablename{Table}%
 	\def\advisorname{Proponente}%
 	\def\coadvisorname{Co-orientador}%
 	\def\listabbrvname{Lista de Abreviaturas e Siglas}%
