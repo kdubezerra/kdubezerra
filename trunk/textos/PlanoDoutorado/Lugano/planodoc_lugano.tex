@@ -474,237 +474,140 @@ This way, many MMOGs could arise and become popular more easily, opening this ma
 % reputação crescente para servidores, mecanismos de "manteneção", wikipédia sw livre etc.
 % comunidades livres X provedores
 
-\chapter{Workplan}
+\chapter{Workplan and schedule}
 
-	
-This section of the study plan aims to detail the steps to follow in order to achieve the objectives previously defined.
+This section describes the workplan, classes to attend and the intended schedule to perform the activities described in the previous sections. Section \ref{sec:metodologia} describes the activities to execute and the intermediate goals to fulfill the study plan; section \ref{sec:credits} lists the classes to attend and section \ref{sec:lugano} describes shortly the intended international cooperation in Lugano.
 
-%Este capítulo do plano de curso de doutorado tem como propósito detalhar os passos que vão se seguir para atingir os objetivos definidos anteriormente, desde a metodologia pretendida até o cronograma e planejamento dos créditos.
 
 \section{Methodology}
 \label{sec:metodologia}
 
-Para atingir o objetivo definido na seção anterior, deverão ser cumpridas algumas etapas, que são as seguintes:
+The steps and intermediate goals to achieve in the doctorate course are as follows:
 
 \begin{enumerate}
 
-\item \textbf{Exigências do doutorado}: requisitos impostos pelo programa de pós-graduação em computação da UFRGS ao estudante de doutorado;
+\item \textbf{Doctoral course requirements}, as imposed, by the postgraduate program in computer science of UFRGS, to the PhD candidate:
 
 \begin{enumerate}
-\item Revalidação dos 24 créditos cursados durante o mestrado;
-\item Cumprimento dos créditos restantes exigidos para o doutorado;
-\item Realização de atividade didática referente ao estágio-docência;
-\item Apresentação de seminário de andamento na Semana Acadêmica do PPGC;
-\item Realização do exame de qualificação em abrangência;
-\item Apresentação da proposta de tese;
+	\item Validation of the 24 credits obtained during the Master;
+	\item Obtainment of the remaining credits required for the doctorate course;
+	\item Realization of teaching activity;
+	\item Presentation of the research stated during the academic week of UFRGS;
+	\item Obtaining of approval in a broad knowledge examination;
+	\item Presentation of the thesis proposal.
 \end{enumerate}
 
-\item \textbf{Revisão bibliográfica}: tem por objetivo expandir o domínio sobre o estado da arte relacionado à distribuição de jogos MMOG;
+\item \textbf{Literature review}: aims to update and expand the domain of the state of the art related to the distribution of MMOGs:
 %TODO: por em emph palavras estrangeiras ao longo do plano, mas so na primeira aparição do termo
 \begin{enumerate}
-\item Estudo de tecnologias de formação de redes overlay e verificar sua compatibilidade com o tipo de gerenciamento de entrada, saída e colapso de nodos servidores pretendido;
-\item Pesquisa de artigos que propõem técnicas visando a colocar os servidores distribuídos na rede overlay, levando em consideração a qualidade da comunicação entre eles (i.e. servidores próximos geograficamente tenderão a ser adjacentes na rede overlay);
-\item Análise de algoritmos de balanceamento de carga, no que se refere à sua aplicabilidade em um servidor distribuído de MMOGs, de maneira a determinar o que se precisaria modificar para adaptar ao contexto de jogos;
-\item Pesquisa de trabalhos que têm por objetivo a descoberta e gerenciamento de hotspots, de forma que sua existência não degrade a qualidade de serviço do jogo;
-\item Revisão de técnicas para sincronizar o estado do jogo entre diferentes servidores de maneira dinâmica, sem que isso gere tráfego excessivo no sistema servidor;
-\item Pesquisar mecanismos de persistência distribuída, consistente e tolerante a falhas que possam ser utilizados para armazenar os estados dos jogadores e do ambiente virtual;
-\item Estudo sobre técnicas existentes para reduzir o tráfego entre os clientes e os servidores e entre os servidores, de maneira a reduzir custos sem prejudicar o jogo;
+	\item Study overlay networks formation technology and check its compatibility with the intended type of management of entry, exit and crash of server nodes;
+	\item Search for papers offering techniques aimed at allocating the servers on the network overlay, taking into account the quality of communication between them (i.e. servers geographically close -- and with a good connection between them -- tend to be adjacent in the overlay network);
+	\item Analysis of load balancing algorithms, with regard to its applicability on a distributed server for MMOGs, in order to determine what adaptations are needed to the context of games;
+	\item Search works that are intended for the discovery and management of hotspots, so that their presence does not degrade the quality of service of the game;
+	\item Review of techniques to synchronize the state of the game among different servers dynamically, without generating excessive traffic on the server system;
+	\item Search mechanisms for distributed, consistent and fault-tolerant persistent, which can be used to store the states of the players and of the virtual environment;
+	\item Study on existing techniques to reduce the traffic between clients and servers and between servers, so as to reduce costs without harming the game quality.
 \end{enumerate} 
 
-\item \textbf{Definição do modelo}: tem como objetivo definir os componentes necessários à arquitetura para que seja capaz de fornecer o tipo de serviço pretendido;
+\item \textbf{Model definition}: aims to define the components necessary for the architecture to be able to provide the desired service:
 
 \begin{enumerate}
-\item Definição do tipo de topologia que a rede overlay deverá ter e de qual tecnologia será utilizada/adaptada para o gerenciamento desta rede;
-\item Definição dos critérios utilizados para efetuar balanceamento de carga e como isso será feito;
-\item Definição do esquema de sincronização entre os nodos servidores;
-\item Definição do modelo de persistência utilizado para armazenar de maneira distribuída e tolerante a falhas o estado dos mundo virtual e dos jogadores;
-\item Integração do modelo definido com técnicas de otimização do uso de largura de banda e de redução de atraso na comunicação;
-\item Cooperação internacional com outro grupo de pesquisa, através de sanduíche ou co-tutela (mais detalhes na seção \ref{sec:ottawa});
+	\item Definition of the kind of topology that the overlay network should have and what technology will be used/adapted for the management of this network;
+	\item Definition of criteria used to perform load balancing and how it will be done;
+	\item Definition of the synchronization scheme among the server nodes;
+	\item Definition of the persistence model used to store in a distributed and fault-tolerant manner the state of the virtual world and the players;
+	\item Integration of the model defined with techniques for optimizing the use of bandwidth and reducing delay in communications;
+	\item International cooperation with another research group, via sandwich or co-tuition (more details in section \ref{sec:lugano}).
 \end{enumerate}
 
-\item \textbf{Implementação do modelo}: visa a criar um protótipo que possa ser utilizado tanto em simulações quanto em execuções reais do modelo proposto;
+\item \textbf{Implementation of the model}, which is aimed to create a prototype that can be used both in simulations and in actual implementations of the proposed model:
 
 \begin{enumerate}
-\item Implementação da camada de gerenciamento da malha de conexões entre os nodos servidores e entre servidores e clientes;
-\item Implementação do módulo de distribuição de carga e gerenciamento de hotspots;
-\item Implementação da camada de sincronização da simulação e persistência de estados;
-\item Criação e integração do módulo de gerenciamento do uso de recursos do nodo e adaptar a qualidade do jogo à capacidade de cada servidor;
+	\item Implementation of the layer form managing the network connections between node servers and between servers and clients;
+	\item Implementation of the module responsible for load distribution and hotspots management;
+	\item Implementation layer of simulation synchronization and state persistence;
+	\item Creation and integration of module responsible for monitoring the node's resource usage and adapting the quality of the game to the capacity of each server.
 \end{enumerate}
 
-\item \textbf{Simulação e testes}: visa validar o modelo proposto e verificar se os objetivos foram alcançados;
+\item \textbf{Simulation and tests}, whose objective is to validate the proposed model and verify whether the defined objectives have been attained:
 
 \begin{enumerate}
-\item Análise e comparação de simuladores de rede e de sistemas em larga escala, um dos quais será escolhido para realização das simulações do modelo proposto de suporte distribuído a MMOGs;
-\item Adaptação do protótipo para que execute sobre o simulador escolhido;
-\item Execução dos testes com respeito a: qualidade da comunicação entre nodos adjacentes, eficiência do balanceamento de carga e detecção dos hotspots, consistência da simulação entre os diferentes nodos servidores, disponibilidade do jogo e dos estados dos jogadores mesmo com a presença de falhas;
-%TODO: 
-\item Testar o protótipo, sobre um sistema em larga escala real, como o Grid5000 \cite{bolze2006gls} e analisar os resultados;
+
+	\item Analysis and comparison of network and large-scale systems simulators, one of which shall be chosen to perform the simulations of the proposed model to support distributed MMOGs;
+	\item Adaptation of the prototype to run on the chosen simulator;
+	\item Performing of tests with respect to: quality of communication between adjacent nodes; efficiency of load balancing and hotspots detection; consistency of the simulation among different server nodes; availability of the game and of the states of the players, even in the presence of faults;
+	\item Test the prototype on a real large scale system, such as Grid5000 \cite{bolze2006gls} and analyze the results.
 \end{enumerate}
 
-\item \textbf{Escrita do trabalho}: tem por objetivo documentar o trabalho realizado, por meio da tese, além de divulgá-lo, através da escrita e publicação de artigos;
+\item \textbf{Thesis' writing}: documentation of the work as a PhD thesis, and publish it, among with conference and journal papers.
 
 \begin{enumerate}
-\item Escrita da tese;
-\item Escrita de artigos para publicação nacional (SBGames) e internacional (\mbox{DS-RT}, NetGames), além de periódicos internacionais, como o \emph{Multimedia Tools and Applications}, por exemplo.
+	\item Thesis writing;
+	\item Writing of articles for national (SBGames) and international (\mbox{DS-RT}, NetGames) publication, besides international journals, such as \emph{Multimedia Tools and Applications}, for example.
 \end{enumerate}
 
 \end{enumerate}
 
-%\begin{enumerate}
-%
-%	\item Revisar as técnicas utilizadas para dar suporte distribuído a jogos MMOG;
-%	
-%	Será dada continuidade à investigação bibliográfica que já foi iniciada para elaboração deste plano de estudos e pesquisa, além de buscar separá-las em categorias segundo: contexto considerado e problemas que buscam solucionar.
-%
-%	\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
-%	
-%	Técnicas utilizadas para dar suporte distribuído a jogos MMOG costumam se basear em cenários onde há grande disponibilidade de recursos, com grandes servidores ligados através de rede local com capacidade de comunicação super-dimensionada. Será analisada a viabilidade de serem utilizadas em um contexto onde os nodos têm recursos mais limitados.
-%
-%	\item Propor integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
-%	
-%	Buscar-se-á fazer aperfeiçoamento de algumas destas técnicas, tendo como ênfase o contexto de super-nodos distribuídos geograficamente e, posteriormente, será proposta uma integração das mesmas% em uma arquitetura de suporte a MMOG
-%.
-%
-%	\item Implementar um protótipo que integre as técnicas estudadas e/ou desenvolvidas nas etapas anteriores;
-%
-%	\item Efetuar simulações que demonstrem o resultado obtido do trabalho e avaliar seus resultados.
-%
-%\end{enumerate}
 
-%
-%As etapas que esse trabalho seguirão são:
-%
-%\begin{enumerate}
-%
-%	\item Dar continuidade à investigação bibliográfica de técnicas de otimização do suporte a jogos MMOG
 
-%	\item Propor uma arquitetura preliminar de suporte a jogos MMOG, que dê ênfase a escalabilidade e a tolerância a falhas;
-%
-%Tal arquitetura \textbf{provavelmente (bom ou ruim?)} seguirá a vertente de sistema geograficamente distribuído de servidores, apresentada na seção anterior, para distribuir o processamento e a comunicação necessários para a execução de um MMOG.
-%
-%	\item Buscar algoritmos de particionamento que dividam o mundo virtual entre os nodos de maneira que os jogadores possam ter uma experiência de jogo satisfatória;
-%
-%Pretende-se evitar o uso de algoritmos que necessitem de informações globais do sistema, de forma que o particionamento e balanceamento de carga possa ser executada com apenas um subconjunto de nodos. Dessa forma, o particionamento dificilmente será ótimo, mas seu tempo de execução estará dentro dos limites do aceitável, e espera-se que tal particionamento consiga uma divisão do mundo que possibilite uma boa experiência de jogo.
-%
-%	\item Pesquisar uma técnica de sincronização entre os servidores, de forma que o estado dos mesmos - e dos jogadores a eles conectados - tenha consistência satisfatória;
-%
-%Não se pretende garantir consistência global, pois o estado de cada jogador ou objeto presente no mundo não é necessariamente relevante para todas as outras partes integrantes do ambiente.
-%
-%	\item Pesquisar técnicas de tolerância a falhas, de forma a tornar o sistema mais robusto;
-%	
-%Como a simulação será distribuída, haverá diversos pontos suscetíveis a falha, tornando necessário o emprego de alguma técnica de tolerância a falhas que minimize este problema. \textbf{Provavelmente}, serão utilizadas réplicas para cada servidor, cuja finalidade é apenas manter-se atualizada e estar pronta para substituir o nodo servidor original no caso de falha do mesmo.
-%
-%	\item Integrar os algoritmos e técnicas pesquisados e executar simulações para medir seu desempenho.
-%\end{enumerate}
+\section{Courses to attend and credits to obtain}
+\label{sec:credits}
 
-\section{Planejamento dos créditos}
-
-De forma a cumprir os créditos exigidos pelo curso de doutorado, pretende-se:
+In order to fulfill the requirements of the doctorate course in UFRGS, it is intended to:
 
 \begin{enumerate}
-\item Revalidar os 24 créditos obtidos durante o curso de mestrado acadêmico no Programa de Pós Graduação em Computação do Instituto de Informática da UFRGS (PPGC/UFRGS). As disciplinas cursadas estão sumarizadas na Tabela \ref{tab:revalidar};
-\item Obter 12 créditos adicionais, através do curso das disciplinas CMP182 - Redes de Computadores I B, CMP147 - Redes de Computadores II e CMP200 - Criptografia de Dados;
-\item Obter mais 3 créditos, referentes a um trabalho individual e a realização de atividade didática (Tabela \ref{tab:creditos}).
+	\item Validate the 24 credits obtained during the Master course in Computer Science, in UFRGS. The attended courses are listed in table \ref{tab:revalidar};
+	\item Obtain 12 additional credits, by attending the courses CMP134, CMP189 and CMP112;
+	\item Obtain 3 more credits, corresponding to a written work and the realization of teaching activity (Table \ref{tab:creditos}).
 \end{enumerate}
 
-%\begin{table}[!ht]
-%\begin{center}
-%\caption{Créditos a revalidar}
-%\label{tab:revalidar}
-%\begin{tabular}{|c||p{5cm}|c|c|c|c|c|c|c|}
-%\hline
-%Código   & Disciplina                  													& Créditos & Conceito & Professor(a)	\\ \hline \hline
-%CMP139   & Tolerância a Falhas em Sistemas Distribuídos 				& 4 & A & Taisy Weber 								\\ \hline
-%CMP255   & Prog. Paralela para Processamento de Alto Desempenho & 4 & A & Nicolas Maillard     				\\ \hline
-%CMP167   & Programação com Objetos Distribuídos B       				& 4 & A & Cláudio Geyer    						\\ \hline
-%CMP256   & Proj. de Prog. Paralelos para Proc. de Alto Desempenho &4& A & Nicolas Maillard       			\\ \hline
-%CMP157   & Programação Paralela e Distribuída 									& 4 & A & Cláudio Geyer      					\\ \hline
-%CMP250   & Aspectos Conceituais de Tolerância a Falhas 					& 1 & B & Ingrid Jansch-Pôrto  				\\ \hline
-%CMP401   & Trabalho Individual I         												& 2 & A & Cláudio Geyer   						\\ \hline
-%CMP410   & Atividade Didática I       													& 1 & A & Alexandre Carissimi   			\\ \hline
-%\end{tabular}
-%\end{center}
-%\end{table}
 
 \begin{table}[h]
 \begin{center}
-\caption{Créditos a revalidar}
+\caption{Credits, from Master, to validate}
 \label{tab:revalidar}
 \begin{tabular}{|c||p{9cm}|c|c|c|c|c|c|c|}
 \hline
-Código   & Disciplina                  													& Créditos & Conceito \\ \hline \hline
-CMP139   & Tolerância a Falhas em Sistemas Distribuídos 				& 4 & A 						\\ \hline
-CMP255   & Prog. Paralela para Processamento de Alto Desempenho & 4 & A   				\\ \hline
-CMP167   & Programação com Objetos Distribuídos B       				& 4 & A 					\\ \hline
-CMP256   & Proj. de Prog. Paralelos para Proc. de Alto Desempenho &4& A       			\\ \hline
-CMP157   & Programação Paralela e Distribuída 									& 4 & A     					\\ \hline
-CMP250   & Aspectos Conceituais de Tolerância a Falhas 					& 1 & B   				\\ \hline
-CMP401   & Trabalho Individual I         												& 2 & A 					\\ \hline
-CMP410   & Atividade Didática I       													& 1 & A   			\\ \hline
+Code   	 & Subject & Credits & Grade \\ \hline \hline
+CMP139   & Fault-tolerance in distributed systems & 4 & A \\ \hline
+CMP255   & Parallel programming for HPC & 4 & A \\ \hline
+CMP167   & Distributed objects programming & 4 & A \\ \hline
+CMP256   & Design of parallel programs for HPC & 4 & A \\ \hline
+CMP157   & Parallel and distributed programming & 4 & A \\ \hline
+CMP250   & Conceptual aspects of fault-tolerance & 1 & B \\ \hline
+CMP401   & Written work I & 2 & A \\ \hline
+CMP410   & Teaching activity I & 1 & A \\ \hline
 \end{tabular}
 \end{center}
 \end{table}
+
 
 \begin{table}[h]
 \begin{center}
-\caption{Créditos a obter}
+\caption{Credits obtained during the doctorate course}
 \label{tab:creditos}
 \begin{tabular}{|c||c|c|c|c|c|c|c|c|}
 \hline
-Código   & Disciplina                  & Créditos \\ \hline \hline
-CMP182   & Redes de Computadores I B   & 4        \\ \hline
-CMP147   & Redes de Computadores II    & 4        \\ \hline
-CMP200   & Criptografia de Dados       & 4        \\ \hline
+Code   & Subject & Credits \\ \hline \hline
+CMP112   & Distributed information systems & 4 \\ \hline
+CMP134   & Introduction to parallel and distributed processing & 4 \\ \hline
+CMP189   & Geometric algorithms & 4 \\ \hline
 %CMP260   & Redes P2P: características, protocolos e aplicações & 4        \\ \hline
-CMP40(X) & Trabalho Individual         & 2        \\ \hline
-CMP411   & Atividade Didática II       & 1        \\ \hline
+CMP402 & Written work II & 2 \\ \hline
+CMP411   & Teaching activity II & 1 \\ \hline
 \end{tabular}
 \end{center}
 \end{table}
 
-\section{Cooperação internacional}
-\label{sec:ottawa}
-
-%Durante a estadia em Vancouver, para apresentação de trabalho no DS-RT -- \emph{IEEE Symposium on Distributed Simulation and Real-Time Applications} -- foram feitos contatos com professores e pesquisadores do SITE (\emph{School of Information Technology and Engineering}), da Universidade de Ottawa, no Canadá. Uma destas pessoas foi o doutorando Dewan Ahmed, que trabalha especificamente com jogos MMOG \cite{ahmed2008dai}. Seu orientador é o professor Shervir Shirmohammadi, que trabalha, dentre outras coisas, com MMOGs e ambientes virtuais e multicast no nível da aplicação com redes overlay. Tem-se mantido contato com este grupo de pesquisa desde então, com o intuito de realizar doutorado sanduíche ou co-tutela, sendo que há interesse de ambas as partes.
-
-%Também  houve conversas com o professor Azzedine Boukerche, também da uOttawa, que trabalha com simulações distribuídas de larga escala, das quais MMOGs seriam um caso específico. Também houve interesse em cooperação por parte desse professor, embora sua pesquisa não seja especificamente com jogos online maciçamente multijogador.
-
-Tem-se mantido contato com o professor Fernando Pedone, da Universidade de Lugano (USI), na Suíça, que trabalha com sistemas distribuídos e sistemas de gerenciamento de dados distribuídos, sendo que há possibilidade de estágio no exterior nessa universidade, com grande interesse dos pesquisadores de ambas as instituições (UFRGS e USI). O intuito do período em uma universidade estrangeira seria o de trocar experiências entre os grupos de pesquisa, de forma a definir um melhor modelo final para o Cosmmus, utilizando \emph{know-how} de outros pesquisadores da área de simulação distribuída e, mais especificamente, MMOGs.
+\section{International cooperation}
+\label{sec:lugano}
 
 
+There has been several contacts with professor Fernando Pedone, from University of Lugano (USI), Switzerland, who works with distributed systems and distributed data management, with the possibility of an internship abroad at the Swiss university, for what a great interest has been demonstrated by the researchers from both institutions (UFRGS and USI). The purpose of the period in a foreign university would be to exchange experiences between the research groups in order to better define a final model for Cosmmus, utilizing expertise of others researchers in the field of distributed simulation and, more specifically, MMOGs.
 
-\section{Cronograma}
+\section{Schedule}
 
-A Tabela \ref{tab:cronograma} apresenta o cronograma de atividades a serem desenvolvidas, conforme listadas na seção de metodologia.
-
-%\begin{enumerate}
-%	\item Levantamento bibliográfico do estado-da-arte das técnicas de distribuição do suporte a MMOG;
-%	\item Levantamento bibliográfico de técnicas de distribuição em geral, que possam ser aplicadas a jogos MMOG;
-%	\item Análise e categorização destas técnicas;
-%	\item Elaboração de um modelo arquitetural de suporte distribuído a jogos MMOG;
-%	\item Integração das técnicas no modelo proposto;
-%	\item Implementação de um protótipo com o fim de testes;
-%	\item Levantamento dos simuladores mais indicados para efetuar tais testes;
-%	\item Execução dos testes em um dos simuladores pesquisados;
-%	\item Análise dos resultados;
-%	\item Apresentação do seminário de andamento na semana acadêmica;
-%	\item Escrita da dissertação;
-%	\item Escrita de artigos;
-%	\item Entrega da dissertação;
-%	\item Defesa da dissertação;
-%	\item Elaboração de artigo a ser submetido para WSCAD;
-%	\item Elaboração de artigo científico relativo ao trabalho já desenvolvido na Dissertação;
-%	\item Desenvolvimento do Seminário de Andamento;
-%	\item Semana acadêmica;
-%	\item Paralelização através do Open-MP;
-%	\item Paralelização através do MPI;
-%	\item Paralelização através do MPI-2;
-%	\item Comparação de resultados;
-%	\item Redação da dissertação;
-%	\item Elaboração de artigo a ser submetido em evento da área (Alto desempenho e Física computacional);
-%	\item Entrega da dissertação;
-%	\item Defesa da dissertação
-%\end{enumerate}
+Table \ref{tab:cronograma} presents the schedule for the activities depicted in the previous sections, as listed in section \ref{sec:metodologia}.
 
 \begin{table}[!ht]
 
