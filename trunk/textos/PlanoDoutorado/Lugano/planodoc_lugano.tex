@@ -664,7 +664,7 @@ Task
 
 %\chapter{Informações do candidato}
 %\section{Dados de identificação}
-\chapter{Experiência com pesquisa}
+\chapter{Research experience}
 
 %papers
 %inge
@@ -672,39 +672,13 @@ Task
 %eventos em que participou
 %TODO: ref do K-L, ref do indigente
 
-Antes de realizar o mestrado acadêmico, o candidato já havia trabalhado com pesquisa e desenvolvimento, no grupo indigente \cite{indigente}, sendo um dos idealizadores e desenvolvedor do motor para jogos InGE -- \emph{indigente game engine} -- \cite{rocha2007dmm}, tendo sido o único responsável pelo módulo de rede. Posteriormente, foi um dos desenvolvedores do jogo \emph{We Are The Champignons}, que obteve premiação em um festival de jogos de âmbito nacional.
+Before entering the Master course, the candidate has already worked with research and development, in the independent group \emph{indigente} \cite{indigente}, being one of the mentors and developers of the game engine InGE \cite{rocha2007dmm} and the sole programmer of its network module. Next, he was one of the developers of the game \emph{We Are The Champignons}, which obtained the 3rd prize in a national indie games contest -- the ``Game Festival'', part of the 5th Brazilian Symposium on Computer Games and Digital Entertainment, in 2006.
 
-O curso de doutorado pretendido terá por objetivo dar continuidade à pesquisa iniciada no mestrado acadêmico pelo PPGC/UFRGS, entre os anos de 2007 a 2009, sendo a defesa da dissertação prevista para fevereiro de 2009. Durante o mestrado, foram propostas algumas técnicas que visam a otimizar o uso de largura de banda em um sistema distribuído atuando como servidor para um jogo online maciçamente jogador. Uma destas técnicas consiste no gerenciamento de interesse do jogador, levando em conta diferentes níveis de relevância para diferentes entidades do jogo. Outra técnica proposta é a de balanceamento de carga dinâmico, baseado em particionamento de grafo e refinamento de suas partições \cite{kernighan1970ehp}. Este trabalho está em fase de conclusão, faltando coletar os resultados e escrever artigo para publicar no journal \emph{Multimedia Tools and Applications}, da Springer, que terá uma edição especial a respeito de MMOGs a ser publicada em 2009.
+One of the objectives of the doctoral course is to continue the research started during the Master's course, during which a technique for bandwidth usage optimization have been proposed: the A$^3$ algorithm \cite{bezerra2008a3}, which consists of a fine-tuned interest management, based on different relevance levels for each pair of entities in the game. Another work done during the Master's was the definition of a distributed server load balancing scheme \cite{bezerra2009lbs} which takes into consideration several points that have been considered critical: first, the distributed MMOG server system is not necessarilyh homogeneous, requiring the load balancing scheme to consider the different amounts of resources; second, the players may move their avatars to certain positions with a higher probability, leading to the formation of densely populated areas (hotspots) in the virtual environment; and, finally, the algorithms proposed tried to minimize the inter-server communication by using a graph partitioning approach.
 
-O candidato também participou do projeto P2PSE \cite{vilanova2008psm}, sendo um dos responsáveis pelo desenvolvimento da funcionalidade de multi-servidor, utilizando linguagem de programação C++. Também é o responsável pelas simulações de rede, realizadas com o auxílio do simulador ns-2 \cite{mccanne:nsn}, presentes no artigo publicado em simpósio nacional a respeito do mesmo projeto.
+Additionally, the candidate participated of the P2PSE project \cite{vilanova2008psm}, as one of the developers responsible for the multi-server support in the library. The programming language used was C++. Besides, he set up and executed the network tests with the ns-2 simulator \cite{mccanne:nsn}, whose results have been considered satisfying.
 
-Tais trabalhos desenvolvidos durante o curso de mestrado acadêmico, além do envolvimento anterior com pesquisa e desenvolvimento, renderam algumas publicações e uma premiação:
-
-\begin{itemize}
-
-\item Full paper, em periódico internacional:
-
-\textbf{A load balancing scheme for massively multiplayer online games}, BEZERRA, Carlos Eduardo B.; CECIN, Fábio R.; GEYER, Cláudio F. R., em \emph{Multimedia Tools and Applications}, 2009, Springer Netherlands.
-
-\item Full paper, em simpósio internacional:
-
-\textbf{A${^3}$: a novel interest management algorithm for distributed simulations of MMOGs}, BEZERRA, Carlos Eduardo B.; CECIN, Fábio R.; GEYER, Cláudio F. R., em \emph{Proc. of the 12-th IEEE International Symposium on Distributed Simulation and Real Time Applications}, 2008, Vancouver, BC, Canada.
-
-\item Full paper, em simpósio nacional:
-
-\textbf{P2PSE - A peer-to-peer support for multiplayer games}, VILANOVA, Felipe J.; BEZERRA, Carlos Eduardo B.; CRIPPA, Marcos R., CECIN, Fábio R.; GEYER, Cláudio F. R., em \emph{Proc. of SBGames 2008 - VII Brazilian Symposium on Computer Games and Digital Entertainment - Computing Track}, 2008, Belo Horizonte, MG, Brazil.
-
-\item Short paper, em simpósio nacional, a respeito do desenvolvimento do InGE:
-
-\textbf{Desenvolvendo um Motor Multiplataforma para Jogos 3D}, ROCHA, Rodrigo; BESSA, Aline; BEZERRA, Carlos E. B.; MEDEIROS, Ivan; OLIVEIRA, Caio; BANDEIRA, H., em \emph{Anais do SBGames 2007 - VI Simpósio Brasileiro de Jogos para Computador e Entretenimento Digital - Trilha Computação}, 2007, São Leopoldo, RS, Brazil.
-
-\item 3º lugar no Festival de Jogos Independentes do SBGames 2006:
-
-\textbf{We Are The Champignons}, \emph{V Simpósio Brasileiro de Jogos para Computador e Entretenimento Digital}, 2006, Recife, PE, Brasil.
-
-\end{itemize}
-
-Para o curso de doutorado, o candidato pretende criar um modelo mais detalhado que cubra os requisitos definidos para o sistema servidor distribuído. Pelo menos devem ser satisfeitos os requisitos de distribuição da persistência do estado dos jogadores e do mundo virtual, da sincronização da simulação distribuída entre os nodos servidores, provendo também tolerância a falhas, além de desenvolver técnicas que otimizem tanto quanto possível o uso de largura de banda, evitando que a qualidade do jogo seja prejudicada.
+For the doctoral course, the candidate intends to create a more detailed model to cover the requirements defined for the distributed server system, resulting in a MMOG network support middleware. During the research period in Switzerland, the solutions for distributed persistence and consistency management, at least, will be researched, along with the definition of a high-level application programming interface for the MMOG developers to use the services provided by the middleware seamlessly, minimizing their concern with distribution issues. Besides, fault-tolerance and further bandwidth usage optimizations will be provided by the intended middleware.
 
 \bibliography{planodoc}
 \bibliographystyle{abnt} 
