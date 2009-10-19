@@ -1,0 +1,8 @@
+Marco Antonio Wisniewski
+
+
+Exercício 2a:
+Sim, o programa apresenta uma condição de corrida já que as
+atualizações a variável saldo constituem uma seção crítica mas não
+estão protegidas por um semáforo, o que faz com que uma thread
+leia/atualize essa variável "enquanto a outra ainda está atualizando".
