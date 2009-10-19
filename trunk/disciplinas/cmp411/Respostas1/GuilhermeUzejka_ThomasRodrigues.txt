@@ -1,0 +1,2 @@
+Na questão 2 faltava colocar o semàforo ao ler e escrever sobre a variável
+saldo.

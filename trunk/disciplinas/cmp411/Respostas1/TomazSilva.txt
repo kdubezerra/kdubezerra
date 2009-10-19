@@ -1,0 +1,4 @@
+Nome: Tomaz Rocha da Silva
+
+Questão 2 a. O programa apresenta um erro na concorrência no acesso a
+variavel saldo.

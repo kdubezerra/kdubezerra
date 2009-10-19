@@ -1,0 +1,34 @@
+Boa tarde,
+
+Em anexo seguem os arquivos e abaixo segue a resposta da questão2:
+
+2. O programa ap2_ex2.c efetua uma sequência de
+débitos e créditos. Considerando os possíveis
+problemas causados pela concorrência
+apresentados em aula responda:
+a)O programa apresenta algum problema relacionado
+a concorrência? Qual?
+
+Sim, a variável saldo deve ser protegida devido ao acesso concorrente das
+threads de crédito e débito ( respectivamente através das funções creditar e
+debitar ).
+
+b)Caso tenha algum problema, apresente uma
+versão do programa, com o problema solucionado.
+
+sem_wait(&sema_saldo);
+      creditar(100);
+sem_post(&sema_saldo);
+
+sem_wait(&sema_saldo);
+      debitar(100);
+sem_post(&sema_saldo)
+
+
+Alunos:
+Elias Medeiros - 134722
+Felipe Wilke - 149151
+
+Att,
+
+Felipe Wilke. 
