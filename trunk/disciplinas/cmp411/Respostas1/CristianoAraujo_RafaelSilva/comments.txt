@@ -1,0 +1,2 @@
+Faltou Join no ex1: -1 ponto
+Nota final: 9
