@@ -1,0 +1,47 @@
+Exercício Prático 2 - Threads e Semáforos - Sistemas Operacionais II
+
+Gustavo Seganfredo Farias - 138284 - Individual
+
+Pequeno resumo do procedimento executado para resposta de cada questão
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1.  Escrever um programa em C que cria 5 threads.
+  * Cada thread deve imprimir a mensagem “Sou a thread X”, onde X
+corresponde ao índice de criação da thread que deve ser passado por
+parâmetro para a função que a thread executará.
+    - Removido semáforos (não tem seção crítica),
+    - Declarado mais 3 thread sobre o exercício exemplo,
+    - Incluída pthread_create para mais estas três threads,
+    - Removidas variáveis i e j,
+    - Alterado pthread_create para passar um inteiro, relativo ao índice da
+thread.
+
+
+2. O programa ap2_ex2.c efetua uma sequência de débitos e créditos.
+Considerando os possíveis problemas causados pela concorrência apresentados
+em aula responda:
+  * O programa apresenta algum problema relacionado a concorrência? Qual?
+    - Sim, tanto débitos quanto créditos acessam uma área comum que deve ser
+protegida (saldo)
+  * Caso tenha algum problema, apresente uma nova versão do programa, com o
+problema solucionado.
+    - Declaramos um semáforo para controlar o acesso a variável saldo,
+    - Inicializamos ele com 0 (livre),
+    - Incluímos a entrada e saída da seção crítica na funções de débito e
+crédito (post e wait)
+    - Como temos o mesmo número de débitos e de créditos, o valor final tem
+que ser 100. Confirma
+
+3. O programa ap2_ex3.c apresenta um programa com threads leitores e
+escritores.
+  * Alterar o programa para apresentar uma solução para o problema dos
+leitores/escritores, adotando a solução com prioridade para os leitores.
+    - Alterada função 'leitor'
+    - Incluídas duas entradas de semáforos para controlar o acesso a seção
+crítica do escritor
+    - A primeira entrada controla o número de leitores fazendo a leitura.
+Ela por sí é uma seção crítica.
+    - Acessando essa seção, o leitor verifica se é o unico leitor na seçao
+critica, se for ele bloqueia o acesso dos escritores
+    - saindo da seção crítica, ele verifica se era o último escritor nesta
+seção, Se for libera o acesso dos escritores 

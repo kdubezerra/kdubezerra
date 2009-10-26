@@ -1,0 +1,6 @@
+exercício 2-
+para acessar o saldo deve-se usar um semáforo para garantir exclusão mútua
+
+pos eles estavam acessando ao mesmo tempo a variável
+
+Leonardo Fernando dos Santos Moura
