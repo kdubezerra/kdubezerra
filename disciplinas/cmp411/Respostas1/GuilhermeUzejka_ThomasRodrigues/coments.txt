@@ -1,0 +1,1 @@
+Faltou JOIN no começo
