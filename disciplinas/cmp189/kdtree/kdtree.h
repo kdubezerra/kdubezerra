@@ -68,7 +68,7 @@ class KDTree {
 							// cada nodo no penúltimo nível da árvore corresponde a um
 							// servidor, e seus filhos são os avatares dos jogadores.
 							// a capacidade de um nodo é igual à capacidade de seus
-							// filhos, e a capacidade de cada nodo no penúltimo nível
+							// filhos, e a capacidade de cada nodo folha
 							// é igual à capacidade do servidor correspondente
 		static SDL_Surface* screen;
 		static KDTree* root;

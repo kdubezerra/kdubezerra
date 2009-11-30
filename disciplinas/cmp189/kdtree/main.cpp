@@ -30,7 +30,7 @@ int main () {
 	setSdl(&screen);
 	
 	list<Avatar*> avatar_list;
-  list<Server*> server_list;
+	list<Server*> server_list;
 	Server* server[NUM_SERVERS];
 	for (int i = 0 ; i < NUM_PLAYERS ; i++) {
 		Avatar* av = new Avatar();
@@ -41,15 +41,14 @@ int main () {
   
   
 	for (int i = 0 ; i < NUM_SERVERS ; i++) {
-    //_s = new Server ((i+1)*20000);
+		//_s = new Server ((i+1)*20000);
 		server[i] = new Server ((i+1)*MULTIPLIER);
-    server_list.push_back(server[i]);
-    //server[i]->assignRegion(*(it++));
-    cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
-  }
+		server_list.push_back(server[i]);
+		//server[i]->assignRegion(*(it++));
+		cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
+	}
   
-  Server* sampleserver = server[1]; ///servidor 2
-	
+	Server* sampleserver = server[1]; ///servidor 2
 	//Avatar::toggleMobility();
 	KDTree* kdt = new KDTree(server_list, avatar_list);
 	kdt->setScreen(screen);
@@ -57,7 +56,7 @@ int main () {
 	
 	Uint32 time = 0;
 	Uint32 step_delay = 250;
-  Uint32 lastbal = 0;
+	Uint32 lastbal = 0;
 	SDL_EnableKeyRepeat(400, 10);
 	SDL_Surface* bg = NULL;
 	TTF_Font *font = NULL;	
