@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="400"
+   width="505"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="clipping_sample.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   version="1.0">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Mend"
+       style="overflow:visible;">
+      <path
+         id="path3684"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 200 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="505 : 200 : 1"
+       inkscape:persp3d-origin="252.5 : 133.33333 : 1"
+       id="perspective2888" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:cx="220.50118"
+     inkscape:cy="222.22479"
+     inkscape:zoom="1"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer8"
+     showgrid="false"
+     showguides="false"
+     inkscape:guide-bbox="true"
+     inkscape:grid-points="false"
+     gridtolerance="10000"
+     inkscape:window-width="1440"
+     inkscape:window-height="838"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
+     inkscape:showpageshadow="true"
+     borderlayer="false"
+     width="505px"
+     height="400px"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Original"
+     id="layer1"
+     transform="translate(0,-270)"
+     style="display:inline">
+    <g
+       id="g2894">
+      <path
+         id="path2162"
+         d="M 15.6,284.38716 L 50.6,389.3872 L 70.6,389.3872 L 80.6,354.3872 L 90.6,389.3872 L 110.6,389.3872 L 145.6,284.38716 L 125.6,284.38716 L 100.6,369.3872 L 90.6,334.38716 L 70.6,334.38716 L 60.6,369.3872 L 35.6,284.38716 L 15.6,284.38716 z "
+         style="fill:#c8c8c8;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cccccc"
+         id="path6145"
+         d="M 10.6,334.38716 L 30.6,294.38716 L 85.6,279.38716 L 155.6,334.38716 L 75.6,389.3872 L 10.6,334.38716 z "
+         style="fill:#ff0000;fill-opacity:0.1254902;fill-rule:evenodd;stroke:#ff0000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Step1"
+     transform="translate(170,-270)"
+     style="display:inline" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Step2"
+     transform="translate(340,-270)"
+     style="display:inline" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="Step3"
+     transform="translate(0,-135)"
+     style="display:inline" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="Step4"
+     transform="translate(170,-135)"
+     style="display:inline" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer7"
+     inkscape:label="Step5"
+     transform="translate(340,-135)"
+     style="display:inline" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer8"
+     inkscape:label="Cutted"
+     transform="translate(170,0)"
+     style="display:inline">
+    <g
+       id="g2890"
+       transform="translate(42,-270)">
+      <path
+         sodipodi:nodetypes="cccccc"
+         id="path2220"
+         d="m 10.6,334.38716 20,-40 55,-15 70,55 -80,55.00004 -65,-55.00004 z"
+         style="fill:none;stroke:#ff0000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline" />
+      <path
+         id="path20750"
+         d="m 37.94375,292.39998 -7.34375,2 -7,14 17.1875,51.53122 30.78125,26.0626 L 80.6,354.4 l 7.5,26.2813 33,-22.7501 13.34375,-40.06247 -15.15625,-12 L 100.6,369.4 l -10,-35.00002 -20,0 L 60.6,369.4 37.94375,292.39998 z"
+         style="fill:#c8c8c8;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-opacity:1;display:inline" />
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.29999995;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
+       d="M -3.9999905,66 40.696047,66"
+       id="path2898" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="-14"
+       y="87"
+       id="text4120"><tspan
+         sodipodi:role="line"
+         id="tspan4122"
+         x="-14"
+         y="87"
+         style="font-size:20px;font-family:Calibri;-inkscape-font-specification:Calibri">clipping</tspan></text>
+  </g>
+</svg>
