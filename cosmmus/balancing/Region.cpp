@@ -137,7 +137,7 @@ long Region::getRegionWeight() {
   list<Cell*>::iterator it;
   long weight = 0;
   for (it = cells.begin() ; it != cells.end() ; it++)
-    weight += (*it)->getCellWeight();
+	weight += (*it)->getCellWeight();
   return weight;
 }
 
