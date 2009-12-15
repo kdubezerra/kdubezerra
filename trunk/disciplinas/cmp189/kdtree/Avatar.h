@@ -65,6 +65,7 @@ class Avatar {
     
     static bool compareX(Avatar* a, Avatar* b);
     static bool compareY(Avatar* a, Avatar* b);
+    static void setHotspotsProbability(int prob);
 		
   protected:
 
@@ -76,13 +77,14 @@ class Avatar {
     long weight;
     unsigned char R,G,B;
     Uint32 last_move, resting_time;
-    bool isSeen;
+    bool isSeen;    
     float incr_y;
     float incr_x;
     int relevance;
     unsigned long stopped_time;
     bool isDrawable;		
     unsigned long player_id;
+    static int tendencyToHotspots;
     static int m_numofhotspots;
     static vector<coord> mv_hotspotlist;
     static SDL_Surface* surface_vertex_weight;
