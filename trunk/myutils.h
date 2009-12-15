@@ -20,8 +20,14 @@
 #include <signal.h>
 #include <math.h>
 
+#define AHMED 1
+#define PROGREGA 2
+#define PROGREGA_KH 3
+#define PROGREGA_KF 4
+#define BFBCT 5
+
 #define uint64 unsigned long
-#define nplayers WW
+#define NPLAYERS WW
 #define WW 750
 // ww = world width
 #define P_SIZE 5
