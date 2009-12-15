@@ -7,7 +7,7 @@
 #include "myutils.h"
 
 
-#define NUM_PLAYERS 750
+//#define NUM_PLAYERS 750
 #define NUM_SERVERS 8
 #define MULTIPLIER 20000
 
@@ -22,13 +22,16 @@
 
 void checkInput();
 
-int main () {
+int main (int arc, char** argv) {
 	//srand(time(NULL));
+
+  int NUM_PLAYERS = atoi(argv[1]);
+  int HOTSPOTS_CONCENTRATION = atoi(argv[2]);
 
 	SDL_Surface* screen = NULL;
 	
 	setSdl(&screen);
-	
+  
 	list<Avatar*> avatar_list;
 	list<Server*> server_list;
 	Server* server[NUM_SERVERS];
@@ -37,6 +40,7 @@ int main () {
 		//av->setDrawable(PLAYER_IMAGE, PLAYER_SEEN_IMAGE, screen);
 		avatar_list.push_back(av);
 	}
+  Avatar::setHotspotsProbability(HOTSPOTS_CONCENTRATION);
 	
   
   
