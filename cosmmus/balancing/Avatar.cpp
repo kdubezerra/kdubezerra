@@ -25,6 +25,7 @@ long Avatar::migration_walk = 0;
 long Avatar::migration_still = 0;
 Avatar* Avatar::first = NULL;
 list<Avatar*> Avatar::avList;
+int Avatar::tendencyToHotspots = 70;
 
 Avatar::Avatar() {
   init();
@@ -127,7 +128,7 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
   } else {
     stopped_time += delay;  
     if (stopped_time < resting_time) return; //only chooses a new destination with a 0.05 probability
-    if (!USE_HOTSPOTS || rand() % 100 < 30) { //selects a random spot
+    if (!USE_HOTSPOTS || rand() % 100 >= tendencyToHotspots) { //selects a random spot
       destx = rand() % WW;
       desty = rand() % WW;
       last_move = SDL_GetTicks();
@@ -298,4 +299,8 @@ bool Avatar::setMobility(bool value) {
   bool oldstate = isMobile;
   isMobile = value;
   return oldstate;
+}
+
+void Avatar::setHotspotsProbability(int prob) {
+    tendencyToHotspots = prob;
 }

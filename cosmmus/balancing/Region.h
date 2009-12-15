@@ -85,6 +85,7 @@ class Region {
 
     // FASE DE PARTICIONAMENTO (WORKING)
 
+    static void setMethod(short method);
     static void initRegions(int num_reg);
     static void disposeRegions();
     static void partitionWorld();
@@ -162,6 +163,7 @@ class Region {
     map<Region*, long> edgeByRegion;
     Server* parentServer;
     long regionCapacity;
+    static short rebalMethod;
     static long worldCapacity;
     static list<Region*> regionList;
     static bool showr, showe, showw;
