@@ -12,6 +12,7 @@ bool Region::showw = false;
 bool Region::showe = false;
 bool Region::showr = false;
 int Region::numRegions;
+short Region::rebalMethod = PROGREGA;
 long worldCapacity = 0;
 
 //================================cons/des-truction methods
@@ -374,6 +375,10 @@ void Region::getWorldPartition() {
     subscribe(c);
     c = Cell::getHighestEdgeFreeNeighbor(getCells());
   }
+}
+
+void Region::setMethod(short method) {
+    rebalMethod = method;
 }
 
 void Region::initRegions(int num_reg) {
@@ -870,7 +875,30 @@ void Region::startLocalBalancing() {
   //Region::rebalance_progrega(local_group); //progrega
   //Region::improveBalancing_kwise(local_group);
   //cout << "Now rebalancing with Ahmed-Shirmohammadi" << endl;
-  Region::rebalance_as();
+  
+  switch(rebalMethod) {
+    case PROGREGA :
+      Region::rebalance_progrega(local_group);
+      refineKL_kwise(local_group);
+      break;
+    case AHMED :
+      Region::rebalance_as();
+      break;
+    case BFBCT :
+      Region::rebalance_bfbct(local_group);
+      refineKL_kwise(local_group);
+      break;
+    case PROGREGA_KH :
+      Region::rebalance_progrega_kh(local_group);
+      refineKL_kwise(local_group);
+      break;
+    case PROGREGA_KF :
+      Region::rebalance_progrega_kf(local_group);
+      refineKL_kwise(local_group);
+      break;
+  }
+  
+  //Region::rebalance_as();
   
   //K-L:
   //refineKL_kwise(local_group);

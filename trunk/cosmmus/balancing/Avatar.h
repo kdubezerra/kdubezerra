@@ -66,6 +66,8 @@ class Avatar {
     static bool toggleEdge();
     static bool toggleMobility();
     static bool setMobility(bool value);
+    
+    static void setHotspotsProbability(int prob);
 		
   protected:
 
@@ -98,4 +100,5 @@ class Avatar {
     static long migration_still;
     static Avatar* first;
     static list<Avatar*> avList;
+    static int tendencyToHotspots;
 };

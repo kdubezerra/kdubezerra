@@ -5,6 +5,7 @@
 #endif
 
 #include <string>
+#include <string.h>
 #include <fstream>
 
 #define CORE_COUNT 4
@@ -34,7 +35,7 @@
 
 bool showing_help = false;
 
-Avatar* player[nplayers];
+Avatar** player;
 Server* server[NUM_SERVERS];
 SDL_Surface* screen = NULL;
 SDL_Event event;
@@ -53,6 +54,8 @@ inflong sum_oh[NUM_SERVERS];
 long total_mig_walk = 0;
 long total_mig_still = 0;
 
+int nplayers;
+
 void checkInput();
 void showHelp();
 void toggleShowHelp();
@@ -63,6 +66,31 @@ void plotAllAvatars(string filename);
 
 int main (int argc, char* argv[]) {
   ///srand(time(NULL));
+  
+  nplayers = atoi(argv[1]);
+  player = new Avatar*[nplayers];
+  int probtohotspot = atoi(argv[2]);
+  char rebal_method[255];
+  strcpy(rebal_method, argv[3]);
+  
+  Avatar::setHotspotsProbability(probtohotspot);
+  
+  if (!strcmp(rebal_method,"PROGREGA")) {
+    cout << "PROGREGA" << endl;
+    Region::setMethod(PROGREGA);
+  } else if (!strcmp(rebal_method,"PROGREGA_KH")) {
+    cout << "PROGREGA_KH" << endl;
+    Region::setMethod(PROGREGA_KH);
+  } else if (!strcmp(rebal_method,"PROGREGA_KF")) {
+    cout << "PROGREGA_KF" << endl;
+    Region::setMethod(PROGREGA_KF);
+  } else if (!strcmp(rebal_method,"BFBCT")) {
+    cout << "BFBCT" << endl;
+    Region::setMethod(BFBCT);
+  } else if (!strcmp(rebal_method,"AHMED")) {
+    cout << "AHMED" << endl;
+    Region::setMethod(AHMED);
+  }
   
   setSdl(&screen);
   SDL_EnableKeyRepeat(400, 10);
@@ -114,7 +142,7 @@ int main (int argc, char* argv[]) {
   //Avatar::toggleMobility();
 
   while (time < EXECUTION_TIME) { // CICLO PRINCIPAL
-    apply_surface(0,0,bg,screen);///***
+    ///apply_surface(0,0,bg,screen);///*** COMENTE PARA NÃO RENDERIZAR
 
     step_delay = SDL_GetTicks() - time;
     step_delay = step_delay > 40 ? 40 : step_delay;
@@ -126,15 +154,15 @@ int main (int argc, char* argv[]) {
       Cell::updateAllEdgesAndVertexWeights();
 //      dtime = time;
 //    }    
-    Cell::drawCells(screen);///***
-    Region::drawAllRegions(screen);///***
-    Region::drawAllRegionsWeights(screen, font);///***
+    ///Cell::drawCells(screen);///*** COMENTE PARA NÃO RENDERIZAR
+    ///Region::drawAllRegions(screen);///*** COMENTE PARA NÃO RENDERIZAR
+    ///Region::drawAllRegionsWeights(screen, font);///*** COMENTE PARA NÃO RENDERIZAR
     
-    for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();///***
+    ///for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();///*** COMENTE PARA NÃO RENDERIZAR
 
     //time = SDL_GetTicks();
     //showHelp();
-    SDL_Flip( screen );///***
+    ///SDL_Flip( screen );///*** COMENTE PARA NÃO RENDERIZAR
     count++;
     checkInput();
     
@@ -267,7 +295,7 @@ void checkInput() {
 }
 
 int weighter (void* data) {
-  int my_id = (int) data;
+  long my_id = (long) data;
   cout << "Thread: Minha id é: " << my_id << endl;
   
   while (1) {
