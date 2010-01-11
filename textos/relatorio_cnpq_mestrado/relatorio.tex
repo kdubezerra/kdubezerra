@@ -1,4 +1,4 @@
- %
+%
 % exemplo genérico de uso da classe iiufrgs.cls
 % $Id: iiufrgs.tex,v 4.6 2003/11/21 22:36:13 avila Exp $
 %
@@ -19,6 +19,7 @@
 %\usepackage{mathptmx}          % p/ usar fonte Adobe Times nas fórmulas
 \usepackage{algorithm}
 \usepackage{algorithmic}
+\usepackage{rotating}
 
 \hyphenation{di-fe-ren-tes}
 \hyphenation{re-qui-si-to}
@@ -27,13 +28,15 @@
 \hyphenation{res-trin-ge}
 \hyphenation{pre-ci-sa-rão}
 
+\newcommand{\misccite}[2]{#1. Disponível em: <#2>. Acesso em: 26 fev. 2009}
+\newcommand{\gamecite}[2]{\misccite{#1}{#2}}
+
 %\renewcomd{\listalgorithmname}{Lista de Algoritmos}
 
 %
 % Informações gerais
 %
-\title{Suporte distribuído para jogos MMG em cenários com recursos limitados%Uma proposta de arquitetura híbrida (par-a-par e cliente-servidor) para jogos maciçamente distribuídos 
-\\ (Título Provisório)}
+\title{Lidando com Recursos Escassos e Heterogênos em um Sistema Geograficamente Distribuído Atuando como Servidor de MMOG}
 
 \author{Benevides Bezerra}{Carlos Eduardo}
 % alguns documentos podem ter varios autores:
@@ -188,8 +191,17 @@
 \begin{abstract}
 
 
-Este trabalho visa analisar a aplicabilidade das técnicas utilizadas para dar suporte a jogos maciçamente multijogador em cenários onde os recursos computacionais são mais limitados. Como geralmente são utilizadas redes de servidores de alto custo, com links que dão suporte à comunicação entre dezenas de milhares de jogadores \cite{cecin2004fsa}, é necessário revisar o que foi feito e analisar sua aplicabilidade em arquiteturas que não dispõem de tais recursos. Assim sendo, objetiva-se avaliar e, quando possível, aperfeiçoar as técnicas pesquisadas%\cite{os artigos pesquisados}
-, considerando um cenário em que a infra-estrutura de suporte se restringe a um conjunto de nodos de capacidade menor - ou super-nodos, no sentido em que têm links e capacidade de processamento superiores às dos usuários de Internet em geral, mas inferiores às dos grandes servidores. Pretende-se, por fim, construir um modelo arquitetural de suporte a jogos maciçamente multijogador, que defina a distribuição das cargas de processamento e comunicação associadas ao jogo entre o conjunto de nodos servidores e integre - tantas quanto for possível - as técnicas pesquisadas e/ou propostas. Após isso, será feito um protótipo e simulações para validar o trabalho.
+
+Durante o mestrado, o aluno Carlos Eduardo Benevides Bezerra propôs a utilização de nodos de baixo custo geograficamente distribuídos, operando como um servidor distribuído para MMOGs. O modelo de distribuição proposto e alguns trabalhos relacionados também foram apresentados. Para tratar o custo de comunicação imposto aos servidores, foi projetado um novo refinamento para a técnica de gerenciamento de interesse, reduzindo significativamente a largura de banda necessária ao jogo. Foram realizadas simulações utilizando o simulador ns-2, comparando diferentes algoritmos de área de interesse. Os resultados demonstram que a nossa proposta é a que tem a menor utilização de largura de banda, com uma redução em 33,10\% do tráfego máximo, e em 33,58\% do tráfego médio, quando comparada com outros algoritmos de gerenciamento de interesse. 
+% BALANCEAMENTO
+Foi proposto também um esquema de balanceamento de carga que utiliza o tráfego de rede como a carga a balancear entre os servidores e tem como objetivos principais: alocar a carga nos servidores proporcionalmente à capacidade de cada um e reduzir tanto quanto possível o \emph{overhead} introduzido pela própria distribuição.
+
+Como resultados deste trabalho, foram publicados dois artigos em conferências (sendo uma delas internacional, Qualis A, na época), dois artigos em periódicos (um nacional e um internacional), além de uma dissertação em cuja defesa a banca de avaliação atribuiu o conceito A, por unanimidade.
+
+
+
+%Este trabalho visa analisar a aplicabilidade das técnicas utilizadas para dar suporte a jogos maciçamente multijogador em cenários onde os recursos computacionais são mais limitados. Como geralmente são utilizadas redes de servidores de alto custo, com links que dão suporte à comunicação entre dezenas de milhares de jogadores \cite{cecin2004fsa}, é necessário revisar o que foi feito e analisar sua aplicabilidade em arquiteturas que não dispõem de tais recursos. Assim sendo, objetiva-se avaliar e, quando possível, aperfeiçoar as técnicas pesquisadas%\cite{os artigos pesquisados}
+%, considerando um cenário em que a infra-estrutura de suporte se restringe a um conjunto de nodos de capacidade menor - ou super-nodos, no sentido em que têm links e capacidade de processamento superiores às dos usuários de Internet em geral, mas inferiores às dos grandes servidores. Pretende-se, por fim, construir um modelo arquitetural de suporte a jogos maciçamente multijogador, que defina a distribuição das cargas de processamento e comunicação associadas ao jogo entre o conjunto de nodos servidores e integre - tantas quanto for possível - as técnicas pesquisadas e/ou propostas. Após isso, será feito um protótipo e simulações para validar o trabalho.
 
 %O objetivo do trabalho é propor uma arquitetura de sistema distribuído sobre a Internet, que seja tolerante a falhas e escalável. Tal sistema funcionará como um grande servidor para jogos maciçamente multijogador. A idéia é que diversos computadores de baixo ou médio custo, conectados à Internet, com conexão de banda larga, formem um sistema distribuído que aceitará e repartirá conexões oriundas de jogadores. Os diferentes nodos desse sistema dividirão a carga de processamento e de comunicação dos diferentes jogadores conectados, assim como a simulação do ambiente virtual do jogo. Tal sistema poderá ser expandido por novos computadores que satisfaçam alguns requisitos mínimos de capacidade de processamento, armazenamento e largura de banda disponível para transmissão e recebimento de mensagens. Também deverá ser possível que qualquer nodo se retire do sistema, delegando sua carga aos restantes. Por fim, tal sistema deverá ser tolerante a falhas, de forma a prejudicar o mínimo possível a simulação e a entrega de atualizações de estado aos clientes. O objetivo principal, além da tolerância a falhas, é que o sistema seja escalável, ou seja, suporte um grande número de jogadores, porém sem comprometer severamente a qualidade do serviço.
 
@@ -208,190 +220,86 @@ Este trabalho visa analisar a aplicabilidade das técnicas utilizadas para dar su
 
 
 
+\chapter {Introdução}
 
+Jogos online maciçamente multijogador -- ou MMOGs, \emph{massively multiplayer online games} -- foram o tema central do trabalho de mestrado em questão. Geralmente, utiliza-se uma infra-estrutura com um servidor central para dar suporte a este tipo de jogo. No entanto, existem alternativas descentralizadas que visam a reduzir o custo necessário para a manutenção do jogo. Este trabalho focou em um modelo de servidor distribuído, porém, diferente da maior parte dos trabalhos da área \cite{rieche2007ppb,assiotis2006dam,ng2002msa}, utilizando nodos de baixo custo e recursos heterogênos distribuídos geograficamente. No entanto, para tornar viável a utilização de tal abordagem, foi necessário otimizar o uso de largura de banda e lidar com a não-uniformidade dos recursos disponíveis para servir o jogo.
 
+\section{Jogos Multijogador}
+\label{intro:mug}
 
+% o que são
+% breve histórico e exemplos
+% requisitos computacionais (sem mtos detalhes)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\chapter{Motivação}
-
-%Jogos eletrônicos on-line têm se popularizado bastante nos últimos tempos, devido principalmente ao aumento do público com acesso à Internet, especialmente com conexões de banda larga. Como exemplos de títulos de sucesso, podem ser citados Starcraft: Brood War \cite{broodwar}, Counter-Strike \cite{counterstrike} e Warcraft III \cite{warcraft3}, que possuem a opção de multijogador (ou \emph{multiplayer}), permitindo que diferentes usuários joguem entre si.
-
-%Mais especificamente, j
-Jogos do tipo MMG (\emph{massively multiplayer games}, jogos maciçamente multijogador) têm se popularizado bastante nos últimos tempos. Além de poderem ser jogados on-line, permitem a interação simultânea de um grande número de participantes. Nos casos de maior sucesso, como World of Warcraft \cite{worldofwarcraft} e Lineage II \cite{lineage2}, por exemplo, é dado suporte a uma base de dezenas a centenas de milhares de jogadores simultâneos \cite{chen2006pch}. Estes jogadores podem, então, interagir entre si e com o ambiente virtual do jogo. Cada jogador controla uma entidade chamada de \emph{avatar}, que nada mais é que sua representação no ambiente virtual.% Para que a partida se mantenha consistente para diferentes participantes, cada alteração de cada avatar deve ser notificada para todos os jogadores que estejam por perto, ou para quem aquela mudança possa dizer respeito.
-
-Jogos dessa natureza têm alguns requisitos \cite{schiele2007rpp}, dentre os quais podem ser citados: \textbf{persistência} do estado do mundo virtual e dos avatares; \textbf{disponibilidade} do serviço; \textbf{consistência} do estado do mundo e dos avatares entre os diferentes participantes; \textbf{segurança}, no que se refere a tentativas de subversão das regras do jogo por trapaceiros e \textbf{escalabilidade}, tendo em vista o grande número esperado de jogadores.
-
-%\begin{itemize}
-%
-%	\item \textbf{Persistência} - Jogos MMG, em geral, consistem em um mundo virtual onde os jogadores interagem entre si e com o mundo virtual, alterando o estado do mesmo e de seus avatares (representação virtual do jogador no jogo). Espera-se que essas mudanças não sejam desfeitas entre uma sessão de jogo e outra. Por este motivo, é necessário suporte a persistência dos estados; 
-%		
-%	\item \textbf{Disponibilidade} - Em geral, jogos MMG são pagos - tais como World of Warcraft \cite{worldofwarcraft} - e, por causa disso, seus usuários costumam ser exigentes quanto ao quesito de disponibilidade. Assim, deseja-se que, a qualquer momento, o sistema esteja disponível;
-%	
-%	\item \textbf{Consistência} - Jogos multijogador consistem em um ambiente virtual compartilhado entre os jogadores, que disputam a mesma partida. Sendo assim, é necessário que aquele ambiente seja representado de maneira equivalente nas máquinas dos diferentes jogadores para que estes possam se coordenar. Isto se torna mais complexo com o aumento do número de participantes;
-%	
-%	\item \textbf{Segurança} - Em um sistema onde há dezenas de milhares de participantes, não é razoável confiar em todos eles, o que torna necessário algum mecanismo que proveja segurança. Segurança aqui se refere não somente a autenticação de usuários cadastrados, como também verificar se os estados/ações que os diferentes jogadores enviam são válidos. Jogadores trapaceiros, por exemplo, podem alterar o software executado em suas máquinas de forma que sejam enviados estados/ações que lhes dêem alguma vantagem no jogo, o que deve ser impedido;
-%	
-%	\item \textbf{Escalabilidade} - Levando-se em conta o número de participantes em um jogo MMG, é necessário que o sistema que lhe dá suporte seja capaz de suportar bem a carga crescente de processamento e comunicação exigida para isso. No entanto, muitas das técnicas utilizadas para jogos em pequena escala - com algumas dezenas de jogadores - não funcionam bem em cenários com um número muito maior de participantes.
-%	
-%\end{itemize}
-
-Para dar suporte à grande quantidade de participantes, geralmente é usado o paradigma cliente-servidor, sendo que toda interação é feita através da máquina servidora. Neste paradigma, o computador servidor possui a cópia oficial do estado e é responsável pela computação sobre a mesma, enquanto o cliente atua na apresentação do estado para o usuário. O servidor é responsável, também, por atualizar os clientes, em tempo real, sobre as alterações que ocorrem no ambiente virtual do jogo. A centralização nesse computador servidor, devido ao grande número de participantes, faz com que seu custo de manutenção seja bastante elevado. Geralmente, é necessária uma capacidade de comunicação de dezenas de GBps e um razoável poder de processamento para executar toda a simulação. Torna-se inviável, por exemplo, a manutenção de jogos maciçamente multijogador por grupos independentes sem grande disponibilidade de recursos financeiros, como o Indigente \cite{indigente}, por exemplo.
-
-A \textbf{arquitetura cliente-servidor} supre diversos aspectos necessários para a execução satisfatória de jogos do tipo MMG, o que inclui um alto nível de controle sobre o sistema como um todo, o que facilita autenticação, persistência e segurança. Porém isso custa caro, como já foi dito, além de ser um possível gargalo. Objetivando minimizar este problema, foram propostas algumas alternativas. Uma delas é a de usar computação agregada, onde um cluster, ao invés de um computador único, faz o papel de servidor. Tal abordagem tem um ganho expressivo de poder de processamento, mas não resolve todos os problemas dos jogos maciçamente multijogador. Deve-se prover também a largura de banda necessária para dar suporte ao tráfego intenso entre o servidor e os jogadores.
-
-Outra abordagem possível é a \textbf{arquitetura par-a-par}, ou P2P, onde se divide a simulação entre os computadores envolvidos. Pode-se ter um sistema sem qualquer servidor, onde os pares (antes clientes), que são as máquinas dos jogadores, entram em algum tipo de acordo para os diversos passos da simulação. No que se refere à escalabilidade, tal abordagem não é ótima, pois garantir esse "acordo"{} é custoso em termos de troca de mensagens \cite{lamport1982bgp}. Ainda que seja eleito um dos pares para decidir o andamento da simulação, ainda haverá o problema de que todos os pares precisarão trocar mensagens com todos. Tendo-se $n$ pares, há uma complexidade de O({$n^2$}) trocas de mensagem para cada passo da simulação. É evidente que tal abordagem não é tão escalável quanto se possa querer para um sistema onde se pretende executar um jogo maciçamente multijogador. Além disso, seria necessário prover armazenamento distribuído e recuperação dos estados do jogo.
-
-Alguns trabalhos já foram realizados no sentido de tornar jogos em redes P2P mais escaláveis, como \cite{schiele2007rpp}. Para reduzir o tráfego entre os pares, cada um envia atualizações de estado apenas àqueles que tiverem interesse nas mesmas. Para atingir este objetivo, o ambiente virtual é dividido em regiões, cada uma com um coordenador. O coordenador de cada região é eleito entre os pares ali presentes e se encarrega, apenas, de decidir para quem cada atualização de estado interessa - ele \emph{não} intermedia as trocas de mensagens entre os pares, que se comunicam diretamente entre si. No entanto, tal abordagem se baseia no fato de que aquele par seria confiável, o que não pode ser garantido, já que o software utilizado por aquele usuário pode ter sido alterado de forma a agir de maneira incorreta. Outra abordagem seria a de eleger múltiplos coordenadores por região, mas isso implicaria na implementação de algum mecanismo de votação, além de depender da disponibilidades de pares para gerenciarem. Além disso, não seria eliminada a necessidade de cada par enviar atualizações de estado a diversos outros pares. Outros trabalhos que têm proposta bastante semelhante são \cite{elrhalibi2005abm} e \cite{iimura2004zfg}.
-
-Existem também as propostas de \textbf{arquiteturas híbridas}, que utilizam servidores ao mesmo tempo em que fazem uso de infra-estrutura P2P. %Um exemplo disso são os "pares agregados"{} \cite{chen2006pch}. Neste trabalho, é
-É proposta, por exemplo, uma arquitetura onde pares e servidor dividem a simulação do jogo \cite{chen2006pch}. O ambiente virtual é dividido em regiões, cada uma gerenciada por um dos pares, que atua como um sub-servidor. É para ele que cada um dos outros pares naquela região envia cada atualização de estado, que de lá é encaminhada aos outros pares interessados na mesma. Isto pode gerar problemas de segurança e disponibilidade, já que não há garantias de que aquele par é confiável para servir aquela região, ou que ele irá permanecer no sistema enquanto for necessário. Para tratar a segurança, os autores sugerem o uso dos agregados de pares - que consistem no gerenciador de região, mais pares "reserva"{} - para fazerem verificação da simulação, além de prover robustez ao sistema, no caso do gerenciador sofrer colapso. Porém, tal abordagem novamente remete ao problema da eficiência de comunicação e escalabilidade, já que é necessário haver acordo entre os pares integrantes daquele agregado. %Haverá um sobrecusto adicional considerável, se for levado em conta que, para cada passo da simulação a ser executado, eles devem entrar em acordo.% Uma alternativa seria a utilização de validação em bloco dos passos. Periodicamente, os reservas receberiam algum tipo de histórico de eventos e, baseado nisso, verificariam a corretude da simulação que foi feita. No entanto, quanto maior o intervalo entre uma verificação e outra, maior seria a perda por roll-back para o último estado válido da simulação.
-
-Outra arquitetura híbrida é a do FreeMMG \cite{cecin2004fsa}. Nela, os pares se organizam de maneira P2P em cada região do ambiente virtual e o servidor intermedia a comunicação entre diferentes regiões. Novamente, tem-se o problema da segurança: os pares dentro de uma região controlam a simulação que ocorre ali, podendo subvertê-la. É feita uma abordagem probabilística, utilizando um par selecionado aleatoriamente de outro ponto do ambiente para verificar a simulação naquela região. Espera-se que, caso os pares ali desejem entrar em conluio para subverter o jogo, pelo menos o nodo inserido ali detecte as ações inválidas e reporte ao servidor. No entanto, além de não garantir completamente segurança, persiste o problema de poder haver muitos pares se comunicando com muitos, o que pode comprometer a qualidade do jogo.
-
-%\textbf{... por esses motivos, decidiu-se utiliza o msoi (ver \emph{"discussao autista.txt"})}
-O que se pretende investigar é o uso de um sistema servidor composto de "super-nodos"{} distribuídos geograficamente. Cada super-nodo teria uma capacidade de processamento e link de comunicação mínimos exigidos para fazer parte do sistema. No entanto, como a simulação seria distribuída entre eles, não seria necessário que cada um destes super-nodos tivesse a mesma capacidade de processamento ou comunicação possuída pelos grandes servidores centrais usados comumente para jogos MMG. O mundo do jogo poderia então ser dividido em regiões, cada uma gerenciada por um destes super-nodos. Dessa forma, os jogadores que estivessem em uma dada região apenas enviariam atualizações de estado àquele nodo servidor, que as processaria, armazenaria e enviaria para a quem fossem relevantes.
-
-Utilizando esta abordagem, seria preciso apenas garantir a confiabilidade dos nodos servidores, que, então, verificariam se cada ação dos jogadores é válida. %Levando em conta que cada nodo servidor estaria apto a gerenciar dezenas ou centenas de jogadores, haveria muito menos servidores do que jogadores. 
-Assim, torna-se mais simples a tarefa de garantir segurança no sistema, pois pode-se assumir que cada super-nodo é confiável%um número bem mais reduzido de nodos podem ser assumidos como confiáveis
-. Outro aspecto - o da disponibilidade - seria melhor satisfeito, pois cada região do mundo virtual estaria sendo servida por um nodo que estaria dedicado a esta tarefa. %Isto é mais desejável do que designar cada região a um par controlado por jogador, como sugerido em alguns trabalhos, pois jogadores saem e entram de volta no jogo de maneira imprevisível.%, o que poderia ser um ponto fraco da abordagem destes autores.
-
-Seguindo esta última vertente, existem alguns problemas que, ou estão por resolver, ou estão sendo pesquisados atualmente, tais como:
+Nas últimas décadas, desde o surgimento do computador pessoal, jogos de computador têm se popularizado de maneira crescente. Mais ainda, após o surgimento da Internet, com conexões domésticas cada vez mais baratas e mais rápidas, jogos online multijogador têm merecido atenção especial. Estes jogos se caracterizam por haver vários participantes interagindo uns com os outros, utilizando uma conexão através da Internet entre seus dispositivos computacionais, que são geralmente computadores pessoais ou consoles (dispositivos computacionais específicos para jogos). Este tipo de jogo pode ser dividido em vários gêneros, como por exemplo:
 
 \begin{itemize}
 
-\item Encontrar uma maneira de particionar o espaço virtual, mapeando cada região a um nodo servidor, de forma que nodos com boa comunicação entre si estejam próximos na topologia lógica da rede;
+\item FPS: \emph{first-person shooting}, ou jogos de tiro com visão em primeira-pessoa, em que cada jogador controla um personagem que dispõe de diferentes armas, com as quais enfrenta monstros ou personagens de outros jogadores. São caracterizados por ação rápida, incluindo atirar, mover-se, esquivar-se etc.;
 
-\item	Balancear dinamicamente a carga da simulação entre os nodos servidores, de forma que seja mantida uma qualidade mínima de serviço em cada uma das diferentes regiões do ambiente virtual;
+\item RTS: \emph{real-time strategy}, ou jogos de estratégia em tempo-real, onde cada jogador controla um exército, mas suas ações são executadas simultaneamente às ações dos outros jogadores, ao invés de serem separadas em turnos. A ação é mais lenta que em jogos FPS;
 
-\item Manter consistente a simulação nas diferentes regiões, entre jogadores da mesma região, e de jogadores em regiões adjacentes;
-
-\item	Coordenar a entrada, a saída e a detecção de colapso de nodos do sistema;
-
-\item	Distribuir o armazenamento persistente do estado dos jogadores, de forma a poder recuperá-lo quando necessário;
-
-\item	Otimizar a comunicação entre clientes e servidores, de forma a economizar o máximo possível de largura de banda, sem que isso seja perceptível pelos jogadores;
-
-\item	Como cada nodo tem recursos mais limitados que os de um grande servidor central, deve-se buscar algoritmos adaptativos que tornem a simulação (atualizações de estado e sincronização da simulação entre os clientes) coerente com os recursos disponíveis no momento;
-
-%\item	Tornar o sistema como um todo o mais escalável possível, mesmo que para isso seja necessário relaxar algumas restrições, como consistência global, por exemplo;
-%
-%\item	Tornar esse sistema tolerante a falhas, pois ele será dinâmico (entrada e saída de nodos do sistema) e conterá diversos pontos passíveis de terem problemas.
+\item RPG: \emph{role-playing game}, ou jogo de interpretação de papéis, no qual cada jogador tem um personagem que evolui com o tempo, adquirindo mais poder e acumulando tesouros. Jogos deste tipo são caracterizados por não terem um início ou fim de partida definidos, constituindo um mundo virtual de estado persistente. Os jogadores então podem evoluir seus personagens, desconectarem-se e reconectarem-se mais tarde para continuarem jogando a partir do ponto onde pararam.%, pois seu estado estará armazenado.
 
 \end{itemize}
 
-Foram feitos trabalhos que buscam tratar alguns destes problemas, como balanceamento de carga \cite{lee2003sdl}, assim como foram feitas algumas propostas de arquiteturas de suporte a MMG \cite{ng2002msa} e \cite{assiotis2006dam}. No entanto, tais propostas levam em consideração que os servidores são de grande porte e ligados através de links de comunicação poderosos, havendo muito pouco atraso entre eles. Cabe, então, fazer a análise da aplicabilidade das técnicas já pesquisadas em um contexto de recursos mais escassos e propor, tendo isso em vista, aperfeiçoamento das mesmas e uma arquitetura que as integre, além de efetuar implementação e testes de um protótipo que as utilize.
-
-%
-%\begin{figure}
-% \centering
-% \includegraphics[width=0.50\textwidth]{imagens/www}
-% \caption{Troca de ligações no algoritmo WWW. Esquerda: configuração inicial; Direita: configuração após a troca}
-% \label{fig:WWW}
-%\end{figure}
-%\begin{equation}
-%	\label{equ:Hib}
-%	 Hib=\frac{1}{N}\sum_{i=1}^NC_i(N_i-N_{0_i})^2 
-%\end{equation}
-
-%\begin{equation}
-%	\label{equ:Ene}
-%	 Energ=\sum_{r_{ij}<r_{max}}[k_r(r_{ij}-r_{0_{ij}})^2+\sum_{r_{ik}<r_{max}}K_a(\theta_{ijk}-\theta_{0_i})^2] 
-%\end{equation}
+Como exemplos de jogos multijogador online conhecidos, podem ser citados \emph{Quake} \cite{quake}, um jogo do gênero FPS lançado em meados da década de 90; \emph{Starcraft} \cite{starcraft}, da mesma época, porém consistindo de um jogo RTS; \emph{Counter-Strike} \cite{counterstrike}, FPS lançado em 2000 e \emph{Diablo II} \cite{diablo2}, RPG lançado no mesmo ano.
 
 
 
 
+\section{Jogos Online Maciçamente Multijogador (MMOGs)}
+\label{intro:mmog}
+%TODO: por um monte de referências a MMOGs, do tipo (de maior sucesso são X, Y, Z), outros exemplos são A, B, C
+% requisitos computacionais elevados a 1000
 
+Da mesma forma que jogos de computador evoluíram para jogos multijogador on-line após a popularização da Internet, evoluiu-se em seguida para jogos online maciçamente multijogador (ou MMOG, \emph{massively multiplayer online games}), graças ao barateamento das conexões à Internet e o aumento da sua velocidade. Jogos deste tipo têm se popularizado bastante nos últimos tempos. Além de poderem ser jogados on-line, permitem a interação simultânea de um grande número de participantes. Nos casos de maior sucesso, como \emph{World of Warcraft} \cite{worldofwarcraft}, \emph{Lineage II} \cite{lineage2} e \emph{EVE Online} \cite{eveonline}, por exemplo, é dado suporte a uma base de dezenas a centenas de milhares de jogadores simultâneos \cite{chen2006pch}. Estes jogadores podem, então, interagir entre si e com o ambiente virtual do jogo.
 
+Uma das principais características destes jogos, presente em quase todos os MMOGs comerciais, são as partidas muito longas. Em alguns MMORTS (MMOGs de estratégia em tempo real), como \emph{Travian} \cite{travian}, as partidas chegam a durar de seis meses a um ano. Já nos MMORPGs (MMOGs no estilo de RPG), como é o caso do World of Warcraft, as partidas não têm um momento determinado para que acabem. Os mundos destes jogos são tão vastos e populosos -- no que diz respeito a número de jogadores --, que eles passam a evoluir e modificar seu estado independentemente de parte dos jogadores estarem jogando ou não, pois sempre existe alguém conectado dando continuidade à partida. Por esta razão, espera-se que cada jogador possa desconectar-se e continuar jogando mais tarde, sem ter que recomeçar do zero. Além disso, espera-se que as alterações feitas sobre o próprio mundo do jogo persistam, não importando quantas vezes cada jogador entrou e saiu.
 
+Geralmente, cada jogador controla uma entidade chamada de \emph{avatar}, que nada mais é que sua representação no ambiente virtual -- um personagem que executa as ações determinadas pelo jogador, que dessa forma passa a interferir na história e no encaminhamento do jogo. Para que a partida se mantenha consistente para os diferentes participantes, cada ação executada por cada avatar deve ser processada pelo servidor, que calculará o estado resultante dessa ação no jogo. Esse novo estado é então difundido para os outros jogadores. Outras alterações no mundo do jogo, como destruição ou criação de objetos no ambiente, e eventos, como ações de personagens controlados pelo servidor, devem também ser transmitidos aos jogadores envolvidos. É então através destes envios de comandos do jogador e recebimento do novo estado do servidor que os jogadores conseguem interagir entre si e com o mundo simulado no jogo.
 
+No entanto, percebe-se que tal mecanismo pode facilmente saturar a banda e sobrecarregar o(s) processador(es) do servidor. Geralmente o que se faz é montar uma infra-estrutura que dispõe de um grande servidor central, geralmente um cluster com seus nodos ligados por uma rede local de alta velocidade e baixo atraso, com conexão à Internet de algumas centenas ou milhares de MBps \cite{feng2007wnn}. O maior custo advém da manutenção desta conexão, que visa a enviar para cada jogador o estado mais recente do jogo sempre que este mudar, dentro de um limite estabelecido de atraso, que irá depender do gênero do jogo.
 
+É daí que surge a idéia de utilizar abordagens descentralizadas, com o propósito de desonerar o servidor do jogo. Diversas abordagens foram propostas para prover um suporte distribuído -- e, portanto, mais barato -- para jogos MMOG. Para este trabalho, foi proposto o uso de um modelo de servidor distribuído, composto por nodos geograficamente dispersos, conectados através da Internet. No entanto, para evitar que o custo do sistema como um todo fosse semelhante ao custo de um servidor tradicional, foi necessário fazer algumas otimizações, objetivo alcançado no trabalho em questão.
 
-
-
-
+%Jogos dessa natureza têm alguns requisitos \cite{schiele2007rpp}, dentre os quais podem ser citados: \textbf{persistência} do estado do mundo virtual e dos avatares; \textbf{disponibilidade} do serviço; \textbf{consistência} do estado do mundo e dos avatares entre os diferentes participantes; \textbf{resistência a trapaça}, no que se refere a tentativas de subversão das regras do jogo por jogadores desonestos e \textbf{escalabilidade}, tendo em vista que o grande número de jogadores poderá facilmente sobrecarregar a infra-estrutura de suporte se esta não tiver capacidade de processamento e, principalmente, largura de banda suficientes.
 
 \chapter{Objetivo}
+\label{intro:objectives}
 
-O objetivo é criar um modelo arquitetural de suporte a jogos maciçamente multijogador. Seguindo este modelo, deverá ser possível formar um sistema geograficamente distribuído de nodos servidores, utilizando a Internet como meio de ligação entre os mesmos. Além de distribuir as cargas computacionais (comunicação e processamento) impostas pelo grande número de jogadores, este modelo deverá incluir técnicas com o fim de reduzir o tráfego entre os componentes deste sistema (nodos servidores e máquinas clientes dos jogadores), economizando largura de banda. Tais técnicas são o foco deste trabalho, tendo em vista que se considera um cenário com recursos voláteis e limitados, já que a ligação entre os nodos será feita através da Internet.
+O objetivo buscado neste trabalho foi tornar mais viável o uso de um sistema de nodos de baixo custo geograficamente distribuídos como servidor para jogos MMOG. Isto foi feito com a introdução de novas técnicas que visam a otimizar o uso dos recursos desse sistema e a gerenciá-los de maneira mais eficiente, reduzindo o \emph{overhead} causado pela própria distribuição do servidor do jogo, além de buscar não sobrecarregar nodos que o componham. Mais especificamente, os objetivos foram:
 
-Existem outros aspectos relevantes, além da distribuição do servidor e da economia de largura de banda, que poderão ser acrescentados ao modelo, dependo da disponibilidade de tempo para realizar tal tarefa.
+\begin{itemize}
+ \item Criar um algoritmo que reduza o uso de largura de banda pelos nodos servidores;
+ \item Criar um mecanismo de distribuição e de balanceamento dinâmico de carga que distribua a carga entre os nodos de maneira proporcional e justa, além de reduzir, tanto quanto possível e viável, o overhead causado pela própria distribuição.
+\end{itemize}
 
-%A função deste middleware será de abstrair para a camada do jogo, que ficará acima dele, o sistema geograficamente distribuído servidor. distribuir as cargas de processamento e comunicação entre 
-%
-%sistema distribuído sobre a Internet, que funcionará como um grande servidor para jogos maciçamente multijogador. Pode ser utilizado o conceito de "super-nodo", que nada mais é que um computador conectado à Internet, com capacidade de processamento e comunicação acima da média de usuários comuns, mas que, ainda assim, é bem mais limitado que os grandes servidores que costumam servir os jogos MMG mais conhecidos. A idéia é que diversos destes super-nodos, conectados à Internet, formem um sistema distribuído que aceitará e repartirá conexões oriundas de jogadores. Eles então dividirão a carga de processamento e de comunicação dos diferentes jogadores conectados, assim como a simulação do ambiente virtual do jogo.
-
-%Para atingir este objetivo, algumas metas são traçadas:
-%
-%\begin{enumerate}
-%
-%\item Revisar as técnicas utilizadas para dar suporte a jogos MMG;
-%
-%\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
-%
-%\item Propor integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
-%
-%\item Implementar um protótipo que integre as técnicas estudadas e/ou desenvolvidas no trabalho;
-%
-%\item Efetuar simulações que demonstrem o resultado obtido do trabalho e avaliar seus resultados.
-%
-%\end{enumerate}
-
-
-
-
-
-
-
-
-
-
-
-
-
+Para cumprir estes objetivo, foram propostas duas abordagens. A primeira consiste em uma otimização do uso de largura de banda do servidor, através de um novo algoritmo de gerenciamento de interesse. A segunda consiste em um esquema de balanceamento de carga que aloca a cada nodo servidor uma carga proporcional à sua capacidade. Através de simulações em software, demons{\-}trou-se que tais objetivos foram alcançados -- para jogos em que existe informação de localização das entidades do jogo no ambiente virtual --, validando as propostas apresentadas aqui. 
 
 
 
 \chapter{Metodologia}
 
-Para atingir o objetivo definido na seção anterior, deverão ser cumpridas algumas etapas, que são as seguintes:
+Para atingir o objetivo definido na seção anterior, foram cumpridas as seguintes etapas:
 
 \begin{enumerate}
 
-	\item Revisar as técnicas utilizadas para dar suporte distribuído a jogos MMG;
+	\item Revisão das técnicas utilizadas para dar suporte distribuído a jogos MMG;
 	
-	Será dada continuidade à investigação bibliográfica que já foi iniciada para elaboração deste plano de estudos e pesquisa, além de buscar separá-las em categorias segundo: contexto considerado e problemas que buscam solucionar.
+	Foi feita uma investigação bibliográfica, buscando separar as propostas da literatura em categorias, de acordo com o contexto considerado por cada uma delas e os problemas que buscam solucionar.
 
-	\item Analisar a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
+	\item Análise a aplicabilidade destas técnicas em cenários em que cada nodo do sistema tem recursos mais limitados;
 	
-	Técnicas utilizadas para dar suporte distribuído a jogos MMG costumam se basear em cenários onde há grande disponibilidade de recursos, com grandes servidores ligados através de rede local com capacidade de comunicação super-dimensionada. Será analisada a viabilidade de serem utilizadas em um contexto onde os nodos têm recursos mais limitados.
+	Técnicas utilizadas para dar suporte distribuído a jogos MMG costumam se basear em cenários onde há grande disponibilidade de recursos, com grandes servidores ligados através de rede local com capacidade de comunicação super-dimensionada. Foi analisada a viabilidade de serem utilizadas em um contexto onde os nodos têm recursos mais limitados.
 
-	\item Propor integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
+	\item Integração das mesmas, com otimizações focadas no contexto definido (disponibilidade de super-nodos, ao invés de servidores poderosos);
 	
-	Buscar-se-á fazer aperfeiçoamento de algumas destas técnicas, tendo como ênfase o contexto de super-nodos distribuídos geograficamente e, posteriormente, será proposta uma integração das mesmas% em uma arquitetura de suporte a MMG
-.
+	Foi feito o aperfeiçoamento de algumas destas técnicas, tendo como ênfase o contexto de super-nodos distribuídos geograficamente e foi também proposta uma integração das mesmas.% em uma arquitetura de suporte a MMG
 
-	\item Implementar um protótipo que integre as técnicas estudadas e/ou desenvolvidas nas etapas anteriores;
+	\item Implementação de um protótipo que integrou as técnicas estudadas e/ou desenvolvidas nas etapas anteriores;
 
-	\item Efetuar simulações que demonstrem o resultado obtido do trabalho e avaliar seus resultados.
+	\item Execução de simulações que demonstraram o resultado obtido com o trabalho e validaram as propostas.
 
 \end{enumerate}
 
@@ -516,6 +424,13 @@ A Tabela \ref{tab:cronograma} apresenta o
 cronograma de atividades a serem desenvolvidas, conforme citadas abaixo
 
 \begin{enumerate}
+	\item Obtenção dos 24 créditos, obrigatórios para o mestrado:		
+		\begin{enumerate}
+			\item Cadeiras: ``Aspectos Conceituais de Tolerância a Falhas'', ``Programação Paralela e Distribuída'', ``Projeto de Programas Paralelos para Processamento de Alto Desempenho'', ``Programação com Objetos Distribuídos'', ``Programação Paralela para Processamento de Alto Desempenho'', ``Tolerância a Falhas em Sistemas Distribuídos'';
+			\item Trabalho Individual;
+			\item Estágio Docência: SISTEMAS OPERACIONAIS II N;
+		\end{enumerate}
+		
 	\item Levantamento bibliográfico do estado-da-arte das técnicas de distribuição do suporte a MMG;
 	\item Levantamento bibliográfico de técnicas de distribuição em geral, que possam ser aplicadas a jogos MMG;
 	\item Análise e categorização destas técnicas;
@@ -530,93 +445,63 @@ cronograma de atividades a serem desenvolvidas, conforme citadas abaixo
 	\item Escrita de artigos;
 	\item Entrega da dissertação;
 	\item Defesa da dissertação;
-%	\item Elaboração de artigo a ser submetido para WSCAD;
-%	\item Elaboração de artigo científico relativo ao trabalho já desenvolvido na Dissertação;
-%	\item Desenvolvimento do Seminário de Andamento;
-%	\item Semana acadêmica;
-%	\item Paralelização através do Open-MP;
-%	\item Paralelização através do MPI;
-%	\item Paralelização através do MPI-2;
-%	\item Comparação de resultados;
-%	\item Redação da dissertação;
-%	\item Elaboração de artigo a ser submetido em evento da área (Alto desempenho e Física computacional);
-%	\item Entrega da dissertação;
-%	\item Defesa da dissertação
 \end{enumerate}
 
-\begin{table}[!ht]
-
+\begin{sidewaystable}[!ht]
 \begin{center}
 \caption{Cronograma}
 \label{tab:cronograma}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
 Etapa 
-   &Jan&Fev&Mar&Abr&Mai&Jun&Jul&Ago&Set&Out&Nov&Dez&Jan&Fev\\ \hline
-1  & X & X & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
-2  & X & X & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
-3  &   & X & X & X &   &   &   &   &   &   &   &   &   &   \\ \hline
-4  &   &   & X & X & X &   &   &   &   &   &   &   &   &   \\ \hline
-5  &   &   &   & X & X &   &   &   &   &   &   &   &   &   \\ \hline
-6  &   &   &   &   & X & X & X & X &   &   &   &   &   &   \\ \hline
-7  &   &   &   &   &   &   & X & X &   &   &   &   &   &   \\ \hline
-8  &   &   &   &   &   &   &   &   & X &   &   &   &   &   \\ \hline
-9  &   &   &   &   &   &   &   &   &   & X & X &   &   &   \\ \hline
-10 &   &   &   &   & X &   &   &   &   &   &   &   &   &   \\ \hline
-11 &   &   &   &   & X & X & X & X & X & X & X & X &   &   \\ \hline
-12 &   &   &   &   &   &   &   &   & X & X & X & X & X &   \\ \hline
-13 &   &   &   &   &   &   &   &   &   &   &   & X &   &   \\ \hline
-14 &   &   &   &   &   &   &   &   &   &   &   &   &   & X \\ \hline
+   & 2007 &Jan/08&Fev/08&Mar/08&Abr&Mai&Jun&Jul&Ago&Set&Out&Nov&Dez&Jan/09&Fev&Mar\\ \hline
+1  &  X   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+2  &      & X & X & X &   &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+3  &      & X & X & X &   &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+4  &      &   & X & X & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+5  &      &   &   & X & X & X &   &   &   &   &   &   &   &   &   &   \\ \hline
+6  &      &   &   &   & X & X &   &   &   &   &   &   &   &   &   &   \\ \hline
+7  &      &   &   &   &   & X & X & X & X &   &   &   &   &   &   &   \\ \hline
+8  &      &   &   &   &   &   &   & X & X &   &   &   &   &   &   &   \\ \hline
+9  &      &   &   &   &   &   &   &   &   & X &   &   &   &   &   &   \\ \hline
+10 &      &   &   &   &   &   &   &   &   &   & X & X &   &   &   &   \\ \hline
+11 &      &   &   &   &   & X &   &   &   &   &   &   &   &   &   &   \\ \hline
+12 &      &   &   &   &   & X & X & X & X & X & X & X & X &   &   &   \\ \hline
+13 &      &   &   &   &   &   &   &   &   & X & X & X & X & X &   &   \\ \hline
+14 &      &   &   &   &   &   &   &   &   &   &   &   &   &   & X &   \\ \hline
+15 &      &   &   &   &   &   &   &   &   &   &   &   &   &   &   & X \\ \hline
 \end{tabular}
 \end{center}
-\end{table}
+\end{sidewaystable}
 
-\bibliography{pep}
-\bibliographystyle{abnt} 
+\chapter{Publicações}
 
+Como um dos resultados do trabalho desenvolvido durante o mestrado, foram obtidas algumas publicações, de âmbito nacional e internacional, a saber:
 
+\begin{itemize}
 
+\item Paper em periódico internacional:
 
+\textbf{A load balancing scheme for massively multiplayer online games}, BEZERRA, Carlos Eduardo B.; GEYER, Cláudio F. R., em \emph{Multimedia Tools and Applications - Special Issue on Massively Multiplayer Online Gaming Systems and Applications}, v. 1, n. 1, pp. 263-289, Springer Netherlands, 2009.
 
+\item Paper em periódicio nacional:
 
+\textbf{Modelos de Suporte Distribuído para Jogos Online Maciçamente Multijogador}, BEZERRA, Carlos Eduardo B.; CECIN, Fábio R.; GEYER, Cláudio F. R., em \emph{Revista Diálogo}, La Salle, 2009.
 
+\item Full paper, em simpósio internacional:
 
+\textbf{A${^3}$: a novel interest management algorithm for distributed simulations of MMOGs}, BEZERRA, Carlos Eduardo B.; CECIN, Fábio R.; GEYER, Cláudio F. R., em \emph{Proc. of the 12-th IEEE International Symposium on Distributed Simulation and Real Time Applications}, 2008, Vancouver, BC, Canada.
 
+\item Full paper, em simpósio nacional:
 
+\textbf{P2PSE - A peer-to-peer support for multiplayer games}, VILANOVA, Felipe J.; BEZERRA, Carlos Eduardo B.; CRIPPA, Marcos R., CECIN, Fábio R.; GEYER, Cláudio F. R., em \emph{Proc. of SBGames 2008 - VII Brazilian Symposium on Computer Games and Digital Entertainment - Computing Track}, 2008, Belo Horizonte, MG, Brazil.
 
+\item Short paper, em simpósio nacional:
 
+\textbf{Desenvolvendo um Motor Multiplataforma para Jogos 3D}, ROCHA, Rodrigo; BESSA, Aline; BEZERRA, Carlos E. B.; MEDEIROS, Ivan; OLIVEIRA, Caio; BANDEIRA, H., em \emph{Anais do SBGames 2007 - VI Simpósio Brasileiro de Jogos para Computador e Entretenimento Digital - Trilha Computação}, 2007, São Leopoldo, RS, Brazil.
 
+\end{itemize}
 
-
-
-
-
-
-
-
-
-
-\chapter*{Assinaturas}
-
-
-
-\vspace{2cm}
-
-
-
-\begin{center}
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  \\
-Carlos Eduardo Benevides Bezerra
-
-
-\vspace{4cm}
-
-
-
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  \\
-Prof.~Dr. Cláudio Fernando Resin Geyer
-
-\end{center}
-
-
+\bibliographystyle{abnt}
+\bibliography{relatorio}
 \end{document}
