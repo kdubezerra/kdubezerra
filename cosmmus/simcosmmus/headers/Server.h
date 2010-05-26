@@ -1,10 +1,6 @@
 #pragma once
 
-#ifdef _WIN32
-#include "../../myutils.h"
-#else
-#include "myutils.h"
-#endif
+#include "../headers/myutils.h"
 
 #include <algorithm>
 #include <iostream>

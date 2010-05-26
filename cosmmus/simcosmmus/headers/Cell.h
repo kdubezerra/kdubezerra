@@ -2,7 +2,7 @@
 
 #ifdef _WIN32
 #include <SDL.h>
-#include "../../myutils.h"
+#include "../headers/myutils.h"
 #else
 #include <SDL/SDL.h>
 #include "myutils.h"
