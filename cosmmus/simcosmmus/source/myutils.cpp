@@ -1,4 +1,4 @@
-#include "myutils.h"
+#include "../headers/myutils.h"
 
 bool coord::operator==(const coord &other) const {
   if ((other.X == this->X) && (other.Y == this->Y))

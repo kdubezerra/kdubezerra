@@ -113,7 +113,7 @@ int main (int argc, char* argv[]) {
   if (!font)
 	  cerr << "Erro carregando a fonte" << endl;
 
-  //TODO instanciar as c√©lulas
+  //TODO instanciar as cÈlulas
   Cell::allocCellMatrix(15);
   Cell::setCellSurfaces(VERTEX_IMAGE, EDGE_IMAGE);
 
@@ -141,8 +141,8 @@ int main (int argc, char* argv[]) {
   //Avatar::toggleMobility();
 
   while (time < EXECUTION_TIME) { // CICLO PRINCIPAL
-    //apply_surface(0,0,bg,screen);///*** COMENTE PARA N√ÉO RENDERIZAR
-	SDL_FillRect(screen, 0, 0);///*** COMENTE PARA N√ÉO RENDERIZAR
+    //apply_surface(0,0,bg,screen);///*** COMENTE PARA N√O RENDERIZAR
+	SDL_FillRect(screen, 0, 0);///*** COMENTE PARA N√O RENDERIZAR
 
     step_delay = SDL_GetTicks() - time;
     step_delay = step_delay > 40 ? 40 : step_delay;
@@ -154,15 +154,15 @@ int main (int argc, char* argv[]) {
       Cell::updateAllEdgesAndVertexWeights();
 //      dtime = time;
 //    }    
-    Cell::drawCells(screen);///*** COMENTE PARA N√ÉO RENDERIZAR
-    Region::drawAllRegions(screen);///*** COMENTE PARA N√ÉO RENDERIZAR
-    Region::drawAllRegionsWeights(screen, font);///*** COMENTE PARA N√ÉO RENDERIZAR
+    Cell::drawCells(screen);///*** COMENTE PARA N√O RENDERIZAR
+    Region::drawAllRegions(screen);///*** COMENTE PARA N√O RENDERIZAR
+    Region::drawAllRegionsWeights(screen, font);///*** COMENTE PARA N√O RENDERIZAR
     
-    for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();///*** COMENTE PARA N√ÉO RENDERIZAR
+    for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();///*** COMENTE PARA N√O RENDERIZAR
 
     //time = SDL_GetTicks();
-    showHelp();///*** COMENTE PARA N√ÉO RENDERIZAR
-    SDL_Flip( screen );///*** COMENTE PARA N√ÉO RENDERIZAR
+    showHelp();///*** COMENTE PARA N√O RENDERIZAR
+    SDL_Flip( screen );///*** COMENTE PARA N√O RENDERIZAR
     count++;
     checkInput();
     
@@ -214,13 +214,13 @@ int main (int argc, char* argv[]) {
     pesototaldosservidores += server[i]->getWeight();
   }
   
-  cout << "Peso total (servidores) no √∫ltimo instante = " << pesototaldosservidores << endl;
+  cout << "Peso total (servidores) no ˙ltimo instante = " << pesototaldosservidores << endl;
   
   long pesototaldosavatares = 0l;
   for (int i = 0 ; i < nplayers ; i ++) {
     pesototaldosavatares += player[i]->getWeight();
 	}
-  cout << "Peso total (avatares) no √∫ltimo instante = " << pesototaldosavatares << endl;
+  cout << "Peso total (avatares) no ˙ltimo instante = " << pesototaldosavatares << endl;
 
   return 0;
 }
@@ -237,7 +237,7 @@ void checkInput() {
           Region::rebalance_progrega(Region::getRegionList());
           break;
         case SDLK_u:
-          Region::improveBalancing_kwise(Region::getRegionList()); //aquele que eu achei que podia ser o melhor... ver coment√°rio
+          Region::improveBalancing_kwise(Region::getRegionList()); //aquele que eu achei que podia ser o melhor... ver coment·rio
           break;
         case SDLK_i:
           Region::rebalance_progrega_kf(Region::getRegionList());
@@ -296,7 +296,7 @@ void checkInput() {
 
 int weighter (void* data) {
   long my_id = (long) data;
-  cout << "Thread: Minha id √©: " << my_id << endl;
+  cout << "Thread: Minha id È: " << my_id << endl;
   
   while (1) {
     SDL_SemWait(tsem);
@@ -321,7 +321,7 @@ void showHelp() {
   SDL_Color txtColor;
   static coord helpPos;
   helpPos.X = helpPos.Y = 10;
-  //string helpTxt = "p : pausa\nv : mostrar pesos das c√©lulas\ne : mostrar peso das arestas\nd : fazer todo particionamento do 0\nr : mostrar regi√µes\nw : mostrar pesos das regi√µes\n";
+  //string helpTxt = "p : pausa\nv : mostrar pesos das cÈlulas\ne : mostrar peso das arestas\nd : fazer todo particionamento do 0\nr : mostrar regiıes\nw : mostrar pesos das regiıes\n";
   static string helpTxt[] = {"d : particionamento global, do zero","y : particionamento local, do zero",
                              "u : distribuir celulas mais leves a regioes que se aproximem da carga ideal",
                              "t : v2 (NAO!), getCellWithWeightLowerThanButClosestTo","o : v3 (parece funcionar, mas *NAO* da forma ideal), mantem a celula mais pesada",

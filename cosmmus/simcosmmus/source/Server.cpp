@@ -1,6 +1,6 @@
-#include "Server.h"
-#include "Region.h"
-#include "Cell.h"
+#include "../headers/Server.h"
+#include "../headers/Region.h"
+#include "../headers/Cell.h"
 
 //===========================================static members
 

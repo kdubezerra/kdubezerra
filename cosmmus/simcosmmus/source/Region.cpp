@@ -1,7 +1,7 @@
-#include "Region.h"
-#include "Server.h"
-#include "Cell.h"
-#include "Avatar.h"
+#include "../headers/Region.h"
+#include "../headers/Server.h"
+#include "../headers/Cell.h"
+#include "../headers/Avatar.h"
 
 #define MIN_BAL_IMPROVEMENT 0.0f
 
