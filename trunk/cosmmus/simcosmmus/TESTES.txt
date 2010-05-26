@@ -1,0 +1,23 @@
+Parâmetros: instante, número de jogadores.
+
+Retornos:
+TEMPO, BALANCEAMENTO (definir como medir isso...), MIGRAÇÕES, CUSTO TOTAL DO MUNDO (LOAD)
+
+X
+
+Âmbito do particionamento:
+LOCAL, GLOBAL, [ESTÁTICO, NÃO COMBINAR COM OUTROS]
+
+X
+
+Seleção de células:
+ARESTA MAIS PESADA, VÉRTICE MAIS PESADO, ALEATÓRIO
+
+X
+
+Refinamento para minimizar edge cut:
+COM K-L, SEM K-L
+
+=
+
+[1 +] 2 * 3 * 2 = 12 [+ 1]!!! 
