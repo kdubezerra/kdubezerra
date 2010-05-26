@@ -1,0 +1,50 @@
+Class Avatar:
+	most important methods:
+		STEP (each step moves the avatar according to the random waypoint model)
+		CHECKCELLMIGRATION (the avatar just checks if its movement took it to another cell)
+	most important atributes - parentcell, position, orientation and speed
+	
+Class Cell:
+	most important methods:
+		GetHeaviestFreeCell (static/global)
+		GetFreeNeighborConnectedByHeaviestEdge
+	most important atributes:
+		cell's limit coordinates (x0,y0 and xn,yn, if the cell is a square)
+		Neighbor cells (total of 8)
+		List of avatars located inside it
+		parent region
+
+Class Region:
+	mim:
+		checkifoverloaded (checks if the regions is unfairly overloaded)
+		balanceregion (calls one of the algorithms described in the paper, starting from THIS region)
+	mia:
+		List of cells which belong to this region (may be a disconnected graph, or even an empty graph)
+		Region's server power
+
+=======================================================================================================
+
+SIMULATION PSEUDO-CODE:
+
+BEGIN
+	create N regions, where N is the number of servers
+	create M cells, where M is the (constant) number of cells
+	distribute the M cells among the N regions
+	create P avatars, representin P Players
+	position each of the P avatars in a random spot of the virtual environment
+	
+	MAIN SIMULATION LOOP:
+	BEGIN
+		for each avatar do		
+			step();
+			checkcellmigration();
+		end for
+		
+		for each region do
+			ol = checkifoverloaded();
+			if (ol == true)
+				balanceregion(); //according to chosen algorithm
+			endif
+		end for
+	END
+END
