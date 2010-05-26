@@ -1,12 +1,8 @@
-#ifdef _WIN32
-#include "../../myutils.h"
-#else
-#include "myutils.h"
-#endif
+#include "../headers/myutils.h"
 
-#include "Region.h"
-#include "Cell.h"
-#include "Avatar.h"
+#include "../headers/Region.h"
+#include "../headers/Cell.h"
+#include "../headers/Avatar.h"
 
 //===========================================static members
 

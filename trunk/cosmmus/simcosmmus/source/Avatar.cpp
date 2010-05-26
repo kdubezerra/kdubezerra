@@ -1,11 +1,7 @@
-#ifdef _WIN32
-  #include "../../myutils.h"
-#else
-  #include "myutils.h"
-#endif
+#include "../headers/myutils.h"
 
-#include "Avatar.h"
-#include "Cell.h"
+#include "../headers/Avatar.h"
+#include "../headers/Cell.h"
 
 
 #define USE_HOTSPOTS true
