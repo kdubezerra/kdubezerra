@@ -51,11 +51,6 @@ void toggleShowHelp();
 int weighter (void* data);
 void plotAllAvatars(string filename);
 
-//AQUI COMECA O PROGRAMA
-//#ifdef __cplusplus
-//	extern "C"
-//#endif
-#undef main
 int main (int argc, char* argv[]) {
 	///srand(time(NULL));
 
