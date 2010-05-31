@@ -191,6 +191,10 @@
 				RelativePath="..\source\simcosmmus.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\source\Simulation.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -215,6 +219,10 @@
 			</File>
 			<File
 				RelativePath="..\headers\Server.h"
+				>
+			</File>
+			<File
+				RelativePath="..\headers\Simulation.h"
 				>
 			</File>
 		</Filter>
