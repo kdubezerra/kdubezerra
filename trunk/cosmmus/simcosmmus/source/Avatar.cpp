@@ -2,7 +2,8 @@
 
 #include "../headers/Avatar.h"
 #include "../headers/Cell.h"
-
+#include "../headers/KDTree.h"
+#include "../headers/Simulation.h"
 
 #define USE_HOTSPOTS true
 
@@ -19,6 +20,7 @@ bool Avatar::isMobile = true;
 long Avatar::total_weight = 0;
 long Avatar::migration_walk = 0;
 long Avatar::migration_still = 0;
+long Avatar::migrations = 0;
 Avatar* Avatar::first = NULL;
 list<Avatar*> Avatar::avList;
 int Avatar::tendencyToHotspots = 70;
@@ -27,8 +29,8 @@ Avatar::Avatar() {
   init();
   isDrawable = false;
   player_id = 555;
-  if (!first) first = this;
   avList.push_back(this);
+  if (!first) first = this;
 }    
 
 void Avatar::setDrawable(string my_surface_file, string seen_surface_file, SDL_Surface* out_screen) {     
@@ -50,11 +52,16 @@ void Avatar::init() {
     diry = rand() % WW;
     destx = rand() % WW;
     desty = rand() % WW;
-    coord my_location = getCell();
-    my_cell = Cell::getCell(my_location.X, my_location.Y);
-    old_cell = my_cell;
-    old_region = old_cell->getParentRegion();
-    my_cell->subscribe(this);
+	if (Simulation::getSpacePartMethod() == KDTREE) {
+		parentNode = NULL;	
+	}
+	else if (Simulation::getSpacePartMethod() == CELLS) {
+	    coord my_location = getCell();
+	    my_cell = Cell::getCell(my_location.X, my_location.Y);
+	    old_cell = my_cell;
+	    old_region = old_cell->getParentRegion();
+    	my_cell->subscribe(this);
+	}
   } while (distance(posx, posy, destx, desty) <= 20.0f);      
   R = rand() % 255;
   G = rand() % 255;
@@ -97,8 +104,6 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
 
   float distance_ = distance(posx, posy, destx, desty);  
   if (distance_ > 20) {    
-    coord new_cell_coord;
-    Cell* new_cell;        
     int speed = rand() % 5 + 1;   
     incr_y =  speed * (desty - posy) / distance(posx, posy, destx, desty); // sin of the direction angle
     incr_x =  speed * (destx - posx) / distance(posx, posy, destx, desty); // cossin of the direction angle               
@@ -110,14 +115,18 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
     if (posx >= WW - 3) posx = WW - 3;
     if (posy < 3) posy = 3;
     if (posy >= WW - 3) posy = WW - 3;        
-    new_cell_coord.X = int (simpleScale(posx, WW, CELLS_ON_A_ROW));
-    new_cell_coord.Y = int (simpleScale(posy, WW, CELLS_ON_A_ROW));        
-    new_cell = Cell::getCell(new_cell_coord.X, new_cell_coord.Y);
-    if (new_cell != my_cell) {//TODO o problema está aqui!
-      my_cell->unsubscribe(this);
-      new_cell->subscribe(this);
-      my_cell = new_cell;
-    }
+	if (Simulation::getSpacePartMethod() == CELLS()) {
+	    coord new_cell_coord;
+	    Cell* new_cell;
+	    new_cell_coord.X = int (simpleScale(posx, WW, CELLS_ON_A_ROW));
+	    new_cell_coord.Y = int (simpleScale(posy, WW, CELLS_ON_A_ROW));        
+	    new_cell = Cell::getCell(new_cell_coord.X, new_cell_coord.Y);
+	    if (new_cell != my_cell) {//TODO o problema está aqui!
+	      my_cell->unsubscribe(this);
+	      new_cell->subscribe(this);
+	      my_cell = new_cell;
+	    }
+	}
     stopped_time = 0;
     last_move = SDL_GetTicks();
     resting_time = rand () % MAX_RESTING_TIME; //just for the case in which this is its last move towards its destination...            
@@ -139,17 +148,43 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
 }
 
 void Avatar::checkMigration() {
-  coord cell_coord = getCell();
-  Cell* new_cell = Cell::getCell(cell_coord.X, cell_coord.Y);  
-  Region* new_region = new_cell->getParentRegion();
-  if (new_region != old_region) {
-    if (new_cell   !=   old_cell)
-      migration_walk++; 
-    else
-      migration_still++;    
+  if (Simulation::getSpacePartMethod() == KDTREE) {
+	int xmin, xmax, ymin, ymax;
+	parentNode->getLimits(xmin, xmax, ymin, ymax);
+	if (posx < xmin ||posx >= xmax || posy < ymin || posy >= ymax) {
+		parentNode->removeAvatar(this);
+		KDTree::getRoot()->insertAvatar(this);
+    migrations++;
+	}
   }
-  old_cell = new_cell;
-  old_region = new_region;
+
+  if (Simulation::getSpacePartMethod() == CELLS) {
+     coord cell_coord = getCell();
+   
+   
+   
+   
+   
+     Cell* new_cell = Cell::getCell(cell_coord.X, cell_coord.Y);  
+     Region* new_region = new_cell->getParentRegion();
+     if (new_region != old_region) {
+       if (new_cell   !=   old_cell) {
+         migration_walk++;
+         migrations++;
+       } else {
+         migration_still++;
+         migrations++;
+       }
+     }
+     old_cell = new_cell;
+     old_region = new_region;
+  }
+}
+
+long Avatar::getMigrations(bool clear_mig) {
+  long mig = migrations;
+  if (clear_mig) migrations = 0;
+  return mig;
 }
 
 long Avatar::getMigrationStill(bool clear_migs) {
@@ -168,9 +203,32 @@ void Avatar::setPlayerId (int i) {
   player_id = i;
 }
 
+void Avatar::setParentNode (KDTree *_parent) {
+	parentNode = _parent;
+}
+
 void Avatar::markAsSeen(int relevance_) {
   relevance = relevance_;
-  isSeen = true;      
+  isSeen = true;
+}
+
+void Avatar::calcWeight() 
+	//list<Avatar*> avs = KDTree::getRoot()->getAvList();
+  list<Avatar*> avs = avList;
+	list<Avatar*>::iterator visible_begin = avs.begin();
+	//avs.sort(Avatar::compareX);
+	for (list<Avatar*>::iterator this_avatar = avs.begin() ; this_avatar != avs.end() ; this_avatar++) {
+		(*this_avatar)->weight = 0;
+		for (list<Avatar*>::iterator other_avatar = visible_begin ; other_avatar != avs.end() ; other_avatar++) {
+/*			if ((*other_avatar)->GetX() < (*this_avatar)->GetX() - VIEW_DISTANCE) {
+				visible_begin++;
+				continue;
+			}
+			if ((*other_avatar)->GetX() > (*this_avatar)->GetX() + VIEW_DISTANCE) break;*/
+			(*this_avatar)->weight += (*this_avatar)->OtherRelevance(*other_avatar);
+		}
+	}
+
 }
 
 int Avatar::OtherRelevance(Avatar* other) {//valor entre 0 e 100, ao invés de 0.0f e 1.0f
@@ -238,7 +296,12 @@ long Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferent
 }
 
 long Avatar::getWeight() {
-  return getWeightBruteForce();
+  if (Simulation::getSpacePartMethod() == KDTREE) {
+    return weight;
+  }
+  else if (Simulation::getSpacePartMethod() == CELLS) {
+    return getWeightBruteForce();
+  }
 }
 
 long Avatar::getWeightBruteForce() {

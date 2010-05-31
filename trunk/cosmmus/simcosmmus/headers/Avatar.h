@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <string>
+#include <list>
 
 using namespace std;
 
@@ -17,9 +18,8 @@ using namespace std;
 class Cell;
 class Region;
 
-// class Avatar;//TODO apagar esta linha
-
 class coord;
+class KDTree;
 
 class Avatar {
 
@@ -35,10 +35,12 @@ class Avatar {
     void step(unsigned long delay);
 
     void checkMigration();
+	static long getMigrations(bool clear_mig = true);
     static long getMigrationStill(bool clear_migs = true);
     static long getMigrationWalk(bool clear_migw = true);
 					
     void setPlayerId (int i);
+    void setParentNode (KDTree *_parent);
     
     void markAsSeen(int relevance_);
 		
@@ -56,6 +58,7 @@ class Avatar {
     void checkCellWeight (Avatar* other);
     
     long getInteraction(Cell* _cell);
+    static void calcWeight();
     long getWeight();
     long getWeightBruteForce();
     
@@ -67,6 +70,8 @@ class Avatar {
     static bool toggleMobility();
     static bool setMobility(bool value);
     
+    static bool compareX(Avatar* a, Avatar* b);
+    static bool compareY(Avatar* a, Avatar* b);
     static void setHotspotsProbability(int prob);
 		
   protected:
@@ -76,6 +81,7 @@ class Avatar {
     float posx, posy;
     int dirx, diry;
     int destx, desty;
+    long weight;
     unsigned char R,G,B;
     Uint32 last_move, resting_time;
     bool isSeen;
@@ -98,6 +104,8 @@ class Avatar {
     SDL_Surface* screen;
     static long migration_walk;
     static long migration_still;
+	static long migrations;
+    KDTree* parentNode;
     static Avatar* first;
     static list<Avatar*> avList;
     static int tendencyToHotspots;
