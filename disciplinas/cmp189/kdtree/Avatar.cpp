@@ -193,7 +193,7 @@ void Avatar::calcWeight() {
 	list<Avatar*>::iterator visible_begin = avs.begin();
 	//avs.sort(Avatar::compareX);
 	for (list<Avatar*>::iterator this_avatar = avs.begin() ; this_avatar != avs.end() ; this_avatar++) {
-		(*this_avatar)->weight = 0l;
+		(*this_avatar)->weight = 0;
 		for (list<Avatar*>::iterator other_avatar = visible_begin ; other_avatar != avs.end() ; other_avatar++) {
 /*			if ((*other_avatar)->GetX() < (*this_avatar)->GetX() - VIEW_DISTANCE) {
 				visible_begin++;
