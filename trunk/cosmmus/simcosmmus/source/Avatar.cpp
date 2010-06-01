@@ -291,6 +291,16 @@ coord Avatar::getCell () {
 	return cell;
 }
 
+void Avatar::checkCellWeight (Avatar* other) { //por hora é mto simples, apenas contando q o peso da celula = numero de avatares nela
+  if (!showv && !showe) return;      
+  coord myCell = getCell();
+  coord otherCell = other->getCell();      
+  if (otherCell == myCell) {
+    SDL_SemWait(vsem);    
+    SDL_SemPost(vsem);
+  }
+}
+
 long Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferente: getWeightE(UP_LEFT), por exemplo.
 	list<Avatar*>::iterator it;
 	long _interaction = 0;
