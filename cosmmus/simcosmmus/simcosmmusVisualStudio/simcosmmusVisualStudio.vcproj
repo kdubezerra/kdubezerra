@@ -176,6 +176,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\source\KDTree.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\source\myutils.cpp"
 				>
 			</File>
@@ -207,6 +211,10 @@
 			</File>
 			<File
 				RelativePath="..\headers\Cell.h"
+				>
+			</File>
+			<File
+				RelativePath="..\headers\KDTree.h"
 				>
 			</File>
 			<File
@@ -269,6 +277,10 @@
 			</File>
 			<File
 				RelativePath="..\resources\SDL_ttf.dll"
+				>
+			</File>
+			<File
+				RelativePath="..\resources\sdlgfx.dll"
 				>
 			</File>
 			<File

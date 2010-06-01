@@ -1,7 +1,8 @@
-#include "kdtree.h"
-#include "Avatar.h"
-#include "Server.h"
-#include "myutils.h"
+#include "../headers/myutils.h"
+
+#include "../headers/KDTree.h"
+#include "../headers/Avatar.h"
+#include "../headers/Server.h"
 
 
 SDL_Surface* KDTree::screen = NULL;
@@ -228,15 +229,15 @@ void KDTree::drawTree() {
     schild->drawTree();
     bchild->drawTree();
   }
-  else{
+  else {
 		Uint32 color = colorTable(node_id);
     color = color ? color : 0xFFFFFF;
     color &= 0xFFFFFF88;
-    boxColor(screen, xmin, ymin, xmax, ymax, color);    
+    //boxColor(screen, xmin, ymin, xmax, ymax, color);    
     string power = longToString(server->getServerPower());
     string load = longToString(getWeight());
-    stringColor(screen, xmin, ymin, power.c_str(), 0x000000FF);
-    stringColor(screen, xmin, ymin+10, load.c_str(), 0x000000FF);
+    //stringColor(screen, xmin, ymin, power.c_str(), 0x000000FF);
+    //stringColor(screen, xmin, ymin+10, load.c_str(), 0x000000FF);
 	}
 }
 
