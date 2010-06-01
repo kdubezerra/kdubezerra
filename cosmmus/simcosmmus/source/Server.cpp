@@ -2,6 +2,7 @@
 #include "../headers/Region.h"
 #include "../headers/Cell.h"
 #include "../headers/KDTree.h"
+#include "../headers/Simulation.h"
 
 //===========================================static members
 
@@ -27,7 +28,7 @@ Server::~Server() {
   if (it != serverList.end())
     serverList.erase(it);
 }    
-    
+
 //============================================other methods
 
 int Server::assignRegion(Region* r) {
@@ -54,7 +55,6 @@ void Server::releaseAllRegions() {
 Region* Server::getRegion() {
   return managedRegion;
 }
-*/
 
 void Server::setNode(KDTree *_node) {
   treeNode = _node;
@@ -109,11 +109,18 @@ double Server::getPowerFraction() {
 }
 
 long Server::getWeight() {
-  if (this->getRegion()) {
-    return this->getRegion()->getRegionWeight();
+  if (Simulation::getSpacePartMethod() == KDTREE) {
+    if (this->treeNode)
+      return this->treeNode->getWeight();
+    else
+      return 0;
   }
-  else {
-    return 0;
+
+  else if (Simulation::getSpacePartMethod() == CELLS) {
+    if (this->getRegion())
+      return this->getRegion()->getRegionWeight();
+    else
+      return 0;
   }
 }
 
@@ -122,7 +129,13 @@ double Server::getUsage() {
 }
 
 double Server::getUsageDeviation() {
-  double global_usage = double(Cell::getWorldWeight()) / (double)Server::getMultiserverPower();
+  double global_usage;
+  if (Simulation::getSpacePartMethod() == KDTREE) {
+    global_usage = (double)(KDTree::getRoot()->getWeight()) / (double)Server::getMultiserverPower();
+  }
+  else if (Simulation::getSpacePartMethod() == CELLS) {
+    global_usage = (double)(Cell::getWorldWeight()) / (double)Server::getMultiserverPower();
+  }
   double sum_of_square_diffs = 0.0f;
   for (list<Server*>::iterator it = serverList.begin() ; it != serverList.end() ; it++) {
     sum_of_square_diffs += pow((*it)->getUsage() - global_usage, 2);
@@ -131,11 +144,24 @@ double Server::getUsageDeviation() {
   return sqrt(mean_sqr_diff);
 }
 
+void Server::clearOverhead() {
+  for (list<Server*>::iterator it = serverList.begin() ; it != serverList.end() ; it++) {
+    (*it)->overHead = 0;
+  }
+}
+
 long Server::getOverhead() {
-  if (this->getRegion()) {
-    return this->getRegion()->getNeighborsOverhead();
+  if (Simulation::getSpacePartMethod() == KDTREE) {
+    return overHead;
   }
-  else {
-    return 0;
+  else if (Simulation::getSpacePartMethod() == CELLS) {
+    if (this->getRegion())
+      return this->getRegion()->getNeighborsOverhead();
+    else
+      return 0;
   }
+}
+
+void Server::incOverhead(long value) {
+  overHead += value;
 }

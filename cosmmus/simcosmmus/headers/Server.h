@@ -49,7 +49,7 @@ class Server {
 
   protected:
 
-///    Region* managedRegion;
+    Region* managedRegion;
     KDTree* treeNode;
     long serverPower;
     int serverId;
