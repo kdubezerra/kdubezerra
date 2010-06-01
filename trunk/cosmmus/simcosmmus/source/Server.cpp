@@ -1,20 +1,28 @@
 #include "../headers/Server.h"
 #include "../headers/Region.h"
 #include "../headers/Cell.h"
+#include "../headers/KDTree.h"
 
 //===========================================static members
 
 long Server::multiServerPower = 0;
 list<Server*> Server::serverList;
+map<int, Server*> Server::serversMap;
+int Server::lastId = 0;;
 
 //================================cons/des-truction methods
 
 Server::Server(long power) : managedRegion(NULL), serverPower(power) {  
+  serverId = lastId++;
+  serversMap[serverId] = this;
   serverList.push_back(this);
+  treeNode = NULL;
+  overHead = 0;
 }
 
 Server::~Server() {
   list<Server*>::iterator it;
+  serversMap.erase(serverId);
   for (it = serverList.begin() ; it != serverList.end() && *it != this ; it++);
   if (it != serverList.end())
     serverList.erase(it);
@@ -45,6 +53,19 @@ void Server::releaseAllRegions() {
 
 Region* Server::getRegion() {
   return managedRegion;
+}
+*/
+
+void Server::setNode(KDTree *_node) {
+  treeNode = _node;
+}
+
+KDTree* Server::getNode() {
+  return treeNode;
+}
+
+Server* Server::getServerById(int _id) {
+  return serversMap[_id];
 }
 
 void Server::setServerPower(long pow) {

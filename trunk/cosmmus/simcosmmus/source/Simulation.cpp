@@ -1,8 +1,8 @@
 #include "../headers/Simulation.h"
 
-SpacePartMethod Simulation::setSpacePartMethod = CELLS;
+SpacePartMethod Simulation::usedPartMethod = CELLS;
 
-bool Simulation::getSpacePartMethod() {
+SpacePartMethod Simulation::getSpacePartMethod() {
 	return usedPartMethod;
 }
 
