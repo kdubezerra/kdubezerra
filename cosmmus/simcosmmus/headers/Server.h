@@ -10,6 +10,8 @@
 
 using namespace std;
 
+class KDTree;
+
 class Region;
 
 class Server {
@@ -23,7 +25,10 @@ class Server {
     void releaseRegion();
     static void releaseAllRegions();
     Region* getRegion();
+    void setNode(KDTree* _node);
+    KDTree* getNode();
 
+    static Server* getServerById(int _id);
     void setServerPower(long pow);
     long getServerPower();
     static long getMultiserverPower();
@@ -37,13 +42,21 @@ class Server {
     long getWeight();
     double getUsage();
     static double getUsageDeviation();
+    
+    static void clearOverhead();
     long getOverhead();
+    void incOverhead(long value);
 
   protected:
 
-    Region* managedRegion;
+///    Region* managedRegion;
+    KDTree* treeNode;
     long serverPower;
+    int serverId;
+    long overHead;
+    static int lastId;
     static long multiServerPower;
     static list<Server*> serverList;
+    static map<int, Server*> serversMap;
     
 };

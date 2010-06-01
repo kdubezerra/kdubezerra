@@ -8,5 +8,5 @@ class Simulation {
 		static SpacePartMethod getSpacePartMethod();
 
 	protected :
-		static usedPartMethod;
+		static SpacePartMethod usedPartMethod;
 };
