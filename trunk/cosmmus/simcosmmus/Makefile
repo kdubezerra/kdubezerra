@@ -1,5 +1,5 @@
 ggp:
-	g++ myutils.cpp Avatar.cpp Cell.cpp Region.cpp Server.cpp ggp.cpp -lSDL -lSDL_ttf -o ggp -g
+	g++ source/myutils.cpp source/Avatar.cpp source/Cell.cpp source/Region.cpp source/Server.cpp source/simcosmmus.cpp -lSDL -lSDL_ttf -o simcosmmus -g
 
 clean:
-	rm ggp && clear && echo "Clear"
+	rm simcosmmus && clear && echo "Clear"
