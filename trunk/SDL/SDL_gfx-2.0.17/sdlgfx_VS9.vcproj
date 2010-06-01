@@ -186,23 +186,23 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath=".\SDL_framerate.cpp"
+				RelativePath=".\src\SDL_framerate.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_gfxBlitFunc.cpp"
+				RelativePath=".\src\SDL_gfxBlitFunc.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_gfxPrimitives.cpp"
+				RelativePath=".\src\SDL_gfxPrimitives.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_imageFilter.cpp"
+				RelativePath=".\src\SDL_imageFilter.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_rotozoom.cpp"
+				RelativePath=".\src\SDL_rotozoom.cpp"
 				>
 			</File>
 		</Filter>
@@ -211,27 +211,27 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\SDL_framerate.h"
+				RelativePath=".\include\SDL_framerate.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_gfxBlitFunc.h"
+				RelativePath=".\include\SDL_gfxBlitFunc.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_gfxPrimitives.h"
+				RelativePath=".\include\SDL_gfxPrimitives.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_gfxPrimitives_font.h"
+				RelativePath=".\include\SDL_gfxPrimitives_font.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_imageFilter.h"
+				RelativePath=".\include\SDL_imageFilter.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SDL_rotozoom.h"
+				RelativePath=".\include\SDL_rotozoom.h"
 				>
 			</File>
 		</Filter>
