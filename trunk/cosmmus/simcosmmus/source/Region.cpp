@@ -12,7 +12,7 @@ bool Region::showw = false;
 bool Region::showe = false;
 bool Region::showr = false;
 int Region::numRegions;
-short Region::rebalMethod = PROGREGA;
+short Region::rebalMethod;
 long worldCapacity = 0;
 
 //================================cons/des-truction methods
