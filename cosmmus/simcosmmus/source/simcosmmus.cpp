@@ -21,6 +21,7 @@
 #include "../headers/Cell.h"
 #include "../headers/Region.h"
 #include "../headers/Server.h"
+#include "../headers/Simulation.h"
 
 
 bool showing_help = false;
@@ -64,19 +65,27 @@ int main (int argc, char* argv[]) {
 
 	if (!strcmp(rebal_method,"PROGREGA")) {
 		cout << "PROGREGA" << endl;
+		Simulation::setSpacePartMethod(CELLS);
 		Region::setMethod(PROGREGA);
 	} else if (!strcmp(rebal_method,"PROGREGA_KH")) {
 		cout << "PROGREGA_KH" << endl;
+		Simulation::setSpacePartMethod(CELLS);
 		Region::setMethod(PROGREGA_KH);
 	} else if (!strcmp(rebal_method,"PROGREGA_KF")) {
 		cout << "PROGREGA_KF" << endl;
+		Simulation::setSpacePartMethod(CELLS);
 		Region::setMethod(PROGREGA_KF);
 	} else if (!strcmp(rebal_method,"BFBCT")) {
 		cout << "BFBCT" << endl;
+		Simulation::setSpacePartMethod(CELLS);
 		Region::setMethod(BFBCT);
 	} else if (!strcmp(rebal_method,"AHMED")) {
 		cout << "AHMED" << endl;
+		Simulation::setSpacePartMethod(CELLS);
 		Region::setMethod(AHMED);
+	} else if (!strcmp(rebal_method,"KDTREE")) {
+		cout << "KDTREE" << endl;
+		Simulation::setSpacePartMethod(KDTREE);
 	}
 
 	setSdl(&screen);
