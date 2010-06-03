@@ -55,6 +55,28 @@ void plotAllAvatars(string filename);
 int main (int argc, char* argv[]) {
 	///srand(time(NULL));
 
+	setSdl(&screen);
+	SDL_EnableKeyRepeat(400, 10);
+
+	SDL_Surface* bg = NULL;
+	bg = load_image (BG_IMAGE);
+	if (!bg) cerr << "\nErro setando a imagem de plano de fundo: " << BG_IMAGE << endl;
+	tsem = SDL_CreateSemaphore(0);
+	msem = SDL_CreateSemaphore(0);
+	font = TTF_OpenFont( "FreeSansBold.ttf", 10 );
+	if (!font)
+		cerr << "Erro carregando a fonte" << endl;
+
+	//Uint32 time = SDL_GetTicks();
+	Uint32 time = 0;
+	Uint32 step_delay = 250;
+	Uint32 dtime = time;
+	long unsigned count = 0;
+	Color bli;
+	bli.R = 255;
+	bli.G = 155;
+	bli.B = 100;
+
 	nplayers = atoi(argv[1]);
 	player = new Avatar*[nplayers];
 	int probtohotspot = atoi(argv[2]);
@@ -88,31 +110,22 @@ int main (int argc, char* argv[]) {
 		Simulation::setSpacePartMethod(KDTREE);
 	}
 
-	setSdl(&screen);
-	SDL_EnableKeyRepeat(400, 10);
-
-	Server::releaseAllRegions();
-	Region::initRegions(NUM_SERVERS);
-	list<Region*>::iterator it = Region::getRegionList().begin();
-	for (int i = 0 ; i < NUM_SERVERS ; i++) {
-		server[i] = new Server ((i+1)*20000);
-		server[i]->assignRegion(*(it++));
-		//cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
+	if (Simulation::getSpacePartMethod() == CELLS) {
+		Server::releaseAllRegions();
+		Region::initRegions(NUM_SERVERS);
+		list<Region*>::iterator it = Region::getRegionList().begin();
+		for (int i = 0 ; i < NUM_SERVERS ; i++) {
+			server[i] = new Server ((i+1)*20000);
+			server[i]->assignRegion(*(it++));
+			//cout << "Server " << i << " has power of " << server[i]->getServerPower() << endl;
+		}
+		//TODO instanciar as células
+		Cell::allocCellMatrix(15);
+		Cell::setCellSurfaces(VERTEX_IMAGE, EDGE_IMAGE);
+		Cell::updateAllEdgesAndVertexWeights();
+		Region::partitionWorld();
+		Region::checkAllRegionsNeighbors();
 	}
-
-
-	SDL_Surface* bg = NULL;
-	bg = load_image (BG_IMAGE);
-	if (!bg) cerr << "\nErro setando a imagem de plano de fundo: " << BG_IMAGE << endl;
-	tsem = SDL_CreateSemaphore(0);
-	msem = SDL_CreateSemaphore(0);
-	font = TTF_OpenFont( "FreeSansBold.ttf", 10 );
-	if (!font)
-		cerr << "Erro carregando a fonte" << endl;
-
-	//TODO instanciar as células
-	Cell::allocCellMatrix(15);
-	Cell::setCellSurfaces(VERTEX_IMAGE, EDGE_IMAGE);
 
 	for (int i = 0 ; i < nplayers ; i++) {
 		player[i] = new Avatar();
@@ -121,21 +134,7 @@ int main (int argc, char* argv[]) {
 
 	if (!player[0]->setImage(PLAYER_ZERO_IMAGE)) cerr << "\nErro setando a imagem do player 0: " << PLAYER_ZERO_IMAGE << endl;
 
-	//Uint32 time = SDL_GetTicks();
-	Uint32 time = 0;
-	Uint32 step_delay = 250;
-	Uint32 dtime = time;
-	long unsigned count = 0;
-	Color bli;
-	bli.R = 255;
-	bli.G = 155;
-	bli.B = 100;
-
-	Cell::updateAllEdgesAndVertexWeights();
-	Region::partitionWorld();
-	Region::checkAllRegionsNeighbors();
-
-	//Avatar::toggleMobility();
+	//Avatar::toggleMobility(); ///:TODO: fazer com que a simulação realmente PARE quando chamar essa função
 
 	while (time < EXECUTION_TIME) { // CICLO PRINCIPAL
 		//apply_surface(0,0,bg,screen);///*** COMENTE PARA NÃO RENDERIZAR
@@ -145,15 +144,17 @@ int main (int argc, char* argv[]) {
 		step_delay = step_delay > 40 ? 40 : step_delay;
 		for (int i = 0 ; i < nplayers ; i ++) player[i]->step(100/* * step_delay*/);
 		//time = SDL_GetTicks();
-		time += 100;
+		time += 100;///:TODO:fazer com que a simulação inteira PARE mesmo
 
-		//    if (/*SDL_GetTicks()*/ time - dtime >= 25) {
-		Cell::updateAllEdgesAndVertexWeights();
-		//      dtime = time;
-		//    }    
-		Cell::drawCells(screen);///*** COMENTE PARA NÃO RENDERIZAR
-		Region::drawAllRegions(screen);///*** COMENTE PARA NÃO RENDERIZAR
-		Region::drawAllRegionsWeights(screen, font);///*** COMENTE PARA NÃO RENDERIZAR
+		if (Simulation::getSpacePartMethod() == CELLS) {
+			//    if (/*SDL_GetTicks()*/ time - dtime >= 25) {
+			Cell::updateAllEdgesAndVertexWeights();
+			//      dtime = time;
+			//    }    
+			Cell::drawCells(screen);///*** COMENTE PARA NÃO RENDERIZAR
+			Region::drawAllRegions(screen);///*** COMENTE PARA NÃO RENDERIZAR
+			Region::drawAllRegionsWeights(screen, font);///*** COMENTE PARA NÃO RENDERIZAR
+		}
 
 		for (int i = 0 ; i < nplayers ; i ++) player[i]->draw();///*** COMENTE PARA NÃO RENDERIZAR
 
@@ -164,8 +165,10 @@ int main (int argc, char* argv[]) {
 		checkInput();
 
 		if (time > lastbal + REBAL_INTERVAL) {
-			Region::checkAllRegionsNeighbors();
-			Region::updateAllEdgesAllRegions();
+			if (Simulation::getSpacePartMethod() == CELLS) {
+				Region::checkAllRegionsNeighbors();
+				Region::updateAllEdgesAllRegions();
+			}
 
 			cout << time << " " << Avatar::getMigrationWalk(false) << " " << Avatar::getMigrationStill(false) << " " << Server::getUsageDeviation() << " " << NUM_SERVERS << " ";
 			total_mig_walk += Avatar::getMigrationWalk();
@@ -179,17 +182,11 @@ int main (int argc, char* argv[]) {
 				sum_oh[i].add(server[i]->getOverhead());
 			}
 			cout << endl;
-			for (int i = 0 ; i < NUM_SERVERS && server[i]->getRegion() ; i++){
-				//        cout << "Server " << i << " :: LOAD = " << server[i]->getRegion()->getAbsoluteLoad() << " (W = " << server[i]->getRegion()->getRegionWeight()
-				//        << ", OH = " << server[i]->getRegion()->getNeighborsOverhead() << ")" << endl;
-			}
-			//      cout << "Still migrations = " << Avatar::getMigrationStill() << endl;
-			//      cout << "Walk migrations = " << Avatar::getMigrationWalk() << endl;
 
-
-			for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {
-				(*it)->checkBalancing();
-				//         cout << "Checkin Rebalance" << endl;
+			if (Simulation::getSpacePartMethod() == CELLS) {
+				for (list<Region*>::iterator it = Region::getRegionList().begin() ; it != Region::getRegionList().end() ; it++) {
+					(*it)->checkBalancing();
+				}
 			}
 			lastbal = time;//SDL_GetTicks();
 		}
@@ -314,15 +311,20 @@ void toggleShowHelp() {
 void showHelp() {
 	if (!showing_help) return;
 
-	static SDL_Surface* helpSurf[] = {NULL,NULL,NULL,NULL,NULL,NULL};
+	static SDL_Surface* helpSurf[] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 	SDL_Color txtColor;
 	static coord helpPos;
 	helpPos.X = helpPos.Y = 10;
 	//string helpTxt = "p : pausa\nv : mostrar pesos das células\ne : mostrar peso das arestas\nd : fazer todo particionamento do 0\nr : mostrar regiões\nw : mostrar pesos das regiões\n";
-	static string helpTxt[] = {"d : particionamento global, do zero","y : particionamento local, do zero",
+	static string helpTxt[] = {
+		"d : particionamento global, do zero",
+		"y : particionamento local, do zero",
 		"u : distribuir celulas mais leves a regioes que se aproximem da carga ideal",
-		"t : v2 (NAO!), getCellWithWeightLowerThanButClosestTo","o : v3 (parece funcionar, mas *NAO* da forma ideal), mantem a celula mais pesada",
-		"i : v4 (NAO! bagunca muito as regioes), libera as celulas mais leves e algum outro server pega","PROPOSTA: P-Y-L! melhor ate entao. (P-I-L tambem eh bom)"};
+		"t : v2 (NAO!), getCellWithWeightLowerThanButClosestTo",
+		"o : v3 (parece funcionar, mas *NAO* da forma ideal), mantem a celula mais pesada",
+		"i : v4 (NAO! bagunca muito as regioes), libera as celulas mais leves e algum outro server pega",
+		"PROPOSTA: P-Y-L! melhor ate entao. (P-I-L tambem eh bom)"
+	};
 	for (int i = 0 ; i < 7 ; i++) {
 		if (helpSurf[i]) SDL_FreeSurface(helpSurf[i]);
 	}
