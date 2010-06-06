@@ -1,12 +1,11 @@
-SRCDIR =./source
+SRCDIR =../source
 CC=g++
 RELEASEFLAGS=-O3
 DEBUGFLAGS=-g
-ODIR=./linux-build/obj
 
-RELEASEDIR=./linux-build/release
-DEBUGDIR=./linux-build/debug
-
+RELEASEDIR=./release
+DEBUGDIR=./debug
+RESOURCESDIR=../resources
 
 LIBS=-lSDL -lSDL_ttf -lSDL_gfx
 
@@ -16,11 +15,15 @@ DEBUGOBJ = $(patsubst %,$(DEBUGDIR)/%,$(_OBJ))
 
 all: $(RELEASEDIR)/simcosmmus $(DEBUGDIR)/simcosmmus
 
+release: $(RELEASEDIR)/simcosmmus
+
+debug: $(DEBUGDIR)/simcosmmus
+
 $(RELEASEDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) -c -o $@ $< $(RELEASEFLAGS)
 
 $(RELEASEDIR)/simcosmmus: $(RELEASEOBJ)
-	g++ -o $@ $^ $(RELEASEFLAGS) $(LIBS) && cp resources/*.bmp $(RELEASEDIR)/ && cp resources/*.ttf $(RELEASEDIR)/
+	g++ -o $@ $^ $(RELEASEFLAGS) $(LIBS) && cp $(RESOURCESDIR)/*.bmp $(RELEASEDIR)/ && cp $(RESOURCESDIR)/*.ttf $(RELEASEDIR)/
 
 
 
@@ -28,7 +31,7 @@ $(DEBUGDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) -c -o $@ $< $(DEBUGFLAGS)
 
 $(DEBUGDIR)/simcosmmus: $(DEBUGOBJ)
-	g++ -o $@ $^ $(DEBUGFLAGS) $(LIBS) && cp resources/*.bmp $(DEBUGDIR)/ && cp resources/*.ttf $(DEBUGDIR)/
+	g++ -o $@ $^ $(DEBUGFLAGS) $(LIBS) && cp $(RESOURCESDIR)/*.bmp $(DEBUGDIR)/ && cp $(RESOURCESDIR)/*.ttf $(DEBUGDIR)/
 
 .PHONY: clean
 
