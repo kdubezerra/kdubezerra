@@ -36,4 +36,4 @@ $(DEBUGDIR)/simcosmmus: $(DEBUGOBJ)
 .PHONY: clean
 
 clean:
-	rm -f $(RELEASEDIR)/*.* $(DEBUGDIR)/*.* *~
+	rm -f $(RELEASEDIR)/* $(DEBUGDIR)/* *~
