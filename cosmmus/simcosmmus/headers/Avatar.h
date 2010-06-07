@@ -74,6 +74,8 @@ public:
 	static bool compareY(Avatar* a, Avatar* b);
 	static void setHotspotsProbability(int prob);
 
+  static list<Avatar*> getAvatarList();
+
 protected:
 
 	SDL_Surface* my_surface;

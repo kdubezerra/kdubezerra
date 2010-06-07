@@ -86,6 +86,11 @@ long Server::getMultiserverPower() {
   return totalPow;
 }
 
+list<Server*> Server::getServerList() {
+  list<Server*> returned_list = serverList;
+  return returned_list;
+}
+
 bool Server::comparePower(Server* sA, Server* sB) {
   return (sA->getServerPower() > sB->getServerPower());
 }
