@@ -162,13 +162,8 @@ void Avatar::checkMigration() {
 		}
 	}
 
-	else if (Simulation::getSpacePartMethod() == CELLS) {
+  else if (Simulation::getSpacePartMethod() == CELLS) {
 		coord cell_coord = getCell();
-
-
-
-
-
 		Cell* new_cell = Cell::getCell(cell_coord.X, cell_coord.Y);  
 		Region* new_region = new_cell->getParentRegion();
 		if (new_region != old_region) {
@@ -384,4 +379,9 @@ bool Avatar::compareY(Avatar* a, Avatar* b) {
 
 void Avatar::setHotspotsProbability(int prob) {
 	tendencyToHotspots = prob;
+}
+
+list<Avatar*> Avatar::getAvatarList() {
+  list<Avatar*> returned_list = avList;
+  return returned_list;
 }

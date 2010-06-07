@@ -32,6 +32,7 @@ class Server {
     void setServerPower(long pow);
     long getServerPower();
     static long getMultiserverPower();
+    static list<Server*> getServerList();
     
     static bool comparePower(Server* sA, Server* sB);
     static void sortServersByPower();
