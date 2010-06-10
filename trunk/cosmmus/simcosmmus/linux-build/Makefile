@@ -13,7 +13,7 @@ _OBJ = myutils.o Avatar.o Cell.o Region.o KDTree.o Server.o Simulation.o simcosm
 RELEASEOBJ = $(patsubst %,$(RELEASEDIR)/%,$(_OBJ))
 DEBUGOBJ = $(patsubst %,$(DEBUGDIR)/%,$(_OBJ))
 
-all: $(RELEASEDIR)/simcosmmus $(DEBUGDIR)/simcosmmus
+all: release debug
 
 release: $(RELEASEDIR)/simcosmmus
 
