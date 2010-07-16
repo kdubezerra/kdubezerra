@@ -1,0 +1,151 @@
+\chapter{Balanceamento de carga otimista em um ambiente virtual distribuído}
+
+Neste trabalho, \cite{chertov:olb} investigam a arquitetura de um ambiente unificado onde o mundo virtual online não é particionado com fronteiras rígidas, mas de acordo com um paradigma adaptativo. Como é difícil desenvolver um algoritmo de balanceamento de carga ótimo para um ambiente unificado, propõe-se um esquema otimista que converge rapidamente. O custo de migrações frequentes é reduzido seguindo um modelo de troca de dados push/push. Analisa-se também o custo de tempo computacional de tal sistema.
+
+A grande questão deste trabalho é que o ambiente virtual é unificado, e não desconectado. Seria trivial criar um ambiente onde as regiões não tivessem nenhuma relação umas com as outras, e, ao invés de ter um grande ambiente com um grande suporte de rede, ter-se-ia vários pequenos ambientes, com soluções triviais para seu funcionamento.
+
+Uma questão crucial a ser resolvida ao se criar um esquema para esse tipo de ambiente é o atraso da rede. Se houver um atraso na comunicação entre os jogadores, ou entre o servidor e o jogador, maior que o máximo tolerável, estes jogadores irão perceber movimentações inusitadas e não naturais de si mesmos e de seus parceiros de jogo. É necessário, pois, manter uma qualidade de serviço mínima para a simulação do ambiente virtual distribuído.  Como serviços integrados e diferenciados não estão amplamente implementados no suporte atual da Internet, os autores empregam roteamento e políticas para manutenção de qualidade de serviço no nível da aplicação. Cada provedor de serviço de Internet pode prover um ou mais nodos gateway para os quais seus clientes conectar-se-iam para participar do ambiente virtual distribuído. Figura \ref{fig:fahmy1} ilustra dois gateways em dois provedores diferentes, que conectam-se ao mesmo núcleo servidor (ou cluster de servidores). Os gateways podem atuar como pontos de agregação de dados de usuários. Além de prover acesso rápido ao servidor, os gateways podem ser pontos de filtragem. Por fim, os gateways podem atuar como sincronizadores para garantir que todos os clientes receberão atualizações aproximadamente ao mesmo tempo, de forma a garantir a fairness.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{imagens/FAHMY_gateways.jpg}
+ \caption{Arquitetura do sistema}
+ \label{fig:fahmy1}
+\end{figure}
+
+Criar e gerenciar tais gateways é vantajoso apenas se o núcleo servidor puder suportar um número extremamente grande de clientes. Clientes ficarão relutantes em pagar taxas de assinatura se o servidor permanecer maior parte do tempo muito ocupado e ele não puder participar. Além disso, o núcleo servidor deve ser um cluster de máquinas que executam balanceamento inteligente de carga para compartilhar a carga do cliente de uma maneira escalável. É empregado um modelo de troca de dados push/push para reduzir os custos de migração de clientes entre os servidores.
+
+Este paper fornece uma arquitetura e algoritmos para um ambiente virtual distribuído similar ao sistema ilustrado na Figura \ref{fig:fahmy1}. O sistema permite que os clientes se movam com direções e velocidades selecionadas, assumindo-se que o percurso no eixo vertical não é relevante, significando que o ambiente pode ser decomposto em um mapa de apenas duas dimensões. Isto é adequado para a maior parte dos sistemas interativos no mercado atualmente. É projetada e avaliada a performance de um novo esquema adaptativo de balanceamento de carga para o núcleo servidor que explora o fato de que os clientes tendem a se aglomerar ao redor de pontos de interesse.
+
+%1
+\section{Visão geral do sistema}
+
+Clientes de ambientes virtuais distribuídos  não se movem tipicamente de acordo com um caminhar aleatório: sempre há alguma estrutura para a posição geral dos clientes. Neste trabalho, \cite{chertov:olb} exploram o fato de que os clientes tendem a se aglomerar ao redor de pontos de interesse, que variam de um ambiente virtual para o outro. Os pontos de interesse podem ser dinâmicos e desconhecidos com antecedência, tornando difícil, senão impossível, particionar o espaço de jogo com antecedência. Assim sendo, um balanceador de carga altamente dinâmico é necessário. Um bom balanceador de carga deve satisfazer as seguintes propriedades:
+
+\begin{enumerate}
+
+	\item Alcançar distribuição de carga uniforme;
+	
+	\item Lidar de maneira eficiente com ambientes esparsos e
+	
+	\item Permitir pontos de interesse dinâmicos.
+	
+\end{enumerate}
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{imagens/FAHMY_2.jpg}
+ \caption{Particionamento ideal dos clientes}
+ \label{fig:fahmy2}
+\end{figure}
+
+Figura \ref{fig:fahmy2} ilustra um ambiente distribuído virtual com oito clientes. Os círculos pontilhados ao redor dos clientes representam o alcance de seu campo de visão. As setas representam os vetores diretores do cliente. Dados três servidores, é impossível construir regiões retangulares que dividam o processamento dos clientes igualmente entre os servidores. Foram escolhidos retângulos porque é rápido executar operaçãoes geométricas sobre eles, se comparados com outros polígonos. As regiões de cobertura dos retângulos podem mudar de tamanho com a movimentação dos clientes, mas enquanto os clientes permanecerem nas proximidades do ponto de interesse, não há necessidade de mudar as associações de cliente e servidor. Até que as coberturas dos servidores se interceptarem ou estiverem num campo de visão de um cliente, os servidores não precisam interagir de maneira extensiva para determinar se os clientes no seu domínio podem ver outros clientes.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{imagens/FAHMY_3.jpg}
+ \caption{Sobreposição de cobertura devido ao uso de retângulos como fronteira}
+ \label{fig:fahmy3}
+\end{figure}
+
+Claramente, particionamento perfeito nem sempre pode ser mantido. Clientes tipicamente permanecem próximos a um ponto de interesse por algum tempo, mas então decidem mover-se para outro ponto, causando sobreposição. A Figura \ref{fig:fahmy3} ilustra um cenário em que um cliente no Server2 pode ver um cliente no Server3 e vice-versa. Isto pode ser facilmente checado observando quais campos de visão saem da área de cobertura. O caso em que o Server1 e Server3 se sobrepõem é mais problemático. Buscas devem ser conduzidas dentro das áreas de cobertura, e isto pode se tornar caro se o número de clientes é grande ou se sobreposições são frequentes. Este problema é melhor discutido mais adiante.
+
+A seguir, será descrita por completo a arquitetura do algoritmo de balanceamento de carga, núcleo servidor e gateways.
+
+%1.1
+\subsection{Balanceador de carga}
+
+Indivualmente, os servidores no núcleo servidor executam ações locais gulosas para resolver problemas de sobreposição como os da Figura \ref{fig:fahmy3}. O otimismo no sistema deriva do fato de que podemos rapidamente alcançar um bom estado global que nós prevemos ficará estável por vários ciclos. O balanceador de carga tem dois modos de operação. No primeiro modo, o balanceador tenta balancear a carga. O segundo modo é necessário para resolver qualquer questão de sobreposição.
+
+Cada servidor usa um client\_threshold para determinar o número de clientes que ele pretende servir. Se client\_threshold é superado, o servidor tenta migrar parte de sua carga para um servidor próximo. Em certas situações, o servidor pode aceitar mais clientes que o especificado por client\_threshold, mas ele não irá aceitar mais nenhum quando max\_clients for atingido. Figura \ref{fig:fahmy4} demonstra a migração em ação. O número de clientes em Server2 excede o client\_threshold, que tem o valor de 3, e o Server2 inicia a migração. O servidor seleciona outro servidor, que esteja mais próximo e que não tenha alcançado ainda sua capacidade máxima. Então, o cliente que estiver mais próximo da área gerenciada por aquele servidor será transferido. Colocou-se uma condição na transferência, para evitar sobreposição excessiva: a transferência não irá ocorrer se a nova área do servidor exceder max\_area, que é configurável. Isto mantém o sistema verificado, de forma que um servidor não pode começar uma expansão rapida e maciçamente sobrepositora.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{imagens/FAHMY_4.jpg}
+ \caption{Migração de um cliente quando o número de clientes de um servidor excede o client\_threshold de 3}
+ \label{fig:fahmy4}
+\end{figure}
+
+Migrações e movimentações de clientes vão, inevitavelmente, produzir casos onde as áreas de cobertura se sobrepõem. A Figura \ref{fig:fahmy5} ilustra um cenário onde um cliente do Server1 se move até a área de cobertura do Server2. Para resolver esta situação, cada servidor examina os outros servidores, que se sobrepõem com ele e tenta transferir todos os seus próprios clientes que estão na área sobreposta para o outro servidor, contanto que a capacidade máxima destes não tenha sido alcançada. Uma heurística que se aplicou neste caso é uma busca aleatória dos servidores que se intersectam. Isto é importante em situações onde a mesma região está na área de cobertura de mais que dois servidores. Busca aleatória garante que várias combinações de soluções para intersecção são levadas em conta até que uma boa solução seja encontrada.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=0.8\textwidth]{imagens/FAHMY_5.jpg}
+ \caption{Resolução do problema de interseção de áreas de cobertura}
+ \label{fig:fahmy5}
+\end{figure}
+
+Para reduzir ainda mais a sobreposição de cobertura, introduz-se uma regra adicional. Se a área de cobertura de um servidor excede max\_area, então o client\_threshold é setado a 0, de forma que migrações irão ocorrer. Isto é necessário para evitar casos em que a área de cobertura do servidor X começa a crescer, causando uma crescente sobreposição, e os servidores que não eram vizinhos de X anteriormente passam a fazer transferências para ele, piorando ainda mais o problema.
+
+Os parâmetros do algoritmo então permitem um tradeoff entre redução na variação de carga e sobreposições. Se o valor de max\_clients estiver próximo de client\_threshold, a variação da carga entre os servidores será pequena; no entanto, isto irá deixar pouco espaço para resolução do problema da sobreposição de áreas de cobertura, resultando em um maior número de sobreposições.
+
+%1.2
+\subsection{Núcleo servidor}
+
+O núcleo servidor serve como um ponto de agregação de todos os dados dos clientes, e emprega o algoritmo de balanceamento de carga descrito acima. Além disso, o núcleo servidor pode processar dados dos clientes, rodando uma versão limitada do motor do ambiente virtual distribuído com todas as rotinas gráficas desabilitadas. Executando este motor no núcleo servidor, trapaceadores podem ser detectados, pois os cálculos do cliente e do servidor irião apresentar discrepâncias. Em uma abordagem alternativa, o núcleo servidor pode executar o ambiente virtual distribuído e os clientes apenas processarem entrada e funções de exibição gráfica. Isto é útil em situações onde os clientes t~em capacidade limitada de CPU, como clientes em dispositivos portáteis.
+
+Para reduzir o custo da migração de clientes dentro do núcleo servidor, emprega-se um  modo stateless, significando que servidores individuais não guardam informações dos clientes localmente. Isto elimina a necessidade de migração de complexas estruturas de dados dos clientes. Isso também elimina atraso na migração. A abordagem stateless proposta é adequada para casos em que uma porção significativa do estado do cliente irá mudar a cada atualização, e o estado pode ser comptactadamente representado (desde que os tipos e regras do ambiente virtual distribuído são conhecidas). O servidor mantém um pool de vagas de cliente para preencher com informação, à medida em que ocorrem atualizações e inserções de novos clientes. A vaga no pool elimina problemas de fragmentação de memória. É importante observar, no entanto, que se a taxa de atualização de estado for baixa, o modo stateless pode ser indesejável, já que o volume de tráfego será muito alto. Isto pode ser mitigado utilizando diferentes níveis de detalhe, de tal forma que o estado completo, até quando possível, não seja necessário.
+
+O núcleo servidor comunica-se com gateways que executam roteamento no nível da aplicação. Conexões com estado são evitadas: pacotes UDP são roteados simplesmente com base no identificador único do servidor (ID). Roteamento eficiente no nível da aplicação pode ser conseguido por um software roteador modular ou um processador de rede. Há relatos de que aumentar o número de micro-motores nos processadores de rede irá permitir lidar com classificação específica da aplicação e roteamento na velocidade da linha.
+
+Os gateways, primeiramente, fazem um push dos dados de atualização de estado dos usuários para os servidores. Cada cliente tem um ID de gateway e um ID de servidor associados a ele. Se uma migração de cliente ocorre, o núcleo servidor irá fazer um push dos novos dados em direção aos gateways refletindo a nova relação entre servidor e cliente. Isto forma a base dop modelo de troca de estados stateless push/push.
+
+%1.3
+\subsection{Gateways}
+
+Cada gateway atua como um ponto de conexão de alta velocidade ao núcleo servidor, a partir de um provedor de serviços de Internet em particular. Um gateway pode ser um servidor rápido ou uma coleção de processadores de rede que são otimizados para lidar especificamente com as questões do ambiente virtual distribuído. O gateway sincroniza-se com o núcleo servidor, garantindo que os clientes utilizam o mesmo tempo global. Isto é necessário para compesar os efeitos de atraso quando se utiliza vetores de predição e direção. O gateway pode também atrasar pacotes destinados a clientes para garantir que todos os clientes recebam os pacotes ao mesmo tempo. Isto previne casos em que alguns clientes podem ver eventos antes que outros clientes possam. Apesar de que os clientes podem aderir a ciclos iguais de tempo, o gateway não deve ser forçado a esperar que todos os dados dos clientes cheguem antes dele fazer o push para o núcleo servidor, de forma a evitar demoras devidas a clientes com performance pobre. Isto pode resultar em atualizações incompletas, mas enquanto os clientes não perderem seus tempos de envio agendados com muita frequencia, este problema não será perceptível.
+
+Cada gateway recebe dados do núcleo servidor apenas a respeito dos clientes que pertencem a ele e que eles podem ver. Isto filtra de forma significativa informação irrelevante, reduzindo custos de processamento e de largura de banda. O gateway deve também filtrar os dados que são relevantes a cada clientes, já que seria ineficiente encaminhar o conjunto inteiro de dados para todos os seus clientes. A filtragem pode ser executada com base no campo de visão do cliente. Se o cliente não tem como ver aquele objeto, então não há necessidade de encaminhar-lhe aquela informação.
+
+%2
+\section{Análise de tempo de computação}
+
+Primeiro, é considerado o caso de um único servidor, então uma abordagem simples é utilizada pra múltiplos servidores, e então é apresentada uma abordagem otimizada para o problema.
+
+%2.1
+\subsection{Servidor único}
+
+No caso de um único servidor que utiliza o modelo de gateway descrito anteriormente, o servidor deve computar a física do ambiente virtual distribuído para cada cliente, e então computador quais clientes podem se ver uns aos outros de forma que ele possa reduzir a informação que os gateways receberam. Seja N o número de clientes. Seja $P_i$ o tempo necessário para processar a física e a detecção de trapaça para o $Client_i$. Seja $C_{i,j}$ o tempo necessário para computar se o $Client_i$ e o $Client_j$ podem se ver e se eles colidiram. Em um sistema simples de um único servidor executado comparações de par em par, o tempo total, $T_s$, pode ser computador como $T_s = \sum_{i=0}^NP_i+\sum_{i=0}^N\sum_{j=0}^NC_{i,j}$. Se assumir-se que $Pi = P$ para todo i, já que cada operação $C_{i,j}$ tem tempo constante, obtém-se $T_s = NP + N^2$.
+
+%2.2
+\subsection{Múltiplos servidores}
+
+Considere-se um sistema com M servidores e N clientes. Assuma-se que $N_i$ é o número de clientes do $Server_i$, e (como acima) que P é o tempo requerido para processar a física e a detecção de trapaça para qualquer cliente. O custo das tarefas a serem executadas pelo servidor i, $T_i$, inclue:
+
+\begin{enumerate}
+
+	\item $N_iP$ para processar a física e a detecção de trapaça para seus próprios clientes.
+	
+	\item $N_i^2$ para buscar interações locais de clientes.
+	
+	\item $M - 1$ para determinar os K retângulos adjacentes e sobrepostos (dentro do campo de visão do cliente) que são gerenciados por outros servidores.
+	
+	\item $N_i\sum_{k=0}^KN_k$ para determinar os clientes que potencialmente podem interagir com seus clientes.
+	
+	\item $N_i + K$ para determinar o cliente que é o mais próximo do servidor mais próximo se migração for requerida.
+	
+	\item $KN_i$ para determinar quais clientes atuais estão dentro da área de cobertura de outros servidores de forma que eles possam ser transferidos para lá, levando em conta que a capacidade máxima daquele servidor não tenha sido alcançada.
+		
+\end{enumerate}	
+
+O tempo total do sistema é computador como $T_{total} = max(T_0, ..., T_M)$.
+
+%2.3
+\subsection{Custo otimizado}
+
+A análise simples acima mostra que se K é grande ou a distribuição de carga dos clientes ($N_i$ é grande para algum i) é não-uniforme, o sistema multi-servidor irá ter um desempenho pior do que um sistema de servidor único. K é altamente dependente do número de retângulos soprepostos, porque se não havia sobreposição e todos os servidores cobriam espaçoes disjuntos, haveria no máximo 8 retângulos vizinhos a checar. Assim sendo, K depende da distribuição dos clientes e da performance do balanceador de carga.
+
+O custo da busca de proximidade dos clientes pode ser reduzido para um pior caso de $O(N2N^{0.5})$ se uma quadtree for usado. Também leva $O(NlnN)$ para construir a árvore se inserção aproximadamente aleatória for assumida. Daí então, seria mais rápido construir uma árvore do zero e fazer buscas de proximadade do que fazer comparações de par em par. Modificando os passos na seção anterior, agora obtém-se a seguinte equação para o tempo de cada servidor: $T_i$ = $N_iP$ + $2N_i^{1.5}$ + $N_ilnN_i$ + $M - 1$ + $(2N_i\sum_{k=0}^KN_k)\times(N_i\sum_{k=0}^KN_k)^{0.5}$ + $(N_i\sum_{k=0}^KN_k)ln(N_i\sum_{k=0}^KN_k)$ + $N_i$ + $K$ + $KN_i$.
+
+A complexidad computacional é, então: $O(N_i^{1.5}$ + $(N_i\sum_{k=0}^KN_k)^{1.5})$ se assumir-se tempo constante P. Quando for utilizada a mesma otimização (e novamente assumindo tempo constante P), a complexidade de um sistema com um único servidor é $O(N^{1.5})$. Assim, fica claro que é \emph{essencial} minimizar K, e manter Ni tão próximo de N/M quanto possível. Para um valor grande de N, o custo principal é guiado pelo algoritmo de interação de clientes, e \emph{não} pelo processamento da física.
+
+%3
+\section{Avaliação do trabalho}
+
+Este trabalho considera que os servidores, também formando um sistema distribuído, estarão instalados na forma de um núcleo servidor, dentro do qual não há atraso de rede ou gargalo de comunicação considerável. Assume-se que cada cliente está conectado a um provedor, que possui um gateway de acesso ao núcleo servidor, de forma a minimizar o custo de comunicação entre o cliente e o núcleo servidor do ambiente virtual distribuído.
+
+Há também alguns pontos fracos neste trabalho, pois os autores consideram que o limite de clientes por servidor é uma constante, que poderia ser ajustada dinamicamente, com base na situação corrente daquele servidor. Mesmo assim, é interessante a idéia de considerar um sistema heterogêneo, onde cada servidor teria uma capacidade diferente. Ainda assim, esta capacidade poderia ser medida dinamicamente, baseada em parâmetros como atraso médio na comunicação com os clientes, ou largura de banda disponível para comunicar-se com eles.
+
+Outro ponto questionável é o do algoritmo utilizado para reduzir a sobreposição das áreas de cobertura dos diferentes servidores. Para evitar que um servidor atinja uma área excessivamente grande, quando a sua área atingir ou exceder o valor max\_area, o client\_threshold é ajustado para 0, disparando o algoritmo de migração . E, mais uma vez, o valor max\_area deveria ser calculado dinamicamente.
+
+Não obstante, é interessante a análise de complexidade feita pelos autores, o que permite ter uma noção mais exata do tempo que é gato pelo algoritmo.
