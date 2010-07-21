@@ -2,7 +2,7 @@
 % exemplo genérico de uso da classe iiufrgs.cls
 % $Id: iiufrgs.tex,v 4.6 2003/11/21 22:36:13 avila Exp $
 %
-\documentclass[ti]{iiufrgs}
+\documentclass[ti,english]{iiufrgs}
 % um tipo específico de monografia pode ser informado como parâmetro opcional:
 %\documentclass[tese]{iiufrgs}
 % monografias em inglês devem receber o parâmetro `english':
@@ -22,7 +22,8 @@
 %
 % Informações gerais
 %
-\title{Técnicas de Balanceamento de Carga em Um Sistema Multiservidor para MMOGs}
+%\title{Técnicas de Balanceamento de Carga em Um Sistema Multiservidor para MMOGs}
+\title{Load Balancing Techniques for MMOG Multiserver Systems}
 
 \author{Bezerra}{Carlos Eduardo Benevides}
 % alguns documentos podem ter varios autores:
@@ -35,7 +36,7 @@
 
 % a data deve ser a da defesa; se nao especificada, são gerados
 % mes e ano correntes
-\date{julho}{2010}
+\date{July}{2010}
 
 % o nome do curso pode ser redefinido (ex. para TCs)
 %\course{Curso de Especialização em Cachaça}
@@ -96,10 +97,11 @@
 % palavras-chave
 % iniciar todas com letras minúsculas, exceto no caso de abreviaturas
 %
-\keyword{MMG}
-\keyword{Simulação Interativa Distribuída}
-\keyword{Jogos Maciçamente Multijogador}
-\keyword{Multi-servidor}
+\keyword{MMOG}
+\keyword{Massively Multiplayer Online Games}
+\keyword{Distributed Interactive Simulation}
+\keyword{Multiserver}
+\keyword{Load Balancing}
 
 %
 % inicio do documento
@@ -133,16 +135,11 @@
 % o parametro deve ser a abreviatura mais longa
 \begin{listofabbrv}{SPMDAAAA}
 
-				 \item[MMG] \emph{Massively multiplayer games} (jogos maciçamente multijogador)
-				 \item[MMORPG] \emph{Massively multiplayer role-playing games} (jogos de interpretação de papéis maciçamente multijogador)
-				 \item[DVE] \emph{Distributed Virtual Environment} (ambiente virtual distribuído)
-				 \item[P2P] \emph{Peer-to-peer} (par-a-par)
-				 \item[NPC] \emph{Non-player character} (personagem não de jogador)
-%        \item[MPI] Message-Passing Interface
-%        \item[SMP] Symmetric Multi-Processor
-%        \item[NUMA] Non-Uniform Memory Access
-%        \item[SIMD] Single Instruction Multiple Data
-%        \item[SPMD] Single Program Multiple Data
+				 \item[MMG] Massively multiplayer games
+				 \item[MMORPG] Massively multiplayer online role-playing games
+				 \item[DVE] Distributed Virtual Environment
+				 \item[P2P] Peer-to-peer
+				 \item[NPC] Non-player character
 \end{listofabbrv}
 
 % idem para a lista de símbolos
@@ -157,8 +154,8 @@
 % lista de tabelas
 %\listoftables
 
-\include{texto/01-resumo}
-\include{texto/02-introducao}
+\include{texto/01-abstract}
+\include{texto/02-introduction}
 \include{texto/assiotis}
 \include{texto/ng}
 \include{texto/lee}
