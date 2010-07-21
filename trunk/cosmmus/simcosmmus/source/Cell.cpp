@@ -174,7 +174,7 @@ void Cell::updateAllEdgesAndVertexWeights() {
       cellMatrix[i][j]->updateAllEdges();
       //worldWeight += cellMatrix[i][j]->getVWeight();
       //worldWeight += cellMatrix[i][j]->getAllEdgesWeight();
-      //TODO: esse aqui talvez n�o seja necess�rio, se corrigir o VWeight pra conter a intera��o fora da c�lula
+      //TODO: esse aqui talvez nao seja necessario, se corrigir o VWeight pra conter a interacao fora da celula
       worldWeight += cellMatrix[i][j]->getCellWeight();
     }
 }

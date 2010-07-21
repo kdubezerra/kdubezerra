@@ -117,12 +117,13 @@ int main (int argc, char* argv[]) {
     server[i] = new Server ((i+1)*MULTIPLIER);
   }
 
-  for (int i = 0 ; i < nplayers ; i++) {
-    player[i] = new Avatar();
-    player[i]->setDrawable(PLAYER_IMAGE, PLAYER_SEEN_IMAGE, screen);
-  }
+  
 
   if (Simulation::getSpacePartMethod() == KDTREE) {
+    for (int i = 0 ; i < nplayers ; i++) {
+      player[i] = new Avatar();
+      player[i]->setDrawable(PLAYER_IMAGE, PLAYER_SEEN_IMAGE, screen);
+    }
     kdt = new KDTree(Server::getServerList(), Avatar::getAvatarList());
     kdt->setScreen(screen);
   }
@@ -134,6 +135,10 @@ int main (int argc, char* argv[]) {
       server[i]->assignRegion(*(it++));
     }
     Cell::allocCellMatrix(15);
+    for (int i = 0 ; i < nplayers ; i++) {
+      player[i] = new Avatar();
+      player[i]->setDrawable(PLAYER_IMAGE, PLAYER_SEEN_IMAGE, screen);
+    }
     Cell::setCellSurfaces(VERTEX_IMAGE, EDGE_IMAGE);
     Cell::updateAllEdgesAndVertexWeights();
     Region::partitionWorld();
