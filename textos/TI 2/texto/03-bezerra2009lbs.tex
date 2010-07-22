@@ -405,7 +405,7 @@ A possible undesirable effect of the \ggp\ algorithm is that by releasing all th
 	 		\STATE temporarily free all cells from $R$
 	 		\STATE $R \leftarrow R \cup \{c\}$ \label{alg:ggpk:getbackheaviestcell}
 	 \ENDFOR
-	 \STATE sort $\rlist$ in decreasing $p(s(R))$ order \label{alg:ggp:sortregions}
+	 \STATE sort $\rlist$ in decreasing $p(s(R))$ order
 	 \FOR{each region $R$ in $\rlist$}
 	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$
 	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggpk:whilefraction}
