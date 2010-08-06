@@ -25,6 +25,7 @@ KDTree::KDTree(list<Server*> _server_list, list<Avatar*> &_avatar_list) {
   split_coordinate = -1;
 	parent = schild = bchild = NULL;
   server = NULL;
+  node_id = 0;
 	buildTree(_server_list, 0, 0, _avatar_list, X_NODE);  
   runTree();	
 }
@@ -104,10 +105,11 @@ void KDTree::checkBalanceFromRoot() {
 }
 
 void KDTree::balanceLoad() {
-  if (!parent) return;
+  if (!parent || getWeight() == 0l) return;
+  long gw = getWeight();
   if (parent->getPower() < parent->getWeight())
     parent->balanceLoad();
-  
+
   list<Avatar*>::iterator it;
   list<Avatar*> avs = parent->getAvList();
   list<Avatar*> my_share;
@@ -231,7 +233,7 @@ void KDTree::drawTree() {
   else {
 		Uint32 color = colorTable(node_id);
     color = color ? color : 0xFFFFFF;
-    color &= 0xFFFFFF88;
+    color &= 0xFFFFFF01;
     boxColor(screen, xmin, ymin, xmax, ymax, color);
     string power = longToString(server->getServerPower());
     string load = longToString(getWeight());
@@ -241,19 +243,19 @@ void KDTree::drawTree() {
 }
 
 void KDTree::runTree() {
-  cout << "Node id #" << node_id << ": " << split_coordinate << endl;
+  cout << "Node id #" << node_id << ", split coordinate: " << split_coordinate << endl;
   if (schild) {
     schild->runTree();
     bchild->runTree();
   }
 }
 
-long KDTree::getWeight() {
+unsigned long long KDTree::getWeight() {
   if (schild) {
     return schild->getWeight() + bchild->getWeight();
   }
   else {
-    long _w = 0;
+    unsigned long long _w = 0;
     for (list<Avatar*>::iterator it = avList.begin() ; it != avList.end() ; it++) {
       _w += (*it)->getWeight();
     }

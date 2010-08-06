@@ -162,10 +162,10 @@ int main (int argc, char* argv[]) {
     
     if (Simulation::getSpacePartMethod() == KDTREE) {
       kdt->drawTree();
-      kdt->checkBalanceFromRoot();      
-      //boxRGBA(screen, 20, 20, 200, 200, 255, 127, 63, 255);
-      //Server::clearOverhead();
-      ///Avatar::calcWeight();
+      Server::clearOverhead();
+      Avatar::calcWeight();
+      kdt->checkBalanceFromRoot();
+      
     }
     else if (Simulation::getSpacePartMethod() == CELLS) {
       //    if (/*SDL_GetTicks()*/ time - dtime >= 25) {

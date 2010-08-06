@@ -42,7 +42,7 @@ class KDTree {
 		void drawTree();
 		void runTree();
 		
-		long getWeight();
+		unsigned long long getWeight();
 		long getPower();
 		list<Avatar*> getAvList();
 		void removeAvatar(Avatar* _av);
