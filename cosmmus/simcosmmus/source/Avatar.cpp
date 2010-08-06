@@ -119,7 +119,7 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
 		if (Simulation::getSpacePartMethod() == KDTREE) {
 			if (!parentNode) cout << "ALARM !!! ALARM !!! Avatar without parent node!!!" << endl;
 		}
-		else if (Simulation::getSpacePartMethod() == CELLS) {
+    else if (Simulation::getSpacePartMethod() == CELLS) {
 			coord new_cell_coord;
 			Cell* new_cell;
 			new_cell_coord.X = int (simpleScale(posx, WW, CELLS_ON_A_ROW));
@@ -152,7 +152,7 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
 }
 
 void Avatar::checkMigration() {
-	if (Simulation::getSpacePartMethod() == KDTREE) {
+  if (Simulation::getSpacePartMethod() == KDTREE) {
 		int xmin, xmax, ymin, ymax;
 		parentNode->getLimits(xmin, xmax, ymin, ymax);
 		if (posx < xmin ||posx >= xmax || posy < ymin || posy >= ymax) {
@@ -304,7 +304,7 @@ long Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferent
 	return _interaction;
 }
 
-long Avatar::getWeight() {
+unsigned long long Avatar::getWeight() {
 	if (Simulation::getSpacePartMethod() == KDTREE) {
 		return weight;
 	}
@@ -313,8 +313,8 @@ long Avatar::getWeight() {
 	}
 }
 
-long Avatar::getWeightBruteForce() {
-	long _w = 0l;
+unsigned long long Avatar::getWeightBruteForce() {
+	unsigned long long _w = 0l;
 	for (list<Avatar*>::iterator it = avList.begin() ; it != avList.end() ; it++) {
 		_w += this->OtherRelevance(*it);
 	}

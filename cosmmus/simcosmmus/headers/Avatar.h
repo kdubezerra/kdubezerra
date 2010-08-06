@@ -59,8 +59,8 @@ public:
 
 	long getInteraction(Cell* _cell);
 	static void calcWeight();
-	long getWeight();
-	long getWeightBruteForce();
+	unsigned long long getWeight();
+	unsigned long long getWeightBruteForce();
 
 	static void resetCells ();    
 	static void drawCells (SDL_Surface* output);
@@ -83,7 +83,7 @@ protected:
 	float posx, posy;
 	int dirx, diry;
 	int destx, desty;
-	long weight;
+	unsigned long long weight;
 	unsigned char R,G,B;
 	Uint32 last_move, resting_time;
 	bool isSeen;
