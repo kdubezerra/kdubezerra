@@ -13,7 +13,7 @@ include("top.html");
 
 <div class="content">
 
-<meuh2>Online Resources</meuh2><br/><br />
+<h2 class="meuh2">Online Resources</h2><br/><br />
 
 <p align="center">
 <img src="images/underconstruction2.jpg" alt="Under Construction" />
