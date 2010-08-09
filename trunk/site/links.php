@@ -13,7 +13,7 @@ include("top.html");
 
 <div class="content">
 
-<meuh2>External Links</meuh2><br/><br />
+<h2 class="meuh2">External Links</h2><br/><br />
 
 <p align="center">
 <img src="images/underconstruction2.jpg" alt="Under Construction" />

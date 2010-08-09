@@ -13,7 +13,7 @@ include("top.html");
 
 <div class="content">
 
-<meuh2>Short Bio</meuh2><br/><br />
+<h2 class="meuh2">Short Bio</h2><br/>
 
 <img src="images/foto_thumb.jpg" alt="Eduardo Bezerra" style="border: 2px solid #888;"/><br /><br />
 

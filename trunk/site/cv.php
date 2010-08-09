@@ -13,16 +13,15 @@ include("top.html");
 ?>
 
 <div class="content">
-<meuh2>Curriculum Vitae</meuh2><br/><br />
+<h2 class="meuh2">Curriculum Vitae</h2><br/>
 
-currículo lattes: <a href="http://lattes.cnpq.br/7512631263282644">http://lattes.cnpq.br/7512631263282644</a>
+currículo lattes: <a href="http://lattes.cnpq.br/7512631263282644">http://lattes.cnpq.br/7512631263282644</a><br /><br />
 
-<br />
-<br /><meuh3>Resumo</meuh3><br />
+<h3 class="meuh3">Resumo</h3><br />
 Doutorando em Ciência da Computação pela UFRGS, Mestre em Ciência da Computação pela UFRGS (2009) e Bacharel em Ciência da Computação pela UFBa (2007). Possui conhecimento avançado nas linguagens C e C++, além de experiência com Java e VisualBasic e longa experiência com Linux. Fluente em inglês, com conhecimento básico de alemão, francês e italiano.
 
 <br /><br />
-<br /><meuh3>Formação</meuh3><br />
+<br /><h3 class="meuh3">Formação</h3><br />
 Mestrado em Computação, UFRGS.<br />
 Iniciado em 2007/1 e concluído em 2009/1.<br />
 Área: sistemas distribuídos.<br />
@@ -33,14 +32,14 @@ Orientador: Cláudio Fernando Resin Geyer
 Iniciado em 2002/1 e concluído em 2006/2.
 
 
-<br /><br /><br /><meuh3>Formação complementar</meuh3><br />
+<br /><br /><br /><h3 class="meuh3">Formação complementar</h3><br />
 <b>Alemão básico</b> – curso de alemão Alles Gute!.<br />
 <b>Francês básico</b> – Alliance Française.<br />
 <b>Italiano básico</b> - Societá Italiana Massolin de Fiori.<br />
 <b>Inglês (fluente)</b> – fluência adquirida com a vivência do idioma.<br />
 
 
-<br /><br /><meuh3>Experiência</meuh3><br />
+<br /><br /><h3 class="meuh3">Experiência</h3><br />
 
 <b>2007 – Projeto P2PSE - UFRGS e FINEP.</b><br />
 Desenvolvimento em C++ do suporte a múltiplos servidores na biblioteca para jogos massivos em rede P2PSE.<br /><br />
@@ -58,7 +57,7 @@ Desenvolvimento web com Java, Struts, Hibernate e PostgreSQL.<br /><br />
 Desenvolvimento com VB, VB.net e Microsoft SQL Server, além de pesquisa com redes sem-fio IEEE 802.11.<br /><br />
 
 
-<br /><meuh3>Atividades adicionais</meuh3><br />
+<br /><h3 class="meuh3">Atividades adicionais</h3><br />
 
 Pesquisa em otimização de uso de largura de banda em ambientes virtuais distribuídos, como objetivo do mestrado.<br />
 Linguagens utilizadas: C, C++, tcl e otcl.<br /><br />
