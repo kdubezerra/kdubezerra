@@ -1,5 +1,7 @@
 #include "../headers/myutils.h"
 
+#include <SDL/SDL.h>
+
 #include <string>
 #include <string.h>
 #include <fstream>

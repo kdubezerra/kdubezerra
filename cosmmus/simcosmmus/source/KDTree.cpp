@@ -20,7 +20,7 @@ KDTree::KDTree(int _node_id) {
   node_id = _node_id;
 }
 
-KDTree::KDTree(list<Server*> _server_list, list<Avatar*> &_avatar_list) {
+KDTree::KDTree(list<Server*> _server_list, list<Avatar*> _avatar_list) {
   KDTree::root = this;
   split_coordinate = -1;
 	parent = schild = bchild = NULL;

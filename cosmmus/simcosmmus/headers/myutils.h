@@ -2,12 +2,12 @@
 
 #include <limits.h>
 
-#ifdef _WIN32
-#include <SDL.h>
-#include <SDL_ttf.h>
-#else
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
+#if defined(_WIN32)// || defined(__APPLE__)
+  #include <SDL.h>
+  #include <SDL_ttf.h>
+#else //linux or mac
+  #include <SDL/SDL.h>
+  #include <SDL/SDL_ttf.h>
 #endif
 
 #include <iostream>
