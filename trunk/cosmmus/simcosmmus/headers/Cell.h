@@ -1,9 +1,9 @@
 #pragma once
 
-#ifdef _WIN32
+#if defined(_WIN32)// || defined(__APPLE__)
 #include <SDL.h>
 #include "../headers/myutils.h"
-#else
+#else //linux or mac
 #include <SDL/SDL.h>
 #include "myutils.h"
 #endif

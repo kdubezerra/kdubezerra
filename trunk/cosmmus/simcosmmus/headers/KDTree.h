@@ -3,9 +3,9 @@
 #include <list>
 #include <vector>
 
-#ifdef _WIN32
+#if defined(_WIN32)// || defined(__APPLE__)
 #include <SDL_gfxPrimitives.h>
-#else
+#else //linux or mac
 #include <SDL/SDL_gfxPrimitives.h>
 #endif
 
@@ -29,7 +29,7 @@ class KDTree {
 	public:
 		KDTree();
 		KDTree(int _node_id);
-		KDTree(list<Server*> _server_list, list<Avatar*> &_avatar_list);
+		KDTree(list<Server*> _server_list, list<Avatar*> _avatar_list);
 		~KDTree();
 		void splitLeaf();
 		void setSplitCoordinate(int _coord); //somente se esse nodo tiver duas sub-árvores
