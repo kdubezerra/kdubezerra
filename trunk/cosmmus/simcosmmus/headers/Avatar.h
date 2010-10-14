@@ -15,11 +15,11 @@ using namespace std;
 #define VIEW_DISTANCE 50
 #define THRESHOLD_DISTANCE 10
 
+class coord;
 class Cell;
 class Region;
-
-class coord;
 class KDTree;
+class BSPTree;
 
 class Avatar {
 
@@ -41,6 +41,7 @@ public:
 
 	void setPlayerId (int i);
 	void setParentNode (KDTree *_parent);
+	void setParentNode (BSPTree *_parent);
 
 	void markAsSeen(int relevance_);
 
@@ -108,6 +109,7 @@ protected:
 	static long migration_still;
 	static long migrations;
 	KDTree* parentNode;
+	BSPTree* parentbsptNode;
 	static Avatar* first;
 	static list<Avatar*> avList;
 	static int tendencyToHotspots;

@@ -83,6 +83,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/headers/Avatar.h</locationURI>
 		</link>
 		<link>
+			<name>headers/BSPTree.h</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/headers/BSPTree.h</locationURI>
+		</link>
+		<link>
 			<name>headers/Cell.h</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/headers/Cell.h</locationURI>
@@ -116,6 +121,11 @@
 			<name>source/Avatar.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/source/Avatar.cpp</locationURI>
+		</link>
+		<link>
+			<name>source/BSPTree.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/source/BSPTree.cpp</locationURI>
 		</link>
 		<link>
 			<name>source/Cell.cpp</name>

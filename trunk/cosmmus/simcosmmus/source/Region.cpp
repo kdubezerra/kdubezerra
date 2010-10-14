@@ -300,7 +300,7 @@ void Region::drawAllRegionsWeights(SDL_Surface* output, TTF_Font* font) {
   }
 }
 
-void Region::toggleShowRegions() {
+void Region::toggleDisplayRegions() {
   showr = !showr;
 }
 
@@ -308,7 +308,7 @@ void Region::toggleShowEdges() {
   showe = !showe;
 }
 
-void Region::toggleShowRegionWeight() {
+void Region::toggleDisplayRegionsWeights() {
   showw = !showw;
 }
 

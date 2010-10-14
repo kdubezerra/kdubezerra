@@ -1,28 +1,28 @@
 #include "../headers/myutils.h"
-#include "../headers/KDTree.h"
+#include "../headers/BSPTree.h"
 #include "../headers/Avatar.h"
 #include "../headers/Server.h"
 
-SDL_Surface* KDTree::screen = NULL;
-KDTree* KDTree::root = NULL;
-bool KDTree::drawing_regions = false;
-bool KDTree::drawing_loads = false;
+SDL_Surface* BSPTree::screen = NULL;
+BSPTree* BSPTree::root = NULL;
+bool BSPTree::drawing_regions = false;
+bool BSPTree::drawing_loads = false;
 
-KDTree::KDTree() {
+BSPTree::BSPTree() {
   parent = schild = bchild = NULL;
   server = NULL;
   split_coordinate = -1;
 }
 
-KDTree::KDTree(int _node_id) {
+BSPTree::BSPTree(int _node_id) {
   parent = schild = bchild = NULL;
   server = NULL;
   split_coordinate = -1;
   node_id = _node_id;
 }
 
-KDTree::KDTree(list<Server*> _server_list, list<Avatar*> _avatar_list) {
-  KDTree::root = this;
+BSPTree::BSPTree(list<Server*> _server_list, list<Avatar*> _avatar_list) {
+  BSPTree::root = this;
   split_coordinate = -1;
   parent = schild = bchild = NULL;
   server = NULL;
@@ -31,10 +31,10 @@ KDTree::KDTree(list<Server*> _server_list, list<Avatar*> _avatar_list) {
   runTree();
 }
 
-KDTree::~KDTree() {
+BSPTree::~BSPTree() {
 }
 
-void KDTree::setSplitCoordinate(int _coord) {
+void BSPTree::setSplitCoordinate(int _coord) {
   if (split_axis == X_NODE) {
     if (xmax - xmin <= 1)
       return;
@@ -60,7 +60,7 @@ void KDTree::setSplitCoordinate(int _coord) {
   }
 }
 
-void KDTree::setLimits(int _lvl) {
+void BSPTree::setLimits(int _lvl) {
   xmin = parent->xmin;
   xmax = parent->xmax;
   ymin = parent->ymin;
@@ -95,8 +95,8 @@ void KDTree::setLimits(int _lvl) {
   }
 }
 
-void KDTree::checkBalance(short recursive) {
-  //if (getRoot()->getAvList().size() != 750) cout << "ALARM !!! ALARM !!! KDTree with less than 750 players!!!" << endl;
+void BSPTree::checkBalance(short recursive) {
+  //if (getRoot()->getAvList().size() != 750) cout << "ALARM !!! ALARM !!! BSPTree with less than 750 players!!!" << endl;
   if (!schild && getWeight() >= DISBAL_TOLERANCE
       * (float) server->getServerPower())
     balanceLoad();
@@ -106,11 +106,11 @@ void KDTree::checkBalance(short recursive) {
   }
 }
 
-void KDTree::checkBalanceFromRoot() {
+void BSPTree::checkBalanceFromRoot() {
   root->checkBalance(RECURSIVE);
 }
 
-void KDTree::balanceLoad() {
+void BSPTree::balanceLoad() {
   if (!parent || getWeight() == 0l)
     return;
   long gw = getWeight();
@@ -152,7 +152,7 @@ void KDTree::balanceLoad() {
   }
 }
 
-void KDTree::buildTree(list<Server*> _server_list, int _server_number,
+void BSPTree::buildTree(list<Server*> _server_list, int _server_number,
     int _tree_lvl, list<Avatar*> _avatars, short _split_lvl) {
   ///***************************************************************************************************
   ///(INICIO) armazenando os limites definidos por cada nodo, para nao necessitar de calculo em run-time
@@ -197,8 +197,8 @@ void KDTree::buildTree(list<Server*> _server_list, int _server_number,
   ///******************************************************
   ///(INICIO) NOH INTERMEDIARIO + RECURSAO
   split_axis = _split_lvl;
-  schild = new KDTree(_server_number);
-  bchild = new KDTree(_server_number + intPow(2, _tree_lvl));
+  schild = new BSPTree(_server_number);
+  bchild = new BSPTree(_server_number + intPow(2, _tree_lvl));
   schild->parent = bchild->parent = this;
 
   int _middle_index = _avatars.size() / 2;
@@ -235,11 +235,11 @@ void KDTree::buildTree(list<Server*> _server_list, int _server_number,
   ///******************************************************
 }
 
-void KDTree::setScreen(SDL_Surface* _screen) {
+void BSPTree::setScreen(SDL_Surface* _screen) {
   screen = _screen;
 }
 
-void KDTree::drawTree() {
+void BSPTree::drawTree() {
   if (!drawing_regions && !drawing_loads) return;
   if (schild) { ///i.e. nao eh noh-folha
     schild->drawTree();
@@ -259,7 +259,7 @@ void KDTree::drawTree() {
   }
 }
 
-void KDTree::runTree() {
+void BSPTree::runTree() {
   cout << "Node id #" << node_id << ", split coordinate: " << split_coordinate
       << endl;
   if (schild) {
@@ -268,7 +268,7 @@ void KDTree::runTree() {
   }
 }
 
-unsigned long long KDTree::getWeight() {
+unsigned long long BSPTree::getWeight() {
   if (schild) {
     return schild->getWeight() + bchild->getWeight();
   } else {
@@ -280,7 +280,7 @@ unsigned long long KDTree::getWeight() {
   }
 }
 
-long KDTree::getPower() {
+long BSPTree::getPower() {
   if (schild) {
     return schild->getPower() + bchild->getPower();
   } else {
@@ -288,7 +288,7 @@ long KDTree::getPower() {
   }
 }
 
-list<Avatar*> KDTree::getAvList() {
+list<Avatar*> BSPTree::getAvList() {
   if (schild) {
     list<Avatar*> avs, childs;
     childs = schild->getAvList();
@@ -300,11 +300,11 @@ list<Avatar*> KDTree::getAvList() {
     return avList;
 }
 
-void KDTree::removeAvatar(Avatar* _av) {
+void BSPTree::removeAvatar(Avatar* _av) {
   avList.remove(_av);
 }
 
-void KDTree::insertAvatar(Avatar* _av) {
+void BSPTree::insertAvatar(Avatar* _av) {
   ///*********************************************************
   ///(INICIO) NOH INTERMEDIARIO: PRECISA DESCER MAIS NA ÁRVORE
   if (schild) {
@@ -333,7 +333,7 @@ void KDTree::insertAvatar(Avatar* _av) {
   ///*******************************
 }
 
-void KDTree::clearAvList() {
+void BSPTree::clearAvList() {
   if (schild) {
     schild->clearAvList();
     bchild->clearAvList();
@@ -341,30 +341,30 @@ void KDTree::clearAvList() {
   avList.clear();
 }
 
-KDTree* KDTree::getRoot() {
+BSPTree* BSPTree::getRoot() {
   return root;
 }
 
-void KDTree::setServer(Server* _server) {
+void BSPTree::setServer(Server* _server) {
   server = _server;
   _server->setNode(this);
 }
 
-Server* KDTree::getServer() {
+Server* BSPTree::getServer() {
   return server;
 }
 
-void KDTree::getLimits(int& _xmin, int& _xmax, int& _ymin, int& _ymax) {
+void BSPTree::getLimits(int& _xmin, int& _xmax, int& _ymin, int& _ymax) {
   _xmin = xmin;
   _xmax = xmax;
   _ymin = ymin;
   _ymax = ymax;
 }
 
-void KDTree::toggleDisplayRegions() {
+void BSPTree::toggleDisplayRegions() {
   drawing_regions = !drawing_regions;
 }
 
-void KDTree::toggleDisplayRegionsWeights() {
+void BSPTree::toggleDisplayRegionsWeights() {
   drawing_loads = !drawing_loads;
 }

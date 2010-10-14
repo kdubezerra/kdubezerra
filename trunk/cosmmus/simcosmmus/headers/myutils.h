@@ -42,6 +42,10 @@
 #define MAX(A,B) \
           A > B ? A : B
 
+typedef struct {
+  int x,y;
+} point;
+
 using namespace std;
 
 class coord {
