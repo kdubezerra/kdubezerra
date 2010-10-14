@@ -65,9 +65,9 @@ class Region {
     void drawLoad(SDL_Surface* output, TTF_Font* font);
     static void drawAllRegionsWeights(SDL_Surface* output, TTF_Font* font);
 
-    static void toggleShowRegions();
+    static void toggleDisplayRegions();
     static void toggleShowEdges();
-    static void toggleShowRegionWeight();
+    static void toggleDisplayRegionsWeights();
     
     static list<Region*> &getRegionList();
     static int getNumRegions();

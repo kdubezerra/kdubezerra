@@ -1,6 +1,6 @@
 #pragma once
 
-enum SpacePartMethod { KDTREE, CELLS, BSPTREE };
+enum SpacePartMethod { CELLS, KDTREE, BSPTREE };
 
 class Simulation {
 	public :

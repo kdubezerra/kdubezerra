@@ -10,9 +10,9 @@
 
 using namespace std;
 
-class KDTree;
-
 class Region;
+class KDTree;
+class BSPTree;
 
 class Server {
 
@@ -26,6 +26,7 @@ class Server {
     static void releaseAllRegions();
     Region* getRegion();
     void setNode(KDTree* _node);
+    void setNode(BSPTree* _node);
     KDTree* getNode();
 
     static Server* getServerById(int _id);
@@ -52,6 +53,7 @@ class Server {
 
     Region* managedRegion;
     KDTree* treeNode;
+    BSPTree* bsptreeNode;
     long serverPower;
     int serverId;
     long overHead;

@@ -11,7 +11,7 @@ RESOURCESDIR=../resources
 
 LIBS=-lSDL -lSDLmain -lSDL_ttf -lSDL_gfx -framework Cocoa
 
-_OBJ = myutils.o Avatar.o Cell.o Region.o KDTree.o Server.o Simulation.o simcosmmus.o
+_OBJ = myutils.o Avatar.o Cell.o Region.o KDTree.o BSPTree.o Server.o Simulation.o simcosmmus.o
 RELEASEOBJ = $(patsubst %,$(RELEASEDIR)/%,$(_OBJ))
 DEBUGOBJ = $(patsubst %,$(DEBUGDIR)/%,$(_OBJ))
 

@@ -60,6 +60,10 @@ void Server::setNode(KDTree *_node) {
   treeNode = _node;
 }
 
+void Server::setNode(BSPTree *_node) {
+  bsptreeNode = _node;
+}
+
 KDTree* Server::getNode() {
   return treeNode;
 }

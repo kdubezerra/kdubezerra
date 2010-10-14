@@ -3,6 +3,7 @@
 #include "../headers/Avatar.h"
 #include "../headers/Cell.h"
 #include "../headers/KDTree.h"
+#include "../headers/BSPTree.h"
 #include "../headers/Simulation.h"
 #include "../headers/Server.h"
 
@@ -54,7 +55,10 @@ void Avatar::init() {
 		destx = rand() % WW;
 		desty = rand() % WW;
 		if (Simulation::getSpacePartMethod() == KDTREE) {
-			parentNode = NULL;	
+			parentNode = NULL;
+		}
+		else if (Simulation::getSpacePartMethod() == BSPTREE) {
+		  parentbsptNode = NULL;
 		}
 		else if (Simulation::getSpacePartMethod() == CELLS) {
 			coord my_location = getCell();
@@ -152,6 +156,16 @@ void Avatar::step(unsigned long delay) { // delay in microseconds
 }
 
 void Avatar::checkMigration() {
+  if (Simulation::getSpacePartMethod() == BSPTREE) {
+    int xmin, xmax, ymin, ymax;
+    parentbsptNode->getLimits(xmin, xmax, ymin, ymax);
+    if (posx < xmin ||posx >= xmax || posy < ymin || posy >= ymax) {
+      parentbsptNode->removeAvatar(this);
+      BSPTree::getRoot()->insertAvatar(this);
+      migrations++;
+    }
+  }
+
   if (Simulation::getSpacePartMethod() == KDTREE) {
 		int xmin, xmax, ymin, ymax;
 		parentNode->getLimits(xmin, xmax, ymin, ymax);
@@ -206,6 +220,10 @@ void Avatar::setParentNode (KDTree *_parent) {
 	parentNode = _parent;
 }
 
+void Avatar::setParentNode (BSPTree *_parent) {
+  parentbsptNode = _parent;
+}
+
 void Avatar::markAsSeen(int relevance_) {
 	relevance = relevance_;
 	isSeen = true;
@@ -249,6 +267,10 @@ int Avatar::OtherRelevance(Avatar* other) {//valor entre 0 e 100, ao invés de 0
 	if (Simulation::getSpacePartMethod() == KDTREE && this->parentNode != other->parentNode) {
 		other->parentNode->getServer()->incOverhead(relevance);
 	}
+
+  if (Simulation::getSpacePartMethod() == BSPTREE && this->parentbsptNode != other->parentbsptNode) {
+    other->parentbsptNode->getServer()->incOverhead(relevance);
+  }
 
 	return relevance;
 }
@@ -305,7 +327,7 @@ long Avatar::getInteraction(Cell* _cell) { //mudar pra usar cada celula diferent
 }
 
 unsigned long long Avatar::getWeight() {
-	if (Simulation::getSpacePartMethod() == KDTREE) {
+	if (Simulation::getSpacePartMethod() == KDTREE || Simulation::getSpacePartMethod() == BSPTREE) {
 		return weight;
 	}
 	else if (Simulation::getSpacePartMethod() == CELLS) {

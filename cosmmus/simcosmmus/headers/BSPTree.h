@@ -2,7 +2,6 @@
 
 #include <list>
 #include <vector>
-#include "myutils.h"
 
 #if defined(_WIN32)// || defined(__APPLE__)
 #include <SDL_gfxPrimitives.h>
@@ -21,13 +20,13 @@ class Server;
 #define LEAF_NODE 2
 #define RECURSIVE 1
 
-class KDTree {
+class BSPTree {
 	
 	public:
-		KDTree();
-		KDTree(int _node_id);
-		KDTree(list<Server*> _server_list, list<Avatar*> _avatar_list);
-		~KDTree();
+		BSPTree();
+		BSPTree(int _node_id);
+		BSPTree(list<Server*> _server_list, list<Avatar*> _avatar_list);
+		~BSPTree();
 		void splitLeaf();
 		void setSplitCoordinate(int _coord); //somente se esse nodo tiver duas sub-árvores
 		void setLimits(int _lvl = 0);
@@ -45,7 +44,7 @@ class KDTree {
 		void removeAvatar(Avatar* _av);
 		void insertAvatar(Avatar* _av);
 		void clearAvList();
-		static KDTree* getRoot();
+		static BSPTree* getRoot();
 		
 		void setServer(Server* _server);
     Server* getServer();
@@ -60,7 +59,7 @@ class KDTree {
 		void reckonLoad();
 		void reckonRects();
 		short split_axis;
-		KDTree *parent, *schild, *bchild;
+		BSPTree *parent, *schild, *bchild;
 		Server *server;
 		list<Avatar*> avList;
 		int split_coordinate, xmin, xmax, ymin, ymax;		
@@ -76,7 +75,7 @@ class KDTree {
 							// filhos, e a capacidade de cada nodo folha
 							// é igual à capacidade do servidor correspondente
 		static SDL_Surface* screen;
-		static KDTree* root;
+		static BSPTree* root;
 		static bool drawing_regions;
 		static bool drawing_loads;
 };

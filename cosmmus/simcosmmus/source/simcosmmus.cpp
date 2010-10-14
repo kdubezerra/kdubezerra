@@ -25,12 +25,14 @@
 #include "../headers/Region.h"
 #include "../headers/Server.h"
 #include "../headers/KDTree.h"
+#include "../headers/BSPTree.h"
 #include "../headers/Simulation.h"
 
 
 bool showing_help = false;
 
 KDTree* kdt;
+BSPTree* bspt;
 Avatar** player;
 Server* server[NUM_SERVERS];
 SDL_Surface* screen = NULL;
@@ -113,6 +115,9 @@ int main (int argc, char* argv[]) {
   } else if (!strcmp(rebal_method,"KDTREE")) {
     cout << "KDTREE" << endl;
     Simulation::setSpacePartMethod(KDTREE);
+  } else if (!strcmp(rebal_method, "BSPTREE")) {
+    cout << "BSPTREE" << endl;
+    Simulation::setSpacePartMethod(BSPTREE);
   }
 
   for (int i = 0 ; i < NUM_SERVERS ; i++) {
@@ -120,7 +125,14 @@ int main (int argc, char* argv[]) {
   }
 
   
-
+  if (Simulation::getSpacePartMethod() == BSPTREE) {
+     for (int i = 0 ; i < nplayers ; i++) {
+       player[i] = new Avatar();
+       player[i]->setDrawable(PLAYER_IMAGE, PLAYER_SEEN_IMAGE, screen);
+     }
+     bspt = new BSPTree(Server::getServerList(), Avatar::getAvatarList());
+     bspt->setScreen(screen);
+   }
   if (Simulation::getSpacePartMethod() == KDTREE) {
     for (int i = 0 ; i < nplayers ; i++) {
       player[i] = new Avatar();
@@ -162,12 +174,17 @@ int main (int argc, char* argv[]) {
     time += 100;///:TODO:fazer com que a simulação inteira PARE mesmo
 
     
+    if (Simulation::getSpacePartMethod() == BSPTREE) {
+          bspt->drawTree();
+          Server::clearOverhead();
+          Avatar::calcWeight();
+          bspt->checkBalanceFromRoot();
+    }
     if (Simulation::getSpacePartMethod() == KDTREE) {
       kdt->drawTree();
       Server::clearOverhead();
       Avatar::calcWeight();
       kdt->checkBalanceFromRoot();
-      
     }
     else if (Simulation::getSpacePartMethod() == CELLS) {
       //    if (/*SDL_GetTicks()*/ time - dtime >= 25) {
@@ -275,10 +292,14 @@ void checkInput() {
       Cell::toggleShowEdgeWeight();
       break;
     case SDLK_r:
-      Region::toggleShowRegions();
+      Region::toggleDisplayRegions();
+      KDTree::toggleDisplayRegions();
+      BSPTree::toggleDisplayRegions();
       break;
     case SDLK_w:
-      Region::toggleShowRegionWeight();
+      Region::toggleDisplayRegionsWeights();
+      KDTree::toggleDisplayRegionsWeights();
+      BSPTree::toggleDisplayRegionsWeights();
       break;
     case SDLK_k:
       Region::refinePartitioningGlobal();
