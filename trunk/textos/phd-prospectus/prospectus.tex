@@ -1,0 +1,46 @@
+\documentclass[]{usiinfprospectus}
+
+\captionsetup{labelfont={bf}}
+
+\author{Your Name}
+
+\title{The Title}
+\subtitle{The (optional) sub title}
+\versiondate{\today}
+
+\begin{committee}
+%With more than 1 advisor an error is raised...: only 1 advisor is allowed!
+\researchadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Research}{Advisor}
+\academicadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Academic}{Advisor}
+\committeemember[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Committee}{Member1}
+\committeemember[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Committee}{Member2}
+%\committeemember[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Committee}{Member3}
+\coadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Research}{Co-Advisor1}
+\coadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Research}{Co-Advisor2}
+%\coadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Research}{Co-Advisor3}
+\phddirector{Prof.}{Michele}{Lanza}
+\end{committee}
+
+\abstract {
+An abstract describing what the prospectus is all about. ``Omit needless words'' \cite{Stru1899a}: It should fit within the page without making the footer of the title page break the page --- otherwise what kind of abstract would it be?
+}
+
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction} \label{introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Verbum Laudatur Si Factum Sequatur}
+
+The research prospectus outlines the research area in which the student intends to perform research, and describes initial work performed by the student. It should be no more than 4 pages in length (excluding bibliography). The research prospectus must be submitted to the prospectus review committee at least one week before the {\em prospectus review}.
+
+%%%%%
+\bibliographystyle{abbrv}
+\bibliography{references}
+
+
+
+\end{document}
