@@ -2,15 +2,15 @@
 
 \captionsetup{labelfont={bf}}
 
-\author{Your Name}
+\author{Carlos Eduardo B. Bezerra}
 
-\title{The Title}
-\subtitle{The (optional) sub title}
+\title{A fault tolerant multi-server system for MMOGs}
+%\subtitle{A crash-stop model oriented approach}
 \versiondate{\today}
 
 \begin{committee}
 %With more than 1 advisor an error is raised...: only 1 advisor is allowed!
-\researchadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Research}{Advisor}
+\researchadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Fernando}{Pedone}
 \academicadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Academic}{Advisor}
 \committeemember[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Committee}{Member1}
 \committeemember[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Committee}{Member2}
@@ -22,7 +22,8 @@
 \end{committee}
 
 \abstract {
-An abstract describing what the prospectus is all about. ``Omit needless words'' \cite{Stru1899a}: It should fit within the page without making the footer of the title page break the page --- otherwise what kind of abstract would it be?
+Massively multiplayer online games have become, in the last decade, an important genre of online entertainment, having a significant market share. In these games, thousands to tens of thousands of participants play simultaneously with one another in the same match. %Such games, usually, consist of a virtual environment, where each player has an \emph{avatar} -- a character -- controlled by him.
+However, traditionally, this kind of game is supported by a powerful (and expensive) central infrastructure with considerable cpu power and very fast and low latency Internet connections. This work proposes the use of a geographically distributed server system, formed by voluntary nodes which help serving the game to the players. Two very important features, therefore, must be provided: consistency (which may be week and only existing in the players' perspective) and fault tolerance, as some of the participating nodes may crash and become unavailable. For this work, we consider the crash-stop failure model.
 }
 
 
@@ -30,12 +31,31 @@ An abstract describing what the prospectus is all about. ``Omit needless words''
 \maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction} \label{introduction}
+\section{Introduction} \label{sec_introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+all the mmog intro and context...
 
 \subsection{Verbum Laudatur Si Factum Sequatur}
 
 The research prospectus outlines the research area in which the student intends to perform research, and describes initial work performed by the student. It should be no more than 4 pages in length (excluding bibliography). The research prospectus must be submitted to the prospectus review committee at least one week before the {\em prospectus review}.
+
+\section{Proposed Model} \label{sec_model}
+
+As already mentioned, in order to provide the service required by the MMOG, this work proposes the use of a geographically distributed system composed by voluntary nodes working together to form a distributed MMOG server. This distributed server must deliver, at least, the following services:
+
+\begin{itemize}
+	\item \textbf{Simulation} of the game, that is, the receiving of actions sent by the players and then processing their corresponding outcomes, which may result in changes on the game state;
+	\item \textbf{Broadcasting} of the current game state to the different players connected to it -- although sending the whole game state to every player is very likely unnecessary;
+	\item \textbf{Storage} of the game's state, which is, in short, the combination of the states of each object in the virtual environment -- inanimate objects, players' avatars and ai-controlled characters (also know as non-playable characters, or NPCs);
+	\item \textbf{Retrieval} of the state of each object in the game, so that whenever a player connects to a server, it may receive the current state of the game and then interact with a valid copy of the virtual environment.
+\end{itemize}
+
+It is important to note that, when adding a large number of players (falar aqui de timeliness), specially if they are distributed among different servers, many questions become critical. (falar aqui da sincronização com varios servidores)
+
+
+
+As mentioned before, this work considers the crash-stop failure model. Therefore
 
 %%%%%
 \bibliographystyle{abbrv}
