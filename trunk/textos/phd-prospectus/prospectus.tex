@@ -1,5 +1,7 @@
 \documentclass[]{usiinfprospectus}
 
+\usepackage[utf-8]{inputenc}
+
 \captionsetup{labelfont={bf}}
 
 \author{Carlos Eduardo B. Bezerra}
@@ -11,19 +13,18 @@
 \begin{committee}
 %With more than 1 advisor an error is raised...: only 1 advisor is allowed!
 \researchadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Fernando}{Pedone}
-\academicadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Academic}{Advisor}
+\academicadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Fernando}{Pedone}
 \committeemember[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Committee}{Member1}
 \committeemember[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Committee}{Member2}
 %\committeemember[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Committee}{Member3}
-\coadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Research}{Co-Advisor1}
-\coadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Research}{Co-Advisor2}
+\coadvisor[Universidade Federal do Rio Grande do Sul, Brazil]{Prof.}{Cl\'audio}{Geyer}
+%\coadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Research}{Co-Advisor2}
 %\coadvisor[Universit\`a della Svizzera Italiana, Switzerland]{Prof.}{Research}{Co-Advisor3}
 \phddirector{Prof.}{Michele}{Lanza}
 \end{committee}
 
 \abstract {
-Massively multiplayer online games have become, in the last decade, an important genre of online entertainment, having a significant market share. In these games, thousands to tens of thousands of participants play simultaneously with one another in the same match. %Such games, usually, consist of a virtual environment, where each player has an \emph{avatar} -- a character -- controlled by him.
-However, traditionally, this kind of game is supported by a powerful (and expensive) central infrastructure with considerable cpu power and very fast and low latency Internet connections. This work proposes the use of a geographically distributed server system, formed by voluntary nodes which help serving the game to the players. Two very important features, therefore, must be provided: consistency (which may be week and only existing in the players' perspective) and fault tolerance, as some of the participating nodes may crash and become unavailable. For this work, we consider the crash-stop failure model.
+Massively multiplayer online games have become, in the last decade, an important genre of online entertainment, having a significant market share. In these games, thousands to tens of thousands of participants play simultaneously with one another in the same match. However, traditionally, this kind of game is supported by a powerful (and expensive) central infrastructure with considerable cpu power and very fast and low latency Internet connections. This work proposes the use of a geographically distributed server system, formed by voluntary nodes which help serving the game to the players. Two very important features, therefore, must be provided: consistency (which may be week and only existing in the players' perspective) and fault tolerance, as some of the participating nodes may crash and become unavailable. For this work, we consider the crash-stop failure model.
 }
 
 
@@ -40,9 +41,13 @@ all the mmog intro and context...
 
 The research prospectus outlines the research area in which the student intends to perform research, and describes initial work performed by the student. It should be no more than 4 pages in length (excluding bibliography). The research prospectus must be submitted to the prospectus review committee at least one week before the {\em prospectus review}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Proposed Model} \label{sec_model}
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
-As already mentioned, in order to provide the service required by the MMOG, this work proposes the use of a geographically distributed system composed by voluntary nodes working together to form a distributed MMOG server. This distributed server must deliver, at least, the following services:
+This work considers persistent state real-time games with virtual environments where each player controls an avatar, which executes the commands issued by the player, hence interacting with the virtual world and with objects present in it, such as avatars of other players. The basic operation of the game network support system must be as follows: when a player connects to the server, it must send the current state of the player's avatar and of the surroundings of its current location; after that, this player keeps receiving periodic state updates for the objects which are relevant to it (usually, based on the the perceivability of such objects by the player [,]). When a player issues a command (such as to move its avatar from one place to the other, to pick up an object or to attack another player's avatar), it sends a message to the server containing such input, which is then processed by the server, which decides the outcome of this action, probably changing the state of the game, which is then broadcast to all involved players.
+
+As already mentioned, in order to provide the services required by the MMOG, this work proposes the use of a geographically distributed system composed of voluntary nodes working together to form a distributed MMOG server. This distributed server must deliver, at least, the following services:
 
 \begin{itemize}
 	\item \textbf{Simulation} of the game, that is, the receiving of actions sent by the players and then processing their corresponding outcomes, which may result in changes on the game state;
@@ -51,8 +56,15 @@ As already mentioned, in order to provide the service required by the MMOG, this
 	\item \textbf{Retrieval} of the state of each object in the game, so that whenever a player connects to a server, it may receive the current state of the game and then interact with a valid copy of the virtual environment.
 \end{itemize}
 
-It is important to note that, when adding a large number of players (falar aqui de timeliness), specially if they are distributed among different servers, many questions become critical. (falar aqui da sincronizaÃ§Ã£o com varios servidores)
+It is important to note that in real-time games (as opposed to turn-based games), it is critical for the players to receive timely responses, that is, after issuing a command to the server, the time it takes for the new game state resulting from that command to arrive in the player's machine is short enough not to be an impediment to the game. In other words, there is a constraint on the time it takes for a player to see the result of each of his actions, in order to keep the game ``playable''. This applies specially to the situation where there are multiple players and it is desirable that each player is informed about the actions of others as soon as they happen, so that they can have a proper interaction. Therefore, although not every change in the game state is immediately important to every player, it is necessary to provide this \textbf{timeliness} for the delivery of state update messages to each player for at least a subset of the objects in the virtual environment. Usually, this subset consists of the objects which are perceivable by the player at each moment.
 
+Besides the timeliness for the delivery of the messages, it is necessary to provide \textbf{consistency} for the game state between each pair of players interacting with one another, which means that, if two any players are interacting with each other or with the same object -- or, sometimes, even if they are just playing in the same location of the game's virtual environment --, the game state they perceive must be the same. Apart from that, another important requisite of multiplayer games is to provide \textbf{fairness}, in the sense that the outcome of the players' actions is decided according to the game rules and that none of the players has advantages over the others even if that implies a more complex message ordering algorithm, for example.
+
+
+
+when adding a large number of players (falar aqui de timeliness), specially if they are distributed among different servers, many questions become critical. (falar aqui da sincroniza‹o com varios servidores)
+
+- direct communication (players -> signed -> check by servers)
 
 
 As mentioned before, this work considers the crash-stop failure model. Therefore
