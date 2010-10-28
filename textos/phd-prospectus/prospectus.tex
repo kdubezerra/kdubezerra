@@ -1,6 +1,8 @@
 \documentclass[]{usiinfprospectus}
 
-\usepackage[utf-8]{inputenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
 
 \captionsetup{labelfont={bf}}
 
@@ -42,10 +44,14 @@ all the mmog intro and context...
 The research prospectus outlines the research area in which the student intends to perform research, and describes initial work performed by the student. It should be no more than 4 pages in length (excluding bibliography). The research prospectus must be submitted to the prospectus review committee at least one week before the {\em prospectus review}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Proposed Model} \label{sec_model}
+\section{Proposed Model} \label{sec:model}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 This work considers persistent state real-time games with virtual environments where each player controls an avatar, which executes the commands issued by the player, hence interacting with the virtual world and with objects present in it, such as avatars of other players. The basic operation of the game network support system must be as follows: when a player connects to the server, it must send the current state of the player's avatar and of the surroundings of its current location; after that, this player keeps receiving periodic state updates for the objects which are relevant to it (usually, based on the the perceivability of such objects by the player [,]). When a player issues a command (such as to move its avatar from one place to the other, to pick up an object or to attack another player's avatar), it sends a message to the server containing such input, which is then processed by the server, which decides the outcome of this action, probably changing the state of the game, which is then broadcast to all involved players.
+
+The next sections will describe the services the service must provide to the players connected to it (Section \ref{sec:services}), the specific requirements for a fault-tolerant distributed MMOG server system, considering the crash-stop failure model, and the proposed distributed architecture (Section \ref{sec:feats}) and an algorithm devised to synchronize the game state between the replicas (Section \ref{sec:algorithm}). 
+
+\subsection{Services to be provided} \label{sec:services}
 
 As already mentioned, in order to provide the services required by the MMOG, this work proposes the use of a geographically distributed system composed of voluntary nodes working together to form a distributed MMOG server. This distributed server must deliver, at least, the following services:
 
@@ -61,10 +67,31 @@ It is important to note that in real-time games (as opposed to turn-based games)
 Besides the timeliness for the delivery of the messages, it is necessary to provide \textbf{consistency} for the game state between each pair of players interacting with one another, which means that, if two any players are interacting with each other or with the same object -- or, sometimes, even if they are just playing in the same location of the game's virtual environment --, the game state they perceive must be the same. Apart from that, another important requisite of multiplayer games is to provide \textbf{fairness}, in the sense that the outcome of the players' actions is decided according to the game rules and that none of the players has advantages over the others even if that implies a more complex message ordering algorithm, for example.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Characteristics and architecture of the intended distributed game server system} \label{sec:feats}
 
-when adding a large number of players (falar aqui de timeliness), specially if they are distributed among different servers, many questions become critical. (falar aqui da sincroniza��o com varios servidores)
+The main purpose of the system is to reduce or, ideally, eliminate the necessity of a central server for the game. In this work, the approach proposed to achieve this is based on principles similar to those of volunteer computing, where a potentially large set of contributors make their computers available to perform tasks requested by some remote entity. With such a system, although each of these nodes is probably much less powerful than a traditional mmog server, when working together they can sum up the cpu power and network link necessary to host one of these games.
 
-- direct communication (players -> signed -> check by servers)
+However, several questions arise when dealing with a potentially large scale geographically distributed server system composed of voluntary nodes. First, as the nodes are volunteer, there is no guarantee that they will be available whenever they are needed, neither there is any guarantee regarding the amount of resources that each of these nodes makes available for the system -- be it cpu power, network bandwidth or storage. Besides, not only can these nodes become unavailable, but there can be a high rate of nodes joining and leaving the system, characterizing churn. There are also problems related to the geographical distribution of this system, as the option of using efficient group communication techniques -- such as network level multicast -- is not widely available on the Internet. Finally, considering the potentially large number of nodes in this system, it is very likely that some of them present failures, for what we are assuming the crash-stop failure model -- therefore, we assume the possibility of nodes crashing and network links becoming unavailable.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsection{Proposed architecture} \label{sec:arch}
+
+%x
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Proposed synchronization algorithm} \label{sec:algorithm}
+
+y
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+começar a falar das características específicas do sistema servidor distribuído, o que ele deve fazer (replicação, sincronização, tolerância a falhas, modelo crash-stop)
+
+when adding a large number of players (falar aqui de timeliness), specially if they are distributed among different servers, many questions become critical. (falar aqui da sincronização com vários servidores)
+
+- direct communication (players -> signed -> check by servers OU )
 
 
 As mentioned before, this work considers the crash-stop failure model. Therefore
