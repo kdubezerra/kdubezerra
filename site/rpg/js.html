@@ -1,0 +1,41 @@
+<html>
+<body>
+
+<script type="text/javascript">
+
+function $() {
+  var elements = new Array();
+    for (var i = 0; i < arguments.length; i++) {
+        var element = arguments[i];
+	    if (typeof element == 'string')
+	          element = document.getElementById(element);
+		      if (arguments.length == 1)
+		            return element;
+			        elements.push(element);
+				  }
+				    return elements;
+				    }
+
+
+
+				    function funccc(mmm) {
+				       var xai = 10;
+				          alert(mmm + " = " + xai);
+					     eval(mmm + " += 2");
+					        alert(eval(mmm));
+						   //elm = document.getElementById(mmm);
+						      //alert(mmm + "    -    " + elm.src);
+						      }
+						      var txt="Hello World!";
+						      document.write(txt.length);
+
+						      </script>
+
+
+						      <img src="http://www.google.com.br/images/firefox/tshirt.png" id="foda" onclick="funccc(/*this.id*/'xai')" />
+
+
+						      </body>
+						      </html>
+
+

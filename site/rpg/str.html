@@ -1,0 +1,62 @@
+<html>
+<head>
+<style>
+a {
+color:#000000;
+text-decoration:none;
+}
+</style>
+</head>
+<body>
+
+<script type="text/javascript">
+var strength = 1;
+
+function drawValue5(atrstring, val) {
+   for (var i = 1 ; i <= 5 ; i++) {
+       var elem;
+       eval ("elem = document.getElementById(\"" + atrstring + i + "\")");
+       if (i <= val) {
+           elem.innerHTML="x;
+       } else {
+           elem.innerHTML="o";
+       }
+ 
+   }
+}
+
+function setAttribute(atrstring, val) {
+
+   alert(atrstring);
+
+   var oldatr;
+   var newatr;
+   
+   eval ("oldatr = " + atrstring);
+   if (val != oldatr) {
+      eval (atrstring + " = val ");
+      drawValue5(atrstring, val);
+   } else {
+      eval (atrstring + " = val - 1 ");
+      drawValue5(atrstring, val - 1);
+   }   
+}
+
+
+
+</script>
+
+
+<a id="strength1" href="#" onclick="alert(strength)">x</a>
+
+<a id="strength2" href="javascript:setAttribute('strength', 2)">o</a>
+
+<a id="strength3" href="javascript:setAttribute('strength', 3)">o</a>
+
+<a id="strength4" href="javascript:setAttribute('strength', 4)">o</a>
+
+<a id="strength5" href="javascript:setAttribute('strength', 5)">o</a>
+
+
+													</body>
+													</html>

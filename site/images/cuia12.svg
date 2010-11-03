@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="cuia11.svg"
+   inkscape:export-filename="C:\Users\Eduardo\Desktop\logo encontro cs poa\cuia8-mini.png"
+   inkscape:export-xdpi="76.074036"
+   inkscape:export-ydpi="76.074036">
+  <defs
+     id="defs4">
+    <inkscape:path-effect
+       effect="interpolate"
+       id="path-effect4459"
+       is_visible="true"
+       trajectory="M 0,0 0,0"
+       equidistant_spacing="true"
+       steps="5" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <inkscape:perspective
+       id="perspective2921"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.60811183"
+     inkscape:cx="373.31423"
+     inkscape:cy="806.06682"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1440"
+     inkscape:window-height="838"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Camada 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g3617"
+       transform="matrix(1.4693511,0,0,1.4693511,-248.85529,245.44914)">
+      <text
+         sodipodi:linespacing="80.000001%"
+         id="text3732"
+         y="196.24577"
+         x="223.13193"
+         style="font-size:49.13576508px;font-style:normal;font-weight:normal;line-height:80.00000119%;fill:#659ba2;fill-opacity:1;stroke:none;font-family:Berlin Sans FB Demi;-inkscape-font-specification:Berlin Sans FB Demi"
+         xml:space="preserve"><tspan
+           id="tspan3790"
+           style="font-size:49.13576508px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:start;fill:#659ba2;fill-opacity:1;font-family:Berlin Sans FB Demi;-inkscape-font-specification:Berlin Sans FB Demi Bold"
+           y="196.24577"
+           x="223.13193"
+           sodipodi:role="line"><tspan
+             style="font-size:44.90897369px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:start;fill:#659ba2;fill-opacity:1;font-family:Berlin Sans FB Demi;-inkscape-font-specification:Berlin Sans FB Demi Bold"
+             id="tspan2833">Couch<tspan
+   id="tspan3607"
+   style="fill:#f6931e;fill-opacity:1">Surfing </tspan></tspan><tspan
+             id="tspan3615"
+             style="fill:#000000;fill-opacity:1">Brasil </tspan></tspan></text>
+      <text
+         id="text3758"
+         y="158.30849"
+         x="223.9787"
+         style="font-size:94.33274078px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Berlin Sans FB Demi;-inkscape-font-specification:Berlin Sans FB Demi"
+         xml:space="preserve"><tspan
+           rotate="0 0 2.6760805 0"
+           style="font-size:61.31628418px"
+           y="158.30849"
+           x="223.9787"
+           id="tspan3760"
+           sodipodi:role="line">1º Encontro Sul</tspan></text>
+    </g>
+    <path
+       style="fill:#659ba2;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       d="m 570.78137,33.509516 c -44.03954,2.743267 -86.09866,25.834434 -120.35945,60.308256 -31.41804,31.392978 -58.98955,68.429788 -85.91857,105.765618 -9.73353,14.50346 -20.46789,28.38131 -28.39312,44.7024 -1.51318,3.55289 -3.50708,9.16305 0.62928,10.76171 3.53849,2.29711 7.96294,0.69047 9.56506,-4.13914 12.63084,-18.9008 28.05464,-34.22046 41.97285,-51.53911 33.06682,-38.14793 64.67247,-78.77509 102.73639,-108.803681 29.58103,-21.961944 63.552,-34.064422 97.53842,-38.366387 3.65751,1.194465 6.81265,-2.157467 8.91062,-5.41268 2.24138,-6.504408 -4.24964,-10.931831 -8.4072,-11.939744 -5.97922,-1.352949 -12.20338,-1.253737 -18.27428,-1.337242 z"
+       id="path3676" />
+    <g
+       id="g3636"
+       transform="translate(40.31564,0)">
+      <path
+         id="path3658"
+         d="m 452.52687,108.83994 c -6.32861,0.61789 -5.87148,7.43676 -9.0781,10.9529 -10.4825,17.16189 -29.98796,31.43466 -31.04531,51.96619 -1.94051,30.04509 14.28159,57.80451 19.76736,86.87681 0.67425,17.08476 -14.84972,30.24229 -27.07945,41.83944 -22.97066,20.17283 -51.1831,36.39618 -80.30879,48.55508 -5.70692,-2.2914 -9.17809,4.42285 -10.16253,8.1547 -1.29662,5.77736 3.24212,11.78057 10.10056,12.60512 14.51464,3.53031 29.01392,-2.90935 41.88947,-7.91485 35.86695,-16.54975 64.58152,-44.46037 79.5652,-76.90995 7.27131,-17.43651 6.1631,-36.84194 -0.78865,-54.26557 -6.25351,-19.50475 -15.12327,-39.1509 -15.07482,-59.55371 3.40874,-10.49002 14.17434,-17.60379 19.82936,-27.07571 6.94451,-9.83684 14.03945,-21.27846 11.77365,-33.09848 -1.95923,-2.81694 -6.20025,-2.00764 -9.38795,-2.13197 z"
+         style="fill:#ae0000;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <path
+         id="path3648"
+         d="m 207.31053,109.46602 c -5.67547,0.2693 -6.63101,5.98741 -5.04494,9.7202 4.20764,17.41986 20.77136,29.89215 34.91822,41.86069 6.41578,4.56767 13.58575,11.15793 10.66009,18.94282 -4.15217,25.1836 -21.48414,46.98208 -28.31758,71.4888 -5.91253,20.32436 5.56016,40.71606 20.28027,56.09688 31.27985,31.39191 74.17726,54.89746 121.2006,64.90484 15.25568,2.86171 33.56131,6.55039 47.34012,-1.86825 5.21642,-5.30312 2.23429,-13.56437 -4.34693,-16.84113 -2.24286,-2.08001 -5.22769,0.56768 -7.32946,0.27075 -47.77789,-16.00639 -96.36721,-33.79833 -134.72256,-63.49271 -10.2976,-7.65164 -22.3249,-18.33675 -19.29139,-31.19133 8.5847,-27.79471 28.88531,-53.43534 28.11215,-83.04145 -0.0917,-11.67154 -7.36253,-22.26394 -16.85849,-30.13159 -12.54312,-11.42592 -26.50853,-22.19411 -35.84385,-35.77088 -3.33738,-1.46969 -7.18187,-0.65622 -10.75625,-0.94764 z"
+         style="fill:#f6931e;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <path
+         id="path3674"
+         d="m 187.44528,97.28541 c -3.01547,2.97668 -5.45971,11.83341 -0.16222,13.34401 75.04521,23.42737 153.17039,27.39638 230.24724,22.75389 16.30196,-0.62518 32.57597,-2.5536 48.74439,-4.83866 4.69827,3.59533 10.75237,-1.01196 12.51678,-6.75603 2.04576,-6.22166 -2.52797,-12.82096 -7.85932,-11.77194 -34.19403,-4.98583 -68.82196,-2.14557 -103.19578,-2.09197 -48.37978,1.18954 -96.85001,-0.47915 -144.93054,-7.58059 -11.68166,-1.178818 -23.9032,-4.040143 -35.36055,-3.05871 z"
+         style="fill:#007500;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+    </g>
+  </g>
+</svg>
