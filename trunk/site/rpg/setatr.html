@@ -1,0 +1,78 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+<head>
+<style>
+a {
+color:#000000;
+text-decoration:none;
+}
+</style>
+</head>
+<body>
+
+<script type="text/javascript">
+var dexterity = 1;
+var stamina = 1;
+
+function drawValue5(atrstring, val) {
+   for (var i = 1 ; i <= 5 ; i++) {
+      var elem;
+      eval ("elem = document.getElementById(\"" + atrstring + i + "\")");
+      if (i <= val) {
+          elem.innerHTML="●";
+	  //elem.innerHTML="x"
+      } else {
+          elem.innerHTML="○";
+	  //elem.innerHTML="o";
+      }
+      
+   }
+}
+
+function setAttribute(atrstring, val) {
+   var oldatr;
+   var newatr;
+   eval ("oldatr = " + atrstring);
+   if (val != oldatr) {
+      eval (atrstring + " = val ");
+      drawValue5(atrstring, val);
+   } else {
+      eval (atrstring + " = val - 1 ");
+      drawValue5(atrstring, val - 1);
+   }
+   var elem;
+   eval ("elem = document.getElementById(\"" + atrstring + "value\")");
+   eval ("elem.innerHTML = atrstring + \" value: \" + " + atrstring);
+}
+
+</script>
+
+Strength: 
+<font size=5><a id="strength1" href="javascript:setAttribute('strength', 1)">●</a></font>
+<font size=5><a id="strength2" href="javascript:setAttribute('strength', 2)">○</a></font>
+<font size=5><a id="strength3" href="javascript:setAttribute('strength', 3)">○</a></font>
+<font size=5><a id="strength4" href="javascript:setAttribute('strength', 4)">○</a></font>
+<font size=5><a id="strength5" href="javascript:setAttribute('strength', 5)">○</a></font>
+<br />
+
+Dexterity:
+<font size=5><a id="dexterity1" href="javascript:setAttribute('dexterity', 1)">●</a></font>
+<font size=5><a id="dexterity2" href="javascript:setAttribute('dexterity', 2)">○</a></font>
+<font size=5><a id="dexterity3" href="javascript:setAttribute('dexterity', 3)">○</a></font>
+<font size=5><a id="dexterity4" href="javascript:setAttribute('dexterity', 4)">○</a></font>
+<font size=5><a id="dexterity5" href="javascript:setAttribute('dexterity', 5)">○</a></font>
+<br />
+
+Stamina:
+<font size=5><a id="stamina1" href="javascript:setAttribute('stamina', 1)">●</a></font>
+<font size=5><a id="stamina2" href="javascript:setAttribute('stamina', 2)">○</a></font>
+<font size=5><a id="stamina3" href="javascript:setAttribute('stamina', 3)">○</a></font>
+<font size=5><a id="stamina4" href="javascript:setAttribute('stamina', 4)">○</a></font>
+<font size=5><a id="stamina5" href="javascript:setAttribute('stamina', 5)">○</a></font>
+
+<p id="strengthvalue">strength value: 1</p>
+<p id="dexterityvalue">dexterity value: 1</p>
+<p id="staminavalue">stamina value: 1</p>
+
+</body>
+</html>
