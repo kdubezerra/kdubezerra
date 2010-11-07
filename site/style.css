@@ -19,7 +19,7 @@ a:hover { color : #faf391; }
 a.meulink { color: #FFFFFF; font-weight: bold; text-decoration: none; filter:alpha(opacity=50); -moz-opacity: 0.5; opacity: 0.5; -khtml-opacity: 0.5;}
 a.meulink:hover { color: #FFFFFF; font-weight: bold; filter:alpha(opacity=100); -moz-opacity: 1.0; opacity: 1.0; -khtml-opacity: 1.0;}
 
-a.publink { color: #0088FF; }
+a.publink { color: #0088FF; font-weight: bold }
 a.publink:hover { color: #FAF391; }
 
 *.transOFF {opacity:1; filter: alpha(opacity=100); -moz-opacity: 1.0; color: #FFFFFF}
@@ -28,7 +28,7 @@ img.transON {opacity:1; filter: alpha(opacity=100); -moz-opacity: 1.0; color: #F
 
 h3.meuh3 { color:#FAF391; font-size: 16px; font-weight: bold; text-decoration: none;}
 
-h2.meuh2 { color:#FAF391; font-size: 30px; font-weight: light; text-decoration: none;}
+h2.meuh2 { color:#FAF391; font-size: 25px; font-weight: light; text-decoration: none;}
 
 #wrap {
 width: 760px;
@@ -75,7 +75,7 @@ padding-left: 12px;
   float : left ;
   list-style: none;
   width : 200px ;
-  height : 700px ;
+  height : 750px ;
 }
 
 .navigation { 
