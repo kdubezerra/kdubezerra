@@ -12,66 +12,73 @@ include("head.html");
 include("top.html");
 ?>
 
-<div class="content">
+<div class="content" style="text-align:justify">
 <h2 class="meuh2">Curriculum Vitae</h2><br/>
 
-currículo lattes: <a href="http://lattes.cnpq.br/7512631263282644">http://lattes.cnpq.br/7512631263282644</a><br /><br />
+Lattes curriculum: <a target="_blank" href="http://lattes.cnpq.br/7512631263282644">http://lattes.cnpq.br/7512631263282644</a><br><br>
 
-<h3 class="meuh3">Resumo</h3><br />
-Doutorando em Ciência da Computação pela UFRGS, Mestre em Ciência da Computação pela UFRGS (2009) e Bacharel em Ciência da Computação pela UFBa (2007). Possui conhecimento avançado nas linguagens C e C++, além de experiência com Java e VisualBasic e longa experiência com Linux. Fluente em inglês, com conhecimento básico de alemão, francês e italiano.
+<h3 class="meuh3">Summary</h3><br>
+PhD student in Computer Science in UFRGS and USI, Master in Computer Science by UFRGS (2009) and Bachelor in Computer Science by UFBA (2007). Possesses advanced knowledge of the C and C++ programming languages, as well as experience with Java, VisualBasic and long experience with Linux operating systems. Fluent in English and Portuguese, with basic knowledge of Italian, German and French.
 
-<br /><br />
-<br /><h3 class="meuh3">Formação</h3><br />
-Mestrado em Computação, UFRGS.<br />
-Iniciado em 2007/1 e concluído em 2009/1.<br />
-Área: sistemas distribuídos.<br />
-Título do trabalho: “Lidando com recursos escassos e heterogêneos em um sistema distribuído atuando como servidor de MMOG”.<br />
-Orientador: Cláudio Fernando Resin Geyer
+<br><br>
+<br><h3 class="meuh3">Academic background</h3><br>
 
-<br /><br />Bacharelado em Ciência da Computação, UFBa.<br />
-Iniciado em 2002/1 e concluído em 2006/2.
-
-
-<br /><br /><br /><h3 class="meuh3">Formação complementar</h3><br />
-<b>Alemão básico</b> – curso de alemão Alles Gute!.<br />
-<b>Francês básico</b> – Alliance Française.<br />
-<b>Italiano básico</b> - Societá Italiana Massolin de Fiori.<br />
-<b>Inglês (fluente)</b> – fluência adquirida com a vivência do idioma.<br />
-
-
-<br /><br /><h3 class="meuh3">Experiência</h3><br />
-
-<b>2007 – Projeto P2PSE - UFRGS e FINEP.</b><br />
-Desenvolvimento em C++ do suporte a múltiplos servidores na biblioteca para jogos massivos em rede P2PSE.<br /><br />
-
-<b>2006 – Interactive Digital Entertainment.</b><br />
-Desenvolvimento em C++ do jogo “We Are The Champignons”, utilizando a engine InGE.<br /><br />
-
-<b>2006 – Interactive Digital Entertainment.</b><br />
-Desenvolvimento do módulo de rede da engine InGE, em C e C++, utilizando XML e SDL (simple directmedia layer).<br /><br />
-
-<b>2006 – Centro de processamento de dados, UFBa.</b><br />
-Desenvolvimento web com Java, Struts, Hibernate e PostgreSQL.<br /><br />
-
-<b>2005 – Jabil Circuit.</b><br />
-Desenvolvimento com VB, VB.net e Microsoft SQL Server, além de pesquisa com redes sem-fio IEEE 802.11.<br /><br />
+<b>Master in Computer Science, UFRGS</b><br>
+Started in March 2007 and finished in March 2009<br>
+Area: distributed systems<br>
+Title of the Master's Thesis: "Dealing with scarce and heterogeneous resources in a geographically distributed MMOG server system"<br>
+Advisor: Prof. Dr. Cláudio Fernando Resin Geyer<br>
+<br>
+<b>Bachelor in Computer Science, UFBA</b><br>
+Started in July 2002 and finished in December 2006<br>
+Title of the Bachelor's Thesis: "QoS for Multiplayer Games in IEEE 802.11 Networks"<br>
+Advisor: Prof. Dr. George Marconi de Araújo Lima<br>
+<br>
+<br>
+<h3 class="meuh3">Languages</h3><br>
+<b>German (basic)</b> – <i>Alles Gute!</i> German course.<br>
+<b>French (basic)</b> – <i>Alliance Française</i> French scool.<br>
+<b>Italian (basic)</b> - <i>Massolin de Fiori</i> Italian society.<br>
+<b>English (fluent)</b> – fluency acquired by learning at school and by experiencing the language every day.<br>
 
 
-<br /><h3 class="meuh3">Atividades adicionais</h3><br />
+<br><br><h3 class="meuh3">Professional experience in software development</h3><br>
 
-Pesquisa em otimização de uso de largura de banda em ambientes virtuais distribuídos, como objetivo do mestrado.<br />
-Linguagens utilizadas: C, C++, tcl e otcl.<br /><br />
+In the years <b>2008 to 2010</b>, the focus was on research and, even though there was much programming effort, it was directed to validating the theoretical models proposed.<br><br>
 
-Publicação de full paper no 12-th IEEE International Symposium on Distributed Simulation and Real Time Applications, Vancouver, Canadá, 2008.<br /><br />
+<b>2007 – P2PSE Project - UFRGS e FINEP.</b><br>
+Software development with C++ - added support for multiple servers in the decentralized massively multiplayer games network library P2PSE.<br><br>
 
-Publicação de full paper no VII SBGames (Simpósio Brasileiro de Jogos para Computador e Entretenimento Digital), Belo Horizonte, 2008.<br /><br />
+<b>2006 – Interactive Digital Entertainment.</b><br>
+Development, in C++, of the game “We Are The Champignons”, using the InGE game engine.<br><br>
 
-Publicação de short paper no VI SBGames (Simpósio Brasileiro de Jogos para Computador e Entretenimento Digital), São Leopoldo, 2007.<br /><br />
+<b>2006 – Interactive Digital Entertainment.</b><br>
+Development, using C, C++, XML and SDL (simple directmedia layer), of the network module of the InGE game engine.<br><br>
 
-Participação no V SBGames (Simpósio Brasileiro de Jogos para Computador e Entretenimento Digital), Recife, 2006.<br />
-Foi obtido o 3º lugar no festival de jogos do SBGames 2006 com o jogo “We Are The Champignons”.<br /><br />
+<b>2006 – UFBA's Data Center.</b><br>
+Software development with Java, Struts, Hibernate e PostgreSQL.<br><br>
 
-Participação no XXII Encontro nacional de estudantes de computação (ENECOMP), Salvador, 2004.<br /><br />
+<b>2005 – Jabil Circuit.</b><br>
+Software development with VB, VB.net and Microsoft SQL Server, as well as research with IEEE 802.11 wireless networks.<br><br>
+
+
+<br><h3 class="meuh3">Extra activities</h3><br>
+
+<b>Dec. 2009 to Sep. 2010</b> - Online tutor for the Specialization in Basic Informatics for Fundamental School Professors distance course.<br><br>
+
+<b>June 2009 to Sep. 2009</b> - Steering chair of the WSPPD 2009 (VII Workshop of Parallel and Distributed Processing).<br><br>
+
+<b>Aug. 2008 to Dec. 2008</b> and <b>Aug. 2009 to Dec. 2009</b> - Teaching assistance on the Operating Systems II course, with Prof. Dr. Alexandre Carissimi and Prof. Dr. Cláudio F. R. Geyer.<br><br>
+
+<b>Oct. 2008</b> - Participation in the 12th IEEE International Symposium on Distributed Simulation and Real Time Applications, Vancouver, Canada.<br><br>
+
+<b>Oct. 2009, Nov. 2008, Nov. 2007, Nov. 2006</b> - Participation in the VIII, VII, VI and V editions of SBGames (Brazilian Symposium on Computer Games and Digital Entertainment), in Rio de Janeiro (2009)*, Belo Horizonte (2008), São Leopoldo (2007) and Recife (2006)**.<br><br>
+
+<p style="margin-left:5%"><b>*</b> - In SBGames 2009, the paper <a class="publink" href="http://www.inf.ufrgs.br/~cebbezerra/publications/bezerra2009fgl.pdf"><b>A fine granularity load balancing scheme...</b></a> was awarded as 2nd best paper of the conference, and the authors were invited to submit an extended version to the <a href="http://cie.acm.org/">ACM Computers in Entertainment journal</a>.<br><br>
+
+<b>**</b> - In SBGames 2006, the game <a class="publink" href="https://intranet.dcc.ufba.br/svn/indigente/trunk/WeAreTheChampignons/"><b>We are the champignons</b></a>, developed with the indigente's <a href="https://intranet.dcc.ufba.br/svn/indigente/trunk/libinge/">InGE library</a> was awarded as the 3rd best game of the independent games festival.</p><br>
+
+<b>Aug. 2004</b> - Participation in the XXII National Meeting of Computer Science Students (ENECOMP), in Salvador.<br><br>
 
 </div>
 

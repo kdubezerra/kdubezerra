@@ -12,26 +12,18 @@ include("top.html");
 ?>
 
 <div class="content">
-<h2>(in portuguese) Aula prática de SisOp II</h2>
-<a class="transON" onmouseover="this.className='transOFF'" onmouseout="this.className='transON'" href="resources/slides_sisop2_pratica.ppt">
-<img class="transON" onmouseover="this.className='transOFF'" onmouseout="this.className='transON'" src="images/3d_icons/ppt.png" alt="slides_sisop2_pratica.ppt" />
-<br />
-<strong>Slides em formato do Microsoft Powerpoint</strong></a><br />
-<a class="transON" onmouseover="this.className='transOFF'" onmouseout="this.className='transON'" href="resources/slides_sisop2_pratica.odp">
-<img class="transON" onmouseover="this.className='transOFF'" onmouseout="this.className='transON'" src="images/odp.png" alt="slides_sisop2_pratica.odp" />
-<br />
-<strong>Slides em formato do OpenOffice Impress</strong></a><br />
-<a class="transON" onmouseover="this.className='transOFF'" onmouseout="this.className='transON'" href="resources/slides_sisop2_pratica.pdf">
-<img class="transON" onmouseover="this.className='transOFF'" onmouseout="this.className='transON'" src="images/3d_icons/pdf.png" alt="slides_sisop2_pratica.pdf" />
-<br />
-<strong>Slides em formato PDF</strong></a><br />
-<a class="transON" onmouseover="this.className='transOFF'" onmouseout="this.className='transON'" href="resources/pratica_sisop2.zip">
-<img class="transON" onmouseover="this.className='transOFF'" onmouseout="this.className='transON'" src="images/3d_icons/zip.png" alt="pratica_sisop2.zip" />
-<br />
-<strong>Pacote zip com os códigos-fonte utilizados na prática</strong></a><br />
 
-<p><br /></p>
+<h2 class="meuh2">Hi! Welcome to my website!</h2><br>
 
+<img src="images/foto_thumb.jpg" alt="Eduardo Bezerra"  style="border: 1px solid #888;"/><br>
+<br>
+<p style="text-align:justify">
+My name is Eduardo and I am currently a PhD student in the <a href="http://www.inf.ufrgs.br" target="blank">Informatics Institute</a> of <a href="http://www.ufrgs.br" target="blank">UFRGS (Universidade Federal do Rio Grande do Sul)</a>, in Porto Alegre, Brazil and in the <a href="http://www.inf.usi.ch" target="_blank">Faculty of Informatics</a> of <a href="http://www.usi.ch" target="blank">USI (Università della Svizzera italiana)</a>, in Lugano, Switzerland. My advisor in UFRGS is <a href="http://www.inf.ufrgs.br/en/index.php?option=com_content&view=article&id=94:claudio-fernando-resin-geyer&catid=39:corpo-docente&Itemid=81" target="_blank">Prof. Dr. Cláudio Fernando Resin Geyer</a>, from <a href="http://saloon.inf.ufrgs.br/twiki/view" target="_blank">GPPD (Parallel and Distributed Processing Group)</a>. My advisor in USI is <a href="http://www.inf.usi.ch/faculty/pedone/" target="_blank">Prof. Dr. Fernando Pedone</a>.<br>
+<br>
+Before starting the PhD courses in collaboration with these two universities, I obtained my Master's degree from UFRGS and my Bachelor's degree from the <a href="http://wiki.dcc.ufba.br/DCC/" target="_blank">DCC (Computer Science Department)</a> from <a href="http://www.ufba.br" target="blank">UFBA (Universidade Federal da Bahia)</a>, in Salvador, Brazil. During that time, I also worked volunteerly on the independent game-related research and development group <a href="http://indigente.ufba.br" target="_blank">indigente (Interactive Digital Entertainment)</a>.<br>
+<br>
+You can find more about me and my work by navigating through this website, using the navigation panel on the left. Have a nice tour ;)</p>
+<br>
 <p align=center>
 <a href="http://www4.clustrmaps.com/counter/maps.php?url=http://www.inf.ufrgs.br/~cebbezerra" id="clustrMapsLink">
 <img src="http://www4.clustrmaps.com/counter/index2.php?url=http://www.inf.ufrgs.br/~cebbezerra" style="border:0px;" alt="Locations of visitors to this page" title="Locations of visitors to this page" id="clustrMapsImg" onerror="this.onerror=null; this.src='http://www2.clustrmaps.com/images/clustrmaps-back-soon.jpg'; document.getElementById('clustrMapsLink').href='http://www2.clustrmaps.com';" />
