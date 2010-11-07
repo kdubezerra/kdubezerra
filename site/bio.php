@@ -15,9 +15,9 @@ include("top.html");
 
 <h2 class="meuh2">Short Bio</h2><br/>
 
-<img src="images/site-canada.jpg" alt="Eduardo Bezerra"/><br /><br />
+<img src="images/site-canada.jpg" alt="Grouse Mountain, North Vancouver, Canada - November 2008"/><br /><br />
 
-<p style="text-align:justify">I was born the may 17h, 1985, in Maranguape, a city in the countryside of the state of Ceará, in the northeast region of Brazil. However, I grew up in Feira de Santana, in Bahia, and stayed there until 2002, when I was sixteen and moved once again, this time do Salvador, capital of Bahia.<br /><br />
+<p style="text-align:justify">I was born the may 17th, 1985, in Maranguape, a city in the countryside of the state of Ceará, in the northeast region of Brazil. However, I grew up in Feira de Santana, in Bahia, and stayed there until 2002, when I was sixteen and moved once again, this time do Salvador, capital of Bahia.<br /><br />
 
 In Salvador, I entered college, eventually graduating and earning the title of Bachelor in Computer Science, in february 2007, from the Federal University of Bahia. After finishing my undergraduate course, I applied for some post-graduation programs from universities all over Brazil, which were: UFPE, UFBA, UNICAMP, UFRGS and USP.<br /><br />
 
