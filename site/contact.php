@@ -13,10 +13,10 @@ include("top.html");
 
 <div class="content">
 
-<h2 class="meuh2">Contact Info</h2><br/>
+<h2 class="meuh2">Contact Info</h2><br>
 
-<h3 class="meuh3">Address:</h3><br />
-<b>Faculty of Informatics<b><br>
+<h3 class="meuh3">Address:</h3><br>
+<b>Faculty of Informatics</b><br>
 Universittà della Svizzera Italiana (USI)<br>
 Via Giuseppe Buffi 13<br>
 6900 Lugano<br>
@@ -27,16 +27,10 @@ Porto Alegre – RS<br />
 91501-970 <br />
 Brazil<br /><br /-->
 
-<h3 class="meuh3">E-mail:</h3><br />
-<!--carlos.bezerra@inf.ufrgs.br<br>
-carlos.bezerra@usi.ch<br>
-kdubezerra@gmail.com<br-->
+<h3 class="meuh3">E-mail:</h3><br>
 <img src="images/emails.jpg" /><br>
 <!--img src="images/ig.jpg" /><br />
 <img src="images/mg.jpg" /><br /><br /-->
-
-<p><br />
-</p>
 
 </div>
 
