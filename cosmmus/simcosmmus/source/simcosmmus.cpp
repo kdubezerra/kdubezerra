@@ -121,7 +121,7 @@ int main (int argc, char* argv[]) {
   }
 
   for (int i = 0 ; i < NUM_SERVERS ; i++) {
-    server[i] = new Server ((i+1)*MULTIPLIER);
+    server[i] = new Server (100000);//((i+1)*MULTIPLIER);
   }
 
   

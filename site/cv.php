@@ -40,7 +40,7 @@ Advisor: Prof. Dr. George Marconi de Araújo Lima<br>
 <b>French (basic)</b> – <i>Alliance Française</i> French scool.<br>
 <b>Italian (basic)</b> - <i>Massolin de Fiori</i> Italian society.<br>
 <b>English (fluent)</b> – fluency acquired by learning at school and by experiencing the language every day.<br>
-
+<b>Portuguese (native)</b> - native speaker of Brazilian Portuguese.<br>
 
 <br><br><h3 class="meuh3">Professional experience in software development</h3><br>
 
@@ -74,9 +74,9 @@ Software development with VB, VB.net and Microsoft SQL Server, as well as resear
 
 <b>Oct. 2009, Nov. 2008, Nov. 2007, Nov. 2006</b> - Participation in the VIII, VII, VI and V editions of SBGames (Brazilian Symposium on Computer Games and Digital Entertainment), in Rio de Janeiro (2009)*, Belo Horizonte (2008), São Leopoldo (2007) and Recife (2006)**.<br><br>
 
-<p style="margin-left:5%"><b>*</b> - In SBGames 2009, the paper <a class="publink" href="http://www.inf.ufrgs.br/~cebbezerra/publications/bezerra2009fgl.pdf"><b>A fine granularity load balancing scheme...</b></a> was awarded as 2nd best paper of the conference, and the authors were invited to submit an extended version to the <a href="http://cie.acm.org/">ACM Computers in Entertainment journal</a>.<br><br>
+<p style="margin-left:5%"><b>*</b> - In SBGames 2009, the paper <a class="publink" href="http://www.inf.ufrgs.br/~cebbezerra/publications/bezerra2009fgl.pdf"><b>A fine granularity load balancing technique...</b></a> was awarded as 2nd best paper of the conference, and the authors were invited to submit an extended version to the <a href="http://cie.acm.org/">ACM Computers in Entertainment journal</a>.<br><br>
 
-<b>**</b> - In SBGames 2006, the game <a class="publink" href="https://intranet.dcc.ufba.br/svn/indigente/trunk/WeAreTheChampignons/"><b>We are the champignons</b></a>, developed with the indigente's <a href="https://intranet.dcc.ufba.br/svn/indigente/trunk/libinge/">InGE library</a> was awarded as the 3rd best game of the independent games festival.</p><br>
+<b>**</b> - In SBGames 2006, the game <a class="publink" href="https://intranet.dcc.ufba.br/svn/indigente/trunk/WeAreTheChampignons/"><b>We are the champignons</b></a>, developed with indigente's <a href="https://intranet.dcc.ufba.br/svn/indigente/trunk/libinge/">InGE library</a>, was awarded as the 3rd best game in the independent games festival.</p><br>
 
 <b>Aug. 2004</b> - Participation in the XXII National Meeting of Computer Science Students (ENECOMP), in Salvador.<br><br>
 
