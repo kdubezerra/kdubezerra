@@ -252,9 +252,11 @@ void BSPTree::drawTree() {
       boxColor(screen, xmin, ymin, xmax, ymax, color);
     if (drawing_loads) {
       string power = longToString(server->getServerPower());
-      string load = longToString(getWeight());
+      string weight = longToString(getWeight());
+      string load = floatToString( (float)(getWeight()) / (float)(server->getServerPower()) );
       stringColor(screen, xmin, ymin, power.c_str(), 0x000000FF);
-      stringColor(screen, xmin, ymin + 10, load.c_str(), 0x000000FF);
+      stringColor(screen, xmin, ymin + 10, weight.c_str(), 0x000000FF);
+      stringColor(screen, xmin, ymin + 20, load.c_str(), 0x000000FF);
     }
   }
 }
