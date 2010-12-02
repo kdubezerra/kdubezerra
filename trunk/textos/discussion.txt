@@ -1,0 +1,5 @@
+1. ao receber uma acao, o backup pode fazer rbcast dela para o manager e para os outros backups, enviando tb a sequencia otimista que considerou, como uma lista das ultimos pares msgid-msgseq# considerados por ele desde a ultima lista que enviou.
+1.1 a heuristica para ordenar as mensagens de maneira otimista deve ser a mesma entre os diferentes backups, de forma que as ordens otimistas consideradas por cada um deles sejam parecidas, minimizando possiveis conflitos
+1.2. a ordem decidida pelo region manager eh definida tentando-se minimizar o numero de conflitos nas ordens otimistas dos backups. Assim, se houver apenas um backup e o proprio manager nao tiver nenhuma mensagem nova a enviar, a ordem definida pelo backup sera tomada como final
+
+2. diferentes mensagens a serem gam-cast poderiam receber o mesmo ts temporario de cada processo que a propoe.
