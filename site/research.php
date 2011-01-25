@@ -22,7 +22,8 @@ I have been doing research in this area since the last year of my Bachelor cours
 My Master's thesis had as objective to create a decentralized multi-server architecture, where the server nodes were actually given by volunteers - therefore, presenting very limited resources to serve the game. I had several publication during my Master, whose focus was on saving network bandwidth from the servers, through a fine-tuned interest management scheme, and on balancing the load between the game server at the same time that a minimum inter-server communication was pursued, in order to save resources of the system and to minimize tha communication latency of the players.<br>
 <br>
 In my PhD course, which is bein done at this moment, my objective is to create a decentralized multi-server architecture composed of volunteer nodes, and adding fault-tolerance to it. In a first moment, a crash-stop failure model is being considered, but the ultimate goal of my thesis is to create a system which is tolerant to byzantine faults - whose purpose is to minimize the cheating issue of decentralized multiplayer game architectures, while also covering faulty, but non-malicious, behaviors of the system.
-
+<br>
+<p align=center><img src="images/wordclouds/research.jpg" /></p>
 <!--p align="center">
 <img src="images/underconstruction2.jpg" alt="Under Construction" />
 </p-->
