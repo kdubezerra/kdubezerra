@@ -25,12 +25,12 @@ Before starting the PhD courses in collaboration with these two universities, I 
 You can find more about me and my work by navigating through this website, using the navigation panel on the left. Have a nice tour ;)</p>
 <br>
 <p align=center>
-<img src="images/wordclouds/intro.jpg" />
-<br>
-<a href="http://www4.clustrmaps.com/counter/maps.php?url=http://www.inf.ufrgs.br/~cebbezerra" id="clustrMapsLink">
+<!--a href="http://www4.clustrmaps.com/counter/maps.php?url=http://www.inf.ufrgs.br/~cebbezerra" id="clustrMapsLink">
 <img src="http://www4.clustrmaps.com/counter/index2.php?url=http://www.inf.ufrgs.br/~cebbezerra" style="border:0px;" alt="Locations of visitors to this page" title="Locations of visitors to this page" id="clustrMapsImg" onerror="this.onerror=null; this.src='http://www2.clustrmaps.com/images/clustrmaps-back-soon.jpg'; document.getElementById('clustrMapsLink').href='http://www2.clustrmaps.com';" />
-</a><br>
+</a-->
 <br>
+<br>
+<img src="images/wordclouds/intro.jpg" />
 
 <!--
 <a href="http://www.ubuntu.com"><img border="0" id="ubuntuCountDown"/></a>
