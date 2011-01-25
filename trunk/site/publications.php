@@ -62,6 +62,7 @@ BEZERRA, Carlos E. B.; LIMA, George M. A.;<br />
 <br />
 <!--br />
 A few very interesting reviews of papers submitted by some well-known computer scientists: <a class="publink" href="http://www.computer.org/portal/site/computer/menuitem.eb7d70008ce52e4b0ef1bd108bcd45f3/index.jsp?pName=computer_level1&path=computer/homepage/1205&file=profession.xml&xsl=article.xsl"><b>We Are Sorry To Inform You</b></a>, by Simone Santini from University of California at San Diego<br / -->
+<p align=center><img src="images/wordclouds/publications.jpg" /></p>
 </div>
 
 <?php
