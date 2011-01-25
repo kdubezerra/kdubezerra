@@ -23,6 +23,8 @@ My Master's thesis had as objective to create a decentralized multi-server archi
 <br>
 In my PhD course, which is bein done at this moment, my objective is to create a decentralized multi-server architecture composed of volunteer nodes, and adding fault-tolerance to it. In a first moment, a crash-stop failure model is being considered, but the ultimate goal of my thesis is to create a system which is tolerant to byzantine faults - whose purpose is to minimize the cheating issue of decentralized multiplayer game architectures, while also covering faulty, but non-malicious, behaviors of the system.
 <br>
+<br>
+<br>
 <p align=center><img src="images/wordclouds/research.jpg" /></p>
 <!--p align="center">
 <img src="images/underconstruction2.jpg" alt="Under Construction" />

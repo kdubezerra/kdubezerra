@@ -29,6 +29,8 @@ Brazil<br /><br /-->
 
 <h3 class="meuh3">E-mail:</h3><br>
 <img src="images/emails.jpg" /><br>
+<br>
+<p align=center><img src="images/wordclouds/contact.jpg" /></p>
 <!--img src="images/ig.jpg" /><br />
 <img src="images/mg.jpg" /><br /><br /-->
 

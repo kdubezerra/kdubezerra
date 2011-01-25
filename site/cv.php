@@ -80,6 +80,8 @@ Software development with VB, VB.net and Microsoft SQL Server, as well as resear
 
 <b>Aug. 2004</b> - Participation in the XXII National Meeting of Computer Science Students (ENECOMP), in Salvador.<br><br>
 
+<p align=center><img src="images/wordclouds/cv.jpg" /></p>
+<br>
 </div>
 
 <?php
