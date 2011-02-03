@@ -11,6 +11,7 @@
 #include <list>
 
 class Object;
+class GameServer;
 
 class Command {
   public:
