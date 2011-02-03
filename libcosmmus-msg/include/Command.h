@@ -2,7 +2,7 @@
  * Command.h
  *
  *  Created on: 31/01/2011
- *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch Bezerra
+ *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
 #ifndef COMMAND_H_
