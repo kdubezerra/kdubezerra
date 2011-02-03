@@ -2,7 +2,7 @@
  * GameClient.cpp
  *
  *  Created on: 03/02/2011
- *      Author: Eduardo
+ *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
 #include "../include/GameClient.h"

@@ -2,7 +2,7 @@
  * GameServer.h
  *
  *  Created on: 03/02/2011
- *      Author: Eduardo
+ *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
 #ifndef GAMESERVER_H_

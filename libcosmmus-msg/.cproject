@@ -23,15 +23,17 @@
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug,org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.macosx.lib.debug.1523447824" name="Debug" parent="cdt.managedbuild.config.macosx.lib.debug">
 					<folderInfo id="cdt.managedbuild.config.macosx.lib.debug.1523447824." name="/" resourcePath="">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.macosx.lib.debug.2030925901" name="MacOSX GCC" superClass="cdt.managedbuild.toolchain.gnu.macosx.lib.debug">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.macosx.lib.debug.2030925901" name="MacOSX GCC" nonInternalBuilderId="cdt.managedbuild.target.gnu.builder.macosx.lib.debug" superClass="cdt.managedbuild.toolchain.gnu.macosx.lib.debug">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.macosx.lib.debug.1146655287" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.macosx.lib.debug"/>
-							<builder autoBuildTarget="all" buildPath="${workspace_loc:/libcosmmus-msg/Debug}" cleanBuildTarget="clean" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" id="cdt.managedbuild.target.gnu.builder.macosx.lib.debug.2109905187" incrementalBuildTarget="all" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="4" superClass="cdt.managedbuild.target.gnu.builder.macosx.lib.debug"/>
+							<builder buildPath="${workspace_loc:/libcosmmus-msg/Debug}" id="cdt.managedbuild.target.gnu.builder.macosx.lib.debug.66447746" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" parallelizationNumber="4" superClass="cdt.managedbuild.target.gnu.builder.macosx.lib.debug"/>
 							<tool id="cdt.managedbuild.tool.macosx.c.linker.macosx.base.111639516" name="MacOS X C Linker" superClass="cdt.managedbuild.tool.macosx.c.linker.macosx.base"/>
 							<tool id="cdt.managedbuild.tool.macosx.cpp.linker.macosx.base.1427649455" name="MacOS X C++ Linker" superClass="cdt.managedbuild.tool.macosx.cpp.linker.macosx.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.macosx.lib.debug.534970979" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.macosx.lib.debug">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1936861617" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
-							<tool id="cdt.managedbuild.toolmacosx.lib.debug.gnu.archiver.1604830684" name="GCC Archiver" superClass="cdt.managedbuild.toolmacosx.lib.debug.gnu.archiver"/>
+							<tool id="cdt.managedbuild.toolmacosx.lib.debug.gnu.archiver.1604830684" name="GCC Archiver" superClass="cdt.managedbuild.toolmacosx.lib.debug.gnu.archiver">
+								<outputType id="cdt.managedbuild.tool.gnu.archiver.output.246399360" outputPrefix="" superClass="cdt.managedbuild.tool.gnu.archiver.output"/>
+							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.macosx.lib.debug.233688282" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.macosx.lib.debug">
 								<option id="gnu.cpp.compiler.macosx.lib.debug.option.optimization.level.1105013961" name="Optimization Level" superClass="gnu.cpp.compiler.macosx.lib.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.macosx.lib.debug.option.debugging.level.1602788735" name="Debug Level" superClass="gnu.cpp.compiler.macosx.lib.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>

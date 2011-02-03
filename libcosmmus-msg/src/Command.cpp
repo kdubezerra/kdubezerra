@@ -2,7 +2,7 @@
  * Command.cpp
  *
  *  Created on: 31/01/2011
- *      Author: Eduardo
+ *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
 #include "../include/Command.h"
