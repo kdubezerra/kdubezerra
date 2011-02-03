@@ -2,7 +2,7 @@
  * GameClient.h
  *
  *  Created on: 03/02/2011
- *      Author: Eduardo
+ *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
 #ifndef GAMECLIENT_H_
@@ -21,13 +21,10 @@ class GameClient {
     virtual ~GameClient();
     int connect(std::string _address);
     int disconnect();
-    int submitCommand(Command* _cmd, std::list<Object*> _objs);
-    int submitCommand(Command* _cmd, std::list<GameServer*> _servers);
+    int submitCommand(Command* _cmd);
     int submitRequest(std::string _request);
     virtual int handleServerMsg(std::string _msg);
 
-  protected:
-    int submitCommand(Command* _cmd, std::list<GameServer*> _servers, bool _knowsObjects);
 };
 
 #endif /* GAMECLIENT_H_ */
