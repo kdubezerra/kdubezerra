@@ -6,16 +6,19 @@
 CPP_SRCS += \
 ../src/Command.cpp \
 ../src/GameClient.cpp \
+../src/GameServer.cpp \
 ../src/Object.cpp 
 
 OBJS += \
 ./src/Command.o \
 ./src/GameClient.o \
+./src/GameServer.o \
 ./src/Object.o 
 
 CPP_DEPS += \
 ./src/Command.d \
 ./src/GameClient.d \
+./src/GameServer.d \
 ./src/Object.d 
 
 
