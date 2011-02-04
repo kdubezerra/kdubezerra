@@ -13,9 +13,17 @@ class Object {
     Object();
     virtual ~Object();
 
+    int setId(long _id);
+    long getId();
+
     //These methods should be overridden by the application
     virtual void handleOptimisticDelivery();
     virtual void handleConservativeDelivery();
+
+    virtual Object* createNew()=0;
+
+  private:
+    long id;
 };
 
 #endif /* OBJECT_H_ */
