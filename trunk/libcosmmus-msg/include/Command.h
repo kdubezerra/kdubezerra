@@ -11,6 +11,7 @@
 #include <list>
 
 class Object;
+class Message;
 class GameServer;
 
 class Command {
@@ -18,12 +19,31 @@ class Command {
     Command();
     virtual ~Command();
 
-  protected:
+    void addTarget(Object* _obj);
+    std::list<Object*> getTargetList();
+
+    void addServer(GameServer* _server);
+    std::list<GameServer*> getServerList();
+
+    void setContent(Message* _content);
+    Message* getContent();
+
+    void setKnowsTargets(bool _knowsTargets);
+    bool knowsTargets();
+
+    void setOptimisticallyDeliverable(bool _isOpDeliverable);
+    bool isConservativelyDeliverable();
+
+    void setConservativelyDeliverable(bool _isConsDeliverable);
+    bool isOptimisticallyDeliverable();
+
+  private:
     std::list<Object*> targetList;
     std::list<GameServer*> serverList;
-    bool knowsTargets;
-    // if the command contains the list of target objects, the corresponding servers must be found
-    // if not, it should know the list of possibly
+    Message* commandContent;
+    bool withTargets;
+    bool optimistic;
+    bool conservative;
 };
 
 #endif /* COMMAND_H_ */
