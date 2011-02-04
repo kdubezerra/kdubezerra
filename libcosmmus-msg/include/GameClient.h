@@ -30,7 +30,7 @@ class GameClient {
 
     int connect(std::string _address);
     int disconnect();
-    int submitCommand(Command* _cmd);
+    void submitCommand(Command* _cmd);
     int submitRequest(Message* _request);
     virtual int handleServerAppMsg(Message* _msg);
 

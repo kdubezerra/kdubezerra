@@ -32,15 +32,15 @@ class CoreClient {
     virtual ~CoreClient();
     int connect(std::string _address);
     int disconnect();
-    int submitCommand(Command* _cmd);
-    int setCallbackClientInterface(GameClient* _cbclient);
-    int handleServerMessage(ServerMessage* _serverMsg);
+    void submitCommand(Command* _cmd);
+    void setCallbackClientInterface(GameClient* _cbclient);
     GameClient* getCallbackClientInterface();
+    void handleServerMessage(ServerMessage* _serverMsg);
 
   private:
-    int handleCommand(Command* _cmd);
-    int handleStateUpdate(Object* _state);
-    GameClient* _cbclient;
+    void handleCommand(Command* _cmd);
+    void handleStateUpdate(Object* _state);
+    GameClient* cbclient;
 };
 
 #endif /* CORECLIENT_H_ */
