@@ -39,8 +39,8 @@ int GameClient::disconnect() {
  * \param _cmd The Command object, which contains the details of the command (application-defined type of command and its targets, if any).
  * \return The result of the submission: 0 if submitted successfully to the server.
   */
-int GameClient::submitCommand(Command* _cmd) {
-  return coreClient->submitCommand(_cmd);
+void GameClient::submitCommand(Command* _cmd) {
+  coreClient->submitCommand(_cmd);
 }
 
 /*!
