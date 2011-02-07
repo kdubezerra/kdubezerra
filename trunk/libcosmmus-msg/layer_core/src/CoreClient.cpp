@@ -92,6 +92,7 @@ void CoreClient::handleCommand(Command* _cmd) {
     if (_cmd->isConservativelyDeliverable())
       // TODO: at this point, the delivered command must be checked against the first one in the optimistic queue.
       //       Should be found a difference, action must be taken to correct this discrepancy.
+      // default: application handles it.
       obj->handleConservativeDelivery(_cmd->getContent());
   }
 }
@@ -102,7 +103,7 @@ void handleStateUpdate(Object* _state) {
  *       this going to work? When will one state overwrite the other? Every object should have a
  *       command queue and the library is responsible for controlling this? Maybe this should be
  *       delegated do the application? Although this is not critical for the development of this
- *       library, it would be interest to have this problem worked out.
+ *       library, it would be interesting to have this problem worked out.
  *
  * UPDATE: for now, the "visible" state will be the optimistic one, which will be overwritten and
  *     recalculated once a discrepancy between the conservative delivery order and the previously

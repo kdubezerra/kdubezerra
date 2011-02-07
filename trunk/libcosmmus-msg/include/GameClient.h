@@ -32,15 +32,20 @@ class GameClient {
     int disconnect();
     void submitCommand(Command* _cmd);
     int submitRequest(Message* _request);
-    virtual int handleServerAppMsg(Message* _msg);
-
+    void setObjectModel(Object* _objModel);
     std::list<Object*> getObjectList();
 
-    virtual Object* newAppObject()=0;
+    /*!
+     * \brief Abstract method to be implement by the application. It is called when a message from the server is received.
+     * \param _msg The message object received from the server.
+     * \return An integer number whose meaning should be defined by the application. 0 should mean message successfully handled.
+     */
+    virtual int handleServerAppMsg(Message* _msg);
 
   private:
     std::list<Object*> objList;
     CoreClient* coreClient;
+    Object* objectModel;
 };
 
 #endif /* GAMECLIENT_H_ */

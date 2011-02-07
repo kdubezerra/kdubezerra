@@ -52,11 +52,10 @@ int GameClient::submitRequest(Message* _request) {
 
 }
 
-/*!
- * \brief Abstract method to be implement by the application. It is called when a message from the server is received.
- * \param _msg The message object received from the server.
- * \return An integer number whose meaning should be defined by the application. 0 should mean message successfully handled.
- */
-int GameClient::handleServerAppMsg(Message* _msg) {
+void GameClient::setObjectModel(Object* _objModel) {
+  objectModel = _objModel;
+}
 
+std::list<Object*> GameClient::getObjectList() {
+  return objList;
 }

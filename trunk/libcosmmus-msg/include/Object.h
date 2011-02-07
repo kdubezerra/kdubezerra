@@ -19,10 +19,10 @@ class Object {
     Object();
     virtual ~Object();
 
-    int setId(long _id);
+    void setId(long _id);
     long getId();
 
-    static std::list<Object*> getObjectList();
+    static std::map<long,Object*> getObjectList();
     static Object* getObjectById(long _id);
 
     //These methods should be overridden by the application
@@ -32,11 +32,17 @@ class Object {
     virtual void handleOptimisticDelivery(Message* _cmd) = 0;
     virtual void handleConservativeDelivery(Message* _cmd) = 0;
 
+    /*!
+    * \brief As the library needs to instantiate application objects, whose type is not
+    *        known by it, it must use a callback function, delegating the task of instantiating
+    *        objects to the application developer.
+    * \return It returns a pointer to the newly instantiated application's extended object.
+    */
     virtual Object* createNew() = 0;
 
   private:
     long id;
-    static std::map <long, Object*> objectList;
+    static std::map<long, Object*> objectList;
 };
 
 #endif /* OBJECT_H_ */
