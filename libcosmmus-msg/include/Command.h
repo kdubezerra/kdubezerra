@@ -32,10 +32,10 @@ class Command {
     bool knowsTargets();
 
     void setOptimisticallyDeliverable(bool _isOpDeliverable);
-    bool isConservativelyDeliverable();
+    bool isOptimisticallyDeliverable();
 
     void setConservativelyDeliverable(bool _isConsDeliverable);
-    bool isOptimisticallyDeliverable();
+    bool isConservativelyDeliverable();
 
   private:
     std::list<Object*> targetList;

@@ -6,6 +6,8 @@
  */
 
 #include "../include/GameServer.h"
+#include "../include/Object.h"
+#include "../include/Player.h"
 
 GameServer::GameServer() {
   // TODO Auto-generated constructor stub
@@ -14,4 +16,8 @@ GameServer::GameServer() {
 
 GameServer::~GameServer() {
   // TODO Auto-generated destructor stub
+}
+
+void GameServer::setObjectModel(Object* _objModel) {
+  objectModel = _objModel;
 }
