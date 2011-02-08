@@ -7,11 +7,19 @@
 
 #include "../include/ServerMessage.h"
 
+using namespace optpaxos;
+
 ServerMessage::ServerMessage() {
   // TODO Auto-generated constructor stub
 
 }
 
 ServerMessage::~ServerMessage() {
-  // TODO Auto-generated destructor stub
+  for (std::list<Command*>::iterator it = commandList.begin ; it != commandList.end() ; it++)
+    delete *it;
+
+  for (std::list<Object*>::iterator it = stateList.begin() ; it != stateList.end() ; it++)
+    delete *it;
+
+  delete extraPayload;
 }
