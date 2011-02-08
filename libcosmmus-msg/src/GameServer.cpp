@@ -10,14 +10,40 @@
 #include "../include/Player.h"
 
 GameServer::GameServer() {
-  // TODO Auto-generated constructor stub
-
+  objectModel = NULL;
+  serverGroup = NULL;
+  coreServer = new Server();
+  coreServer->setCallbackServerInterface(this);
 }
 
 GameServer::~GameServer() {
   // TODO Auto-generated destructor stub
 }
 
-void GameServer::setObjectModel(Object* _objModel) {
+int GameServer::init(unsigned int _port) {
+  coreServer->init(_port);
+}
+
+list<Group*> GameServer::findGroups(std::string _address) {
+  return Server->findGroups(_address);
+}
+
+int GameServer::joinServerGroup(Group* _group) {
+  serverGroup = _group;
+  serverGroup->addServer(this);
+}
+
+void GameServer::leaveServerGroup() {
+  serverGroup->removeServer(this);
+  serverGroup = NULL;
+}
+
+void GameServer::setObjectModel(GameObject* _objModel) {
+  if (objectModel != NULL)
+    delete objectModel;
+  objectModel = _objModel;
+}
+
+void GameServer::setObjectModel(GameObject* _objModel) {
   objectModel = _objModel;
 }

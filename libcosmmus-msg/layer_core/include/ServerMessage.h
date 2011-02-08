@@ -9,9 +9,10 @@
 #define SERVERMESSAGE_H_
 
 #include <list>
+#include "../../layer_network/include/Message.h"
 
-// API layer classes
-class Message;
+namespace optpaxos {
+
 class Command;
 class Object;
 
@@ -24,10 +25,17 @@ class ServerMessage {
     ServerMessage();
     virtual ~ServerMessage();
 
+    void setType(int _msgType);
+    void addCommand(Command* _cmd);
+    void setCommandList(std::list<Command*> _cmdList);
+    void addState(Object* _state);
+    void setStateList(std::list<Object*> _objList);
+    void addExtraPayload(netwrapper::Message* _payload);
+
     int getType();
     std::list<Command*> getCommandList();
     std::list<Object*> getStateList();
-    Message* getExtraPayload();
+    netwrapper::Message* getExtraPayload();
 
     bool hasCommand();
     bool hasState();
@@ -37,7 +45,9 @@ class ServerMessage {
     int messageType;
     std::list<Command*> commandList;
     std::list<Object*> stateList;
-    Message* extraPayload;
+    netwrapper::Message* extraPayload;
 };
+
+}
 
 #endif /* SERVERMESSAGE_H_ */

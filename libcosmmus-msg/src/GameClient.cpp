@@ -6,10 +6,14 @@
  */
 
 #include "../include/GameClient.h"
-#include "../layer_core/include/CoreClient.h"
+#include "../layer_core/include/Client.h"
+
+using namespace cosmmusmsg;
+using namespace optpaxos;
 
 GameClient::GameClient() {
-  CoreClient* coreClient = new CoreClient();
+  objectModel = NULL;
+  Client* coreClient = new Client();
   coreClient->setCallbackClientInterface(this);
 }
 
@@ -36,10 +40,10 @@ int GameClient::disconnect() {
 
 /*!
  * \brief Send a command to the server, which commits it to the overall game server system.
- * \param _cmd The Command object, which contains the details of the command (application-defined type of command and its targets, if any).
+ * \param _cmd The GameCommand object, which contains the details of the command (application-defined type of command and its targets, if any).
  * \return The result of the submission: 0 if submitted successfully to the server.
   */
-void GameClient::submitCommand(Command* _cmd) {
+void GameClient::submitCommand(GameCommand* _cmd) {
   coreClient->submitCommand(_cmd);
 }
 
@@ -52,10 +56,10 @@ int GameClient::submitRequest(Message* _request) {
 
 }
 
-void GameClient::setObjectModel(Object* _objModel) {
+void GameClient::setObjectModel(GameObject* _objModel) {
   objectModel = _objModel;
 }
 
-std::list<Object*> GameClient::getObjectList() {
+std::list<GameObject*> GameClient::getObjectList() {
   return objList;
 }

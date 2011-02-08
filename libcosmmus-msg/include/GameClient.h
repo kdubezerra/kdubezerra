@@ -11,13 +11,11 @@
 #include <string>
 #include <list>
 
-// API layer classes
-class Command;
-class Message;
-class Object;
+namespace cosmmusmsg {
 
-// core layer classes
-class CoreClient;
+// API layer classes
+class GameCommand;
+class GameObject;
 
 /*!
  * \class GameClient
@@ -30,10 +28,11 @@ class GameClient {
 
     int connect(std::string _address);
     int disconnect();
-    void submitCommand(Command* _cmd);
-    int submitRequest(Message* _request);
-    void setObjectModel(Object* _objModel);
-    std::list<Object*> getObjectList();
+    void submitCommand(GameCommand* _cmd);
+    //int submitRequest(ServerMessage* _request);
+
+    void setObjectModel(GameObject* _objModel);
+    std::list<GameObject*> getObjectList();
 
     /*!
      * \brief Abstract method to be implement by the application. It is called when a message from the server is received.
@@ -43,9 +42,11 @@ class GameClient {
     virtual int handleServerAppMsg(Message* _msg);
 
   private:
-    std::list<Object*> objList;
-    CoreClient* coreClient;
-    Object* objectModel;
+    std::list<GameObject*> objList;
+    Client* coreClient;
+    GameObject* objectModel;
 };
+
+}
 
 #endif /* GAMECLIENT_H_ */

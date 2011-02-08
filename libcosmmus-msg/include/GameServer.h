@@ -11,10 +11,12 @@
 #include <list>
 #include <string>
 
+namespace cosmmusmsg {
+
 // API level classes
-class Command;
+class GameCommand;
 class Message;
-class Object;
+class GameObject;
 class Player;
 class Group;
 
@@ -24,29 +26,37 @@ class GameServer {
     virtual ~GameServer();
 
     int init(unsigned int _port);
+
     list<Group*> findGroups(std::string _address);
+    int joinServerGroup(Group* _group);
+    void leaveServerGroup();
 
-    void subscribe (Player* _player, Object* _obj);
-    void unsubscribe (Player* _player, Object* _obj);
-
-    void addManagedObject(Object* _obj);
-    void removeManagedObject(Object* _obj);
-
-    void setObjectModel(Object* _objModel);
+    void setObjectModel(GameObject* _objModel);
 
     /*!
      * \brief This method must be implemented in the subclass in order to retrieve, based
-     *        on the subclass' logic, which objects are affected by the command _cmd.
-     * \param _cmd The Command whose targets are still not known, leaving to the server
+     *        on the application's logic, which objects are affected by the command _cmd.
+     * \param _cmd The GameCommand whose targets are still not known, leaving to the server
      *        the task of finding them.
      * \return The method must return a list of the objects affected by the command _cmd.
      */
-    virtual std::list<Object*> getTargets(Command* _cmd);
+    virtual std::list<GameObject*> getTargets(GameCommand* _cmd);
 
+    /*!
+     * \brief This method must be implemented in the subclass in order to process application
+     *        level requests sent by a client.
+     * \param _req The message sent by the client.
+     * \return The application may define a set of return values in order to inform the result
+     *         of the request processing.
+     */
     virtual int handleAppRequest(Message* _req);
 
   private:
-    Object* objectModel;
+    GameObject* objectModel;
+    Group* serverGroup;
+    Server* coreServer;
 };
+
+}
 
 #endif /* GAMESERVER_H_ */
