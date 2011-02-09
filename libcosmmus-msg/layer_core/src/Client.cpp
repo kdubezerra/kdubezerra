@@ -7,7 +7,7 @@
 
 // core level classes
 #include "../include/Client.h"
-#include "../include/ServerMessage.h"
+#include "../include/OPMessage.h"
 
 // network level classes
 #include "../../layer_network/include/FIFOReliableClient.h"
@@ -18,7 +18,8 @@ using namespace netwrapper;
 Client::Client() {
   FIFOReliableClient* netClient = new FIFOReliableClient();
   netClient->setCallbackInterface(this);
-  objModel = NULL;
+  objectFactory = NULL;
+  callbackClient = NULL;
 }
 
 Client::~Client() {
@@ -34,51 +35,58 @@ int Client::disconnect() {
 }
 
 void Client::submitCommand(Command* _cmd) {
-  Message* cmdMsg = new Message();
-
-  if (_cmd->knowsTargets()) {
-    cmdMsg->addBool(true);
-    std::list<Object*> targets = _cmd->getTargetList();
-    for (std::list<Object*>::iterator it = targets.begin() ; it != targets.end() ; it++) {
-      cmdMsg->addInt((*it)->getId()); //object's id
-    }
-  }
-  else {
-    cmdMsg->addBool(false);
-    std::list<Server*> servers = _cmd->getServerList();
-    for (std::list<Server*>::iterator it = servers.begin() ; it != servers.end() ; it++) {
-      cmdMsg->addInt((*it)->getId()); //server's id
-    }
-  }
-
-  cmdMsg->addMessage(_cmd->getContent());
-
+  Message* cmdMsg = Command::packToNetwork();
   netClient->sendMessage(cmdMessage);
+  delete cmdMsg;
+}
+
+void Client::submitApplicationMessage(netwrapper::Message* _msg) {
+  OPMessage* opMsg = new OPMessage();
+  opMsg->setType(APP_MSG);
+  opMsg->addExtraPayload(_msg);
+  Message* msgOpMsg = OPMessage::packToNetwork(opMsg);
+  netClient->sendMessage(msgOpMsg);
+  delete msgOpMsg;
+  delete opMsg;
+}
+
+void Client::setObjectFactory(ObjectFactory* _factory) {
+  ObjectFactory = _factory;
+  Command::setObjectFactory(_factory);
+  OPMessage::setObjectFactory(_factory);
+}
+
+void Client::setCallbackInterface(optpaxos::ClientInterface* _callbackClient) {
+  callbackClient = _callbackClient;
+}
+
+optpaxos::ClientInterface* Client::getCallbackClient() {
+  return callbackClient;
 }
 
 void Client::handleMessage(netwrapper::Message* _msg) {
-  ServerMessage* serverMsg = getServerMessageFromMsg(_msg);
-  handleServerMessage(serverMsg);
-  delete serverMsg;
+  OPMessage* opMsg = OPMessage::unpackFromNetwork(_msg);
+  handleOPMessage(opMsg);
+  delete opMsg;
 }
 
-void Client::handleServerMessage(ServerMessage* _serverMsg) {
-  if (_serverMsg->hasState()) {
-    list<Object*> states = _serverMsg->getStateList();
+void Client::handleOPMessage(OPMessage* _opMsg) {
+  if (_opMsg->hasState()) {
+    list<Object*> states = _opMsg->getStateList();
     for (list<Object*>::iterator it = states.begin() ; it != states.end() ; it++) {
       handleStateUpdate(*it);
     }
   }
 
-  if (_serverMsg->hasCommand()) {
-    list<Command*> coms = _serverMsg->getCommandList();
+  if (_opMsg->hasCommand()) {
+    list<Command*> coms = _opMsg->getCommandList();
     for (list<Command*>::iterator it = coms.begin() ; it != coms.end() ; it++) {
       handleCommand(*it);
     }
   }
 
-  if (_serverMsg->hasExtraPayload()) {
-    callbackInterface->handleServerMessage(_serverMsg->getExtraPayload());
+  if (_opMsg->hasExtraPayload()) {
+    callbackClient->handleMessage(_opMsg->getExtraPayload());
   }
 }
 
@@ -90,7 +98,7 @@ void Client::handleServerMessage(ServerMessage* _serverMsg) {
  * newest state (prior to the execution of the command) to each object needing update.
  * \param _cmd The core layer level command to be parsed.
  */
-void Client::handleCommand(GameCommand* _cmd) {
+void Client::handleCommand(Command* _cmd) {
   list<Object*> targets = _cmd->getTargetList();
 
   for (list<Object*>::iterator it = targets.begin() ; it != targets.end() ; it++) {
@@ -126,54 +134,4 @@ void handleStateUpdate(GameObject* _state) {
  *     considered conservative one.
  */
 
-}
-
-ServerMessage* Client::getServerMessageFromMsg(Message* _msg) {
-  ServerMessage* serverMsg = new ServerMessage();
-
-  bool hasCmd = _msg->getBool(0);
-  bool hasState = _msg->getBool(1);
-  bool hasExtraPayload = _msg->getBool(2);
-
-  int index = 0;
-
-  serverMsg->setType(_msg->getInt(0));
-  if (hasCmd) serverMsg->setCommandList(getCommandListFromMsg(_msg->getMessage(index++)));
-  if (hasState) serverMsg->setStateList(getObjectListFromMsg(_msg->getMessage(index++)));
-  if (hasExtraPayload) serverMsg->addExtraPayload(_msg->getMessage(index++));
-
-  return ServerMessage;
-}
-
-std::list<Command*> Client::getCommandListFromMsg(Message* _msg) {
-  std::list<Command*> cmdList;
-  int commandCount = _msg->getInt();
-  for (int index = 0 ; index < commandCount ; index++) {
-    cmdList.push_back(getCommandFromMsg(_msg->getMessage(index)));
-  }
-  return cmdList;
-}
-
-Command* Client::getCommandFromMsg(Message* _msg) {
-  Command* comm = new Command();
-  comm->setTargetList(getObjectListFromMsg(_msg->getMessage(0)));
-  comm->setContent(_msg->getMessage(1));
-  comm->setOptimisticallyDeliverable(_msg->getBool(0));
-  comm->setConservativelyDeliverable(_msg->getBool(1));
-}
-
-std::list<Object*> Client::getObjectListFromMsg(Message* _msg) {
-  std::list<Object*> objList;
-  int objCount = _msg->getInt();
-  for (int index = 0 ; index < objCount ; index++) {
-    objList.push_back(getObjectFromMsg(_msg->getMessage(index)));
-  }
-  return objList;
-}
-
-Object* Client::getObjectFromMsg(Message* _msg) {
-  Object* obj = objModel->createObject();
-  obj->setId(_msg->getInt(0));
-  obj->unpackFromNetwork(_msg->getMessage(0));
-  return obj;
 }

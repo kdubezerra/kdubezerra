@@ -8,6 +8,7 @@
 #ifndef OBJECT_H_
 #define OBJECT_H_
 
+#include <list>
 #include "../../layer_network/include/Message.h"
 
 namespace optpaxos {
@@ -15,7 +16,7 @@ namespace optpaxos {
 /*
  *
  */
-class Object {
+class Object : private OPTPaxosControl {
   public:
     Object();
     virtual ~Object();
@@ -23,30 +24,10 @@ class Object {
     int getId();
     void setId(int _id);
 
-    /*!
-    * \brief As the library needs to instantiate application objects, whose type is not
-    *        known by it, it must use a callback function, delegating the task of instantiating
-    *        objects to the application developer.
-    * \return It returns a pointer to the newly instantiated application's extended object.
-    */
-    virtual Object* createObject() = 0;
-
-    /*!
-     * \brief As the library has no knowledge of what the application's object states
-     *        consists of, the developer must do, himself, the packing of the object
-     *        into a netwrapper::Message object to be sent through the network.
-     * \return Returns a pointer to a netwrapper::Message object, ready to be sent by
-     *         the client.
-     */
-    virtual netwrapper::Message* packToNetwork() = 0;
-
-    /*!
-     * \brief Upon
-     * \param param*
-     * \return
-     * \retval*
-     */
-    virtual void unpackFromNetwork(netwrapper::Message* _objMsg);
+    static netwrapper::Message* packToNetwork(Object* _obj);
+    static netwrapper::Message* packObjectListToNetwork(std::list<Object*> _objList);
+    static Object* unpackFromNetwork(netwrapper::Message* _msg);
+    static std::list<Object*> unpackObjectListFromNetwork(netwrapper::Message* _msg);
 
     /*!
      * \brief The application must implement this method in order to update the optimistic
@@ -92,6 +73,9 @@ class Object {
      * \param _cmd The command to be delivered and processed by the application.
      */
     virtual void handleConservativeDelivery(Message* _cmd) = 0;
+
+  protected:
+    int id;
 };
 
 }

@@ -29,7 +29,7 @@ class GameClient {
     int connect(std::string _address);
     int disconnect();
     void submitCommand(GameCommand* _cmd);
-    //int submitRequest(ServerMessage* _request);
+    //int submitRequest(OPMessage* _request);
 
     void setObjectModel(GameObject* _objModel);
     std::list<GameObject*> getObjectList();
