@@ -10,8 +10,8 @@
 using namespace netwrapper;
 
 Message::Message() {
-  // TODO Auto-generated constructor stub
-
+  arbitraryData = NULL;
+  arbitraryLength = 0;
 }
 
 Message::~Message() {

@@ -13,11 +13,12 @@
  */
 namespace netwrapper {
 
-}
 class FIFOReliableServer {
   public:
     FIFOReliableServer();
     virtual ~FIFOReliableServer();
+
+    int init (unsigned _port);
 };
 
 }

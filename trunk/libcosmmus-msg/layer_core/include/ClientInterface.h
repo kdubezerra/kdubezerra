@@ -17,6 +17,8 @@ class ClientInterface {
   public:
     ClientInterface();
     virtual ~ClientInterface();
+
+    virtual void handleMessage(netwrapper::Message* _msg) = 0;
 };
 
 }

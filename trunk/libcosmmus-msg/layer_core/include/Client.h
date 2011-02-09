@@ -22,7 +22,7 @@ namespace optpaxos {
 class ClientInterface;
 class Command;
 class Object;
-class ServerMessage;
+class OPMessage;
 
 /*!
  * \class Client
@@ -31,28 +31,23 @@ class ServerMessage;
  * The network layer, then, is the one responsible for calling the operating system. This allows for future improvements of the
  * lower lever network implementation, while leaving the core algorithms untouched.
  */
-class Client : public netwrapper::ClientInterface {
+class Client : public netwrapper::ClientInterface, private OPTPaxosControl {
   public:
     Client();
     virtual ~Client();
     int connect(std::string _address);
     int disconnect();
     void submitCommand(Command* _cmd);
-    void handleMessage(netwrapper::Message* _msg);
+    void submitApplicationMessage(netwrapper::Message* _msg);
     void setCallbackInterface(optpaxos::ClientInterface* _callbackClient);
     optpaxos::ClientInterface* getCallbackClient();
+    void handleMessage(netwrapper::Message* _msg);
 
   private:
-    ServerMessage* getServerMessageFromMsg(netwrapper::Message* _msg);
-    std::list<Command*> getCommandListFromMsg(netwrapper::Message* _msg);
-    Command* getCommandFromMsg(netwrapper::Message* _msg);
-    std::list<Object*> getObjectListFromMsg(netwrapper::Message* _msg);
-    Object* getObjectFromMsg(netwrapper::Message* _msg);
-    void handleServerMessage(ServerMessage* _serverMsg);
+    void handleOPMessage(OPMessage* _serverMsg);
     void handleCommand(Command* _cmd);
     void handleStateUpdate(Object* _state);
 
-    Object* objModel;
     optpaxos::ClientInterface* callbackClient;
     netwrapper::FIFOReliableClient* netClient;
 };
