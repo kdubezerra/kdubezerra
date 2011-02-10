@@ -17,6 +17,8 @@ Message::Message() {
 Message::~Message() {
   for (std::vector<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++)
     delete *it;
+  if (arbitraryData != NULL)
+    delete arbitraryData;
 }
 
 int Message::addInt(int _ivalue) {

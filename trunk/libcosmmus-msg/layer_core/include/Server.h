@@ -11,6 +11,7 @@
 #include <list>
 #include <string>
 #include "../../layer_network/include/FIFOReliableServer.h"
+#include "../../layer_network/include/Message.h"
 #include "../../layer_network/include/UnreliablePeer.h"
 
 namespace optpaxos {
@@ -21,7 +22,9 @@ class Group;
 /*
  *
  */
-class Server : private OPTPaxosControl {
+class Server : public netwrapper::ServerInterface,
+               public netwrapper::PeerInterface,
+               private OPTPaxosControl {
   public:
     Server();
     virtual ~Server();
@@ -32,12 +35,8 @@ class Server : private OPTPaxosControl {
     void handlePeerMessage(netwrapper::Message* _msg);
     void handleClientMessage(netwrapper::Message _msg);
 
-    static netwrapper::Message* packToNetwork(ServerInfo* _server);
-    static netwrapper::Message* packServerListToNetwork(std::list<ServerInfo*> _objList);
-    static ServerInfo* unpackFromNetwork(netwrapper::Message* _msg);
-    static std::list<ServerInfo*> unpackServerListFromNetwork(netwrapper::Message* _msg);
-
   private:
+    void handleClientCommand(Command* _cmd);
     void handleCommandInsideGroup(Command* _cmd);
     void handleCommandToOtherGroups(Command* _cmd);
     netwrapper::UnreliablePeer* groupPeer;

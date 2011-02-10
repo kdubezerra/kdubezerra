@@ -20,7 +20,7 @@ class ClientInterface {
     ClientInterface();
     virtual ~ClientInterface();
 
-    virtual void handleMessage(Message* _msg) = 0;
+    virtual void handleServerMessage(Message* _msg) = 0;
 };
 
 }

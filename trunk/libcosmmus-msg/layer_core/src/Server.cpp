@@ -6,6 +6,7 @@
  */
 
 #include "../include/Server.h"
+#include "../include/OPMessage.h"
 
 using namespace optpaxos;
 using namespace netwrapper;
@@ -42,40 +43,35 @@ void Server::setObjectFactory(ObjectFactory* _factory) {
   objectFactory = _factory;
 }
 
-void Server::handleClientMessage(netwrapper::Message* _msg) {
-  /* TODO:
-  if (command...)
-  else callback...
-  */
+void Server::handlePeerMessage(Message* _msg) {
+
 }
 
-Message* Server::packToNetwork(Server* _obj) {
-  Message* servInfo = new Message();
+void Server::handleClientMessage(Message* _msg) {
+  OPMessage* clientMessage = OPMessage::unpackFromNetwork(_msg);
+  switch (clientMessage->getType()) {
+    case OPMessageType::APP_MSG :
+      callbackServer->handleClientMessage(clientMessage->getExtraPayload());
+      break;
+    case OPMessageType::CLIENT_CMD :
+      Command* clientCommand = clientMessage->getCommandList().front();
+      handleClientCommand(clientCommand);
+      break;
+    default:
 
-  return servInfo;
-}
-
-Message* Server::packServerListToNetwork(std::list<Server*> _objList) {
-  Message* servListInfo = new Message();
-  //TODO:
-  return servListInfo;
-}
-
-SERVER_INFO Server::unpackFromNetwork(Message* _msg) {
-  SERVER_INFO servInfo;
-  //TODO:
-  return servInfo;
-}
-
-std::list<SERVER_INFO> Server::unpackServerListFromNetwork(Message* _msg) {
-  std::list<SERVER_INFO> serverInfoList;
-
-  int count = _msg->getInt(0);
-  for (int index = 0 ; index < count ; index++) {
-    serverInfoList.push_back(Server::unpackFromNetwork(_msg->getMessage(index)));
+      break;
   }
+  delete clientMessage;
+}
 
-  return serverInfoList;
+void Server::handleClientCommand(Command* _cmd) {
+  if (_cmd->knowsTargets()) {
+
+  }
+  else if(_cmd->knowsGroups()) {
+
+  }
+  else return;
 }
 
 void Server::handleCommandInsideGroup(Command* _cmd) {

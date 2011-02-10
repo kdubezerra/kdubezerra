@@ -26,8 +26,8 @@ Client::~Client() {
   // TODO Auto-generated destructor stub
 }
 
-int Client::connect(string _address) {
-  return netClient->connect(_address);
+int Client::connect(std::string _address, unsigned _port) {
+  return netClient->connect(_address, _port);
 }
 
 int Client::disconnect() {
@@ -35,25 +35,23 @@ int Client::disconnect() {
 }
 
 void Client::submitCommand(Command* _cmd) {
-  Message* cmdMsg = Command::packToNetwork();
+  OPMessage* cmdOpMsg = new OPMessage();
+  cmdOpMsg->setType(CLIENT_CMD);
+  cmdOpMsg->addCommand(_cmd);
+  Message* cmdOpMsgMsg = OPMessage::packToNetwork(cmdOpMsg);
   netClient->sendMessage(cmdMessage);
-  delete cmdMsg;
+  delete cmdOpMsgMsg;
+  delete cmdOpMsg;
 }
 
 void Client::submitApplicationMessage(netwrapper::Message* _msg) {
   OPMessage* opMsg = new OPMessage();
   opMsg->setType(APP_MSG);
-  opMsg->addExtraPayload(_msg);
+  opMsg->setExtraPayload(_msg);
   Message* msgOpMsg = OPMessage::packToNetwork(opMsg);
   netClient->sendMessage(msgOpMsg);
   delete msgOpMsg;
   delete opMsg;
-}
-
-void Client::setObjectFactory(ObjectFactory* _factory) {
-  ObjectFactory = _factory;
-  Command::setObjectFactory(_factory);
-  OPMessage::setObjectFactory(_factory);
 }
 
 void Client::setCallbackInterface(optpaxos::ClientInterface* _callbackClient) {
@@ -64,7 +62,7 @@ optpaxos::ClientInterface* Client::getCallbackClient() {
   return callbackClient;
 }
 
-void Client::handleMessage(netwrapper::Message* _msg) {
+void Client::handleServerMessage(netwrapper::Message* _msg) {
   OPMessage* opMsg = OPMessage::unpackFromNetwork(_msg);
   handleOPMessage(opMsg);
   delete opMsg;
