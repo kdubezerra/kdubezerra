@@ -76,6 +76,8 @@ class Object : private OPTPaxosControl {
 
   protected:
     int id;
+    bool waitingForDecision;
+    std::list<OPMessage*> pendingRequests;
 };
 
 }

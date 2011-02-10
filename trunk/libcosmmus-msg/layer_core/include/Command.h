@@ -31,6 +31,7 @@ class Command : private OPTPaxosControl {
 
     void addGroup(GroupInfo* _server);
     void setGroupList(std::list<GroupInfo*> _serverList);
+    std::list<GroupInfo*> findGroups();
     std::list<GroupInfo*> getGroupList();
 
     void setContent(netwrapper::Message* _content);
