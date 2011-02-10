@@ -11,7 +11,7 @@ using namespace optpaxos;
 using namespace netwrapper;
 
 OPMessage::OPMessage() {
-  // TODO Auto-generated constructor stub
+  extraPayload = NULL;
 }
 
 OPMessage::~OPMessage() {
@@ -21,7 +21,63 @@ OPMessage::~OPMessage() {
   for (std::list<Object*>::iterator it = stateList.begin() ; it != stateList.end() ; it++)
     delete *it;
 
-  delete extraPayload;
+  if (extraPayload != NULL)
+    delete extraPayload;
+}
+
+void OPMessage::setType(OPMessageType _msgType) {
+  messageType = _msgType;
+}
+
+void OPMessage::addCommand(Command* _cmd) {
+  commandList.push_back(_cmd);
+}
+
+void OPMessage::setCommandList(std::list<Command*> _cmdList) {
+  commandList = _cmdList;
+}
+
+void OPMessage::addState(Object* _state) {
+  stateList.push_back(_state);
+}
+
+void OPMessage::setStateList(std::list<Object*> _stateList) {
+  stateList = _stateList;
+}
+
+void OPMessage::setExtraPayload(netwrapper::Message* _payload) {
+  extraPayload = _payload;
+}
+
+OPMessageType OPMessage::getType() {
+  return messageType;
+}
+
+std::list<Command*> OPMessage::getCommandList() {
+  return commandList;
+}
+
+std::list<Object*> OPMessage::getStateList() {
+  return stateList;
+}
+
+netwrapper::Message* OPMessage::getExtraPayload() {
+  return extraPayload;
+}
+
+bool OPMessage::hasCommand() {
+  return commandList.empty();
+}
+
+bool OPMessage::hasState() {
+  return stateList.empty();
+}
+
+bool OPMessage::hasExtraPayload() {
+  if (extraPayload != NULL)
+    return true;
+  else
+    return false;
 }
 
 Message* OPMessage::packToNetwork(OPMessage* _opMsg) {
@@ -63,12 +119,8 @@ OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
     opMsg->setStateList(Object::unpackObjectListFromNetwork(_msg->getMessage(index++)));
   }
   if (hasExtraPayload) {
-    opMsg->addExtraPayload(_msg->getMessage(index++));
+    opMsg->setExtraPayload(_msg->getMessage(index++));
   }
 
   return OPMessage;
-}
-
-void OPMessage::setObjectFactory(ObjectFactory* _factory) {
-  objectFactory = _factory;
 }

@@ -30,7 +30,7 @@ list<Group*> GameServer::findGroups(std::string _address) {
 
 int GameServer::joinServerGroup(Group* _group) {
   serverGroup = _group;
-  serverGroup->addServer(this);
+  serverGroup->addGroup(this);
 }
 
 void GameServer::leaveServerGroup() {

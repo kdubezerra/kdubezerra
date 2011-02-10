@@ -13,7 +13,7 @@
 
 namespace optpaxos {
 
-enum OPMessageType { APP_MSG, CMD_MSG };
+enum OPMessageType { APP_MSG, CLIENT_CMD, CMD_DELIVERY };
 
 class Command;
 class Object;
@@ -31,8 +31,8 @@ class OPMessage : private OPTPaxosControl {
     void addCommand(Command* _cmd);
     void setCommandList(std::list<Command*> _cmdList);
     void addState(Object* _state);
-    void setStateList(std::list<Object*> _objList);
-    void addExtraPayload(netwrapper::Message* _payload);
+    void setStateList(std::list<Object*> _stateList);
+    void setExtraPayload(netwrapper::Message* _payload);
 
     OPMessageType getType();
     std::list<Command*> getCommandList();

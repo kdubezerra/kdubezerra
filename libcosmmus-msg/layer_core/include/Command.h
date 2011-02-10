@@ -14,7 +14,7 @@
 namespace optpaxos {
 
 class Object;
-class NodeInfo;
+class GroupInfo;
 
 /*!
  * \class Command
@@ -29,9 +29,9 @@ class Command : private OPTPaxosControl {
     void setTargetList(std::list<Object*> _targetList);
     std::list<Object*> getTargetList();
 
-    void addServer(NodeInfo* _server);
-    void setServerList(std::list<NodeInfo*> _serverList);
-    std::list<NodeInfo*> getServerList();
+    void addGroup(GroupInfo* _server);
+    void setGroupList(std::list<GroupInfo*> _serverList);
+    std::list<GroupInfo*> getGroupList();
 
     void setContent(netwrapper::Message* _content);
     netwrapper::Message* getContent();
@@ -39,8 +39,8 @@ class Command : private OPTPaxosControl {
     void setKnowsTargets(bool _knowsTargets);
     bool knowsTargets();
 
-    void setKnowsServers(bool _knowsServers);
-    bool knowsServers();
+    void setKnowsGroups(bool _knowsGroups);
+    bool knowsGroups();
 
     bool hasContent();
 
@@ -57,10 +57,10 @@ class Command : private OPTPaxosControl {
 
   private:
     std::list<Object*> targetList;
-    std::list<NodeInfo*> serverList;
+    std::list<GroupInfo*> groupList;
     netwrapper::Message* commandContent;
     bool withTargets;
-    bool withServers;
+    bool withGroups;
     bool withContent;
     bool optimistic;
     bool conservative;

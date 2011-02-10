@@ -13,7 +13,7 @@ using namespace netwrapper;
 Command::Command() {
   commandContent = NULL;
   withTargets = false;
-  withServers = false;
+  withGroups = false;
   withContent = false;
   optimistic = false;
   conservative = false;
@@ -27,7 +27,7 @@ Command::~Command() {
     if (*it != NULL)
      delete *it;
 
-  for (std::list<NodeInfo*>::iterator it = serverList.begin() ; it != serverList.end() ; it++)
+  for (std::list<GroupInfo*>::iterator it = groupList.begin() ; it != groupList.end() ; it++)
     if (*it != NULL)
       delete *it;
 }
@@ -47,18 +47,18 @@ std::list<Object*> Command::getTargetList() {
   return targetList;
 }
 
-void Command::addServer(NodeInfo* _server) {
-  serverList.push_back(_server);
-  withServers = true;
+void Command::addGroup(GroupInfo* _group) {
+  groupList.push_back(_group);
+  withGroups = true;
 }
 
-void Command::setServerList(std::list<NodeInfo*> _serverList) {
-  serverList = _serverList;
-  withServers = true;
+void Command::setGroupList(std::list<GroupInfo*> _groupList) {
+  groupList = _groupList;
+  withGroups = true;
 }
 
-std::list<NodeInfo*> Command::getServerList() {
-  return serverList;
+std::list<GroupInfo*> Command::getGroupList() {
+  return groupList;
 }
 
 void Command::setContent(Message* _content) {
@@ -80,12 +80,12 @@ bool Command::knowsTargets() {
   return withTargets;
 }
 
-void Command::setKnowsServers(bool _knowsServers) {
-  withServers = _knowsServers;
+void Command::setKnowsGroups(bool _knowsGroups) {
+  withGroups = _knowsGroups;
 }
 
-bool Command::knowsServers() {
-  return withServers;
+bool Command::knowsGroups() {
+  return withGroups;
 }
 
 bool Command::hasContent() {
@@ -113,13 +113,13 @@ Message* Command::packToNetwork(Command* _cmd) {
 
   cmdMsg->addBool(_cmd->hasContent());
   cmdMsg->addBool(_cmd->knowsTargets());
-  cmdMsg->addBool(_cmd->knowsServers());
+  cmdMsg->addBool(_cmd->knowsGroups());
   cmdMsg->addBool(_cmd->isOptimisticallyDeliverable());
   cmdMsg->addBool(_cmd->isConservativelyDeliverable());
 
   if (_cmd->hasContent()) cmdMsg->addMessage(_cmd->getContent());
   if (_cmd->knowsTargets()) cmdMsg->addMessage(Object::packObjectListToNetwork(_cmd->getTargetList()));
-  if (_cmd->knowsServers()) cmdMsg->addMessage(NodeInfo::packNodeListToNetwork(_cmd->getServerList()));
+  if (_cmd->knowsGroups()) cmdMsg->addMessage(GroupInfo::packGroupListToNetwork(_cmd->getGroupList()));
 
   return cmdMsg;
 }
@@ -130,12 +130,12 @@ Command* Command::unpackFromNetwork(Message* _msg) {
 
   bool hasContent = _msg->getBool(0);
   cmd->setKnowsTargets(_msg->getBool(1));
-  cmd->setKnowsServers(_msg->getBool(2));
+  cmd->setKnowsGroups(_msg->getBool(2));
   cmd->setOptimisticallyDeliverable(_msg->getBool(3));
   cmd->setConservativelyDeliverable(_msg->getBool(4));
   if (hasContent) cmd->setContent(_msg->getMessage(msgIndex++));
   if (cmd->knowsTargets()) cmd->setTargetList(Command::unpackCommandListFromNetwork(_msg->getMessage(msgIndex++)));
-  if (cmd->knowsServers()) cmd->setServerList(NodeInfo::unpackNodeListFromNetwork(_msg->getMessage(msgIndex)));
+  if (cmd->knowsGroups()) cmd->setGroupList(GroupInfo::unpackGroupListFromNetwork(_msg->getMessage(msgIndex)));
 
   return cmd;
 }
