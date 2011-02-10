@@ -4,6 +4,10 @@
  *  Created on: 04/02/2011
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
+/// TODO: leave as public _only_ the methods which should be visible to the application. Leave all else as private and,
+///       when necessary, use the _friend_ modifier...
+///       ...
+///       or use the Proxy design pattern.
 
 #ifndef CLIENT_H_
 #define CLIENT_H_

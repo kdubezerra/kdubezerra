@@ -17,6 +17,11 @@ class UnreliablePeer {
   public:
     UnreliablePeer();
     virtual ~UnreliablePeer();
+
+    void setCallbackInterface(PeerInterface* _callbackPeer);
+
+  private:
+    PeerInterface* callbackPeer;
 };
 
 }

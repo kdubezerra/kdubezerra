@@ -37,8 +37,9 @@ class Server : public netwrapper::ServerInterface,
 
   private:
     void handleClientCommand(Command* _cmd);
-    void handleCommandInsideGroup(Command* _cmd);
-    void handleCommandToOtherGroups(Command* _cmd);
+    void handleCommandOneGroup(Command* _cmd);
+    void handleCommandMultipleGroups(Command* _cmd);
+    std::map<unsigned long, PaxosInstance*> paxosInstances;
     netwrapper::UnreliablePeer* groupPeer;
     netwrapper::FIFOReliableServer* netServer;
     ServerInterface* callbackServer;

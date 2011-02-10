@@ -11,8 +11,8 @@ using namespace optpaxos;
 using namespace netwrapper;
 
 Object::Object() {
-  // TODO Auto-generated constructor stub
-
+  id = NULL;
+  waitingForDecision = false;
 }
 
 Object::~Object() {
