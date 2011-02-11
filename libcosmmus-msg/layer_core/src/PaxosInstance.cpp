@@ -10,8 +10,8 @@
 namespace optpaxos {
 
 PaxosInstance::PaxosInstance() {
-  // TODO Auto-generated constructor stub
-
+  acceptedValue = NULL;
+  learnt = false;
 }
 
 PaxosInstance::~PaxosInstance() {

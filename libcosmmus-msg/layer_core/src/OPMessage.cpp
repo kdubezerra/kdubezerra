@@ -119,7 +119,8 @@ OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
     opMsg->setStateList(Object::unpackObjectListFromNetwork(_msg->getMessage(index++)));
   }
   if (hasExtraPayload) {
-    opMsg->setExtraPayload(_msg->getMessage(index++));
+    Message* extra = new Message(_msg->getMessage(index));
+    opMsg->setExtraPayload(extra);
   }
 
   return OPMessage;

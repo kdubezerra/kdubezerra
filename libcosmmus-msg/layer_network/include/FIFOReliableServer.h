@@ -13,7 +13,7 @@
  */
 namespace netwrapper {
 
-class FIFOReliableServer {
+class FIFOReliableServer : public GenericNode {
   public:
     FIFOReliableServer();
     virtual ~FIFOReliableServer();

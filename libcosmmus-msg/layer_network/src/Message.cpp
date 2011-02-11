@@ -14,6 +14,16 @@ Message::Message() {
   arbitraryLength = 0;
 }
 
+Message::Message(Message* _msg) {
+  floatList = _msg->floatList;
+  intList = _msg->intList;
+  stringList = _msg->stringList;
+  arbitraryLength = _msg->arbitraryLength;
+  arbitraryData = new void*[arbitraryLength];
+  memcpy(arbitraryData, _msg->arbitraryData, arbitraryLength);
+  for (std::list<Message*>::iterator it = _msg->messageList.begin() ; it != _msg->messageList.end() ; it++) addMessage(*it);
+}
+
 Message::~Message() {
   for (std::vector<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++)
     delete *it;
@@ -29,8 +39,17 @@ int Message::addFloat(float _fvalue) {
   floatList.push_back(_fvalue);
 }
 
-int Message::addString(std::string& _svalue) {
-  stringList.push_back(_svalue);
+int Message::addString(const std::string& _svalue) {
+  stringList.push_back(newString);
+}
+
+int Message::addMessage(Message* _msg) {
+  messageList.push_back(_msg);
+}
+
+int Message::addMessageCopy(Message* _msg) {
+  Message* newMessage = new Message(_msg);
+  messageList.push_back(newMessage);
 }
 
 int Message::getInt(int _pos) {

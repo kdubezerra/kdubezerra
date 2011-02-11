@@ -13,32 +13,41 @@
 
 namespace optpaxos {
 
+class Group;
 class Object;
-class GroupInfo;
+class ObjectInfo;
 
 /*!
  * \class Command
  * \brief Generic command to be delivered in order.
  */
-class Command : private OPTPaxosControl {
+class Command {
   public:
     Command();
+    Command(Command* _cmd);
     virtual ~Command();
 
-    void addTarget(Object* _obj);
-    void setTargetList(std::list<Object*> _targetList);
-    std::list<Object*> getTargetList();
+    void addTarget(ObjectInfo* _obj);
+    void setTargetList(std::list<ObjectInfo*> _targetList);
+    std::list<ObjectInfo*> getTargetList();
 
-    void addGroup(GroupInfo* _server);
-    void setGroupList(std::list<GroupInfo*> _serverList);
-    std::list<GroupInfo*> findGroups();
-    std::list<GroupInfo*> getGroupList();
+    void addPriorStateState(Object* _state);
+    void setPriorStateList(std::list<Object*> _stateList);
+    std::list<Object*> getPriorStateList();
+
+    void addGroup(Group* _server);
+    void setGroupList(std::list<Group*> _serverList);
+    std::list<Group*> findGroups();
+    std::list<Group*> getGroupList();
 
     void setContent(netwrapper::Message* _content);
     netwrapper::Message* getContent();
 
     void setKnowsTargets(bool _knowsTargets);
     bool knowsTargets();
+
+    void setHasPriorStates(bool _hasPriorStates);
+    bool hasPriorStates();
 
     void setKnowsGroups(bool _knowsGroups);
     bool knowsGroups();
@@ -57,10 +66,12 @@ class Command : private OPTPaxosControl {
     static std::list<Command*> unpackCommandListFromNetwork(netwrapper::Message* _msg);
 
   private:
-    std::list<Object*> targetList;
-    std::list<GroupInfo*> groupList;
+    std::list<ObjectInfo*> targetList;
+    std::list<Object*> necessaryStates;
+    std::list<Group*> groupList;
     netwrapper::Message* commandContent;
     bool withTargets;
+    bool withPriorStates;
     bool withGroups;
     bool withContent;
     bool optimistic;

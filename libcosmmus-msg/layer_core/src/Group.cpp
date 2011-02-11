@@ -13,6 +13,14 @@ Group::Group() {
   groupCoordinator = NULL;
 }
 
+Group::Group(Group* _group) {
+  groupCoordinator = new NodeInfo(_group->groupCoordinator);
+  for (std::list<Object*>::iterator it = _group->managedObjects.begin() ; it != _group->managedObjects.end() ; it++) {
+    Object* objectCopy = new Object(*it);
+    managedObjects.push_back(objectCopy);
+  }
+}
+
 Group::~Group() {
   // TODO Auto-generated destructor stub
 }

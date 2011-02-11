@@ -35,8 +35,7 @@ class OPMessage;
  * The network layer, then, is the one responsible for calling the operating system. This allows for future improvements of the
  * lower lever network implementation, while leaving the core algorithms untouched.
  */
-class Client : public netwrapper::ClientInterface,
-               private OPTPaxosControl {
+class Client : public netwrapper::ClientInterface {
   public:
     Client();
     virtual ~Client();

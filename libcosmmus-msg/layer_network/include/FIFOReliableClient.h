@@ -18,7 +18,7 @@ namespace netwrapper {
 class ClientInterface;
 class Message;
 
-class FIFOReliableClient {
+class FIFOReliableClient : public GenericNode {
   public:
     FIFOReliableClient();
     virtual ~FIFOReliableClient();
@@ -31,6 +31,7 @@ class FIFOReliableClient {
 
   private:
     netwrapper::ClientInterface* clientInterface;
+
 };
 
 }

@@ -97,22 +97,23 @@ void Client::handleOPMessage(OPMessage* _opMsg) {
  * \param _cmd The core layer level command to be parsed.
  */
 void Client::handleCommand(Command* _cmd) {
-  list<Object*> targets = _cmd->getTargetList();
+  list<Object*> priorStates = _cmd->getPriorStateList();
+  list<ObjectInfo*> targets = _cmd->getTargetList();
 
-  for (list<Object*>::iterator it = targets.begin() ; it != targets.end() ; it++) {
-    Object* obj = Object::getObjectById((*it)->getId());
+  for (list<Object*>::iterator it = priorStates.begin() ; it != priorStates.end() ; it++) {
+    Object* obj = Object::getObjectById((*it)->getInfo()->getId());
     if (_cmd->isOptimisticallyDeliverable())
       obj->handleNewOptimisticState(*it);
     if (_cmd->isConservativelyDeliverable())
       obj->handleNewConservativeState(*it);
   }
 
-  for (list<Object*>::iterator it = targets.begin() ; it != targets.end() ; it++) {
+  for (list<ObjectInfo*>::iterator it = targets.begin() ; it != targets.end() ; it++) {
     Object* obj = Object::getObjectById((*it)->getId());
     if (_cmd->isOptimisticallyDeliverable())
-      obj->handleOptimisticDelivery(_cmd->getContent());
+      obj->handleOptimisticDelivery(_cmd);
     if (_cmd->isConservativelyDeliverable())
-      obj->handleConservativeDelivery(_cmd->getContent());
+      obj->handleConservativeDelivery(_cmd);
       // TODO: at this point, the delivered command must be checked against the first one in the optimistic queue.
       //       Should be found a difference, action must be taken to correct this discrepancy.
       // default: application handles it.
