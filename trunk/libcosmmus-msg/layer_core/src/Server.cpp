@@ -14,8 +14,8 @@ using namespace netwrapper;
 Server::Server() {
   netServer = new FIFOReliableServer();
   groupPeer = new UnreliablePeer();
-  objectFactory = NULL;
   callbackServer = NULL;
+  nodeInfo = NULL;
 }
 
 Server::~Server() {
@@ -50,12 +50,31 @@ void Server::handlePeerMessage(Message* _msg) {
 void Server::handleClientMessage(Message* _msg) {
   OPMessage* clientMessage = OPMessage::unpackFromNetwork(_msg);
   switch (clientMessage->getType()) {
-    case OPMessageType::APP_MSG :
+    case APP_MSG :
       callbackServer->handleClientMessage(clientMessage->getExtraPayload());
       break;
-    case OPMessageType::CLIENT_CMD :
+    case CLIENT_CMD :
       Command* clientCommand = clientMessage->getCommandList().front();
-      handleClientCommand(clientCommand);
+      if (clientCommand->knowsGroups() == false) clientCommand->findGroups();
+      fwdOptimisticallyToGroups(clientCommand);
+      fwdCommandToCoordinator(clientCommand);
+      break;
+    case CMD_OPT :
+
+      break;
+    case CMD_TO_COORD :
+      Command* cmd = clientMessage->getCommandList().front();
+      if (cmd->knowsGroups() == false) cmd->findGroups();
+      if (cmd->getGroupList().size == 1) {
+        PaxosInstance* pxInstance = new PaxosInstance();
+        //TODO:
+        pxInstance->addAcceptors(localGroup);
+        pxInstance->addLearners(localGroup);
+        pxInstance->broadCast(cmd);
+      }
+      else {
+
+      }
       break;
     default:
 
@@ -64,21 +83,36 @@ void Server::handleClientMessage(Message* _msg) {
   delete clientMessage;
 }
 
-void Server::handleClientCommand(Command* _cmd) {
-  addTimeStamp(_cmd);
-
-  if (_cmd->knowsTargets()) {
-    int groupCount = (int) (_cmd->findGroups().size());
-    if (groupCount == 1)
-      handleCommandOneGroup(_cmd);
-    if (groupCount > 1)
-      handleCommandMultipleGroups(_cmd);
+void Server::fwdOptimisticallyToGroups(Command* _cmd) {
+  Command* cmdCopy = new Command(_cmd);
+  //cmdCopy->setTimestamp(now + delay(this, coordinator))
+  OPMessage* cmdOpMsg = new OPMessage();
+  cmdOpMsg->setType(CMD_OPT);
+  cmdOpMsg->addCommand(cmdCopy);
+  Message* packedCmdOpMsg = OPMessage::packToNetwork(cmdOpMsg);
+  std::list<Group*> groupList = cmdCopy->getGroupList();
+  for (std::list<Group*>::iterator itgroup = groupList.begin() ; itgroup != groupList.end() ; itgroup++) {
+    std::list<NodeInfo> servers = (*itgroup)->getServerList();
+    for (std::list<NodeInfo*>::iterator itserver = servers.begin() ; itserver != servers.end() ; itserver++) {
+      groupPeer->sendMessage(packedCmdOpMsg, (*itserver)->getAdress());
+    }
   }
-  else if(_cmd->knowsGroups()) {
-
-  }
-  else return;
+  delete packedCmdOpMsg;
+  delete cmdOpMsg;
 }
+
+void Server::fwdCommandToCoordinator(Command* _cmd) {
+  NodeInfo* coordinator = localGroup->getCoordinator();
+  Command* cmdCopy = new Command(_cmd);
+  OPMessage* cmdOpMsg = new OPMessage();
+  cmdOpMsg->setType(CMD_TO_COORD);
+  cmdOpMsg->addCommand(cmdCopy);
+  Message* packedCmdOpMsg = OPMessage::packToNetwork(cmdOpMsg);
+  groupPeer->sendMessage(packedCmdOpMsg, coordinator->getAdress());
+  delete packedCmdOpMsg;
+  delete cmdOpMsg;
+}
+
 
 void Server::handleCommandOneGroup(Command* _cmd) {
   /**
@@ -92,7 +126,6 @@ void Server::handleCommandOneGroup(Command* _cmd) {
      after receiving n/2 + 1 replies, deliver it.
    }
    */
-
 }
 
 void Server::handleCommandMultipleGroups(Command* _cmd) {

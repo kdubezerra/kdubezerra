@@ -12,7 +12,7 @@
 
 namespace optpaxos {
 
-class Object;
+class ObjectInfo;
 class Server;
 
 /*
@@ -21,25 +21,31 @@ class Server;
 class Group {
   public:
     Group();
+    Group(Group* _group);
     virtual ~Group();
 
-    void addServer(Server* _server);
-    void removeServer(Server* _server);
-    std::list<Server*> getServerList();
+    void addServer(NodeInfo* _server);
+    void removeServer(NodeInfo* _server);
+    std::list<NodeInfo*> getServerList();
 
-    void setCoordinator(Server* _server);
-    Server* getCoordinator();
+    void setCoordinator(NodeInfo* _server);
+    NodeInfo* getCoordinator();
 
-    void addManagedObject(GameObject* _obj);
-    void removeManagedObject(GameObject* _obj);
-    std::list<Object*> getGroupObjects();
+    void addManagedObject(ObjectInfo* _obj);
+    void removeManagedObject(ObjectInfo* _obj);
+    std::list<ObjectInfo*> getGroupObjects();
 
     static std::list<Group*> findGroups(std::string _brokerUrl, unsigned port);
 
+    static netwrapper::Message* packToNetwork(Group* _obj);
+    static netwrapper::Message* packGroupListToNetwork(std::list<Group*> _objList);
+    static Group* unpackFromNetwork(netwrapper::Message* _msg);
+    static std::list<Group*> unpackGroupListFromNetwork(netwrapper::Message* _msg);
+
   private:
-    std::list<Server*> serverList;
-    std::list<Object*> managedObjects;
-    Server* groupCoordinator;
+    std::list<NodeInfo*> serverList;
+    std::list<ObjectInfo*> managedObjects;
+    NodeInfo* groupCoordinator;
 };
 
 }

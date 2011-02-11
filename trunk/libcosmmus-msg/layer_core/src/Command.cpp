@@ -19,6 +19,23 @@ Command::Command() {
   conservative = false;
 }
 
+Command::Command(Command* _cmd) {
+  commandContent = new Message(_cmd->commandContent);
+  withTargets = _cmd->withTargets;
+  withGroups = _cmd->withGroups;
+  withContent = _cmd->withContent;
+  optimistic = _cmd->optimistic;
+  conservative = _cmd->conservative;
+  for (std::list<Group*>::iterator it = _cmd->groupList.begin() ; it != _cmd->groupList.end() ; it++) {
+    Group* groupCopy = new Group(*it);
+    groupList.push_back(groupCopy);
+  }
+  for (std::list<Object*>::iterator it = _cmd->targetList.begin() ; it != _cmd->targetList.end() ; it++) {
+    Object* targetCopy = new Object(*it);
+    targetList.push_back(targetCopy);
+  }
+}
+
 Command::~Command() {
   if (commandContent != NULL)
     delete commandContent;
@@ -27,7 +44,7 @@ Command::~Command() {
     if (*it != NULL)
      delete *it;
 
-  for (std::list<GroupInfo*>::iterator it = groupList.begin() ; it != groupList.end() ; it++)
+  for (std::list<Group*>::iterator it = groupList.begin() ; it != groupList.end() ; it++)
     if (*it != NULL)
       delete *it;
 }
@@ -47,17 +64,17 @@ std::list<Object*> Command::getTargetList() {
   return targetList;
 }
 
-void Command::addGroup(GroupInfo* _group) {
+void Command::addGroup(Group* _group) {
   groupList.push_back(_group);
   withGroups = true;
 }
 
-void Command::setGroupList(std::list<GroupInfo*> _groupList) {
+void Command::setGroupList(std::list<Group*> _groupList) {
   groupList = _groupList;
   withGroups = true;
 }
 
-std::list<GroupInfo*> Command::getGroupList() {
+std::list<Group*> Command::getGroupList() {
   return groupList;
 }
 
@@ -113,13 +130,15 @@ Message* Command::packToNetwork(Command* _cmd) {
 
   cmdMsg->addBool(_cmd->hasContent());
   cmdMsg->addBool(_cmd->knowsTargets());
+  cmdMsg->addBool(_cmd->hasPriorStates());
   cmdMsg->addBool(_cmd->knowsGroups());
   cmdMsg->addBool(_cmd->isOptimisticallyDeliverable());
   cmdMsg->addBool(_cmd->isConservativelyDeliverable());
 
   if (_cmd->hasContent()) cmdMsg->addMessage(_cmd->getContent());
-  if (_cmd->knowsTargets()) cmdMsg->addMessage(Object::packObjectListToNetwork(_cmd->getTargetList()));
-  if (_cmd->knowsGroups()) cmdMsg->addMessage(GroupInfo::packGroupListToNetwork(_cmd->getGroupList()));
+  if (_cmd->knowsTargets()) cmdMsg->addMessage(ObjectInfo::packObjectInfoListToNetwork(_cmd->getTargetList()));
+  if (_cmd->hasPriorStates()) cmdMsg->addMessage(Object::packObjectListToNetwork(_cmd->getPriorStateList()));
+  if (_cmd->knowsGroups()) cmdMsg->addMessage(Group::packGroupListToNetwork(_cmd->getGroupList()));
 
   return cmdMsg;
 }
@@ -135,7 +154,7 @@ Command* Command::unpackFromNetwork(Message* _msg) {
   cmd->setConservativelyDeliverable(_msg->getBool(4));
   if (hasContent) cmd->setContent(_msg->getMessage(msgIndex++));
   if (cmd->knowsTargets()) cmd->setTargetList(Command::unpackCommandListFromNetwork(_msg->getMessage(msgIndex++)));
-  if (cmd->knowsGroups()) cmd->setGroupList(GroupInfo::unpackGroupListFromNetwork(_msg->getMessage(msgIndex)));
+  if (cmd->knowsGroups()) cmd->setGroupList(Group::unpackGroupListFromNetwork(_msg->getMessage(msgIndex)));
 
   return cmd;
 }

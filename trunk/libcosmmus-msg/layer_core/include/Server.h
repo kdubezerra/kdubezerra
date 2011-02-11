@@ -23,8 +23,7 @@ class Group;
  *
  */
 class Server : public netwrapper::ServerInterface,
-               public netwrapper::PeerInterface,
-               private OPTPaxosControl {
+               public netwrapper::PeerInterface {
   public:
     Server();
     virtual ~Server();
@@ -36,13 +35,16 @@ class Server : public netwrapper::ServerInterface,
     void handleClientMessage(netwrapper::Message _msg);
 
   private:
-    void handleClientCommand(Command* _cmd);
+    void fwdOptimisticallyToGroups(Command* _cmd);
+    void fwdCommandToCoordinator(Command* _cmd);
     void handleCommandOneGroup(Command* _cmd);
     void handleCommandMultipleGroups(Command* _cmd);
+    Group* localGroup;
     std::map<unsigned long, PaxosInstance*> paxosInstances;
     netwrapper::UnreliablePeer* groupPeer;
     netwrapper::FIFOReliableServer* netServer;
     ServerInterface* callbackServer;
+    NodeInfo* nodeInfo;
     // TODO: define a way to uniquely identify each server (ip:port?)
 };
 

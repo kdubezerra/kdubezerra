@@ -17,11 +17,15 @@ class PaxosInstance {
   public:
     PaxosInstance();
     virtual ~PaxosInstance();
+    void flushToDisk();
+    void addAcceptors(Group* _acceptors);
+    void addLearners(Group* _learners);
 
   private:
     instanceId;
-    std::list<GroupInfo*> acceptorsList;
-    std::list<GroupInfo*> learnersList;
+    //static file paxosLog;
+    std::list<Group*> acceptorsList;
+    std::list<Group*> learnersList;
     OPMessage* acceptedValue;
     bool learnt;
 };

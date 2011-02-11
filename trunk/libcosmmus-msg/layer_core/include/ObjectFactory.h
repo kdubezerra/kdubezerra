@@ -22,9 +22,6 @@ class ObjectFactory {
     ObjectFactory();
     virtual ~ObjectFactory();
 
-    virtual netwrapper::Message* packToNetwork(Object* _obj) = 0;
-    virtual Object* unpackFromNetwork(netwrapper::Message* _msg) = 0;
-
     /*!
     * \brief As the library needs to instantiate application objects, whose type is not
     *        known by it, it must use a callback function, delegating the task of instantiating
@@ -51,7 +48,7 @@ class ObjectFactory {
      * \return Returns a pointer to the newly created Object, containing the unpacked data from the
      *         network message.
      */
-    virtual Object* unpackFromNetwork(netwrapper::Message* _objMsg);
+    virtual Object* unpackFromNetwork(netwrapper::Message* _objMsg) = 0;
 
 
 };

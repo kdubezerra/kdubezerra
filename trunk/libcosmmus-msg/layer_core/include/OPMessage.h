@@ -13,7 +13,7 @@
 
 namespace optpaxos {
 
-enum OPMessageType { APP_MSG, CLIENT_CMD, CMD_DELIVERY };
+enum OPMessageType { APP_MSG, CLIENT_CMD, CMD_TO_COORD, CMD_OPT, CMD_DELIVERY };
 
 class Command;
 class Object;
@@ -22,7 +22,7 @@ class Object;
  * \class OPMessage
  * \brief This class may contain: a list of commands, updates and/or an extra payload which was produced in the application level
  */
-class OPMessage : private OPTPaxosControl {
+class OPMessage {
   public:
     OPMessage();
     virtual ~OPMessage();

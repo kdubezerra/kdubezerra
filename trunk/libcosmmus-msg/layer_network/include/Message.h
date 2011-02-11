@@ -24,7 +24,7 @@ class Message {
     int addChar(char _cvalue);
     int addInt(int _ivalue);
     int addFloat(float _fvalue);
-    int addString(std::string& _svalue);
+    int addString(const std::string& _svalue);
     int addMessage(Message* _msg);
     int addArbitrary(int length, void* data);
 

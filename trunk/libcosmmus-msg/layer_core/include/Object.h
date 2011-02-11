@@ -16,13 +16,16 @@ namespace optpaxos {
 /*
  *
  */
-class Object : private OPTPaxosControl {
+class Object {
   public:
     Object();
     virtual ~Object();
 
-    int getId();
-    void setId(int _id);
+    ObjectInfo* getInfo();
+    void setInfo(ObjectInfo* _objInfo);
+
+    static void setObjectFactory(ObjectFactory* _factory);
+    static ObjectFactory* getObjectFactory();
 
     static netwrapper::Message* packToNetwork(Object* _obj);
     static netwrapper::Message* packObjectListToNetwork(std::list<Object*> _objList);
@@ -38,7 +41,7 @@ class Object : private OPTPaxosControl {
      *        stream of commands.
      * \param _state GameObject containing the up-to-date state.
      */
-    virtual void handleNewOptimisticState(GameObject* _state) = 0;
+    virtual void handleNewOptimisticState(Object* _state) = 0;
 
     /*!
      * \brief The application must implement this method in order to update the conservative
@@ -48,7 +51,7 @@ class Object : private OPTPaxosControl {
      *        command stream.
      * \param _state GameObject containing the up-to-date state.
      */
-    virtual void handleNewConservativeState(GameObject* _state) = 0;
+    virtual void handleNewConservativeState(Object* _state) = 0;
 
     /*!
      * \brief The application must implement this method in order to process a command once
@@ -60,7 +63,7 @@ class Object : private OPTPaxosControl {
      *        delivery (slow, but guaranteed to be obey the correct, final order).
      * \param _cmd The command to be delivered and processed by the application.
      */
-    virtual void handleOptimisticDelivery(Message* _cmd) = 0;
+    virtual void handleOptimisticDelivery(Command* _cmd) = 0;
 
     /*!
      * \brief The application must implement this method in order to process a command once
@@ -72,12 +75,13 @@ class Object : private OPTPaxosControl {
      *        delivery (slow, but guaranteed to be obey the correct, final order).
      * \param _cmd The command to be delivered and processed by the application.
      */
-    virtual void handleConservativeDelivery(Message* _cmd) = 0;
+    virtual void handleConservativeDelivery(Command* _cmd) = 0;
 
   protected:
-    int id;
+    ObjectInfo* objectInfo;
     bool waitingForDecision;
     std::list<OPMessage*> pendingRequests;
+    static ObjectFactory* objectFactory;
 };
 
 }

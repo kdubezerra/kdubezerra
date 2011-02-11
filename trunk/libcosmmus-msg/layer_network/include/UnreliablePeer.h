@@ -13,13 +13,15 @@
  */
 namespace netwrapper {
 
-class UnreliablePeer {
+class UnreliablePeer : public GenericNode {
   public:
     UnreliablePeer();
     virtual ~UnreliablePeer();
 
     void setCallbackInterface(PeerInterface* _callbackPeer);
 
+    netwrapper::PeerInterface* getCallbackPeer();
+    int sendMessage(Message* _msg, Address* _address);
   private:
     PeerInterface* callbackPeer;
 };
