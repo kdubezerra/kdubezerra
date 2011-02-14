@@ -96,7 +96,7 @@ Message* OPMessage::packToNetwork(OPMessage* _opMsg) {
       netMsg->addMessage(Object::packObjectListToNetwork(_opMsg->getStateList()));
     }
     if (_opMsg->hasExtraPayload()) {
-      netMsg->addMessage(_opMsg->getExtraPayload());
+      netMsg->addMessageCopy(_opMsg->getExtraPayload());
     }
 
     return netMsg;

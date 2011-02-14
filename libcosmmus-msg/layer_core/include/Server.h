@@ -45,6 +45,7 @@ class Server : public netwrapper::ServerInterface,
     netwrapper::FIFOReliableServer* netServer;
     ServerInterface* callbackServer;
     NodeInfo* nodeInfo;
+    int lastPaxosInstance;
     // TODO: define a way to uniquely identify each server (ip:port?)
 };
 

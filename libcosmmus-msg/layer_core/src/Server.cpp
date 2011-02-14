@@ -16,6 +16,7 @@ Server::Server() {
   groupPeer = new UnreliablePeer();
   callbackServer = NULL;
   nodeInfo = NULL;
+  lastPaxosInstance = 0;
 }
 
 Server::~Server() {
@@ -28,6 +29,7 @@ int Server::init(unsigned _reliablePort, unsigned _unreliablePort) {
   if (returnValue != NULL) return returnValue;
   returnValue = groupPeer->init(_unreliablePort);
   if (returnValue != NULL) return returnValue;
+  PaxosInstance::setPeerInterface(groupPeer);
   return 0;
 }
 
@@ -66,7 +68,7 @@ void Server::handleClientMessage(Message* _msg) {
       Command* cmd = clientMessage->getCommandList().front();
       if (cmd->knowsGroups() == false) cmd->findGroups();
       if (cmd->getGroupList().size == 1) {
-        PaxosInstance* pxInstance = new PaxosInstance();
+        PaxosInstance* pxInstance = new PaxosInstance(++lastPaxosInstance);
         //TODO:
         pxInstance->addAcceptors(localGroup);
         pxInstance->addLearners(localGroup);
@@ -75,6 +77,12 @@ void Server::handleClientMessage(Message* _msg) {
       else {
 
       }
+      break;
+    case ACCEPT_MSG :
+      PaxosInstance::handleAcceptMessage(_msg);
+      break;
+    case ACCEPTED_MSG :
+      PaxosInstance::handleAcceptedMessage(_msg);
       break;
     default:
 
@@ -85,7 +93,7 @@ void Server::handleClientMessage(Message* _msg) {
 
 void Server::fwdOptimisticallyToGroups(Command* _cmd) {
   Command* cmdCopy = new Command(_cmd);
-  //cmdCopy->setTimestamp(now + delay(this, coordinator))
+  // TODO: cmdCopy->setTimestamp(now + delay(this, coordinator))
   OPMessage* cmdOpMsg = new OPMessage();
   cmdOpMsg->setType(CMD_OPT);
   cmdOpMsg->addCommand(cmdCopy);
