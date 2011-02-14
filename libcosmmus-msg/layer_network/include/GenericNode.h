@@ -8,6 +8,8 @@
 #ifndef GENERICNODE_H_
 #define GENERICNODE_H_
 
+#include "../include/Address.h"
+
 /*
  *
  */
@@ -18,8 +20,8 @@ class GenericNode {
     GenericNode();
     virtual ~GenericNode();
 
-    Address* getAdress();
-    void setAddress (Adress* address);
+    Address* getAddress();
+    void setAddress (Address* address);
 
   private:
     Address* address;

@@ -5,8 +5,8 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
-#ifndef SERVERINTERFACE_H_
-#define SERVERINTERFACE_H_
+#ifndef OPSERVERINTERFACE_H_
+#define OPSERVERINTERFACE_H_
 
 #include "../../layer_network/include/Message.h"
 
@@ -28,4 +28,4 @@ class ServerInterface {
 
 }
 
-#endif /* SERVERINTERFACE_H_ */
+#endif /* OPSERVERINTERFACE_H_ */

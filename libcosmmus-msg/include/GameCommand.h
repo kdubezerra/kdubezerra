@@ -9,7 +9,7 @@
 #define GAMECOMMAND_H_
 
 #include <list>
-#include <../layer_core/include/Command.h>
+#include "../layer_core/include/Command.h"
 
 namespace cosmmusmsg {
 
@@ -18,7 +18,7 @@ class GameObject;
 class Message;
 class GameServer;
 
-class GameCommand : public Command {
+class GameCommand : public optpaxos::Command {
   public:
     GameCommand();
     virtual ~GameCommand();

@@ -5,8 +5,10 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
-#ifndef CLIENTINTERFACE_H_
-#define CLIENTINTERFACE_H_
+#ifndef OPCLIENTINTERFACE_H_
+#define OPCLIENTINTERFACE_H_
+
+#include "../../layer_network/include/Message.h"
 
 /*
  *
@@ -23,4 +25,4 @@ class ClientInterface {
 
 }
 
-#endif /* CLIENTINTERFACE_H_ */
+#endif /* OPCLIENTINTERFACE_H_ */

@@ -13,19 +13,27 @@
 
 namespace optpaxos {
 
-/*
- *
- */
+class Command;
+class ObjectFactory;
+class ObjectInfo;
+class OPMessage;
+
 class Object {
   public:
     Object();
     virtual ~Object();
+    virtual bool equals(Object* _other);
 
     ObjectInfo* getInfo();
     void setInfo(ObjectInfo* _objInfo);
 
+    static Object* getObjectById(int _id);
+
     static void setObjectFactory(ObjectFactory* _factory);
     static ObjectFactory* getObjectFactory();
+
+    static void handleCommand(Command* _cmd);
+    static void handleStateUpdate(Object* _state);
 
     static netwrapper::Message* packToNetwork(Object* _obj);
     static netwrapper::Message* packObjectListToNetwork(std::list<Object*> _objList);

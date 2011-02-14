@@ -7,6 +7,7 @@
 
 // core level classes
 #include "../include/Client.h"
+#include "../include/Object.h"
 #include "../include/OPMessage.h"
 
 // network level classes
@@ -18,7 +19,6 @@ using namespace netwrapper;
 Client::Client() {
   FIFOReliableClient* netClient = new FIFOReliableClient();
   netClient->setCallbackInterface(this);
-  objectFactory = NULL;
   callbackClient = NULL;
 }
 
@@ -38,9 +38,9 @@ void Client::submitCommand(Command* _cmd) {
   OPMessage* cmdOpMsg = new OPMessage();
   cmdOpMsg->setType(CLIENT_CMD);
   cmdOpMsg->addCommand(_cmd);
-  Message* cmdOpMsgMsg = OPMessage::packToNetwork(cmdOpMsg);
-  netClient->sendMessage(cmdMessage);
-  delete cmdOpMsgMsg;
+  Message* packedCmdOpMsg = OPMessage::packToNetwork(cmdOpMsg);
+  netClient->sendMessage(packedCmdOpMsg);
+  delete packedCmdOpMsg;
   delete cmdOpMsg;
 }
 
@@ -70,16 +70,16 @@ void Client::handleServerMessage(netwrapper::Message* _msg) {
 
 void Client::handleOPMessage(OPMessage* _opMsg) {
   if (_opMsg->hasState()) {
-    list<Object*> states = _opMsg->getStateList();
-    for (list<Object*>::iterator it = states.begin() ; it != states.end() ; it++) {
-      handleStateUpdate(*it);
+    std::list<Object*> states = _opMsg->getStateList();
+    for (std::list<Object*>::iterator it = states.begin() ; it != states.end() ; it++) {
+      Object::handleStateUpdate(*it);
     }
   }
 
   if (_opMsg->hasCommand()) {
-    list<Command*> coms = _opMsg->getCommandList();
-    for (list<Command*>::iterator it = coms.begin() ; it != coms.end() ; it++) {
-      handleCommand(*it);
+    std::list<Command*> coms = _opMsg->getCommandList();
+    for (std::list<Command*>::iterator it = coms.begin() ; it != coms.end() ; it++) {
+      Object::handleCommand(*it);
     }
   }
 
@@ -88,39 +88,7 @@ void Client::handleOPMessage(OPMessage* _opMsg) {
   }
 }
 
-/*!
- * \brief This method is responsible for listing the objects affected by the command. Also,
- * it checks whether the command's delivery is either optimistic or conservative, and delivers
- * to the correspondent application level queue of each object. If the client doesn't have an
- * up-to-date state of all objects affected by the command, this method also forwards the
- * newest state (prior to the execution of the command) to each object needing update.
- * \param _cmd The core layer level command to be parsed.
- */
-void Client::handleCommand(Command* _cmd) {
-  list<Object*> priorStates = _cmd->getPriorStateList();
-  list<ObjectInfo*> targets = _cmd->getTargetList();
-
-  for (list<Object*>::iterator it = priorStates.begin() ; it != priorStates.end() ; it++) {
-    Object* obj = Object::getObjectById((*it)->getInfo()->getId());
-    if (_cmd->isOptimisticallyDeliverable())
-      obj->handleNewOptimisticState(*it);
-    if (_cmd->isConservativelyDeliverable())
-      obj->handleNewConservativeState(*it);
-  }
-
-  for (list<ObjectInfo*>::iterator it = targets.begin() ; it != targets.end() ; it++) {
-    Object* obj = Object::getObjectById((*it)->getId());
-    if (_cmd->isOptimisticallyDeliverable())
-      obj->handleOptimisticDelivery(_cmd);
-    if (_cmd->isConservativelyDeliverable())
-      obj->handleConservativeDelivery(_cmd);
-      // TODO: at this point, the delivered command must be checked against the first one in the optimistic queue.
-      //       Should be found a difference, action must be taken to correct this discrepancy.
-      // default: application handles it.
-  }
-}
-
-void handleStateUpdate(GameObject* _state) {
+void handleStateUpdate(Object* _state) {
 /* TODO: create a coherent model of state and its updates: when the server sends an update, what
  *       is it updating? There at least two and, possibly, one more state delivery queue. How is
  *       this going to work? When will one state overwrite the other? Every object should have a

@@ -19,16 +19,44 @@ Message::Message(Message* _msg) {
   intList = _msg->intList;
   stringList = _msg->stringList;
   arbitraryLength = _msg->arbitraryLength;
-  arbitraryData = new void*[arbitraryLength];
+  arbitraryData = new char[arbitraryLength];
   memcpy(arbitraryData, _msg->arbitraryData, arbitraryLength);
-  for (std::list<Message*>::iterator it = _msg->messageList.begin() ; it != _msg->messageList.end() ; it++) addMessage(*it);
+  for (std::vector<Message*>::iterator it = _msg->messageList.begin() ; it != _msg->messageList.end() ; it++) addMessage(new Message(*it));
 }
 
 Message::~Message() {
   for (std::vector<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++)
     delete *it;
   if (arbitraryData != NULL)
-    delete arbitraryData;
+    delete [] arbitraryData;
+}
+
+bool Message::equals(Message* _other) {
+  if (this->intList != _other->intList
+    || this->floatList != _other->floatList
+    || this->stringList != _other->stringList
+    || this->arbitraryLength != _other->arbitraryLength)
+    return false;
+
+  std::vector<Message*>::iterator itthis = this->messageList.begin();
+  std::vector<Message*>::iterator itother = _other->messageList.begin();
+  while(true) {
+    if (itthis == this->messageList.end() || itother == _other->messageList.end()) {
+      if (itthis == this->messageList.end() && itother == _other->messageList.end())
+        break;
+      else
+        return false;
+    }
+    if ( !(*itthis)->equals(*itother) )
+      return false;
+    itthis++;
+    itother++;
+  }
+
+  if (memcmp(this->arbitraryData, _other->arbitraryData, this->arbitraryLength) != 0)
+    return false;
+
+  return true;
 }
 
 int Message::addInt(int _ivalue) {
@@ -40,7 +68,7 @@ int Message::addFloat(float _fvalue) {
 }
 
 int Message::addString(const std::string& _svalue) {
-  stringList.push_back(newString);
+  stringList.push_back(_svalue);
 }
 
 int Message::addMessage(Message* _msg) {
@@ -55,15 +83,15 @@ int Message::getInt(int _pos) {
   return intList[_pos];
 }
 
-long Message::getIntCount() {
+int Message::getIntCount() {
   return intList.size();
 }
 
-int Message::getFloat(int _pos) {
+float Message::getFloat(int _pos) {
   return floatList[_pos];
 }
 
-long Message::getFloatCount() {
+int Message::getFloatCount() {
   return floatList.size();
 }
 
@@ -71,6 +99,6 @@ const std::string Message::getString(int _pos) {
   return stringList[_pos];
 }
 
-long Message::getStringCount() {
+int Message::getStringCount() {
   return stringList.size();
 }

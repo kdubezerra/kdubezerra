@@ -10,9 +10,8 @@
 
 #include <list>
 
-/*
- *
- */
+#include "../../layer_network/include/Message.h"
+
 namespace optpaxos {
 
 class Object;

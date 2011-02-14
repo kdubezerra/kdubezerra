@@ -7,6 +7,8 @@
 
 #include "../include/FIFOReliableClient.h"
 
+using namespace netwrapper;
+
 FIFOReliableClient::FIFOReliableClient() {
   // TODO Auto-generated constructor stub
 

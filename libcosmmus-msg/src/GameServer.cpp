@@ -6,14 +6,19 @@
  */
 
 #include "../include/GameServer.h"
-#include "../include/Object.h"
+#include "../include/GameObject.h"
 #include "../include/Player.h"
+
+#include "../layer_core/include/Server.h"
+
+using namespace cosmmusmsg;
+using namespace optpaxos;
 
 GameServer::GameServer() {
   objectModel = NULL;
   serverGroup = NULL;
   coreServer = new Server();
-  coreServer->setCallbackServerInterface(this);
+  coreServer->setCallbackInterface(this);
 }
 
 GameServer::~GameServer() {
@@ -21,29 +26,20 @@ GameServer::~GameServer() {
 }
 
 int GameServer::init(unsigned int _port) {
-  coreServer->init(_port);
+  return coreServer->init(_port, _port);
 }
 
-list<Group*> GameServer::findGroups(std::string _address) {
-  return Server->findGroups(_address);
+std::list<Group*> GameServer::findGroups(std::string _address, int _port) {
+  return Group::findGroups(_address, _port);
 }
 
 int GameServer::joinServerGroup(Group* _group) {
   serverGroup = _group;
-  serverGroup->addGroup(this);
+  serverGroup->addServer(this->coreServer->getNodeInfo());
+  return 0;
 }
 
 void GameServer::leaveServerGroup() {
-  serverGroup->removeServer(this);
+  serverGroup->removeServer(this->coreServer->getNodeInfo());
   serverGroup = NULL;
-}
-
-void GameServer::setObjectModel(GameObject* _objModel) {
-  if (objectModel != NULL)
-    delete objectModel;
-  objectModel = _objModel;
-}
-
-void GameServer::setObjectModel(GameObject* _objModel) {
-  objectModel = _objModel;
 }

@@ -8,6 +8,8 @@
 #ifndef FIFORELIABLESERVER_H_
 #define FIFORELIABLESERVER_H_
 
+#include "GenericNode.h"
+
 /*
  *
  */

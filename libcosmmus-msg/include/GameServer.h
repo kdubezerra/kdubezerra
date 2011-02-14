@@ -11,24 +11,28 @@
 #include <list>
 #include <string>
 
+#include "../layer_core/include/Group.h"
+#include "../layer_core/include/Server.h"
+#include "../layer_core/include/ServerInterface.h"
+#include "../layer_network/include/Message.h"
+
+
 namespace cosmmusmsg {
 
 // API level classes
 class GameCommand;
-class Message;
 class GameObject;
 class Player;
-class Group;
 
-class GameServer {
+class GameServer : public optpaxos::ServerInterface {
   public:
     GameServer();
     virtual ~GameServer();
 
     int init(unsigned int _port);
 
-    list<Group*> findGroups(std::string _address);
-    int joinServerGroup(Group* _group);
+    std::list<optpaxos::Group*> findGroups(std::string _address, int port);
+    int joinServerGroup(optpaxos::Group* _group);
     void leaveServerGroup();
 
     void setObjectModel(GameObject* _objModel);
@@ -49,12 +53,12 @@ class GameServer {
      * \return The application may define a set of return values in order to inform the result
      *         of the request processing.
      */
-    virtual int handleAppRequest(Message* _req);
+    virtual int handleAppRequest(netwrapper::Message* _req);
 
   private:
     GameObject* objectModel;
-    Group* serverGroup;
-    Server* coreServer;
+    optpaxos::Group* serverGroup;
+    optpaxos::Server* coreServer;
 };
 
 }

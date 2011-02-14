@@ -11,6 +11,12 @@
 #include <string>
 #include <list>
 
+#include "../layer_core/include/Client.h"
+#include "../layer_core/include/ClientInterface.h"
+#include "../layer_core/include/Command.h"
+
+#include "../layer_network/include/Message.h"
+
 namespace cosmmusmsg {
 
 // API layer classes
@@ -21,15 +27,15 @@ class GameObject;
  * \class GameClient
  * \brief Class to be extended by the application in order to connect to the game server.
  */
-class GameClient {
+class GameClient : public optpaxos::ClientInterface {
   public:
     GameClient();
     virtual ~GameClient();
 
-    int connect(std::string _address);
+    int connect(std::string _address, unsigned port);
     int disconnect();
-    void submitCommand(GameCommand* _cmd);
-    //int submitRequest(OPMessage* _request);
+    void submitCommand(optpaxos::Command* _cmd);
+    int submitRequest(netwrapper::Message* _request);
 
     void setObjectModel(GameObject* _objModel);
     std::list<GameObject*> getObjectList();
@@ -39,11 +45,11 @@ class GameClient {
      * \param _msg The message object received from the server.
      * \return An integer number whose meaning should be defined by the application. 0 should mean message successfully handled.
      */
-    virtual int handleServerAppMsg(Message* _msg);
+    virtual int handleServerAppMsg(netwrapper::Message* _msg);
 
   private:
     std::list<GameObject*> objList;
-    Client* coreClient;
+    optpaxos::Client* coreClient;
     GameObject* objectModel;
 };
 

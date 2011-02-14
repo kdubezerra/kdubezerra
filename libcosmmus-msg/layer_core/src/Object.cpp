@@ -5,13 +5,16 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
+#include "../include/Command.h"
 #include "../include/Object.h"
+#include "../include/ObjectFactory.h"
+#include "../include/ObjectInfo.h"
 
 using namespace optpaxos;
 using namespace netwrapper;
 
 Object::Object() {
-  id = NULL;
+  this->objectInfo = NULL;
   waitingForDecision = false;
 }
 
@@ -19,16 +22,46 @@ Object::~Object() {
   // TODO Auto-generated destructor stub
 }
 
-int Object::getId() {
-  return id;
+bool Object::equals(Object* _other) {
+  if (this->objectInfo->getId() != _other->objectInfo->getId())
+    return false;
 }
 
-void Object::setId(int _id) {
-  id = _id;
+
+/*!
+ * \brief This method is responsible for listing the objects affected by the command. Also,
+ * it checks whether the command's delivery is either optimistic or conservative, and delivers
+ * to the correspondent application level queue of each object. If the client doesn't have an
+ * up-to-date state of all objects affected by the command, this method also forwards the
+ * newest state (prior to the execution of the command) to each object needing update.
+ * \param _cmd The core layer level command to be parsed.
+ */
+void Object::handleCommand(Command* _cmd) {
+  std::list<Object*> priorStates = _cmd->getPriorStateList();
+  std::list<ObjectInfo*> targets = _cmd->getTargetList();
+
+  for (std::list<Object*>::iterator it = priorStates.begin() ; it != priorStates.end() ; it++) {
+    Object* obj = Object::getObjectById((*it)->getInfo()->getId());
+    if (_cmd->isOptimisticallyDeliverable())
+      obj->handleNewOptimisticState(*it);
+    if (_cmd->isConservativelyDeliverable())
+      obj->handleNewConservativeState(*it);
+  }
+
+  for (std::list<ObjectInfo*>::iterator it = targets.begin() ; it != targets.end() ; it++) {
+    Object* obj = Object::getObjectById((*it)->getId());
+    if (_cmd->isOptimisticallyDeliverable())
+      obj->handleOptimisticDelivery(_cmd);
+    if (_cmd->isConservativelyDeliverable())
+      obj->handleConservativeDelivery(_cmd);
+      // TODO: at this point, the delivered command must be checked against the first one in the optimistic queue.
+      //       Should be found a difference, action must be taken to correct this discrepancy.
+      // default: application handles it.
+  }
 }
 
 Message* Object::packToNetwork(Object* _obj) {
-  return objFactory->packToNetwork(_obj);
+  return objectFactory->packToNetwork(_obj);
 }
 
 Message* Object::packObjectListToNetwork(std::list<Object*> _objList) {
@@ -42,7 +75,7 @@ Message* Object::packObjectListToNetwork(std::list<Object*> _objList) {
 }
 
 Object* Object::unpackFromNetwork(netwrapper::Message* _msg) {
-  return objFactory->unpackFromNetwork(_msg);
+  return objectFactory->unpackFromNetwork(_msg);
 }
 
 std::list<Object*> Object::unpackObjectListFromNetwork(netwrapper::Message* _msg) {

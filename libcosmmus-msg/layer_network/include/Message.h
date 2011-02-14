@@ -8,8 +8,9 @@
 #ifndef MESSAGE_H_
 #define MESSAGE_H_
 
-#include <vector>
+#include <list>
 #include <string>
+#include <vector>
 
 namespace netwrapper {
 
@@ -19,7 +20,10 @@ namespace netwrapper {
 class Message {
   public:
     Message();
+    Message(Message* _other);
     virtual ~Message();
+    bool equals(Message* _other);
+
     int addBool(bool _bvalue);
     int addChar(char _cvalue);
     int addInt(int _ivalue);
@@ -55,7 +59,7 @@ class Message {
     std::vector<float> floatList;
     std::vector<std::string> stringList;
     std::vector<Message*> messageList;
-    void* arbitraryData;
+    char* arbitraryData;
     int arbitraryLength;
 };
 

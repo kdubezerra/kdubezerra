@@ -7,6 +7,8 @@
 
 #include "../include/GameObject.h"
 
+using namespace cosmmusmsg;
+
 GameObject::GameObject() {
   // TODO Auto-generated constructor stub
 

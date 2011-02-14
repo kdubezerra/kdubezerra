@@ -6,6 +6,8 @@
  */
 
 #include "../include/Group.h"
+#include "../include/NodeInfo.h"
+#include "../include/ObjectInfo.h"
 
 using namespace optpaxos;
 
@@ -15,9 +17,8 @@ Group::Group() {
 
 Group::Group(Group* _group) {
   groupCoordinator = new NodeInfo(_group->groupCoordinator);
-  for (std::list<Object*>::iterator it = _group->managedObjects.begin() ; it != _group->managedObjects.end() ; it++) {
-    Object* objectCopy = new Object(*it);
-    managedObjects.push_back(objectCopy);
+  for (std::list<ObjectInfo*>::iterator it = _group->managedObjects.begin() ; it != _group->managedObjects.end() ; it++) {
+    managedObjects.push_back(new ObjectInfo(*it));
   }
 }
 
@@ -25,39 +26,39 @@ Group::~Group() {
   // TODO Auto-generated destructor stub
 }
 
-void Group::addServer(Server* _server) {
+void Group::addServer(NodeInfo* _server) {
   serverList.push_back(_server);
 }
 
-void Group::removeServer(Server* _server) {
+void Group::removeServer(NodeInfo* _server) {
   serverList.remove(_server);
 }
 
-std::list<Server*> Group::getServerList() {
+std::list<NodeInfo*> Group::getServerList() {
   return serverList;
 }
 
-void Group::setCoordinator(Server* _server) {
+void Group::setCoordinator(NodeInfo* _server) {
   groupCoordinator = _server;
 }
 
-Server* Group::getCoordinator() {
+NodeInfo* Group::getCoordinator() {
   return groupCoordinator;
 }
 
-void Group::addManagedObject(Object* _obj) {
+void Group::addManagedObject(ObjectInfo* _obj) {
   managedObjects.push_back(_obj);
 }
 
-void Group::removeManagedObject(Object* _obj) {
+void Group::removeManagedObject(ObjectInfo* _obj) {
   managedObjects.remove(_obj);
 }
 
-std::list<Object*> Group::getGroupObjects() {
+std::list<ObjectInfo*> Group::getGroupObjects() {
   return managedObjects;
 }
 
-static std::list<Group*> Group::findGroups(std::string _brokerUrl, unsigned port) {
+std::list<Group*> Group::findGroups(std::string _brokerUrl, unsigned port) {
   std::list<Group*> groupsList;
 
   return groupsList;

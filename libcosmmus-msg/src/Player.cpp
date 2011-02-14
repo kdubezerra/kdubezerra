@@ -7,6 +7,8 @@
 
 #include "../include/Player.h"
 
+using namespace cosmmusmsg;
+
 Player::Player() {
   // TODO Auto-generated constructor stub
 
