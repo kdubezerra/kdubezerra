@@ -5,6 +5,8 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
+#include "../include/Command.h"
+#include "../include/Object.h"
 #include "../include/OPMessage.h"
 
 using namespace optpaxos;
@@ -15,7 +17,7 @@ OPMessage::OPMessage() {
 }
 
 OPMessage::~OPMessage() {
-  for (std::list<Command*>::iterator it = commandList.begin ; it != commandList.end() ; it++)
+  for (std::list<Command*>::iterator it = commandList.begin() ; it != commandList.end() ; it++)
     delete *it;
 
   for (std::list<Object*>::iterator it = stateList.begin() ; it != stateList.end() ; it++)
@@ -96,7 +98,7 @@ Message* OPMessage::packToNetwork(OPMessage* _opMsg) {
       netMsg->addMessage(Object::packObjectListToNetwork(_opMsg->getStateList()));
     }
     if (_opMsg->hasExtraPayload()) {
-      netMsg->addMessageCopy(_opMsg->getExtraPayload());
+      netMsg->addMessage(new Message(_opMsg->getExtraPayload()));
     }
 
     return netMsg;
@@ -111,7 +113,7 @@ OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
 
   int index = 0;
 
-  opMsg->setType(_msg->getInt(0));
+  opMsg->setType((OPMessageType) _msg->getInt(0));
   if (hasCmd) {
     opMsg->setCommandList(Command::unpackCommandListFromNetwork(_msg->getMessage(index++)));
   }
@@ -123,5 +125,5 @@ OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
     opMsg->setExtraPayload(extra);
   }
 
-  return OPMessage;
+  return opMsg;
 }

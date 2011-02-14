@@ -16,14 +16,14 @@
 #include <string>
 #include <list>
 
+#include "../../layer_core/include/ClientInterface.h"
+
 #include "../../layer_network/include/ClientInterface.h"
 #include "../../layer_network/include/FIFOReliableClient.h"
 #include "../../layer_network/include/Message.h"
 
 namespace optpaxos {
 
-// core layer Classes
-class ClientInterface;
 class Command;
 class Object;
 class OPMessage;
@@ -39,7 +39,7 @@ class Client : public netwrapper::ClientInterface {
   public:
     Client();
     virtual ~Client();
-    int connect(std::string _address);
+    int connect(std::string _address, unsigned port);
     int disconnect();
     void submitCommand(Command* _cmd);
     void submitApplicationMessage(netwrapper::Message* _msg);

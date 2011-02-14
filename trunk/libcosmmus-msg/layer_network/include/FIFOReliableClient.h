@@ -9,6 +9,7 @@
 #define FIFORELIABLECLIENT_H_
 
 #include <string>
+#include "../include/GenericNode.h"
 
 /*
  *

@@ -10,11 +10,12 @@
 
 using namespace cosmmusmsg;
 using namespace optpaxos;
+using namespace netwrapper;
 
 GameClient::GameClient() {
   objectModel = NULL;
   Client* coreClient = new Client();
-  coreClient->setCallbackClientInterface(this);
+  coreClient->setCallbackInterface(this);
 }
 
 GameClient::~GameClient() {
@@ -26,8 +27,8 @@ GameClient::~GameClient() {
  * \param _address The address of the game server, may be in the forms of url, ip:port or url:port.
  * \return The result of the connection: 0 if successful; not 0 otherwise.
  */
-int GameClient::connect(std::string _address) {
-  return coreClient->connect(_address);
+int GameClient::connect(std::string _address, unsigned _port) {
+  return coreClient->connect(_address, _port);
 }
 
 /*!
@@ -43,7 +44,7 @@ int GameClient::disconnect() {
  * \param _cmd The GameCommand object, which contains the details of the command (application-defined type of command and its targets, if any).
  * \return The result of the submission: 0 if submitted successfully to the server.
   */
-void GameClient::submitCommand(GameCommand* _cmd) {
+void GameClient::submitCommand(Command* _cmd) {
   coreClient->submitCommand(_cmd);
 }
 
@@ -53,7 +54,7 @@ void GameClient::submitCommand(GameCommand* _cmd) {
  * \return The result of the submission: 0 if submitted successfully to the server.
  */
 int GameClient::submitRequest(Message* _request) {
-
+  return 0;
 }
 
 void GameClient::setObjectModel(GameObject* _objModel) {

@@ -8,6 +8,9 @@
 #ifndef UNRELIABLEPEER_H_
 #define UNRELIABLEPEER_H_
 
+#include "GenericNode.h"
+#include "PeerInterface.h"
+
 /*
  *
  */
@@ -17,6 +20,8 @@ class UnreliablePeer : public GenericNode {
   public:
     UnreliablePeer();
     virtual ~UnreliablePeer();
+
+    int init(unsigned _port);
 
     void setCallbackInterface(PeerInterface* _callbackPeer);
 

@@ -10,8 +10,9 @@
 
 namespace cosmmusmsg {
 
-/*
- *
+/*!
+ * \class Player
+ * \brief Player class
  */
 class Player {
   public:

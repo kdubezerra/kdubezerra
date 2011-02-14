@@ -10,8 +10,11 @@
 
 #include <list>
 
+#include "../../layer_network/include/Message.h"
+
 namespace optpaxos {
 
+class NodeInfo;
 class ObjectInfo;
 class Server;
 
@@ -21,8 +24,12 @@ class Server;
 class Group {
   public:
     Group();
+    Group(int _id);
     Group(Group* _group);
     virtual ~Group();
+
+    void setId(int _id);
+    int getId();
 
     void addServer(NodeInfo* _server);
     void removeServer(NodeInfo* _server);
@@ -43,6 +50,7 @@ class Group {
     static std::list<Group*> unpackGroupListFromNetwork(netwrapper::Message* _msg);
 
   private:
+    int id;
     std::list<NodeInfo*> serverList;
     std::list<ObjectInfo*> managedObjects;
     NodeInfo* groupCoordinator;

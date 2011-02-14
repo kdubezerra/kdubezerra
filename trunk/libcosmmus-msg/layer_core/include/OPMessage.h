@@ -13,7 +13,7 @@
 
 namespace optpaxos {
 
-enum OPMessageType { APP_MSG, CLIENT_CMD, CMD_TO_COORD, CMD_OPT, ACCEPT_MSG, ACCEPTED_MSG, CMD_DELIVERY };
+enum OPMessageType { APP_MSG, CLIENT_CMD, CMD_TO_COORD, CMD_OPT, ACCEPT_MSG, ACCEPTED_MSG, LEARN_MSG, CMD_DELIVERY };
 
 class Command;
 class Object;
@@ -25,6 +25,7 @@ class Object;
 class OPMessage {
   public:
     OPMessage();
+    OPMessage(OPMessage* _other);
     virtual ~OPMessage();
 
     void setType(OPMessageType _msgType);

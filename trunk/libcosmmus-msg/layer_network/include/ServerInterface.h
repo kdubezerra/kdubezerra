@@ -13,6 +13,8 @@
  */
 namespace netwrapper {
 
+class Message;
+
 class ServerInterface {
   public:
     ServerInterface();

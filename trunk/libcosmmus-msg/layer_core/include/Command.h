@@ -26,6 +26,7 @@ class Command {
     Command();
     Command(Command* _cmd);
     virtual ~Command();
+    bool equals(Command* _other);
 
     void addTarget(ObjectInfo* _obj);
     void setTargetList(std::list<ObjectInfo*> _targetList);

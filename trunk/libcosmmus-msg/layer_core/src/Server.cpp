@@ -5,8 +5,13 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
-#include "../include/Server.h"
+#include "../include/Command.h"
+#include "../include/Group.h"
+#include "../include/NodeInfo.h"
+#include "../include/Object.h"
 #include "../include/OPMessage.h"
+#include "../include/PaxosInstance.h"
+#include "../include/Server.h"
 
 using namespace optpaxos;
 using namespace netwrapper;
@@ -26,26 +31,18 @@ Server::~Server() {
 int Server::init(unsigned _reliablePort, unsigned _unreliablePort) {
   int returnValue;
   returnValue = netServer->init(_reliablePort);
-  if (returnValue != NULL) return returnValue;
+  if (returnValue != 0) return returnValue;
   returnValue = groupPeer->init(_unreliablePort);
-  if (returnValue != NULL) return returnValue;
+  if (returnValue != 0) return returnValue;
   PaxosInstance::setPeerInterface(groupPeer);
   return 0;
 }
 
 int Server::joinGroup(Group *_group) {
-
+  return 0;
 }
 
 void Server::leaveGroup() {
-
-}
-
-void Server::setObjectFactory(ObjectFactory* _factory) {
-  objectFactory = _factory;
-}
-
-void Server::handlePeerMessage(Message* _msg) {
 
 }
 
@@ -55,40 +52,61 @@ void Server::handleClientMessage(Message* _msg) {
     case APP_MSG :
       callbackServer->handleClientMessage(clientMessage->getExtraPayload());
       break;
-    case CLIENT_CMD :
+
+    case CLIENT_CMD : {
       Command* clientCommand = clientMessage->getCommandList().front();
       if (clientCommand->knowsGroups() == false) clientCommand->findGroups();
       fwdOptimisticallyToGroups(clientCommand);
       fwdCommandToCoordinator(clientCommand);
       break;
-    case CMD_OPT :
+    }
 
+    case CMD_OPT :
       break;
-    case CMD_TO_COORD :
+
+    case CMD_TO_COORD : {
       Command* cmd = clientMessage->getCommandList().front();
       if (cmd->knowsGroups() == false) cmd->findGroups();
-      if (cmd->getGroupList().size == 1) {
-        PaxosInstance* pxInstance = new PaxosInstance(++lastPaxosInstance);
+      if (cmd->getGroupList().size() == 1) {
+        PaxosInstance* pxInstance = new PaxosInstance(lastPaxosInstance * SVID_LEN + (long) localGroup->getId());
         //TODO:
         pxInstance->addAcceptors(localGroup);
         pxInstance->addLearners(localGroup);
-        pxInstance->broadCast(cmd);
+        pxInstance->broadcast(cmd);
       }
       else {
-
       }
       break;
-    case ACCEPT_MSG :
-      PaxosInstance::handleAcceptMessage(_msg);
-      break;
-    case ACCEPTED_MSG :
-      PaxosInstance::handleAcceptedMessage(_msg);
-      break;
-    default:
+    }
 
+    default:
       break;
   }
   delete clientMessage;
+}
+
+void Server::handlePeerMessage(Message* _msg) {
+  OPMessage* peerMessage = OPMessage::unpackFromNetwork(_msg);
+  switch (peerMessage->getType()) {
+    case ACCEPT_MSG :
+      PaxosInstance::handleAcceptMessage(peerMessage);
+      break;
+    case ACCEPTED_MSG :
+      PaxosInstance::handleAcceptedMessage(peerMessage);
+      break;
+    case LEARN_MSG :
+      handleLearntMessage(peerMessage);
+      break;
+    default:
+      break;
+  }
+  delete peerMessage;
+}
+
+void Server::handleLearntMessage(OPMessage* _learntMsg) {
+  Command* cmd = _learntMsg->getCommandList().front();
+  Object::handleCommand(cmd);
+  sendCommandToClients(cmd);
 }
 
 void Server::fwdOptimisticallyToGroups(Command* _cmd) {
@@ -100,7 +118,7 @@ void Server::fwdOptimisticallyToGroups(Command* _cmd) {
   Message* packedCmdOpMsg = OPMessage::packToNetwork(cmdOpMsg);
   std::list<Group*> groupList = cmdCopy->getGroupList();
   for (std::list<Group*>::iterator itgroup = groupList.begin() ; itgroup != groupList.end() ; itgroup++) {
-    std::list<NodeInfo> servers = (*itgroup)->getServerList();
+    std::list<NodeInfo*> servers = (*itgroup)->getServerList();
     for (std::list<NodeInfo*>::iterator itserver = servers.begin() ; itserver != servers.end() ; itserver++) {
       groupPeer->sendMessage(packedCmdOpMsg, (*itserver)->getAdress());
     }

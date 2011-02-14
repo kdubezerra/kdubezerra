@@ -7,6 +7,8 @@
 
 #include "../include/GameCommand.h"
 
+using namespace cosmmusmsg;
+
 GameCommand::GameCommand() {
 
 }
