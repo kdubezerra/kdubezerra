@@ -16,18 +16,25 @@ namespace optpaxos {
 class PaxosInstance {
   public:
     PaxosInstance();
+    PaxosInstance(int _instanceId);
     virtual ~PaxosInstance();
     void flushToDisk();
     void addAcceptors(Group* _acceptors);
     void addLearners(Group* _learners);
+    void broadCast(Command* _cmd);
+
+    static void setPeerInterface(netwrapper::UnreliablePeer* _peer);
+    static void handleAcceptMessage(OPMessage* _accMsg);
 
   private:
-    instanceId;
+    int instanceSeq;
     //static file paxosLog;
-    std::list<Group*> acceptorsList;
-    std::list<Group*> learnersList;
+    std::list<Group*> acceptors;
+    std::list<Group*> learners;
     OPMessage* acceptedValue;
     bool learnt;
+    static netwrapper::UnreliablePeer* peerInterface;
+    static std::list<PaxosInstance*> instanceList;
 };
 
 }

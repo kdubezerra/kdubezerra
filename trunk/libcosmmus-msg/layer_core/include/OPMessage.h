@@ -13,7 +13,7 @@
 
 namespace optpaxos {
 
-enum OPMessageType { APP_MSG, CLIENT_CMD, CMD_TO_COORD, CMD_OPT, CMD_DELIVERY };
+enum OPMessageType { APP_MSG, CLIENT_CMD, CMD_TO_COORD, CMD_OPT, ACCEPT_MSG, ACCEPTED_MSG, CMD_DELIVERY };
 
 class Command;
 class Object;

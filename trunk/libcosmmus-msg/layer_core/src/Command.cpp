@@ -135,7 +135,7 @@ Message* Command::packToNetwork(Command* _cmd) {
   cmdMsg->addBool(_cmd->isOptimisticallyDeliverable());
   cmdMsg->addBool(_cmd->isConservativelyDeliverable());
 
-  if (_cmd->hasContent()) cmdMsg->addMessage(_cmd->getContent());
+  if (_cmd->hasContent()) cmdMsg->addMessageCopy(_cmd->getContent());
   if (_cmd->knowsTargets()) cmdMsg->addMessage(ObjectInfo::packObjectInfoListToNetwork(_cmd->getTargetList()));
   if (_cmd->hasPriorStates()) cmdMsg->addMessage(Object::packObjectListToNetwork(_cmd->getPriorStateList()));
   if (_cmd->knowsGroups()) cmdMsg->addMessage(Group::packGroupListToNetwork(_cmd->getGroupList()));

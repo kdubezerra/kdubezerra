@@ -48,8 +48,7 @@ int Message::addMessage(Message* _msg) {
 }
 
 int Message::addMessageCopy(Message* _msg) {
-  Message* newMessage = new Message(_msg);
-  messageList.push_back(newMessage);
+  messageList.push_back(new Message(_msg));
 }
 
 int Message::getInt(int _pos) {

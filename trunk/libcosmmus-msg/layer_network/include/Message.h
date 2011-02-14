@@ -26,6 +26,7 @@ class Message {
     int addFloat(float _fvalue);
     int addString(const std::string& _svalue);
     int addMessage(Message* _msg);
+    int addMessageCopy(Message* _msg);
     int addArbitrary(int length, void* data);
 
     bool getBool(int _pos);
