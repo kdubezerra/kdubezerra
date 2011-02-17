@@ -112,6 +112,10 @@ bool Command::equals(Command* _other) {
   return true;
 }
 
+bool Command::compareLT(Command* c1, Command* c2) {
+  return c1->stamp < c2->stamp;
+}
+
 void Command::addTarget(ObjectInfo* _obj) {
   targetList.push_back(_obj);
   withTargets = true;
@@ -186,6 +190,29 @@ void Command::setConservativelyDeliverable(bool _isConsDeliverable) {
 
 bool Command::isConservativelyDeliverable() {
   return conservative;
+}
+
+void Command::calculateStamp() {
+  long greatestStamp = -1;
+
+  for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
+    Object* obj = Object::getObjectById((*it)->getId());
+    if (obj == NULL) continue;
+    if (obj->getInfo()->getLastStamp() > greatestStamp) {
+      greatestStamp = obj->getInfo()->getLastStamp();
+    }
+  }
+
+  if (greatestStamp > this->stamp)
+    this->stamp = greatestStamp;
+}
+
+long Command::getStamp() {
+  return stamp;
+}
+
+void Command::setStamp(long _stamp) {
+  stamp = _stamp;
 }
 
 Message* Command::packToNetwork(Command* _cmd) {

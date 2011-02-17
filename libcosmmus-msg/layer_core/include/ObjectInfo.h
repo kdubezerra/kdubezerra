@@ -24,11 +24,15 @@ class ObjectInfo {
     int getId();
     void setId(int _id);
 
+    long getLastStamp();
+    void setLastStamp(long _stamp);
+
     static netwrapper::Message* packObjectInfoListToNetwork(std::list<ObjectInfo*> _objInfoList);
     static std::list<ObjectInfo*> unpackObjectInfoListFromNetwork(netwrapper::Message* _msg);
 
   private:
     int objectId;
+    long lastStamp;
 };
 
 }

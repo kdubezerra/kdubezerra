@@ -25,8 +25,39 @@ Object::~Object() {
 bool Object::equals(Object* _other) {
   if (this->objectInfo->getId() != _other->objectInfo->getId())
     return false;
+  // TODO call the subclass' equals method
+  return true;
 }
 
+void Object::enqueue(Command* _cmd, CommandType _type) {
+  pendingCommands.push_back(new Command(_cmd));
+  pendingCommands.sort(Command::compareLT);
+}
+
+void Object::tryFlushingCmdQueue(CommandType _type) {
+  bool allObjsReady = true;
+  if (pendingCommands.empty())
+    return;
+  Command* nextCmd = new Command(pendingCommands.front());
+  std::list<ObjectInfo*> targetList = nextCmd->getTargetList();
+  for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
+    Object* obj = Object::getObjectById((*ittarget)->getId());
+    if ((*ittarget)->getLastStamp() != obj->getInfo()->getLastStamp())
+      allObjsReady = false;
+  }
+  if (allObjsReady) {
+    for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
+      Object* obj = Object::getObjectById((*ittarget)->getId());
+      obj->handleConservativeDelivery(nextCmd);
+      delete obj->pendingCommands.front();
+      obj->pendingCommands.pop_front();
+    }
+    for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
+      Object* obj = Object::getObjectById((*ittarget)->getId());
+      obj->tryFlushingCmdQueue(CONSERVATIVE);
+    }
+  }
+}
 
 /*!
  * \brief This method is responsible for listing the objects affected by the command. Also,

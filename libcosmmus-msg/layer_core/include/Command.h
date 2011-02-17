@@ -13,6 +13,11 @@
 
 namespace optpaxos {
 
+enum CommandType {
+  OPTIMISTIC,
+  CONSERVATIVE
+};
+
 class Group;
 class Object;
 class ObjectInfo;
@@ -27,6 +32,7 @@ class Command {
     Command(Command* _cmd);
     virtual ~Command();
     bool equals(Command* _other);
+    static bool compareLT(Command* c1, Command* c2);
 
     void addTarget(ObjectInfo* _obj);
     void setTargetList(std::list<ObjectInfo*> _targetList);
@@ -38,7 +44,7 @@ class Command {
 
     void addGroup(Group* _server);
     void setGroupList(std::list<Group*> _serverList);
-    std::list<Group*> findGroups();
+    std::list<Group*> findGroups(); // TODO:
     std::list<Group*> getGroupList();
 
     void setContent(netwrapper::Message* _content);
@@ -61,6 +67,10 @@ class Command {
     void setConservativelyDeliverable(bool _isConsDeliverable);
     bool isConservativelyDeliverable();
 
+    void calculateStamp();
+    long getStamp();
+    void setStamp(long _stamp);
+
     static netwrapper::Message* packToNetwork(Command* _cmd);
     static netwrapper::Message* packCommandListToNetwork(std::list<Command*> _cmdList);
     static Command* unpackFromNetwork(netwrapper::Message* _msg);
@@ -77,6 +87,7 @@ class Command {
     bool withContent;
     bool optimistic;
     bool conservative;
+    long stamp;
 };
 
 }
