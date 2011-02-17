@@ -8,9 +8,8 @@
 #ifndef SERVERINTERFACE_H_
 #define SERVERINTERFACE_H_
 
-/*
- *
- */
+#include "../../layer_network/include/Address.h"
+
 namespace netwrapper {
 
 class Message;
@@ -20,6 +19,8 @@ class ServerInterface {
     ServerInterface();
     virtual ~ServerInterface();
 
+    virtual void handleClientConnect(Address* _newClient) = 0;
+    virtual void handleClientDisconnect(Address* _client) = 0;
     virtual void handleClientMessage(Message* _msg) = 0;
 };
 

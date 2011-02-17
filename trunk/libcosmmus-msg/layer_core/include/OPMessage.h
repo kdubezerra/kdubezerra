@@ -13,7 +13,10 @@
 
 namespace optpaxos {
 
-enum OPMessageType { APP_MSG, CLIENT_CMD, CMD_TO_COORD, CMD_OPT, ACCEPT_MSG, ACCEPTED_MSG, LEARN_MSG, CMD_DELIVERY };
+enum OPMessageType {
+  APP_MSG, CLIENT_CMD, CMD_TO_COORD, CMD_OPT, PAXOS_ACCEPT_MSG,
+  PAXOS_ACCEPTED_MSG, CMD_DELIVERY, CMD_ONE_GROUP_CONSERVATIVE
+};
 
 class Command;
 class Object;
@@ -27,22 +30,24 @@ class OPMessage {
     OPMessage();
     OPMessage(OPMessage* _other);
     virtual ~OPMessage();
+    bool equals (OPMessage* other);
 
     void setType(OPMessageType _msgType);
     void addCommand(Command* _cmd);
     void setCommandList(std::list<Command*> _cmdList);
     void addState(Object* _state);
     void setStateList(std::list<Object*> _stateList);
-    void setExtraPayload(netwrapper::Message* _payload);
+    void addMessage(netwrapper::Message* _payload);
+    void setMessageList(std::list<netwrapper::Message*> _msglist);
 
     OPMessageType getType();
     std::list<Command*> getCommandList();
     std::list<Object*> getStateList();
-    netwrapper::Message* getExtraPayload();
+    std::list<netwrapper::Message*> getMessageList();
 
     bool hasCommand();
     bool hasState();
-    bool hasExtraPayload();
+    bool hasMessage();
 
     static netwrapper::Message* packToNetwork(OPMessage* _opMsg);
     static OPMessage* unpackFromNetwork(netwrapper::Message* _msg);
@@ -51,7 +56,7 @@ class OPMessage {
     OPMessageType messageType;
     std::list<Command*> commandList;
     std::list<Object*> stateList;
-    netwrapper::Message* extraPayload;
+    std::list<netwrapper::Message*> messageList;
 };
 
 }

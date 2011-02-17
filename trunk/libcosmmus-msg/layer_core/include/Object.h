@@ -10,6 +10,7 @@
 
 #include <list>
 #include "../../layer_network/include/Message.h"
+#include "Command.h"
 
 namespace optpaxos {
 
@@ -31,6 +32,9 @@ class Object {
 
     static void setObjectFactory(ObjectFactory* _factory);
     static ObjectFactory* getObjectFactory();
+
+    void enqueue(Command* _cmd, CommandType _type);
+    void tryFlushingCmdQueue(CommandType _type);
 
     static void handleCommand(Command* _cmd);
     static void handleStateUpdate(Object* _state);
@@ -88,7 +92,7 @@ class Object {
   protected:
     ObjectInfo* objectInfo;
     bool waitingForDecision;
-    std::list<OPMessage*> pendingRequests;
+    std::list<Command*> pendingCommands;
     static ObjectFactory* objectFactory;
 };
 

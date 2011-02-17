@@ -11,6 +11,8 @@
 #include <list>
 #include <map>
 
+#include "PaxosLearnerInterface.h"
+
 #include "../../layer_network/include/Message.h"
 #include "../../layer_network/include/UnreliablePeer.h"
 
@@ -40,14 +42,13 @@ class PaxosInstance {
     void addLearners(Group* _learners);
     std::list<Group*> getLearners();
 
-    void broadcast(Command* _cmd);
-    void broadcastAcceptedValue();
-    void broadcastToLearners();
-
-    static void setPeerInterface(netwrapper::UnreliablePeer* _peer);
+    void broadcast(OPMessage* _cmd);
     static void handleAcceptMessage(OPMessage* _accMsg);
+    void broadcastAcceptedValue();
     static void handleAcceptedMessage(OPMessage* _accedMsg);
 
+    static void setLearner(PaxosLearnerInterface* _learner);
+    static void setPeerInterface(netwrapper::UnreliablePeer* _peer);
     static netwrapper::Message* packToNetwork(PaxosInstance* _instance);
     static PaxosInstance* unpackFromNetwork(netwrapper::Message* _msg);
 
@@ -59,6 +60,7 @@ class PaxosInstance {
     std::list<Group*> learners;
     OPMessage* acceptedValue;
     bool learnt;
+    static PaxosLearnerInterface* callbackLearner;
     static netwrapper::UnreliablePeer* peerInterface;
     static std::map<long, PaxosInstance*> instancesIndex;
 };

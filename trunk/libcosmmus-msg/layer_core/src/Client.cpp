@@ -47,7 +47,7 @@ void Client::submitCommand(Command* _cmd) {
 void Client::submitApplicationMessage(netwrapper::Message* _msg) {
   OPMessage* opMsg = new OPMessage();
   opMsg->setType(APP_MSG);
-  opMsg->setExtraPayload(_msg);
+  opMsg->addMessage(_msg);
   Message* msgOpMsg = OPMessage::packToNetwork(opMsg);
   netClient->sendMessage(msgOpMsg);
   delete msgOpMsg;
@@ -82,10 +82,11 @@ void Client::handleOPMessage(OPMessage* _opMsg) {
       Object::handleCommand(*it);
     }
   }
-
-  if (_opMsg->hasExtraPayload()) {
-    callbackClient->handleMessage(_opMsg->getExtraPayload());
-  }
+/* TODO: fix up this stupid implementation
+ * if (_opMsg->hasExtraPayload()) {
+ *   callbackClient->handleMessage(_opMsg->getExtraPayload());
+ * }
+ */
 }
 
 void handleStateUpdate(Object* _state) {

@@ -13,7 +13,6 @@ using namespace optpaxos;
 using namespace netwrapper;
 
 OPMessage::OPMessage() {
-  extraPayload = NULL;
 }
 
 OPMessage::~OPMessage() {
@@ -23,8 +22,8 @@ OPMessage::~OPMessage() {
   for (std::list<Object*>::iterator it = stateList.begin() ; it != stateList.end() ; it++)
     delete *it;
 
-  if (extraPayload != NULL)
-    delete extraPayload;
+  for (std::list<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++)
+    delete *it;
 }
 
 void OPMessage::setType(OPMessageType _msgType) {
@@ -47,8 +46,8 @@ void OPMessage::setStateList(std::list<Object*> _stateList) {
   stateList = _stateList;
 }
 
-void OPMessage::setExtraPayload(netwrapper::Message* _payload) {
-  extraPayload = _payload;
+void OPMessage::addMessage(netwrapper::Message* _msg) {
+  messageList.push_back(_msg);
 }
 
 OPMessageType OPMessage::getType() {
@@ -63,8 +62,8 @@ std::list<Object*> OPMessage::getStateList() {
   return stateList;
 }
 
-netwrapper::Message* OPMessage::getExtraPayload() {
-  return extraPayload;
+std::list<Message*> OPMessage::getMessageList() {
+  return messageList;
 }
 
 bool OPMessage::hasCommand() {
@@ -75,21 +74,19 @@ bool OPMessage::hasState() {
   return stateList.empty();
 }
 
-bool OPMessage::hasExtraPayload() {
-  if (extraPayload != NULL)
-    return true;
-  else
-    return false;
+bool OPMessage::hasMessage() {
+  return messageList.empty();
 }
 
 Message* OPMessage::packToNetwork(OPMessage* _opMsg) {
     Message* netMsg = new Message();
 
     netMsg->addInt(_opMsg->getType());
+    netMsg->addInt((int) _opMsg->messageList.size());
 
     netMsg->addBool(_opMsg->hasCommand());
     netMsg->addBool(_opMsg->hasState());
-    netMsg->addBool(_opMsg->hasExtraPayload());
+    netMsg->addBool(_opMsg->hasMessage());
 
     if (_opMsg->hasCommand()) {
       netMsg->addMessage(Command::packCommandListToNetwork(_opMsg->getCommandList()));
@@ -97,8 +94,10 @@ Message* OPMessage::packToNetwork(OPMessage* _opMsg) {
     if (_opMsg->hasState()) {
       netMsg->addMessage(Object::packObjectListToNetwork(_opMsg->getStateList()));
     }
-    if (_opMsg->hasExtraPayload()) {
-      netMsg->addMessage(new Message(_opMsg->getExtraPayload()));
+    if (_opMsg->hasMessage()) {
+      std::list<Message*> messageList = _opMsg->messageList;
+      for (std::list<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++)
+        netMsg->addMessage(new Message(*it));
     }
 
     return netMsg;
@@ -109,7 +108,7 @@ OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
 
   bool hasCmd = _msg->getBool(0);
   bool hasState = _msg->getBool(1);
-  bool hasExtraPayload = _msg->getBool(2);
+  bool hasMsg = _msg->getBool(2);
 
   int index = 0;
 
@@ -120,9 +119,10 @@ OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
   if (hasState) {
     opMsg->setStateList(Object::unpackObjectListFromNetwork(_msg->getMessage(index++)));
   }
-  if (hasExtraPayload) {
-    Message* extra = new Message(_msg->getMessage(index));
-    opMsg->setExtraPayload(extra);
+  if (hasMsg) {
+    int messageCount = _msg->getInt(1);
+    for (int j = index ; j < index + messageCount ; j++)
+      opMsg->messageList.push_back(new Message(_msg->getMessage(j)));
   }
 
   return opMsg;
