@@ -42,8 +42,8 @@ class Server : public optpaxos::PaxosLearnerInterface,
     int init(unsigned _reliablePort, unsigned _unreliablePort);
     int joinGroup(Group *_group);
     void leaveGroup();
-    void handleClientConnect(netwrapper::Address* _newClient);
-    void handleClientDisconnect(netwrapper::Address* _client);
+    void handleClientConnect(netwrapper::RemoteFRC* _newClient);
+    void handleClientDisconnect(netwrapper::RemoteFRC* _client);
 
     NodeInfo* getNodeInfo();
     void setNodeInfo(NodeInfo* _info);
@@ -68,7 +68,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     optpaxos::ServerInterface* callbackServer;
     NodeInfo* nodeInfo;
     long lastPaxosInstance;
-    std::list<netwrapper::Address*> clientList; // TODO: create a decent client management
+    std::list<netwrapper::RemoteFRC*> clientList; // TODO: create a decent client management
     // TODO: define a way to uniquely identify each server (ip:port?)
 };
 

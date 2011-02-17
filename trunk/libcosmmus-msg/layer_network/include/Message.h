@@ -14,9 +14,6 @@
 
 namespace netwrapper {
 
-/*
- *
- */
 class Message {
   public:
     Message();
@@ -24,14 +21,14 @@ class Message {
     virtual ~Message();
     bool equals(Message* _other);
 
-    int addBool(bool _bvalue);
-    int addChar(char _cvalue);
-    int addInt(int _ivalue);
-    int addFloat(float _fvalue);
-    int addString(const std::string& _svalue);
-    int addMessage(Message* _msg);
-    int addMessageCopy(Message* _msg);
-    int addArbitrary(int length, void* data);
+    void addBool(bool _bvalue);
+    void addChar(char _cvalue);
+    void addInt(int _ivalue);
+    void addFloat(float _fvalue);
+    void addString(const std::string& _svalue);
+    void addMessage(Message* _msg);
+    void addMessageCopy(Message* _msg);
+    void addArbitrary(int length, void* data);
 
     bool getBool(int _pos);
     int getBoolCount();
@@ -54,7 +51,13 @@ class Message {
     const void* getArbitrary();
     int getArbitraryLength();
 
+    char* getSerializedMessage();
+    int getSerializedLength();
+    void buildFromBuffer(char* _buffer, int length);
+
   private:
+    std::vector<bool> boolList;
+    std::vector<char> charList;
     std::vector<int> intList;
     std::vector<float> floatList;
     std::vector<std::string> stringList;

@@ -9,6 +9,9 @@
 #define FIFORELIABLECLIENT_H_
 
 #include <string>
+#include <SDL/SDL.h>
+#include <SDL/SDL_net.h>
+
 #include "../include/GenericNode.h"
 
 /*
@@ -32,6 +35,7 @@ class FIFOReliableClient : public GenericNode {
 
   private:
     netwrapper::ClientInterface* clientInterface;
+    TCPsocket clientSocket;
 
 };
 

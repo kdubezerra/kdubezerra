@@ -52,12 +52,12 @@ void Server::leaveGroup() {
   // TODO: create a decent membership manager
 }
 
-void Server::handleClientConnect(netwrapper::Address* _newClient) {
+void Server::handleClientConnect(netwrapper::RemoteFRC* _newClient) {
   clientList.push_back(_newClient);
   // TODO: create a decent client manager
 }
 
-void Server::handleClientDisconnect(netwrapper::Address* _client) {
+void Server::handleClientDisconnect(netwrapper::RemoteFRC* _client) {
   clientList.remove(_client);
   // TODO: create a decent membership manager (besides, the previous commline just doesn't work)
 }
@@ -157,7 +157,7 @@ void Server::sendCommandToClients(Command* _cmd) {
   cmdMsg->setType(CMD_ONE_GROUP_CONSERVATIVE);
   cmdMsg->addCommand(new Command(_cmd));
   Message* packedCmdMsg = OPMessage::packToNetwork(cmdMsg);
-  for (std::list<netwrapper::Address*>::iterator it = clientList.begin() ; it != clientList.end() ; it++) {
+  for (std::list<netwrapper::RemoteFRC*>::iterator it = clientList.begin() ; it != clientList.end() ; it++) {
     netServer->send(packedCmdMsg, *it);
   }
 }
