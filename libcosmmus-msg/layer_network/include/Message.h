@@ -53,7 +53,7 @@ class Message {
 
     char* getSerializedMessage();
     int getSerializedLength();
-    void buildFromBuffer(char* _buffer, int length);
+    void buildFromBuffer(char* _buffer);
 
   private:
     std::vector<bool> boolList;

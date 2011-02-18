@@ -32,13 +32,13 @@ int FIFOReliableClient::connect(std::string _address, unsigned _port) {
   IPaddress ip;
 
   if(SDLNet_ResolveHost(&ip, _address.c_str(), (Uint16) _port)==-1) {
-      cerr << "SDLNet_ResolveHost: " << SDLNet_GetError() << endl;
+      cerr << "FIFOReliableClient::connect: SDLNet_ResolveHost: " << SDLNet_GetError() << endl;
       return 1;
   }
 
   clientSocket = SDLNet_TCP_Open(&ip);
   if(!clientSocket) {
-      cerr << "SDLNet_TCP_Open: " << SDLNet_GetError() << endl;
+      cerr << "FIFOReliableClient::connect: SDLNet_TCP_Open: " << SDLNet_GetError() << endl;
       return 2;
   }
 
@@ -46,9 +46,19 @@ int FIFOReliableClient::connect(std::string _address, unsigned _port) {
 }
 
 int FIFOReliableClient::disconnect() {
-
+  return 0;
 }
 
 int FIFOReliableClient::sendMessage(Message* _msg) {
-
+  char* msgBuffer = _msg->getSerializedMessage();
+  int msgLength = _msg->getSerializedLength();
+  if (SDLNet_TCP_Send(clientSocket, msgBuffer, msgLength) < msgLength) {
+    cerr << "FIFOReliableClient::sendMessage: Failed to send message length: " << SDLNet_GetError() << endl;
+    return 1;
+  }
+  cout << "FIFOReliableClient::sendMessage: ";
+  for (int i = 0 ; i < msgLength ; i++) cout << msgBuffer[i];
+  cout << endl;
+  delete [] msgBuffer;
+  return 0;
 }

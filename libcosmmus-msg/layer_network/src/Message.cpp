@@ -132,8 +132,11 @@ Message* Message::getMessage(int _pos) {
 }
 
 char* Message::getSerializedMessage() {
-  char* buffer = new char[getSerializedLength()];
+  int serializedLength = getSerializedLength();
+  char* buffer = new char[serializedLength];
   char* bufferpos = buffer;
+  SDLNet_Write32(serializedLength, bufferpos);
+  bufferpos += 4;
   // *******************************************************\\ BOOL LIST
   SDLNet_Write32((Uint32) boolList.size(), bufferpos);
   bufferpos += 4;
@@ -178,10 +181,8 @@ char* Message::getSerializedMessage() {
   for (std::vector<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++) {
     char* serializedMsg = (*it)->getSerializedMessage();
     Uint32 msgLength = (Uint32) (*it)->getSerializedLength();
-    SDLNet_Write32(msgLength, bufferpos);
-    bufferpos += 4;
     memcpy(bufferpos, serializedMsg, msgLength);
-    delete serializedMsg;
+    delete [] serializedMsg;
     bufferpos += msgLength;
   }
   // *******************************************************\\ ARBITRARY DATA
@@ -194,7 +195,7 @@ char* Message::getSerializedMessage() {
 }
 
 int Message::getSerializedLength() {
-  int length = 0;
+  int length = 4;
   length += 4 + (int) boolList.size();
   length += 4 + (int) charList.size();
   length += 4 + 4 * (int) intList.size();
@@ -208,14 +209,13 @@ int Message::getSerializedLength() {
   length += 4 + arbitraryLength;
   length += 4;
   for (std::vector<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++) {
-    length += 4;
     length += (*it)->getSerializedLength();
   }
   return length;
 }
 
-void Message::buildFromBuffer(char* _buffer, int length) {
-  char* bufferpos = _buffer;
+void Message::buildFromBuffer(char* _buffer) {
+  char* bufferpos = _buffer + 4;
   int boolCount = SDLNet_Read32(bufferpos);
   bufferpos += 4;
   for (int i = 0 ; i < boolCount ; i++) {
@@ -253,9 +253,9 @@ void Message::buildFromBuffer(char* _buffer, int length) {
   bufferpos += 4;
   for (int i = 0 ; i < messageCount ; i++) {
     Message* msg = new Message();
+    // The length field is actullay part of the msg, so the bufferpos stays the same
     int msgLength = SDLNet_Read32(bufferpos);
-    bufferpos += 4;
-    msg->buildFromBuffer(bufferpos, msgLength);
+    msg->buildFromBuffer(bufferpos);
     this->addMessage(msg);
     bufferpos += msgLength;
   }
