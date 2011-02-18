@@ -23,7 +23,7 @@ class GenericNode {
     Address* getAddress();
     void setAddress (Address* address);
 
-  private:
+  protected:
     Address* address;
 };
 

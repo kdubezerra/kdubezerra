@@ -8,6 +8,8 @@
 #ifndef ADDRESS_H_
 #define ADDRESS_H_
 
+#include <SDL/SDL_net.h>
+
 /*
  *
  */
@@ -17,6 +19,10 @@ class Address {
   public:
     Address();
     virtual ~Address();
+    void setAddress (IPaddress address);
+    IPaddress getAddress();
+  private:
+    IPaddress address;
 };
 
 }

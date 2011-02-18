@@ -9,10 +9,10 @@
 #define FIFORELIABLECLIENT_H_
 
 #include <string>
-#include <SDL/SDL.h>
 #include <SDL/SDL_net.h>
 
-#include "../include/GenericNode.h"
+#include "GenericNode.h"
+#include "Message.h"
 
 /*
  *
