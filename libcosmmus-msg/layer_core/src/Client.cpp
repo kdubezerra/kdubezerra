@@ -30,7 +30,7 @@ int Client::connect(std::string _address, unsigned _port) {
   return netClient->connect(_address, _port);
 }
 
-int Client::disconnect() {
+void Client::disconnect() {
   return netClient->disconnect();
 }
 

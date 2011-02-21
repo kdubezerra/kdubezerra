@@ -40,7 +40,7 @@ class Client : public netwrapper::ClientInterface {
     Client();
     virtual ~Client();
     int connect(std::string _address, unsigned port);
-    int disconnect();
+    void disconnect();
     void submitCommand(Command* _cmd);
     void submitApplicationMessage(netwrapper::Message* _msg);
     void setCallbackInterface(optpaxos::ClientInterface* _callbackClient);

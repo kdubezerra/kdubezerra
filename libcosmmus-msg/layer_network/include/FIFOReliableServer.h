@@ -31,9 +31,12 @@ class FIFOReliableServer : public GenericNode {
     void setCallbackServer(ServerInterface* _cbServer);
 
     void checkConnections();
-    void checkNewMessages();
-    void send (Message* _msg, RemoteFRC* _client);
+    int checkNewMessages();
+    int send (Message* _msg, RemoteFRC* _client);
     void disconnect(RemoteFRC* _client);
+    std::list<RemoteFRC*> getClientList() const;
+    void setClientList(std::list<RemoteFRC*> clientList);
+
   private:
     ServerInterface* callbackServer;
     std::list<RemoteFRC*> clientList;
@@ -42,5 +45,6 @@ class FIFOReliableServer : public GenericNode {
 };
 
 }
+
 
 #endif /* FIFORELIABLESERVER_H_ */

@@ -53,7 +53,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     void handleLearntValue(OPMessage* _learntMsg);
 
     void setCallbackInterface(optpaxos::ServerInterface* _cbInterface);
-    virtual void handleOptimisticDelivery();
+    virtual void handleOptimisticDelivery(Command* _cmd) = 0;
 
   private:
     void sendCommandToClients(Command* _cmd);

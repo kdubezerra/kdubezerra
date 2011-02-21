@@ -6,14 +6,18 @@
  */
 
 #include <iostream>
+#include "../include/ClientInterface.h"
 #include "../include/FIFOReliableClient.h"
 
 using namespace std;
 using namespace netwrapper;
 
 FIFOReliableClient::FIFOReliableClient() {
-  // TODO Auto-generated constructor stub
-
+  socketSet = SDLNet_AllocSocketSet(1);
+  if (socketSet == NULL) {
+    cout << "FIFOReliableClient::FIFOReliableClient: ERROR: socketSet NOT allocated!" << endl;
+  }
+  callbackClient = NULL;
 }
 
 FIFOReliableClient::~FIFOReliableClient() {
@@ -21,11 +25,11 @@ FIFOReliableClient::~FIFOReliableClient() {
 }
 
 void FIFOReliableClient::setCallbackInterface(ClientInterface* _callbackClient) {
-  clientInterface = _callbackClient;
+  callbackClient = _callbackClient;
 }
 
 ClientInterface* FIFOReliableClient::getCallbackClient() {
-  return clientInterface;
+  return callbackClient;
 }
 
 int FIFOReliableClient::connect(std::string _address, unsigned _port) {
@@ -42,11 +46,21 @@ int FIFOReliableClient::connect(std::string _address, unsigned _port) {
       return 2;
   }
 
+  if (socketSet == NULL) {
+    cout << "FIFOReliableClient::connect: SDLNet_AllocSocketSet: " << SDLNet_GetError() << endl;
+    return 3; // Quit!
+  }
+
+  SDLNet_TCP_AddSocket(socketSet, clientSocket);
+  cout << "FIFOReliableClient::connect: connected to server at " << _address << ":" << _port << endl;
+
   return 0;
 }
 
-int FIFOReliableClient::disconnect() {
-  return 0;
+void FIFOReliableClient::disconnect() {
+  SDLNet_TCP_Close(clientSocket);
+  SDLNet_TCP_DelSocket(socketSet, clientSocket);
+  cout << "FIFOReliableClient::disconnect: client disconnected from server" << endl;
 }
 
 int FIFOReliableClient::sendMessage(Message* _msg) {
@@ -56,9 +70,44 @@ int FIFOReliableClient::sendMessage(Message* _msg) {
     cerr << "FIFOReliableClient::sendMessage: Failed to send message length: " << SDLNet_GetError() << endl;
     return 1;
   }
-  cout << "FIFOReliableClient::sendMessage: ";
-  for (int i = 0 ; i < msgLength ; i++) cout << msgBuffer[i];
-  cout << endl;
   delete [] msgBuffer;
   return 0;
+}
+
+int FIFOReliableClient::checkNewMessages() {
+  int rcvdMsgCount = 0;
+  int socketActivity = SDLNet_CheckSockets(socketSet, 0);
+  cout << "FIFOReliableClient::checkNewMessages: socketActivity = " << socketActivity << endl;
+
+  int clientSocketActivity = SDLNet_SocketReady(clientSocket);
+  cout << "FIFOReliableClient::checkNewMessages: clientSocketActivity for client " << this << " = " << socketActivity << endl;
+  if (clientSocketActivity != 0) {
+    char lengthBuffer[4];
+    int receivedByteCount = SDLNet_TCP_Recv(clientSocket, lengthBuffer, 4);
+    if (receivedByteCount <= 0) {
+      cout << "FIFOReliableClient::checkNewMessages: disconnected from server" << endl;
+      disconnect();
+      return 1;
+    }
+    int messageLength = SDLNet_Read32(lengthBuffer);
+    cout << "FIFOReliableClient::checkNewMessages: received message length = " << messageLength << endl;
+    char* messageBuffer = new char[messageLength];
+    memcpy(messageBuffer, lengthBuffer, 4);
+    receivedByteCount = SDLNet_TCP_Recv(clientSocket, messageBuffer + 4, messageLength - 4);
+    if (receivedByteCount <= 0) {
+      cout << "FIFOReliableClient::checkNewMessages: disconnected from server" << endl;
+      disconnect();
+      return 2;
+    }
+    rcvdMsgCount++;
+    cout << "FIFOReliableClient::checkNewMessages: new received message: ";
+    for (int i = 0 ; i < messageLength ; i++) cout << messageBuffer[i];
+    cout << endl;
+    Message* rcvdMessage = new Message();
+    rcvdMessage->buildFromBuffer(messageBuffer);
+    delete [] messageBuffer;
+    if (callbackClient) callbackClient->handleServerMessage(rcvdMessage);
+    delete rcvdMessage;
+  }
+  return rcvdMsgCount;
 }

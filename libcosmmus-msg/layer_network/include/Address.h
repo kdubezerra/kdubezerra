@@ -10,17 +10,24 @@
 
 #include <SDL/SDL_net.h>
 
+#include "Message.h"
+
 /*
  *
  */
 namespace netwrapper {
 
+class Message;
+
 class Address {
   public:
     Address();
+    Address(Address* other);
     virtual ~Address();
-    void setAddress (IPaddress address);
+    void setAddress (IPaddress _address);
     IPaddress getAddress();
+    static Message* pack(Address* _addr);
+    static Address* unpack(Message* _msg);
   private:
     IPaddress address;
 };

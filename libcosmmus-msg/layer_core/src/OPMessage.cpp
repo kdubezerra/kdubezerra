@@ -26,6 +26,37 @@ OPMessage::~OPMessage() {
     delete *it;
 }
 
+bool OPMessage::equals (OPMessage* other) {
+  if (this->messageType != other->messageType
+      || this->commandList.size() != other->commandList.size()
+      || this->stateList.size() != other->stateList.size()
+      || this->messageList.size() != other->messageList.size())
+    return false;
+
+  std::list<Command*>::iterator icother = other->commandList.begin();
+  for (std::list<Command*>::iterator itthis = commandList.begin() ; itthis != commandList.end() ; itthis++) {
+    if (!(*itthis)->equals(*icother))
+      return false;
+    icother++;
+  }
+
+  std::list<Object*>::iterator ioother = other->stateList.begin();
+  for (std::list<Object*>::iterator itthis = stateList.begin() ; itthis != stateList.end() ; itthis++) {
+    if (!(*itthis)->equals(*ioother))
+      return false;
+    ioother++;
+  }
+
+  std::list<Message*>::iterator imother = other->messageList.begin();
+  for (std::list<Message*>::iterator itthis = messageList.begin() ; itthis != messageList.end() ; itthis++) {
+    if (!(*itthis)->equals(*imother))
+      return false;
+    imother++;
+  }
+
+  return true;
+}
+
 void OPMessage::setType(OPMessageType _msgType) {
   messageType = _msgType;
 }
@@ -92,7 +123,7 @@ Message* OPMessage::packToNetwork(OPMessage* _opMsg) {
       netMsg->addMessage(Command::packCommandListToNetwork(_opMsg->getCommandList()));
     }
     if (_opMsg->hasState()) {
-      netMsg->addMessage(Object::packObjectListToNetwork(_opMsg->getStateList()));
+      netMsg->addMessage(Object::packListToNetwork(_opMsg->getStateList()));
     }
     if (_opMsg->hasMessage()) {
       std::list<Message*> messageList = _opMsg->messageList;
@@ -117,7 +148,7 @@ OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
     opMsg->setCommandList(Command::unpackCommandListFromNetwork(_msg->getMessage(index++)));
   }
   if (hasState) {
-    opMsg->setStateList(Object::unpackObjectListFromNetwork(_msg->getMessage(index++)));
+    opMsg->setStateList(Object::unpackListFromNetwork(_msg->getMessage(index++)));
   }
   if (hasMsg) {
     int messageCount = _msg->getInt(1);

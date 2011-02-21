@@ -30,12 +30,14 @@ class FIFOReliableClient : public GenericNode {
     void setCallbackInterface(netwrapper::ClientInterface* _callbackClient);
     netwrapper::ClientInterface* getCallbackClient();
     int connect(std::string _address, unsigned _port);
-    int disconnect();
+    void disconnect();
     int sendMessage(Message* _msg);
+    int checkNewMessages();
 
   private:
-    netwrapper::ClientInterface* clientInterface;
+    netwrapper::ClientInterface* callbackClient;
     TCPsocket clientSocket;
+    SDLNet_SocketSet socketSet;
 
 };
 

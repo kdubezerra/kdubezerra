@@ -9,6 +9,7 @@
 #define OBJECT_H_
 
 #include <list>
+#include <map>
 #include "../../layer_network/include/Message.h"
 #include "Command.h"
 
@@ -40,9 +41,9 @@ class Object {
     static void handleStateUpdate(Object* _state);
 
     static netwrapper::Message* packToNetwork(Object* _obj);
-    static netwrapper::Message* packObjectListToNetwork(std::list<Object*> _objList);
+    static netwrapper::Message* packListToNetwork(std::list<Object*> _objList);
     static Object* unpackFromNetwork(netwrapper::Message* _msg);
-    static std::list<Object*> unpackObjectListFromNetwork(netwrapper::Message* _msg);
+    static std::list<Object*> unpackListFromNetwork(netwrapper::Message* _msg);
 
     /*!
      * \brief The application must implement this method in order to update the optimistic
@@ -93,6 +94,7 @@ class Object {
     ObjectInfo* objectInfo;
     bool waitingForDecision;
     std::list<Command*> pendingCommands;
+    static std::map<int, Object*> objectIndex;
     static ObjectFactory* objectFactory;
 };
 

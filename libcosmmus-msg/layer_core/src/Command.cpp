@@ -52,60 +52,41 @@ Command::~Command() {
       delete *it;
 }
 
-bool Command::equals(Command* _other) {
+bool Command::equals(Command* other) {
 
-  if (!this->commandContent->equals(_other->commandContent)
-      || this->withContent != _other->withContent
-      || this->withGroups != _other->withGroups
-      || this->withPriorStates != _other->withPriorStates
-      || this->withTargets != _other->withTargets
-      || this->conservative != _other->conservative
-      || this->optimistic != _other->conservative) {
+  if (!this->commandContent->equals(other->commandContent)
+      || this->withContent != other->withContent
+      || this->withGroups != other->withGroups
+      || this->withPriorStates != other->withPriorStates
+      || this->withTargets != other->withTargets
+      || this->conservative != other->conservative
+      || this->optimistic != other->conservative
+      || this->targetList.size() != other->targetList.size()
+      || this->necessaryStates.size() != other->necessaryStates.size()
+      || this->groupList.size() != other->groupList.size()) {
     return false;
   }
 
-  std::list<ObjectInfo*>::iterator oiitthis = this->targetList.begin();
-  std::list<ObjectInfo*>::iterator oiitother = _other->targetList.begin();
-  while(true) {
-    if (oiitthis == this->targetList.end() || oiitother == _other->targetList.end()) {
-      if (oiitthis == this->targetList.end() && oiitother == _other->targetList.end())
-        break;
-      else
-        return false;
-    }
-    if ((*oiitthis)->getId() != (*oiitother)->getId())
+
+  std::list<ObjectInfo*>::iterator oiitother = other->targetList.begin();
+  for (std::list<ObjectInfo*>::iterator itthis = targetList.begin(); itthis != targetList.end() ; itthis++) {
+    if ((*itthis)->getId() != (*oiitother)->getId())
       return false;
-    oiitthis++;
     oiitother++;
   }
 
-  std::list<Object*>::iterator obitthis = this->necessaryStates.begin();
-  std::list<Object*>::iterator obitother = _other->necessaryStates.begin();
-  while(true) {
-    if (obitthis == this->necessaryStates.end() || obitother == _other->necessaryStates.end()) {
-      if (obitthis == this->necessaryStates.end() && obitother == _other->necessaryStates.end())
-        break;
-      else
-        return false;
-    }
-    if ( !(*obitthis)->equals(*obitother)  )
+
+  std::list<Object*>::iterator obitother = other->necessaryStates.begin();
+  for (std::list<Object*>::iterator itthis = necessaryStates.begin(); itthis != necessaryStates.end() ; itthis++) {
+    if (!(*itthis)->equals(*obitother))
       return false;
-    obitthis++;
     obitother++;
   }
 
-  std::list<Group*>::iterator gitthis = this->groupList.begin();
-  std::list<Group*>::iterator gitother = _other->groupList.begin();
-  while(true) {
-    if (gitthis == this->groupList.end() || gitother == _other->groupList.end()) {
-      if (gitthis == this->groupList.end() && gitother == _other->groupList.end())
-        break;
-      else
-        return false;
-    }
-    if ( (*gitthis)->getId() != (*gitother)->getId() )
+  std::list<Group*>::iterator gitother = other->groupList.begin();
+    for (std::list<Group*>::iterator itthis = groupList.begin(); itthis != groupList.end() ; itthis++) {
+    if ((*itthis)->getId() != (*gitother)->getId())
       return false;
-    gitthis++;
     gitother++;
   }
 
@@ -131,6 +112,18 @@ std::list<ObjectInfo*> Command::getTargetList() {
   return targetList;
 }
 
+void Command::addPriorStateState(Object* _state) {
+  necessaryStates.push_back(_state);
+}
+
+void Command::setPriorStateList(std::list<Object*> _stateList) {
+  necessaryStates = _stateList;
+}
+
+std::list<Object*> Command::getPriorStateList() {
+  return necessaryStates;
+}
+
 void Command::addGroup(Group* _group) {
   groupList.push_back(_group);
   withGroups = true;
@@ -139,6 +132,21 @@ void Command::addGroup(Group* _group) {
 void Command::setGroupList(std::list<Group*> _groupList) {
   groupList = _groupList;
   withGroups = true;
+}
+
+std::list<Group*> Command::findGroups() {
+  std::list<Group*> allGroups = Group::getGroupsList();
+  std::list<Group*> cmdGroups;
+  for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
+    for (std::list<Group*>::iterator itgroup = allGroups.begin() ; itgroup != allGroups.end() ; itgroup++) {
+      std::map<int, ObjectInfo*> groupObjects = (*itgroup)->getObjectsIndex();
+      if (groupObjects.find((*ittarget)->getId()) != groupObjects.end()) {
+        cmdGroups.push_back(*itgroup);
+        break;
+      }
+    }
+  }
+  return cmdGroups;
 }
 
 std::list<Group*> Command::getGroupList() {
@@ -162,6 +170,14 @@ void Command::setKnowsTargets(bool _knowsTargets) {
 
 bool Command::knowsTargets() {
   return withTargets;
+}
+
+void Command::setHasPriorStates(bool _hasPriorStates) {
+  withPriorStates = _hasPriorStates;
+}
+
+bool Command::hasPriorStates() {
+  return withPriorStates;
 }
 
 void Command::setKnowsGroups(bool _knowsGroups) {
@@ -226,9 +242,9 @@ Message* Command::packToNetwork(Command* _cmd) {
   cmdMsg->addBool(_cmd->isConservativelyDeliverable());
 
   if (_cmd->hasContent()) cmdMsg->addMessage(new Message(_cmd->getContent()));
-  if (_cmd->knowsTargets()) cmdMsg->addMessage(ObjectInfo::packObjectInfoListToNetwork(_cmd->getTargetList()));
-  if (_cmd->hasPriorStates()) cmdMsg->addMessage(Object::packObjectListToNetwork(_cmd->getPriorStateList()));
-  if (_cmd->knowsGroups()) cmdMsg->addMessage(Group::packGroupListToNetwork(_cmd->getGroupList()));
+  if (_cmd->knowsTargets()) cmdMsg->addMessage(ObjectInfo::packListToNetwork(_cmd->getTargetList()));
+  if (_cmd->hasPriorStates()) cmdMsg->addMessage(Object::packListToNetwork(_cmd->getPriorStateList()));
+  if (_cmd->knowsGroups()) cmdMsg->addMessage(Group::packListToNetwork(_cmd->getGroupList()));
 
   return cmdMsg;
 }
@@ -243,8 +259,8 @@ Command* Command::unpackFromNetwork(Message* _msg) {
   cmd->setOptimisticallyDeliverable(_msg->getBool(3));
   cmd->setConservativelyDeliverable(_msg->getBool(4));
   if (hasContent) cmd->setContent(_msg->getMessage(msgIndex++));
-  if (cmd->knowsTargets()) cmd->setTargetList(ObjectInfo::unpackObjectInfoListFromNetwork(_msg->getMessage(msgIndex++)));
-  if (cmd->knowsGroups()) cmd->setGroupList(Group::unpackGroupListFromNetwork(_msg->getMessage(msgIndex)));
+  if (cmd->knowsTargets()) cmd->setTargetList(ObjectInfo::unpackListFromNetwork(_msg->getMessage(msgIndex++)));
+  if (cmd->knowsGroups()) cmd->setGroupList(Group::unpackListFromNetwork(_msg->getMessage(msgIndex)));
 
   return cmd;
 }

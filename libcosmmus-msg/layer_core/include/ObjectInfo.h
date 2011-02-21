@@ -8,6 +8,8 @@
 #ifndef OBJECTINFO_H_
 #define OBJECTINFO_H_
 
+#include <map>
+
 #include "../../layer_network/include/Message.h"
 
 /*
@@ -27,8 +29,12 @@ class ObjectInfo {
     long getLastStamp();
     void setLastStamp(long _stamp);
 
-    static netwrapper::Message* packObjectInfoListToNetwork(std::list<ObjectInfo*> _objInfoList);
-    static std::list<ObjectInfo*> unpackObjectInfoListFromNetwork(netwrapper::Message* _msg);
+    static netwrapper::Message* packToNetwork(ObjectInfo* _objInfo);
+    static netwrapper::Message* packListToNetwork(std::list<ObjectInfo*> _objInfoList);
+    static netwrapper::Message* packIndexToNetwork(std::map<int, ObjectInfo*> _objInfoIndex);
+    static ObjectInfo* unpackFromNetwork(netwrapper::Message* _msg);
+    static std::list<ObjectInfo*> unpackListFromNetwork(netwrapper::Message* _msg);
+    static std::map<int, ObjectInfo*> unpackIndexFromNetwork(netwrapper::Message* _msg);
 
   private:
     int objectId;
