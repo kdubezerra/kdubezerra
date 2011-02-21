@@ -37,9 +37,11 @@ class PaxosInstance {
     void setId(long _id);
 
     void addAcceptors(Group* _acceptors);
+    void setAcceptorsGroups(std::list<Group*> _accList);
     std::list<Group*> getAcceptors();
 
     void addLearners(Group* _learners);
+    void setLearnersGroups(std::list<Group*> _lList);
     std::list<Group*> getLearners();
 
     void broadcast(OPMessage* _cmd);
@@ -56,8 +58,8 @@ class PaxosInstance {
     long instanceSeq;
     int acceptedMsgCounter;
     //static file paxosLog;
-    std::list<Group*> acceptors;
-    std::list<Group*> learners;
+    std::list<Group*> acceptorsGroupsList;
+    std::list<Group*> learnersGroupsList;
     OPMessage* acceptedValue;
     bool learnt;
     static PaxosLearnerInterface* callbackLearner;

@@ -9,6 +9,7 @@
 #define NODEINFO_H_
 
 #include "../../layer_network/include/GenericNode.h"
+#include "../../layer_network/include/Message.h"
 
 /*
  *
@@ -20,7 +21,7 @@ enum NodeType { CLIENT_NODE , SERVER_NODE };
 class NodeInfo : public netwrapper::GenericNode {
   public:
     NodeInfo();
-    NodeInfo(NodeInfo* _other);
+    NodeInfo(NodeInfo* other);
     virtual ~NodeInfo();
 
     int getNodeId() const;
@@ -32,10 +33,15 @@ class NodeInfo : public netwrapper::GenericNode {
     void setAddress(netwrapper::Address* _address);
     netwrapper::Address* getAdress();
 
+    static netwrapper::Message* packToNetwork(NodeInfo* _node);
+    static netwrapper::Message* packListToNetwork(std::list<NodeInfo*> _nodeList);
+    static NodeInfo* unpackFromNetwork(netwrapper::Message* _msg);
+    static std::list<NodeInfo*> unpackListFromNetwork(netwrapper::Message* _msg);
+
   private:
+    int nodeId;
     NodeType nodeType;
     netwrapper::Address* address;
-    int nodeId;
 };
 
 }

@@ -31,6 +31,10 @@ Message::Message(Message* _msg) {
     addMessage(new Message(*it));
 }
 
+Message::Message(char* _buffer) {
+  this->buildFromBuffer(_buffer);
+}
+
 Message::~Message() {
   for (std::vector<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++)
     delete *it;
@@ -92,6 +96,12 @@ void Message::addMessage(Message* _msg) {
 
 void Message::addMessageCopy(Message* _msg) {
   messageList.push_back(new Message(_msg));
+}
+
+void Message::setArbitraryData(int _length, void* _data) {
+  arbitraryData = new char[_length];
+  arbitraryLength = _length;
+  memcpy(arbitraryData, _data, _length);
 }
 
 bool Message::getBool(int _pos) {
@@ -253,7 +263,7 @@ void Message::buildFromBuffer(char* _buffer) {
   bufferpos += 4;
   for (int i = 0 ; i < messageCount ; i++) {
     Message* msg = new Message();
-    // The length field is actullay part of the msg, so the bufferpos stays the same
+    // The length field is actually part of the msg, so the bufferpos stays the same
     int msgLength = SDLNet_Read32(bufferpos);
     msg->buildFromBuffer(bufferpos);
     this->addMessage(msg);
@@ -261,6 +271,8 @@ void Message::buildFromBuffer(char* _buffer) {
   }
   this->arbitraryLength = SDLNet_Read32(bufferpos);
   bufferpos += 4;
-  if (arbitraryLength > 0)
+  if (arbitraryLength > 0) {
+    arbitraryData = new char[arbitraryLength];
     memcpy(this->arbitraryData, bufferpos, arbitraryLength);
+  }
 }

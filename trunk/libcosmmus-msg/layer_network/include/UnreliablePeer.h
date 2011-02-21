@@ -21,14 +21,17 @@ class UnreliablePeer : public GenericNode {
     UnreliablePeer();
     virtual ~UnreliablePeer();
 
-    int init(unsigned _port);
+    int init(unsigned _port = 0);
+
+    int sendMessage(Message* _msg, Address* _address);
+    int checkNewMessages();
 
     void setCallbackInterface(PeerInterface* _callbackPeer);
-
     netwrapper::PeerInterface* getCallbackPeer();
-    int sendMessage(Message* _msg, Address* _address);
+
   private:
     PeerInterface* callbackPeer;
+    UDPsocket peerSocket;
 };
 
 }

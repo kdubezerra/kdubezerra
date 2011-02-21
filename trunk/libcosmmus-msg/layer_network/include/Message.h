@@ -18,6 +18,7 @@ class Message {
   public:
     Message();
     Message(Message* _other);
+    Message(char* _buffer);
     virtual ~Message();
     bool equals(Message* _other);
 
@@ -28,7 +29,7 @@ class Message {
     void addString(const std::string& _svalue);
     void addMessage(Message* _msg);
     void addMessageCopy(Message* _msg);
-    void addArbitrary(int length, void* data);
+    void setArbitraryData(int _length, void* _data);
 
     bool getBool(int _pos);
     int getBoolCount();

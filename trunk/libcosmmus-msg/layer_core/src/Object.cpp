@@ -13,6 +13,9 @@
 using namespace optpaxos;
 using namespace netwrapper;
 
+std::map<int, Object*> Object::objectIndex;
+ObjectFactory* Object::objectFactory = NULL;
+
 Object::Object() {
   this->objectInfo = NULL;
   waitingForDecision = false;
@@ -27,6 +30,22 @@ bool Object::equals(Object* _other) {
     return false;
   // TODO call the subclass' equals method
   return true;
+}
+
+ObjectInfo* Object::getInfo() {
+  return objectInfo;
+}
+
+void Object::setInfo(ObjectInfo* _objInfo) {
+  objectInfo = _objInfo;
+}
+
+Object* Object::getObjectById(int _id) {
+  std::map<int, Object*>::iterator finder = objectIndex.find(_id);
+  if (finder != objectIndex.end())
+    return finder->second;
+  else
+    return NULL;
 }
 
 void Object::enqueue(Command* _cmd, CommandType _type) {
@@ -95,7 +114,7 @@ Message* Object::packToNetwork(Object* _obj) {
   return objectFactory->packToNetwork(_obj);
 }
 
-Message* Object::packObjectListToNetwork(std::list<Object*> _objList) {
+Message* Object::packListToNetwork(std::list<Object*> _objList) {
   Message* objListMsg = new Message();
 
   objListMsg->addInt((int) _objList.size());
@@ -109,7 +128,7 @@ Object* Object::unpackFromNetwork(netwrapper::Message* _msg) {
   return objectFactory->unpackFromNetwork(_msg);
 }
 
-std::list<Object*> Object::unpackObjectListFromNetwork(netwrapper::Message* _msg) {
+std::list<Object*> Object::unpackListFromNetwork(netwrapper::Message* _msg) {
   std::list<Object*> objList;
 
   int objectCount = _msg->getInt(0);

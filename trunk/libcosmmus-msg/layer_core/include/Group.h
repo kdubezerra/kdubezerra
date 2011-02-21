@@ -9,6 +9,7 @@
 #define GROUP_H_
 
 #include <list>
+#include <map>
 
 #include "../../layer_network/include/Message.h"
 
@@ -39,21 +40,25 @@ class Group {
     NodeInfo* getCoordinator();
 
     void addManagedObject(ObjectInfo* _obj);
+    bool hasObject(ObjectInfo* _obj);
     void removeManagedObject(ObjectInfo* _obj);
-    std::list<ObjectInfo*> getGroupObjects();
+    std::map<int, ObjectInfo*> getObjectsIndex();
+    std::list<ObjectInfo*> getObjectsList();
 
-    static std::list<Group*> findGroups(std::string _brokerUrl, unsigned port);
+    static std::list<Group*> requestGroupsList(std::string _brokerUrl, unsigned port);
+    static std::list<Group*> getGroupsList();
 
-    static netwrapper::Message* packToNetwork(Group* _obj);
-    static netwrapper::Message* packGroupListToNetwork(std::list<Group*> _objList);
+    static netwrapper::Message* packToNetwork(Group* _group);
+    static netwrapper::Message* packListToNetwork(std::list<Group*> _groupList);
     static Group* unpackFromNetwork(netwrapper::Message* _msg);
-    static std::list<Group*> unpackGroupListFromNetwork(netwrapper::Message* _msg);
+    static std::list<Group*> unpackListFromNetwork(netwrapper::Message* _msg);
 
   private:
     int id;
     std::list<NodeInfo*> serverList;
-    std::list<ObjectInfo*> managedObjects;
     NodeInfo* groupCoordinator;
+    std::map<int, ObjectInfo*> managedObjects;
+    static std::list<Group*> groupList;
 };
 
 }

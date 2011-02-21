@@ -193,7 +193,7 @@ void Server::handleCommandOneGroup(Command* _cmd) {
   /**
    send command to coordinator;
    if objects are not locked
-   PaxosBCast(_cmd + _maxtsamongobjects, _group, _group) { // void PaxosBCast(what, acceptors, learners)
+   PaxosBCast(_cmd + _maxtsamongobjects, _group, _group) { // void PaxosBCast(what, acceptorsGroupsList, learnersGroupsList)
      if (this is coordinator) {
        send command to all members of the group;
      }

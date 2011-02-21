@@ -16,11 +16,17 @@ namespace netwrapper {
 class RemoteFRC {
   public:
     RemoteFRC();
+    RemoteFRC(TCPsocket _clientSocket);
     virtual ~RemoteFRC();
+    bool equals(RemoteFRC* _other);
     TCPsocket getSocket() const;
     void setSocket(TCPsocket _clientSocket);
+    bool isConnected();
+    void setConnected(bool _isConnected = true);
+
   private:
     TCPsocket clientSocket;
+    bool connected;
 };
 
 }

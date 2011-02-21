@@ -66,8 +66,7 @@ void FIFOReliableServer::checkConnections() {
   if ((clientSocket = SDLNet_TCP_Accept(serverSocket))) {
     if ((clientIP = SDLNet_TCP_GetPeerAddress(clientSocket))) {
       SDLNet_TCP_AddSocket(socketSet, clientSocket);
-      RemoteFRC* newClient = new RemoteFRC();
-      newClient->setSocket(clientSocket);
+      RemoteFRC* newClient = new RemoteFRC(clientSocket);
       clientList.push_back(newClient);
       if (callbackServer) callbackServer->handleClientConnect(newClient);
       cout << "FIFOReliableServer::checkConnections: Host connected: " << SDLNet_Read32(&clientIP->host) << ":" << SDLNet_Read16(&clientIP->port) << endl;
@@ -79,13 +78,13 @@ void FIFOReliableServer::checkConnections() {
   //check disconnections
 }
 
-void FIFOReliableServer::checkNewMessages() {
-  int socketActivity = SDLNet_CheckSockets(socketSet, 0);
-  cout << "FIFOReliableServer::checkNewMessages: socketActivity = " << socketActivity << endl;
+int FIFOReliableServer::checkNewMessages() {
+  int rcvdMsgCount = 0;
+  SDLNet_CheckSockets(socketSet, 0);
 
+  std::list<RemoteFRC*> clientList = this->clientList;
   for (std::list<RemoteFRC*>::iterator it = clientList.begin() ; it != clientList.end() ; it++) {
     int clientSocketActivity = SDLNet_SocketReady((*it)->getSocket());
-    cout << "FIFOReliableServer::checkNewMessages: clientSocketActivity for client " << *it << " = " << socketActivity << endl;
     if (clientSocketActivity != 0) {
       char lengthBuffer[4];
       int receivedByteCount = SDLNet_TCP_Recv((*it)->getSocket(), lengthBuffer, 4);
@@ -104,9 +103,7 @@ void FIFOReliableServer::checkNewMessages() {
         disconnect(*it);
         continue;
       }
-      cout << "FIFOReliableServer::checkNewMessages: new received message: ";
-      for (int i = 0 ; i < messageLength ; i++) cout << messageBuffer[i];
-      cout << endl;
+      rcvdMsgCount++;
       Message* rcvdMessage = new Message();
       rcvdMessage->buildFromBuffer(messageBuffer);
       delete [] messageBuffer;
@@ -114,16 +111,47 @@ void FIFOReliableServer::checkNewMessages() {
       delete rcvdMessage;
     }
   }
+  return rcvdMsgCount;
 }
 
-void FIFOReliableServer::send (Message* _msg, RemoteFRC* _client) {
+int FIFOReliableServer::send (Message* _msg, RemoteFRC* _client) {
+  bool knowsClient = false;
+  for (std::list<RemoteFRC*>::iterator it = clientList.begin() ; it != clientList.end() ; it++) {
+    if ((*it)->equals(_client)) {
+      knowsClient = true;
+      break;
+    }
+  }
+  if (!knowsClient) {
+    cerr << "FIFOReliableServer::send: RemoteRFC has been found." << endl;
+    return 1;
+  }
 
+  char* msgBuffer = _msg->getSerializedMessage();
+  int msgLength = _msg->getSerializedLength();
+  if (SDLNet_TCP_Send(_client->getSocket(), msgBuffer, msgLength) < msgLength) {
+    cerr << "FIFOReliableServer::send: Failed to send message length: " << SDLNet_GetError() << endl;
+    return 2;
+  }
+  cout << "FIFOReliableServer:send: ";
+  for (int i = 0 ; i < msgLength ; i++) cout << msgBuffer[i];
+  cout << endl;
+  delete [] msgBuffer;
+  return 0;
 }
 
 void FIFOReliableServer::disconnect(RemoteFRC* _client) {
   clientList.remove(_client);
   SDLNet_TCP_DelSocket(socketSet, _client->getSocket());
   SDLNet_TCP_Close(_client->getSocket());
-  callbackServer->handleClientDisconnect(_client);
+  if (callbackServer) callbackServer->handleClientDisconnect(_client);
   delete _client;
+}
+
+std::list<RemoteFRC*> FIFOReliableServer::getClientList() const {
+    return clientList;
+}
+
+void FIFOReliableServer::setClientList(std::list<RemoteFRC*> _clientList) {
+    clientList = _clientList;
 }

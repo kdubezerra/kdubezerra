@@ -21,7 +21,7 @@ class GenericNode {
     virtual ~GenericNode();
 
     Address* getAddress();
-    void setAddress (Address* address);
+    void setAddress (Address* _address);
 
   protected:
     Address* address;
