@@ -13,6 +13,10 @@ Address::Address() {
   // TODO Auto-generated constructor stub
 }
 
+Address::Address(std::string _address, unsigned short _port) {
+  SDLNet_ResolveHost(&address, _address.c_str(), (Uint16) _port);
+}
+
 Address::Address(Address* other) {
   this->address = other->address;
 }

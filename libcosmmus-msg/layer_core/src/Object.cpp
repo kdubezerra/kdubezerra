@@ -17,8 +17,17 @@ std::map<int, Object*> Object::objectIndex;
 ObjectFactory* Object::objectFactory = NULL;
 
 Object::Object() {
-  this->objectInfo = NULL;
+  objectInfo = new ObjectInfo();
   waitingForDecision = false;
+}
+
+Object::Object(Object* _other) {
+  objectInfo = new ObjectInfo(_other->objectInfo);
+}
+
+Object::Object(int _id) {
+  objectInfo = new ObjectInfo();
+  objectInfo->setId(_id);
 }
 
 Object::~Object() {
@@ -46,6 +55,14 @@ Object* Object::getObjectById(int _id) {
     return finder->second;
   else
     return NULL;
+}
+
+void Object::setObjectFactory(ObjectFactory* _factory) {
+  objectFactory = _factory;
+}
+
+ObjectFactory* Object::getObjectFactory() {
+  return objectFactory;
 }
 
 void Object::enqueue(Command* _cmd, CommandType _type) {
@@ -111,7 +128,10 @@ void Object::handleCommand(Command* _cmd) {
 }
 
 Message* Object::packToNetwork(Object* _obj) {
-  return objectFactory->packToNetwork(_obj);
+  Message* msg = new Message();
+  msg->addMessage(ObjectInfo::packToNetwork(_obj->objectInfo));
+  msg->addMessage(objectFactory->packToNetwork(_obj));
+  return msg;
 }
 
 Message* Object::packListToNetwork(std::list<Object*> _objList) {
@@ -125,7 +145,9 @@ Message* Object::packListToNetwork(std::list<Object*> _objList) {
 }
 
 Object* Object::unpackFromNetwork(netwrapper::Message* _msg) {
-  return objectFactory->unpackFromNetwork(_msg);
+  Object* obj = objectFactory->unpackFromNetwork(_msg->getMessage(0));
+  obj->setInfo(ObjectInfo::unpackFromNetwork(_msg->getMessage(1)));
+  return obj;
 }
 
 std::list<Object*> Object::unpackListFromNetwork(netwrapper::Message* _msg) {
