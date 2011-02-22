@@ -55,6 +55,9 @@ class Server : public optpaxos::PaxosLearnerInterface,
     void setCallbackInterface(optpaxos::ServerInterface* _cbInterface);
     virtual void handleOptimisticDelivery(Command* _cmd) = 0;
 
+    //debug purposes: the server itself creates a msg
+    void sendCommand(Command* cmd);
+
   private:
     void sendCommandToClients(Command* _cmd);
     void fwdOptimisticallyToGroups(Command* _cmd);

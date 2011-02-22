@@ -32,7 +32,7 @@ int FIFOReliableServer::init (unsigned _port) {
     return(1);
   }
 
-  if(SDLNet_ResolveHost(&ip, NULL, (Uint16) _port)==-1) {
+  if(SDLNet_ResolveHost(&ip, NULL, (Uint16) _port) == -1) {
     cerr << "FIFOReliableServer::init: SDLNet_ResolveHost: " << SDLNet_GetError() << endl;
     return(2);
   }

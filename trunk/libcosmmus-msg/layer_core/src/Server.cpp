@@ -39,6 +39,8 @@ int Server::init(unsigned _reliablePort, unsigned _unreliablePort) {
   if (returnValue != 0) return returnValue;
   PaxosInstance::setPeerInterface(groupPeer);
   PaxosInstance::setLearner(this);
+  nodeInfo = new NodeInfo();
+  nodeInfo->setAddress(new Address(groupPeer->getAddress()));
   return 0;
 }
 
@@ -149,6 +151,12 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
   Command* cmd = _learntMsg->getCommandList().front();
   Object::handleCommand(cmd);
   sendCommandToClients(cmd);
+}
+
+void Server::sendCommand(Command* cmd) {
+  if (cmd->knowsGroups() == false) cmd->findGroups();
+  // TODO: fwdOptimisticallyToGroups(clientCommand);
+  fwdCommandToCoordinator(cmd);
 }
 
 void Server::sendCommandToClients(Command* _cmd) {

@@ -10,8 +10,8 @@
 
 #include <list>
 #include <map>
-#include "../../layer_network/include/Message.h"
 #include "Command.h"
+#include "../../layer_network/include/Message.h"
 
 namespace optpaxos {
 
@@ -23,6 +23,8 @@ class OPMessage;
 class Object {
   public:
     Object();
+    Object(int _id);
+    Object(Object* _other);
     virtual ~Object();
     virtual bool equals(Object* _other);
 

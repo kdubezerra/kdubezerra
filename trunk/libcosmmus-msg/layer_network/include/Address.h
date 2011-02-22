@@ -8,6 +8,7 @@
 #ifndef ADDRESS_H_
 #define ADDRESS_H_
 
+#include <string>
 #include <SDL/SDL_net.h>
 
 #include "Message.h"
@@ -22,6 +23,7 @@ class Message;
 class Address {
   public:
     Address();
+    Address(std::string _address, unsigned short _port);
     Address(Address* other);
     virtual ~Address();
     void setAddress (IPaddress _address);

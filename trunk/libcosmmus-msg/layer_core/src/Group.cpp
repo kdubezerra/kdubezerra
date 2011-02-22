@@ -18,6 +18,10 @@ Group::Group() {
   groupCoordinator = NULL;
 }
 
+Group::Group(int _id) {
+  id = _id;
+}
+
 Group::Group(Group* _group) {
   groupCoordinator = new NodeInfo(_group->groupCoordinator);
   for (std::map<int, ObjectInfo*>::iterator it = _group->managedObjects.begin() ; it != _group->managedObjects.end() ; it++) {

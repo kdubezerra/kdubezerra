@@ -11,8 +11,7 @@ using namespace optpaxos;
 using namespace netwrapper;
 
 ObjectInfo::ObjectInfo() {
-  // TODO Auto-generated constructor stub
-
+  this->lastStamp = this->objectId = -1;
 }
 
 ObjectInfo::ObjectInfo(ObjectInfo* other) {
