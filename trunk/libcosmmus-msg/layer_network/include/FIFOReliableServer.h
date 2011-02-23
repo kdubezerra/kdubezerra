@@ -22,15 +22,15 @@ class Message;
 class RemoteFRC;
 class ServerInterface;
 
-class FIFOReliableServer : public GenericNode {
+class FIFOReliableServer {
   public:
     FIFOReliableServer();
     virtual ~FIFOReliableServer();
 
-    int init (unsigned _port);
-    void setCallbackServer(ServerInterface* _cbServer);
+    int init(unsigned _port);
+    void setCallbackInterface(ServerInterface* _cbServer);
 
-    void checkConnections();
+    int checkConnections();
     int checkNewMessages();
     int send (Message* _msg, RemoteFRC* _client);
     void disconnect(RemoteFRC* _client);

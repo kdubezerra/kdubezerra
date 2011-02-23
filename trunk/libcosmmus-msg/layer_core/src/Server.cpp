@@ -5,6 +5,7 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
+#include <iostream>
 #include "../include/Command.h"
 #include "../include/Group.h"
 #include "../include/NodeInfo.h"
@@ -15,14 +16,17 @@
 #include "../include/Server.h"
 #include "../include/ServerInterface.h"
 
+using namespace std;
 using namespace optpaxos;
 using namespace netwrapper;
 
 Server::Server() {
   netServer = new FIFOReliableServer();
+  netServer->setCallbackInterface(this);
   groupPeer = new UnreliablePeer();
+  groupPeer->setCallbackInterface(this);
   callbackServer = NULL;
-  nodeInfo = NULL;
+  //nodeInfo = NULL;
   lastPaxosInstance = 0;
   PaxosInstance::setLearner(this);
 }
@@ -39,8 +43,6 @@ int Server::init(unsigned _reliablePort, unsigned _unreliablePort) {
   if (returnValue != 0) return returnValue;
   PaxosInstance::setPeerInterface(groupPeer);
   PaxosInstance::setLearner(this);
-  nodeInfo = new NodeInfo();
-  nodeInfo->setAddress(new Address(groupPeer->getAddress()));
   return 0;
 }
 
@@ -51,7 +53,25 @@ int Server::joinGroup(Group *_group) {
 }
 
 void Server::leaveGroup() {
+  localGroup = NULL;
   // TODO: create a decent membership manager
+}
+/*
+NodeInfo* Server::getNodeInfo() {
+  return nodeInfo;
+}
+
+void Server::setNodeInfo(NodeInfo* _info) {
+  nodeInfo = _info;
+}
+*/
+int Server::checkNewMessages() {
+  return groupPeer->checkNewMessages() + netServer->checkNewMessages();
+}
+
+int Server::checkConnections() {
+  // TODO: handle membership, group changes, disconnected servers etc.
+  return netServer->checkConnections();
 }
 
 void Server::handleClientConnect(netwrapper::RemoteFRC* _newClient) {
@@ -96,6 +116,7 @@ void Server::handlePeerMessage(Message* _msg) {
 
     case CMD_TO_COORD : {
       OPMessage* cmdMessage = peerMessage;
+      cout << "Número de comandos na lista: " << (int) cmdMessage->getCommandList().size() << endl;
       Command* cmd = cmdMessage->getCommandList().front();
       if (cmd->knowsGroups() == false) cmd->findGroups();
       if (cmd->getGroupList().size() == 1) {

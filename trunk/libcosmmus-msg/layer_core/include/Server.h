@@ -42,12 +42,13 @@ class Server : public optpaxos::PaxosLearnerInterface,
     int init(unsigned _reliablePort, unsigned _unreliablePort);
     int joinGroup(Group *_group);
     void leaveGroup();
+    //NodeInfo* getNodeInfo();
+    //void setNodeInfo(NodeInfo* _info);
+
+    int checkNewMessages();
+    int checkConnections();
     void handleClientConnect(netwrapper::RemoteFRC* _newClient);
     void handleClientDisconnect(netwrapper::RemoteFRC* _client);
-
-    NodeInfo* getNodeInfo();
-    void setNodeInfo(NodeInfo* _info);
-
     void handleClientMessage(netwrapper::Message* _msg);
     void handlePeerMessage(netwrapper::Message* _msg);
     void handleLearntValue(OPMessage* _learntMsg);
@@ -69,7 +70,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     netwrapper::UnreliablePeer* groupPeer;
     netwrapper::FIFOReliableServer* netServer;
     optpaxos::ServerInterface* callbackServer;
-    NodeInfo* nodeInfo;
+    //NodeInfo* nodeInfo;
     long lastPaxosInstance;
     std::list<netwrapper::RemoteFRC*> clientList; // TODO: create a decent client management
     // TODO: define a way to uniquely identify each server (ip:port?)

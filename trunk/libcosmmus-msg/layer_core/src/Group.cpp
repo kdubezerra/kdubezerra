@@ -5,10 +5,13 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
+#include <iostream>
+
 #include "../include/Group.h"
 #include "../include/NodeInfo.h"
 #include "../include/ObjectInfo.h"
 
+using namespace std;
 using namespace optpaxos;
 using namespace netwrapper;
 
@@ -20,17 +23,28 @@ Group::Group() {
 
 Group::Group(int _id) {
   id = _id;
+  groupCoordinator = NULL;
 }
 
-Group::Group(Group* _group) {
-  groupCoordinator = new NodeInfo(_group->groupCoordinator);
-  for (std::map<int, ObjectInfo*>::iterator it = _group->managedObjects.begin() ; it != _group->managedObjects.end() ; it++) {
+Group::Group(Group* _other) {
+  groupCoordinator = new NodeInfo(_other->groupCoordinator);
+  for (std::list<NodeInfo*>::iterator it = _other->serverList.begin() ; it != _other->serverList.end() ; it++) {
+    serverList.push_back(new NodeInfo(*it));
+  }
+  for (std::map<int, ObjectInfo*>::iterator it = _other->managedObjects.begin() ; it != _other->managedObjects.end() ; it++) {
     managedObjects[it->first] = (new ObjectInfo(it->second));
   }
 }
 
 Group::~Group() {
-  // TODO Auto-generated destructor stub
+  if (groupCoordinator != NULL)
+    delete groupCoordinator;
+  for (std::list<NodeInfo*>::iterator it = serverList.begin() ; it != serverList.end() ; it++) {
+    delete *it;
+  }
+  for (std::map<int, ObjectInfo*>::iterator it = managedObjects.begin() ; it != managedObjects.end() ; it++) {
+    delete it->second;
+  }
 }
 
 void Group::setId(int _id) {
@@ -62,11 +76,16 @@ NodeInfo* Group::getCoordinator() {
 }
 
 void Group::addManagedObject(ObjectInfo* _obj) {
-  managedObjects[_obj->getId()] = _obj;
+  managedObjects[_obj->getId()] = new ObjectInfo(_obj);
 }
 
 bool Group::hasObject(ObjectInfo* _obj) {
-  return managedObjects.find(_obj->getId()) != managedObjects.end();
+  if (managedObjects.find(_obj->getId()) == managedObjects.end()) {
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
 void Group::removeManagedObject(ObjectInfo* _obj) {
@@ -83,6 +102,10 @@ std::list<ObjectInfo*> Group::getObjectsList() {
     objList.push_back(it->second);
   }
   return objList;
+}
+
+void Group::addGroup(Group* _grp) {
+  groupList.push_back(_grp);
 }
 
 std::list<Group*> Group::requestGroupsList(std::string _brokerUrl, unsigned port) {

@@ -28,7 +28,7 @@ void FIFOReliableClient::setCallbackInterface(ClientInterface* _callbackClient) 
   callbackClient = _callbackClient;
 }
 
-ClientInterface* FIFOReliableClient::getCallbackClient() {
+ClientInterface* FIFOReliableClient::getCallbackInterface() {
   return callbackClient;
 }
 

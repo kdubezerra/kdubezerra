@@ -45,6 +45,7 @@ class Group {
     std::map<int, ObjectInfo*> getObjectsIndex();
     std::list<ObjectInfo*> getObjectsList();
 
+    static void addGroup(Group* _grp);
     static std::list<Group*> requestGroupsList(std::string _brokerUrl, unsigned port);
     static std::list<Group*> getGroupsList();
 

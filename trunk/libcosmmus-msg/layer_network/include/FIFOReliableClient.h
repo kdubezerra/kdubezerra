@@ -22,13 +22,13 @@ namespace netwrapper {
 class ClientInterface;
 class Message;
 
-class FIFOReliableClient : public GenericNode {
+class FIFOReliableClient {
   public:
     FIFOReliableClient();
     virtual ~FIFOReliableClient();
 
     void setCallbackInterface(netwrapper::ClientInterface* _callbackClient);
-    netwrapper::ClientInterface* getCallbackClient();
+    netwrapper::ClientInterface* getCallbackInterface();
     int connect(std::string _address, unsigned _port);
     void disconnect();
     int sendMessage(Message* _msg);

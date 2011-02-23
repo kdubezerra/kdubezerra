@@ -14,9 +14,9 @@ ObjectInfo::ObjectInfo() {
   this->lastStamp = this->objectId = -1;
 }
 
-ObjectInfo::ObjectInfo(ObjectInfo* other) {
-  this->lastStamp = other->lastStamp;
-  this->objectId = other->objectId;
+ObjectInfo::ObjectInfo(ObjectInfo* _other) {
+  this->lastStamp = _other->lastStamp;
+  this->objectId = _other->objectId;
 }
 
 ObjectInfo::~ObjectInfo() {
