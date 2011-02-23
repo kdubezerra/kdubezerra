@@ -98,15 +98,15 @@ std::list<Message*> OPMessage::getMessageList() {
 }
 
 bool OPMessage::hasCommand() {
-  return commandList.empty();
+  return commandList.empty() == false;;
 }
 
 bool OPMessage::hasState() {
-  return stateList.empty();
+  return stateList.empty() == false;
 }
 
 bool OPMessage::hasMessage() {
-  return messageList.empty();
+  return messageList.empty() == false;
 }
 
 Message* OPMessage::packToNetwork(OPMessage* _opMsg) {
@@ -137,13 +137,13 @@ Message* OPMessage::packToNetwork(OPMessage* _opMsg) {
 OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
   OPMessage* opMsg = new OPMessage();
 
+  opMsg->setType((OPMessageType) _msg->getInt(0));
   bool hasCmd = _msg->getBool(0);
   bool hasState = _msg->getBool(1);
   bool hasMsg = _msg->getBool(2);
 
   int index = 0;
 
-  opMsg->setType((OPMessageType) _msg->getInt(0));
   if (hasCmd) {
     opMsg->setCommandList(Command::unpackCommandListFromNetwork(_msg->getMessage(index++)));
   }

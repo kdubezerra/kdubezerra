@@ -31,7 +31,7 @@ Object::Object(int _id) {
 }
 
 Object::~Object() {
-  // TODO Auto-generated destructor stub
+  delete objectInfo;
 }
 
 bool Object::equals(Object* _other) {

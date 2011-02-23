@@ -11,7 +11,8 @@ using namespace optpaxos;
 using namespace netwrapper;
 
 NodeInfo::NodeInfo() {
-  // TODO Auto-generated constructor stub
+  address = NULL;
+  nodeId = -1;
 }
 
 NodeInfo::NodeInfo(NodeInfo* other) {
@@ -21,7 +22,8 @@ NodeInfo::NodeInfo(NodeInfo* other) {
 }
 
 NodeInfo::~NodeInfo() {
-  // TODO Auto-generated destructor stub
+  if (address != NULL)
+    delete address;
 }
 
 int NodeInfo::getNodeId() const {

@@ -44,7 +44,7 @@ class Command {
 
     void addGroup(Group* _server);
     void setGroupList(std::list<Group*> _serverList);
-    std::list<Group*> findGroups(); // TODO:
+    void findGroups();
     std::list<Group*> getGroupList();
 
     void setContent(netwrapper::Message* _content);

@@ -77,3 +77,11 @@ int UnreliablePeer::checkNewMessages() {
 
   return recvCount;
 }
+
+void UnreliablePeer::setCallbackInterface(PeerInterface* _callbackPeer) {
+  callbackPeer = _callbackPeer;
+}
+
+PeerInterface* UnreliablePeer::getCallbackInterface() {
+  return callbackPeer;
+}

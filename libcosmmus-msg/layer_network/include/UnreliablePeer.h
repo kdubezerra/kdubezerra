@@ -16,7 +16,7 @@
  */
 namespace netwrapper {
 
-class UnreliablePeer : public GenericNode {
+class UnreliablePeer {
   public:
     UnreliablePeer();
     virtual ~UnreliablePeer();
@@ -27,7 +27,7 @@ class UnreliablePeer : public GenericNode {
     int checkNewMessages();
 
     void setCallbackInterface(PeerInterface* _callbackPeer);
-    netwrapper::PeerInterface* getCallbackPeer();
+    netwrapper::PeerInterface* getCallbackInterface();
 
   private:
     PeerInterface* callbackPeer;

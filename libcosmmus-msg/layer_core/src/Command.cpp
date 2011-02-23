@@ -5,11 +5,14 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
+#include <iostream>
+
 #include "../include/Command.h"
 #include "../include/Group.h"
 #include "../include/Object.h"
 #include "../include/ObjectInfo.h"
 
+using namespace std;
 using namespace optpaxos;
 using namespace netwrapper;
 
@@ -23,19 +26,20 @@ Command::Command() {
 }
 
 Command::Command(Command* _cmd) {
-  commandContent = new Message(_cmd->commandContent);
+  if (_cmd->commandContent != NULL)
+    commandContent = new Message(_cmd->commandContent);
+  else
+    commandContent = NULL;
   withTargets = _cmd->withTargets;
   withGroups = _cmd->withGroups;
   withContent = _cmd->withContent;
   optimistic = _cmd->optimistic;
   conservative = _cmd->conservative;
   for (std::list<Group*>::iterator it = _cmd->groupList.begin() ; it != _cmd->groupList.end() ; it++) {
-    Group* groupCopy = new Group(*it);
-    groupList.push_back(groupCopy);
+    groupList.push_back(new Group(*it));
   }
   for (std::list<ObjectInfo*>::iterator it = _cmd->targetList.begin() ; it != _cmd->targetList.end() ; it++) {
-    ObjectInfo* targetCopy = new ObjectInfo(*it);
-    targetList.push_back(targetCopy);
+    targetList.push_back(new ObjectInfo(*it));
   }
 }
 
@@ -98,12 +102,14 @@ bool Command::compareLT(Command* c1, Command* c2) {
 }
 
 void Command::addTarget(ObjectInfo* _obj) {
-  targetList.push_back(_obj);
+  targetList.push_back(new ObjectInfo(_obj));
   withTargets = true;
 }
 
 void Command::setTargetList(std::list<ObjectInfo*> _targetList) {
-  targetList = _targetList;
+  targetList.clear();
+  for (std::list<ObjectInfo*>::iterator it = _targetList.begin() ; it != _targetList.end() ; it++)
+    targetList.push_back(new ObjectInfo(*it));
   withTargets = true;
 }
 
@@ -134,19 +140,17 @@ void Command::setGroupList(std::list<Group*> _groupList) {
   withGroups = true;
 }
 
-std::list<Group*> Command::findGroups() {
+void Command::findGroups() {
   std::list<Group*> allGroups = Group::getGroupsList();
-  std::list<Group*> cmdGroups;
   for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
     for (std::list<Group*>::iterator itgroup = allGroups.begin() ; itgroup != allGroups.end() ; itgroup++) {
-      std::map<int, ObjectInfo*> groupObjects = (*itgroup)->getObjectsIndex();
-      if (groupObjects.find((*ittarget)->getId()) != groupObjects.end()) {
-        cmdGroups.push_back(*itgroup);
+      if ((*itgroup)->hasObject(*ittarget)) {
+        groupList.push_back(new Group(*itgroup));
         break;
       }
     }
   }
-  return cmdGroups;
+  withGroups = true;
 }
 
 std::list<Group*> Command::getGroupList() {
@@ -254,13 +258,16 @@ Command* Command::unpackFromNetwork(Message* _msg) {
   int msgIndex = 0;
 
   bool hasContent = _msg->getBool(0);
-  cmd->setKnowsTargets(_msg->getBool(1));
-  cmd->setKnowsGroups(_msg->getBool(2));
-  cmd->setOptimisticallyDeliverable(_msg->getBool(3));
-  cmd->setConservativelyDeliverable(_msg->getBool(4));
-  if (hasContent) cmd->setContent(_msg->getMessage(msgIndex++));
-  if (cmd->knowsTargets()) cmd->setTargetList(ObjectInfo::unpackListFromNetwork(_msg->getMessage(msgIndex++)));
-  if (cmd->knowsGroups()) cmd->setGroupList(Group::unpackListFromNetwork(_msg->getMessage(msgIndex)));
+  cmd->withTargets = _msg->getBool(1);
+  cmd->withPriorStates = _msg->getBool(2);
+  cmd->withGroups = _msg->getBool(3);
+  cmd->optimistic = _msg->getBool(4);
+  cmd->conservative = _msg->getBool(5);
+
+  if (hasContent) cmd->commandContent = new Message(_msg->getMessage(msgIndex++));
+  if (cmd->withTargets) cmd->setTargetList(ObjectInfo::unpackListFromNetwork(_msg->getMessage(msgIndex++)));
+  if (cmd->withPriorStates) cmd->setPriorStateList(Object::unpackListFromNetwork(_msg->getMessage(msgIndex++)));
+  if (cmd->withGroups) cmd->setGroupList(Group::unpackListFromNetwork(_msg->getMessage(msgIndex)));
 
   return cmd;
 }

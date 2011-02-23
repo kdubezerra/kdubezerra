@@ -23,10 +23,13 @@ Message::Message(Message* _msg) {
   floatList = _msg->floatList;
   stringList = _msg->stringList;
   arbitraryLength = _msg->arbitraryLength;
+
   if (arbitraryLength > 0) {
     arbitraryData = new char[arbitraryLength];
     memcpy(arbitraryData, _msg->arbitraryData, arbitraryLength);
   }
+  else arbitraryData = NULL;
+
   for (std::vector<Message*>::iterator it = _msg->messageList.begin() ; it != _msg->messageList.end() ; it++)
     addMessage(new Message(*it));
 }
@@ -275,4 +278,5 @@ void Message::buildFromBuffer(char* _buffer) {
     arbitraryData = new char[arbitraryLength];
     memcpy(this->arbitraryData, bufferpos, arbitraryLength);
   }
+  else arbitraryData = NULL;
 }

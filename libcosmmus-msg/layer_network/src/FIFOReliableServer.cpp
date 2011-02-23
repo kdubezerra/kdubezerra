@@ -17,7 +17,6 @@ using namespace netwrapper;
 
 FIFOReliableServer::FIFOReliableServer() {
   callbackServer = NULL;
-  address = NULL;
 }
 
 FIFOReliableServer::~FIFOReliableServer() {
@@ -55,16 +54,18 @@ int FIFOReliableServer::init (unsigned _port) {
   return 0;
 }
 
-void FIFOReliableServer::setCallbackServer(ServerInterface* _cbServer) {
+void FIFOReliableServer::setCallbackInterface(ServerInterface* _cbServer) {
   callbackServer = _cbServer;
 }
 
-void FIFOReliableServer::checkConnections() {
+int FIFOReliableServer::checkConnections() {
   TCPsocket clientSocket;
   IPaddress* clientIP;
+  int newConCount = 0;
 
   if ((clientSocket = SDLNet_TCP_Accept(serverSocket))) {
     if ((clientIP = SDLNet_TCP_GetPeerAddress(clientSocket))) {
+      newConCount++;
       SDLNet_TCP_AddSocket(socketSet, clientSocket);
       RemoteFRC* newClient = new RemoteFRC(clientSocket);
       clientList.push_back(newClient);
@@ -75,7 +76,8 @@ void FIFOReliableServer::checkConnections() {
       cerr << "FIFOReliableServer::checkConnections: SDLNet_TCP_GetPeerAddress: " << SDLNet_GetError() << endl;
   }
 
-  //check disconnections
+  return newConCount;
+  // TODO: check disconnections
 }
 
 int FIFOReliableServer::checkNewMessages() {
