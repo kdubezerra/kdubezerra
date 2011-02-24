@@ -33,15 +33,17 @@ class Object {
 
     static Object* getObjectById(int _id);
 
-    static void setObjectFactory(ObjectFactory* _factory);
+    static void setObjectFactory(ObjectFactory* _factory); // (!) shallow copy of the objectFactory!
     static ObjectFactory* getObjectFactory();
 
-    void enqueue(Command* _cmd, CommandType _type);
+    void enqueue(Command* _cmd);
     void tryFlushingCmdQueue(CommandType _type);
 
     static void handleCommand(Command* _cmd);
     static void handleStateUpdate(Object* _state);
 
+    static Object* createObject();
+    static Object* copyObject(Object* _other);
     static netwrapper::Message* packToNetwork(Object* _obj);
     static netwrapper::Message* packListToNetwork(std::list<Object*> _objList);
     static Object* unpackFromNetwork(netwrapper::Message* _msg);
@@ -95,7 +97,7 @@ class Object {
   protected:
     ObjectInfo* objectInfo;
     bool waitingForDecision;
-    std::list<Command*> pendingCommands;
+    std::list<Command*> pendingCommandList;
     static std::map<int, Object*> objectIndex;
     static ObjectFactory* objectFactory;
 };

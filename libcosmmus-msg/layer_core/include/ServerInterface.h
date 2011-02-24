@@ -16,14 +16,13 @@
 namespace optpaxos {
 
 class Command;
-class OPMessage;
 
 class ServerInterface {
   public:
     ServerInterface();
     virtual ~ServerInterface();
 
-    virtual void handleClientMessage(OPMessage* _msg) = 0;
+    virtual void handleClientMessage(netwrapper::Message* _msg) = 0;
     virtual void defineServers(Command* _cmd) = 0;
 };
 

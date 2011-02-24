@@ -10,7 +10,8 @@
 using namespace netwrapper;
 
 Address::Address() {
-  // TODO Auto-generated constructor stub
+  address.host = 0;
+  address.port = 0;
 }
 
 Address::Address(std::string _address, unsigned short _port) {
@@ -42,9 +43,7 @@ Message* Address::pack(Address* _addr) {
 
 Address* Address::unpack(Message* _msg) {
   Address* addr = new Address();
-  IPaddress address;
-  address.host = (Uint32) _msg->getInt(0);
-  address.port = (Uint16) _msg->getInt(1);
-  addr->address = address;
+  addr->address.host = (Uint32) _msg->getInt(0);
+  addr->address.port = (Uint16) _msg->getInt(1);
   return addr;
 }

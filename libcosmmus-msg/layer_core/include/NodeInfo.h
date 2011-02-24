@@ -21,6 +21,7 @@ enum NodeType { CLIENT_NODE , SERVER_NODE };
 class NodeInfo : public netwrapper::GenericNode {
   public:
     NodeInfo();
+    NodeInfo(int _id, NodeType _type, netwrapper::Address* _address); /// (!) deep copy of _address
     NodeInfo(NodeInfo* other);
     virtual ~NodeInfo();
 
@@ -41,7 +42,7 @@ class NodeInfo : public netwrapper::GenericNode {
   private:
     int nodeId;
     NodeType nodeType;
-    netwrapper::Address* address;
+    netwrapper::Address* nodeAddress;
 };
 
 }

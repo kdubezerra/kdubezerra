@@ -48,7 +48,6 @@ class Client : public netwrapper::ClientInterface {
     void handleServerMessage(netwrapper::Message* _msg);
 
   private:
-    void handleOPMessage(OPMessage* _serverMsg);
     void handleCommand(Command* _cmd);
     void handleStateUpdate(Object* _state);
 

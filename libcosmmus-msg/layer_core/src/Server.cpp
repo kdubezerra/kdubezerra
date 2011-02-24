@@ -89,7 +89,7 @@ void Server::handleClientMessage(Message* _msg) {
   switch (clientMessage->getType()) {
 
     case APP_MSG :
-      callbackServer->handleClientMessage(clientMessage);
+      callbackServer->handleClientMessage(clientMessage->getMessageList().front());
       break;
 
     case CLIENT_CMD : {
@@ -121,12 +121,21 @@ void Server::handlePeerMessage(Message* _msg) {
       if (cmd->knowsGroups() == false) cmd->findGroups();
       if (cmd->getGroupList().size() == 1) {
         PaxosInstance* pxInstance = new PaxosInstance(++lastPaxosInstance * SRV_ID_LEN + (long) localGroup->getId());
-        // TODO:
+        /** TODO:
+         * cmd->setOptimisticallyDeliverable(true);
+         * cmd->setConservativelyDeliverable(false);
+         * cmd->setType(CMD_ONE_GROUP_OPTIMISTIC)
+         * fwdfwdOptimisticallyToGroups(cmd);
+        **/
         cmd->calculateStamp();
+        cmd->setOptimisticallyDeliverable(false);
+        cmd->setConservativelyDeliverable(true);
         cmdMessage->setType(CMD_ONE_GROUP_CONSERVATIVE);
         pxInstance->addAcceptors(localGroup);
         pxInstance->addLearners(localGroup);
         pxInstance->broadcast(cmdMessage);
+        delete pxInstance;
+        // TODO a better implementation, although this is not incorrect: the instance is recreated upon receiving accepted msgs
       }
       else {
         // TODO: find local targets for cmd
@@ -158,7 +167,7 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
       std::list<ObjectInfo*> targetList = newCmd->getTargetList();
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());
-        obj->enqueue(newCmd, CONSERVATIVE);
+        obj->enqueue(newCmd);
       }
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());

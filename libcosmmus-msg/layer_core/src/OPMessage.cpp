@@ -13,6 +13,14 @@ using namespace optpaxos;
 using namespace netwrapper;
 
 OPMessage::OPMessage() {
+  messageType = (OPMessageType) 0;
+}
+
+OPMessage::OPMessage(OPMessage* _other) {
+  messageType = _other->messageType;
+  addCommandList(_other->commandList);
+  addMessageCopyList(_other->messageList);
+  addStateList(_other->stateList);
 }
 
 OPMessage::~OPMessage() {
@@ -62,23 +70,39 @@ void OPMessage::setType(OPMessageType _msgType) {
 }
 
 void OPMessage::addCommand(Command* _cmd) {
-  commandList.push_back(_cmd);
+  commandList.push_back(new Command(_cmd));
 }
 
-void OPMessage::setCommandList(std::list<Command*> _cmdList) {
-  commandList = _cmdList;
+void OPMessage::addCommandList(std::list<Command*> _cmdList) {
+  for (std::list<Command*>::iterator it = _cmdList.begin() ; it != _cmdList.end() ; it++)
+    addCommand(*it);
 }
 
 void OPMessage::addState(Object* _state) {
-  stateList.push_back(_state);
+  stateList.push_back(Object::copyObject(_state));
 }
 
-void OPMessage::setStateList(std::list<Object*> _stateList) {
-  stateList = _stateList;
+void OPMessage::addStateList(std::list<Object*> _stateList) {
+  for (std::list<Object*>::iterator it = _stateList.begin() ; it != _stateList.end() ; it++)
+    addState(*it);
 }
 
-void OPMessage::addMessage(netwrapper::Message* _msg) {
+void OPMessage::addMessage(Message* _msg) {
   messageList.push_back(_msg);
+}
+
+void OPMessage::addMessageCopy(Message* _msg) {
+  messageList.push_back(new Message(_msg));
+}
+
+void OPMessage::addMessageList(std::list<Message*> _msgList) {
+  for (std::list<Message*>::iterator it = _msgList.begin() ; it != _msgList.end() ; it++)
+    addMessage(*it);
+}
+
+void OPMessage::addMessageCopyList(std::list<Message*> _msgList) {
+  for (std::list<Message*>::iterator it = _msgList.begin() ; it != _msgList.end() ; it++)
+    addMessageCopy(*it);
 }
 
 OPMessageType OPMessage::getType() {
@@ -98,7 +122,7 @@ std::list<Message*> OPMessage::getMessageList() {
 }
 
 bool OPMessage::hasCommand() {
-  return commandList.empty() == false;;
+  return commandList.empty() == false;
 }
 
 bool OPMessage::hasState() {
@@ -110,29 +134,30 @@ bool OPMessage::hasMessage() {
 }
 
 Message* OPMessage::packToNetwork(OPMessage* _opMsg) {
-    Message* netMsg = new Message();
+  Message* packedOpMsg = new Message();
 
-    netMsg->addInt(_opMsg->getType());
-    netMsg->addInt((int) _opMsg->messageList.size());
+  packedOpMsg->addInt((int) _opMsg->messageType);
 
-    netMsg->addBool(_opMsg->hasCommand());
-    netMsg->addBool(_opMsg->hasState());
-    netMsg->addBool(_opMsg->hasMessage());
+  packedOpMsg->addBool(_opMsg->hasCommand());
+  packedOpMsg->addBool(_opMsg->hasState());
+  packedOpMsg->addBool(_opMsg->hasMessage());
 
-    if (_opMsg->hasCommand()) {
-      netMsg->addMessage(Command::packCommandListToNetwork(_opMsg->getCommandList()));
-    }
-    if (_opMsg->hasState()) {
-      netMsg->addMessage(Object::packListToNetwork(_opMsg->getStateList()));
-    }
-    if (_opMsg->hasMessage()) {
-      std::list<Message*> messageList = _opMsg->messageList;
-      for (std::list<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++)
-        netMsg->addMessage(new Message(*it));
-    }
-
-    return netMsg;
+  if (_opMsg->hasCommand()) {
+    packedOpMsg->addMessage(Command::packCommandListToNetwork(_opMsg->commandList));
   }
+
+  if (_opMsg->hasState()) {
+    packedOpMsg->addMessage(Object::packListToNetwork(_opMsg->stateList));
+  }
+
+  if (_opMsg->hasMessage()) {
+    packedOpMsg->addInt((int) _opMsg->messageList.size());
+    for (std::list<Message*>::iterator it = _opMsg->messageList.begin() ; it != _opMsg->messageList.end() ; it++)
+      packedOpMsg->addMessage(new Message(*it));
+  }
+
+  return packedOpMsg;
+}
 
 OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
   OPMessage* opMsg = new OPMessage();
@@ -145,10 +170,10 @@ OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
   int index = 0;
 
   if (hasCmd) {
-    opMsg->setCommandList(Command::unpackCommandListFromNetwork(_msg->getMessage(index++)));
+    opMsg->addCommandList(Command::unpackCommandListFromNetwork(_msg->getMessage(index++)));
   }
   if (hasState) {
-    opMsg->setStateList(Object::unpackListFromNetwork(_msg->getMessage(index++)));
+    opMsg->addStateList(Object::unpackListFromNetwork(_msg->getMessage(index++)));
   }
   if (hasMsg) {
     int messageCount = _msg->getInt(1);

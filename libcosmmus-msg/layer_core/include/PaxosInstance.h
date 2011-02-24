@@ -31,7 +31,7 @@ class PaxosInstance {
     PaxosInstance(long _instanceId);
     void init();
     virtual ~PaxosInstance();
-    void flushToDisk();
+    static void flushToDisk(PaxosInstance* _pi);
 
     long getId();
     void setId(long _id);

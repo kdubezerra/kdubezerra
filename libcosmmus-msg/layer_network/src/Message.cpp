@@ -276,7 +276,7 @@ void Message::buildFromBuffer(char* _buffer) {
   bufferpos += 4;
   if (arbitraryLength > 0) {
     arbitraryData = new char[arbitraryLength];
-    memcpy(this->arbitraryData, bufferpos, arbitraryLength);
+    memcpy(arbitraryData, bufferpos, arbitraryLength);
   }
   else arbitraryData = NULL;
 }

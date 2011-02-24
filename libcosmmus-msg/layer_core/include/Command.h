@@ -35,15 +35,15 @@ class Command {
     static bool compareLT(Command* c1, Command* c2);
 
     void addTarget(ObjectInfo* _obj);
-    void setTargetList(std::list<ObjectInfo*> _targetList);
+    void addTargetList(std::list<ObjectInfo*> _targetList);
     std::list<ObjectInfo*> getTargetList();
 
-    void addPriorStateState(Object* _state);
-    void setPriorStateList(std::list<Object*> _stateList);
+    void addPriorState(Object* _state);
+    void addPriorStateList(std::list<Object*> _stateList);
     std::list<Object*> getPriorStateList();
 
     void addGroup(Group* _server);
-    void setGroupList(std::list<Group*> _serverList);
+    void addGroupList(std::list<Group*> _serverList);
     void findGroups();
     std::list<Group*> getGroupList();
 
@@ -78,7 +78,7 @@ class Command {
 
   private:
     std::list<ObjectInfo*> targetList;
-    std::list<Object*> necessaryStates;
+    std::list<Object*> priorStateList;
     std::list<Group*> groupList;
     netwrapper::Message* commandContent;
     bool withTargets;
