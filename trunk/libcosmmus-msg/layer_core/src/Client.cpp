@@ -64,20 +64,16 @@ optpaxos::ClientInterface* Client::getCallbackClient() {
 
 void Client::handleServerMessage(netwrapper::Message* _msg) {
   OPMessage* opMsg = OPMessage::unpackFromNetwork(_msg);
-  handleOPMessage(opMsg);
-  delete opMsg;
-}
 
-void Client::handleOPMessage(OPMessage* _opMsg) {
-  if (_opMsg->hasState()) {
-    std::list<Object*> states = _opMsg->getStateList();
+  if (opMsg->hasState()) {
+    std::list<Object*> states = opMsg->getStateList();
     for (std::list<Object*>::iterator it = states.begin() ; it != states.end() ; it++) {
       Object::handleStateUpdate(*it);
     }
   }
 
-  if (_opMsg->hasCommand()) {
-    std::list<Command*> coms = _opMsg->getCommandList();
+  if (opMsg->hasCommand()) {
+    std::list<Command*> coms = opMsg->getCommandList();
     for (std::list<Command*>::iterator it = coms.begin() ; it != coms.end() ; it++) {
       Object::handleCommand(*it);
     }
@@ -87,6 +83,7 @@ void Client::handleOPMessage(OPMessage* _opMsg) {
  *   callbackClient->handleMessage(_opMsg->getExtraPayload());
  * }
  */
+  delete opMsg;
 }
 
 void handleStateUpdate(Object* _state) {

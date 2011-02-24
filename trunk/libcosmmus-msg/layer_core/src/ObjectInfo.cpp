@@ -11,7 +11,7 @@ using namespace optpaxos;
 using namespace netwrapper;
 
 ObjectInfo::ObjectInfo() {
-  this->lastStamp = this->objectId = -1;
+  lastStamp = objectId = -1;
 }
 
 ObjectInfo::ObjectInfo(ObjectInfo* _other) {
@@ -41,8 +41,8 @@ void ObjectInfo::setLastStamp(long _stamp) {
 
 Message* ObjectInfo::packToNetwork(ObjectInfo* _objInfo) {
   Message* objMsg = new Message();
-  objMsg->addInt(_objInfo->getId());
-  objMsg->addInt(_objInfo->getLastStamp());
+  objMsg->addInt(_objInfo->objectId);
+  objMsg->addInt(_objInfo->lastStamp);
   return objMsg;
 }
 
@@ -64,8 +64,8 @@ Message* ObjectInfo::packIndexToNetwork(std::map<int, ObjectInfo*> _objInfoIndex
 
 ObjectInfo* ObjectInfo::unpackFromNetwork(Message* _msg) {
   ObjectInfo* rcvdObjInfo = new ObjectInfo();
-  rcvdObjInfo->setId(_msg->getInt(0));
-  rcvdObjInfo->setLastStamp(_msg->getInt(1));
+  rcvdObjInfo->objectId = _msg->getInt(0);
+  rcvdObjInfo->lastStamp = _msg->getInt(1);
   return rcvdObjInfo;
 }
 

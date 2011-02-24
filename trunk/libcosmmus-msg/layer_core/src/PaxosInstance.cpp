@@ -22,6 +22,7 @@ std::map<long, PaxosInstance*> PaxosInstance::instancesIndex;
 
 PaxosInstance::PaxosInstance() {
   init();
+  instanceSeq = -1;
 }
 
 PaxosInstance::PaxosInstance(long _instanceId) {
@@ -36,11 +37,19 @@ void PaxosInstance::init() {
 }
 
 PaxosInstance::~PaxosInstance() {
-  // TODO Auto-generated destructor stub
+  if (acceptedValue != NULL)
+    delete acceptedValue;
+  for (std::list<Group*>::iterator it = acceptorsGroupsList.begin() ; it != acceptorsGroupsList.end() ; it++) {
+    delete *it;
+  }
+  for (std::list<Group*>::iterator it = learnersGroupsList.begin() ; it != learnersGroupsList.end() ; it++) {
+    delete *it;
+  }
 }
 
-void PaxosInstance::flushToDisk() {
-
+void PaxosInstance::flushToDisk(PaxosInstance* _pi) {
+  // TODO: actually should SAVE to disk!
+  delete _pi;
 }
 
 long PaxosInstance::getId() {
@@ -52,11 +61,12 @@ void PaxosInstance::setId(long _id) {
 }
 
 void PaxosInstance::addAcceptors(Group* _acceptors) {
-  acceptorsGroupsList.push_back(_acceptors);
+  acceptorsGroupsList.push_back(new Group(_acceptors));
 }
 
 void PaxosInstance::setAcceptorsGroups(std::list<Group*> _accList) {
-  acceptorsGroupsList = _accList;
+  for (std::list<Group*>::iterator it = _accList.begin() ; it != _accList.end() ; it++)
+    addAcceptors(*it);
 }
 
 std::list<Group*> PaxosInstance::getAcceptors() {
@@ -64,11 +74,12 @@ std::list<Group*> PaxosInstance::getAcceptors() {
 }
 
 void PaxosInstance::addLearners(Group* _learners) {
-  learnersGroupsList.push_back(_learners);
+  learnersGroupsList.push_back(new Group(_learners));
 }
 
 void PaxosInstance::setLearnersGroups(std::list<Group*> _lList) {
-  learnersGroupsList = _lList;
+  for (std::list<Group*>::iterator it = _lList.begin() ; it != _lList.end() ; it++)
+    addLearners(*it);
 }
 
 std::list<Group*> PaxosInstance::getLearners() {
@@ -164,7 +175,7 @@ void PaxosInstance::setPeerInterface(netwrapper::UnreliablePeer* _peer) {
   peerInterface = _peer;
 }
 
-netwrapper::Message* PaxosInstance::packToNetwork(PaxosInstance* _instance) {
+Message* PaxosInstance::packToNetwork(PaxosInstance* _instance) {
   Message* piMsg = new Message();
   piMsg->addInt(_instance->instanceSeq);
   piMsg->addMessage(Group::packListToNetwork(_instance->acceptorsGroupsList));
@@ -174,8 +185,8 @@ netwrapper::Message* PaxosInstance::packToNetwork(PaxosInstance* _instance) {
 
 PaxosInstance* PaxosInstance::unpackFromNetwork(netwrapper::Message* _msg) {
   PaxosInstance* pi = new PaxosInstance();
-  pi->setId(_msg->getInt(0));
-  pi->setAcceptorsGroups(Group::unpackListFromNetwork(_msg->getMessage(0)));
-  pi->setLearnersGroups(Group::unpackListFromNetwork(_msg->getMessage(1)));
+  pi->instanceSeq = _msg->getInt(0);
+  pi->acceptorsGroupsList = Group::unpackListFromNetwork(_msg->getMessage(0));
+  pi->learnersGroupsList = Group::unpackListFromNetwork(_msg->getMessage(1));
   return pi;
 }

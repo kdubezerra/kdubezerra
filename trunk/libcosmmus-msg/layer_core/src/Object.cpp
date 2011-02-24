@@ -17,21 +17,25 @@ std::map<int, Object*> Object::objectIndex;
 ObjectFactory* Object::objectFactory = NULL;
 
 Object::Object() {
-  objectInfo = new ObjectInfo();
+  objectInfo = NULL;
   waitingForDecision = false;
 }
 
 Object::Object(Object* _other) {
   objectInfo = new ObjectInfo(_other->objectInfo);
+  waitingForDecision = false;
 }
 
 Object::Object(int _id) {
   objectInfo = new ObjectInfo();
   objectInfo->setId(_id);
+  objectInfo->setLastStamp(-1);
+  waitingForDecision = false;
 }
 
 Object::~Object() {
-  delete objectInfo;
+  if (objectInfo != NULL)
+    delete objectInfo;
 }
 
 bool Object::equals(Object* _other) {
@@ -46,7 +50,9 @@ ObjectInfo* Object::getInfo() {
 }
 
 void Object::setInfo(ObjectInfo* _objInfo) {
-  objectInfo = _objInfo;
+  if (objectInfo != NULL)
+    delete objectInfo;
+  objectInfo = new ObjectInfo(_objInfo);
 }
 
 Object* Object::getObjectById(int _id) {
@@ -65,17 +71,17 @@ ObjectFactory* Object::getObjectFactory() {
   return objectFactory;
 }
 
-void Object::enqueue(Command* _cmd, CommandType _type) {
-  pendingCommands.push_back(new Command(_cmd));
-  pendingCommands.sort(Command::compareLT);
+void Object::enqueue(Command* _cmd) {
+  pendingCommandList.push_back(new Command(_cmd));
+  pendingCommandList.sort(Command::compareLT);
 }
 
 void Object::tryFlushingCmdQueue(CommandType _type) {
-  bool allObjsReady = true;
-  if (pendingCommands.empty())
+  if (pendingCommandList.empty())
     return;
-  Command* nextCmd = new Command(pendingCommands.front());
+  Command* nextCmd = new Command(pendingCommandList.front());
   std::list<ObjectInfo*> targetList = nextCmd->getTargetList();
+  bool allObjsReady = true;
   for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
     Object* obj = Object::getObjectById((*ittarget)->getId());
     if ((*ittarget)->getLastStamp() != obj->getInfo()->getLastStamp())
@@ -85,14 +91,15 @@ void Object::tryFlushingCmdQueue(CommandType _type) {
     for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
       Object* obj = Object::getObjectById((*ittarget)->getId());
       obj->handleConservativeDelivery(nextCmd);
-      delete obj->pendingCommands.front();
-      obj->pendingCommands.pop_front();
+      delete obj->pendingCommandList.front();
+      obj->pendingCommandList.pop_front();
     }
     for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
       Object* obj = Object::getObjectById((*ittarget)->getId());
       obj->tryFlushingCmdQueue(CONSERVATIVE);
     }
   }
+  delete nextCmd;
 }
 
 /*!
@@ -127,10 +134,18 @@ void Object::handleCommand(Command* _cmd) {
   }
 }
 
+Object* Object::createObject() {
+    return objectFactory->createObject();
+}
+
+Object* Object::copyObject(Object* _other) {
+    return objectFactory->copyObject(_other);
+}
+
 Message* Object::packToNetwork(Object* _obj) {
   Message* msg = new Message();
-  msg->addMessage(ObjectInfo::packToNetwork(_obj->objectInfo));
   msg->addMessage(objectFactory->packToNetwork(_obj));
+  msg->addMessage(ObjectInfo::packToNetwork(_obj->objectInfo));
   return msg;
 }
 
@@ -144,13 +159,14 @@ Message* Object::packListToNetwork(std::list<Object*> _objList) {
   return objListMsg;
 }
 
-Object* Object::unpackFromNetwork(netwrapper::Message* _msg) {
-  Object* obj = objectFactory->unpackFromNetwork(_msg->getMessage(0));
-  obj->setInfo(ObjectInfo::unpackFromNetwork(_msg->getMessage(1)));
+Object* Object::unpackFromNetwork(Message* _msg) {
+  Object* obj;
+  obj = objectFactory->unpackFromNetwork(_msg->getMessage(0));
+  obj->objectInfo = ObjectInfo::unpackFromNetwork(_msg->getMessage(1));
   return obj;
 }
 
-std::list<Object*> Object::unpackListFromNetwork(netwrapper::Message* _msg) {
+std::list<Object*> Object::unpackListFromNetwork(Message* _msg) {
   std::list<Object*> objList;
 
   int objectCount = _msg->getInt(0);

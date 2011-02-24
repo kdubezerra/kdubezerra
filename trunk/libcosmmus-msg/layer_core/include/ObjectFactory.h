@@ -30,6 +30,14 @@ class ObjectFactory {
     virtual Object* createObject() = 0;
 
     /*!
+    * \brief As the library needs to copy already existing application objects, whose type is not
+    *        known by it, it must use a callback function, delegating the task of instantiating
+    *        objects to the application developer.
+    * \return It returns a pointer to the newly instantiated copy of the application object.
+    */
+    virtual Object* copyObject(Object* _other) = 0;
+
+    /*!
      * \brief As the library has no knowledge of what the application's object states
      *        consists of, the developer must do, himself, the packing of the object
      *        into a netwrapper::Message object to be sent through the network.

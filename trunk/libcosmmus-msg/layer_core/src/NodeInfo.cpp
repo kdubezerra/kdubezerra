@@ -11,19 +11,26 @@ using namespace optpaxos;
 using namespace netwrapper;
 
 NodeInfo::NodeInfo() {
-  address = NULL;
+  nodeAddress = NULL;
   nodeId = -1;
+  nodeType = SERVER_NODE;
+}
+
+NodeInfo::NodeInfo(int _id, NodeType _type, Address* _address) {
+  nodeId = _id;
+  nodeType = _type;
+  nodeAddress = new Address(_address);
 }
 
 NodeInfo::NodeInfo(NodeInfo* other) {
-  this->address = new Address(other->address);
+  this->nodeAddress = new Address(other->nodeAddress);
   this->nodeId = other->nodeId;
   this->nodeType = other->nodeType;
 }
 
 NodeInfo::~NodeInfo() {
-  if (address != NULL)
-    delete address;
+  if (nodeAddress != NULL)
+    delete nodeAddress;
 }
 
 int NodeInfo::getNodeId() const {
@@ -43,18 +50,18 @@ void NodeInfo::setNodeType(NodeType _nodeType) {
 }
 
 void NodeInfo::setAddress(Address* _address) {
-  address = _address;
+  nodeAddress = new Address(_address);
 }
 
 Address* NodeInfo::getAdress() {
-  return address;
+  return nodeAddress;
 }
 
 Message* NodeInfo::packToNetwork(NodeInfo* _node) {
   Message* niMsg = new Message();
-  niMsg->addInt(_node->getNodeId());
-  niMsg->addInt((int) _node->getNodeType());
-  niMsg->addMessage(Address::pack(_node->address));
+  niMsg->addInt(_node->nodeId);
+  niMsg->addInt((int) _node->nodeType);
+  niMsg->addMessage(Address::pack(_node->nodeAddress));
   return niMsg;
 }
 
@@ -69,9 +76,9 @@ netwrapper::Message* NodeInfo::packListToNetwork(std::list<NodeInfo*> _nodeList)
 
 NodeInfo* NodeInfo::unpackFromNetwork(netwrapper::Message* _msg) {
   NodeInfo* ni = new NodeInfo();
-  ni->setNodeId(_msg->getInt(0));
-  ni->setNodeType((NodeType) _msg->getInt(1));
-  ni->setAddress(Address::unpack(_msg->getMessage(0)));
+  ni->nodeId = _msg->getInt(0);
+  ni->nodeType = (NodeType) _msg->getInt(1);
+  ni->nodeAddress = Address::unpack(_msg->getMessage(0));
   return ni;
 }
 

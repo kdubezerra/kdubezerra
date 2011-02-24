@@ -18,6 +18,7 @@ using namespace netwrapper;
 std::list<Group*> Group::groupList;
 
 Group::Group() {
+  id = -1;
   groupCoordinator = NULL;
 }
 
@@ -27,12 +28,13 @@ Group::Group(int _id) {
 }
 
 Group::Group(Group* _other) {
+  id = _other->id;
   groupCoordinator = new NodeInfo(_other->groupCoordinator);
   for (std::list<NodeInfo*>::iterator it = _other->serverList.begin() ; it != _other->serverList.end() ; it++) {
     serverList.push_back(new NodeInfo(*it));
   }
   for (std::map<int, ObjectInfo*>::iterator it = _other->managedObjects.begin() ; it != _other->managedObjects.end() ; it++) {
-    managedObjects[it->first] = (new ObjectInfo(it->second));
+    managedObjects[it->first] = new ObjectInfo(it->second);
   }
 }
 
@@ -56,11 +58,16 @@ int Group::getId() {
 }
 
 void Group::addServer(NodeInfo* _server) {
-  serverList.push_back(_server);
+  serverList.push_back(new NodeInfo(_server));
 }
 
 void Group::removeServer(NodeInfo* _server) {
-  serverList.remove(_server);
+  for (std::list<NodeInfo*>::iterator it = serverList.begin() ; it != serverList.end() ; it++)
+    if ((*it)->getNodeId() == _server->getNodeId()) {
+      delete *it;
+      serverList.erase(it);
+      break;
+    }
 }
 
 std::list<NodeInfo*> Group::getServerList() {
@@ -68,7 +75,9 @@ std::list<NodeInfo*> Group::getServerList() {
 }
 
 void Group::setCoordinator(NodeInfo* _server) {
-  groupCoordinator = _server;
+  if (groupCoordinator != NULL)
+    delete groupCoordinator;
+  groupCoordinator = new NodeInfo(_server);
 }
 
 NodeInfo* Group::getCoordinator() {
@@ -80,15 +89,14 @@ void Group::addManagedObject(ObjectInfo* _obj) {
 }
 
 bool Group::hasObject(ObjectInfo* _obj) {
-  if (managedObjects.find(_obj->getId()) == managedObjects.end()) {
-    return false;
-  }
-  else {
-    return true;
-  }
+  return managedObjects.find(_obj->getId()) != managedObjects.end();
 }
 
 void Group::removeManagedObject(ObjectInfo* _obj) {
+  std::map<int, ObjectInfo*>::iterator finder = managedObjects.find(_obj->getId());
+  if (finder == managedObjects.end())
+    return;
+  delete finder->second;
   managedObjects.erase(_obj->getId());
 }
 
@@ -110,7 +118,7 @@ void Group::addGroup(Group* _grp) {
 
 std::list<Group*> Group::requestGroupsList(std::string _brokerUrl, unsigned port) {
   std::list<Group*> groupsList;
-
+  // TODO: ... everything
   return groupsList;
 }
 

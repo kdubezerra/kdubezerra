@@ -34,11 +34,13 @@ class OPMessage {
 
     void setType(OPMessageType _msgType);
     void addCommand(Command* _cmd);
-    void setCommandList(std::list<Command*> _cmdList);
+    void addCommandList(std::list<Command*> _cmdList);
     void addState(Object* _state);
-    void setStateList(std::list<Object*> _stateList);
+    void addStateList(std::list<Object*> _stateList);
     void addMessage(netwrapper::Message* _payload);
-    void setMessageList(std::list<netwrapper::Message*> _msglist);
+    void addMessageCopy(netwrapper::Message* _payload);
+    void addMessageList(std::list<netwrapper::Message*> _msgList);
+    void addMessageCopyList(std::list<netwrapper::Message*> _msgList);
 
     OPMessageType getType();
     std::list<Command*> getCommandList();
