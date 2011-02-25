@@ -5,6 +5,7 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
+//#include <iostream>
 #include <SDL/SDL_net.h>
 
 #include "../include/Message.h"
@@ -224,6 +225,7 @@ int Message::getSerializedLength() {
   for (std::vector<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++) {
     length += (*it)->getSerializedLength();
   }
+  //std::cout << "Message::getSerializedLength() returning " << length << std::endl;
   return length;
 }
 

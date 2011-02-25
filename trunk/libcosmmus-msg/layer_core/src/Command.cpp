@@ -147,6 +147,8 @@ void Command::addGroupList(std::list<Group*> _groupList) {
 }
 
 void Command::findGroups() {
+  if (withGroups)
+    return;
   std::list<Group*> allGroups = Group::getGroupsList();
   for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
     for (std::list<Group*>::iterator itgroup = allGroups.begin() ; itgroup != allGroups.end() ; itgroup++) {
@@ -219,18 +221,14 @@ bool Command::isConservativelyDeliverable() {
 }
 
 void Command::calculateStamp() {
-  long greatestStamp = -1;
-
+  stamp = -1;
   for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
     Object* obj = Object::getObjectById((*it)->getId());
     if (obj == NULL) continue;
-    if (obj->getInfo()->getLastStamp() > greatestStamp) {
-      greatestStamp = obj->getInfo()->getLastStamp();
-    }
+    if (obj->getInfo()->getLastStamp() > stamp)
+      stamp = obj->getInfo()->getLastStamp();
   }
 
-  if (greatestStamp > this->stamp)
-    this->stamp = greatestStamp;
 }
 
 long Command::getStamp() {

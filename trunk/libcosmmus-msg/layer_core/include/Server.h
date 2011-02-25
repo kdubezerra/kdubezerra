@@ -22,7 +22,7 @@
 
 namespace optpaxos {
 
-#define SRV_ID_LEN 10000
+#define GRP_ID_LEN 10000
 
 class Command;
 class Group;
