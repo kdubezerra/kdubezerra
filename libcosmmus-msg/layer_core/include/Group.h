@@ -59,7 +59,7 @@ class Group {
     std::list<NodeInfo*> serverList;
     NodeInfo* groupCoordinator;
     std::map<int, ObjectInfo*> managedObjects;
-    static std::list<Group*> groupList;
+    static std::list<Group*> allGroupsList;
 };
 
 }

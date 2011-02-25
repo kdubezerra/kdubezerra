@@ -5,6 +5,7 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
+#include <iostream>
 #include "../include/Command.h"
 #include "../include/Group.h"
 #include "../include/NodeInfo.h"
@@ -12,6 +13,8 @@
 #include "../include/PaxosInstance.h"
 #include "../include/PaxosLearnerInterface.h"
 
+
+using namespace std;
 using namespace optpaxos;
 using namespace netwrapper;
 
@@ -107,6 +110,7 @@ void PaxosInstance::handleAcceptMessage(OPMessage* _accMsg) {
   OPMessage* broadcastValue = OPMessage::unpackFromNetwork(_accMsg->getMessageList().back());
   std::map<long, PaxosInstance*>::iterator it = instancesIndex.find(receivedInstance->getId());
   if (it != instancesIndex.end()) {
+    cout << "PaxosInstance::handleAcceptMessage: beginning with already existing instance" << endl;
     PaxosInstance* instance = it->second;
     if ( !( broadcastValue->equals(instance->acceptedValue )) && instance->learnt) {
       instance->broadcastAcceptedValue();
@@ -115,6 +119,7 @@ void PaxosInstance::handleAcceptMessage(OPMessage* _accMsg) {
     delete broadcastValue;
   }
   else {
+    cout << "PaxosInstance::handleAcceptMessage: beginning with new instance" << endl;
     instancesIndex[receivedInstance->getId()] = receivedInstance;
     receivedInstance->acceptedValue = broadcastValue;
     receivedInstance->learnt = false;
@@ -157,10 +162,13 @@ void PaxosInstance::handleAcceptedMessage(OPMessage* _accedMsg) {
     // is, if an ACC'ED msg is received, it's value is coherent with the others:
 
     instance->acceptedMsgCounter++;
-    if (instance->acceptedMsgCounter > ((int) instance->acceptorsGroupsList.size()) / 2
-        && instance->learnt == false) {
+    int numAcceptors = (int) instance->acceptorsGroupsList.size();
+    int halfAcceptors = numAcceptors % 2 ? (numAcceptors + 1) / 2 : numAcceptors / 2;
+    if (true || instance->acceptedMsgCounter > halfAcceptors && instance->learnt == false) {
       instance->learnt = true;
+      cout << "PaxosInstance::handleAcceptedMessage: handing accepted value over to the server" << endl;
       callbackLearner->handleLearntValue(instance->acceptedValue);
+      cout << "PaxosInstance::handleAcceptedMessage: handed accepted value over to the server" << endl;
     }
     delete receivedInstance;
     delete broadcastValue;

@@ -31,7 +31,7 @@ class NodeInfo : public netwrapper::GenericNode {
     void setNodeType(NodeType _nodeType);
     NodeType getNodeType() const;
 
-    void setAddress(netwrapper::Address* _address);
+    void setAddress(netwrapper::Address* _address); /// (!) deep copy of _address
     netwrapper::Address* getAdress();
 
     static netwrapper::Message* packToNetwork(NodeInfo* _node);

@@ -15,7 +15,7 @@ using namespace std;
 using namespace optpaxos;
 using namespace netwrapper;
 
-std::list<Group*> Group::groupList;
+std::list<Group*> Group::allGroupsList;
 
 Group::Group() {
   id = -1;
@@ -113,7 +113,7 @@ std::list<ObjectInfo*> Group::getObjectsList() {
 }
 
 void Group::addGroup(Group* _grp) {
-  groupList.push_back(_grp);
+  allGroupsList.push_back(_grp);
 }
 
 std::list<Group*> Group::requestGroupsList(std::string _brokerUrl, unsigned port) {
@@ -123,7 +123,7 @@ std::list<Group*> Group::requestGroupsList(std::string _brokerUrl, unsigned port
 }
 
 std::list<Group*> Group::getGroupsList() {
-  return groupList;
+  return allGroupsList;
 }
 
 Message* Group::packToNetwork(Group* _group) {

@@ -135,6 +135,7 @@ int FIFOReliableServer::send (Message* _msg, RemoteFRC* _client) {
     cerr << "FIFOReliableServer::send: Failed to send message length: " << SDLNet_GetError() << endl;
     return 2;
   }
+
   cout << "FIFOReliableServer:send: ";
   for (int i = 0 ; i < msgLength ; i++) cout << msgBuffer[i];
   cout << endl;
