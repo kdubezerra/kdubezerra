@@ -136,9 +136,6 @@ int FIFOReliableServer::send (Message* _msg, RemoteFRC* _client) {
     return 2;
   }
 
-  cout << "FIFOReliableServer:send: ";
-  for (int i = 0 ; i < msgLength ; i++) cout << msgBuffer[i];
-  cout << endl;
   delete [] msgBuffer;
   return 0;
 }

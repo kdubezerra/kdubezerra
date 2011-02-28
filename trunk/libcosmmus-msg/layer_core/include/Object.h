@@ -32,6 +32,7 @@ class Object {
     void setInfo(ObjectInfo* _objInfo);
 
     static Object* getObjectById(int _id);
+    static void indexObject(Object* _obj);
 
     static void setObjectFactory(ObjectFactory* _factory); // (!) shallow copy of the objectFactory!
     static ObjectFactory* getObjectFactory();

@@ -70,7 +70,7 @@ void OPMessage::setType(OPMessageType _msgType) {
 }
 
 void OPMessage::addCommand(Command* _cmd) {
-  commandList.push_back(new Command(_cmd));
+  commandList.push_back(_cmd);
 }
 
 void OPMessage::addCommandList(std::list<Command*> _cmdList) {

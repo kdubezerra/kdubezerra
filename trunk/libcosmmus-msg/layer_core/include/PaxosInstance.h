@@ -32,6 +32,8 @@ class PaxosInstance {
     void init();
     virtual ~PaxosInstance();
     static void flushToDisk(PaxosInstance* _pi);
+    static void flushAll();
+    static PaxosInstance* findInstance(long _seq);
 
     long getId();
     void setId(long _id);
@@ -65,6 +67,7 @@ class PaxosInstance {
     static PaxosLearnerInterface* callbackLearner;
     static netwrapper::UnreliablePeer* peerInterface;
     static std::map<long, PaxosInstance*> instancesIndex;
+    static std::list<PaxosInstance*> flushableList;
 };
 
 }

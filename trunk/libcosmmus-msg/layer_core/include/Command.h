@@ -32,7 +32,7 @@ class Command {
     Command(Command* _cmd);
     virtual ~Command();
     bool equals(Command* _other);
-    static bool compareLT(Command* c1, Command* c2);
+    static bool compareStamp(Command* c1, Command* c2);
 
     void addTarget(ObjectInfo* _obj);
     void addTargetList(std::list<ObjectInfo*> _targetList);

@@ -61,6 +61,10 @@ Command::~Command() {
   for (std::list<Group*>::iterator it = groupList.begin() ; it != groupList.end() ; it++)
     if (*it != NULL)
       delete *it;
+
+  for (std::list<Object*>::iterator it = priorStateList.begin() ; it != priorStateList.end() ; it++)
+    if (*it != NULL)
+      delete *it;
 }
 
 bool Command::equals(Command* other) {
@@ -104,7 +108,7 @@ bool Command::equals(Command* other) {
   return true;
 }
 
-bool Command::compareLT(Command* c1, Command* c2) {
+bool Command::compareStamp(Command* c1, Command* c2) {
   return c1->stamp < c2->stamp;
 }
 
@@ -158,6 +162,8 @@ void Command::findGroups() {
       }
     }
   }
+  groupList.sort();
+  groupList.unique();
   withGroups = true;
 }
 
@@ -264,7 +270,7 @@ Command* Command::unpackFromNetwork(Message* _msg) {
 
   cmd->stamp = _msg->getInt(0);
 
-  bool hasContent      = _msg->getBool(0);
+  cmd->withContent     = _msg->getBool(0);
   cmd->withTargets     = _msg->getBool(1);
   cmd->withPriorStates = _msg->getBool(2);
   cmd->withGroups      = _msg->getBool(3);
@@ -272,7 +278,7 @@ Command* Command::unpackFromNetwork(Message* _msg) {
   cmd->conservative    = _msg->getBool(5);
 
   int msgIndex = 0;
-  if (hasContent)           cmd->commandContent = new Message(_msg->getMessage(msgIndex++));
+  if (cmd->withContent)     cmd->commandContent = new Message(_msg->getMessage(msgIndex++));
   if (cmd->withTargets)     cmd->targetList = ObjectInfo::unpackListFromNetwork(_msg->getMessage(msgIndex++));
   if (cmd->withPriorStates) cmd->priorStateList = Object::unpackListFromNetwork(_msg->getMessage(msgIndex++));
   if (cmd->withGroups)      cmd->groupList = Group::unpackListFromNetwork(_msg->getMessage(msgIndex));

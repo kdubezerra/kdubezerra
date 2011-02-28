@@ -5,11 +5,13 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
+#include <iostream>
 #include "../include/Command.h"
 #include "../include/Object.h"
 #include "../include/ObjectFactory.h"
 #include "../include/ObjectInfo.h"
 
+using namespace std;
 using namespace optpaxos;
 using namespace netwrapper;
 
@@ -36,6 +38,9 @@ Object::Object(int _id) {
 Object::~Object() {
   if (objectInfo != NULL)
     delete objectInfo;
+
+  for (std::list<Command*>::iterator it = pendingCommandList.begin() ; it != pendingCommandList.end() ; it++)
+    delete *it;
 }
 
 bool Object::equals(Object* _other) {
@@ -63,6 +68,10 @@ Object* Object::getObjectById(int _id) {
     return NULL;
 }
 
+void Object::indexObject(Object* _obj) {
+  objectIndex[_obj->getInfo()->getId()] = _obj;
+}
+
 void Object::setObjectFactory(ObjectFactory* _factory) {
   objectFactory = _factory;
 }
@@ -73,19 +82,24 @@ ObjectFactory* Object::getObjectFactory() {
 
 void Object::enqueue(Command* _cmd) {
   pendingCommandList.push_back(new Command(_cmd));
-  pendingCommandList.sort(Command::compareLT);
+  pendingCommandList.sort(Command::compareStamp);
 }
 
-void Object::tryFlushingCmdQueue(CommandType _type) {
-  if (pendingCommandList.empty())
+void Object::tryFlushingCmdQueue(CommandType _type) { // TODO: talvez fosse melhor checar se o comando na frente da fila é o mesmo (e nao se o laststamp é o mesmo)
+  cout << "Object::tryFlushingCmdQueue: flushing command queue of object " << this << endl;
+  if (pendingCommandList.empty()) {
+    cout << "Object::tryFlushingCmdQueue: command queue of object " << this->getInfo()->getId() << " is CLEAR." << endl;
     return;
+  }
   Command* nextCmd = new Command(pendingCommandList.front());
   std::list<ObjectInfo*> targetList = nextCmd->getTargetList();
   bool allObjsReady = true;
   for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
     Object* obj = Object::getObjectById((*ittarget)->getId());
-    if ((*ittarget)->getLastStamp() != obj->getInfo()->getLastStamp())
+    if ((*ittarget)->getLastStamp() != obj->getInfo()->getLastStamp()) {
       allObjsReady = false;
+      break;
+    }
   }
   if (allObjsReady) {
     for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {

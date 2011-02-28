@@ -36,18 +36,18 @@ int FIFOReliableClient::connect(std::string _address, unsigned _port) {
   IPaddress ip;
 
   if(SDLNet_ResolveHost(&ip, _address.c_str(), (Uint16) _port)==-1) {
-      cerr << "FIFOReliableClient::connect: SDLNet_ResolveHost: " << SDLNet_GetError() << endl;
-      return 1;
+    cerr << "FIFOReliableClient::connect: SDLNet_ResolveHost: " << SDLNet_GetError() << endl;
+    return 1;
   }
 
   clientSocket = SDLNet_TCP_Open(&ip);
   if(!clientSocket) {
-      cerr << "FIFOReliableClient::connect: SDLNet_TCP_Open: " << SDLNet_GetError() << endl;
-      return 2;
+    cerr << "FIFOReliableClient::connect: SDLNet_TCP_Open: " << SDLNet_GetError() << endl;
+    return 2;
   }
 
   if (socketSet == NULL) {
-    cout << "FIFOReliableClient::connect: SDLNet_AllocSocketSet: " << SDLNet_GetError() << endl;
+    cerr << "FIFOReliableClient::connect: SDLNet_AllocSocketSet: " << SDLNet_GetError() << endl;
     return 3; // Quit!
   }
 
