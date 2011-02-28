@@ -225,7 +225,6 @@ int Message::getSerializedLength() {
   for (std::vector<Message*>::iterator it = messageList.begin() ; it != messageList.end() ; it++) {
     length += (*it)->getSerializedLength();
   }
-  //std::cout << "Message::getSerializedLength() returning " << length << std::endl;
   return length;
 }
 

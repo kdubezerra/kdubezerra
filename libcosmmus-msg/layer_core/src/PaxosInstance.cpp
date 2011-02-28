@@ -21,6 +21,7 @@ using namespace netwrapper;
 UnreliablePeer* PaxosInstance::peerInterface = NULL;
 PaxosLearnerInterface* PaxosInstance::callbackLearner = NULL;
 std::map<long, PaxosInstance*> PaxosInstance::instancesIndex;
+std::list<PaxosInstance*> PaxosInstance::flushableList;
 
 
 PaxosInstance::PaxosInstance() {
@@ -52,7 +53,26 @@ PaxosInstance::~PaxosInstance() {
 
 void PaxosInstance::flushToDisk(PaxosInstance* _pi) {
   // TODO: actually should SAVE to disk!
+  cout << "PaxosInstance::flushToDisk: flushing instance " << _pi->instanceSeq << endl;
+  instancesIndex.erase(_pi->getId());
+  flushableList.remove(_pi);
   delete _pi;
+}
+
+void PaxosInstance::flushAll() {
+  std::list<PaxosInstance*> flushable = flushableList;
+  for (std::list<PaxosInstance*>::iterator it = flushable.begin() ; it != flushable.end() ; it++) {
+    flushToDisk(*it);
+  }
+}
+
+PaxosInstance* PaxosInstance::findInstance(long _seq) {
+  // TODO: if the instance is not in memory, search in the disk, as it must have been flushed to it
+  std::map<long, PaxosInstance*>::iterator finder = instancesIndex.find(_seq);
+  if (finder == instancesIndex.end())
+    return NULL;
+  else
+    return finder->second;
 }
 
 long PaxosInstance::getId() {
@@ -106,25 +126,24 @@ void PaxosInstance::broadcast(OPMessage* _msg) {
 }
 
 void PaxosInstance::handleAcceptMessage(OPMessage* _accMsg) {
-  PaxosInstance* receivedInstance = PaxosInstance::unpackFromNetwork(_accMsg->getMessageList().front());
-  OPMessage* broadcastValue = OPMessage::unpackFromNetwork(_accMsg->getMessageList().back());
-  std::map<long, PaxosInstance*>::iterator it = instancesIndex.find(receivedInstance->getId());
-  if (it != instancesIndex.end()) {
-    cout << "PaxosInstance::handleAcceptMessage: beginning with already existing instance" << endl;
-    PaxosInstance* instance = it->second;
-    if ( !( broadcastValue->equals(instance->acceptedValue )) && instance->learnt) {
-      instance->broadcastAcceptedValue();
+  PaxosInstance* rcvdInstance = PaxosInstance::unpackFromNetwork(_accMsg->getMessageList().front());
+  OPMessage* rcvdValue = OPMessage::unpackFromNetwork(_accMsg->getMessageList().back());
+  PaxosInstance* localInstance = PaxosInstance::findInstance(rcvdInstance->getId());
+  if (localInstance != NULL) {
+    //cout << "PaxosInstance::handleAcceptMessage: beginning with already existing instance" << endl;
+    if ( !rcvdValue->equals(localInstance->acceptedValue) ) {
+      localInstance->broadcastAcceptedValue();
     }
-    delete receivedInstance;
-    delete broadcastValue;
+    delete rcvdInstance;
+    delete rcvdValue;
   }
   else {
-    cout << "PaxosInstance::handleAcceptMessage: beginning with new instance" << endl;
-    instancesIndex[receivedInstance->getId()] = receivedInstance;
-    receivedInstance->acceptedValue = broadcastValue;
-    receivedInstance->learnt = false;
-    receivedInstance->acceptedMsgCounter = 0;
-    receivedInstance->broadcastAcceptedValue();
+    //cout << "PaxosInstance::handleAcceptMessage: beginning with new instance" << endl;
+    instancesIndex[rcvdInstance->getId()] = rcvdInstance;
+    rcvdInstance->acceptedValue = rcvdValue;
+    rcvdInstance->learnt = false;
+    rcvdInstance->acceptedMsgCounter = 0;
+    rcvdInstance->broadcastAcceptedValue();
   }
 }
 
@@ -146,32 +165,34 @@ void PaxosInstance::broadcastAcceptedValue() {
 }
 
 void PaxosInstance::handleAcceptedMessage(OPMessage* _accedMsg) {
-  PaxosInstance* receivedInstance = PaxosInstance::unpackFromNetwork(_accedMsg->getMessageList().front());
-  OPMessage* broadcastValue = OPMessage::unpackFromNetwork(_accedMsg->getMessageList().back());
-  std::map<long,PaxosInstance*>::iterator it = instancesIndex.find(receivedInstance->getId());
-  if (it == instancesIndex.end()) {
-    instancesIndex[receivedInstance->getId()] = receivedInstance;
-    receivedInstance->acceptedValue = broadcastValue;
-    receivedInstance->learnt = false;
-    receivedInstance->acceptedMsgCounter = 1;
+  PaxosInstance* rcvdInstance = PaxosInstance::unpackFromNetwork(_accedMsg->getMessageList().front());
+  OPMessage* rcvdValue = OPMessage::unpackFromNetwork(_accedMsg->getMessageList().back());
+  PaxosInstance* localInstance = PaxosInstance::findInstance(rcvdInstance->getId());
+  if (localInstance == NULL) {
+    instancesIndex[rcvdInstance->getId()] = rcvdInstance;
+    rcvdInstance->acceptedValue = rcvdValue;
+    rcvdInstance->learnt = false;
+    rcvdInstance->acceptedMsgCounter = 1;
   }
   else {
-    PaxosInstance* instance = it->second;
 
     // TODO: we are assuming, for now, that there is no byzantine behavior, that
     // is, if an ACC'ED msg is received, it's value is coherent with the others:
 
-    instance->acceptedMsgCounter++;
-    int numAcceptors = (int) instance->acceptorsGroupsList.size();
-    int halfAcceptors = numAcceptors % 2 ? (numAcceptors + 1) / 2 : numAcceptors / 2;
-    if (true || instance->acceptedMsgCounter > halfAcceptors && instance->learnt == false) {
-      instance->learnt = true;
-      cout << "PaxosInstance::handleAcceptedMessage: handing accepted value over to the server" << endl;
-      callbackLearner->handleLearntValue(instance->acceptedValue);
-      cout << "PaxosInstance::handleAcceptedMessage: handed accepted value over to the server" << endl;
+    localInstance->acceptedMsgCounter++;
+    int numAcceptors = 0;
+    for (std::list<Group*>::iterator it = localInstance->acceptorsGroupsList.begin() ; it != localInstance->acceptorsGroupsList.end() ; it++)
+      numAcceptors += (int) (*it)->getServerList().size();
+    int mostAcceptors = (numAcceptors + 1) % 2 ? (numAcceptors + 2) / 2 : (numAcceptors + 1) / 2;
+    if (localInstance->learnt == false && localInstance->acceptedMsgCounter >= mostAcceptors) { // TODO: fix this to deliver only once
+      localInstance->learnt = true;
+      callbackLearner->handleLearntValue(localInstance->acceptedValue);
+      cout << "PaxosInstance::handleAcceptedMessage: numAcceptors = " << numAcceptors << ", acceptedMsgCounter = " << localInstance->acceptedMsgCounter << endl;
     }
-    delete receivedInstance;
-    delete broadcastValue;
+    if (localInstance->acceptedMsgCounter == numAcceptors) // TODO: create a better criterion to mark an instance as flushable
+      flushableList.push_back(localInstance);
+    delete rcvdInstance;
+    delete rcvdValue;
   }
 }
 

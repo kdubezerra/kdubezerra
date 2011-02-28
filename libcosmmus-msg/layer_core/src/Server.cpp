@@ -108,7 +108,9 @@ void Server::handleClientMessage(Message* _msg) {
 }
 
 void Server::handlePeerMessage(Message* _msg) {
+
   OPMessage* peerMessage = OPMessage::unpackFromNetwork(_msg);
+
   switch (peerMessage->getType()) {
 
     case CMD_OPT :
@@ -119,7 +121,6 @@ void Server::handlePeerMessage(Message* _msg) {
       Command* cmd = cmdMessage->getCommandList().front();
       if (cmd->knowsGroups() == false) cmd->findGroups();
       if (cmd->getGroupList().size() == 1) {
-        cout << "Server::handlePeerMessage: + creating PaxosInstance object" << endl;
         PaxosInstance* pxInstance = new PaxosInstance(++lastPaxosInstance * GRP_ID_LEN + (long) localGroup->getId());
         /** TODO:
          * cmd->setOptimisticallyDeliverable(true);
@@ -133,10 +134,8 @@ void Server::handlePeerMessage(Message* _msg) {
         cmdMessage->setType(CMD_ONE_GROUP_CONSERVATIVE);
         pxInstance->addAcceptors(localGroup);
         pxInstance->addLearners(localGroup);
-        cout << "Server::handlePeerMessage: * broadcasting with the newly created PaxosInstance" << endl;
         pxInstance->broadcast(cmdMessage);
         delete pxInstance;
-        cout << "Server::handlePeerMessage: - deleting PaxosInstance object" << endl;
         // TODO a better implementation, although this is not incorrect: the instance is recreated upon receiving accepted msgs
       }
       else {
@@ -146,20 +145,21 @@ void Server::handlePeerMessage(Message* _msg) {
     }
 
     case PAXOS_ACCEPT_MSG :
-      cout << "Server::handlePeerMessage: received PAXOS_ACCEPT_MSG" << endl;
       PaxosInstance::handleAcceptMessage(peerMessage);
       break;
 
     case PAXOS_ACCEPTED_MSG :
-      cout << "Server::handlePeerMessage: received PAXOS_ACCEPTED_MSG" << endl;
       PaxosInstance::handleAcceptedMessage(peerMessage);
+      PaxosInstance::flushAll();
       break;
 
     default:
       break;
 
   }
+
   delete peerMessage;
+
 }
 
 void Server::handleLearntValue(OPMessage* _learntMsg) {
@@ -171,7 +171,8 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
       std::list<ObjectInfo*> targetList = newCmd->getTargetList();
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());
-        obj->enqueue(newCmd);
+        if (obj == NULL) cout << "Server::handleLearntValue: obj = NULL" << endl;
+        else obj->enqueue(newCmd);
       }
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());
@@ -182,19 +183,10 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
     default:
       break;
   }
-  Command* cmd = _learntMsg->getCommandList().front();
-  Object::handleCommand(cmd);
-  sendCommandToClients(cmd);
 }
 
 void Server::sendCommand(Command* cmd) {
-Message *m = Command::packToNetwork(cmd);
-cout << "Server::sendCommand: cmdMsg->getSerializedLength() (before findgroups) = " << m->getSerializedLength() << endl;
-delete m;
   if (cmd->knowsGroups() == false) cmd->findGroups();
-m = Command::packToNetwork(cmd);
-cout << "Server::sendCommand: cmdMsg->getSerializedLength() (after findgroups) = " << m->getSerializedLength() << endl;
-delete m;
   // TODO: fwdOptimisticallyToGroups(clientCommand);
   fwdCommandToCoordinator(cmd);
 }
@@ -208,6 +200,8 @@ void Server::sendCommandToClients(Command* _cmd) {
   for (std::list<netwrapper::RemoteFRC*>::iterator it = clientList.begin() ; it != clientList.end() ; it++) {
     netServer->send(packedCmdMsg, *it);
   }
+  delete packedCmdMsg;
+  delete cmdMsg;
 }
 
 void Server::fwdOptimisticallyToGroups(Command* _cmd) {
@@ -232,13 +226,8 @@ void Server::fwdCommandToCoordinator(Command* _cmd) {
   cmdOpMsg->setType(CMD_TO_COORD);
   cmdOpMsg->addCommand(new Command(_cmd));
   Message* packedCmdOpMsg = OPMessage::packToNetwork(cmdOpMsg);
-cout << "Server::fwdCommandToCoordinator: packedCmdOpMsg->getSerializedLength() (before findgroups) = " << packedCmdOpMsg->getSerializedLength() << endl;
-cmdOpMsg->getCommandList().front()->findGroups();
-Message* m = OPMessage::packToNetwork(cmdOpMsg);
-cout << "Server::fwdCommandToCoordinator: packedCmdOpMsg->getSerializedLength() (after findgroups) = " << m->getSerializedLength() << endl;
   groupPeer->sendMessage(packedCmdOpMsg, localGroup->getCoordinator()->getAdress());
   delete packedCmdOpMsg;
-delete m;
   delete cmdOpMsg;
 }
 
