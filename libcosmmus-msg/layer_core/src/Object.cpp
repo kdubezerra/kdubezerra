@@ -80,20 +80,46 @@ ObjectFactory* Object::getObjectFactory() {
   return objectFactory;
 }
 
-void Object::enqueue(Command* _cmd) {
-  pendingCommandList.push_back(new Command(_cmd));
-  pendingCommandList.sort(Command::compareStamp);
+std::list<Command*> Object::getPendingCommands() {
+  return pendingCommandList;
 }
 
-void Object::tryFlushingCmdQueue(CommandType _type) { // TODO: talvez fosse melhor checar se o comando na frente da fila é o mesmo (e nao se o laststamp é o mesmo)
-  cout << "Object::tryFlushingCmdQueue: flushing command queue of object " << this << endl;
+void Object::enqueueOrUpdate(Command* _cmd) {
+  for (std::list<Command*>::iterator it = pendingCommandList.begin() ; it != pendingCommandList.end() ; it++)
+    if ((*it)->getId() == _cmd->getId()) {
+      delete *it;
+      pendingCommandList.erase(it);
+      break;
+    }
+
+  pendingCommandList.push_back(new Command(_cmd));
+  pendingCommandList.sort(Command::compareStampThenId);
+}
+
+void Object::tryFlushingCmdQueue(CommandType _type) { // TODO: seria melhor checar se o comando na frente da fila é o mesmo (e nao se o laststamp é o mesmo)
+  pendingCommandList.sort(Command::compareStampThenId);
   if (pendingCommandList.empty()) {
     cout << "Object::tryFlushingCmdQueue: command queue of object " << this->getInfo()->getId() << " is CLEAR." << endl;
     return;
   }
+  else {
+    cout << "Object::tryFlushingCmdQueue: command queue of object " << this->getInfo()->getId() << " has " << (int) pendingCommandList.size() << " elements." << endl;
+  }
   Command* nextCmd = new Command(pendingCommandList.front());
+  if (nextCmd->getStage() != DELIVERABLE) {
+    for (std::list<Command*>::iterator it = pendingCommandList.begin() ; it != pendingCommandList.end() ; it++) {
+      cout << "Object::tryFlushingCmdQueue: command " << (*it)->getId() << " has stamp " << (*it)->getStamp();
+      if ((*it)->getStage() == DELIVERABLE) cout << " and is DELIVERABLE\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*";
+      cout << endl;
+    }
+    cout << "Object::tryFlushingCmdQueue: first command of object " << this->getInfo()->getId() << " is not deliverable yet." << endl;
+
+    return;
+  }
   std::list<ObjectInfo*> targetList = nextCmd->getTargetList();
+
   bool allObjsReady = true;
+  /**
   for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
     Object* obj = Object::getObjectById((*ittarget)->getId());
     if ((*ittarget)->getLastStamp() != obj->getInfo()->getLastStamp()) {
@@ -101,10 +127,13 @@ void Object::tryFlushingCmdQueue(CommandType _type) { // TODO: talvez fosse melh
       break;
     }
   }
+  **/
   if (allObjsReady) {
+    cout << "Object::tryFlushingCmdQueue: command delivered to object " << this->getInfo()->getId() << endl;
     for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
       Object* obj = Object::getObjectById((*ittarget)->getId());
       obj->handleConservativeDelivery(nextCmd);
+      obj->objectInfo->setLastStamp(nextCmd->getStamp());
       delete obj->pendingCommandList.front();
       obj->pendingCommandList.pop_front();
     }

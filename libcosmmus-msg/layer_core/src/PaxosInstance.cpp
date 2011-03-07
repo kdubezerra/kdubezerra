@@ -184,10 +184,10 @@ void PaxosInstance::handleAcceptedMessage(OPMessage* _accedMsg) {
     for (std::list<Group*>::iterator it = localInstance->acceptorsGroupsList.begin() ; it != localInstance->acceptorsGroupsList.end() ; it++)
       numAcceptors += (int) (*it)->getServerList().size();
     int mostAcceptors = (numAcceptors + 1) % 2 ? (numAcceptors + 2) / 2 : (numAcceptors + 1) / 2;
+    cout << "PaxosInstance::handleAcceptedMessage: numAcceptors = " << numAcceptors << ", acceptedMsgCounter = " << localInstance->acceptedMsgCounter << endl;
     if (localInstance->learnt == false && localInstance->acceptedMsgCounter >= mostAcceptors) { // TODO: fix this to deliver only once
       localInstance->learnt = true;
       callbackLearner->handleLearntValue(localInstance->acceptedValue);
-      cout << "PaxosInstance::handleAcceptedMessage: numAcceptors = " << numAcceptors << ", acceptedMsgCounter = " << localInstance->acceptedMsgCounter << endl;
     }
     if (localInstance->acceptedMsgCounter == numAcceptors) // TODO: create a better criterion to mark an instance as flushable
       flushableList.push_back(localInstance);

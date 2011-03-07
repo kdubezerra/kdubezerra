@@ -37,7 +37,8 @@ class Object {
     static void setObjectFactory(ObjectFactory* _factory); // (!) shallow copy of the objectFactory!
     static ObjectFactory* getObjectFactory();
 
-    void enqueue(Command* _cmd);
+    std::list<Command*> getPendingCommands();
+    void enqueueOrUpdate(Command* _cmd);
     void tryFlushingCmdQueue(CommandType _type);
 
     static void handleCommand(Command* _cmd);

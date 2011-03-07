@@ -22,7 +22,7 @@
 
 namespace optpaxos {
 
-#define GRP_ID_LEN 10000
+#define GRP_ID_LEN 1000
 
 class Command;
 class Group;
@@ -51,7 +51,6 @@ class Server : public optpaxos::PaxosLearnerInterface,
     void handleClientDisconnect(netwrapper::RemoteFRC* _client);
     void handleClientMessage(netwrapper::Message* _msg);
     void handlePeerMessage(netwrapper::Message* _msg);
-    void handleLearntValue(OPMessage* _learntMsg);
 
     void setCallbackInterface(optpaxos::ServerInterface* _cbInterface);
     virtual void handleOptimisticDelivery(Command* _cmd) = 0;
@@ -60,6 +59,8 @@ class Server : public optpaxos::PaxosLearnerInterface,
     void sendCommand(Command* cmd);
 
   private:
+    int tryProposingPendingCommands();
+    void handleLearntValue(OPMessage* _learntMsg);
     void sendCommandToClients(Command* _cmd);
     void fwdOptimisticallyToGroups(Command* _cmd);
     void fwdCommandToCoordinator(Command* _cmd);
@@ -72,6 +73,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     optpaxos::ServerInterface* callbackServer;
     //NodeInfo* nodeInfo;
     long lastPaxosInstance;
+    long lastCommandId;
     std::list<netwrapper::RemoteFRC*> clientList; // TODO: create a decent client management
     // TODO: define a way to uniquely identify each server (ip:port?)
 };

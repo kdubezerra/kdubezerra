@@ -26,8 +26,14 @@ class ObjectInfo {
     int getId();
     void setId(int _id);
 
+    long getClock();
+    void setClock(long _value);
+
     long getLastStamp();
     void setLastStamp(long _stamp);
+
+    long getNextStamp();
+    void setNextStamp(long _stamp);
 
     static netwrapper::Message* packToNetwork(ObjectInfo* _objInfo);
     static netwrapper::Message* packListToNetwork(std::list<ObjectInfo*> _objInfoList);
@@ -38,7 +44,9 @@ class ObjectInfo {
 
   private:
     int objectId;
+    long objectClock;
     long lastStamp;
+    long nextStamp;
 };
 
 }
