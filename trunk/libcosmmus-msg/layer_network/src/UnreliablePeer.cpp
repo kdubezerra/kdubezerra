@@ -67,10 +67,10 @@ int UnreliablePeer::checkNewMessages() {
   }
 
   if (SDLNet_UDP_Recv(peerSocket, rcvPacket)) {
-    cout << "UnreliablePeer::checkNewMessages: received UDP PACKET of length " << rcvPacket->len << " bytes" << endl;
+    //cout << "UnreliablePeer::checkNewMessages: received UDP PACKET of length " << rcvPacket->len << " bytes" << endl;
     recvCount++;
     Message* rcvMsg = new Message((char *)(rcvPacket->data));
-    cout << "UnreliablePeer::checkNewMessages: received netwrapper::Message of length " << rcvMsg->getSerializedLength() << " bytes" << endl;
+    //cout << "UnreliablePeer::checkNewMessages: received netwrapper::Message of length " << rcvMsg->getSerializedLength() << " bytes" << endl;
     if (callbackPeer) callbackPeer->handlePeerMessage(rcvMsg);
     delete rcvMsg;
   }

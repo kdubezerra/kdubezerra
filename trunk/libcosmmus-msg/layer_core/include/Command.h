@@ -18,6 +18,13 @@ enum CommandType {
   CONSERVATIVE
 };
 
+enum CommandStage {
+  PROPOSING_LOCAL,
+  GLOBAL_STAMPING,
+  UPDATING_CLOCK,
+  DELIVERABLE
+};
+
 class Group;
 class Object;
 class ObjectInfo;
@@ -29,10 +36,13 @@ class ObjectInfo;
 class Command {
   public:
     Command();
+    Command(long _id);
     Command(Command* _cmd);
     virtual ~Command();
     bool equals(Command* _other);
-    static bool compareStamp(Command* c1, Command* c2);
+    static bool compareStampThenId(Command* c1, Command* c2);
+    static bool compareId(Command* c1, Command* c2);
+    static bool deleteDups(Command* c1, Command* c2);
 
     void addTarget(ObjectInfo* _obj);
     void addTargetList(std::list<ObjectInfo*> _targetList);
@@ -67,9 +77,15 @@ class Command {
     void setConservativelyDeliverable(bool _isConsDeliverable);
     bool isConservativelyDeliverable();
 
-    void calculateStamp();
+    void calcStamp(Group* _localGroup = NULL);
     long getStamp();
     void setStamp(long _stamp);
+
+    CommandStage getStage();
+    void setStage(CommandStage _stage);
+
+    long getId();
+    void setId(long _id);
 
     static netwrapper::Message* packToNetwork(Command* _cmd);
     static netwrapper::Message* packCommandListToNetwork(std::list<Command*> _cmdList);
@@ -88,6 +104,8 @@ class Command {
     bool optimistic;
     bool conservative;
     long stamp;
+    long commandId;
+    CommandStage stage;
 };
 
 }

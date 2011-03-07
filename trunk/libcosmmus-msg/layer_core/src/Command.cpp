@@ -18,7 +18,8 @@ using namespace netwrapper;
 
 Command::Command() {
   commandContent = NULL;
-  stamp = -1;
+  commandId = stamp = -1;
+  stage = PROPOSING_LOCAL;
   withTargets = false;
   withGroups = false;
   withPriorStates = false;
@@ -27,25 +28,40 @@ Command::Command() {
   conservative = false;
 }
 
-Command::Command(Command* _cmd) {
-  if (_cmd->commandContent != NULL)
-    commandContent = new Message(_cmd->commandContent);
+Command::Command(long _id) {
+  commandId = _id;
+  commandContent = NULL;
+  commandId = stamp = -1;
+  stage = PROPOSING_LOCAL;
+  withTargets = false;
+  withGroups = false;
+  withPriorStates = false;
+  withContent = false;
+  optimistic = false;
+  conservative = false;
+}
+
+Command::Command(Command* _other) {
+  if (_other->commandContent != NULL)
+    commandContent = new Message(_other->commandContent);
   else
     commandContent = NULL;
-  stamp = _cmd->stamp;
-  withTargets = _cmd->withTargets;
-  withGroups = _cmd->withGroups;
-  withPriorStates = _cmd->withPriorStates;
-  withContent = _cmd->withContent;
-  optimistic = _cmd->optimistic;
-  conservative = _cmd->conservative;
-  for (std::list<ObjectInfo*>::iterator it = _cmd->targetList.begin() ; it != _cmd->targetList.end() ; it++) {
+  commandId = _other->commandId;
+  stamp = _other->stamp;
+  stage = _other->stage;
+  withTargets = _other->withTargets;
+  withGroups = _other->withGroups;
+  withPriorStates = _other->withPriorStates;
+  withContent = _other->withContent;
+  optimistic = _other->optimistic;
+  conservative = _other->conservative;
+  for (std::list<ObjectInfo*>::iterator it = _other->targetList.begin() ; it != _other->targetList.end() ; it++) {
     targetList.push_back(new ObjectInfo(*it));
   }
-  for (std::list<Group*>::iterator it = _cmd->groupList.begin() ; it != _cmd->groupList.end() ; it++) {
+  for (std::list<Group*>::iterator it = _other->groupList.begin() ; it != _other->groupList.end() ; it++) {
     groupList.push_back(new Group(*it));
   }
-  for (std::list<Object*>::iterator it = _cmd->priorStateList.begin() ; it!= _cmd->priorStateList.end() ; it++) {
+  for (std::list<Object*>::iterator it = _other->priorStateList.begin() ; it!= _other->priorStateList.end() ; it++) {
     priorStateList.push_back(Object::copyObject(*it));
   }
 }
@@ -108,8 +124,24 @@ bool Command::equals(Command* other) {
   return true;
 }
 
-bool Command::compareStamp(Command* c1, Command* c2) {
-  return c1->stamp < c2->stamp;
+
+bool Command::compareStampThenId(Command* c1, Command* c2) {
+  if (c1->stamp != c2->stamp)
+    return c1->stamp < c2->stamp;
+  else
+    return c1->commandId < c2->commandId;
+}
+
+bool Command::compareId(Command* c1, Command* c2) {
+  return c1->commandId < c2->commandId;
+}
+
+bool Command::deleteDups(Command* c1, Command* c2) {
+  if (c1->getId() == c2->getId()) {
+    delete c2;
+    return true;
+  }
+  return false;
 }
 
 void Command::addTarget(ObjectInfo* _obj) {
@@ -151,19 +183,22 @@ void Command::addGroupList(std::list<Group*> _groupList) {
 }
 
 void Command::findGroups() {
+  std::list<Group*> grpSelection;
   if (withGroups)
     return;
   std::list<Group*> allGroups = Group::getGroupsList();
   for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
     for (std::list<Group*>::iterator itgroup = allGroups.begin() ; itgroup != allGroups.end() ; itgroup++) {
       if ((*itgroup)->hasObject(*ittarget)) {
-        groupList.push_back(new Group(*itgroup));
+        grpSelection.push_back(*itgroup);
         break;
       }
     }
   }
-  groupList.sort();
-  groupList.unique();
+  grpSelection.sort();
+  grpSelection.unique();
+  for (std::list<Group*>::iterator it = grpSelection.begin() ; it != grpSelection.end() ; it++)
+    groupList.push_back(new Group(*it));
   withGroups = true;
 }
 
@@ -226,13 +261,16 @@ bool Command::isConservativelyDeliverable() {
   return conservative;
 }
 
-void Command::calculateStamp() {
+void Command::calcStamp(Group* _localGroup) {
   stamp = -1;
+
   for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
     Object* obj = Object::getObjectById((*it)->getId());
-    if (obj == NULL) continue;
-    if (obj->getInfo()->getLastStamp() > stamp)
-      stamp = obj->getInfo()->getLastStamp();
+    if (_localGroup != NULL && !_localGroup->hasObject(*it))
+      continue;
+    if (obj->getInfo()->getClock() > stamp) {
+      stamp = obj->getInfo()->getClock();
+    }
   }
 
 }
@@ -245,10 +283,28 @@ void Command::setStamp(long _stamp) {
   stamp = _stamp;
 }
 
+CommandStage Command::getStage() {
+  return stage;
+}
+
+void Command::setStage(CommandStage _stage) {
+  stage = _stage;
+}
+
+long Command::getId() {
+  return commandId;
+}
+
+void Command::setId(long _id) {
+  commandId = _id;
+}
+
 Message* Command::packToNetwork(Command* _cmd) {
   Message* cmdMsg = new Message();
 
+  cmdMsg->addInt((int) _cmd->commandId);
   cmdMsg->addInt((int) _cmd->getStamp()); // TODO: make this _long_
+  cmdMsg->addInt((int) _cmd->getStage());
 
   cmdMsg->addBool(_cmd->hasContent());
   cmdMsg->addBool(_cmd->knowsTargets());
@@ -268,20 +324,24 @@ Message* Command::packToNetwork(Command* _cmd) {
 Command* Command::unpackFromNetwork(Message* _msg) {
   Command* cmd = new Command();
 
-  cmd->stamp = _msg->getInt(0);
+  int iint = 0;
+  cmd->commandId = _msg->getInt(iint++);
+  cmd->stamp = _msg->getInt(iint++);
+  cmd->stage = (CommandStage) _msg->getInt(iint++);
 
-  cmd->withContent     = _msg->getBool(0);
-  cmd->withTargets     = _msg->getBool(1);
-  cmd->withPriorStates = _msg->getBool(2);
-  cmd->withGroups      = _msg->getBool(3);
-  cmd->optimistic      = _msg->getBool(4);
-  cmd->conservative    = _msg->getBool(5);
+  int ibool = 0;
+  cmd->withContent     = _msg->getBool(ibool++);
+  cmd->withTargets     = _msg->getBool(ibool++);
+  cmd->withPriorStates = _msg->getBool(ibool++);
+  cmd->withGroups      = _msg->getBool(ibool++);
+  cmd->optimistic      = _msg->getBool(ibool++);
+  cmd->conservative    = _msg->getBool(ibool++);
 
-  int msgIndex = 0;
-  if (cmd->withContent)     cmd->commandContent = new Message(_msg->getMessage(msgIndex++));
-  if (cmd->withTargets)     cmd->targetList = ObjectInfo::unpackListFromNetwork(_msg->getMessage(msgIndex++));
-  if (cmd->withPriorStates) cmd->priorStateList = Object::unpackListFromNetwork(_msg->getMessage(msgIndex++));
-  if (cmd->withGroups)      cmd->groupList = Group::unpackListFromNetwork(_msg->getMessage(msgIndex));
+  int imsg = 0;
+  if (cmd->withContent)     cmd->commandContent = new Message(_msg->getMessage(imsg++));
+  if (cmd->withTargets)     cmd->targetList = ObjectInfo::unpackListFromNetwork(_msg->getMessage(imsg++));
+  if (cmd->withPriorStates) cmd->priorStateList = Object::unpackListFromNetwork(_msg->getMessage(imsg++));
+  if (cmd->withGroups)      cmd->groupList = Group::unpackListFromNetwork(_msg->getMessage(imsg));
 
   return cmd;
 }
