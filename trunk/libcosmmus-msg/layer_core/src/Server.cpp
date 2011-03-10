@@ -288,6 +288,7 @@ void Server::fwdOptimisticallyToGroups(Command* _cmd) {
 
 
 void Server::fwdCommandToCoordinator(Command* _cmd) {
+
   OPMessage* cmdOpMsg = new OPMessage();
   cmdOpMsg->setType(CMD_TO_COORD);
   cmdOpMsg->addCommand(new Command(_cmd));
@@ -295,6 +296,7 @@ void Server::fwdCommandToCoordinator(Command* _cmd) {
   groupPeer->sendMessage(packedCmdOpMsg, localGroup->getCoordinator()->getAdress());
   delete packedCmdOpMsg;
   delete cmdOpMsg;
+
 }
 
 

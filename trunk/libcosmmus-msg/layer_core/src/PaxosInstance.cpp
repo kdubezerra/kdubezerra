@@ -64,6 +64,7 @@ void PaxosInstance::flushAll() {
   for (std::list<PaxosInstance*>::iterator it = flushable.begin() ; it != flushable.end() ; it++) {
     flushToDisk(*it);
   }
+  cout << "PaxosInstance::flushToDisk: remaining instances: " << flushableList.size() << endl;
 }
 
 PaxosInstance* PaxosInstance::findInstance(long _seq) {
