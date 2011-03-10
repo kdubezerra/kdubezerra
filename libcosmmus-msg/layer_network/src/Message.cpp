@@ -275,7 +275,7 @@ void Message::buildFromBuffer(char* _buffer) {
   }
   this->arbitraryLength = SDLNet_Read32(bufferpos);
   bufferpos += 4;
-  if (arbitraryLength > 0) {
+  if (arbitraryLength != 0) {
     arbitraryData = new char[arbitraryLength];
     memcpy(arbitraryData, bufferpos, arbitraryLength);
   }
