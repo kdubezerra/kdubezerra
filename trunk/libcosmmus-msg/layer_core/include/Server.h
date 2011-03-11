@@ -59,6 +59,9 @@ class Server : public optpaxos::PaxosLearnerInterface,
     void sendCommand(Command* cmd);
 
   private:
+
+    //*** PRIVATE METHODS ***
+    //=======================
     int tryProposingPendingCommands();
     void handleLearntValue(OPMessage* _learntMsg);
     void sendCommandToClients(Command* _cmd);
@@ -66,6 +69,11 @@ class Server : public optpaxos::PaxosLearnerInterface,
     void fwdCommandToCoordinator(Command* _cmd);
     void handleCommandOneGroup(Command* _cmd);
     void handleCommandMultipleGroups(Command* _cmd);
+    long getWallClockValue();
+    void flushOptCmdQueue();
+
+    //** PRIVATE VARIABLES **
+    //=======================
     Group* localGroup;
     std::map<unsigned long, PaxosInstance*> paxosInstances;
     netwrapper::UnreliablePeer* groupPeer;
@@ -75,7 +83,9 @@ class Server : public optpaxos::PaxosLearnerInterface,
     long lastPaxosInstance;
     long lastCommandId;
     std::list<netwrapper::RemoteFRC*> clientList; // TODO: create a decent client management
-    // TODO: define a way to uniquely identify each server (ip:port?)
+    // TODO: define a way to uniquely identify each server (nodeinfo->id)
+    std::list<Command*> optDeliveryQueue;
+    long waitWindow;
 };
 
 }

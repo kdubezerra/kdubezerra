@@ -53,7 +53,7 @@ PaxosInstance::~PaxosInstance() {
 
 void PaxosInstance::flushToDisk(PaxosInstance* _pi) {
   // TODO: actually should SAVE to disk!
-  cout << "PaxosInstance::flushToDisk: flushing instance " << _pi->instanceSeq << endl;
+  //cout << "PaxosInstance::flushToDisk: flushing instance " << _pi->instanceSeq << endl;
   instancesIndex.erase(_pi->getId());
   flushableList.remove(_pi);
   delete _pi;
@@ -64,7 +64,7 @@ void PaxosInstance::flushAll() {
   for (std::list<PaxosInstance*>::iterator it = flushable.begin() ; it != flushable.end() ; it++) {
     flushToDisk(*it);
   }
-  cout << "PaxosInstance::flushToDisk: remaining instances: " << flushableList.size() << endl;
+  //cout << "PaxosInstance::flushToDisk: remaining instances: " << flushableList.size() << endl;
 }
 
 PaxosInstance* PaxosInstance::findInstance(long _seq) {
@@ -185,7 +185,7 @@ void PaxosInstance::handleAcceptedMessage(OPMessage* _accedMsg) {
     for (std::list<Group*>::iterator it = localInstance->acceptorsGroupsList.begin() ; it != localInstance->acceptorsGroupsList.end() ; it++)
       numAcceptors += (int) (*it)->getServerList().size();
     int mostAcceptors = (numAcceptors + 1) % 2 ? (numAcceptors + 2) / 2 : (numAcceptors + 1) / 2;
-    cout << "PaxosInstance::handleAcceptedMessage: numAcceptors = " << numAcceptors << ", acceptedMsgCounter = " << localInstance->acceptedMsgCounter << endl;
+    //cout << "PaxosInstance::handleAcceptedMessage: numAcceptors = " << numAcceptors << ", acceptedMsgCounter = " << localInstance->acceptedMsgCounter << endl;
     if (localInstance->learnt == false && localInstance->acceptedMsgCounter >= mostAcceptors) { // TODO: fix this to deliver only once
       localInstance->learnt = true;
       callbackLearner->handleLearntValue(localInstance->acceptedValue);
