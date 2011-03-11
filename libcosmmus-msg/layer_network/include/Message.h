@@ -26,6 +26,7 @@ class Message {
     void addChar(char _cvalue);
     void addInt(int _ivalue);
     void addFloat(float _fvalue);
+    void addLong(long _lvalue);
     void addString(const std::string& _svalue);
     void addMessage(Message* _msg);
     void addMessageCopy(Message* _msg);
@@ -42,6 +43,9 @@ class Message {
 
     float getFloat(int _pos);
     int getFloatCount();
+
+    long getLong(int _pos);
+    int getLongCount();
 
     const std::string getString(int _pos);
     int getStringCount();
@@ -61,6 +65,7 @@ class Message {
     std::vector<char> charList;
     std::vector<int> intList;
     std::vector<float> floatList;
+    std::vector<long> longList;
     std::vector<std::string> stringList;
     std::vector<Message*> messageList;
     char* arbitraryData;

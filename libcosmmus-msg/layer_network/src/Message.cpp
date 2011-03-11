@@ -90,6 +90,10 @@ void Message::addFloat(float _fvalue) {
   floatList.push_back(_fvalue);
 }
 
+void Message::addLong(long _lvalue) {
+  longList.push_back(_lvalue);
+}
+
 void Message::addString(const std::string& _svalue) {
   stringList.push_back(_svalue);
 }
@@ -130,6 +134,15 @@ float Message::getFloat(int _pos) {
 
 int Message::getFloatCount() {
   return floatList.size();
+}
+
+long Message::getLong(int _pos) {
+  return longList[_pos];
+}
+
+int Message::getLongCount() {
+  return (int) longList.size();
+
 }
 
 const std::string Message::getString(int _pos) {
@@ -180,6 +193,26 @@ char* Message::getSerializedMessage() {
     SDLNet_Write32(send32, bufferpos);
     bufferpos += 4;
   }
+  // *******************************************************\\ LONG LIST
+  SDLNet_Write32((Uint32) longList.size(), bufferpos);
+  bufferpos += 4;
+  for (std::vector<long>::iterator it = longList.begin() ; it != longList.end() ; it++) {
+    long longData = *it;
+    #if SDL_BYTEORDER == SDL_BIG_ENDIAN
+      int width = LONG_BIT;
+      int i = 0;
+      while (width > 0) {
+        bufferpos[i++] = (longData >> (width = width - 8)) & 0xFF;
+      }
+    #else
+      int width = LONG_BIT;
+      int i = (LONG_BIT / 8) - 1;
+      while (width > 0) {
+        bufferpos[i--] = (longData >> (width = width - 8)) & 0xFF;
+      }
+    #endif
+    bufferpos += 8;
+  }
   // *******************************************************\\ STRING LIST
   SDLNet_Write32((Uint32) stringList.size(), bufferpos);
   bufferpos += 4;
@@ -214,6 +247,7 @@ int Message::getSerializedLength() {
   length += 4 + (int) charList.size();
   length += 4 + 4 * (int) intList.size();
   length += 4 + 4 * (int) floatList.size();
+  length += 4 + 8 * (int) longList.size();
   length += 4;
   for (std::vector<std::string>::iterator it = stringList.begin() ; it != stringList.end() ; it++) {
     length += 4;
@@ -254,6 +288,26 @@ void Message::buildFromBuffer(char* _buffer) {
     Uint32 recvd32 = SDLNet_Read32(bufferpos);
     this->addFloat(*(reinterpret_cast<float*>(&recvd32)));
     bufferpos += 4;
+  }
+  int longCount = SDLNet_Read32(bufferpos);
+  bufferpos += 4;
+  for (int i = 0 ; i < longCount ; i++) {
+    long newLong = 0;
+    #if SDL_BYTEORDER == SDL_BIG_ENDIAN
+      int width = LONG_BIT;
+      int i = 0;
+      while (width > 0) {
+        newLong = newLong | (((Uint8 *)bufferpos)[i++] << (width = width - 8));
+      }
+    #else
+      int width = LONG_BIT;
+      int i = (LONG_BIT / 8) - 1;
+      while (width > 0) {
+        newLong = newLong | (((Uint8 *)bufferpos)[i--] << (width = width - 8));
+      }
+    #endif
+    longList.push_back(newLong);
+    bufferpos += 8;
   }
   int stringCount = SDLNet_Read32(bufferpos);
   bufferpos += 4;

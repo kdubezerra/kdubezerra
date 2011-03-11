@@ -195,12 +195,12 @@ int Server::tryProposingPendingCommands() {
       for (std::list<ObjectInfo*>::iterator itt = cmdTargets.begin() ; itt != cmdTargets.end() ; itt++) {
         Object* obj = Object::getObjectById((*itt)->getId());
 
-        if (obj->getInfo()->getNextStamp() > obj->getInfo()->getClock())
+        if (obj->getInfo()->getNextStamp() > obj->getInfo()->getClock()) //propk must be < or = K
           cmdIsProposable = false;
       }
       if (!cmdIsProposable)
         continue;
-      cout << "Server::tryProposingPendingCommands: command " << (*itc)->getId() << " is proposable" << endl;
+      //cout << "Server::tryProposingPendingCommands: command " << (*itc)->getId() << " is proposable" << endl;
       (*itc)->calcStamp();
       for (std::list<ObjectInfo*>::iterator itt = cmdTargets.begin() ; itt != cmdTargets.end() ; itt++) {
         Object* obj = Object::getObjectById((*itt)->getId());
@@ -237,7 +237,7 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
       std::list<ObjectInfo*> targetList = newCmd->getTargetList();
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());
-        if (obj == NULL) cout << "Server::handleLearntValue: obj = NULL" << endl;
+        if (obj == NULL); //cout << "Server::handleLearntValue: obj = NULL" << endl;
         else {
           obj->enqueueOrUpdate(newCmd);
           obj->getInfo()->setClock(newCmd->getStamp() + 1);
