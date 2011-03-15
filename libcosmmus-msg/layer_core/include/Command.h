@@ -40,7 +40,8 @@ class Command {
     Command(Command* _cmd);
     virtual ~Command();
     bool equals(Command* _other);
-    static bool compareStampThenId(Command* c1, Command* c2);
+    static bool compareLogicalStampThenId(Command* c1, Command* c2);
+    static bool compareTimeStampThenId(Command* c1, Command* c2);
     static bool compareId(Command* c1, Command* c2);
     static bool deleteDups(Command* c1, Command* c2);
 
@@ -77,9 +78,11 @@ class Command {
     void setConservativelyDeliverable(bool _isConsDeliverable);
     bool isConservativelyDeliverable();
 
-    void calcStamp(Group* _localGroup = NULL);
-    long getStamp();
-    void setStamp(long _stamp);
+    void calcLogicalStamp(Group* _localGroup = NULL);
+    long getLogicalStamp();
+    void setLogicalStamp(long _stamp);
+    long getTimeStamp();
+    void setTimeStamp(long _stamp);
 
     CommandStage getStage();
     void setStage(CommandStage _stage);
@@ -103,7 +106,8 @@ class Command {
     bool withContent;
     bool optimistic;
     bool conservative;
-    long stamp;
+    long logicalStamp;
+    long timeStamp;
     long commandId;
     CommandStage stage;
 };

@@ -37,9 +37,13 @@ class Object {
     static void setObjectFactory(ObjectFactory* _factory); // (!) shallow copy of the objectFactory!
     static ObjectFactory* getObjectFactory();
 
-    std::list<Command*> getPendingCommands();
-    void enqueueOrUpdate(Command* _cmd);
-    void tryFlushingCmdQueue(CommandType _type);
+    std::list<Command*> getOptCmdQueue();
+    void enqueueOrUpdateOptQueue(Command* _cmd);
+    void tryFlushingOptQueue();
+
+    std::list<Command*> getConsCmdQueue();
+    void enqueueOrUpdateConsQueue(Command* _cmd);
+    void tryFlushingConsQueue();
 
     static void handleCommand(Command* _cmd);
     static void handleStateUpdate(Object* _state);
@@ -99,7 +103,8 @@ class Object {
   protected:
     ObjectInfo* objectInfo;
     bool waitingForDecision;
-    std::list<Command*> pendingCommandList;
+    std::list<Command*> optCmdQueue;
+    std::list<Command*> consCmdQueue;
     static std::map<int, Object*> objectIndex;
     static ObjectFactory* objectFactory;
 };

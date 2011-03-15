@@ -18,7 +18,7 @@ using namespace netwrapper;
 
 Command::Command() {
   commandContent = NULL;
-  commandId = stamp = -1;
+  commandId = logicalStamp = -1;
   stage = PROPOSING_LOCAL;
   withTargets = false;
   withGroups = false;
@@ -31,7 +31,7 @@ Command::Command() {
 Command::Command(long _id) {
   commandId = _id;
   commandContent = NULL;
-  commandId = stamp = -1;
+  commandId = logicalStamp = -1;
   stage = PROPOSING_LOCAL;
   withTargets = false;
   withGroups = false;
@@ -47,7 +47,7 @@ Command::Command(Command* _other) {
   else
     commandContent = NULL;
   commandId = _other->commandId;
-  stamp = _other->stamp;
+  logicalStamp = _other->logicalStamp;
   stage = _other->stage;
   withTargets = _other->withTargets;
   withGroups = _other->withGroups;
@@ -125,9 +125,16 @@ bool Command::equals(Command* other) {
 }
 
 
-bool Command::compareStampThenId(Command* c1, Command* c2) {
-  if (c1->stamp != c2->stamp)
-    return c1->stamp < c2->stamp;
+bool Command::compareLogicalStampThenId(Command* c1, Command* c2) {
+  if (c1->logicalStamp != c2->logicalStamp)
+    return c1->logicalStamp < c2->logicalStamp;
+  else
+    return c1->commandId < c2->commandId;
+}
+
+bool Command::compareTimeStampThenId(Command* c1, Command* c2) {
+  if (c1->timeStamp != c2->timeStamp)
+    return c1->timeStamp < c2->timeStamp;
   else
     return c1->commandId < c2->commandId;
 }
@@ -261,26 +268,34 @@ bool Command::isConservativelyDeliverable() {
   return conservative;
 }
 
-void Command::calcStamp(Group* _localGroup) {
-  stamp = -1;
+void Command::calcLogicalStamp(Group* _localGroup) {
+  logicalStamp = -1;
 
   for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
     Object* obj = Object::getObjectById((*it)->getId());
     if (_localGroup != NULL && !_localGroup->hasObject(*it))
       continue;
-    if (obj->getInfo()->getClock() > stamp) {
-      stamp = obj->getInfo()->getClock();
+    if (obj->getInfo()->getClock() > logicalStamp) {
+      logicalStamp = obj->getInfo()->getClock();
     }
   }
 
 }
 
-long Command::getStamp() {
-  return stamp;
+long Command::getLogicalStamp() {
+  return logicalStamp;
 }
 
-void Command::setStamp(long _stamp) {
-  stamp = _stamp;
+void Command::setLogicalStamp(long _stamp) {
+  logicalStamp = _stamp;
+}
+
+long Command::getTimeStamp() {
+  return timeStamp;
+}
+
+void Command::setTimeStamp(long _stamp) {
+  timeStamp = _stamp;
 }
 
 CommandStage Command::getStage() {
@@ -303,8 +318,10 @@ Message* Command::packToNetwork(Command* _cmd) {
   Message* cmdMsg = new Message();
 
   cmdMsg->addInt((int) _cmd->commandId);
-  cmdMsg->addInt((int) _cmd->getStamp()); // TODO: make this _long_
-  cmdMsg->addInt((int) _cmd->getStage());
+  cmdMsg->addInt((int) _cmd->logicalStamp); // TODO: make this _long_
+  cmdMsg->addInt((int) _cmd->stage);
+
+  cmdMsg->addLong(_cmd->timeStamp);
 
   cmdMsg->addBool(_cmd->hasContent());
   cmdMsg->addBool(_cmd->knowsTargets());
@@ -326,8 +343,11 @@ Command* Command::unpackFromNetwork(Message* _msg) {
 
   int iint = 0;
   cmd->commandId = _msg->getInt(iint++);
-  cmd->stamp = _msg->getInt(iint++);
+  cmd->logicalStamp = _msg->getInt(iint++);
   cmd->stage = (CommandStage) _msg->getInt(iint++);
+
+  int ilong = 0;
+  cmd->timeStamp = _msg->getLong(ilong++);
 
   int ibool = 0;
   cmd->withContent     = _msg->getBool(ibool++);
