@@ -60,18 +60,23 @@ class Server : public optpaxos::PaxosLearnerInterface,
 
   private:
 
+    //=======================
     //*** PRIVATE METHODS ***
     //=======================
     int tryProposingPendingCommands();
     void handleLearntValue(OPMessage* _learntMsg);
-    void sendCommandToClients(Command* _cmd);
-    void fwdOptimisticallyToGroups(Command* _cmd);
+    void sendCommandToClients(Command* _cmd, CommandType _cmdType);
+    void fwdCommandOptimistically(Command* _cmd);
     void fwdCommandToCoordinator(Command* _cmd);
     void handleCommandOneGroup(Command* _cmd);
     void handleCommandMultipleGroups(Command* _cmd);
-    long getWallClockValue();
+    long getTime();
+    void enqueueOptCmd();
     void flushOptCmdQueue();
+    //=======================
 
+
+    //=======================
     //** PRIVATE VARIABLES **
     //=======================
     Group* localGroup;
@@ -86,6 +91,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     // TODO: define a way to uniquely identify each server (nodeinfo->id)
     std::list<Command*> optDeliveryQueue;
     long waitWindow;
+    //=======================
 };
 
 }

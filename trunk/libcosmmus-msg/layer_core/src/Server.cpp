@@ -6,6 +6,8 @@
  */
 
 #include <iostream>
+#include <sys/time.h>
+#include <time.h>
 #include "../include/Command.h"
 #include "../include/Group.h"
 #include "../include/NodeInfo.h"
@@ -28,7 +30,7 @@ Server::Server() {
   groupPeer->setCallbackInterface(this);
   callbackServer = NULL;
   //nodeInfo = NULL;
-  lastCommandId = lastPaxosInstance = 0;
+  waitWindow = lastCommandId = lastPaxosInstance = 0;
   PaxosInstance::setLearner(this);
 }
 
@@ -107,7 +109,7 @@ void Server::handleClientMessage(Message* _msg) {
     case CLIENT_CMD : {
       Command* clientCommand = clientMessage->getCommandList().front();
       if (clientCommand->knowsGroups() == false) clientCommand->findGroups();
-      // TODO: fwdOptimisticallyToGroups(clientCommand);
+      fwdCommandOptimistically(clientCommand);
       fwdCommandToCoordinator(clientCommand);
       break;
     }
@@ -126,23 +128,34 @@ void Server::handlePeerMessage(Message* _msg) {
 
   switch (peerMessage->getType()) {
 
-    case CMD_OPT :
+    case CMD_OPT : {
+      Command* cmd = peerMessage->getCommandList().front();
+      if (cmd->knowsGroups() == false) cmd->findGroups();
+      if (cmd->getGroupList().size() == 1) {
+        cmd->setOptimisticallyDeliverable(false);
+        if (waitWindow < getTime() - cmd->getTimeStamp()) {
+          waitWindow = getTime() - cmd->getTimeStamp();
+          cout << "Server::handlePeerMessage: waitWindow increased to " << waitWindow << endl;
+        }
+        enqueueOptCmd(cmd);
+      }
       break;
+    }
 
     case CMD_TO_COORD : {
       OPMessage* cmdMessage = peerMessage;
       Command* cmd = cmdMessage->getCommandList().front();
-      cmd->setId(++lastCommandId * GRP_ID_LEN + (long) localGroup->getId()); // TODO: maybe this is not the best place to set an id for the command
+      //cmd->setId(++lastCommandId * GRP_ID_LEN + (long) localGroup->getId()); // TODO: maybe this is not the best place to set an id for the command
       if (cmd->knowsGroups() == false) cmd->findGroups();
       //TODO: if(cmd->knowsTargets() == false) do something about it.
       if (cmd->getGroupList().size() == 1) {
         cmd->setConservativelyDeliverable(false);
         cmd->setStage(PROPOSING_LOCAL);
-        cmd->calcStamp();
+        cmd->calcLogicalStamp();
         std::list<ObjectInfo*> targetList = cmd->getTargetList();
         for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
           Object* obj = Object::getObjectById((*it)->getId());
-          obj->enqueueOrUpdate(cmd);
+          obj->enqueueOrUpdateConsQueue(cmd);
         }
         while(tryProposingPendingCommands() > 0);
       }
@@ -171,9 +184,11 @@ void Server::handlePeerMessage(Message* _msg) {
 }
 
 
-void Server::sendCommand(Command* cmd) {
+void Server::sendCommand(Command* cmd, long _clSeq, int _clId) {
   if (cmd->knowsGroups() == false) cmd->findGroups();
-  // TODO: fwdOptimisticallyToGroups(clientCommand);
+  // TODO: the client is supposed to assign a sequence # to its message... the server just makes it unique appending the client's id
+  cmd->setId(_clSeq * 1000 + _clid);
+  fwdCommandOptimistically(cmd);
   fwdCommandToCoordinator(cmd);
 }
 
@@ -186,7 +201,7 @@ int Server::tryProposingPendingCommands() {
   std::list<ObjectInfo*> localObjects = localGroup->getObjectsList();
   for (std::list<ObjectInfo*>::iterator ito = localObjects.begin() ; ito != localObjects.end() ; ito++) {
     Object* obj = Object::getObjectById((*ito)->getId());
-    std::list<Command*> objCmds = obj->getPendingCommands();
+    std::list<Command*> objCmds = obj->getConsCmdQueue();
     for (std::list<Command*>::iterator itc = objCmds.begin() ; itc != objCmds.end() ; itc++) {
       if ((*itc)->getStage() != PROPOSING_LOCAL && (*itc)->getStage() != UPDATING_CLOCK)
         continue;
@@ -201,10 +216,10 @@ int Server::tryProposingPendingCommands() {
       if (!cmdIsProposable)
         continue;
       //cout << "Server::tryProposingPendingCommands: command " << (*itc)->getId() << " is proposable" << endl;
-      (*itc)->calcStamp();
+      (*itc)->calcLogicalStamp();
       for (std::list<ObjectInfo*>::iterator itt = cmdTargets.begin() ; itt != cmdTargets.end() ; itt++) {
         Object* obj = Object::getObjectById((*itt)->getId());
-        obj->getInfo()->setNextStamp((*itc)->getStamp() + 1);
+        obj->getInfo()->setNextStamp((*itc)->getLogicalStamp() + 1);
       }
       if ((*itc)->getGroupList().size() == 1) {
         PaxosInstance* pxInstance = new PaxosInstance(++lastPaxosInstance * GRP_ID_LEN + (long) localGroup->getId());
@@ -231,21 +246,21 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
     case CMD_ONE_GROUP_CONSERVATIVE : {
       Command* newCmd = _learntMsg->getCommandList().front();
       newCmd->setConservativelyDeliverable(true);
-      newCmd->calcStamp(); //m.ts <- max(k), Oi in m's targets
+      newCmd->calcLogicalStamp(); //m.ts <- max(k), Oi in m's targets
       newCmd->setStage(DELIVERABLE); //m.stage = s3
-      sendCommandToClients(newCmd);
+      sendCommandToClients(newCmd, CONSERVATIVE);
       std::list<ObjectInfo*> targetList = newCmd->getTargetList();
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());
         if (obj == NULL); //cout << "Server::handleLearntValue: obj = NULL" << endl;
         else {
-          obj->enqueueOrUpdate(newCmd);
-          obj->getInfo()->setClock(newCmd->getStamp() + 1);
+          obj->enqueueOrUpdateConsQueue(newCmd);
+          obj->getInfo()->setClock(newCmd->getLogicalStamp() + 1);
         }
       }
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());
-        obj->tryFlushingCmdQueue(CONSERVATIVE);
+        obj->tryFlushingConsQueue();
       }
       break;
     }
@@ -255,10 +270,21 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
 }
 
 
-void Server::sendCommandToClients(Command* _cmd) {
+void Server::sendCommandToClients(Command* _cmd, CommandType _cmdType) {
   // TODO : control subscribers of each command, so that some bandwidth can be saved
   OPMessage* cmdMsg = new OPMessage();
-  cmdMsg->setType(CMD_ONE_GROUP_CONSERVATIVE);
+  if (_cmdType == OPTIMISTIC) {
+    if (_cmd->getGroupList().size() == 1)
+      cmdMsg->setType(CMD_ONE_GROUP_OPTIMISTIC);
+    else
+      cmdMsg->setType(CMD_MULTI_GROUP_OPTIMISTIC);
+  }
+  else if (_cmdType == CONSERVATIVE) {
+    if (_cmd->getGroupList().size() == 1)
+      cmdMsg->setType(CMD_ONE_GROUP_CONSERVATIVE);
+    else
+      cmdMsg->setType(CMD_MULTI_GROUP_CONSERVATIVE);
+  }
   cmdMsg->addCommand(new Command(_cmd));
   Message* packedCmdMsg = OPMessage::packToNetwork(cmdMsg);
   for (std::list<netwrapper::RemoteFRC*>::iterator it = clientList.begin() ; it != clientList.end() ; it++) {
@@ -269,8 +295,8 @@ void Server::sendCommandToClients(Command* _cmd) {
 }
 
 
-void Server::fwdOptimisticallyToGroups(Command* _cmd) {
-  // TODO: _cmd->setTimestamp(now + delay(this, coordinator))
+void Server::fwdCommandOptimistically(Command* _cmd) {
+  _cmd->setTimestamp(getTime()); // should be more like _cmd->setTimestamp(now + delay(this, coordinator))
   OPMessage* cmdOpMsg = new OPMessage();
   cmdOpMsg->setType(CMD_OPT);
   cmdOpMsg->addCommand(new Command(_cmd));
@@ -319,7 +345,7 @@ void Server::handleCommandMultipleGroups(Command* _cmd) {
   /**
    1) send command to coordinator;
    2) coordinator fwd's the command to each coordinator of the groups
-   3...) each coordinator [finds the targets of the command and], based on the command's targets defines a stamp proposal for the command and ...
+   3...) each coordinator [finds the targets of the command and], based on the command's targets defines a logicalStamp proposal for the command and ...
    PaxosBCast(command + proposal, _group, _group1 + _group2 + ... + _groupN) {
      ...3) ...sends to its local group's members
         4) when each member of the group receives the proposal, it sends an accept to ALL servers involved (s : s /in g1, g2, ..., gn)
@@ -334,4 +360,48 @@ void Server::handleCommandMultipleGroups(Command* _cmd) {
      }
   ...6.2) and, then, delivers the command.
   **/
+}
+
+
+long Server::getTime() {
+  struct timeval tv;
+  long timems;
+  gettimeofday(&tv, NULL);
+  timems = (tv.tv_sec - 1300196465)*1000 + (tv.tv_usec / 1000);
+  return timems;
+}
+
+
+void Server::enqueueOptCmd(Command* _cmd) {
+  for (std::list<Command*>::iterator it = optDeliveryQueue.begin() ; it != optDeliveryQueue.end() ; opt++)
+    if (_cmd->getId() == (*it)->getId()) {
+      delete *it;
+      optDeliveryQueue.erase(it);
+      break;
+    }
+
+  optDeliveryQueue.push_back(new Command(_cmd));
+  optDeliveryQueue.sort(Command::compareTimeStampThenId());
+}
+
+
+void Server::flushOptCmdQueue() {
+  std::list<Command*> optQCopy = optDeliveryQueue;
+  for (std::list<Command*>::iterator itc = optQCopy.begin() ; itc != optQCopy.end() ; itc++) {
+    if (getTime() - (*itc)->getTimeStamp() > waitWindow) {
+      std::list<ObjectInfo*> targetList = (*itc)->getTargetList();
+      sendCommandToClients(*itc, OPTIMISTIC);
+      for (std::list<ObjectInfo*>::iterator itt = targetList.begin() ; itt != targetList.end() ; itt++) {
+        Object* obj = Object::getObjectById((*itt)->getId());
+        obj->enqueueOrUpdateOptQueue(*itc);
+      }
+      delete optDeliveryQueue.front();
+      optDeliveryQueue.pop_front();
+      for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
+        Object* obj = Object::getObjectById((*it)->getId());
+        obj->tryFlushingOptQueue();
+      }
+    }
+    else break;
+  }
 }

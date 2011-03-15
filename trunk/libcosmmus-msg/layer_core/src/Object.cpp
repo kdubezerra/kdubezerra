@@ -18,15 +18,18 @@ using namespace netwrapper;
 std::map<int, Object*> Object::objectIndex;
 ObjectFactory* Object::objectFactory = NULL;
 
+
 Object::Object() {
   objectInfo = NULL;
   waitingForDecision = false;
 }
 
+
 Object::Object(Object* _other) {
   objectInfo = new ObjectInfo(_other->objectInfo);
   waitingForDecision = false;
 }
+
 
 Object::Object(int _id) {
   objectInfo = new ObjectInfo();
@@ -35,13 +38,15 @@ Object::Object(int _id) {
   waitingForDecision = false;
 }
 
+
 Object::~Object() {
   if (objectInfo != NULL)
     delete objectInfo;
 
-  for (std::list<Command*>::iterator it = pendingCommandList.begin() ; it != pendingCommandList.end() ; it++)
+  for (std::list<Command*>::iterator it = consCmdQueue.begin() ; it != consCmdQueue.end() ; it++)
     delete *it;
 }
+
 
 bool Object::equals(Object* _other) {
   if (this->objectInfo->getId() != _other->objectInfo->getId())
@@ -50,15 +55,18 @@ bool Object::equals(Object* _other) {
   return true;
 }
 
+
 ObjectInfo* Object::getInfo() {
   return objectInfo;
 }
+
 
 void Object::setInfo(ObjectInfo* _objInfo) {
   if (objectInfo != NULL)
     delete objectInfo;
   objectInfo = new ObjectInfo(_objInfo);
 }
+
 
 Object* Object::getObjectById(int _id) {
   std::map<int, Object*>::iterator finder = objectIndex.find(_id);
@@ -68,52 +76,117 @@ Object* Object::getObjectById(int _id) {
     return NULL;
 }
 
+
 void Object::indexObject(Object* _obj) {
   objectIndex[_obj->getInfo()->getId()] = _obj;
 }
+
 
 void Object::setObjectFactory(ObjectFactory* _factory) {
   objectFactory = _factory;
 }
 
+
 ObjectFactory* Object::getObjectFactory() {
   return objectFactory;
 }
 
-std::list<Command*> Object::getPendingCommands() {
-  return pendingCommandList;
+
+std::list<Command*> Object::getOptCmdQueue() {
+  return optCmdQueue;
 }
 
-void Object::enqueueOrUpdate(Command* _cmd) {
-  for (std::list<Command*>::iterator it = pendingCommandList.begin() ; it != pendingCommandList.end() ; it++)
+
+void Object::enqueueOrUpdateOptQueue(Command* _cmd) {
+  for (std::list<Command*>::iterator it = optCmdQueue.begin() ; it != optCmdQueue.end() ; it++)
     if ((*it)->getId() == _cmd->getId()) {
       delete *it;
-      pendingCommandList.erase(it);
+      optCmdQueue.erase(it);
       break;
     }
 
-  pendingCommandList.push_back(new Command(_cmd));
-  pendingCommandList.sort(Command::compareStampThenId);
+  optCmdQueue.push_back(new Command(_cmd));
+  optCmdQueue.sort(Command::compareTimeStampThenId);
 }
 
-void Object::tryFlushingCmdQueue(CommandType _type) { // TODO: seria melhor checar se o comando na frente da fila é o mesmo (e nao se o laststamp é o mesmo)
-  pendingCommandList.sort(Command::compareStampThenId);
-  if (pendingCommandList.empty()) {
-    //cout << "Object::tryFlushingCmdQueue: command queue of object " << this->getInfo()->getId() << " is CLEAR." << endl;
+
+void Object::tryFlushingOptQueue() {
+  if (optCmdQueue.empty()) {
+    cout << "Object::tryFlushingOptQueue: opt command queue of object " << this->getInfo()->getId() << " is CLEAR." << endl;
     return;
   }
   else {
-    //cout << "Object::tryFlushingCmdQueue: command queue of object " << this->getInfo()->getId() << " has " << (int) pendingCommandList.size() << " elements." << endl;
+    cout << "Object::tryFlushingOptQueue: opt command queue of object " << this->getInfo()->getId() << " has " << (int) optCmdQueue.size() << " elements." << endl;
   }
-  Command* nextCmd = new Command(pendingCommandList.front());
+  Command* nextCmd = new Command(optCmdQueue.front());
+
+  std::list<ObjectInfo*> targetList = nextCmd->getTargetList();
+
+  bool allObjsReady = true;
+
+  for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
+    Object* obj = Object::getObjectById((*ittarget)->getId());
+    if (obj->optCmdQueue.front()->getId() != nextCmd->getId()) {
+      allObjsReady = false;
+      break;
+    }
+  }
+
+  if (allObjsReady) {
+    cout << "Object::tryFlushingOptQueue: command " << nextCmd->getId() << " delivered (OPT) to object " << this->getInfo()->getId() << endl;
+    for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
+      Object* obj = Object::getObjectById((*ittarget)->getId());
+      obj->handleOptimisticDelivery(nextCmd);
+      delete obj->optCmdQueue.front();
+      obj->optCmdQueue.pop_front();
+    }
+
+    for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
+      Object* obj = Object::getObjectById((*ittarget)->getId());
+      obj->tryFlushingOptQueue();
+    }
+  }
+
+  delete nextCmd;
+}
+
+
+std::list<Command*> Object::getConsCmdQueue() {
+  return consCmdQueue;
+}
+
+
+void Object::enqueueOrUpdateConsQueue(Command* _cmd) {
+  for (std::list<Command*>::iterator it = consCmdQueue.begin() ; it != consCmdQueue.end() ; it++)
+    if ((*it)->getId() == _cmd->getId()) {
+      delete *it;
+      consCmdQueue.erase(it);
+      break;
+    }
+
+  consCmdQueue.push_back(new Command(_cmd));
+  consCmdQueue.sort(Command::compareLogicalStampThenId);
+}
+
+
+void Object::tryFlushingConsQueue() { // TODO: seria melhor checar se o comando na frente da fila é o mesmo (e nao se o laststamp é o mesmo)
+  consCmdQueue.sort(Command::compareLogicalStampThenId);
+  if (consCmdQueue.empty()) {
+    //cout << "Object::tryFlushingConsQueue: command queue of object " << this->getInfo()->getId() << " is CLEAR." << endl;
+    return;
+  }
+  else {
+    //cout << "Object::tryFlushingConsQueue: command queue of object " << this->getInfo()->getId() << " has " << (int) consCmdQueue.size() << " elements." << endl;
+  }
+  Command* nextCmd = new Command(consCmdQueue.front());
 
   if (nextCmd->getStage() != DELIVERABLE) {
-    for (std::list<Command*>::iterator it = pendingCommandList.begin() ; it != pendingCommandList.end() ; it++) {
-      //cout << "Object::tryFlushingCmdQueue: command " << (*it)->getId() << " has stamp " << (*it)->getStamp();
+    for (std::list<Command*>::iterator it = consCmdQueue.begin() ; it != consCmdQueue.end() ; it++) {
+      //cout << "Object::tryFlushingConsQueue: command " << (*it)->getId() << " has logicalStamp " << (*it)->getLogicalStamp();
       //if ((*it)->getStage() == DELIVERABLE) cout << " and is DELIVERABLE\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*";
       //cout << endl;
     }
-    //cout << "Object::tryFlushingCmdQueue: first command of object " << this->getInfo()->getId() << " is not deliverable yet." << endl;
+    //cout << "Object::tryFlushingConsQueue: first command of object " << this->getInfo()->getId() << " is not deliverable yet." << endl;
 
     delete nextCmd;
     return;
@@ -124,32 +197,33 @@ void Object::tryFlushingCmdQueue(CommandType _type) { // TODO: seria melhor chec
 
   for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
     Object* obj = Object::getObjectById((*ittarget)->getId());
-    if (obj->getPendingCommands().front()->getId() != nextCmd->getId()) {
+    if (obj->getConsCmdQueue().front()->getId() != nextCmd->getId()) {
       allObjsReady = false;
       break;
     }
   }
 
   if (allObjsReady) {
-    //cout << "Object::tryFlushingCmdQueue: command " << nextCmd->getId() << " delivered to object " << this->getInfo()->getId() << endl;
+    //cout << "Object::tryFlushingConsQueue: command " << nextCmd->getId() << " delivered to object " << this->getInfo()->getId() << endl;
     for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
       Object* obj = Object::getObjectById((*ittarget)->getId());
       obj->handleConservativeDelivery(nextCmd);
-      obj->objectInfo->setLastStamp(nextCmd->getStamp());
-      delete obj->pendingCommandList.front();
-      obj->pendingCommandList.pop_front();
-      //cout << "Object::tryFlushingCmdQueue: deleted command and removed from the queue of object " << obj->getInfo()->getId() << endl;
+      obj->objectInfo->setLastStamp(nextCmd->getLogicalStamp());
+      delete obj->consCmdQueue.front();
+      obj->consCmdQueue.pop_front();
+      //cout << "Object::tryFlushingConsQueue: deleted command and removed from the queue of object " << obj->getInfo()->getId() << endl;
     }
 
     for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
       Object* obj = Object::getObjectById((*ittarget)->getId());
-      obj->tryFlushingCmdQueue(CONSERVATIVE);
+      obj->tryFlushingConsQueue();
     }
   }
 
   delete nextCmd;
 
 }
+
 
 /*!
  * \brief This method is responsible for listing the objects affected by the command. Also,
@@ -183,13 +257,16 @@ void Object::handleCommand(Command* _cmd) {
   }
 }
 
+
 Object* Object::createObject() {
     return objectFactory->createObject();
 }
 
+
 Object* Object::copyObject(Object* _other) {
     return objectFactory->copyObject(_other);
 }
+
 
 Message* Object::packToNetwork(Object* _obj) {
   Message* msg = new Message();
@@ -197,6 +274,7 @@ Message* Object::packToNetwork(Object* _obj) {
   msg->addMessage(ObjectInfo::packToNetwork(_obj->objectInfo));
   return msg;
 }
+
 
 Message* Object::packListToNetwork(std::list<Object*> _objList) {
   Message* objListMsg = new Message();
@@ -208,12 +286,14 @@ Message* Object::packListToNetwork(std::list<Object*> _objList) {
   return objListMsg;
 }
 
+
 Object* Object::unpackFromNetwork(Message* _msg) {
   Object* obj;
   obj = objectFactory->unpackFromNetwork(_msg->getMessage(0));
   obj->objectInfo = ObjectInfo::unpackFromNetwork(_msg->getMessage(1));
   return obj;
 }
+
 
 std::list<Object*> Object::unpackListFromNetwork(Message* _msg) {
   std::list<Object*> objList;
