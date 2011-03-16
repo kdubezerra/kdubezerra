@@ -56,7 +56,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     virtual void handleOptimisticDelivery(Command* _cmd) = 0;
 
     //debug purposes: the server itself creates a msg
-    void sendCommand(Command* cmd);
+    void sendCommand(Command* cmd, long _clSeq, int _clId);
 
   private:
 
@@ -71,7 +71,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     void handleCommandOneGroup(Command* _cmd);
     void handleCommandMultipleGroups(Command* _cmd);
     long getTime();
-    void enqueueOptCmd();
+    void enqueueOptCmd(Command* _cmd);
     void flushOptCmdQueue();
     //=======================
 
