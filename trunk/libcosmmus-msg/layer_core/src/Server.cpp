@@ -30,7 +30,8 @@ Server::Server() {
   groupPeer->setCallbackInterface(this);
   callbackServer = NULL;
   //nodeInfo = NULL;
-  waitWindow = lastCommandId = lastPaxosInstance = 0;
+  lastCommandId = lastPaxosInstance = 0;
+  waitWindow = 10;
   PaxosInstance::setLearner(this);
 }
 
@@ -187,7 +188,7 @@ void Server::handlePeerMessage(Message* _msg) {
 void Server::sendCommand(Command* cmd, long _clSeq, int _clId) {
   if (cmd->knowsGroups() == false) cmd->findGroups();
   // TODO: the client is supposed to assign a sequence # to its message... the server just makes it unique appending the client's id
-  cmd->setId(_clSeq * 1000 + _clid);
+  cmd->setId(_clSeq * 1000 + _clId);
   fwdCommandOptimistically(cmd);
   fwdCommandToCoordinator(cmd);
 }
@@ -296,7 +297,7 @@ void Server::sendCommandToClients(Command* _cmd, CommandType _cmdType) {
 
 
 void Server::fwdCommandOptimistically(Command* _cmd) {
-  _cmd->setTimestamp(getTime()); // should be more like _cmd->setTimestamp(now + delay(this, coordinator))
+  _cmd->setTimeStamp(getTime()); // should be more like _cmd->setTimestamp(now + delay(this, coordinator))
   OPMessage* cmdOpMsg = new OPMessage();
   cmdOpMsg->setType(CMD_OPT);
   cmdOpMsg->addCommand(new Command(_cmd));
@@ -373,7 +374,7 @@ long Server::getTime() {
 
 
 void Server::enqueueOptCmd(Command* _cmd) {
-  for (std::list<Command*>::iterator it = optDeliveryQueue.begin() ; it != optDeliveryQueue.end() ; opt++)
+  for (std::list<Command*>::iterator it = optDeliveryQueue.begin() ; it != optDeliveryQueue.end() ; it++)
     if (_cmd->getId() == (*it)->getId()) {
       delete *it;
       optDeliveryQueue.erase(it);
@@ -381,7 +382,7 @@ void Server::enqueueOptCmd(Command* _cmd) {
     }
 
   optDeliveryQueue.push_back(new Command(_cmd));
-  optDeliveryQueue.sort(Command::compareTimeStampThenId());
+  optDeliveryQueue.sort(Command::compareTimeStampThenId);
 }
 
 
@@ -395,12 +396,12 @@ void Server::flushOptCmdQueue() {
         Object* obj = Object::getObjectById((*itt)->getId());
         obj->enqueueOrUpdateOptQueue(*itc);
       }
-      delete optDeliveryQueue.front();
-      optDeliveryQueue.pop_front();
-      for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
-        Object* obj = Object::getObjectById((*it)->getId());
+      for (std::list<ObjectInfo*>::iterator itt = targetList.begin() ; itt != targetList.end() ; itt++) {
+        Object* obj = Object::getObjectById((*itt)->getId());
         obj->tryFlushingOptQueue();
       }
+      delete optDeliveryQueue.front();
+      optDeliveryQueue.pop_front();
     }
     else break;
   }

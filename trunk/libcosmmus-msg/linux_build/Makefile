@@ -33,16 +33,19 @@ release: $(RELEASE_DIR)/libcosmmus-msg.a
 debug: $(DEBUG_DIR)/libcosmmus-msg.a
 
 
-
+  
 
 ##########################
 # RELEASE BUILD OF THE LIB
 ##########################
 
-$(CORE_RELEASE_DIR)/%.o: $(CORE_SRCDIR)/%.cpp
+release_tree:
+	mkdir -p $(RELEASE_DIR) $(CORE_RELEASE_DIR) $(NET_RELEASE_DIR)
+
+$(CORE_RELEASE_DIR)/%.o: $(CORE_SRCDIR)/%.cpp | release_tree
 	$(CC) -c $(RELEASEFLAGS) -o $@ $<
 
-$(NET_RELEASE_DIR)/%.o: $(NET_SRCDIR)/%.cpp
+$(NET_RELEASE_DIR)/%.o: $(NET_SRCDIR)/%.cpp | release_tree
 	$(CC) -c $(RELEASEFLAGS) -o $@ $<
 
 $(RELEASE_DIR)/libcosmmus-msg.a: $(RELEASEOBJ)
@@ -55,10 +58,13 @@ $(RELEASE_DIR)/libcosmmus-msg.a: $(RELEASEOBJ)
 #  DEBUG BUILD OF THE LIB
 ##########################
 
-$(CORE_DEBUG_DIR)/%.o: $(CORE_SRCDIR)/%.cpp
+debug_tree:
+	mkdir -p $(DEBUG_DIR) $(CORE_DEBUG_DIR) $(NET_DEBUG_DIR)
+
+$(CORE_DEBUG_DIR)/%.o: $(CORE_SRCDIR)/%.cpp | debug_tree
 	$(CC) -c $(DEBUGFLAGS) -o $@ $<
 
-$(NET_DEBUG_DIR)/%.o: $(NET_SRCDIR)/%.cpp
+$(NET_DEBUG_DIR)/%.o: $(NET_SRCDIR)/%.cpp | debug_tree
 	$(CC) -c $(DEBUGFLAGS) -o $@ $<
 
 $(DEBUG_DIR)/libcosmmus-msg.a: $(DEBUGOBJ)
@@ -67,5 +73,5 @@ $(DEBUG_DIR)/libcosmmus-msg.a: $(DEBUGOBJ)
 .PHONY: clean
 
 clean:
-	rm -f $(CORE_RELEASE_DIR)/* $(NET_RELEASE_DIR)/* $(RELEASE_DIR)/* $(CORE_DEBUG_DIR)/* $(NET_DEBUG_DIR)/* $(DEBUG_DIR)/* *~
+	rm -rf $(RELEASE_DIR) $(DEBUG_DIR) ./*~
 
