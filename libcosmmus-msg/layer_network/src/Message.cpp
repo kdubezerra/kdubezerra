@@ -294,14 +294,14 @@ void Message::buildFromBuffer(char* _buffer) {
   for (int i = 0 ; i < longCount ; i++) {
     long newLong = 0;
     #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-      int width = LONG_BIT;
+      int width = 64;
       int i = 0;
       while (width > 0) {
         newLong = newLong | (((Uint8 *)bufferpos)[i++] << (width = width - 8));
       }
     #else
-      int width = LONG_BIT;
-      int i = (LONG_BIT / 8) - 1;
+      int width = 64;
+      int i = (width / 8) - 1;
       while (width > 0) {
         newLong = newLong | (((Uint8 *)bufferpos)[i--] << (width = width - 8));
       }
