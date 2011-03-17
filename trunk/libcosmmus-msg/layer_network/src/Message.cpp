@@ -5,11 +5,12 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
-//#include <iostream>
+#include <iostream>
 #include <SDL/SDL_net.h>
 
 #include "../include/Message.h"
 
+using namespace std;
 using namespace netwrapper;
 
 Message::Message() {
@@ -137,12 +138,12 @@ int Message::getFloatCount() {
 }
 
 long Message::getLong(int _pos) {
+  cout << "Message::getLong -> trying to get a long int in position " << _pos << ", from a list with " << longList.size() << " elements." << endl;
   return longList[_pos];
 }
 
 int Message::getLongCount() {
-  return (int) longList.size();
-
+  return longList.size();
 }
 
 const std::string Message::getString(int _pos) {
@@ -198,19 +199,7 @@ char* Message::getSerializedMessage() {
   bufferpos += 4;
   for (std::vector<long>::iterator it = longList.begin() ; it != longList.end() ; it++) {
     long longData = *it;
-    #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-      int width = 64;
-      int i = 0;
-      while (width > 0) {
-        bufferpos[i++] = (longData >> (width = width - 8)) & 0xFF;
-      }
-    #else
-      int width = 64;
-      int i = (width / 8) - 1;
-      while (width > 0) {
-        bufferpos[i--] = (longData >> (width = width - 8)) & 0xFF;
-      }
-    #endif
+    memcpy(bufferpos, &longData, 8);
     bufferpos += 8;
   }
   // *******************************************************\\ STRING LIST
@@ -250,9 +239,8 @@ int Message::getSerializedLength() {
   length += 4 + 8 * (int) longList.size();
   length += 4;
   for (std::vector<std::string>::iterator it = stringList.begin() ; it != stringList.end() ; it++) {
-    length += 4;
-    length += (int) it->size();
-    length++;
+    length += 4; // string's length
+    length += 1 + (int) it->size(); // number of characters (bytes) + '\0'
   }
   length += 4 + arbitraryLength;
   length += 4;
@@ -293,20 +281,8 @@ void Message::buildFromBuffer(char* _buffer) {
   bufferpos += 4;
   for (int i = 0 ; i < longCount ; i++) {
     long newLong = 0;
-    #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-      int width = 64;
-      int i = 0;
-      while (width > 0) {
-        newLong = newLong | (((Uint8 *)bufferpos)[i++] << (width = width - 8));
-      }
-    #else
-      int width = 64;
-      int i = (width / 8) - 1;
-      while (width > 0) {
-        newLong = newLong | (((Uint8 *)bufferpos)[i--] << (width = width - 8));
-      }
-    #endif
-    longList.push_back(newLong);
+    memcpy(&newLong, bufferpos, 8);
+    this->addLong(newLong);
     bufferpos += 8;
   }
   int stringCount = SDLNet_Read32(bufferpos);

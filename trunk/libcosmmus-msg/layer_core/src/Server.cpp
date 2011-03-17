@@ -188,7 +188,7 @@ void Server::handlePeerMessage(Message* _msg) {
 void Server::sendCommand(Command* cmd, long _clSeq, int _clId) {
   if (cmd->knowsGroups() == false) cmd->findGroups();
   // TODO: the client is supposed to assign a sequence # to its message... the server just makes it unique appending the client's id
-  cmd->setId(_clSeq * 1000 + _clId);
+  cmd->setId(_clSeq * 10 + _clId);
   fwdCommandOptimistically(cmd);
   fwdCommandToCoordinator(cmd);
 }
