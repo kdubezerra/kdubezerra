@@ -199,14 +199,14 @@ char* Message::getSerializedMessage() {
   for (std::vector<long>::iterator it = longList.begin() ; it != longList.end() ; it++) {
     long longData = *it;
     #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-      int width = LONG_BIT;
+      int width = 64;
       int i = 0;
       while (width > 0) {
         bufferpos[i++] = (longData >> (width = width - 8)) & 0xFF;
       }
     #else
-      int width = LONG_BIT;
-      int i = (LONG_BIT / 8) - 1;
+      int width = 64;
+      int i = (width / 8) - 1;
       while (width > 0) {
         bufferpos[i--] = (longData >> (width = width - 8)) & 0xFF;
       }
