@@ -19,6 +19,7 @@ using namespace netwrapper;
 Command::Command() {
   commandContent = NULL;
   commandId = logicalStamp = -1;
+  timeStamp = 0;
   stage = PROPOSING_LOCAL;
   withTargets = false;
   withGroups = false;
@@ -32,6 +33,7 @@ Command::Command(long _id) {
   commandId = _id;
   commandContent = NULL;
   commandId = logicalStamp = -1;
+  timeStamp = 0;
   stage = PROPOSING_LOCAL;
   withTargets = false;
   withGroups = false;
@@ -48,6 +50,7 @@ Command::Command(Command* _other) {
     commandContent = NULL;
   commandId = _other->commandId;
   logicalStamp = _other->logicalStamp;
+  timeStamp = _other->timeStamp;
   stage = _other->stage;
   withTargets = _other->withTargets;
   withGroups = _other->withGroups;
@@ -86,6 +89,10 @@ Command::~Command() {
 bool Command::equals(Command* other) {
 
   if (!this->commandContent->equals(other->commandContent)
+      || this->commandId != other->commandId
+      || this->logicalStamp != other->logicalStamp
+      || this->timeStamp != other->timeStamp
+      || this->stage != other->stage
       || this->withContent != other->withContent
       || this->withGroups != other->withGroups
       || this->withPriorStates != other->withPriorStates
