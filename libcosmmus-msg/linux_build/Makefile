@@ -1,4 +1,4 @@
-OUTPUT=libcommus-msg.a
+OUTPUT=libcosmmus-msg.a
 
 RELEASE_DIR=./release
 DEBUG_DIR=./debug
@@ -28,9 +28,9 @@ DEBUGOBJ = $(patsubst %,$(CORE_DEBUG_DIR)/%,$(CORE_OBJ)) $(patsubst %,$(NET_DEBU
 
 all: release debug
 
-release: $(RELEASE_DIR)/libcosmmus-msg.a
+release: $(RELEASE_DIR)/$(OUTPUT)
 
-debug: $(DEBUG_DIR)/libcosmmus-msg.a
+debug: $(DEBUG_DIR)/$(OUTPUT)
 
 
   
