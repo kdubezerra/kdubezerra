@@ -325,9 +325,9 @@ Message* Command::packToNetwork(Command* _cmd) {
   Message* cmdMsg = new Message();
 
   cmdMsg->addInt((int) _cmd->commandId);
-  cmdMsg->addInt((int) _cmd->logicalStamp); // TODO: make this _long_
   cmdMsg->addInt((int) _cmd->stage);
 
+  cmdMsg->addLong(_cmd->logicalStamp);
   cmdMsg->addLong(_cmd->timeStamp);
 
   cmdMsg->addBool(_cmd->hasContent());
@@ -350,10 +350,10 @@ Command* Command::unpackFromNetwork(Message* _msg) {
 
   int iint = 0;
   cmd->commandId = _msg->getInt(iint++);
-  cmd->logicalStamp = _msg->getInt(iint++);
   cmd->stage = (CommandStage) _msg->getInt(iint++);
 
   int ilong = 0;
+  cmd->logicalStamp = _msg->getLong(ilong++);
   cmd->timeStamp = _msg->getLong(ilong++);
 
   int ibool = 0;
