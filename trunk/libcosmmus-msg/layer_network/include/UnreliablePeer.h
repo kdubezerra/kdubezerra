@@ -8,6 +8,8 @@
 #ifndef UNRELIABLEPEER_H_
 #define UNRELIABLEPEER_H_
 
+#include <list>
+
 #include "GenericNode.h"
 #include "PeerInterface.h"
 
@@ -32,6 +34,8 @@ class UnreliablePeer {
   private:
     PeerInterface* callbackPeer;
     UDPsocket peerSocket;
+
+    /** MUST BE DELETED! **/std::list<Message*> messageList;
 };
 
 }

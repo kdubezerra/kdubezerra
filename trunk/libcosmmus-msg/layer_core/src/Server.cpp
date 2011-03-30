@@ -76,6 +76,13 @@ void Server::setNodeInfo(NodeInfo* _info) {
 }*/
 
 
+void Server::checkAll() {
+  while (checkConnections());
+  while (checkNewMessages());
+  flushOptCmdQueue();
+}
+
+
 int Server::checkNewMessages() {
   return groupPeer->checkNewMessages() + netServer->checkNewMessages();
 }
