@@ -45,6 +45,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     //NodeInfo* getNodeInfo();
     //void setNodeInfo(NodeInfo* _info);
 
+    void checkAll();
     int checkNewMessages();
     int checkConnections();
     void handleClientConnect(netwrapper::RemoteFRC* _newClient);

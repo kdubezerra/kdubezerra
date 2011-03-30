@@ -23,6 +23,7 @@ Message::Message(Message* _msg) {
   charList = _msg->charList;
   intList = _msg->intList;
   floatList = _msg->floatList;
+  longList = _msg->longList;
   stringList = _msg->stringList;
   arbitraryLength = _msg->arbitraryLength;
 
@@ -50,6 +51,7 @@ Message::~Message() {
 bool Message::equals(Message* _other) {
   if (this->intList != _other->intList
     || this->floatList != _other->floatList
+    || this->longList != _other->longList
     || this->stringList != _other->stringList
     || this->arbitraryLength != _other->arbitraryLength)
     return false;
@@ -138,7 +140,6 @@ int Message::getFloatCount() {
 }
 
 long Message::getLong(int _pos) {
-  cout << "Message::getLong -> trying to get a long int in position " << _pos << ", from a list with " << longList.size() << " elements." << endl;
   return longList[_pos];
 }
 

@@ -163,6 +163,7 @@ OPMessage* OPMessage::unpackFromNetwork(netwrapper::Message* _msg) {
   OPMessage* opMsg = new OPMessage();
 
   opMsg->setType((OPMessageType) _msg->getInt(0));
+
   bool hasCmd = _msg->getBool(0);
   bool hasState = _msg->getBool(1);
   bool hasMsg = _msg->getBool(2);
