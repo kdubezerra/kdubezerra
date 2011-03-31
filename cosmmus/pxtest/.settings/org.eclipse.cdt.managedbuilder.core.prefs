@@ -1,0 +1,14 @@
+#Mon Feb 21 13:55:17 CET 2011
+eclipse.preferences.version=1
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/CPATH/delimiter=\:
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/CPATH/operation=remove
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/CPLUS_INCLUDE_PATH/delimiter=\:
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/CPLUS_INCLUDE_PATH/operation=remove
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/C_INCLUDE_PATH/delimiter=\:
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/C_INCLUDE_PATH/operation=remove
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/append=true
+environment/buildEnvironmentInclude/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/appendContributed=true
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/LIBRARY_PATH/delimiter=\:
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/LIBRARY_PATH/operation=remove
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/append=true
+environment/buildEnvironmentLibrary/cdt.managedbuild.config.gnu.macosx.exe.debug.520665919/appendContributed=true

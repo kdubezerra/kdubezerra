@@ -1,0 +1,13 @@
+ObjectMessage.txt
+
+ Created on: 09/02/2011
+     Author: Eduardo
+
+This file is *NOT* automatically read by the library when sending or receiving messages!
+It is just a reminder of how they work and a description of their fields.
+
+ObjectMessage:
+
+int[0] = OBJECT_ID
+
+Message[0] = APP_STUFF_PACKAGE (packed in application level)

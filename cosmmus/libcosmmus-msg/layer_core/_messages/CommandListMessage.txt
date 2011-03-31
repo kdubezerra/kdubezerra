@@ -1,0 +1,16 @@
+CommandListMessage.txt
+
+ Created on: 09/02/2011
+     Author: Eduardo
+
+This file is *NOT* automatically read by the library when sending or receiving messages!
+It is just a reminder of how they work and a description of their fields.
+
+CommandListMessage:
+
+int[0] = N
+
+Message[0] = COMMAND_1
+Message[1] = COMMAND_2
+...
+Message[N - 1] = COMMAND_N

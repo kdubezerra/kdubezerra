@@ -1,0 +1,20 @@
+OPMessage.txt
+
+ Created on: 09/02/2011
+     Author: Eduardo
+
+This file is *NOT* automatically read by the library when sending or receiving messages!
+It is just a reminder of how they work and a description of their fields.
+
+OPMessage:
+
+int[0] = TYPE
+int[1] = NUM_MESSAGES
+
+bool[0] = HAS_COMMAND
+bool[1] = HAS_STATE
+bool[2] = HAS_MESSAGE
+
+Message[0] = COMMAND_LIST     (if HAS_COMMAND = true)
+Message[0/1] = STATE_LIST     (if HAS_STATE = true)
+Message[0/1/2...N]= MESSAGE (if HAS_MESSAGE = true)
