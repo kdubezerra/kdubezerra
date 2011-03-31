@@ -112,11 +112,11 @@ void Object::enqueueOrUpdateOptQueue(Command* _cmd) {
 
 void Object::tryFlushingOptQueue() {
   if (optCmdQueue.empty()) {
-    cout << "Object::tryFlushingOptQueue: opt command queue of object " << this->getInfo()->getId() << " is CLEAR." << endl;
+    //cout << "Object::tryFlushingOptQueue: opt command queue of object " << this->getInfo()->getId() << " is CLEAR." << endl;
     return;
   }
   else {
-    cout << "Object::tryFlushingOptQueue: opt command queue of object " << this->getInfo()->getId() << " has " << (int) optCmdQueue.size() << " elements." << endl;
+    //cout << "Object::tryFlushingOptQueue: opt command queue of object " << this->getInfo()->getId() << " has " << (int) optCmdQueue.size() << " elements." << endl;
   }
   Command* nextCmd = new Command(optCmdQueue.front());
 
@@ -133,7 +133,7 @@ void Object::tryFlushingOptQueue() {
   }
 
   if (allObjsReady) {
-    cout << "Object::tryFlushingOptQueue: command " << nextCmd->getId() << " delivered (OPT) to object " << this->getInfo()->getId() << endl;
+    //cout << "Object::tryFlushingOptQueue: command " << nextCmd->getId() << " delivered (OPT) to object " << this->getInfo()->getId() << endl;
     for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
       Object* obj = Object::getObjectById((*ittarget)->getId());
       obj->handleOptimisticDelivery(nextCmd);

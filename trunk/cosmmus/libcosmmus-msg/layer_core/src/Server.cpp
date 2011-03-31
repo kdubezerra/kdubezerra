@@ -31,7 +31,7 @@ Server::Server() {
   callbackServer = NULL;
   //nodeInfo = NULL;
   lastCommandId = lastPaxosInstance = 0;
-  waitWindow = 10;
+  waitWindow = 0;
   PaxosInstance::setLearner(this);
 }
 
@@ -142,7 +142,7 @@ void Server::handlePeerMessage(Message* _msg) {
       if (cmd->getGroupList().size() == 1) {
         cmd->setOptimisticallyDeliverable(false);
         if (waitWindow < getTime() - cmd->getTimeStamp()) {
-          waitWindow = getTime() - cmd->getTimeStamp();
+          //waitWindow = getTime() - cmd->getTimeStamp();
           cout << "Server::handlePeerMessage: waitWindow increased to " << waitWindow << endl;
         }
         enqueueOptCmd(cmd);
