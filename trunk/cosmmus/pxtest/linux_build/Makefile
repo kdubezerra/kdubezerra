@@ -6,10 +6,10 @@ OBJ_DIR=./debug
 SRC_DIR=../src
 
 CC=g++
-INCLUDE_DIR=/home/eduardo/workspace/libcosmmus-msg/include
+INCLUDE_DIR=../../libcosmmus-msg/include
 CFLAGS=-I$(INCLUDE_DIR) -O0 -g3 -Wall -fmessage-length=0
 
-LDFLAGS=-g -L/home/eduardo/workspace/libcosmmus-msg/linux_build/debug -lcosmmus-msg -lSDL -lSDL_net
+LDFLAGS=-g -L../../libcosmmus-msg/linux_build/debug -lcosmmus-msg -lSDL -lSDL_net
 
 OBJ_FILES=Main.o testobject.o testobjfactory.o testserver.o
 
