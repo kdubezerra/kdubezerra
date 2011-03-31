@@ -39,7 +39,7 @@ void testobject::handleNewConservativeState(Object* _state) {
 }
 
 void testobject::handleOptimisticDelivery(Command* _cmd) {
-  cout << "testobject::handleOptimisticDelivery: command " << _cmd->getContent()->getString(0) << "(" << _cmd->getContent()->getInt(0) << ") OPTIMISTICALLY delivered for object " << this->getInfo()->getId() << endl;
+  //cout << "testobject::handleOptimisticDelivery: command " << _cmd->getContent()->getString(0) << "(" << _cmd->getContent()->getInt(0) << ") OPTIMISTICALLY delivered for object " << this->getInfo()->getId() << endl;
   if (_cmd->getContent()->getString(0).compare("ADD") == 0)
     optState += _cmd->getContent()->getInt(0);
   if (_cmd->getContent()->getString(0).compare("MUL") == 0)
@@ -52,5 +52,4 @@ void testobject::handleConservativeDelivery(Command* _cmd) {
     conState += _cmd->getContent()->getInt(0);
   if (_cmd->getContent()->getString(0).compare("MUL") == 0)
     conState *= _cmd->getContent()->getInt(0);
-  optState = conState;
 }

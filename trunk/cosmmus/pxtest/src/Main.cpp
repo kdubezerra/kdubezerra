@@ -172,8 +172,9 @@ void serverloop(testserver* server, int sid, int cmdcount) {
   //SDL_Delay(5678);
   Command* cmd;
   long seq = 0;
-  while(cmdcount != 0) {
-    if (sid == 1) {
+  bool printed = false;
+  while(true) {
+    if (sid == 1 && cmdcount != 0) {
       cmd = newRandomCommand();
       if (cmd && cmdcount > 0) cmdcount--;
       if (cmd) server->sendCommand(cmd,seq++,1);
@@ -181,6 +182,15 @@ void serverloop(testserver* server, int sid, int cmdcount) {
       if (cmd) delete cmd;
     }
     server->checkAll();
+    if (cmdcount == 0 && !printed) {      
+      cout << endl << "obj1.optstate = " << o1->optState << endl;
+      cout << "obj1.constate = " << o1->conState << endl << endl;
+      cout << "obj2.optstate = " << o2->optState << endl;
+      cout << "obj2.constate = " << o2->conState << endl << endl;
+      cout << "obj3.optstate = " << o3->optState << endl;
+      cout << "obj3.constate = " << o3->conState << endl << endl;
+      printed = true;
+    }
   }
 }
 
@@ -189,9 +199,23 @@ Command* newRandomCommand() {
     return NULL;
   Command* cmd = new Command();
 
-  if (rand() % 2) cmd->addTarget(o1->getInfo());
-  if (rand() % 2) cmd->addTarget(o2->getInfo());
-  if (rand() % 2) cmd->addTarget(o3->getInfo());
+  cout << endl;
+
+  if (rand() % 2) {
+    cmd->addTarget(o1->getInfo());
+    cout << "    obj1 is a target" << endl;
+  }
+
+  if (rand() % 2) {
+    cmd->addTarget(o2->getInfo());
+    cout         << "    obj2 is a target" << endl;
+  }
+
+  if (rand() % 2) {
+    cmd->addTarget(o3->getInfo());
+    cout         << "    obj3 is a target" << endl;
+  }
+
   if (cmd->getTargetList().size() == 0) {
     delete cmd;
     return NULL;
@@ -203,6 +227,7 @@ Command* newRandomCommand() {
     cmd->getContent()->addString("MUL");
   //cout << "newRandomCommand: cmd->getContent()->getString(0) = \"" << cmd->getContent()->getString(0) << "\"" << endl;
   cmd->getContent()->addInt(1 + rand() % 3);
+  cout << "Command is " << cmd->getContent()->getString(0) << "(" << cmd->getContent()->getInt(0) << ")" << endl;
 
   return cmd;
 }
