@@ -11,7 +11,7 @@ CFLAGS=$(INCLUDEFLAGS) -O0 -g3 -Wall -fmessage-length=0
 
 LDFLAGS=-g3 -L../../libcosmmus-msg/linux_build/debug -L/opt/local/lib -lcosmmus-msg -lSDL -lSDL_net -lSDLMain -framework Cocoa
 
-OBJ_FILES=Main.o testobject.o testobjfactory.o testserver.o
+OBJ_FILES=Main.o testobject.o testobjfactory.o testserver.o testclient.o
 
 OBJS=$(patsubst %,$(OBJ_DIR)/%,$(OBJ_FILES))
 
@@ -32,4 +32,4 @@ clean:
 	rm -rf $(OUTPUT) $(OBJ_DIR) ./*~
 
 up:
-	make clean && clear && make
+	make clean && make
