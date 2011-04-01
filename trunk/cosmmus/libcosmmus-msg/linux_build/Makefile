@@ -32,7 +32,14 @@ release: $(RELEASE_DIR)/$(OUTPUT)
 
 debug: $(DEBUG_DIR)/$(OUTPUT)
 
+up:
+	make clean && make
 
+uprel:
+	rm -rf $(RELEASE_DIR) && make release
+
+updeb:
+	rm -rf $(DEBUG_DIR) && make debug
   
 
 ##########################

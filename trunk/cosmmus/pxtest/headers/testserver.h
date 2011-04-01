@@ -8,16 +8,18 @@
 #ifndef TESTSERVER_H_
 #define TESTSERVER_H_
 
-/*
- *
- */
 #include <cosmmus-msg.h>
 
-class testserver: public optpaxos::Server {
+using namespace optpaxos;
+
+class testserver: public optpaxos::Server,
+                  public optpaxos::ServerInterface {
   public:
     testserver();
     virtual ~testserver();
     void handleOptimisticDelivery(optpaxos::Command* _cmd);
+    void handleClientMessage(netwrapper::Message* _msg);
+    void defineServers(Command* _cmd);
 };
 
 #endif /* TESTSERVER_H_ */

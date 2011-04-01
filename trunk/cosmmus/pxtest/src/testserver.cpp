@@ -23,3 +23,11 @@ testserver::~testserver() {
 void testserver::handleOptimisticDelivery(optpaxos::Command* _cmd) {
   cout << "Optimistically delivered command: " << _cmd->getContent()->getString(0) << endl;
 }
+
+void testserver::handleClientMessage(netwrapper::Message* _msg) {
+
+}
+
+void testserver::defineServers(Command* _cmd) {
+
+}

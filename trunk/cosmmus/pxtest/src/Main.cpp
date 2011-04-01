@@ -7,10 +7,12 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <cosmmus-msg.h>
 #include "../headers/testobject.h"
 #include "../headers/testobjfactory.h"
 #include "../headers/testserver.h"
+#include "../headers/testclient.h"
 
 using namespace optpaxos;
 using namespace netwrapper;
@@ -27,89 +29,70 @@ testobject* o3;
 
 Command* newRandomCommand();
 
-void serverloop(testserver* server, int sid, int cc);
+void serverloop(testserver* server, int sid);
+void clientloop(testclient* client, int comcount);
+
+void printstates() {
+  cout << endl << "obj1.optstate = " << o1->optState << endl;
+  cout << "obj1.constate = " << o1->conState << endl << endl;
+  cout << "obj2.optstate = " << o2->optState << endl;
+  cout << "obj2.constate = " << o2->conState << endl << endl;
+  cout << "obj3.optstate = " << o3->optState << endl;
+  cout << "obj3.constate = " << o3->conState << endl << endl;
+}
+
+void helpnquit() {
+  cout << "usage:\n   pxtest <SERVER> <SID> <NSERVERS>\nor pxtest <CLIENT> <CID> [<NCOMMANDS>, default: -1 (infinite)]" << endl;
+  exit(0);
+}
 
 int main(int argc, char* argv[]) {
-  int sid;
-  int cmdcount = -1;
-  testserver* server = new testserver();
+/* <SERVER/CLIENT> ...
+ *    <SERVER> <SID> <NSERVERS>
+ *    <CLIENT> <CID> [<NCOMMANDS>, default: -1 (infinite)]
+ */
+
+  if (argc < 3) helpnquit();
+  vector<string> args;
+  for (int i = 0 ; i < argc ; i++) args.push_back(argv[i]);
+
   testobjfactory* myfactory = new testobjfactory();
   Object::setObjectFactory(myfactory);
-  if (!argv[1]) return 1;
-  string arg = argv[1];
+
   o1 = new testobject(1);
   o2 = new testobject(2);
   o3 = new testobject(3);
   Object::indexObject(o1);
   Object::indexObject(o2);
   Object::indexObject(o3);
-  Group* grp = new optpaxos::Group(1);
-  Group::addGroup(grp);
-  grp->addManagedObject(o1->getInfo());
-  grp->addManagedObject(o2->getInfo());
-  grp->addManagedObject(o3->getInfo());
-  NodeInfo* sv1 = new NodeInfo(1, SERVER_NODE, new Address("localhost", UPORT0 + 1));
-  grp->addServer(sv1);
-  grp->setCoordinator(sv1);
 
-  if (arg.compare("COOSOLO") == 0) {
-    cout << ",,..::SOLO::..,, Coordinator starting..." << endl;
-    srand(1);
-    server->init(RPORT0 + 1, UPORT0 + 1),
-    server->joinGroup(grp);
-    if (argc > 2) {
-      cmdcount = atoi(argv[2]);
+  if (args[1].compare("SERVER") == 0) {
+    int serverid = atoi(args[2].c_str());
+    int nservers = atoi(args[3].c_str());
+    Group* grp = new Group(1);
+    Group::addGroup(grp);
+    grp->addManagedObject(o1->getInfo());
+    grp->addManagedObject(o2->getInfo());
+    grp->addManagedObject(o3->getInfo());
+    for (int i = 0 ; i < nservers ; i++) {
+      NodeInfo* sv = new NodeInfo(i+1, SERVER_NODE, new Address("localhost", UPORT0 + i + 1));
+      grp->addServer(sv);
+      if (i == 0) grp->setCoordinator(sv);
     }
-    serverloop(server, 1, cmdcount);
-
-    cout << endl << "obj1.optstate = " << o1->optState << endl;
-    cout << "obj1.constate = " << o1->conState << endl << endl;
-    cout << "obj2.optstate = " << o2->optState << endl;
-    cout << "obj2.constate = " << o2->conState << endl << endl;
-    cout << "obj3.optstate = " << o3->optState << endl;
-    cout << "obj3.constate = " << o3->conState << endl << endl;
-
-    return 0;
-  }
-
-  NodeInfo* sv2 = new NodeInfo(2, SERVER_NODE, new Address("localhost", UPORT0 + 2));
-  grp->addServer(sv2);
-  NodeInfo* sv3 = new NodeInfo(3, SERVER_NODE, new Address("localhost", UPORT0 + 3));
-  grp->addServer(sv3);
-
-  if (arg.compare("COO") == 0) {
-    sid = 1;
-    cout << "Coordinator starting..." << endl;
-    srand(1);
-    server->init(RPORT0 + 1, UPORT0 + 1),
-    //server->getNodeInfo()->setNodeId(1);
+    testserver* server = new testserver();
+    server->init(RPORT0 + serverid, UPORT0 + serverid);
     server->joinGroup(grp);
+    serverloop(server, serverid);
   }
-  else if (arg.compare("REP") == 0) {
-    sid = atoi(argv[2]);
-    cout << "Replica " << sid << " starting..." << endl;
+  else if (args[1].compare("CLIENT") == 0) {
+    int clientid = atoi(args[2].c_str());
+    int cmdcount = args.size() > 3 ? atoi(args[3].c_str()) : -1;
+    testclient* client = new testclient();
+    client->connect("localhost", RPORT0 + 1);
+    clientloop(client, cmdcount);
+  }
+  else helpnquit();
 
-    srand((unsigned) sid);
-    server->init(RPORT0 + sid, UPORT0 + sid),
-    //server->getNodeInfo()->setNodeId(sid);
-    server->joinGroup(grp);
-  }
-  else {
-    cout << "Wrong argument (COO or REP). Exiting." << endl;
-    return 2;
-  }
-  if (sid == 1 && argc > 2) {
-    cmdcount = atoi(argv[2]);
-  }
-  serverloop(server, sid, cmdcount);
-  cout << endl << "obj1.optstate = " << o1->optState << endl;
-  cout << "obj1.constate = " << o1->conState << endl << endl;
-
-  cout << "obj2.optstate = " << o2->optState << endl;
-  cout << "obj2.constate = " << o2->conState << endl << endl;
-
-  cout << "obj3.optstate = " << o3->optState << endl;
-  cout << "obj3.constate = " << o3->conState << endl << endl;
   /*
   FIFOReliableServer* server = new FIFOReliableServer();
   FIFOReliableClient* client = new FIFOReliableClient();
@@ -168,29 +151,30 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 
-void serverloop(testserver* server, int sid, int cmdcount) {
+void serverloop(testserver* server, int cmdcount) {
   //SDL_Delay(5678);
+  while(true) {
+    server->checkAll();
+  }
+}
+
+void clientloop(testclient* client, int cmdcount) {
   Command* cmd;
   long seq = 0;
   bool printed = false;
-  while(true) {
-    if (sid == 1 && cmdcount != 0) {
+  while (true) {
+    if (cmdcount != 0) {
       cmd = newRandomCommand();
       if (cmd && cmdcount > 0) cmdcount--;
-      if (cmd) server->sendCommand(cmd,seq++,1);
+      if (cmd) client->sendCommand(cmd, seq++, 1);
       if (cmd && !(seq % 1000)) cerr << "Command " << seq << " issued" << endl;
       if (cmd) delete cmd;
     }
-    server->checkAll();
-    if (cmdcount == 0 && !printed) {      
-      cout << endl << "obj1.optstate = " << o1->optState << endl;
-      cout << "obj1.constate = " << o1->conState << endl << endl;
-      cout << "obj2.optstate = " << o2->optState << endl;
-      cout << "obj2.constate = " << o2->conState << endl << endl;
-      cout << "obj3.optstate = " << o3->optState << endl;
-      cout << "obj3.constate = " << o3->conState << endl << endl;
-      printed = true;
-    }
+  }
+  client->checkAll();
+  if (cmdcount == 0 && !printed) {
+    printstates();
+    printed = true;
   }
 }
 

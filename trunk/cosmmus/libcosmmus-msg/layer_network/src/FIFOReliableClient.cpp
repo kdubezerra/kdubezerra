@@ -35,25 +35,30 @@ ClientInterface* FIFOReliableClient::getCallbackInterface() {
 int FIFOReliableClient::connect(std::string _address, unsigned _port) {
   IPaddress ip;
 
+  cout << 1 << endl;
   if(SDLNet_ResolveHost(&ip, _address.c_str(), (Uint16) _port)==-1) {
     cerr << "FIFOReliableClient::connect: SDLNet_ResolveHost: " << SDLNet_GetError() << endl;
     return 1;
   }
 
+  cout << 2 << endl;
   clientSocket = SDLNet_TCP_Open(&ip);
-  if(!clientSocket) {
+  if(clientSocket == NULL) {
     cerr << "FIFOReliableClient::connect: SDLNet_TCP_Open: " << SDLNet_GetError() << endl;
     return 2;
   }
 
+  cout << 3 << endl;
   if (socketSet == NULL) {
     cerr << "FIFOReliableClient::connect: SDLNet_AllocSocketSet: " << SDLNet_GetError() << endl;
     return 3; // Quit!
   }
 
+  cout << 4 << endl;
   SDLNet_TCP_AddSocket(socketSet, clientSocket);
   cout << "FIFOReliableClient::connect: connected to server at " << _address << ":" << _port << endl;
 
+  cout << 5 << endl;
   return 0;
 }
 
