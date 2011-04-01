@@ -47,6 +47,9 @@ class Client : public netwrapper::ClientInterface {
     optpaxos::ClientInterface* getCallbackClient();
     void handleServerMessage(netwrapper::Message* _msg);
 
+    void checkAll();
+    void checkNewMessages();
+
   private:
     void handleCommand(Command* _cmd);
     void handleStateUpdate(Object* _state);

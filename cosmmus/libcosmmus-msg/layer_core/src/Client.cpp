@@ -9,6 +9,7 @@
 #include "../include/Client.h"
 #include "../include/Object.h"
 #include "../include/OPMessage.h"
+#include "../include/ObjectInfo.h"
 
 // network level classes
 #include "../../layer_network/include/FIFOReliableClient.h"
@@ -63,30 +64,43 @@ optpaxos::ClientInterface* Client::getCallbackClient() {
 }
 
 void Client::handleServerMessage(netwrapper::Message* _msg) {
-  OPMessage* opMsg = OPMessage::unpackFromNetwork(_msg);
+  OPMessage* serverMsg = OPMessage::unpackFromNetwork(_msg);
 
-  if (opMsg->hasState()) {
-    std::list<Object*> states = opMsg->getStateList();
-    for (std::list<Object*>::iterator it = states.begin() ; it != states.end() ; it++) {
-      Object::handleStateUpdate(*it);
+  switch (serverMsg->getType()) {
+    case CMD_ONE_GROUP_OPTIMISTIC : {
+
     }
+    break;
+
+    case CMD_ONE_GROUP_CONSERVATIVE : {
+      Command* newCmd = serverMsg->getCommandList().front();
+      std::list<ObjectInfo*> targetList = newCmd->getTargetList();
+      for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
+        Object* obj = Object::getObjectById((*it)->getId());
+        obj->handleConservativeDelivery(newCmd);
+        obj->getInfo()->setLastStamp(newCmd->getLogicalStamp());
+      }
+    }
+    break;
+
+    default: {
+
+    }
+    break;
   }
 
-  if (opMsg->hasCommand()) {
-    std::list<Command*> coms = opMsg->getCommandList();
-    for (std::list<Command*>::iterator it = coms.begin() ; it != coms.end() ; it++) {
-      Object::handleCommand(*it);
-    }
-  }
-/* TODO: fix up this stupid implementation
- * if (_opMsg->hasExtraPayload()) {
- *   callbackClient->handleMessage(_opMsg->getExtraPayload());
- * }
- */
-  delete opMsg;
+  delete serverMsg;
 }
 
-void handleStateUpdate(Object* _state) {
+void Client::checkAll() {
+  checkNewMessages();
+}
+
+void Client::checkNewMessages() {
+  netClient->checkNewMessages();
+}
+
+void Client::handleStateUpdate(Object* _state) {
 /* TODO: create a coherent model of state and its updates: when the server sends an update, what
  *       is it updating? There at least two and, possibly, one more state delivery queue. How is
  *       this going to work? When will one state overwrite the other? Every object should have a
