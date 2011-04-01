@@ -17,7 +17,6 @@ testclient::~testclient() {
 }
 
 void testclient::handleMessage(netwrapper::Message* _msg) {
-
 }
 
 void testclient::sendCommand(Command* cmd, long _clSeq, int _clId) {
