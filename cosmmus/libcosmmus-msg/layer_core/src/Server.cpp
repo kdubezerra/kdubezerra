@@ -205,6 +205,7 @@ void Server::sendCommand(Command* cmd, long _clSeq, int _clId) {
 //
 int Server::tryProposingPendingCommands() {
   int proposalsMade = 0;
+  static int createdPxInstances = 0;
 
   std::list<ObjectInfo*> localObjects = localGroup->getObjectsList();
   for (std::list<ObjectInfo*>::iterator ito = localObjects.begin() ; ito != localObjects.end() ; ito++) {
@@ -230,6 +231,7 @@ int Server::tryProposingPendingCommands() {
         obj->getInfo()->setNextStamp((*itc)->getLogicalStamp() + 1);
       }
       if ((*itc)->getGroupList().size() == 1) {
+        cout << "createdPxInstances = " << ++createdPxInstances << endl;
         PaxosInstance* pxInstance = new PaxosInstance(++lastPaxosInstance * GRP_ID_LEN + (long) localGroup->getId());
         OPMessage* cmdMessage = new OPMessage();
         cmdMessage->setType(CMD_ONE_GROUP_CONSERVATIVE);
