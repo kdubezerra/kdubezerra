@@ -24,7 +24,7 @@ void testserver::handleOptimisticDelivery(optpaxos::Command* _cmd) {
   cout << "Optimistically delivered command: " << _cmd->getContent()->getString(0) << endl;
 }
 
-void testserver::handleClientMessage(netwrapper::Message* _msg) {
+void testserver::handleClientApplicationMessage(netwrapper::Message* _msg) {
 
 }
 

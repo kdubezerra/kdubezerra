@@ -70,7 +70,10 @@ int FIFOReliableServer::checkConnections() {
       RemoteFRC* newClient = new RemoteFRC(clientSocket);
       clientList.push_back(newClient);
       if (callbackServer) callbackServer->handleClientConnect(newClient);
-      cout << "FIFOReliableServer::checkConnections: Host connected: " << SDLNet_Read32(&clientIP->host) << ":" << SDLNet_Read16(&clientIP->port) << endl;
+      Uint8* printableIp = (Uint8*)&clientIP->host;
+      cout << "FIFOReliableServer::checkConnections: Host connected: " << (unsigned short)printableIp[0] << "."
+          << (unsigned short)printableIp[1] << "." << (unsigned short)printableIp[2] << "." << (unsigned short)printableIp[3];
+      cout << ":" << SDLNet_Read16(&clientIP->port) << endl;
     }
     else
       cerr << "FIFOReliableServer::checkConnections: SDLNet_TCP_GetPeerAddress: " << SDLNet_GetError() << endl;
@@ -96,7 +99,6 @@ int FIFOReliableServer::checkNewMessages() {
         continue;
       }
       int messageLength = SDLNet_Read32(lengthBuffer);
-      cout << "FIFOReliableServer::checkNewMessages: received message length = " << messageLength << endl;
       char* messageBuffer = new char[messageLength];
       memcpy(messageBuffer, lengthBuffer, 4);
       receivedByteCount = SDLNet_TCP_Recv((*it)->getSocket(), messageBuffer + 4, messageLength - 4);
@@ -117,6 +119,7 @@ int FIFOReliableServer::checkNewMessages() {
 }
 
 int FIFOReliableServer::send (Message* _msg, RemoteFRC* _client) {
+  /* **************
   bool knowsClient = false;
   for (std::list<RemoteFRC*>::iterator it = clientList.begin() ; it != clientList.end() ; it++) {
     if ((*it)->equals(_client)) {
@@ -125,9 +128,10 @@ int FIFOReliableServer::send (Message* _msg, RemoteFRC* _client) {
     }
   }
   if (!knowsClient) {
-    cerr << "FIFOReliableServer::send: RemoteRFC has been found." << endl;
+    cerr << "FIFOReliableServer::send: RemoteRFC has not been found." << endl;
     return 1;
   }
+  ************** */
 
   char* msgBuffer = _msg->getSerializedMessage();
   int msgLength = _msg->getSerializedLength();

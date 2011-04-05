@@ -28,7 +28,7 @@ Server::Server() {
   netServer->setCallbackInterface(this);
   groupPeer = new UnreliablePeer();
   groupPeer->setCallbackInterface(this);
-  callbackServer = NULL;
+  callbackGameServer = NULL;
   //nodeInfo = NULL;
   lastCommandId = lastPaxosInstance = 0;
   waitWindow = 0;
@@ -108,10 +108,10 @@ void Server::handleClientDisconnect(netwrapper::RemoteFRC* _client) {
 
 void Server::handleClientMessage(Message* _msg) {
   OPMessage* clientMessage = OPMessage::unpackFromNetwork(_msg);
-  switch (clientMessage->getType()) {
 
+  switch (clientMessage->getType()) {
     case APP_MSG :
-      callbackServer->handleClientMessage(clientMessage->getMessageList().front());
+      callbackGameServer->handleClientApplicationMessage(clientMessage->getMessageList().front());
       break;
 
     case CLIENT_CMD : {
@@ -143,7 +143,7 @@ void Server::handlePeerMessage(Message* _msg) {
         cmd->setOptimisticallyDeliverable(false);
         if (waitWindow < getTime() - cmd->getTimeStamp()) {
           //waitWindow = getTime() - cmd->getTimeStamp();
-          cout << "Server::handlePeerMessage: waitWindow increased to " << waitWindow << endl;
+          //cout << "Server::handlePeerMessage: waitWindow increased to " << waitWindow << endl;
         }
         enqueueOptCmd(cmd);
       }
@@ -296,6 +296,7 @@ void Server::sendCommandToClients(Command* _cmd, CommandType _cmdType) {
   cmdMsg->addCommand(new Command(_cmd));
   Message* packedCmdMsg = OPMessage::packToNetwork(cmdMsg);
   for (std::list<netwrapper::RemoteFRC*>::iterator it = clientList.begin() ; it != clientList.end() ; it++) {
+    cout << "Server::sendCommandToClients: sending command to client" << endl;
     netServer->send(packedCmdMsg, *it);
   }
   delete packedCmdMsg;

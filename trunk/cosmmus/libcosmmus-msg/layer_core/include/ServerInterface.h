@@ -22,7 +22,7 @@ class ServerInterface {
     ServerInterface();
     virtual ~ServerInterface();
 
-    virtual void handleClientMessage(netwrapper::Message* _msg) = 0;
+    virtual void handleClientApplicationMessage(netwrapper::Message* _msg) = 0;
     virtual void defineServers(Command* _cmd) = 0;
 };
 

@@ -16,8 +16,6 @@
 #include <string>
 #include <list>
 
-#include "../../layer_core/include/ClientInterface.h"
-
 #include "../../layer_network/include/ClientInterface.h"
 #include "../../layer_network/include/FIFOReliableClient.h"
 #include "../../layer_network/include/Message.h"
@@ -42,10 +40,9 @@ class Client : public netwrapper::ClientInterface {
     int connect(std::string _address, unsigned port);
     void disconnect();
     void submitCommand(Command* _cmd);
-    void submitApplicationMessage(netwrapper::Message* _msg);
-    void setCallbackInterface(optpaxos::ClientInterface* _callbackClient);
-    optpaxos::ClientInterface* getCallbackClient();
+    void submitRequest(netwrapper::Message* _msg);
     void handleServerMessage(netwrapper::Message* _msg);
+    virtual void handleMessage(netwrapper::Message* _msg) = 0;
 
     void checkAll();
     void checkNewMessages();
@@ -54,7 +51,6 @@ class Client : public netwrapper::ClientInterface {
     void handleCommand(Command* _cmd);
     void handleStateUpdate(Object* _state);
 
-    optpaxos::ClientInterface* callbackClient;
     netwrapper::FIFOReliableClient* netClient;
 };
 

@@ -10,7 +10,6 @@
 
 #include "../../layer_network/include/netwrapper.h"
 #include "Client.h"
-#include "ClientInterface.h"
 #include "Command.h"
 #include "Group.h"
 #include "NodeInfo.h"
