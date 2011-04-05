@@ -77,8 +77,8 @@ void Server::setNodeInfo(NodeInfo* _info) {
 
 
 void Server::checkAll() {
-  while (checkConnections());
-  while (checkNewMessages());
+  checkConnections();
+  checkNewMessages();
   flushOptCmdQueue();
 }
 
@@ -279,6 +279,7 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
 
 
 void Server::sendCommandToClients(Command* _cmd, CommandType _cmdType) {
+  static int sentmsgs = 0;
   // TODO : control subscribers of each command, so that some bandwidth can be saved
   OPMessage* cmdMsg = new OPMessage();
   if (_cmdType == OPTIMISTIC) {
@@ -295,10 +296,15 @@ void Server::sendCommandToClients(Command* _cmd, CommandType _cmdType) {
   }
   cmdMsg->addCommand(new Command(_cmd));
   Message* packedCmdMsg = OPMessage::packToNetwork(cmdMsg);
+  cout << "Server::sendCommandToClients: should be sending command to all of its clients" << endl;
+  int i = 0;
   for (std::list<netwrapper::RemoteFRC*>::iterator it = clientList.begin() ; it != clientList.end() ; it++) {
-    cout << "Server::sendCommandToClients: sending command to client" << endl;
+    sentmsgs++;
+    cout << "Server::sendCommandToClients: sending command to client " << ++i << " of " << clientList.size() << endl;
+    cout << (_cmd->isConservativelyDeliverable() ? "CONSERVATIVE" : "OPTIMISTIC") << endl;
     netServer->send(packedCmdMsg, *it);
   }
+  cout << "Server::sendCommandToClients: sentmsgs = " << sentmsgs << endl;
   delete packedCmdMsg;
   delete cmdMsg;
 }

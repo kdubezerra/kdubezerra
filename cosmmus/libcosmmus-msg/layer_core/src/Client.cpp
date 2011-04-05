@@ -67,7 +67,11 @@ void Client::handleServerMessage(netwrapper::Message* _msg) {
       std::list<ObjectInfo*> targetList = optCmd->getTargetList();
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());
-        obj->handleOptimisticDelivery(optCmd);
+        obj->enqueueOrUpdateOptQueue(optCmd);
+      }
+      for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
+        Object* obj = Object::getObjectById((*it)->getId());
+        obj->tryFlushingOptQueue();
       }
     }
     break;
@@ -93,12 +97,12 @@ void Client::handleServerMessage(netwrapper::Message* _msg) {
   delete serverMsg;
 }
 
-void Client::checkAll() {
-  checkNewMessages();
+int Client::checkAll() {
+  return checkNewMessages();
 }
 
-void Client::checkNewMessages() {
-  netClient->checkNewMessages();
+int Client::checkNewMessages() {
+  return netClient->checkNewMessages();
 }
 
 void Client::handleStateUpdate(Object* _state) {

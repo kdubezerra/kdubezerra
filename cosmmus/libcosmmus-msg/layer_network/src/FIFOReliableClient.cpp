@@ -100,7 +100,7 @@ int FIFOReliableClient::sendMessage(Message* _msg) {
 int FIFOReliableClient::checkNewMessages() {
   int rcvdMsgCount = 0;
   int socketActivity = SDLNet_CheckSockets(socketSet, 0);
-  //if (socketActivity)
+  if (socketActivity)
   cout << "FIFOReliableClient::checkNewMessages: socketActivity = " << socketActivity << endl;
 
   int clientSocketActivity = SDLNet_SocketReady(clientSocket);
