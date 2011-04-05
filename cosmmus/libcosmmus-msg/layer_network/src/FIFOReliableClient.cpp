@@ -13,60 +13,76 @@ using namespace std;
 using namespace netwrapper;
 
 FIFOReliableClient::FIFOReliableClient() {
+  if (SDLNet_Init() < 0) {
+    cerr << "(error) FIFOReliableClient::init: SDLNet_Init: " << SDLNet_GetError() << endl;
+  }
+
   socketSet = SDLNet_AllocSocketSet(1);
   if (socketSet == NULL) {
-    cout << "FIFOReliableClient::FIFOReliableClient: ERROR: socketSet NOT allocated!" << endl;
+    cerr << "(error) FIFOReliableClient::FIFOReliableClient: failed to allocate socketSet!" << endl;
   }
+
   callbackClient = NULL;
 }
+
+
 
 FIFOReliableClient::~FIFOReliableClient() {
   // TODO Auto-generated destructor stub
 }
 
+
+
 void FIFOReliableClient::setCallbackInterface(ClientInterface* _callbackClient) {
   callbackClient = _callbackClient;
 }
+
+
 
 ClientInterface* FIFOReliableClient::getCallbackInterface() {
   return callbackClient;
 }
 
-int FIFOReliableClient::connect(std::string _address, unsigned _port) {
-  IPaddress ip;
 
-  cout << 1 << endl;
-  if(SDLNet_ResolveHost(&ip, _address.c_str(), (Uint16) _port)==-1) {
-    cerr << "FIFOReliableClient::connect: SDLNet_ResolveHost: " << SDLNet_GetError() << endl;
+
+int FIFOReliableClient::connect(std::string _address, unsigned _port) {
+  IPaddress server_ip;
+
+  if(SDLNet_ResolveHost(&server_ip, _address.c_str(), (Uint16) _port) == -1) {
+    cerr << "(error) FIFOReliableClient::connect: SDLNet_ResolveHost: " << SDLNet_GetError() << endl;
     return 1;
   }
 
-  cout << 2 << endl;
-  clientSocket = SDLNet_TCP_Open(&ip);
+  clientSocket = SDLNet_TCP_Open(&server_ip);
   if(clientSocket == NULL) {
-    cerr << "FIFOReliableClient::connect: SDLNet_TCP_Open: " << SDLNet_GetError() << endl;
+    cerr << "(error) FIFOReliableClient::connect: SDLNet_TCP_Open: " << SDLNet_GetError() << endl;
     return 2;
   }
 
-  cout << 3 << endl;
   if (socketSet == NULL) {
-    cerr << "FIFOReliableClient::connect: SDLNet_AllocSocketSet: " << SDLNet_GetError() << endl;
+    cerr << "(error) FIFOReliableClient::connect: socketSet is NULL" << endl;
     return 3; // Quit!
   }
 
-  cout << 4 << endl;
-  SDLNet_TCP_AddSocket(socketSet, clientSocket);
+  if (SDLNet_TCP_AddSocket(socketSet, clientSocket) == -1) {
+    cerr << "(error) FIFOReliableClient::connect: " << SDLNet_GetError() << endl;
+    return 4; // Quit!
+  }
+
   cout << "FIFOReliableClient::connect: connected to server at " << _address << ":" << _port << endl;
 
-  cout << 5 << endl;
   return 0;
 }
+
+
 
 void FIFOReliableClient::disconnect() {
   SDLNet_TCP_Close(clientSocket);
   SDLNet_TCP_DelSocket(socketSet, clientSocket);
   cout << "FIFOReliableClient::disconnect: client disconnected from server" << endl;
 }
+
+
 
 int FIFOReliableClient::sendMessage(Message* _msg) {
   char* msgBuffer = _msg->getSerializedMessage();
@@ -79,13 +95,16 @@ int FIFOReliableClient::sendMessage(Message* _msg) {
   return 0;
 }
 
+
+
 int FIFOReliableClient::checkNewMessages() {
   int rcvdMsgCount = 0;
   int socketActivity = SDLNet_CheckSockets(socketSet, 0);
+  //if (socketActivity)
   cout << "FIFOReliableClient::checkNewMessages: socketActivity = " << socketActivity << endl;
 
   int clientSocketActivity = SDLNet_SocketReady(clientSocket);
-  cout << "FIFOReliableClient::checkNewMessages: clientSocketActivity for client " << this << " = " << socketActivity << endl;
+  if (clientSocketActivity) cout << "FIFOReliableClient::checkNewMessages: clientSocketActivity for client " << this << " = " << clientSocketActivity << endl;
   if (clientSocketActivity != 0) {
     char lengthBuffer[4];
     int receivedByteCount = SDLNet_TCP_Recv(clientSocket, lengthBuffer, 4);
@@ -105,9 +124,14 @@ int FIFOReliableClient::checkNewMessages() {
       return 2;
     }
     rcvdMsgCount++;
-    cout << "FIFOReliableClient::checkNewMessages: new received message: ";
-    for (int i = 0 ; i < messageLength ; i++) cout << messageBuffer[i];
-    cout << endl;
+    cout << "FIFOReliableClient::checkNewMessages: received a message from the server with length" << messageLength << endl;
+/*
+ *
+ * cout << "FIFOReliableClient::checkNewMessages: new received message: ";
+ *  for (int i = 0 ; i < messageLength ; i++) cout << messageBuffer[i];
+ *  cout << endl;
+ *
+ */
     Message* rcvdMessage = new Message();
     rcvdMessage->buildFromBuffer(messageBuffer);
     delete [] messageBuffer;

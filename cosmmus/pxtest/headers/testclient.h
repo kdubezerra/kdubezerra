@@ -15,8 +15,7 @@ using namespace optpaxos;
 /*
  *
  */
-class testclient : public optpaxos::Client,
-                   public optpaxos::ClientInterface {
+class testclient : public optpaxos::Client {
   public:
     testclient();
     virtual ~testclient();

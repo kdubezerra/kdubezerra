@@ -48,6 +48,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     void checkAll();
     int checkNewMessages();
     int checkConnections();
+
     void handleClientConnect(netwrapper::RemoteFRC* _newClient);
     void handleClientDisconnect(netwrapper::RemoteFRC* _client);
     void handleClientMessage(netwrapper::Message* _msg);
@@ -84,7 +85,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     std::map<unsigned long, PaxosInstance*> paxosInstances;
     netwrapper::UnreliablePeer* groupPeer;
     netwrapper::FIFOReliableServer* netServer;
-    optpaxos::ServerInterface* callbackServer;
+    optpaxos::ServerInterface* callbackGameServer;
     //NodeInfo* nodeInfo;
     long lastPaxosInstance;
     long lastCommandId;

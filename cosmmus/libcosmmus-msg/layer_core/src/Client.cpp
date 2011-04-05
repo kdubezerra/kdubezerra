@@ -5,6 +5,8 @@
  *      Author: Carlos Eduardo B. Bezerra - carlos.bezerra@usi.ch
  */
 
+#include <iostream>
+
 // core level classes
 #include "../include/Client.h"
 #include "../include/Object.h"
@@ -14,13 +16,13 @@
 // network level classes
 #include "../../layer_network/include/FIFOReliableClient.h"
 
+using namespace std;
 using namespace optpaxos;
 using namespace netwrapper;
 
 Client::Client() {
-  FIFOReliableClient* netClient = new FIFOReliableClient();
+  netClient = new FIFOReliableClient();
   netClient->setCallbackInterface(this);
-  callbackClient = NULL;
 }
 
 Client::~Client() {
@@ -38,14 +40,14 @@ void Client::disconnect() {
 void Client::submitCommand(Command* _cmd) {
   OPMessage* cmdOpMsg = new OPMessage();
   cmdOpMsg->setType(CLIENT_CMD);
-  cmdOpMsg->addCommand(_cmd);
+  cmdOpMsg->addCommand(new Command(_cmd));
   Message* packedCmdOpMsg = OPMessage::packToNetwork(cmdOpMsg);
   netClient->sendMessage(packedCmdOpMsg);
   delete packedCmdOpMsg;
   delete cmdOpMsg;
 }
 
-void Client::submitApplicationMessage(netwrapper::Message* _msg) {
+void Client::submitRequest(netwrapper::Message* _msg) {
   OPMessage* opMsg = new OPMessage();
   opMsg->setType(APP_MSG);
   opMsg->addMessage(_msg);
@@ -55,24 +57,23 @@ void Client::submitApplicationMessage(netwrapper::Message* _msg) {
   delete opMsg;
 }
 
-void Client::setCallbackInterface(optpaxos::ClientInterface* _callbackClient) {
-  callbackClient = _callbackClient;
-}
-
-optpaxos::ClientInterface* Client::getCallbackClient() {
-  return callbackClient;
-}
-
 void Client::handleServerMessage(netwrapper::Message* _msg) {
   OPMessage* serverMsg = OPMessage::unpackFromNetwork(_msg);
 
   switch (serverMsg->getType()) {
     case CMD_ONE_GROUP_OPTIMISTIC : {
-
+      cout << "Client::handleServerMessage: got an optimistic delivery command" << endl;
+      Command* optCmd = serverMsg->getCommandList().front();
+      std::list<ObjectInfo*> targetList = optCmd->getTargetList();
+      for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
+        Object* obj = Object::getObjectById((*it)->getId());
+        obj->handleOptimisticDelivery(optCmd);
+      }
     }
     break;
 
     case CMD_ONE_GROUP_CONSERVATIVE : {
+      cout << "Client::handleServerMessage: got a conservative delivery command" << endl;
       Command* newCmd = serverMsg->getCommandList().front();
       std::list<ObjectInfo*> targetList = newCmd->getTargetList();
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {

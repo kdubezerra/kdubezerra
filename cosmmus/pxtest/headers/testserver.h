@@ -18,7 +18,7 @@ class testserver: public optpaxos::Server,
     testserver();
     virtual ~testserver();
     void handleOptimisticDelivery(optpaxos::Command* _cmd);
-    void handleClientMessage(netwrapper::Message* _msg);
+    void handleClientApplicationMessage(netwrapper::Message* _msg);
     void defineServers(Command* _cmd);
 };
 

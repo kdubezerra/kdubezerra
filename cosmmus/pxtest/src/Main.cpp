@@ -20,7 +20,7 @@ using namespace std;
 
 //#define DESIRED_LENGTH 512000
 //#define MSG_LENGTH DESIRED_LENGTH-32
-#define RPORT0 40000
+#define RPORT0 45000
 #define UPORT0 50000
 
 testobject* o1;
@@ -28,9 +28,8 @@ testobject* o2;
 testobject* o3;
 
 Command* newRandomCommand();
-
 void serverloop(testserver* server, int sid);
-void clientloop(testclient* client, int comcount);
+void clientloop(testclient* client, int cid, int comcount);
 
 void printstates() {
   cout << endl << "obj1.optstate = " << o1->optState << endl;
@@ -42,7 +41,7 @@ void printstates() {
 }
 
 void helpnquit() {
-  cout << "usage:\n   pxtest <SERVER> <SID> <NSERVERS>\nor pxtest <CLIENT> <CID> [<NCOMMANDS>, default: -1 (infinite)]" << endl;
+  cout << "usage:\n   pxtest -s <SID> <NSERVERS>\nor pxtest -c <CID> <SID>[<NCOMMANDS>, default: -1 (infinite)]" << endl;
   exit(0);
 }
 
@@ -51,6 +50,8 @@ int main(int argc, char* argv[]) {
  *    <SERVER> <SID> <NSERVERS>
  *    <CLIENT> <CID> [<NCOMMANDS>, default: -1 (infinite)]
  */
+
+  SDLNet_Init();
 
   if (argc < 3) helpnquit();
   vector<string> args;
@@ -66,7 +67,7 @@ int main(int argc, char* argv[]) {
   Object::indexObject(o2);
   Object::indexObject(o3);
 
-  if (args[1].compare("SERVER") == 0) {
+  if (args[1].compare("-s") == 0) {
     int serverid = atoi(args[2].c_str());
     int nservers = atoi(args[3].c_str());
     Group* grp = new Group(1);
@@ -84,12 +85,13 @@ int main(int argc, char* argv[]) {
     server->joinGroup(grp);
     serverloop(server, serverid);
   }
-  else if (args[1].compare("CLIENT") == 0) {
+  else if (args[1].compare("-c") == 0) {
     int clientid = atoi(args[2].c_str());
-    int cmdcount = args.size() > 3 ? atoi(args[3].c_str()) : -1;
+    int serverid = atoi(args[3].c_str());
+    int cmdcount = args.size() > 4 ? atoi(args[4].c_str()) : -1;
     testclient* client = new testclient();
-    client->connect("localhost", RPORT0 + 1);
-    clientloop(client, cmdcount);
+    client->connect("localhost", RPORT0 + serverid);
+    clientloop(client, clientid, cmdcount);
   }
   else helpnquit();
 
@@ -152,13 +154,12 @@ int main(int argc, char* argv[]) {
 }
 
 void serverloop(testserver* server, int cmdcount) {
-  //SDL_Delay(5678);
   while(true) {
     server->checkAll();
   }
 }
 
-void clientloop(testclient* client, int cmdcount) {
+void clientloop(testclient* client, int clientid, int cmdcount) {
   Command* cmd;
   long seq = 0;
   bool printed = false;
@@ -166,15 +167,15 @@ void clientloop(testclient* client, int cmdcount) {
     if (cmdcount != 0) {
       cmd = newRandomCommand();
       if (cmd && cmdcount > 0) cmdcount--;
-      if (cmd) client->sendCommand(cmd, seq++, 1);
+      if (cmd) client->sendCommand(cmd, seq++, clientid);
       if (cmd && !(seq % 1000)) cerr << "Command " << seq << " issued" << endl;
       if (cmd) delete cmd;
     }
-  }
-  client->checkAll();
-  if (cmdcount == 0 && !printed) {
-    printstates();
-    printed = true;
+    client->checkAll();
+    if (cmdcount == 0 && !printed) {
+      printstates();
+      printed = true;
+    }
   }
 }
 
@@ -209,7 +210,6 @@ Command* newRandomCommand() {
     cmd->getContent()->addString("ADD");
   else
     cmd->getContent()->addString("MUL");
-  //cout << "newRandomCommand: cmd->getContent()->getString(0) = \"" << cmd->getContent()->getString(0) << "\"" << endl;
   cmd->getContent()->addInt(1 + rand() % 3);
   cout << "Command is " << cmd->getContent()->getString(0) << "(" << cmd->getContent()->getInt(0) << ")" << endl;
 
