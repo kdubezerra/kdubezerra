@@ -188,6 +188,7 @@ void PaxosInstance::handleAcceptedMessage(OPMessage* _accedMsg) {
     //cout << "PaxosInstance::handleAcceptedMessage: numAcceptors = " << numAcceptors << ", acceptedMsgCounter = " << localInstance->acceptedMsgCounter << endl;
     if (localInstance->learnt == false && localInstance->acceptedMsgCounter >= mostAcceptors) { // TODO: fix this to deliver only once
       localInstance->learnt = true;
+      cout << "PaxosInstance::handleAcceptedMessage: just learnt a value from a new paxos instance" << endl;
       callbackLearner->handleLearntValue(localInstance->acceptedValue);
     }
     if (localInstance->acceptedMsgCounter == numAcceptors) // TODO: create a better criterion to mark an instance as flushable

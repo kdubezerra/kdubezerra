@@ -112,6 +112,7 @@ int FIFOReliableServer::checkNewMessages() {
       rcvdMessage->buildFromBuffer(messageBuffer);
       delete [] messageBuffer;
       if (callbackServer) callbackServer->handleClientMessage(rcvdMessage);
+      cout << "." << flush;
       delete rcvdMessage;
     }
   }

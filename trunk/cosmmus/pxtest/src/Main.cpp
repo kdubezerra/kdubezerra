@@ -161,9 +161,10 @@ void serverloop(testserver* server, int cmdcount) {
 
 void clientloop(testclient* client, int clientid, int cmdcount) {
   Command* cmd;
+  int cmdmax = 2 * cmdcount;
   long seq = 0;
-  bool printed = false;
-  while (true) {
+  int rcvmsgs = 0;
+  while (rcvmsgs < cmdmax) {
     if (cmdcount != 0) {
       cmd = newRandomCommand();
       if (cmd && cmdcount > 0) cmdcount--;
@@ -171,40 +172,39 @@ void clientloop(testclient* client, int clientid, int cmdcount) {
       if (cmd && !(seq % 1000)) cerr << "Command " << seq << " issued" << endl;
       if (cmd) delete cmd;
     }
-    client->checkAll();
-    if (cmdcount == 0 && !printed) {
-      printstates();
-      printed = true;
-    }
+    rcvmsgs += client->checkAll();
+    cout << "rcvmsgs = " << rcvmsgs << endl;
   }
+  printstates();
 }
 
 Command* newRandomCommand() {
-  if (rand() % 2)
-    return NULL;
   Command* cmd = new Command();
+  unsigned char targsBitmap = 1 + rand() % 7;
 
   cout << endl;
 
-  if (rand() % 2) {
+  if (targsBitmap & (unsigned char) 0x1) {
     cmd->addTarget(o1->getInfo());
     cout << "    obj1 is a target" << endl;
   }
 
-  if (rand() % 2) {
+  if ((targsBitmap >> 1) & (unsigned char) 0x1) {
     cmd->addTarget(o2->getInfo());
-    cout         << "    obj2 is a target" << endl;
+    cout << "    obj2 is a target" << endl;
   }
 
-  if (rand() % 2) {
+  if ((targsBitmap >> 2) & (unsigned char) 0x1) {
     cmd->addTarget(o3->getInfo());
-    cout         << "    obj3 is a target" << endl;
+    cout << "    obj3 is a target" << endl;
   }
 
   if (cmd->getTargetList().size() == 0) {
+    cout << "newRandomCommand: somehow, the command has no target" << endl;
     delete cmd;
     return NULL;
   }
+
   cmd->setContent(new Message());
   if (rand() % 2)
     cmd->getContent()->addString("ADD");

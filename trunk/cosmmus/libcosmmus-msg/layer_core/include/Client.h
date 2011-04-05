@@ -44,8 +44,8 @@ class Client : public netwrapper::ClientInterface {
     void handleServerMessage(netwrapper::Message* _msg);
     virtual void handleMessage(netwrapper::Message* _msg) = 0;
 
-    void checkAll();
-    void checkNewMessages();
+    int checkAll();
+    int checkNewMessages();
 
   private:
     void handleCommand(Command* _cmd);
