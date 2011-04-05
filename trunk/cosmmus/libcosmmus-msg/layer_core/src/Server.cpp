@@ -80,6 +80,7 @@ void Server::checkAll() {
   checkConnections();
   checkNewMessages();
   flushOptCmdQueue();
+  tryProposingPendingCommands();
 }
 
 
