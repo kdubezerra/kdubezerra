@@ -10,7 +10,7 @@
 
 #include <list>
 #include <map>
-#include "Command.h"
+//#include "Command.h"
 #include "../../layer_network/include/Message.h"
 
 namespace optpaxos {
@@ -19,6 +19,7 @@ class Command;
 class ObjectFactory;
 class ObjectInfo;
 class OPMessage;
+class Server;
 
 class Object {
   public:
@@ -37,6 +38,10 @@ class Object {
     static void setObjectFactory(ObjectFactory* _factory); // (!) shallow copy of the objectFactory!
     static ObjectFactory* getObjectFactory();
 
+    void lock();
+    void unlock();
+    bool isLocked();
+
     std::list<Command*> getOptCmdQueue();
     void enqueueOrUpdateOptQueue(Command* _cmd);
     void tryFlushingOptQueue();
@@ -44,6 +49,8 @@ class Object {
     std::list<Command*> getConsCmdQueue();
     void enqueueOrUpdateConsQueue(Command* _cmd);
     void tryFlushingConsQueue();
+
+    static void setCallbackServer(Server* _server);
 
     static void handleCommand(Command* _cmd);
     static void handleStateUpdate(Object* _state);
@@ -102,11 +109,12 @@ class Object {
 
   protected:
     ObjectInfo* objectInfo;
-    bool waitingForDecision;
+    bool lockedForProposals;
     std::list<Command*> optCmdQueue;
     std::list<Command*> consCmdQueue;
     static std::map<int, Object*> objectIndex;
     static ObjectFactory* objectFactory;
+    static Server* callbackServer;
 };
 
 }

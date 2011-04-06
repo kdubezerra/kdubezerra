@@ -10,6 +10,7 @@
 #include "../include/Object.h"
 #include "../include/ObjectFactory.h"
 #include "../include/ObjectInfo.h"
+#include "../include/Server.h"
 
 using namespace std;
 using namespace optpaxos;
@@ -17,17 +18,18 @@ using namespace netwrapper;
 
 std::map<int, Object*> Object::objectIndex;
 ObjectFactory* Object::objectFactory = NULL;
+Server* Object::callbackServer = NULL;
 
 
 Object::Object() {
   objectInfo = NULL;
-  waitingForDecision = false;
+  lockedForProposals = false;
 }
 
 
 Object::Object(Object* _other) {
   objectInfo = new ObjectInfo(_other->objectInfo);
-  waitingForDecision = false;
+  lockedForProposals = false;
 }
 
 
@@ -35,7 +37,7 @@ Object::Object(int _id) {
   objectInfo = new ObjectInfo();
   objectInfo->setId(_id);
   objectInfo->setLastStamp(-1);
-  waitingForDecision = false;
+  lockedForProposals = false;
 }
 
 
@@ -89,6 +91,21 @@ void Object::setObjectFactory(ObjectFactory* _factory) {
 
 ObjectFactory* Object::getObjectFactory() {
   return objectFactory;
+}
+
+
+void Object::lock() {
+  lockedForProposals = true;
+}
+
+
+void Object::unlock() {
+  lockedForProposals = false;
+}
+
+
+bool Object::isLocked() {
+  return lockedForProposals;
 }
 
 
@@ -181,13 +198,6 @@ void Object::tryFlushingConsQueue() { // TODO: seria melhor checar se o comando 
   Command* nextCmd = new Command(consCmdQueue.front());
 
   if (nextCmd->getStage() != DELIVERABLE) {
-    for (std::list<Command*>::iterator it = consCmdQueue.begin() ; it != consCmdQueue.end() ; it++) {
-      //cout << "Object::tryFlushingConsQueue: command " << (*it)->getId() << " has logicalStamp " << (*it)->getLogicalStamp();
-      //if ((*it)->getStage() == DELIVERABLE) cout << " and is DELIVERABLE\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*";
-      //cout << endl;
-    }
-    //cout << "Object::tryFlushingConsQueue: first command of object " << this->getInfo()->getId() << " is not deliverable yet." << endl;
-
     delete nextCmd;
     return;
   }
@@ -204,9 +214,11 @@ void Object::tryFlushingConsQueue() { // TODO: seria melhor checar se o comando 
   }
 
   if (allObjsReady) {
+    callbackServer->handleCommandReady(nextCmd);
     //cout << "Object::tryFlushingConsQueue: command " << nextCmd->getId() << " delivered to object " << this->getInfo()->getId() << endl;
     for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
       Object* obj = Object::getObjectById((*ittarget)->getId());
+      obj->unlock();
       obj->handleConservativeDelivery(nextCmd);
       obj->objectInfo->setLastStamp(nextCmd->getLogicalStamp());
       delete obj->consCmdQueue.front();
@@ -221,7 +233,11 @@ void Object::tryFlushingConsQueue() { // TODO: seria melhor checar se o comando 
   }
 
   delete nextCmd;
+}
 
+
+void Object::setCallbackServer(Server* _server) {
+  callbackServer = _server;
 }
 
 

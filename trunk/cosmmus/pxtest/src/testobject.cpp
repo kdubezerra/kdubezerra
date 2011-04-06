@@ -44,6 +44,7 @@ void testobject::handleOptimisticDelivery(Command* _cmd) {
     optState += _cmd->getContent()->getInt(0);
   if (_cmd->getContent()->getString(0).compare("MUL") == 0)
     optState *= _cmd->getContent()->getInt(0);
+  optComList.push_back(_cmd->getId());
 }
 
 void testobject::handleConservativeDelivery(Command* _cmd) {
@@ -52,4 +53,14 @@ void testobject::handleConservativeDelivery(Command* _cmd) {
     conState += _cmd->getContent()->getInt(0);
   if (_cmd->getContent()->getString(0).compare("MUL") == 0)
     conState *= _cmd->getContent()->getInt(0);
+  consComList.push_back(_cmd->getId());
+}
+
+void testobject::printCmdLists() {
+  int i = 0;
+  for (list<long>::iterator it = optComList.begin() ; it != optComList.end() ; it++)
+    cout << "optDelivery[" << ++i << "] = " << *it << endl;
+  i = 0;
+  for (list<long>::iterator it = consComList.begin() ; it != consComList.end() ; it++)
+    cout << "consDelivery[" << ++i << "] = " << *it << endl;
 }
