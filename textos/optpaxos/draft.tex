@@ -1,0 +1,127 @@
+\documentclass[times, 10pt]{article} 
+%\documentclass[times, 10pt,twocolumn]{article} 
+%\usepackage[noend]{distribalgo}
+\usepackage{algorithm}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amssymb}
+\usepackage[draft]{fixme}
+
+\begin{document}
+
+\newcommand{\mv}[1]{\ensuremath{\operatorname{\mathit{#1}}}}
+\definecolor{dark}{gray}{.6}
+\newcommand{\bc}[1]{\textcolor{dark}{#1}}
+\newtheorem{lems}{Lemma}
+\newtheorem{props}{Proposition}
+\newtheorem{thms}{Theorem}
+\newtheorem{defs}{Definition}
+\newtheorem{obs}{Observation}
+
+\title{MMOGs}
+
+%\author{
+%xxx\\
+%University \\ Country\\
+%\and
+%xxx\\
+%University \\ Country\\
+%\and
+% ...
+%}
+
+\maketitle
+
+\begin{abstract}
+
+
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+
+\section{System model and definitions}
+\label{sec:model}
+
+We assume a system composed of nodes, divided into \emph{players} and \emph{servers}, distributed over a geographical area.
+Nodes may fail by crashing and subsequently recover, but do not experience arbitrary behavior (i.e., no Byzantine failures). 
+Communication is by message passing, through the primitives \emph{send}$(p,m)$ and \emph{receive}$(m)$, where $p$ is the addressee of message $m$. Messages can be lost but not corrupted. If a message is repeatedly resubmitted to a \emph{correct node} (defined below), it is eventually received.
+
+Our protocols ensure safety under both asynchronous and synchronous execution periods. The FLP impossibility result~\cite{FLP85} states that under asynchronous assumptions consensus cannot be both safe and live. We thus assume that the system is initially asynchronous and eventually becomes synchronous. The time when the system becomes synchronous is called the \emph{Global Stabilization Time (GST)}~\cite{DLS88}, and it is unknown to the nodes.
+Before GST, there are no bounds on the time it takes for messages to be transmitted and actions to be executed. After GST, such bounds exist but are unknown. After GST nodes are either \emph{correct} or \emph{faulty}. A correct node is operational ``forever" and can reliably exchange messages with other correct nodes. This assumption is only needed to prove liveness properties about the system. In practice, ``forever" means long enough for one instance of consensus to terminate.
+
+A game is composed of a set of objects. The game's state is defined by the individual states of each one of its objects. We assume that the game objects are partitioned among different servers and each object has a coordinator. Since objects have a location in the game, one way to perform this partitioning is by zoning the virtual world of the game. Each partition consists of a set of objects of the game.
+
+Commands are issued by players to the coordinators of the objects involved in the command---we assume that players have a way to discover object coordinators. Therefore, a command $C = \{ c_1, c_2, ... \}$ is composed of one or more subcommands, one subcommand per object it affects. We refer to the set of objects affected by command $C$ as $obj(C)$.
+
+%Each object has its own command stream. When a command affects more than one object, it must be inserted in the command stream of all the objects it affects.
+
+Our consistency criterion is ``eventual linearizability". (I'm not sure this is indeed what we want and how to define it, but we do need some consistency criterion...)
+
+
+%In order to guarantee that commands are executed properly by servers, theywe define the following order requirement.
+%
+%Let $G =(V,E)$ be a graph where the set $V$ of vertices contains all game commands and $E$ contains edge $C_i \rightarrow C_j$ if subcommand $c_x \in C_i$ is executed before subcommand $c_y \in C_j$. The order requirement states that $G$ is acyclid. In other words, if two commands affect common objects, their subcommands must be executed in the same order.
+%
+%Our goal is to design ordering protocols with low latency. Two aspects affect latency: (a)~the number of communication steps needed to ensure that subcommands can be properly executed in the absence of contention and (b)~possible slowdowns due to contention. We illustrate these aspects in the following section.
+%
+%To each partition, a group of servers is assigned, and they are responsible for storing and managing the state of those objects. One of them is a coordinator (or region manager, if one considers partitions as regions) and the rest of the group is formed by replicas, whose purpose is to provide fault tolerance.
+
+
+
+\section{Baseline protocol}
+
+To ensure reliability despite server crashes, each server is replicated using state-machine replication, implemented with Paxos.
+%
+Each command is assigned a timestamp and executed against objects in timestamp order. We implement this by assigning each object a logical clock.
+If the timestamp of a command $C$ is smaller than the logical clock of the object it affects, $C$ is not executed against the object; otherwise, $C$ is executed and its timestamp is used to set the logical clock of the objects if affects. Therefore, the challenge is how to assign timestamps to commands such that consistency is not violated and commands are not discarded due to stale timestamp values. There are three cases to consider:
+
+
+%In brief, our strategy is to combine state-machine replication (implemented with Paxos), used to handle object replicas, with Skeen's algorithm, used to select timestamps for commands that affect multiple objects.
+
+\begin{itemize}
+\item Command $C$ affects the state of only one game object.
+
+In this case, upon receiving $C$, the server forwards $C$ to the object coordinator, which, in turn, starts an instance of Paxos in its replication group to assign a timestamp to $C$. When that run of Paxos finishes, a timestamp TS is assigned to $C$ and each server of the group deliver $C$ and executes it as soon as $C$'s timestamp is the smallest one affecting the referred object.
+
+\item Command $C$ affects two or more objects, all of which are managed by the same server group.
+
+The server that received $C$ then forwards it to the group coordinator. In the command, it is informed which objects are affected by it. With this information, then, the coordinator picks the highest value (TS) among the logical clocks of the involved objects and assigns it as a timestamp for $C$. The logical clocks of all the affected objects are, then, set to a value higher than TS. To do so, an instance of Paxos is run, in order to inform the group about the new command, its timestamp and about the new values for the logical clocks of the affected objects.
+
+\item Command $C$ affects two or more objects and at least two of them are not managed by the same server group.
+
+We rely on a variation of Skeen's algorithm to implement this case.
+The server that receives C forwards C to all the coordinators of the objects affected by C. Each one of these coordinators, then, proposes a timestamp for C. "To propose" here means to achieve consensus (with paxos, for example) in the group regarding C's timestamp proposed by that group. The value proposed by a group coordinator when it initiates the consensus instance in its group corresponds to the highest value among the logical clocks of the objects affected by C AND which are managed by its group.
+
+After a group reaches consensus about its timestamp proposal for C, it sends it to the other groups. When a group possesses all the timestamp proposals, it picks the highest among them (TS), and assigns it as a timestamp to C. For each group whose proposal was not the highest one, the logical clocks of its object(s) affected by C must be increased to a value higher than TS, which is done by means of consensus in the group.
+
+\end{itemize}
+
+
+
+
+%A common mechanism to handle replication is the state-machine replication approach~\cite{Lam78}. This mechanism ensures that for any given object, commands are executed in the same order across all object replicas. To guarantee the command order property, we can use Skeen's multicast algorithm, which has been proved to be optimum in number of steps.
+%
+%Skeen+Paxos
+%
+%, and thus it also has its own logical clock and its timestamps are assigned independently from those of other objects, unless a command affects two or more objects. A server executes commands in timestamp order, that is, command C with timestamp tmp(C) is only executed against object O if tmp(O) < tmp(C). After the execution of C, OÕs timestamp is updated to CÕs.
+%
+%To ensure that C will be executed by all objects concerned by C, its timestamp tmp(C) will be set to the highest value among the logical clocks of all the objects it was addressed to. After the execution of C, the logical clock of each object is set to a value higher than tmp(C).
+%
+%
+%
+%Here, it is considered that to each command is assigned a timestamp, according to Lamport's logical clocks. 
+%
+
+
+\section{Optimistic protocol}
+
+
+%\bibliographystyle{latex8}
+%\bibliography{main}
+
+\end{document}
+

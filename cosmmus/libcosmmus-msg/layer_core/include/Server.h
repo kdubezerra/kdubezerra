@@ -53,6 +53,7 @@ class Server : public optpaxos::PaxosLearnerInterface,
     void handleClientDisconnect(netwrapper::RemoteFRC* _client);
     void handleClientMessage(netwrapper::Message* _msg);
     void handlePeerMessage(netwrapper::Message* _msg);
+    void handleCommandReady(Command* _cmd);
 
     void setCallbackInterface(optpaxos::ServerInterface* _cbInterface);
     virtual void handleOptimisticDelivery(Command* _cmd) = 0;

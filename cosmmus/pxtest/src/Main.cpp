@@ -156,6 +156,13 @@ int main(int argc, char* argv[]) {
 void serverloop(testserver* server, int cmdcount) {
   while(true) {
     server->checkAll();
+    printstates();
+    cout << "\nObject 1 delivery:\n" << flush;
+    o1->printCmdLists();
+    cout << "\nObject 2 delivery:\n" << flush;
+    o2->printCmdLists();
+    cout << "\nObject 3 delivery:\n" << flush;
+    o3->printCmdLists();
   }
 }
 
@@ -166,6 +173,7 @@ void clientloop(testclient* client, int clientid, int cmdcount) {
   int rcvmsgs = 0;
   while (rcvmsgs < cmdmax) {
     if (cmdcount != 0) {
+      //SDL_Delay(1000);
       cmd = newRandomCommand();
       if (cmd && cmdcount > 0) cmdcount--;
       if (cmd) client->sendCommand(cmd, seq++, clientid);
@@ -176,6 +184,12 @@ void clientloop(testclient* client, int clientid, int cmdcount) {
     cout << "rcvmsgs = " << rcvmsgs << endl;
   }
   printstates();
+  cout << "\nObject 1 delivery:\n" << flush;
+  o1->printCmdLists();
+  cout << "\nObject 2 delivery:\n" << flush;
+  o2->printCmdLists();
+  cout << "\nObject 3 delivery:\n" << flush;
+  o3->printCmdLists();
 }
 
 Command* newRandomCommand() {

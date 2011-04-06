@@ -33,6 +33,7 @@ Server::Server() {
   lastCommandId = lastPaxosInstance = 0;
   waitWindow = 0;
   PaxosInstance::setLearner(this);
+  Object::setCallbackServer(this);
 }
 
 
@@ -193,6 +194,11 @@ void Server::handlePeerMessage(Message* _msg) {
 }
 
 
+void Server::handleCommandReady(Command* _cmd) {
+  sendCommandToClients(_cmd, CONSERVATIVE);
+}
+
+
 void Server::sendCommand(Command* cmd, long _clSeq, int _clId) {
   if (cmd->knowsGroups() == false) cmd->findGroups();
   // TODO: the client is supposed to assign a sequence # to its message... the server just makes it unique appending the client's id
@@ -202,7 +208,7 @@ void Server::sendCommand(Command* cmd, long _clSeq, int _clId) {
 }
 
 
-//When Exists m in PENDING : m.stage = s0 || m.stage = s2) && propK <= K
+//When Exists m in PENDING : m.stage = s0 || m.stage = s2) && propK < or = K
 //
 int Server::tryProposingPendingCommands() {
   int proposalsMade = 0;
@@ -222,6 +228,9 @@ int Server::tryProposingPendingCommands() {
 
         if (obj->getInfo()->getNextStamp() > obj->getInfo()->getClock()) //propk must be < or = K
           cmdIsProposable = false;
+
+        if (obj->isLocked())
+          cmdIsProposable = false;
       }
       if (!cmdIsProposable)
         continue;
@@ -229,6 +238,7 @@ int Server::tryProposingPendingCommands() {
       (*itc)->calcLogicalStamp();
       for (std::list<ObjectInfo*>::iterator itt = cmdTargets.begin() ; itt != cmdTargets.end() ; itt++) {
         Object* obj = Object::getObjectById((*itt)->getId());
+        obj->lock();
         obj->getInfo()->setNextStamp((*itc)->getLogicalStamp() + 1);
       }
       if ((*itc)->getGroupList().size() == 1) {
@@ -259,7 +269,6 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
       newCmd->setConservativelyDeliverable(true);
       newCmd->calcLogicalStamp(); //m.ts <- max(k), Oi in m's targets
       newCmd->setStage(DELIVERABLE); //m.stage = s3
-      sendCommandToClients(newCmd, CONSERVATIVE);
       std::list<ObjectInfo*> targetList = newCmd->getTargetList();
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());
@@ -267,6 +276,7 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
         else {
           obj->enqueueOrUpdateConsQueue(newCmd);
           obj->getInfo()->setClock(newCmd->getLogicalStamp() + 1);
+          //obj->unlock();
         }
       }
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {

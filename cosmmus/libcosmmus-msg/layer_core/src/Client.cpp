@@ -9,6 +9,7 @@
 
 // core level classes
 #include "../include/Client.h"
+#include "../include/Command.h"
 #include "../include/Object.h"
 #include "../include/OPMessage.h"
 #include "../include/ObjectInfo.h"

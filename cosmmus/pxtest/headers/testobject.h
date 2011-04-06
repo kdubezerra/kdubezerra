@@ -8,6 +8,7 @@
 #ifndef TESTOBJECT_H_
 #define TESTOBJECT_H_
 
+#include <list>
 #include <cosmmus-msg.h>
 
 /*
@@ -26,6 +27,9 @@ class testobject : public optpaxos::Object {
     void handleConservativeDelivery(optpaxos::Command* _cmd);
     int optState;
     int conState;
+    std::list<long> optComList, consComList;
+    void printCmdLists();
+
 };
 
 #endif /* TESTOBJECT_H_ */
