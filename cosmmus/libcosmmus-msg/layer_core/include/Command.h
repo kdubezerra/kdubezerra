@@ -43,7 +43,8 @@ class Command {
     static bool compareLogicalStampThenId(Command* c1, Command* c2);
     static bool compareTimeStampThenId(Command* c1, Command* c2);
     static bool compareId(Command* c1, Command* c2);
-    static bool deleteDups(Command* c1, Command* c2);
+    static bool hasSameId(Command* c1, Command* c2);
+    static void removeDuplicates(std::list<Command*>& _cmdlist);
 
     void addTarget(ObjectInfo* _obj);
     void addTargetList(std::list<ObjectInfo*> _targetList);

@@ -150,12 +150,13 @@ bool Command::compareId(Command* c1, Command* c2) {
   return c1->commandId < c2->commandId;
 }
 
-bool Command::deleteDups(Command* c1, Command* c2) {
-  if (c1->getId() == c2->getId()) {
-    delete c2;
-    return true;
-  }
-  return false;
+bool Command::hasSameId(Command* c1, Command* c2) {
+  return c1->getId() == c1->getId();
+}
+
+void Command::removeDuplicates(std::list<Command*>& _cmdlist) {
+  _cmdlist.sort(compareId);
+  _cmdlist.unique(hasSameId);
 }
 
 void Command::addTarget(ObjectInfo* _obj) {
