@@ -20,7 +20,7 @@ RESOURCESDIR=../resources
 
 LIBS=-lSDL -lSDL_ttf -lSDL_gfx
 
-CORE_OBJ = Client.o Group.o Object.o PaxosInstance.o ServerInterface.o ClientInterface.o NodeInfo.o ObjectFactory.o PaxosLearnerInterface.o Command.o OPMessage.o ObjectInfo.o Server.o
+CORE_OBJ = Client.o Group.o Object.o PaxosInstance.o ServerInterface.o NodeInfo.o ObjectFactory.o PaxosLearnerInterface.o Command.o OPMessage.o ObjectInfo.o Server.o
 NET_OBJ = Address.o FIFOReliableClient.o GenericNode.o PeerInterface.o ServerInterface.o ClientInterface.o FIFOReliableServer.o Message.o RemoteFRC.o UnreliablePeer.o
 
 RELEASEOBJ = $(patsubst %,$(CORE_RELEASE_DIR)/%,$(CORE_OBJ)) $(patsubst %,$(NET_RELEASE_DIR)/%,$(NET_OBJ))
