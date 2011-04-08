@@ -36,7 +36,7 @@ Object::Object(Object* _other) {
 Object::Object(int _id) {
   objectInfo = new ObjectInfo();
   objectInfo->setId(_id);
-  objectInfo->setLastStamp(-1);
+  objectInfo->setLastStamp(0);
   lockedForProposals = false;
 }
 
@@ -124,6 +124,8 @@ void Object::enqueueOrUpdateOptQueue(Command* _cmd) {
 
   optCmdQueue.push_back(new Command(_cmd));
   optCmdQueue.sort(Command::compareTimeStampThenId);
+  cout << "LOG Object::enqueueOrUpdateConsQueue: inserted command " << _cmd->getId() << ", with logical stamp "
+       << _cmd->getLogicalStamp() << " into the pending list of object " << this->objectInfo->getId() << endl;
 }
 
 
@@ -187,7 +189,19 @@ void Object::enqueueOrUpdateConsQueue(Command* _cmd) {
 
 
 void Object::tryFlushingConsQueue() { // TODO: seria melhor checar se o comando na frente da fila é o mesmo (e nao se o laststamp é o mesmo)
+  cout << endl;
+  int i = 0;
+  for (std::list<Command*>::iterator it = consCmdQueue.begin() ; it != consCmdQueue.end() ; it++) {
+    cout << "Command " << i << " for object " << this << " = " << (*it)->getId() << endl;
+  }
   consCmdQueue.sort(Command::compareLogicalStampThenId);
+  cout << endl;
+  i = 0;
+  for (std::list<Command*>::iterator it = consCmdQueue.begin() ; it != consCmdQueue.end() ; it++) {
+    cout << "After sorting, command " << i << " for object " << this << " = " << (*it)->getId() << endl;
+  }
+  cout << endl;
+
   if (consCmdQueue.empty()) {
     //cout << "Object::tryFlushingConsQueue: command queue of object " << this->getInfo()->getId() << " is CLEAR." << endl;
     return;
@@ -218,7 +232,7 @@ void Object::tryFlushingConsQueue() { // TODO: seria melhor checar se o comando 
     //cout << "Object::tryFlushingConsQueue: command " << nextCmd->getId() << " delivered to object " << this->getInfo()->getId() << endl;
     for (std::list<ObjectInfo*>::iterator ittarget = targetList.begin() ; ittarget != targetList.end() ; ittarget++) {
       Object* obj = Object::getObjectById((*ittarget)->getId());
-      obj->unlock();
+///      obj->unlock();
       obj->handleConservativeDelivery(nextCmd);
       obj->objectInfo->setLastStamp(nextCmd->getLogicalStamp());
       delete obj->consCmdQueue.front();

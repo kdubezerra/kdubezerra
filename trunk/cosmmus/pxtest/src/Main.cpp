@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <list>
 #include <cosmmus-msg.h>
 #include "../headers/testobject.h"
 #include "../headers/testobjfactory.h"
@@ -163,6 +164,10 @@ void serverloop(testserver* server, int cmdcount) {
     o2->printCmdLists();
     cout << "\nObject 3 delivery:\n" << flush;
     o3->printCmdLists();
+    int i = 0;
+    for (list<long>::iterator it = server->rcvdCmdsAtCoord.begin() ; it != server->rcvdCmdsAtCoord.end() ; it++)
+      cout << "Received command " << ++i << " = " << *it << endl;
+    cout << endl;
   }
 }
 
@@ -194,7 +199,7 @@ void clientloop(testclient* client, int clientid, int cmdcount) {
 
 Command* newRandomCommand() {
   Command* cmd = new Command();
-  unsigned char targsBitmap = 1 + rand() % 7;
+  unsigned char targsBitmap = 1 + rand() % 3;//1 + rand() % 7;
 
   cout << endl;
 

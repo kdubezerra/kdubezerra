@@ -60,6 +60,10 @@ class Server : public optpaxos::PaxosLearnerInterface,
 
     //debug purposes: the server itself creates a msg
     void sendCommand(Command* cmd, long _clSeq, int _clId);
+    //=======================
+    //*** DEBUG VARIABLES ***
+    //=======================
+    std::list<long> rcvdCmdsAtCoord;
 
   private:
 

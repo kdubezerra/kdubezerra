@@ -20,7 +20,7 @@ all: $(OUTPUT)
 directories:
 	mkdir -p $(OUT_DIR) $(OBJ_DIR)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | directories
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp ../../libcosmmus-msg/linux_build/debug/libcosmmus-msg.a | directories
 	$(CC) -c $(CFLAGS) $< -o $@ 
 
 $(OUTPUT): $(OBJS)
