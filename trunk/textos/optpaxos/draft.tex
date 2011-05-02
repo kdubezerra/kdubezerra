@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage[noend]{distribalgo}
 \usepackage[draft]{fixme}
 
 \begin{document}
@@ -53,9 +55,9 @@ We assume a system composed of nodes, divided into \emph{players} and \emph{serv
 Our protocols ensure safety under both asynchronous and synchronous execution periods. The FLP impossibility result~\cite{FLP85} states that under asynchronous assumptions consensus cannot be both safe and live. We thus assume that the system is initially asynchronous and eventually becomes synchronous. The time when the system becomes synchronous is called the \emph{Global Stabilization Time (GST)}~\cite{DLS88}, and it is unknown to the nodes.
 Before GST, there are no bounds on the time it takes for messages to be transmitted and actions to be executed. After GST, such bounds exist but are unknown. After GST nodes are either \emph{correct} or \emph{faulty}. A correct node is operational ``forever" and can reliably exchange messages with other correct nodes. This assumption is only needed to prove liveness properties about the system. In practice, ``forever" means long enough for one instance of consensus to terminate.
 
-A game is composed of a set of objects. The game state is defined by the individual states of each one of its objects. We assume that the game objects are partitioned among different servers. Since objects have a location in the game, one way to perform this partitioning is by zoning the virtual world of the game. Each partition consists of a set of objects of the game and the server responsible for them is their \emph{coordinator}.
+A game is composed of a set of objects. The game state is defined by the individual states of each one of its objects. We assume that the game objects are partitioned among different servers. Since objects have a location in the game, one way to perform this partitioning is by zoning the virtual world of the game. Each partition consists of a set of objects of the game and the server responsible for them is their \emph{coordinator}. As partitions represent physical regions in the game world, we define \emph{neighbor} regions as those which share a border with each other. We consider that each server is replicated, thus forming several groups which consist of the coordinator and its replicas. Therefore, for each region of the game world, there is a group assigned to it. This way, a group is said to coordinate an object when the group's coordinator is the coordinator for that object. Finally, groups are called neighbors when they are assigned to neighbor regions.
 
-Each player sends its commands to one of the servers\footnote{We consider that each server is replicated and that each player may send his command to one of the replicas, instead of the main server, if that provides a lower delay between the issuing of a command and its delivery.} -- in the case of avatar based virtual environments, and as an avatar is usually also an object, the server to which a player is connected is his avatar's coordinator. A command $C = \{ c_1, c_2, ... \}$ is composed of one or more subcommands, one subcommand per object it affects. We refer to the set of objects affected by command $C$ as $obj(C)$. Also, we refer to the objects coordinated by a server $S$ as $obj(S)$. Finally, we define $obj(C,S)$ = \{$o$ : $o \in obj(C)$ and $o \in obj(S)$\}.
+Each player may send his command to one of the replicas, instead of the coordinator, if that provides a lower delay between the issuing of a command and its delivery. In the case of avatar based virtual environments, and as an avatar is usually also an object, the server to which a player is connected is his avatar's coordinator. A command $C = \{ c_1, c_2, ... \}$ is composed of one or more subcommands, one subcommand per object it affects. We refer to the set of objects affected by command $C$ as $obj(C)$. Also, we refer to the objects coordinated by a server $S$ as $obj(S)$. Finally, we define $obj(C,S)$ = \{$o$ : $o \in obj(C)$ and $o \in obj(S)$\}.
 
 %Each object has its own command stream. When a command affects more than one object, it must be inserted in the command stream of all the objects it affects.
 
@@ -72,62 +74,131 @@ Our consistency criterion is ``eventual linearizability". (I'm not sure this is 
 
 
 
-\section{Baseline protocol}
+\section{Protocol}
 
-To ensure reliability despite server crashes, each server is replicated using state-machine replication, implemented with Paxos. Each player may send its commands to any of his server's replicas -- which then forwards it to the server. Each command is assigned a timestamp and executed against objects in timestamp order. We implement this by assigning each object a logical clock. If the timestamp of a command $C$ is smaller than the logical clock of the object it affects, $C$ is not executed against the object; otherwise, $C$ is executed and its timestamp is used to set the logical clock of the objects if affects. Therefore, the challenge is how to assign timestamps to commands such that consistency is not violated and commands are not discarded due to stale timestamp values. There are three cases to consider:
+To ensure reliability despite server crashes, each server is replicated using state-machine replication, implemented with Paxos. Each player may send its commands to any of his server's replicas -- which then forwards it to the server. Each command is assigned a timestamp and executed against objects in timestamp order. We implement this by using a logical clock in each server group, considering that each group consists of a server and its replicas. Guaranteeing that the same set of commands is executed by the respective affected objects in the same order provides the level of consistency we are seeking. Therefore, the challenge is how to assign timestamps to commands such that consistency is not violated and commands are not discarded due to stale timestamp values. There are three cases to consider:
 
+However, providing such level of consistency may prove to be costly in an MMOG context, since there may be several communication steps between the sending of a command and its in-order atomic delivery. For this reason, we also use an \emph{optimistic} delivery for the commands of the players. This delivery, although not guaranteeing that all replicas will receive all commands, or that they will be delivered in the same order, is designed to have a fairly low latency, counting from when each command is sent until it is delivered.
 
-%In brief, our strategy is to combine state-machine replication (implemented with Paxos), used to handle object replicas, with Skeen's algorithm, used to select timestamps for commands that affect multiple objects.
+The final -- conservative, fault tolerant, but costly in terms of communication steps for each message -- delivery order should be as close as possible to the optimistic one, so that no roll-backs would be necessary. To explain how this works, we first should understand the idea behind the optimistic delivery.
+
+\subsection{Optimistic delivery}
+
+%Even when ordering commands relevant to only one group, a significant number of communication steps is required: player to replica; replica to coordinator; consensus (two communication steps in the case of Paxos, when having the coordinator as the leader, using ballot reservation, each acceptor sending phase 2b messages to all other acceptors and assuming a tolerable number of failures) and, once consensus is achieved, each replica can put the command in the delivery queue and send it to each player. That sums up to five communication steps. On a geographically distributed scenario, this number of communication steps may be prohibitive for the ``playability'' of a vast number of online games.
+
+%In order to mitigate this problem, we propose a protocol for \emph{optimistic ordering and delivery} of the commands, which is supposed to run in parallel with the protocol described in the previous section, which from now on will be called \emph{conservative ordering and delivery}. The optimistic order and delivery are correct if they include all the messages delivered with the conservative one and if they are delivered in the same order. Also, each object has an optimistic state and a conservative state. When a command is conservatively delivered to an object, its conservative state is updated, and this state is certainly consistent -- given the assumptions we have made about the system. Likewise, when a command is optimistically delivered, its optimistic state is updated.
+
+%The optimistic ordering and delivery is supposed to be much faster than the conservative one. Assuming that it will be, and if the optimistic delivery order is always correct -- which means that it correctly predicted the conservative delivery order --, then the objects will always have a valid state within much fewer communication steps, counting from when each command $C$ was issued to when it is delivered and applied to $obj(C)$.
+
+The basic idea of the optimistic ordering is the following: assuming that the servers have a synchronized clock\footnote{We don't require here perfectly synchronized clocks, as the optimistic protocol tolerates mistakes by its very definition. We only need clocks which are synchronized enought, so that our delivery order prediction succeeds and matches the conservative delivery order.}, whenever a server $S$ (either coordinator or replica) receives a command $C$ from a client, it immediately applies a provisory (optimistic) timestamp $pTS$ for it, which consists simply of the current value of the server's wallclock, $now$. Therefore, $C.pTS=now$. A wait window of length $w(S)$ is considered, where $w(S)$ is defined as the highest estimated communication delay between the server $S$ and any of the other servers in its group or in its group's neighbors.
+
+After applying the provisory timestamp to $C$, the server $S$ immediately forwards it to all the other servers involved, including servers in other groups. A server is involved with a command $C$ when one of the objects in $obj(C)$ is coordinated by that server's group. Then, $S$ puts $C$ on a list, where it stays until $now>C.pTS+w(S)$, which means that $C$ has been in that list for a time longer than the defined wait window. In the meantime, other commands, sent from other clients and forwarded by other servers, may have been received and also inserted in that list, always sorting by the provisory timestamp of these commands. If $w(S)$ has been correctly estimated as the highest communication delay between the server and each of the other servers in its group or in its neighboring groups, and no message was lost, than all the commands that were supposed to be delivered before $C$ have necessarily been received already. If the same has occurred for all the servers, then all of them have received all the commands, and can deliver them in the same order of $pTS$.
+
+However, even if the optimistic order is the same for all the servers, it won't be valid if the conservative order is different from it. For that reason, we devised a way to make the conservative delivery order as close as possible to the optimistic one.
+
+\subsection{Conservative delivery}
+
+Instead of having the conservative delivery done completely independently from the optimistic one, we can actually use the latter as a hint for the final delivery order. Since the optimistic delivery should be fast compared to the conservative one, waiting for it should not decrease the system performance significantly. Also, if we wait a short period longer, we can avoid a rollback later caused by mismatches between the two delivery orders, which is not desirable. The basic idea is, then, to pick the optimistic delivery order seen at the coordinator of each group.
+
+The complicating factor is the possibility of a command affecting the state of objects in more than one group. So, all involved groups must somehow agree regarding the delivery order of these commands. However, as in most MMOGs objects interact only with other objects which are nearby, we can exploit the fact that the groups addressed by a single command are usually neighbors. We do this by defining \emph{barriers} for multicast, such that $barrier(G_{send},G_{recv})$ = $t$ means that the group $G_{send}$ promised that no commands with timestamp lower than $t$ would be sent to group $G_{recv}$ anymore. When a server $S$ has received all the barrier values from its neighbours, and they are all greater than a value $t$, then $S$ knows that no more commands are coming from other groups and that, once the local ordering is done, all the commands with timestamp up to $t$ can be conservatively delivered. Besides, a barrier is sent along with the bundle of all messages with timestamp greater than the last previous barrier sent from $G_{send}$ to $G_{recv}$, so that when a server has received a barrier, it means that it knows all the messages sent until the time value stored in that barrier. 
+
+There are three possibilities for each command $C$, in the perspective of the coordinator $S_c$ of a given group $G$:
 
 \begin{itemize}
-\item Command $C$ affects the state of only one game object.
+  \item Command $C$ affects the state of objects in only one server group.
+  
+  In this case, when $C$ is optimistically delivered by the coordinator, it is inserted in a \textit{consPending} list for later being conservatively delivered via consensus in the local group.
 
-In this case, upon receiving $C$, the server forwards $C$ to the object coordinator, which, in turn, locks\footnote{Locking an object here means that no two command proposals can be done in parallel for that object. If, while trying to lock an object, it was already locked, the \code{\footnotesize{lock()}} call returns a value informing that it failed to lock.} the object and starts an instance of Paxos in its replication group to assign a timestamp to $C$. When that run of Paxos finishes, a timestamp $TS$ is assigned to $C$, the object is unlocked and each server of the group delivers $C$ and executes it as soon as $C$'s timestamp is the smallest one affecting the referred object.
-
-\item Command $C$ affects two or more objects, all of which are managed by the same server group.
-
-The server that received $C$ then forwards it to the group coordinator. In the command, it is informed which objects are affected by it. With this information, then, the coordinator locks all the involved objects, picks the highest value ($TS$) among their logical clocks and assigns it as a timestamp for $C$. After that, an instance of Paxos is run in order to store the command and its timestamp in the memory of replicas. Upon reaching consensus, the logical clocks of all the affected objects are, then, set to a value higher than $TS$ and they are all unlocked.
-
-\item Command $C$ affects two or more objects and at least two of them are not managed by the same server group.
-
-\code{(we have to check whether this really works\ldots)}
-
-We rely on a variation of Skeen's algorithm to implement this case. The server that receives $C$ forwards $C$ to all the coordinators of the objects affected by $C$. Each coordinator $S$ then locks all objects in $obj(C,S)$ and proposes a timestamp for $C$. ``To propose" here means to achieve consensus (with Paxos, for example) in the group regarding $C$'s timestamp proposed by that group. The value proposed by a group coordinator when it initiates the consensus instance in its group corresponds to the highest value among the logical clocks of the objects in $obj(C,S)$.
-
-After a group reaches consensus about its timestamp proposal for $C$, it sends it to the other groups. When a group with a coordinator $S$ possesses all the timestamp proposals, it picks the highest among them ($TS$), assigns it as a timestamp to $C$, and unlocks all objects in $obj(C,S)$. For each group whose proposal was not the highest one, the logical clocks of its object(s) affected by $C$ must be increased to a value higher than $TS$, which is done by means of consensus in the group.
-
+  \item When $C$ affects objects in more than one group and it has originated in the same group $G$ of the coordinator $S_c$.
+  
+  In this case, when $C$ is optimistically delivered by the coordinator, it starts a Paxos consensus instance within its group, having not only its own group's servers as learners, but also those of the neighbor groups affected by $C$. The proposed value is the command $C$ itself, including $C.pTS$. When the value is decided and learnt, the servers of each of the other groups $G'$ adjusts $barrier(G, G')$ to $C.pTS$ and the coordinators of all the involved groups insert it into the respective \textit{consPending} lists. 
+  
+  \item When $C$ affects objects in more than one group, but its group of origin is not $G$.
+  
+  In this case, when $C$ is optimistically delivered, nothing else is done by $S_c$, as it should be inserted into the \textit{consPending} list only when learnt via a consensus instance started at its group of origin -- stored in $C.src$.
 \end{itemize}
 
+The list \textit{consPending} is always sorted in ascending order of the timestamp of the commands in it. When the first command $C$ in this list is such that $C.pTS < now - w(S_c)$ and $C.pTS < barrier(G, G')$ for all $G'$ such that $G'$ is a neighbor of $G$, then $C$ is atomically broadcast (e.g. also with Paxos) to the group as the next command to be conservatively delivered. 
 
+The possibility not covered here is when a message is sent from a group to another one which is not its neighbour. However, it is realistic for this context to assume that objects should be close to each other in the virtual environment to interact and that, as such, this kind of interaction is not supported. Nevertheless, one simple way to provide this kind of support could be by each group waiting for the barriers of every other group in the system, instead of only those of its neighbors.
 
+A more formal description of the protocol is given in Algorithm \ref{algorithm:optpaxos}. Note that, by abuse of notation, we have `server $s \in C.dst$' instead of `server $s$~: $\exists$ group $G~\in~C.dst$ $\wedge$ $s~\in~G$. Also, we consider that three primitives are given: $getTime()$, which returns the current value of the local wallclock; $Propose(val, learners)$, which initiates a Paxos \cite{paxosref} instance proposing the value $val$ with the local group as the group of acceptors and $learners$ as the group of learners; and also $Learn(val)$, which is called when a paxos instance achieves consensus. The $Learn(val)$ is called for all the processes which are supposed to learn a given proposed value once it is decided by a Paxos instance. For the sake of simplicity, we assume that, in a group, the values are learnt by consensus in the same order in which the consensus instances were initiated. This can be easily done with a sequence number given by the group's coordinator when initiating each consensus instance.
 
-%A common mechanism to handle replication is the state-machine replication approach~\cite{Lam78}. This mechanism ensures that for any given object, commands are executed in the same order across all object replicas. To guarantee the command order property, we can use Skeen's multicast algorithm, which has been proved to be optimum in number of steps.
-%
-%Skeen+Paxos
-%
-%, and thus it also has its own logical clock and its timestamps are assigned independently from those of other objects, unless a command affects two or more objects. A server executes commands in timestamp order, that is, command C with timestamp tmp(C) is only executed against object O if tmp(O) < tmp(C). After the execution of C, O�s timestamp is updated to C�s.
-%
-%To ensure that C will be executed by all objects concerned by C, its timestamp tmp(C) will be set to the highest value among the logical clocks of all the objects it was addressed to. After the execution of C, the logical clock of each object is set to a value higher than tmp(C).
-%
-%
-%
-%Here, it is considered that to each command is assigned a timestamp, according to Lamport's logical clocks. 
-%
+Moreover, each server contains an \textit{optPending} list which contains the commands waiting to be \textit{OPT-Delivered} (optimistically delivered). The \mbox{\textit{consPending}} list contains the commands ready to be \textit{CONS-Delivered} (conservatively delivered), but which may be waiting for the clearance from the neighbor groups. Also, each command $cmd$ has at least three fields: $dst$, which is the list of groups which contain objects affected by it; $src$, which is the group to which the client who issued it is connected; and $pTS$, the value of the wallclock of a server when it received the command from the client.
 
+\begin{algorithm}
+\begin{distribalgo}[1]
+\STATE \underline{This part of the algorithm is executed by every server $s$:}
+\STATE
+\INDENT{\textit{When $s$ receives a command $cmd$ from a client}}
+  \STATE $cmd.pTS \leftarrow getTime()$  
+  \COMMENT{current wallclock value as the timestamp of $cmd$}
+  \INDENT{\textbf{for all} $s' \in cmd.dst$ \textbf{do}}
+    \STATE $send(s', cmd)$    
+    \COMMENT{send optimistically $cmd$ to all involved servers}
+  \ENDINDENT
+  \STATE $optPending \leftarrow optPending$ $\cup$ $\{cmd\}$
+\ENDINDENT
+\STATE
+\INDENT{\textit{When a server $s$ receives a command $cmd'$ from another server}}
+  \IF {$cmd'.pTS < getTime() - w(s)$}
+    \STATE discard $cmd'$
+    \COMMENT{late commands probably lead to out-of-order delivery}
+  \ELSE
+    \STATE $optPending \leftarrow optPending$ $\cup$ $\{cmd'\}$
+  \ENDIF
+\ENDINDENT
+\STATE
+\INDENT{\textit{When $\exists c \in optPending$ : $getTime() > c.pTS + w(s)$ $\wedge$\\$\nexists c' \in optPending: c'.pTS < c.pTS$}}
+  \STATE OPT-Deliver(c)  
+  \INDENT{\textbf{for all} $cli \in clients(s)$ \textbf{do}}
+    \STATE $send(cli, \{c, \text{`optimistic'}\})$    
+    \COMMENT{s sends $c$ to its clients, warning it is optimistic}
+  \ENDINDENT
+  \STATE $optPending \leftarrow optPending \setminus \{c\}$
+  \IF {$s$ is a coordinator $\wedge$ $|c.dst| = 1$}
+    \STATE $consPending \leftarrow consPending$ $\cup$ $\{c\}$
+  \ENDIF  
+\ENDINDENT
+\STATE
+\INDENT{\textit{When} $Learn(\{c, \text{`deliver'}\})$}
+  \STATE CONS-Deliver(c)
+  \INDENT{\textbf{for all} $cli \in clients(s)$ \textbf{do}}
+    \STATE $send(cli, {c, \text{`final'}})$    
+    \COMMENT{s sends $c$ to its clients, telling it is the final order}
+  \ENDINDENT
+  \IF {$s$ is a coordinator}
+    \STATE $consPending \leftarrow consPending \setminus \{c\}$
+  \ENDIF  
+\ENDINDENT
+\STATE
+\STATE
+\STATE \underline{The next part is executed only by the coordinator $s_c$ of each group $g$:}
+\STATE
+\INDENT{\textit{When $\exists c \in optPending$ : $getTime() > c.pTS + w(s_c)$ $\wedge$ \\ $|c.dst| > 1 \wedge c.src = g \wedge \nexists c' \in optPending : c'.pTS < c.pTS$}}
+  \STATE $Propose(\{c, \text{`multicast'}\}, c.dst)$
+  \COMMENT{saving c in the acceptors before multicasting}
+\ENDINDENT
+\STATE
+\INDENT{\textit{When} $Learn(\{c, \text{`multicast'}\})$}
+  \STATE $consPending \leftarrow consPending$ $\cup$ $\{c\}$ 
+  \IF {$c.src \neq g$}
+    \STATE $barrier(c.src, g) \leftarrow c.pTS$
+  \ENDIF  
+\ENDINDENT
+\STATE
+\INDENT{\textit{When $\exists c \in consPending$ : \\ $c.pTS < getTime() - w(s_c)$ $\wedge$ \\ $\forall g' : g'$ is a neighbor of $g$, $c.pTS < barrier(g',g)$ $\wedge$ \\ $\nexists c' \in consPending : c'.pTS < c.pTS$ }}
+  \STATE $Propose(\{c, \text{`deliver'}\}, g)$
+\ENDINDENT
 
-\section{Optimistic protocol}
+\caption{Delivery algorithm}
+\label{algorithm:optpaxos}
+\end{distribalgo}
+\end{algorithm}
 
-By understanding the abstract description of the baseline protocol of the previous section, it is easy to realize that, even when ordering commands relevant to only one group, a significant number of communication steps is required: player to replica; replica to coordinator; consensus (two communication steps in the case of Paxos, when having the coordinator as the leader, using ballot reservation, each acceptor sending phase 2b messages to all other acceptors and assuming a tolerable number of failures) and, once consensus is achieved, each replica can put the command in the delivery queue and send it to each player. That sums up to five communication steps. On a geographically distributed scenario, this number of communication steps may be prohibitive for the ``playability'' of a vast number of online games.
+% Nevertheless, one possible way to implement the delivery for a command $C$ of this type would be to initiate a Paxos consensus instance in each group addressed by it, proposing $C$ and having as learns all servers in all involved groups. 
 
-In order to mitigate this problem, we propose a protocol for \emph{optimistic ordering and delivery} of the commands, which is supposed to run in parallel with the protocol described in the previous section, which from now on will be called \emph{conservative ordering and delivery}. The optimistic order and delivery are correct if they include all the messages delivered with the conservative one and if they are delivered in the same order. Also, each object has an optimistic state and a conservative state. When a command is conservatively delivered to an object, its conservative state is updated, and this state is certainly consistent -- given the assumptions we have made about the system. Likewise, when a command is optimistically delivered, its optimistic state is updated.
-
-The optimistic ordering and delivery is supposed to be much faster than the conservative one. Assuming that it will be, and if the optimistic delivery order is always correct -- which means that it correctly predicted the conservative delivery order --, then the objects will always have a valid state within much fewer communication steps, counting from when each command $C$ was issued to when it is delivered and applied to $obj(C)$.
-
-The basic idea of the optimistic ordering is the following: assuming that the nodes have a synchronized clock\footnote{We don't require here perfectly synchronized clocks, as the optimistic protocol tolerates mistakes by its very definition. We only need clocks which are synchronized enought, so that our delivery order prediction succeeds and matches the conservative delivery order.}, whenever a server (either coordinator or replica) receives a command $C$ from a client, it immediately applies a provisory (optimistic) timestamp $pTS$ for it, which consists simply of the current value of the server's wallclock, $now$. Therefore, $pTS=now$. A wait window of length $w(S)$ is considered, where $w(S)$ is defined as the highest estimated communication delay between the server $S$ and any of the other servers of its group.
-
-After applying the provisory timestamp to $C$, the server immediately forwards it to the other servers of that group, and puts $C$ on a list, where it stays until $now>C.pTS+w(S)$, which means that $C$ has been in that list for a time longer than the defined wait window. In the meantime, other commands, sent from other clients and forwarded by other servers, may have been received and also inserted in that list, always sorting by the provisory timestamp of these commands. If $w(S)$ has been correctly estimated as the highest communication delay between the server and each of the other servers, and no message was lost, than all the commands that were supposed to be delivered before $C$ have necessarily been received already. If the same occurred for all the servers, then all of them have received all the commands, and can deliver them in the same order of $pTS$.
-
-However, even if the optimistic order is the same for all the servers, it won't be valid if the conservative order is different from it. For that reason, before submitting a command to be conservatively ordered, the coordinator $S_c$ also waits for $w(S_c)$, which is the maximum delay between $S_c$ and any of its replicas. Assuming that the clocks are sufficiently synchronized and that the communication delays have been correctly estimated, then after the time $w(S_c)$ has elapsed, the coordinator will have received all the commands forwarded by any of its replicas (until the instant $t:t=now-w(S_c)$), and it will be able to conservatively order them in the same order of the optimistic delivery, assuming that the final order is the same as the order in which the messages were submitted by the coordinator (FIFO). Therefore, given the optimistic assumptions we have made, the conservative delivery order (based on the order in which the coordinator FIFO-broadcast the commands to the group) will be the same as the optimistic delivery order (based on the provisory timestamp assigned by the replicas).
+%In brief, our strategy is to combine state-machine replication (implemented with Paxos), used to handle object replicas, with Skeen's algorithm, used to select timestamps for commands that affect multiple objects.
 
 \subsection{Recovering from mistakes}
 
