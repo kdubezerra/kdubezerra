@@ -1,0 +1,9 @@
+\beamer@endinputifotherversion {3.10pt}
+\select@language {english}
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@subsectionintoc {1}{1}{A long way to Paxos}{3}{0}{1}
+\beamer@subsectionintoc {1}{2}{The consensus problem}{5}{0}{1}
+\beamer@sectionintoc {2}{The Paxos Algorithm}{6}{0}{2}
+\beamer@subsectionintoc {2}{1}{Notations used}{6}{0}{2}
+\beamer@subsectionintoc {2}{2}{Consistency conditions}{9}{0}{2}
+\beamer@subsectionintoc {2}{3}{Proof sketch}{10}{0}{2}

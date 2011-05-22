@@ -1,0 +1,7 @@
+\BOOKMARK [2][]{Outline0.1}{Introduction}{}% 1
+\BOOKMARK [3][]{Outline0.1.1.3}{A long way to Paxos}{Outline0.1}% 2
+\BOOKMARK [3][]{Outline0.1.2.5}{The consensus problem}{Outline0.1}% 3
+\BOOKMARK [2][]{Outline0.2}{The Paxos Algorithm}{}% 4
+\BOOKMARK [3][]{Outline0.2.1.6}{Notations used}{Outline0.2}% 5
+\BOOKMARK [3][]{Outline0.2.2.9}{Consistency conditions}{Outline0.2}% 6
+\BOOKMARK [3][]{Outline0.2.3.10}{Proof sketch}{Outline0.2}% 7
