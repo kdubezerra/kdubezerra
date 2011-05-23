@@ -21,7 +21,7 @@
 \DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
 \DeclareMathAlphabet{\mathcalligra}{T1}{calligra}{m}{n}
 
-\documentclass{beamer}
+\documentclass[10 pt]{beamer}
 
 \mode<presentation>
 {
@@ -42,7 +42,7 @@
 % three lines if you don't like this look
 
 \usepackage{mathptmx}
-\usepackage[scaled=.90]{helvet}
+%\usepackage[scaled=.90]{helvet}
 \usepackage{courier}
 \usepackage{chancery}
 \usepackage{mathrsfs}
@@ -255,6 +255,7 @@ Universittà della Svizzera italiana
 
   Consistency is guaranteed if the following conditions are ensured:
 
+%write conditions on the whiteboard
   \begin{itemize}
     \item $B1(\beta)$
     
@@ -285,18 +286,20 @@ Universittà della Svizzera italiana
 \begin{frame}
 \frametitle{Proof sketch}
 
+%write lemma on the whiteboard
 \textsc{\textbf{Lemma}}. If $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$ hold, then $$((\bqrmm \subseteq \bvotm) \wedge (B'_{bal} > \bbalm)) \Rightarrow (B'_{val} = \bvalm)$$ for any $B$, $B'$ in $\beta$.
 
 \vspace{3 mm}
-\textsc{\textbf{Proof of Lemma}}. Let $\uppsi(B, \beta)$ be defined as: $$\uppsi(B, \beta) = \{B' \in \beta : (B'_{bal} > \bbalm) \wedge (B'_{val} \neq \bvalm)\}$$
+\textsc{\textbf{Proof of Lemma}}. Let $\Psi(B, \beta)$ be defined as: $$\Psi(B, \beta) = \{B' \in \beta : (B'_{bal} > \bbalm) \wedge (B'_{val} \neq \bvalm)\}$$
 
 
-Assume that $\bqrmm \subseteq \bvotm$. By contradiction, assume that $\uppsi(B, \beta) \neq \emptyset$.
+Assume that $\bqrmm \subseteq \bvotm$. By contradiction, assume that $\Psi(B, \beta) \neq \emptyset$.
 
 \vspace{3 mm}
-(1) As $\uppsi(B, \beta) \neq \emptyset$, we have that $\exists C : C_{bal} = min\{B'_{bal} : B' \in \uppsi(B, \beta)\}$
+(1) As $\Psi(B, \beta) \neq \emptyset$, we pick $C \in \Psi(B, \beta)$, such that $C_{bal} = min\{B'_{bal} : B' \in \Psi(B, \beta)\}$
 
-(2) From (1) and from the definition of $\uppsi(B, \beta)$, we have that $C_{bal} > \bbalm$
+\vspace{2 mm}
+(2) From (1) and from the definition of $\Psi(B, \beta)$, we have that $C_{bal} > \bbalm$
 
 \end{frame}
 
@@ -316,32 +319,129 @@ Assume that $\bqrmm \subseteq \bvotm$. By contradiction, assume that $\uppsi(B, 
 (6) From (5) and $B3(\beta)$, we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{val} = C_{val}$
 
 \vspace{2 mm}
-(7) From (6), and as $C_{val} \neq \bvalm$ (from $\uppsi(B, \beta$)), we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{val} \neq \bvalm$
+(7) From (6), and as $C_{val} \neq \bvalm$ (from $\Psi(B, \beta$)), we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{val} \neq \bvalm$
 
 \end{frame}
+
+
 
 \begin{frame}
-% You can create overlays
-\begin{itemize}
-  \item using the \texttt{pause} command:
-  \begin{itemize}
-    \item First item.
-    \pause
-    \item Second item.
-  \end{itemize}
-  \item using overlay specifications:
-  \begin{itemize}
-    \item<3-> First item.
-    \item<4-> Second item.
-  \end{itemize}
-  \item using the general \texttt{uncover} command:
-  \begin{itemize}
-    \uncover<5->{\item First item.}
-    \uncover<6->{\item Second item.}
-  \end{itemize}
-\end{itemize}
+\frametitle{Proof sketch}
+\framesubtitle{continuing\ldots}
+
+(8) As \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{bal} \geq \bbalm$ (from (4)) and \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{val} \neq \bvalm$ (from (7)), we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{bal} > \bbalm$
+
+\vspace{2 mm}
+(9) From (8), and since \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{val} \neq \bvalm$, we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta) \in \text{\textit{Votes}}(\Psi(B,\beta))$ 
+
+\vspace{2 mm}
+(10) By the definition of \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)$, we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{bal} < C_{bal}$
+
+\vspace{2 mm}
+(11) From (10), we have that $\exists B' : B' \in \Psi(B, \beta) \wedge B'_{bal} < C_{bal}$, which means that $$C_{bal} \neq min\{B'_{bal} : B' \in \Psi(B, \beta)\}$$ which is a contradiction with (1). $\square$
+
 \end{frame}
 
+
+
+\begin{frame}
+\frametitle{Proof sketch}
+\framesubtitle{continuing\ldots}
+
+With the lemma, we show that, for a given set $\beta$ of ballots which hold $B1$, $B2$ and $B3$, then any two successful ballots decided the same value.
+
+\vspace{2 mm}
+\textbf{\textsc{Theorem 1}}. If $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$ hold, then
+$$((\bqrmm \subseteq \bvotm) \wedge (B'_{qrm} \subseteq B'_{vot})) \Rightarrow (B'_{val} = B_{val})$$
+for any $B$, $B'$ in $\beta$.
+
+\vspace{2 mm}
+\textbf{\textsc{Proof of Theorem}}. If $B'_{bal} = B_{bal}$ then $B1(\beta)$ implies $B' = B$. If $B'_{bal} \neq B_{bal}$, the theorem follows immediately from the lemma. $\square$
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Proof sketch}
+\framesubtitle{continuing\ldots}
+
+If there are enough correct (non-faulty) processes, then a new ballot may be conducted while $B1$, $B2$ and $B3$ are preserved.
+
+\vspace{2 mm}
+\textbf{\textsc{Theorem 2}}. Let $b$ be a ballot number, and let $Q$ be a set of processes such that $b > \bbalm$ and $Q \cap \bqrmm \neq \emptyset$, for all $B \in \beta$. If $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$ hold, then there is a ballot $B'$ with $B'_{bal} = b$ and $B'_{qrm} = B'_{vot} = Q$ such that $B1(\beta \cup \{B'\})$, $B2(\beta \cup \{B'\})$ and $B3(\beta \cup \{B'\})$ hold.
+
+\vspace{2 mm}
+\textbf{\textsc{Proof of Theorem}}.
+\begin{itemize}
+\item $B1(\beta \cup \{B'\})$ follows from $B1(\beta)$ and the fact that $B'_{bal} = b$, and the assumption about $b$.
+\item $B2(\beta \cup \{B'\})$ follows from $B2(\beta)$ and the fact that $B'_{qrm} = Q$, and the assumption about $Q$.
+\item For $B3(\beta \cup \{B'\})$, if \textit{MaxVote}$(b,Q,B) = -\infty$ then let $B'_{val}$ be any value; otherwise, let $B'_{val} = \text{\textit{MaxVote}}(b,Q,B)_{val}$. $B3(\beta \cup \{B'\})$ then follows from $B3(\beta)$. $\square$
+\end{itemize} 
+\end{frame}
+
+
+
+%----------------------------------------------------------
+\subsection{Preliminary protocol}
+%----------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Preliminary protocol}
+
+A protocol can be derived directly from $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$, so that all these properties are maintained throughout its execution and a value may* be agreed upon.
+
+\begin{itemize}
+  \item To maintain $B1(\beta)$, whenever $p$ starts a new ballot $B$, it assigns a sequence number $seq$, which was never used by $p$. To avoid collisions, $p$'s unique id is appended. Then $\bbalm = (seq, p_{id})$.
+  \item To maintain $B2(\beta)$, each ballot $B$ has \bqrm\ as the majority set of the processes. As it is impossible to choose two disjoint majority sets from the same group*, $B2(\beta)$ is satisfied.
+  \item To maintain $B3(\beta)$, before initiating a ballot $B$, $p$ has to find out what is \textit{MaxVote}$(B, \bqrmm, \beta)$, which is done by finding the \textit{MaxVote}$(B, q, \beta)$ for each $q$ in \bqrm.
+  \begin{itemize}
+    \item If \textit{MaxVote}$(B, \bqrmm, \beta) = null$, then \bval\ can be anything;\\
+    otherwise $\bvalm = \text{\textit{MaxVote}}(B, \bqrmm, \beta)_{val}$.
+  \end{itemize}
+\end{itemize}
+
+{\small * If half of the processes is faulty, consistency is still respected and there is no deadlock, but the ballot $B$ does not succeed}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Preliminary protocol}%all the phases are optional! consistency is always guaranteed!
+
+  Phase 1) Find \textit{MaxVote}$(B, \bqrmm, \beta)_{val}$
+   
+  \hspace{3 mm} \textbf{Phase 1a}) $p$ picks a ballot number $b$ and sends \textit{NextBallot}$(b)$ to other processes
+   
+  \hspace{3 mm} \textbf{Phase 1b}) each process $q$ responds with \textit{LastVote}$(b, vote)$ to $p$, where $vote$ is the vote cast by $q$ with the highest ballot number less than $b$ (or $null$)
+   
+  \vspace{6 mm}
+   
+  Phase 2) Execute the ballot $B$
+   
+  \hspace{3 mm} \textbf{Phase 2a}) after receiving \textit{LastVote}$(b, vote)$ from a majority $Q$ of the processes, $p$ initiates the ballot with number $b$ and value $val$ such that $B3(\beta)$ is maintained, by sending \textit{BeginBallot}$(b, val)$ to every process in $Q$
+      
+  \hspace{3 mm} \textbf{Phase 2b}) upon receiving \textit{BeginBallot}$(b, val)$, a process will not vote on it if it has already sent \textit{LastVote}$(b', val')$, such that $b' > b$; otherwise, it sends \textit{Voted}$(b, q)$ to $p$ and records this vote in its memory
+  
+  \vspace{6 mm}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Preliminary protocol}
+   
+  Phase 3) Announce the result of consensus
+   
+  \hspace{3 mm} \textbf{Phase 3a}) if $p$ receives \textit{Voted}$(b, q)$ from a majority $Q$ of processes, then it sends \textit{Success}$(val)$ to all processes
+      
+  \hspace{3 mm} \textbf{Phase 2b}) upon receiving \textit{Success}$(val)$, the process learns that the group achieved consensus on $val$.
+ 
+\end{frame}
+ 
 
 
 %==========================================================
