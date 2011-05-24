@@ -8,3 +8,4 @@
 \beamer@subsectionintoc {2}{2}{Consistency conditions}{9}{0}{2}
 \beamer@subsectionintoc {2}{3}{Proof sketch}{10}{0}{2}
 \beamer@subsectionintoc {2}{4}{Preliminary protocol}{15}{0}{2}
+\beamer@subsectionintoc {2}{5}{Basic protocol}{18}{0}{2}
