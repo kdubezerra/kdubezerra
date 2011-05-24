@@ -139,6 +139,18 @@ Universittà della Svizzera italiana
     \item the paper was submitted in 1990\ldots and accepted in 1998%people just couldn't understand it!
     \item several other publications, such as [2, 3, 4], had explaining it as their main purpose\ldots
   \end{itemize}
+  
+  \vspace{3mm}
+  
+  Some people do use the described \textbf{Paxos} protocol: % 20 years after being first described?...
+
+  \begin{itemize}
+    \item Google uses Paxos in their Chubby distributed lock service
+    \item IBM supposedly uses Paxos in their SAN Volume Controller product
+    \item Microsoft uses Paxos in the Autopilot cluster management service
+    \item WANDisco uses Paxos in their replication technology
+    \item Keyspace uses Paxos as its basic replication primitive
+  \end{itemize}
 
 \end{frame}
 
@@ -383,7 +395,7 @@ If there are enough correct (non-faulty) processes, then a new ballot may be con
 
 
 %==========================================================
-\section{The Paxos Algorithm}
+\section{The Synod Protocol}
 %==========================================================
 
 %----------------------------------------------------------
@@ -530,40 +542,137 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
 
 
 %----------------------------------------------------------
-\subsection{Complete (synchronous) protocol}
+\subsection{Complete protocol}
 %----------------------------------------------------------
 
 
 \begin{frame}
-\frametitle{Complete (synchronous) protocol}
+  \frametitle{Complete protocol}
+  
+  \begin {itemize}
+    \item Same steps of the basic protocol  
+    
+    \vspace{2mm}
+    \item Each process performs phases 1b -- 3b as soon as they can  
+    
+    \vspace{2mm}
+    \item Some process must execute phase 1a
+    \begin{itemize}
+      \item Never initiating a ballot prevents termination
+      \item However, too frequent initiation also does it %explicar cada ballot anulando o anterior, e sendo anulado antes de terminar
+      \item A single process (leader) should be the only one initiating ballots %isso tb causaria a anulação de ballots anteriores de outros processos
+    \end{itemize}
+    
+    \vspace{2mm}
+    \item Knowledge of time, and of a maximum message delay $\Delta$, is needed
+    \begin{itemize}
+      \item Not exactly an asynchronous system anymore
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
 
 
 
+\begin{frame}
+  \frametitle{Complete protocol}
+  
+  \begin {itemize}
+    \item A minimal execution of the basic protocol would take at most $5\Delta$
+%     \begin {itemize}
+%       \item the responses to message (1a) would arrive after $2\Delta$ (at most)
+%       \item the responses to message (2a) would arrive after $2\Delta$ (at most)
+%       \item the (3a) message would take at most $\Delta$
+%     \end{itemize} 
+    \vspace{2 mm}
+    \item A leader would ensure progress, but that requires leader election     
+    \begin {itemize}
+      \item when a leader seems to have failed, a new one should be elected\\
+      (the election takes time $T_{el}$)
+      \item if not enough responses to (1a) or (2a) arrive after $2\Delta$, a ballot $B$ had started before $T_{el}$
+      \begin{itemize}
+        \item or too many failures or message losses occurred\ldots %which violates the assumptions for this protocol
+      \end{itemize}
+      %the other ballot may even have succeeded! 
+      %maybe started by another process before T was fully elapsed
+      \item in this case, a ballot with number $b' > B_{bal}$ may be started by the leader -- $NACK$s to (1a) or (2a) may have carried \bbal
+      \item in the worst case, the leader receives a $NACK$ for (2a), $4\Delta$ after $T_{el}$
+      \item as no other process initiated any ballot after $T_{el}$, the ballot numbered $b'$ would succeed $5\Delta$ after the $NACK$
+    \end{itemize}
+    \vspace{2 mm}
+    \item The complete protocol, with leader election, terminates at most after $T_{el} + 9\Delta$
+    \begin{itemize}
+      \item if no message was lost, every correct process learns the decided value
+    \end{itemize}   
+
+  \end{itemize}
+  
 \end{frame}
 
 
 
 %==========================================================
-\section*{Summary}
+\section{The Paxos Protocol}
 %==========================================================
+
+%----------------------------------------------------------
+\subsection{Running multiple consensus instances}
+%----------------------------------------------------------
 
 
 \begin{frame}
-\frametitle<presentation>{Summary}
-
-\begin{itemize}
-  \item The \alert{first main message} of your talk in one or two lines.
-\end{itemize}
-
-% The following outlook is optional.
-\vskip0pt plus.5fill
-\begin{itemize}
-  \item Outlook
+  \frametitle{The \textbf{Paxos} Protocol}
+  \framesubtitle{Multiple consensus instances}
+  
   \begin{itemize}
-    \item Something you haven't solved.
-    \item Something else you haven't solved.
+    \item Each instance has an id $I_{id}$ -- and there should be a leader %although, as seen, that wouldn't be really necessary for consistency
+    \item Phases (1a) and (1b) can be executed for many of them --
+    e.g. $p$ sends $NextBallot(b,n)$, for all instances $I$ with $I_{id} > n$
+    \item The response from $q$ (1b) would contain a $LastVote(I_{id}, b, v)$ message for each instance $I : I_{id} > n$ that $q$ voted in
+    \item Another process can send $NextBallot(b',n')$, with $b' > b$,\\
+    and $p$'s (2a) messages would be ignored from then on
+    \item This brings the protocol latency, on most cases, down to $3\Delta$
+    \begin{itemize}
+      \item no leader changes, enough correct processes and enough messages
+    \end{itemize}
+    \item If each process sent messages (2b) to every other one, we'd have $2\Delta$ %show how this is done on the board
+    \item If instance $I^A$ was passed (phase (3b) concluded) before $I^B$ had a value proposed (phase (2a)), then $I^A_{id} < I^B_{id}$
+    % ORDERING PROPERTY
+    % the leader needed to know the result of previous instances before starting a new one (= atomic broadcast)
   \end{itemize}
-\end{itemize}
+
+\end{frame}
+
+
+
+%----------------------------------------------------------
+\subsection{Relevance to computer science}
+%----------------------------------------------------------
+
+
+\begin{frame}
+  \frametitle{The \textbf{Paxos} Protocol}
+  \framesubtitle{Relevance to computer science}
+  
+  \begin{itemize}
+    \item It may be used to implement state-machine replication
+    \begin{itemize}
+      \item A system (e.g. a database) may be implemented as a set of states and deterministic state changes
+      \item The group of processes would be the set of replicas of the system
+      \item Each state changed would be agreed upon by means of consensus (an ordered instance of Paxos)
+      \item One of the replicas might be elected as leader, and client requests (state changes) would be sent to it
+      \item As all replicas would have a consistent set of state changes, so would be their state
+    \end{itemize} 
+  \end{itemize}
+  
+  \vspace{2 mm}
+  \begin{itemize}
+    \item Many derivations from Paxos have been published since it was first described
+    \begin{itemize}
+      \item Cheap Paxos, Fast Paxos, Generalized Paxos, Multi-Paxos,\\
+      Byzantine Paxos, Fast Byzantine Paxos, Fast Byzantine Multi-Paxos, Ring Paxos
+    \end{itemize} 
+  \end{itemize}
 
 \end{frame}
 
@@ -594,6 +703,33 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
 \vspace{4 mm}
 [6] Fischer, M., Lynch, N., Paterson, M., \textbf{Impossibility of distributed consensus with one faulty process}, J. ACM 32 1 (Jan.), 374-382, 1985
   
+\end{frame}
+
+
+
+\begin{frame}
+
+\begin{center}
+{\Huge \textbf{Thank you!}}
+
+\vspace{5 mm}
+{\footnotesize Questions?}
+\end{center}
+% 
+%   \begin{itemize}
+%     \item The paper presents the construction of a consensus protocol, based on three consistency conditions, from a preliminary one, to a complete one which ensures consistency \textbf{and} termination, as long as some message delay bound is known
+%   \end{itemize}
+% % 
+% % The following outlook is optional.
+% \vskip0pt plus.5fill
+% \begin{itemize}
+%   \item Outlook
+%   \begin{itemize}
+%     \item Something you haven't solved.
+%     \item Something else you haven't solved.
+%   \end{itemize}
+% \end{itemize}
+
 \end{frame}
 
 
