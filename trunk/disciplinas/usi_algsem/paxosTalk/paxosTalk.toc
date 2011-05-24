@@ -3,9 +3,11 @@
 \beamer@sectionintoc {1}{Introduction}{3}{0}{1}
 \beamer@subsectionintoc {1}{1}{A long way to Paxos}{3}{0}{1}
 \beamer@subsectionintoc {1}{2}{The consensus problem}{5}{0}{1}
-\beamer@sectionintoc {2}{The Paxos Algorithm}{6}{0}{2}
+\beamer@sectionintoc {2}{About correctness}{6}{0}{2}
 \beamer@subsectionintoc {2}{1}{Notations used}{6}{0}{2}
 \beamer@subsectionintoc {2}{2}{Consistency conditions}{9}{0}{2}
 \beamer@subsectionintoc {2}{3}{Proof sketch}{10}{0}{2}
-\beamer@subsectionintoc {2}{4}{Preliminary protocol}{15}{0}{2}
-\beamer@subsectionintoc {2}{5}{Basic protocol}{18}{0}{2}
+\beamer@sectionintoc {3}{The Paxos Algorithm}{15}{0}{3}
+\beamer@subsectionintoc {3}{1}{Preliminary protocol}{15}{0}{3}
+\beamer@subsectionintoc {3}{2}{Basic protocol}{18}{0}{3}
+\beamer@subsectionintoc {3}{3}{Complete (synchronous) protocol}{21}{0}{3}
