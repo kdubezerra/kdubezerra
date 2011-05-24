@@ -415,18 +415,16 @@ A protocol can be derived directly from $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$
    
   \hspace{3 mm} \textbf{Phase 1a}) $p$ picks a ballot number $b$ and sends \textit{NextBallot}$(b)$ to other processes
    
-  \hspace{3 mm} \textbf{Phase 1b}) each process $q$ responds with \textit{LastVote}$(b, vote)$ to $p$, where $vote$ is the vote cast by $q$ with the highest ballot number less than $b$ (or $null$)
+  \hspace{3 mm} \textbf{Phase 1b}) each process $q$ responds with \textit{LastVote}$(b, v)$ to $p$, where $v$ is the vote cast by $q$ with the highest ballot number less than $b$ (or $null$)
    
   \vspace{6 mm}
    
   Phase 2) Execute the ballot $B$
    
-  \hspace{3 mm} \textbf{Phase 2a}) after receiving \textit{LastVote}$(b, vote)$ from a majority $Q$ of the processes, $p$ initiates the ballot with number $b$ and value $val$ such that $B3(\beta)$ is maintained, by sending \textit{BeginBallot}$(b, val)$ to every process in $Q$
+  \hspace{3 mm} \textbf{Phase 2a}) after receiving \textit{LastVote}$(b, v)$ from a majority $Q$ of the processes, $p$ initiates the ballot with number $b$ and value $val$ such that $B3(\beta)$ is maintained, by sending \textit{BeginBallot}$(b, val)$ to every process in $Q$%Bqrm = Q, Bval = val, Bbal = b
       
-  \hspace{3 mm} \textbf{Phase 2b}) upon receiving \textit{BeginBallot}$(b, val)$, a process will not vote on it if it has already sent \textit{LastVote}$(b', val')$, such that $b' > b$; otherwise, it sends \textit{Voted}$(b, q)$ to $p$ and records this vote in its memory
+  \hspace{3 mm} \textbf{Phase 2b}) upon receiving \textit{BeginBallot}$(b, val)$, $q$ will not vote on it if it has already sent \textit{LastVote}$(b', v')$, such that $b' > b$; otherwise, it sends \textit{Voted}$(b, q)$ to $p$ and records this vote in its memory
   
-  \vspace{6 mm}
-
 \end{frame}
 
 
@@ -438,10 +436,75 @@ A protocol can be derived directly from $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$
    
   \hspace{3 mm} \textbf{Phase 3a}) if $p$ receives \textit{Voted}$(b, q)$ from a majority $Q$ of processes, then it sends \textit{Success}$(val)$ to all processes
       
-  \hspace{3 mm} \textbf{Phase 2b}) upon receiving \textit{Success}$(val)$, the process learns that the group achieved consensus on $val$.
+  \hspace{3 mm} \textbf{Phase 3b}) upon receiving \textit{Success}$(val)$, the process learns that the group achieved consensus on $val$.
+  
+  \vspace{6mm}
+  Every phase of this protocol is optional. Consistency is still maintained, although progress is not guaranteed.
+
+  \vspace{6mm}
+  Each process $q$ must keep \textit{MaxVote(b, q, $\beta$)} for each ballot numbered $b$ and remember all \textit{LastVote}$(b, v)$ messages it has sent.
  
 \end{frame}
- 
+
+
+
+%----------------------------------------------------------
+\subsection{Basic protocol}
+%----------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Basic protocol}
+
+In the preliminary protocol, much information must be kept. A simpler, yet correct, protocol can be derived. Each process $p$ keeps then only:
+
+\vspace{2 mm}
+\mbox{\textit{\textbf{lastTried}}$[p]$ -- the number of the last ballot $p$ tried to initiate ($-\infty$ if none)}
+
+\vspace{2mm}
+\mbox{\textit{\textbf{prevVote}}$[p]$ -- the highest ballot for which $p$ ever voted ($-\infty$ if none)}
+
+\vspace{2mm}
+\textit{\textbf{nextBal}}$[p]$ -- the highest ballot number $b$ for which $p$ sent \textit{LastVote}$(b, v)$ ($-\infty$ if none)
+
+\vspace{4mm}
+In the preliminary protocol, \textit{LastVote}$(b, v)$ represented a ``promise'' from $q$ not to vote in any ballot numbered $b' : \text{\textit{LastVote}}(b, v)_{bal} < b' < b$ 
+
+\vspace{2mm}
+Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not to vote in any ballot numbered $b' < b$
+% although this promise is stronger, it just representing not sending a LastVote(...) in cases the preliminary prot. would. 
+% as seen, this doesn't affect consistency
+% ANYway, this is arguable, as one could see that the collection of promises from the preliminary are equivalent to this
+% one single promise.
+
+\end{frame} 
+
+
+
+
+\begin{frame}
+\frametitle{Basic protocol}
+
+  Phase 1)
+   
+  \hspace{3 mm} \textbf{Phase 1a}) $p$ picks a ballot number $b > \text{\textit{lastTried}}[p]$ and sends \textit{NextBallot}$(b)$ to other processes
+   
+   %explain the if thing.
+  \hspace{3 mm} \textbf{Phase 1b}) upon receipt of \textit{NextBallot}$(b)$ from $p$, \mbox{\textbf{if \textit{b}} > \textbf{\textit{nextBal}}[\textbf{\textit{q}}],} $q$ \mbox{sets $\text{\textit{nextBal}}[q]$ to $b$ and sends \textit{LastVote}$(b, v)$ to $p$, where $v = \text{\textit{prevVote}}[q]$}
+   
+  \vspace{6 mm}
+    
+  Phase 2)
+   
+  \hspace{3 mm} \textbf{Phase 2a}) after receiving \textit{LastVote}$(b, v)$ from a majority $Q$, \textbf{where \mbox{\textit{b $=$ lastTried}}}[\textbf{\textit{p}}], $p$ initiates ballot  number $b$ with value $val$ such that $B3(\beta)$ is maintained, by sending \textit{BeginBallot}$(b, val)$ to every process in $Q$
+  %Bqrm = Q, Bval = val, Bbal = b
+      
+  \hspace{3 mm} \textbf{Phase 2b}) upon receiving \textit{BeginBallot}$(b, val)$ \textbf{with \textit{b $=$ nextBal}}[\textbf{\textit{q}}], $q$ votes on ballot number $b$, set $prevVote[q]$ to this vote and sends \textit{Voted}$(b, q)$ to $p$
+  % here, each process first must promise to vote for the ballot B (and not receive any higher ballot B') to be able to vote for B...
+  % in the preliminary, it didn't need any promise to respond in phase 2b
+  
+\end{frame}
+
 
 
 %==========================================================
