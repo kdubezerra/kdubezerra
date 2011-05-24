@@ -185,7 +185,7 @@ Universittà della Svizzera italiana
 
 
 %==========================================================
-\section{The Paxos Algorithm}
+\section{About correctness}
 %==========================================================
 
 %----------------------------------------------------------
@@ -194,8 +194,8 @@ Universittà della Svizzera italiana
 
 
 \begin{frame}
-  \frametitle{The Paxos algorithm}
-  \framesubtitle{Some notations used}
+%  \frametitle{The Paxos algorithm}
+  \frametitle{Some notations used}
   
   A value is chosen after a series of numbered \textbf{ballots}. For each ballot $B$, we have that:
   \begin{itemize}
@@ -211,8 +211,8 @@ Universittà della Svizzera italiana
 \end{frame}
 
 \begin{frame}
-  \frametitle{The Paxos algorithm}
-  \framesubtitle{Some more notations}
+%  \frametitle{The Paxos algorithm}
+  \frametitle{Some more notations}
   
   In each ballot, each process can cast a vote (accept or not a given proposed value). A vote $v$ has the components:
 
@@ -230,8 +230,8 @@ Universittà della Svizzera italiana
 \end{frame}
 
 \begin{frame}
-  \frametitle{The Paxos algorithm}
-  \framesubtitle{Still more notations\ldots}
+%  \frametitle{The Paxos algorithm}
+  \frametitle{Still more notations\ldots}
 
   We then define \maxvotep\ as the vote $v$ with highest \vbal\ in 
  $\{v \in Votes(\beta) : (v_p = p) \wedge (v_{bal} < b)\} \cup \{null\}$,\\
@@ -382,6 +382,10 @@ If there are enough correct (non-faulty) processes, then a new ballot may be con
 
 
 
+%==========================================================
+\section{The Paxos Algorithm}
+%==========================================================
+
 %----------------------------------------------------------
 \subsection{Preliminary protocol}
 %----------------------------------------------------------
@@ -477,8 +481,7 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
 % ANYway, this is arguable, as one could see that the collection of promises from the preliminary are equivalent to this
 % one single promise.
 
-\end{frame} 
-
+\end{frame}
 
 
 
@@ -503,6 +506,39 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
   % here, each process first must promise to vote for the ballot B (and not receive any higher ballot B') to be able to vote for B...
   % in the preliminary, it didn't need any promise to respond in phase 2b
   
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Basic protocol}
+   
+  Phase 3)
+   
+  \hspace{3 mm} \textbf{Phase 3a}) if $p$ receives \textit{Voted}$(b, q)$ from a majority $Q$ of processes, then it sends \textit{Success}$(val)$ to all processes
+      
+  \hspace{3 mm} \textbf{Phase 3b}) upon receiving \textit{Success}$(val)$, the process learns that the group achieved consensus on $val$.
+  
+  \vspace{6mm}
+  Consistency is still maintained, and progress is still not guaranteed.
+
+  \vspace{6mm}
+  Anyway, it is impossible to guarantee termination of consensus in an asynchronous system [6]\ldots 
+ 
+\end{frame}
+
+
+
+%----------------------------------------------------------
+\subsection{Complete (synchronous) protocol}
+%----------------------------------------------------------
+
+
+\begin{frame}
+\frametitle{Complete (synchronous) protocol}
+
+
+
 \end{frame}
 
 
@@ -542,18 +578,21 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
   \frametitle{References}
 
 [1] Lamport, L. \textbf{The part-time parliament}, Technical Report 49, Systems Research Center, Digital Equipment Corp., 1989
-\vspace{4 mm}
 
-[2] Lamport, L. \textbf{Paxos Made Simple}, ACM SIGACT News, 2001
 \vspace{4 mm}
+[2] Lamport, L. \textbf{Paxos made simple}, ACM SIGACT News, 2001
 
-[3] De Prisco, R., Lampson, B., Lynch, N. \textbf{Revisiting the Paxos Algorithm}, Distributed Algorithms, 1997
 \vspace{4 mm}
+[3] De Prisco, R., Lampson, B., Lynch, N. \textbf{Revisiting the Paxos algorithm}, Distributed Algorithms, 1997
 
+\vspace{4 mm}
 [4] Lampson, B. \textbf{How to build a highly available system using consensus}, Distributed Algorithms, 1996
-\vspace{4 mm}
 
-[5] Castro, M., Liskov, B., \textbf{Practical Byzantine Fault Tolerance}, Operating Systems Design and Implementation, 1999
+\vspace{4 mm}
+[5] Castro, M., Liskov, B., \textbf{Practical Byzantine fault tolerance}, Operating Systems Design and Implementation, 1999
+
+\vspace{4 mm}
+[6] Fischer, M., Lynch, N., Paterson, M., \textbf{Impossibility of distributed consensus with one faulty process}, J. ACM 32 1 (Jan.), 374-382, 1985
   
 \end{frame}
 
