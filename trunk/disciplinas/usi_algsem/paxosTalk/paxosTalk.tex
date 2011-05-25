@@ -512,11 +512,12 @@ In the preliminary protocol, much information must be kept. A simpler, yet corre
 \vspace{2mm}
 \textit{\textbf{nextBal}}$[p]$ -- the highest ballot number $b$ for which $p$ sent \textit{LastVote}$(b, v)$ ($-\infty$ if none)
 
-\vspace{4mm}
-In the preliminary protocol, \textit{LastVote}$(b, v)$ represented a ``promise'' from $q$ not to vote in any ballot numbered $b' : \text{\textit{LastVote}}(b, v)_{bal} < b' < b$ 
+%\vspace{4mm}
+%In the preliminary protocol, \textit{LastVote}$(b, v)$ represented a ``promise'' from $q$ not to vote in any ballot numbered $b' : \text{\textit{LastVote}}(b, v)_{bal} < b' < b$ 
 
-\vspace{2mm}
-Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not to vote in any ballot numbered $b' < b$
+\vspace{4mm}
+%Here, 
+\textit{LastVote}$(b, v)$ represents a ``promise'' from $q$ not to vote in any ballot numbered $b' < b$
 % although this promise is stronger, it just representing not sending a LastVote(...) in cases the preliminary prot. would. 
 % as seen, this doesn't affect consistency
 % ANYway, this is arguable, as one could see that the collection of promises from the preliminary are equivalent to this
