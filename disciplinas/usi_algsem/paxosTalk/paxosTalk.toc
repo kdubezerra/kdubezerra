@@ -2,15 +2,15 @@
 \select@language {english}
 \beamer@sectionintoc {1}{Introduction}{3}{0}{1}
 \beamer@subsectionintoc {1}{1}{A long way to Paxos}{3}{0}{1}
-\beamer@subsectionintoc {1}{2}{The consensus problem}{5}{0}{1}
-\beamer@sectionintoc {2}{About correctness}{6}{0}{2}
-\beamer@subsectionintoc {2}{1}{Notations used}{6}{0}{2}
-\beamer@subsectionintoc {2}{2}{Consistency conditions}{9}{0}{2}
-\beamer@subsectionintoc {2}{3}{Proof sketch}{10}{0}{2}
-\beamer@sectionintoc {3}{The Synod Protocol}{15}{0}{3}
-\beamer@subsectionintoc {3}{1}{Preliminary protocol}{15}{0}{3}
-\beamer@subsectionintoc {3}{2}{Basic protocol}{18}{0}{3}
-\beamer@subsectionintoc {3}{3}{Complete protocol}{21}{0}{3}
-\beamer@sectionintoc {4}{The Paxos Protocol}{23}{0}{4}
-\beamer@subsectionintoc {4}{1}{Running multiple consensus instances}{23}{0}{4}
-\beamer@subsectionintoc {4}{2}{Relevance to computer science}{24}{0}{4}
+\beamer@subsectionintoc {1}{2}{The consensus problem}{6}{0}{1}
+\beamer@sectionintoc {2}{About correctness}{7}{0}{2}
+\beamer@subsectionintoc {2}{1}{Notations used}{7}{0}{2}
+\beamer@subsectionintoc {2}{2}{Consistency conditions}{10}{0}{2}
+\beamer@subsectionintoc {2}{3}{Proof sketch}{13}{0}{2}
+\beamer@sectionintoc {3}{The Synod Protocol}{30}{0}{3}
+\beamer@subsectionintoc {3}{1}{Preliminary protocol}{30}{0}{3}
+\beamer@subsectionintoc {3}{2}{Basic protocol}{44}{0}{3}
+\beamer@subsectionintoc {3}{3}{Complete protocol}{49}{0}{3}
+\beamer@sectionintoc {4}{The Paxos Protocol}{53}{0}{4}
+\beamer@subsectionintoc {4}{1}{Running multiple consensus instances}{53}{0}{4}
+\beamer@subsectionintoc {4}{2}{Relevance to computer science}{57}{0}{4}

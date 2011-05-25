@@ -142,6 +142,8 @@ Universittà della Svizzera italiana
   
   \vspace{3mm}
   
+  \pause
+  
   Some people do use the described \textbf{Paxos} protocol: % 20 years after being first described?...
 
   \begin{itemize}
@@ -272,12 +274,14 @@ Universittà della Svizzera italiana
     \item $B1(\beta)$
     
     $\forall B, B' \in \beta : (B \neq B') \Rightarrow (\bbalm \neq B'_{bal})$
-
+   
+    \pause
     \vspace{4 mm}
     \item $B2(\beta)$ %B2 may be ensured by always picking a majority of processes as quorum, which implies that n > 2f (a majority is correct for each instance)
   
     $\forall B, B' \in \beta : \bqrmm \cap B'_{qrm} \neq \emptyset)$
     
+    \pause
     \vspace{4 mm}
     \item $B3(\beta)$
   
@@ -301,15 +305,18 @@ Universittà della Svizzera italiana
 %write lemma on the whiteboard
 \textsc{\textbf{Lemma}}. If $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$ hold, then $$((\bqrmm \subseteq \bvotm) \wedge (B'_{bal} > \bbalm)) \Rightarrow (B'_{val} = \bvalm)$$ for any $B$, $B'$ in $\beta$.
 
+\pause
 \vspace{3 mm}
 \textsc{\textbf{Proof of Lemma}}. Let $\Psi(B, \beta)$ be defined as: $$\Psi(B, \beta) = \{B' \in \beta : (B'_{bal} > \bbalm) \wedge (B'_{val} \neq \bvalm)\}$$
 
 
 Assume that $\bqrmm \subseteq \bvotm$. By contradiction, assume that $\Psi(B, \beta) \neq \emptyset$.
 
+\pause
 \vspace{3 mm}
 (1) As $\Psi(B, \beta) \neq \emptyset$, we pick $C \in \Psi(B, \beta)$, such that $C_{bal} = min\{B'_{bal} : B' \in \Psi(B, \beta)\}$
 
+\pause
 \vspace{2 mm}
 (2) From (1) and from the definition of $\Psi(B, \beta)$, we have that $C_{bal} > \bbalm$
 
@@ -321,15 +328,19 @@ Assume that $\bqrmm \subseteq \bvotm$. By contradiction, assume that $\Psi(B, \b
 
 (3) As $\bqrmm \subseteq \bvotm$ and $\forall B, B' \in \beta : \bqrmm \cap B'_{qrm} \neq \emptyset$, we have that $\bvotm \cap C_{qrm} \neq \emptyset$
 
+\pause
 \vspace{2 mm}
 (4) As $C_{bal} > \bbalm$ and $\bvotm \cap C_{qrm} \neq \emptyset$, we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{bal} \geq \bbalm$
 
+\pause
 \vspace{2 mm}
 (5) From (4) and the definition of \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)$, we know that such vote exists in \textit{Votes}$(\beta)$ (i.e. it is not $null$).
 
+\pause
 \vspace{2 mm}
 (6) From (5) and $B3(\beta)$, we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{val} = C_{val}$
 
+\pause
 \vspace{2 mm}
 (7) From (6), and as $C_{val} \neq \bvalm$ (from $\Psi(B, \beta$)), we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{val} \neq \bvalm$
 
@@ -343,12 +354,15 @@ Assume that $\bqrmm \subseteq \bvotm$. By contradiction, assume that $\Psi(B, \b
 
 (8) As \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{bal} \geq \bbalm$ (from (4)) and \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{val} \neq \bvalm$ (from (7)), we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{bal} > \bbalm$
 
+\pause
 \vspace{2 mm}
 (9) From (8), and since \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{val} \neq \bvalm$, we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta) \in \text{\textit{Votes}}(\Psi(B,\beta))$ 
 
+\pause
 \vspace{2 mm}
 (10) By the definition of \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)$, we have that \textit{MaxVote}$(C_{bal}, C_{qrm}, \beta)_{bal} < C_{bal}$
 
+\pause
 \vspace{2 mm}
 (11) From (10), we have that $\exists B' : B' \in \Psi(B, \beta) \wedge B'_{bal} < C_{bal}$, which means that $$C_{bal} \neq min\{B'_{bal} : B' \in \Psi(B, \beta)\}$$ which is a contradiction with (1). $\square$
 
@@ -367,6 +381,7 @@ With the lemma, we show that, for a given set $\beta$ of ballots which hold $B1$
 $$((\bqrmm \subseteq \bvotm) \wedge (B'_{qrm} \subseteq B'_{vot})) \Rightarrow (B'_{val} = B_{val})$$
 for any $B$, $B'$ in $\beta$.
 
+\pause
 \vspace{2 mm}
 \textbf{\textsc{Proof of Theorem}}. If $B'_{bal} = B_{bal}$ then $B1(\beta)$ implies $B' = B$. If $B'_{bal} \neq B_{bal}$, the theorem follows immediately from the lemma. $\square$
 
@@ -383,6 +398,7 @@ If there are enough correct (non-faulty) processes, then a new ballot may be con
 \vspace{2 mm}
 \textbf{\textsc{Theorem 2}}. Let $b$ be a ballot number, and let $Q$ be a set of processes such that $b > \bbalm$ and $Q \cap \bqrmm \neq \emptyset$, for all $B \in \beta$. If $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$ hold, then there is a ballot $B'$ with $B'_{bal} = b$ and $B'_{qrm} = B'_{vot} = Q$ such that $B1(\beta \cup \{B'\})$, $B2(\beta \cup \{B'\})$ and $B3(\beta \cup \{B'\})$ hold.
 
+\pause
 \vspace{2 mm}
 \textbf{\textsc{Proof of Theorem}}.
 \begin{itemize}
@@ -410,7 +426,11 @@ A protocol can be derived directly from $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$
 
 \begin{itemize}
   \item To maintain $B1(\beta)$, whenever $p$ starts a new ballot $B$, it assigns a sequence number $seq$, which was never used by $p$. To avoid collisions, $p$'s unique id is appended. Then $\bbalm = (seq, p_{id})$.
+  
+  \pause
   \item To maintain $B2(\beta)$, each ballot $B$ has \bqrm\ as the majority set of the processes. As it is impossible to choose two disjoint majority sets from the same group*, $B2(\beta)$ is satisfied.
+  
+  \pause
   \item To maintain $B3(\beta)$, before initiating a ballot $B$, $p$ has to find out what is \textit{MaxVote}$(B, \bqrmm, \beta)$, which is done by finding the \textit{MaxVote}$(B, q, \beta)$ for each $q$ in \bqrm.
   \begin{itemize}
     \item If \textit{MaxVote}$(B, \bqrmm, \beta) = null$, then \bval\ can be anything;\\
@@ -418,9 +438,10 @@ A protocol can be derived directly from $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$
   \end{itemize}
 \end{itemize}
 
+\pause
 {\small * If half of the processes is faulty, consistency is still respected and there is no deadlock, but the ballot $B$ does not succeed}
 
-\end{frame}
+\end{frame} 
 
 
 
@@ -429,16 +450,21 @@ A protocol can be derived directly from $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$
 
   Phase 1) Find \textit{MaxVote}$(B, \bqrmm, \beta)_{val}$
    
+  \pause
   \hspace{3 mm} \textbf{Phase 1a}) $p$ picks a ballot number $b$ and sends \textit{NextBallot}$(b)$ to other processes
-   
+  
+  \pause 
   \hspace{3 mm} \textbf{Phase 1b}) each process $q$ responds with \textit{LastVote}$(b, v)$ to $p$, where $v$ is the vote cast by $q$ with the highest ballot number less than $b$ (or $null$)
    
   \vspace{6 mm}
-   
+  
+  \pause 
   Phase 2) Execute the ballot $B$
-   
+  
+  \pause 
   \hspace{3 mm} \textbf{Phase 2a}) after receiving \textit{LastVote}$(b, v)$ from a majority $Q$ of the processes, $p$ initiates the ballot with number $b$ and value $val$ such that $B3(\beta)$ is maintained, by sending \textit{BeginBallot}$(b, val)$ to every process in $Q$%Bqrm = Q, Bval = val, Bbal = b
-      
+  
+  \pause    
   \hspace{3 mm} \textbf{Phase 2b}) upon receiving \textit{BeginBallot}$(b, val)$, $q$ will not vote on it if it has already sent \textit{LastVote}$(b', v')$, such that $b' > b$; otherwise, it sends \textit{Voted}$(b, q)$ to $p$ and records this vote in its memory
   
 \end{frame}
@@ -449,11 +475,14 @@ A protocol can be derived directly from $B1(\beta)$, $B2(\beta)$ and $B3(\beta)$
 \frametitle{Preliminary protocol}
    
   Phase 3) Announce the result of consensus
-   
+  
+  \pause 
   \hspace{3 mm} \textbf{Phase 3a}) if $p$ receives \textit{Voted}$(b, q)$ from a majority $Q$ of processes, then it sends \textit{Success}$(val)$ to all processes
-      
+  
+  \pause    
   \hspace{3 mm} \textbf{Phase 3b}) upon receiving \textit{Success}$(val)$, the process learns that the group achieved consensus on $val$.
   
+  \pause
   \vspace{6mm}
   Every phase of this protocol is optional. Consistency is still maintained, although progress is not guaranteed.
 
@@ -508,7 +537,8 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
   \hspace{3 mm} \textbf{Phase 1b}) upon receipt of \textit{NextBallot}$(b)$ from $p$, \mbox{\textbf{if \textit{b}} > \textbf{\textit{nextBal}}[\textbf{\textit{q}}],} $q$ \mbox{sets $\text{\textit{nextBal}}[q]$ to $b$ and sends \textit{LastVote}$(b, v)$ to $p$, where $v = \text{\textit{prevVote}}[q]$}
    
   \vspace{6 mm}
-    
+  
+  \pause  
   Phase 2)
    
   \hspace{3 mm} \textbf{Phase 2a}) after receiving \textit{LastVote}$(b, v)$ from a majority $Q$, \textbf{where \mbox{\textit{b $=$ lastTried}}}[\textbf{\textit{p}}], $p$ initiates ballot  number $b$ with value $val$ such that $B3(\beta)$ is maintained, by sending \textit{BeginBallot}$(b, val)$ to every process in $Q$
@@ -530,7 +560,8 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
   \hspace{3 mm} \textbf{Phase 3a}) if $p$ receives \textit{Voted}$(b, q)$ from a majority $Q$ of processes, then it sends \textit{Success}$(val)$ to all processes
       
   \hspace{3 mm} \textbf{Phase 3b}) upon receiving \textit{Success}$(val)$, the process learns that the group achieved consensus on $val$.
-  
+
+  \pause  
   \vspace{6mm}
   Consistency is still maintained, and progress is still not guaranteed.
 
@@ -584,6 +615,7 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
 %       \item the responses to message (2a) would arrive after $2\Delta$ (at most)
 %       \item the (3a) message would take at most $\Delta$
 %     \end{itemize} 
+    \pause
     \vspace{2 mm}
     \item A leader would ensure progress, but that requires leader election     
     \begin {itemize}
@@ -600,9 +632,12 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
       \item as no other process initiated any ballot after $T_{el}$, the ballot numbered $b'$ would succeed $5\Delta$ after the $NACK$
     \end{itemize}
     \vspace{2 mm}
+    \pause
     \item The complete protocol, with leader election, terminates at most after $T_{el} + 9\Delta$
     \begin{itemize}
-      \item if no message was lost, every correct process learns the decided value
+      \item if a majority of processes didnt't fail during that time
+      \item and if the leader didn't fail for $9\Delta$ after $T_{el}$
+      \item and if enough messages were delivered
     \end{itemize}   
 
   \end{itemize}
@@ -626,6 +661,8 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
   
   \begin{itemize}
     \item Each instance has an id $I_{id}$ -- and there should be a leader %although, as seen, that wouldn't be really necessary for consistency
+
+    \pause
     \item Phases (1a) and (1b) can be executed for many of them --
     e.g. $p$ sends $NextBallot(b,n)$, for all instances $I$ with $I_{id} > n$
     \item The response from $q$ (1b) would contain a $LastVote(I_{id}, b, v)$ message for each instance $I : I_{id} > n$ that $q$ voted in
@@ -635,7 +672,11 @@ Here, \textit{LastVote}$(b, v)$ represents a stronger ``promise'' from $q$ not t
     \begin{itemize}
       \item no leader changes, enough correct processes and enough messages
     \end{itemize}
+    
+    \pause
     \item If each process sent messages (2b) to every other one, we'd have $2\Delta$ %show how this is done on the board
+        
+    \pause
     \item If instance $I^A$ was passed (phase (3b) concluded) before $I^B$ had a value proposed (phase (2a)), then $I^A_{id} < I^B_{id}$
     % ORDERING PROPERTY
     % the leader needed to know the result of previous instances before starting a new one (= atomic broadcast)
