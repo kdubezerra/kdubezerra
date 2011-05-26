@@ -78,11 +78,32 @@ Our consistency criterion is ``eventual linearizability". (I'm not sure this is 
 
 To ensure reliability despite server crashes, each server is replicated using state-machine replication, implemented with Paxos. Each player sends his commands to the server to which he is connected, which then forwards it to the coordinator. Each command is assigned a timestamp and executed against objects in timestamp order. We implement this by using a logical clock in each server group. Guaranteeing that the same set of commands is executed by the respective affected objects in the same order provides the level of consistency we are seeking. Therefore, the challenge is how to assign timestamps to commands such that consistency is not violated and commands are not discarded due to stale timestamp values.
 
-However, providing such level of consistency may prove to be costly in an MMOG context, since there may be several communication steps between the sending of a command and its atomic delivery. For this reason, we also use an \emph{optimistic} delivery for the commands of the players. This delivery, although not guaranteeing that all replicas will receive all commands, or that they will be delivered in the same order, is designed to have a fairly low latency, counting from when each command is sent until it is delivered.
+However, providing such level of consistency may prove to be costly in an MMOG context, since there may be several communication steps between the sending of a command and its atomic delivery. For this reason, we use a primitive we call quasi-genuine global fifo total order multicast, which is described in section \ref{sec:quasi}.
 
-The final -- conservative, fault tolerant, but costly in terms of communication steps for each message -- delivery order should be as close as possible to the optimistic one, so that no rollbacks would be deemed necessary. To explain how this works, we first should understand the idea behind the optimistic delivery.
+\subsection{Quasi-genuine Global FIFO Total Order Multicast}
+\label{sec:quasi}
 
-\subsection{Optimistic delivery}
+To reduce the time needed to deliver a message, we use a multicast primitive which delivers messages optmistically, based on the time when they are created in a sender. This \emph{optimistic} delivery, although not guaranteeing that all replicas will receive all messages, is designed to have a fairly low latency, counting from when each message is sent until it is delivered.
+
+The final -- conservative, fault tolerant, but costly in terms of communication steps for each message -- delivery order should be as close as possible to the optimistic one, so that no rollbacks would be deemed necessary. To explain how this works, we first should understand the idea behind the optimistic delivery. Also, we must define what ``quasi-genuine'' and ``global FIFO'' means.
+
+\textbf{Genuine} multicast protocols are those where two multicast groups only communicate with each other when one has some message to send to the other. A \textbf{quasi-genuine} multicast protocol assumes that: 
+
+\begin{center}
+\emph{A1: every group knows from which other groups a multicast message can possibly arrive, and to which other groups it can send a multicast message.}
+\end{center}
+
+Different groups communicate with each other even if there is no message to be sent from one to the other, but, from A1, there is no need for a group $g_i$ to communicate with some other group $g_j$ which cannot send messages to $g_i$, or receive messages from $g_i$\footnote{This relation may even be asymmetric: it could be possible to send a message from group $g_i$ to $g_j$, but not in the opposite direction. In this case, in a protocol where a group is blocked waiting for possible messages from other groups, $g_j$ may block its delivery of messages waiting for some kind of ``clearance'' from $g_i$, but $g_i$ will never block waiting for messages from $g_j$.}. This information may be given by the application which is making use of such primitive, so, although not genuine, a quasi-genuine protocol does not imply that each group has to keep sending messages to every other group.
+
+As messages are delivered according to their generation time, the delivery order is FIFO. Besides, as every two messages which are delivered in different groups should be delivered in the same order in these groups, we need total order. However, FIFO total order is not enough to guarantee that a message $m_1$ is delivered before a message $m_2$, which came from a different source than $m_1$, if the time $t_1$, at which $m_1$ was generated at the process $p_1$ which sent it, is such that $t_1 < t_2$, where $t_2$ is the time at which $m_2$ was generated at $p_2$, according to $p_2$'s clock, where $p_2$ is the source of $m_2$.
+
+Although this property may be hard to observe, it is used by the optimistic delivery protocol, so that messages can be delivered in order in one communication step, in the best case. If, when each process sends a message $m$, it stamps the message with the current value of its wallclock, which will be $st(m)$, we define:
+
+\textbf{Global FIFO order}: if processes $p_i$ and $p_j$ send respectively $m_i$ and $m_j$ to the same destination $p_d$, then if $st(m_i) < st(m_j)$ then $m_j$ is not delivered after $m_i$ in $p_d$.
+
+
+
+\subsubsection{Optimistic delivery}
 
 %Even when ordering commands relevant to only one group, a significant number of communication steps is required: player to replica; replica to coordinator; consensus (two communication steps in the case of Paxos, when having the coordinator as the leader, using ballot reservation, each acceptor sending phase 2b messages to all other acceptors and assuming a tolerable number of failures) and, once consensus is achieved, each replica can put the command in the delivery queue and send it to each player. That sums up to five communication steps. On a geographically distributed scenario, this number of communication steps may be prohibitive for the ``playability'' of a vast number of online games.
 
@@ -90,19 +111,21 @@ The final -- conservative, fault tolerant, but costly in terms of communication 
 
 %The optimistic ordering and delivery is supposed to be much faster than the conservative one. Assuming that it will be, and if the optimistic delivery order is always correct -- which means that it correctly predicted the conservative delivery order --, then the objects will always have a valid state within much fewer communication steps, counting from when each command $C$ was issued to when it is delivered and applied to $obj(C)$.
 
-The basic idea of the optimistic ordering is the following: assuming that the servers have a synchronized clock\footnote{We don't require here perfectly synchronized clocks, as the optimistic protocol tolerates mistakes by its very definition. We only need clocks which are synchronized enought, so that our delivery order prediction succeeds and matches the conservative delivery order.}, whenever a server $S$ (either coordinator or replica) receives a command $C$ from a client, it immediately applies a provisory (optimistic) timestamp $pTS$ for it, which consists simply of the current value of the server's wallclock, $now$. Therefore, $C.pTS=now$. A wait window of length $w(S)$ is considered, where $w(S)$ is defined as the highest estimated communication delay between the server $S$ and any of the other servers in its group or in its group's neighbors.
+The basic idea of the optimistic ordering is the following: assuming that the servers have a synchronized clock\footnote{We don't require here perfectly synchronized clocks, as the optimistic protocol tolerates mistakes by its very definition. We only need clocks which are synchronized enough, so that our delivery order prediction succeeds and matches the conservative delivery order.}, whenever a server $S$ (either coordinator or replica) receives a message $m$ from a client, it immediately applies a timestamp $ts$ for it, which consists simply of the current value of the server's wallclock, $now$. Therefore, $m.ts=now$. A wait window of length $w(S)$ is considered, where $w(S)$ is defined as the highest estimated communication delay between the server $S$ and any of the other servers in its group or in its group's neighbors.
 
-After applying the provisory timestamp to $C$, the server $S$ immediately forwards it to all the other servers involved, including servers in other groups. A server is involved with a command $C$ when one of the objects in $obj(C)$ is coordinated by that server's group. Then, $S$ puts $C$ on a list (\mbox{\textit{optPending}}), where it stays until $now>C.pTS+w(S)$, which means that $C$ has been in that list for a time longer than the defined wait window. In the meantime, other commands, sent from other clients and forwarded by other servers, may have been received and also inserted in that list, always sorting by the provisory timestamp of these commands. If $w(S)$ has been correctly estimated as the highest communication delay between the server and each of the other servers in its group or in its neighboring groups, and no message was lost, than all the commands that were supposed to be delivered before $C$ have necessarily been received already. If the same has occurred for all the servers, then all of them have received all the commands, and can deliver them in the same order of $pTS$.
+After applying the timestamp to $m$, the server $S$ immediately forwards it to all the other servers involved, including servers in other groups. A server is involved with a message $m$ when it is one of its destinations, in $m.dst$. Then, $S$ puts $m$ on a list (\mbox{\textit{optPending}}), where it stays until $now>m.ts+w(S)$, which means that $m$ has been in that list for a time longer than the defined wait window. In the meantime, other messages, sent from other clients and forwarded by other servers, may have been received and also inserted in that list, always sorting by the timestamp of their timestamps. If $w(S)$ has been correctly estimated as the highest communication delay between the server and each of the other servers in its group or in its neighboring groups, and no message was lost, than all the commands that were supposed to be delivered before $m$ have necessarily been received already. If the same has occurred for all the servers, then all of them have received all the commands, and can deliver them in the same order of $ts$.
 
 However, even if the optimistic order is the same for all the servers, it won't be valid if the conservative order is different from it. For that reason, we devised a way to make the conservative delivery order as close as possible to the optimistic one.
 
-\subsection{Conservative delivery}
+\subsubsection{Conservative delivery}
 
 Instead of having the conservative delivery done completely independently from the optimistic one, we can actually use the latter as a hint for the final delivery order. Since the optimistic delivery should be fast when compared to the conservative one, waiting for it should not decrease the system performance significantly. Also, if we wait a short period longer, we can avoid a rollback later caused by mismatches between the two delivery orders, which is not desirable. The basic idea is, then, to pick the optimistic delivery order seen at the coordinator of each group.
 
-The complicating factor is the possibility of a command affecting the state of objects in more than one group. So, all involved groups must somehow agree regarding the delivery order of these commands. However, as in most MMOGs objects interact only with other objects which are nearby, we can exploit the fact that the groups addressed by a single command are usually neighbors. We do this by defining \emph{barriers} for multicast, such that $barrier(G_{send},G_{recv})$ = $t$ means that the group $G_{send}$ promised that no commands with timestamp lower than $t$ would be sent to group $G_{recv}$ anymore. When a server $S$ has received all the barrier values from its neighbours, and they are all greater than a value $t$, then $S$ knows that no more commands are coming from other groups and that, once the local ordering is done, all the commands with timestamp up to $t$ can be conservatively delivered. Besides, a barrier is sent along with the bundle of all messages with timestamp greater than the last previous barrier sent from $G_{send}$ to $G_{recv}$, so that when a server has received a barrier from a group, it means that it knows all the messages sent by that group until the time value stored in that barrier. 
+%The complicating factor is the possibility of a command affecting the state of objects in more than one group. So, all involved groups must somehow agree regarding the delivery order of these commands. However, as in most MMOGs objects interact only with other objects which are nearby, we can exploit the fact that the groups addressed by a single command are usually neighbors. We do this by defining \emph{barriers} for multicast, such that $barrier(G_{send},G_{recv})$ = $t$ means that the group $G_{send}$ promised that no commands with timestamp lower than $t$ would be sent to group $G_{recv}$ anymore. When a server $S$ has received all the barrier values from its neighbours, and they are all greater than a value $t$, then $S$ knows that no more commands are coming from other groups and that, once the local ordering is done, all the commands with timestamp up to $t$ can be conservatively delivered. Besides, a barrier is sent along with the bundle of all messages with timestamp greater than the last previous barrier sent from $G_{send}$ to $G_{recv}$, so that when a server has received a barrier from a group, it means that it knows all the messages sent by that group until the time value stored in that barrier.
 
-There are three possibilities for each command $C$, in the perspective of the coordinator $S_c$ of a given group $G$:
+The complicating factor is the possibility of a message having at least one destination group different from its source group. So, all involved groups must somehow agree regarding the delivery order of these messages. However, from assumption A1, each group knows which other groups it could send messages to -- or receive messages from. We can use this by defining \emph{barriers} for multicast, such that $barrier(G_{send},G_{recv})$ = $t$ means that the group $G_{send}$ promised that no more messages with a timestamp lower than $t$ would be sent to group $G_{recv}$. Let $sendersTo(G) =$ \mbox{$\{G' : G'\text{ is able to send a message to }G\}$}. When a server $S$, from group $G$, has received all the barrier values from all the groups in $sendersTo(G)$, and they are all greater than a value $t$, then $S$ knows that no more messages with timestamp lower than $t$ are coming from other groups and that, once the local ordering is done, all the messages with timestamp up to $t$ can be conservatively delivered. Besides, a barrier is sent along with the bundle of all messages with timestamp greater than the last previous barrier sent from $G_{send}$ to $G_{recv}$, so that when a server has received a barrier from a group, it means that it knows all the messages sent by that group until the time value stored in that barrier. 
+
+There are three possibilities for each message $C$, in the perspective of the coordinator $S_c$ of a given group $G$:
 
 \begin{itemize}
   \item Command $C$ affects the state of objects in only one server group.
@@ -111,27 +134,27 @@ There are three possibilities for each command $C$, in the perspective of the co
 
   \item When $C$ affects objects in more than one group and it has originated in the same group $G$ of the coordinator $S_c$.
   
-  In this case, when $C$ is optimistically delivered by the coordinator, it starts a Paxos consensus instance within its group, having not only its own group's servers as learners, but also those of the neighbor groups affected by $C$. The proposed value is the command $C$ itself, including $C.pTS$. When the value is decided and learnt, the servers of every other affected group $G'$ adjust $barrier(G, G')$ to $C.pTS$ and the coordinators of all the involved groups insert it into the respective \textit{consPending} lists. 
+  In this case, when $C$ is optimistically delivered by the coordinator, it starts a Paxos consensus instance within its group, having not only its own group's servers as learners, but also those of the neighbor groups affected by $C$. The proposed value is the command $C$ itself, including $C.ts$. When the value is decided and learnt, the servers of every other affected group $G'$ adjust $barrier(G, G')$ to $C.ts$ and the coordinators of all the involved groups insert it into the respective \textit{consPending} lists. 
   
   \item When $C$ affects objects in more than one group, but its group of origin is not $G$.
   
   In this case, when $C$ is optimistically delivered, nothing else is done by $S_c$, as it should be inserted into the \textit{consPending} list only when learnt via a consensus instance started at its group of origin -- stored in $C.src$.
 \end{itemize}
 
-The list \textit{consPending} is always sorted in ascending order of the timestamp of the commands in it. When the first command $C$ in this list is such that $C.pTS < now - w(S_c)$ and $C.pTS < barrier(G, G')$ for all $G'$ such that $G'$ is a neighbor of $G$, then $C$ is atomically broadcast (e.g. also with Paxos) to the group as the next command to be conservatively delivered. 
+The list \textit{consPending} is always sorted in ascending order of the timestamp of the commands in it. When the first command $C$ in this list is such that $C.ts < now - w(S_c)$ and $C.ts < barrier(G, G')$ for all $G'$ such that $G'$ is a neighbor of $G$, then $C$ is atomically broadcast (e.g. also with Paxos) to the group as the next command to be conservatively delivered. 
 
 The possibility not covered here is when a message is sent from a group to another one which is not its neighbour. However, it is realistic for this context to assume that objects should be close to each other in the virtual environment to interact and that, as such, this kind of interaction is not supported. Nevertheless, one simple way to provide this kind of support could be by each group waiting for the barriers of every other group in the system, instead of only those of its neighbors.
 
 A more formal description of the protocol is given in Algorithm \ref{algorithm:optpaxos}. We consider that three primitives are given: $getTime()$, which returns the current value of the local wallclock; $Propose(val, learners)$, which initiates a Paxos \cite{paxosref} instance proposing the value $val$ with the local group as the group of acceptors and $learners$ as the group of learners; and also $Learn(val)$, which is called when a paxos instance achieves consensus. The $Learn(val)$ is called for all the processes which are supposed to learn a given proposed value once it is decided by a Paxos instance. For the sake of simplicity, we assume that, for each group, the values are learnt by consensus in the same order in which the consensus instances were initiated. This can be easily done with a sequence number given by the group's coordinator when initiating each consensus instance -- but note that we don't care if consensus instances initiated by different groups are finished in a non-deterministic order, but only those initiated in each single group; we want something like a FIFO ``learn order'', and not necessarily atomic.
 
-Moreover, each server contains an \textit{optPending} list which contains the commands waiting to be \textit{OPT-Delivered} (optimistically delivered). The \mbox{\textit{consPending}} list contains the commands ready to be \textit{CONS-Delivered} (conservatively delivered), but which may be waiting for the clearance from the neighbor groups. Also, each command $cmd$ has at least three fields: $dst$, which is the list of groups which contain objects affected by it; $src$, which is the group to which the client who issued it is connected; and $pTS$, the value of the wallclock of the server when it received the command from the client. Note that, by abuse of notation, we have `server $s \in C.dst$' instead of `server $s$~: $\exists$ group $G~\in~C.dst$ $\wedge$ $s~\in~G$.
+Moreover, each server contains an \textit{optPending} list which contains the commands waiting to be \textit{OPT-Delivered} (optimistically delivered). The \mbox{\textit{consPending}} list contains the commands ready to be \textit{CONS-Delivered} (conservatively delivered), but which may be waiting for the clearance from the neighbor groups. Also, each command $cmd$ has at least three fields: $dst$, which is the list of groups which contain objects affected by it; $src$, which is the group to which the client who issued it is connected; and $ts$, the value of the wallclock of the server when it received the command from the client. Note that, by abuse of notation, we have `server $s \in C.dst$' instead of `server $s$~: $\exists$ group $G~\in~C.dst$ $\wedge$ $s~\in~G$.
 
 \begin{algorithm}
 \begin{distribalgo}[1]
 \STATE \underline{This part of the algorithm is executed by every server $s$:}
 \STATE
 \INDENT{\textit{When $s$ receives a command $cmd$ from a client}}
-  \STATE $cmd.pTS \leftarrow getTime()$  
+  \STATE $cmd.ts \leftarrow getTime()$  
   \COMMENT{current wallclock value as the timestamp of $cmd$}
   \INDENT{\textbf{for all} $s' \in cmd.dst$ \textbf{do}}
     \STATE $send(s', cmd)$    
@@ -141,7 +164,7 @@ Moreover, each server contains an \textit{optPending} list which contains the co
 \ENDINDENT
 \STATE
 \INDENT{\textit{When a server $s$ receives a command $cmd'$ from another server}}
-  \IF {$cmd'.pTS < getTime() - w(s)$}
+  \IF {$cmd'.ts < getTime() - w(s)$}
     \STATE discard $cmd'$
     \COMMENT{late commands probably lead to out-of-order delivery}
   \ELSE
@@ -149,7 +172,7 @@ Moreover, each server contains an \textit{optPending} list which contains the co
   \ENDIF
 \ENDINDENT
 \STATE
-\INDENT{\textit{When $\exists c \in optPending$ : $getTime() > c.pTS + w(s)$ $\wedge$\\$\nexists c' \in optPending: c'.pTS < c.pTS$}}
+\INDENT{\textit{When $\exists c \in optPending$ : $getTime() > c.ts + w(s)$ $\wedge$\\$\nexists c' \in optPending: c'.ts < c.ts$}}
   \STATE OPT-Deliver(c)  
   \INDENT{\textbf{for all} $cli \in clients(s)$ \textbf{do}}
     \STATE $send(cli, \{c, \text{`optimistic'}\})$    
@@ -175,7 +198,7 @@ Moreover, each server contains an \textit{optPending} list which contains the co
 \STATE
 \STATE \underline{The next part is executed only by the coordinator $s_c$ of each group $g$:}
 \STATE
-\INDENT{\textit{When $\exists c \in optPending$ : $getTime() > c.pTS + w(s_c)$ $\wedge$ \\ $|c.dst| > 1 \wedge c.src = g \wedge \nexists c' \in optPending : c'.pTS < c.pTS$}}
+\INDENT{\textit{When $\exists c \in optPending$ : $getTime() > c.ts + w(s_c)$ $\wedge$ \\ $|c.dst| > 1 \wedge c.src = g \wedge \nexists c' \in optPending : c'.ts < c.ts$}}
   \STATE $Propose(\{c, \text{`multicast'}\}, c.dst)$
   \COMMENT{saving c in the acceptors before multicasting}
 \ENDINDENT
@@ -183,11 +206,11 @@ Moreover, each server contains an \textit{optPending} list which contains the co
 \INDENT{\textit{When} $Learn(\{c, \text{`multicast'}\})$}
   \STATE $consPending \leftarrow consPending$ $\cup$ $\{c\}$ 
   \IF {$c.src \neq g$}
-    \STATE $barrier(c.src, g) \leftarrow c.pTS$
+    \STATE $barrier(c.src, g) \leftarrow c.ts$
   \ENDIF  
 \ENDINDENT
 \STATE
-\INDENT{\textit{When $\exists c \in consPending$ : \\ $c.pTS < getTime() - w(s_c)$ $\wedge$ \\ $\forall g' : g'$ is a neighbor of $g$, $c.pTS < barrier(g',g)$ $\wedge$ \\ $\nexists c' \in consPending : c'.pTS < c.pTS$ }}
+\INDENT{\textit{When $\exists c \in consPending$ : \\ $c.ts < getTime() - w(s_c)$ $\wedge$ \\ $\forall g' : g'$ is a neighbor of $g$, $c.ts < barrier(g',g)$ $\wedge$ \\ $\nexists c' \in consPending : c'.ts < c.ts$ }}
   \STATE $Propose(\{c, \text{`deliver'}\}, g)$
 \ENDINDENT
 
@@ -204,16 +227,16 @@ The problem with Algorithm \ref{algorithm:optpaxos} is that it does not guarante
 \STATE
 \INDENT{\textit{When} $Learn(\{c, \text{`multicast'}\})$ $\wedge$ $c.src = g$}
   \INDENT{\textbf{for all} $g' : g' \in c.dst$ \textbf{do}}
-    \STATE $lastBarrierSent(g') \leftarrow c.pTS$
+    \STATE $lastBarrierSent(g') \leftarrow c.ts$
   \ENDINDENT
 \ENDINDENT
 \STATE
 \INDENT{\textit{When $\exists g' : g'$ is a neighbor of $g$ $\wedge$\\$getTime() - lastBarrierSent(g') > barrierThreshold$}}
   \STATE $ec \leftarrow$ empty command
-  \STATE $ec.pTS \leftarrow getTime()$
+  \STATE $ec.ts \leftarrow getTime()$
   \STATE $ec.src \leftarrow g$
   \STATE $Propose(\{ec, \text{`multicast'}\}, \{g,g'\})$
-  \COMMENT{saving that nothing was sent until ec.pTS}
+  \COMMENT{saving that nothing was sent until ec.ts}
 \ENDINDENT
 \STATE
 
@@ -226,7 +249,7 @@ The problem with Algorithm \ref{algorithm:optpaxos} is that it does not guarante
 
 %In brief, our strategy is to combine state-machine replication (implemented with Paxos), used to handle object replicas, with Skeen's algorithm, used to select timestamps for commands that affect multiple objects.
 
-\subsection{Recovering from mistakes}
+\subsubsection{Recovering from mistakes}
 
 Unfortunately, even with a very good delay estimation (e.g. on an environment with a low jitter), there is absolutely no guarantee that the optimistic delivery order will match the conservative one. When it doesn't, it is considered a \emph{mistake}. Every mistake of the optimistic algorithm -- either a lost command message, or an out-of-order delivery -- will cause a rollback of the optimistic state of the objects and re-execution of some of the optimistically delivered commands.
 
