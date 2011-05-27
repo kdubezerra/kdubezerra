@@ -166,7 +166,7 @@ Something that must be noticed is that some messages might not have the source g
 %\STATE
 \blankline\
 \INDENT {Initialization}
-  \INDENT{\textbf{for all} $G' : G' \in sendersTo(G)$ \textbf{do}}
+  \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
     \STATE $barrier(G',G) = -\infty$
   \ENDINDENT
 \ENDINDENT
@@ -238,13 +238,13 @@ The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee l
 \begin{distribalgo}[1]
 \blankline\
 \INDENT {Initialization}
-  \INDENT{\textbf{for all} $G' : G' \in receiversFrom(G)$ \textbf{do}}
+  \INDENT{\textbf{for all} $G' \in receiversFrom(G)$ \textbf{do}}
     \STATE $lastBarrierSent(G') = -\infty$
   \ENDINDENT
 \ENDINDENT
 \blankline\
-\INDENT{\textit{When} $Learn(\{m\})$ $\wedge$ $m.src = G$}
-  \INDENT{\textbf{for all} $G' : G' \in m.dst$ \textbf{do}}
+\INDENT{\textit{When} $Learn(m)$ $\wedge$ $m.src = G$}
+  \INDENT{\textbf{for all} $G' \in m.dst$ \textbf{do}}
     \STATE $lastBarrierSent(G') \leftarrow m.ts$
   \ENDINDENT
 \ENDINDENT
@@ -276,7 +276,7 @@ When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq
 %\STATE
 \blankline\
 \INDENT {Initialization}
-  \INDENT{\textbf{for all} $G' : G' \in sendersTo(G)$ \textbf{do}}
+  \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
     \STATE $barrier(G',G) = -\infty$
   \ENDINDENT
 \ENDINDENT
@@ -284,7 +284,7 @@ When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq
 \INDENT{\textit{When $p$ generates a message $m$}}
   \STATE $m.ts \leftarrow getTime()$  
   \COMMENT{current wallclock value as the timestamp of $m$}
-  \INDENT{\textbf{for all} $p' \in m.dst \cup G \cup blockers(m)$ \textbf{do}} \label{algline:askclearance}
+  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\} \cup blockers(m)$ \textbf{do}} \label{algline:askclearance}
     \STATE $send(p', m)$
   \ENDINDENT
 \ENDINDENT
