@@ -174,7 +174,7 @@ Something that must be noticed is that some messages might not have the source g
 \INDENT{\textit{When $p$ generates a message $m$}}
   \STATE $m.ts \leftarrow getTime()$  
   \COMMENT{current wallclock value as the timestamp of $m$}
-  \INDENT{\textbf{for all} $p' \in m.dst \cup G$ \textbf{do}} \label{algline:sendcoord}
+  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\}$ \textbf{do}} \label{algline:sendcoord}
     \STATE $send(p', m)$    
     \COMMENT{send optimistically $m$ to all involved processes}
   \ENDINDENT
@@ -220,6 +220,7 @@ Something that must be noticed is that some messages might not have the source g
 \ENDINDENT
 \blankline\
 \INDENT{\textit{When $\exists m \in consPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$ $\wedge$ \\ $\nexists m' \in consPending : m'.ts < m.ts$ }}
+  \STATE $consPending \leftarrow consPending \setminus \{m\}$
   \STATE CONS-Deliver($m$)
 
 \blankline\
@@ -336,6 +337,7 @@ When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq
 \ENDINDENT
 \blankline\
 \INDENT{\textit{When $\exists m \in consPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$ $\wedge$ \\ $\nexists m' \in consPending : m'.ts < m.ts$ }}
+  \STATE $consPending \leftarrow consPending \setminus \{m\}$
   \STATE CONS-Deliver($m$)
 
 \blankline\
@@ -349,7 +351,9 @@ When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq
 Now, assuming that $w(c)$ is the same for every group coordinator $c$, we have a worst-case delivery latency for $m$ of $w(c) + 2\Delta$, as the $null$ message is created and proposed in parallel with $m$. However, each sender process is sending $m$ to every destination process -- which will not be changed --, but also to every process in its group and to every process belonging to some group of $blockers(m)$. This can create an amount of messages too high to be practical. A solution for that would be the following: instead of sending $m$ to every single process in $G$ and in each group of $blockers(m)$, the sender $p$ sends $m$ only to its destinations and to the coordinators of $G$ and of the groups in $blockers(m)$. That way, the line \ref{algline:askclearance} of Algorithm \ref{algorithm:ondemand} would be:
 \\
 \\
-\textbf{for all}\\$p' \in m.dst \cup \{c : c\text{ coordinates }G \vee (\exists G_B \in blockers(m) \wedge c\text{ coordinates }G_B)\}$\\\textbf{do}
+\textbf{for all} $p' : p' \in m.dst \vee
+\\p' \in \{c : c\text{ coordinates }G \vee (\exists G_B \in blockers(m) \wedge c\text{ coordinates }G_B)\}$
+\\\textbf{do}
 
 % Nevertheless, one possible way to implement the delivery for a command $C$ of this type would be to initiate a Paxos consensus instance in each group addressed by it, proposing $C$ and having as learns all servers in all involved groups. 
 
