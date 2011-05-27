@@ -295,8 +295,9 @@ When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq
     \STATE $null.src \leftarrow G$
     \STATE $null.ts \leftarrow m'.ts$
     \STATE $null.dst \leftarrow m'.dst \cap receiversFrom(G)$
-    \STATE $optPending \leftarrow optPending \cup null$
-  \ELSIF {$m'.ts < getTime() - w(p)$}
+    \STATE $optPending \leftarrow optPending \cup \{null\}$
+  \ENDIF
+  \IF {$m'.ts < getTime() - w(p) \vee G \notin m'.dst$}
     \STATE discard $m'$
     \COMMENT{late commands probably lead to out-of-order delivery}
   \ELSE
