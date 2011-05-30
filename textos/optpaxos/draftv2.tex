@@ -166,7 +166,7 @@ Something that must be noticed is that some messages might not have their source
 
 \blankline\
 \INDENT {Initialization}
-  \STATE $groupClock \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $propPending \leftarrow \emptyset$,\\
+  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $propPending \leftarrow \emptyset$,\\
   $optPending \leftarrow \emptyset$, $consPending \leftarrow \emptyset$
   \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
     \STATE $barrier(G',G) \leftarrow -\infty$ 
@@ -205,11 +205,10 @@ $getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
 
 \blankline\
 \INDENT{\textit{When $(\exists m \in propPending : \nexists m' \in propPending: m'.ts < m.ts)$\\
-$\wedge$ $nextProp = groupClock$}}
+$\wedge\ nextProp = k$}}
 %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
 %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
-    \STATE $k \leftarrow groupClock$
-    \STATE $nextProp \leftarrow groupClock + 1$
+    \STATE $nextProp \leftarrow k + 1$
     \STATE Propose($k$,$m$)
 %  \ENDIF
 \ENDINDENT
@@ -219,7 +218,7 @@ $\wedge$ $nextProp = groupClock$}}
 %  \STATE $m.gs \leftarrow k$
   \STATE $decided \leftarrow decided \cup \{m\}$
   \STATE $propPending \leftarrow propPending \setminus (\{m\} \cup \{m' : m'.ts < m.ts\})$
-  \STATE $nextProp \leftarrow groupClock \leftarrow k + 1$
+  \STATE $nextProp \leftarrow k \leftarrow k + 1$
   \IF {$G \in m.dst$} \label{algline:checkcons}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDIF
