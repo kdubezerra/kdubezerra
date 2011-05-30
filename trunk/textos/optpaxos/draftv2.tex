@@ -7,9 +7,9 @@
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{amssymb}
-\usepackage{algorithm}
 \usepackage[noend]{distribalgo}
 \usepackage[draft]{fixme}
+
 
 \begin{document}
 
@@ -133,7 +133,7 @@ Instead of having the conservative delivery done completely independently from t
 
 The complicating factor is the possibility of a message having at least one destination group different from its source group. So, all involved groups must somehow agree regarding the delivery order of these messages. However, from assumption A1, each group knows which other groups it could send messages to -- or receive messages from. We can use this by defining \emph{barriers} for multicast, such that $barrier(G_{send},G_{recv})$ = $t$ means that the group $G_{send}$ promised that it would send no more messages with a timestamp lower than $t$ to group $G_{recv}$. We have defined that $sendersTo(G) =$ \mbox{$\{G' : G'\text{ is able to send a message to }G\}$}. When a process $p$, from group $G$, has received all the barrier values from all the groups in $sendersTo(G)$, and they are all greater than a value $t$, then $p$ knows that no more messages with timestamp lower than $t$ are coming from other groups and that, once the local ordering (the ordering of messages originated in $G$) is done, all the messages with timestamp up to $t$ can be conservatively delivered. Besides, a barrier is sent along with the bundle of all messages with timestamp greater than the last previous barrier sent from $G_{send}$ to $G_{recv}$, so that when a process has received a barrier from a group, it means that it knows all the messages sent by that group until the time value stored in that barrier. 
 
-We use consensus to conservatively deliver each message. Consider that each consensus instance $I$ from each group $I.grp$ receives a monotonically increasing unique integer identifier, without gaps, that is, for any two instances $I_i$ and $I_k$, such that $I_i.grp = I_k.grp$, if $I_i.id + 1 < I_k.id$, there is necessarily an instance $I_j : I_i.grp = I_j.grp = I_k.grp \wedge I_i.id < I_j.id < I_k.id$. Consider also that each message sent by a group $G$ has a group sequence number $m.gs$ related to the order in which it is conservatively delivered, relatively to other messages also sent by $G$. As messages are conservatively delivered via consensus, the group sequence number of a message is equal to the id of the instance in which it was decided, that is, $m.gs = i \Leftrightarrow \exists I : I.grp = m.src \wedge Decide(I.id, m) \wedge I.id = i$.
+We use consensus to conservatively deliver each message. Consider that each consensus instance $I$ from each group $I.grp$ receives a monotonically increasing unique integer identifier, without gaps, that is, for any two instances $I_i$ and $I_k$, such that $I_i.grp = I_k.grp$, if $I_i.id + 1 < I_k.id$, there is necessarily an instance $I_j : I_i.grp = I_j.grp = I_k.grp \wedge I_i.id < I_j.id < I_k.id$. Consider also that each message $m$ sent by a group $G$ has a group sequence number $m.gs$ related to the order in which it is conservatively delivered, relatively to other messages also sent by $G$. As messages are conservatively delivered via consensus, the group sequence number of a message is equal to the id of the instance in which it was decided, that is, $m.gs = i \Leftrightarrow \exists I : I.id = i \wedge I.grp = m.src \wedge I.val = m$, where $I.val$ is the value decided by the instance $I$.
 
 There are three possibilities for each message $m$, in the perspective of a process $p$ of $G$:
 
@@ -148,41 +148,43 @@ There are three possibilities for each message $m$, in the perspective of a proc
   
   \item When $G$ is one of the destinations of $m$, but $m$ was originated in some other group $G'$:
   
-  In this case, when $m$ is optimistically delivered by a process $p$ of group $G$, nothing else is done. The message $m$ is inserted into the \mbox{\textit{consPending}} list of $p$ only $p$ receives some message $\{m, \text{`cons'}\}$.
+  In this case, when $m$ is optimistically delivered by a process $p$ of group $G$, nothing else is done. The message $m$ is inserted into the \mbox{\textit{consPending}} list of $p$ only when $p$ receives some message $\{m, \text{`cons'}\}$.
 \end{itemize}
 
 The messages in the \textit{consPending} list are always sorted in ascending order of their timestamps. When the first message $m$, in the $consPending$ list of a process $p : group(p) = G$, is such that $m.ts < barrier(G, G')$ for all $G' \in sendersTo(G)$, then $m$ is conservatively delivered by $p$ to the application as the next message. We claim that this delivery respects the ``global FIFO total order''\footnote{Proof needed.}.
 
 %The possibility not covered here is when a message is sent from a group to another one which is not its neighbour. However, it is realistic for this context to assume that objects should be close to each other in the virtual environment to interact and that, as such, this kind of interaction is not supported. Nevertheless, one simple way to provide this kind of support could be by each group waiting for the barriers of every other group in the system, instead of only those of its neighbors.
 
-A more formal description of the protocol is given in Algorithm \ref{algorithm:quasi}. We consider that three primitives are given: $getTime()$, which returns the current value of the local wallclock; $Propose(I, val)$, which proposes a value $val$ for the consensus instance of id $I.id$ within the group $I.grp$; and also $Decide(I, val)$, which is called when the consensus instance $I$ finishes. $Decide(I, val)$ is called for all the processes of the group $I.grp$, when they learn that the value $val$ has been agreed upon in $I$. For the sake of simplicity, we assume that, for consensus instances within the same group, the values are decided in the same order of the instances id's\footnote{This can be easily done by delaying the callback of $Decide(I, val)$ while there is some unfinished consensus instance $I': I'.grp = I.grp \wedge I'.id < I.id$.}.
+A more formal description of the protocol is given in Algorithm \ref{algorithm:quasi}. We consider that three primitives are given: $getTime()$, which returns the current value of the local wallclock; $Propose(k, val)$, which proposes a value $val$ for the consensus instance of id $k$ within its group; and also $Decide(k, val)$, which is called when the consensus instance of id $k$ finishes. $Decide(k, val)$ is called for all the processes of the group that initiated it, when they learn that the value $val$ has been agreed upon in instance of id $k$. For the sake of simplicity, we assume that, for consensus instances within the same group, the values are decided in the same order of the instances id's\footnote{This can be easily done by delaying the callback of $Decide(k, val)$ while there is some unfinished consensus instance of id $k': k' < k$ from the same group.}.
 
-Moreover, each process $p$ of group $G$ keeps an \textit{optPending} list which contains the messages waiting to be \textit{OPT-Delivered} (optimistically delivered). The \mbox{\textit{consPending}} list contains the messages ready to be \textit{CONS-Delivered} (conservatively delivered), but which may be waiting for the clearance from the groups in $sendersTo(G)$. Also, each message $m$ has at least three fields: $dst$, which is the set of $m$'s destination groups; $src$, which is the group where $m$ was generated; and $ts$, the value of the wallclock of the process when $m$ was generated. Note that, by abuse of notation, we have `process $p \in m.dst$' instead of `process $p$ : $\exists$ group $G \in m.dst \wedge p \in G$'.
+Moreover, each process $p$ of group $G$ keeps an \textit{optPending} list which contains the messages waiting to be \textit{OPT-Delivered} (optimistically delivered). The \mbox{\textit{consPending}} list contains the messages ready to be \textit{CONS-Delivered} (conservatively delivered), but which may be waiting for the clearance from the groups in $sendersTo(G)$. Also, each message $m$ has at least four fields: $dst$, which is the set of $m$'s destination groups; $src$, which is the group where $m$ was generated; $ts$, the value of the wallclock of the process when $m$ was generated; and $gs$, which is $m$'s sequence number relatively to its group of origin. Note that, by abuse of notation, we have `process $p \in m.dst$' instead of `process $p$ : $\exists$ group $G \in m.dst \wedge p \in G$'.
 
-Something that must be noticed is that some messages might not have the source group as a destination. Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
+Something that must be noticed is that some messages might not have their source groups as a destinations. Anyway, each message $m$ of this type still has to be agreed upon in its groups of origin, so that $m.gs$ can be decided, and also $m$ will be retrievable, even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
 
 \begin{algorithm}
 \begin{distribalgo}[1]
-%\blankline\
-%\STATE\underline{This algorithm is executed by every process $p$, which belongs to group $G$:}
-%\STATE
+
 \blankline\
 \INDENT {Initialization}
+  \STATE $groupClock \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $propPending \leftarrow \emptyset$,\\
+  $optPending \leftarrow \emptyset$, $consPending \leftarrow \emptyset$
   \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
-    \STATE $barrier(G',G) = -\infty$
+    \STATE $barrier(G',G) \leftarrow -\infty$ 
   \ENDINDENT
-\ENDINDENT
+\ENDINDENT 
+
 \blankline\
-\INDENT{\textit{When $p$ generates a message $m$}}
+\INDENT{\textit{To send a message $m$}}
   \STATE $m.ts \leftarrow getTime()$  
   \COMMENT{current wallclock value as the timestamp of $m$}
-  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\}$ \textbf{do}} \label{algline:sendcoord}
-    \STATE $send(p', m)$    
+  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\}$ \textbf{do}}
+    \STATE send($p'$, $m$)    
     \COMMENT{send optimistically $m$ to all involved processes}
   \ENDINDENT
 \ENDINDENT
+
 \blankline\
-\INDENT{\textit{When a process $p$ receives a message $m'$}}
+\INDENT{\textit{When} receive($m'$)}
   \IF {$m'.ts < getTime() - w(p)$}
     \STATE discard $m'$
     \COMMENT{late commands probably lead to out-of-order delivery}
@@ -190,40 +192,55 @@ Something that must be noticed is that some messages might not have the source g
     \STATE $optPending \leftarrow optPending$ $\cup$ $\{m'\}$
   \ENDIF
 \ENDINDENT
+
 \blankline\
-\INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p)$ $\wedge$\\$\nexists m' \in optPending: m'.ts < m.ts$}}
+\INDENT{\textit{When $\exists m \in optPending :$\\
+$getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
   \STATE $optPending \leftarrow optPending \setminus \{m\}$
-  \IF {$p$ is a coordinator $\wedge$ $m.src = G$}
-    \STATE $Propose(m, m.dst \cup G)$ \label{algline:propg}
-  \ENDIF
   \IF {$G \in m.dst$}  \label{algline:notinterested}
     \STATE OPT-Deliver($m$)  
-%   \INDENT{\textbf{for all} $cli \in clients(s)$ \textbf{do}}
-%     \STATE $send(cli, \{c, \text{`optimistic'}\})$    
-%     \COMMENT{s sends $c$ to its clients, warning it is optimistic}
-%   \ENDINDENT
-  \ENDIF  
+  \ENDIF
+  \STATE $propPending \leftarrow propPending \cup \{m\}$
 \ENDINDENT
+
 \blankline\
-\INDENT{\textit{When} $Learn(m)$}
+\INDENT{\textit{When $(\exists m \in propPending : \nexists m' \in propPending: m'.ts < m.ts)$\\
+$\wedge$ $nextProp = groupClock$}}
+%  \STATE $propPending \leftarrow propPending \setminus \{m\}$
+%  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
+    \STATE $k \leftarrow groupClock$
+    \STATE $nextProp \leftarrow groupClock + 1$
+    \STATE Propose($k$,$m$)
+%  \ENDIF
+\ENDINDENT
+
+\blankline\
+\INDENT{\textit{When} Decide($k$,$m$)}
+%  \STATE $m.gs \leftarrow k$
+  \STATE $decided \leftarrow decided \cup \{m\}$
+  \STATE $propPending \leftarrow propPending \setminus (\{m\} \cup \{m' : m'.ts < m.ts\})$
+  \STATE $nextProp \leftarrow groupClock \leftarrow k + 1$
   \IF {$G \in m.dst$} \label{algline:checkcons}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDIF
-  \IF {$m.src \neq G$}
-    \STATE $barrier(m.src, G) = m.ts$
-  \ENDIF
-%   \INDENT{\textbf{for all} $cli \in clients(s)$ \textbf{do}}
-%     \STATE $send(cli, \{c, \text{`final'}\})$    
-%     \COMMENT{s sends $c$ to its clients, telling it is the final order}
-%   \ENDINDENT
-%   \IF {$p$ is a coordinator}
-%     \STATE $consPending \leftarrow consPending \setminus \{c\}$
-%   \ENDIF  
+  \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
+    \STATE send($p'$, $\{m, \text{`cons'}\}$)    
+  \ENDINDENT
 \ENDINDENT
+
+\blankline\
+\INDENT{\textit{When} receive($\{m',\{\text{`cons'}\}$)}
+  \STATE $barrier(m'.dst,G) \leftarrow max(m'.ts, barrier(m'.dst,G))$
+  \IF {$m' \notin consPending \wedge m' \notin delivered$}
+    \STATE $consPending \leftarrow consPending \cup \{m\}$
+  \ENDIF
+\ENDINDENT
+
 \blankline\
 \INDENT{\textit{When $\exists m \in consPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$ $\wedge$ \\ $\nexists m' \in consPending : m'.ts < m.ts$ }}
   \STATE $consPending \leftarrow consPending \setminus \{m\}$
   \STATE CONS-Deliver($m$)
+  \STATE $delivered \leftarrow delivered \cup \{m\}$
 
 \blankline\
 \ENDINDENT
