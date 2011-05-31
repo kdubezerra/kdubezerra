@@ -227,7 +227,9 @@ Something that must be noticed is that some messages might not have their source
   \IF {$G \in m.dst \wedge\ m \neq null$}
     \STATE \optdel{$m$}  
   \ENDIF
-  \STATE $propPending \leftarrow propPending \cup \{m\}$
+  \IF {$G = m.src$}
+    \STATE $propPending \leftarrow propPending \cup \{m\}$
+  \ENDIF
 \ENDINDENT
 
 \blankline
@@ -260,7 +262,7 @@ Something that must be noticed is that some messages might not have their source
   \IF {$m' \notin\ consPending \wedge\ m' \notin\ delivered \wedge\ m' \neq\ null$}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDIF
-  \STATE $barrier(m'.src,G) \leftarrow max(m'.ts, barrier(m'.src,G))$ \label{algline:incbar}
+  \STATE $barrier(m'.src,G) \leftarrow max(m'.ts, barrier(m'.src,G))$ \label{algline:incbar} \COMMENT{channels are FIFO, but there are different senders}
 \ENDINDENT
 
 \blankline
@@ -300,8 +302,8 @@ The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee l
   \STATE $null \leftarrow$ empty message
   \STATE $null.ts \leftarrow lastBarrierSent(G') + barrierThreshold$ \label{algline:samenullid}
   \STATE $null.src \leftarrow G$
-  \STATE $null.dst \leftarrow G'$
-  \STATE \cmsend{$null$}
+  \STATE $null.dst \leftarrow G'$ 
+  \STATE $optPending \leftarrow optPending \cup \{null\}$
   \COMMENT{saving that nothing was sent until null.ts}
 \ENDINDENT 
 
@@ -342,9 +344,9 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
 
 \blankline
 \INDENT{\textit{When} receive($m'$)}
-  \IF {$G \neq m'.src$}
+  \IF {$G \neq m'.src$ $\wedge$ $(\exists G' \in m'.dst: G' \neq G$ $\wedge$ $G' \neq m'.src)$}
     \STATE $null \leftarrow$ empty message
-    \STATE $null.src \leftarrow G$
+    \STATE $null.src \leftarrow G$  \COMMENT{some other group needs a barrier from this one}
     \STATE $null.ts \leftarrow m'.ts$ \label{algline:nulltsmts}
     \STATE $null.dst \leftarrow m'.dst \cap receiversFrom(G)$
     \STATE $optPending \leftarrow optPending \cup \{null\}$
@@ -363,7 +365,9 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
   \IF {$G \in m.dst \wedge\ m \neq null$}
     \STATE \optdel{$m$}  
   \ENDIF
-  \STATE $propPending \leftarrow propPending \cup \{m\}$
+  \IF {$G = m.src$}
+    \STATE $propPending \leftarrow propPending \cup \{m\}$
+  \ENDIF
 \ENDINDENT
 
 \blankline
@@ -382,11 +386,11 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
   \STATE $propPending \leftarrow propPending \setminus (\{m\} \cup \{m' : m'.ts < m.ts \wedge m' \neq null\})$ \label{algline:keepnull}
   \STATE $nextProp \leftarrow k + 1$
   \STATE $k \leftarrow k + 1$  
-  \IF {$G \in m.dst$} \label{algline:checkcons}
+  \IF {$G \in m.dst \wedge m \neq null$} \label{algline:checkcons}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDIF
   \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
-    \STATE send($p'$, $\{m, \text{`cons'}\}$)    
+    \STATE send($p'$, $\{m, \text{`cons'}\}$)  \COMMENT{this message is sent through a FIFO lossless channel}
   \ENDINDENT
 \ENDINDENT
 
@@ -395,7 +399,7 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
   \IF {$m' \notin\ consPending \wedge\ m' \notin\ delivered \wedge\ m' \neq\ null$}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDIF
-  \STATE $barrier(m'.src,G) \leftarrow max(m'.ts, barrier(m'.src,G))$
+  \STATE $barrier(m'.src,G) \leftarrow max(m'.ts, barrier(m'.src,G))$  \COMMENT{channels are FIFO, but there are different senders}
 \ENDINDENT
 
 \blankline
