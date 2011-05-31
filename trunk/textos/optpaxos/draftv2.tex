@@ -9,6 +9,7 @@
 \usepackage{amssymb}
 \usepackage[noend]{distribalgo}
 \usepackage[draft]{fixme}
+\usepackage[hmargin=2cm,vmargin=2cm]{geometry}
 
 
 \begin{document}
@@ -24,7 +25,9 @@
 
 \newcommand{\code}[1]{\texttt{\small{\textbf{#1}}}}
 
-\newcommand{\blankline}[1]{\vspace{4 mm}}
+\newcommand{\blankline}{\vspace{4 mm}}
+
+\newcommand{\cmsend}[1]{GFTO-Mcast({#1})}
 
 \title{Practical consistency management for geographically distributed MMOG servers}
 
@@ -164,17 +167,16 @@ Something that must be noticed is that some messages might not have their source
 \begin{algorithm}
 \begin{distribalgo}[1]
 
-\blankline\
+\blankline
 \INDENT {Initialization}
-  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $propPending \leftarrow \emptyset$,\\
-  $optPending \leftarrow \emptyset$, $consPending \leftarrow \emptyset$
+  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $propPending \leftarrow \emptyset$, $optPending \leftarrow \emptyset$, $consPending \leftarrow \emptyset$
   \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
     \STATE $barrier(G',G) \leftarrow -\infty$ 
   \ENDINDENT
 \ENDINDENT 
 
-\blankline\
-\INDENT{\textit{To send a message $m$}}
+\blankline
+\INDENT{\textit{To send a message $m$} -- \cmsend{m}}
   \STATE $m.ts \leftarrow getTime()$  
   \COMMENT{current wallclock value as the timestamp of $m$}
   \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\}$ \textbf{do}}
@@ -183,7 +185,7 @@ Something that must be noticed is that some messages might not have their source
   \ENDINDENT
 \ENDINDENT
 
-\blankline\
+\blankline
 \INDENT{\textit{When} receive($m'$)}
   \IF {$m'.ts < getTime() - w(p)$}
     \STATE discard $m'$
@@ -193,19 +195,17 @@ Something that must be noticed is that some messages might not have their source
   \ENDIF
 \ENDINDENT
 
-\blankline\
-\INDENT{\textit{When $\exists m \in optPending :$\\
-$getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
+\blankline
+\INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
   \STATE $optPending \leftarrow optPending \setminus \{m\}$
-  \IF {$G \in m.dst$}  \label{algline:notinterested}
+  \IF {$G \in m.dst \wedge\ m \neq null$}
     \STATE OPT-Deliver($m$)  
   \ENDIF
   \STATE $propPending \leftarrow propPending \cup \{m\}$
 \ENDINDENT
 
-\blankline\
-\INDENT{\textit{When $(\exists m \in propPending : \nexists m' \in propPending: m'.ts < m.ts)$\\
-$\wedge\ nextProp = k$}}
+\blankline
+\INDENT{\textit{When $(\exists m \in propPending : \nexists m' \in propPending: m'.ts < m.ts) \wedge\ nextProp = k$}}
 %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
 %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
     \STATE $nextProp \leftarrow k + 1$
@@ -213,12 +213,13 @@ $\wedge\ nextProp = k$}}
 %  \ENDIF
 \ENDINDENT
 
-\blankline\
+\blankline
 \INDENT{\textit{When} Decide($k$,$m$)}
 %  \STATE $m.gs \leftarrow k$
   \STATE $decided \leftarrow decided \cup \{m\}$
   \STATE $propPending \leftarrow propPending \setminus (\{m\} \cup \{m' : m'.ts < m.ts\})$
-  \STATE $nextProp \leftarrow k \leftarrow k + 1$
+  \STATE $nextProp \leftarrow k + 1$
+  \STATE $k \leftarrow k + 1$  
   \IF {$G \in m.dst$} \label{algline:checkcons}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDIF
@@ -227,79 +228,81 @@ $\wedge\ nextProp = k$}}
   \ENDINDENT
 \ENDINDENT
 
-\blankline\
+\blankline
 \INDENT{\textit{When} receive($\{m',\{\text{`cons'}\}$)}
   \STATE $barrier(m'.dst,G) \leftarrow max(m'.ts, barrier(m'.dst,G))$
-  \IF {$m' \notin consPending \wedge m' \notin delivered$}
+  \IF {$m' \notin\ consPending \wedge\ m' \notin\ delivered \wedge\ m' \neq\ null$}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDIF
 \ENDINDENT
 
-\blankline\
-\INDENT{\textit{When $\exists m \in consPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$ $\wedge$ \\ $\nexists m' \in consPending : m'.ts < m.ts$ }}
+\blankline
+\INDENT{\textit{When $\exists m \in consPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in consPending : m'.ts < m.ts$ }}
   \STATE $consPending \leftarrow consPending \setminus \{m\}$
   \STATE CONS-Deliver($m$)
   \STATE $delivered \leftarrow delivered \cup \{m\}$
 
-\blankline\
+\blankline
 \ENDINDENT
 
-\caption{Delivery algorithm, executed by every process $p$ from group $G$}
+\caption{\cmsend{m} -- executed by every process $p$ from group $G$}
 \label{algorithm:quasi}
 \end{distribalgo}
 \end{algorithm}
 
 \subsubsection{Addressing liveness}
 
-The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee liveness when a group has no message to receive from some other group and then keeps waiting for a new message to increase the barrier value and proceed with the conservative delivery. However, it does not disrupt the optimistic delivery. Also, liveness for the conservative delivery can be easily provided by sending periodic empty messages from $G$ to each $G' \in receiversFrom(G)$ to which no message has been sent for a specified time threshold \textit{barrierThreshold}. Algorithm \ref{algorithm:liveness} describes this. For the coordinator of $G$ to know when a message was successfully delivered to other group via consensus, it must also learn it. For this reason, when it proposes any message for conservative delivery, it always includes $G$ as one of the group of learners (l. \ref{algline:propg} of Algorithm \ref{algorithm:quasi}). To avoid the conservative delivery of messages whose destinations do not include $G$, it checks before including it in the conservative delivery queue (l. \ref{algline:checkcons} of Algorithm \ref{algorithm:quasi}). This check also avoids delivering empty messages sent by other groups with the sole purpose of providing liveness.
+The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee liveness when a group has no message to receive from some other group and then keeps waiting for a new message to increase the barrier value and proceed with the conservative delivery. However, it does not disrupt the optimistic delivery. Also, liveness for the conservative delivery can be easily provided by sending periodic empty messages from $G$ to each $G' \in receiversFrom(G)$ to which no message has been sent for a specified time threshold \textit{barrierThreshold}. Algorithm \ref{algorithm:liveness} describes this. When a message from group $G$ to some other group $G'$ has been agreed upon and a $\{m, \text{`cons'}\}$ message is sent by each process $p$ of $G$ to every process $p'$ of $G'$, $p$ knows that $p'$ increased its barrier value for messages from $G$. However, when there is a long period after the last time such kind of message has been sent, $p$ decides to send some empty message to the processes of $G'$ with the sole purpose of increasing their barrier values and allow for the delivery of possibly blocked messages in $G'$.
 
 \begin{algorithm}
 \begin{distribalgo}[1]
-\blankline\
+\blankline
 \INDENT {Initialization}
   \INDENT{\textbf{for all} $G' \in receiversFrom(G)$ \textbf{do}}
     \STATE $lastBarrierSent(G') = -\infty$
   \ENDINDENT
 \ENDINDENT
-\blankline\
-\INDENT{\textit{When} $Learn(m)$ $\wedge$ $m.src = G$}
-  \INDENT{\textbf{for all} $G' \in m.dst$ \textbf{do}}
-    \STATE $lastBarrierSent(G') \leftarrow m.ts$
-  \ENDINDENT
+
+\blankline
+\INDENT{\textit{When} send($p'$,$\{m, \text{`cons'}\}$) for every $p' \in G'$}
+  \STATE $lastBarrierSent(G') \leftarrow m.ts$
 \ENDINDENT
-\blankline\
+
+\blankline
 \INDENT{\textit{When $\exists G' \in receiversFrom(G):$\\$getTime() - lastBarrierSent(G') > barrierThreshold$}}
   \STATE $null \leftarrow$ empty message
   \STATE $null.ts \leftarrow getTime()$
   \STATE $null.src \leftarrow G$
-  \STATE $Propose(null, \{G,G'\})$
+  \STATE $null.dst \leftarrow G'$
+  \STATE \cmsend{$null$}
   \COMMENT{saving that nothing was sent until null.ts}
-\ENDINDENT
-\blankline\
+\ENDINDENT 
 
-\caption{Achieving liveness; executed by the coordinator $c$ of group $G$}
+\blankline
+\caption{Achieving liveness; executed by every process $p$ of group $G$}
 \label{algorithm:liveness}
 \end{distribalgo}
 \end{algorithm}
 
-The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b$ is less than $m.ts$ by an infinitesimal difference. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait for $barrierThreshold + 2\Delta$, assuming that $2\Delta$ is the time needed for a proposal to be learnt after it has been initiated. Because of that, the conservative delivery of $m$ will be delayed by $w(c') + 2\Delta + barrierThreshold + 2\Delta$, where $w(c')$ is the wait window of the coordinator of $G'$, and $2\Delta$ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
+The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b$ is less than $m.ts$ by an infinitesimal difference. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait at least for $barrierThreshold + T(consensus)$, where $T(consensus)$ is the time needed for a value to be decided after it has been proposed in some consensus instance -- assuming that such value is going to be decided at all in that instance. Because of that, the conservative delivery of $m$ will be delayed by $w(p) + barrierThreshold + 2T(consensus)$, where $w(p)$ is the wait window of the process $p \in G$, and $T(consensus)$ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
 
-There is a way to provide liveness withouth such a possibly big delay, although creating more messages and making deeper changes in the delivery algorithm. Let $blockers(m)$ be defined as the set of groups whose barrier is needed in order to some group to deliver $m$. More formally $blockers(m) = \{G_B : \exists G_{dst} \in m.dst \wedge G_B \in sendersTo(G_{dst})\}$. The idea is that, once each group $G_B$ in $blockers(m)$ have sent a barrier $b > m.ts$ to all the groups in $m.dst \cap receiversFrom(G_B)$, all possible destinations of $m$ can deliver it. This way, instead of relying on periodic messages, whenever a process $p$ in a group $G$ has a message $m$ to send, $p$ sends $m$ to every $p' \in m.dst \cup G \cup blockers(m)$. Like in Algorithm \ref{algorithm:quasi}, the message must be addressed to $G$, so that $G$'s coordinator starts a consensus instance to deliver it conservatively; and it is sent to the groups in $blockers(m)$, so that they know that there is a message which will be blocked until they send a proper barrier to unblock it.
+There is a way to provide liveness withouth such a possibly big delay, although creating more messages and making deeper changes in the delivery algorithm. Let $blockers(m)$ be defined as the set of groups whose barrier is needed in order to some group to deliver $m$. More formally $blockers(m) = \{G_B : \exists G_{dst} \in m.dst \wedge G_B \in sendersTo(G_{dst})\}$. The idea is that, once each group $G_B$ in $blockers(m)$ have sent a barrier $b > m.ts$ to all the groups in $m.dst \cap receiversFrom(G_B)$, all possible destinations of $m$ can deliver it. This way, instead of relying on periodic messages, whenever a process $p$ in a group $G$ has a message $m$ to send, $p$ sends $m$ to every $p' \in m.dst \cup G \cup blockers(m)$. It is sent to the groups in $blockers(m)$, so that they know that there is a message which will be blocked until they send a proper barrier to unblock it.
 
-When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq G'$, $c'$ knows that there might be other groups depeding on $G's$ barrier to deliver $m$. For that reason, it will immediately create a $null$ message with a timestamp equals to $m.ts$ and insert it into its optimistic queue. As soon as $null.ts > now - w(c')$, the $null$ message will be proposed by $c'$ in $G'$, having \mbox{$m.dst \cap receiversFrom(G')$} as its learners -- this way, any group which was waiting for a barrier from $G'$ to deliver $m$ will be able to do so as soon as it learns the $null$ message which was just created. The new delivery algorithm would be as described in Algorithm {\ref{algorithm:ondemand}}.
+When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$, $p'$ knows that there might be other groups depeding on the barrier of $G'$ to deliver $m$. For that reason, it will immediately create a $null$ message with a timestamp equals to $m.ts$ and with $null.dst = m.dst$ $\cap$ $receiversFrom(G')$. Then, $p$ will execute \mbox{\cmsend{$null$}}. As soon as $null.ts > now - w(p')$, the $null$ message will be proposed in $G'$ and, once $null$ is decided, each process $p'$ of $G'$ will send a $\{null, \text{`cons'}\}$ message to every process in every group \mbox{$G \in m.dst \cap receiversFrom(G')$} -- this way, any group which was waiting for a barrier from $G'$ to deliver $m$ will be able to do so as soon as it receives such a message. The new delivery algorithm would be as described in Algorithm {\ref{algorithm:ondemand}}.
 
 \begin{algorithm}
 \begin{distribalgo}[1]
 %\blankline\
 %\STATE\underline{This algorithm is executed by every process $p$, which belongs to group $G$:}
 %\STATE
-\blankline\
+\blankline
 \INDENT {Initialization}
   \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
     \STATE $barrier(G',G) = -\infty$
   \ENDINDENT
 \ENDINDENT
-\blankline\
+
+\blankline
 \INDENT{\textit{When $p$ generates a message $m$}}
   \STATE $m.ts \leftarrow getTime()$  
   \COMMENT{current wallclock value as the timestamp of $m$}
@@ -307,7 +310,8 @@ When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq
     \STATE $send(p', m)$
   \ENDINDENT
 \ENDINDENT
-\blankline\
+
+\blankline
 \INDENT{\textit{When a process $p$ receives a message $m'$}}
   \IF {$G \neq m'.src$} \label{algline:askedforclearance}
     \STATE $null \leftarrow$ empty message
@@ -323,7 +327,8 @@ When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq
     \STATE $optPending \leftarrow optPending$ $\cup$ $\{m'\}$
   \ENDIF
 \ENDINDENT
-\blankline\
+
+\blankline
 \INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p)$ $\wedge$\\$\nexists m' \in optPending: m'.ts < m.ts$}}
   \STATE $optPending \leftarrow optPending \setminus \{m\}$
   \IF {$p$ is a coordinator $\wedge$ $m.src = G$}
@@ -337,7 +342,8 @@ When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq
 %   \ENDINDENT
   \ENDIF  
 \ENDINDENT
-\blankline\
+
+\blankline
 \INDENT{\textit{When} $Learn(m)$}
   \IF {$m \neq null$} %\label{algline:checkcons}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
@@ -353,15 +359,16 @@ When the coordinator $c'$ of some group $G'$ receives $m$, such that $m.src \neq
 %     \STATE $consPending \leftarrow consPending \setminus \{c\}$
 %   \ENDIF  
 \ENDINDENT
-\blankline\
+
+\blankline
 \INDENT{\textit{When $\exists m \in consPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$ $\wedge$ \\ $\nexists m' \in consPending : m'.ts < m.ts$ }}
   \STATE $consPending \leftarrow consPending \setminus \{m\}$
   \STATE CONS-Deliver($m$)
 
-\blankline\
+\blankline
 \ENDINDENT
 
-\caption{Delivery algorithm, executed by every process $p$ from group $G$}
+\caption{\cmsend{m} -- Algorithm executed by every process $p$ from group $G$}
 \label{algorithm:ondemand}
 \end{distribalgo}
 \end{algorithm}
