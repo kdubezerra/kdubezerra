@@ -237,7 +237,7 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
+\INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p) \wedge \nexists m' \in optPending: m'.ts < m.ts$}}
   \STATE $optPending \leftarrow optPending \setminus \{m\}$
   \IF {$G \in m.dst \wedge m \neq null$}
     \STATE \optdel{$m$}  
@@ -248,7 +248,7 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When $\exists m \in propPending \wedge\ nextProp = k$}}
+\INDENT{\textit{When $\exists m \in propPending \wedge nextProp = k$}}
 %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
 %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
     \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : \exists m \in msgSet \wedge m'.ts < m.ts \wedge m' \neq null\})$ \label{algline:nullstays}
@@ -278,7 +278,7 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 
 \blankline
 \INDENT{\textit{When} receive($\{m',\{\text{`cons'}\}$)}
-  \IF {$m' \notin\ consPending \wedge\ m' \notin\ delivered \wedge\ m' \neq\ null$}
+  \IF {$m' \notin\ consPending \wedge m' \notin\ delivered \wedge m' \neq\ null$}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDIF
   \STATE $barrier(m'.src,G) \leftarrow max(m'.ts, barrier(m'.src,G))$ \label{algline:incbar} \COMMENT{channels are FIFO, but there are different senders}
@@ -394,7 +394,7 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When $\exists m \in propPending \wedge\ nextProp = k$}}
+\INDENT{\textit{When $\exists m \in propPending \wedge nextProp = k$}}
 %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
 %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
     \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : m'.ts < m.ts \wedge m' \neq null\})$ \label{algline:keepnull}
@@ -424,7 +424,7 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
 
 \blankline
 \INDENT{\textit{When} receive($\{m',\{\text{`cons'}\}$)}  
-  \IF {$m' \notin\ consPending \wedge\ m' \notin\ delivered \wedge\ m' \neq\ null$}
+  \IF {$m' \notin\ consPending \wedge m' \notin\ delivered \wedge m' \neq\ null$}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDIF
   \STATE $barrier(m'.src,G) \leftarrow max(m'.ts, barrier(m'.src,G))$  \COMMENT{channels are FIFO, but there are different senders}
