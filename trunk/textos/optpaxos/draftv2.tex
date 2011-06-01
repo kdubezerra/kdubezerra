@@ -239,7 +239,7 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 \blankline
 \INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
   \STATE $optPending \leftarrow optPending \setminus \{m\}$
-  \IF {$G \in m.dst \wedge\ m \neq null$}
+  \IF {$G \in m.dst \wedge m \neq null$}
     \STATE \optdel{$m$}  
   \ENDIF
   \IF {$G = m.src$}
@@ -385,7 +385,7 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
 \blankline
 \INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
   \STATE $optPending \leftarrow optPending \setminus \{m\}$
-  \IF {$G \in m.dst \wedge\ m \neq null$}
+  \IF {$G \in m.dst \wedge m \neq null$}
     \STATE \optdel{$m$}  
   \ENDIF
   \IF {$G = m.src$}
