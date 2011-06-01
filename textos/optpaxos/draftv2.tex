@@ -64,7 +64,7 @@
 
 We assume a system composed of nodes, divided into \emph{players} and \emph{servers}, distributed over a geographical area. Nodes may fail by crashing and subsequently recover, but do not experience arbitrary behavior (i.e., no Byzantine failures). Communication is done by message passing, through the primitives \emph{send}$(p,m)$ and \emph{receive}$(m)$, where $p$ is the addressee of message $m$. Messages can be lost but not corrupted. If a message is repeatedly resubmitted to a \emph{correct node} (defined below), it is eventually received.
 
-Our protocols ensure safety under both asynchronous and synchronous execution periods. The FLP impossibility result~\cite{FLP85} states that under asynchronous assumptions consensus cannot be both safe and live. We thus assume that the system is initially asynchronous and eventually becomes synchronous. The time when the system becomes synchronous is called the \emph{Global Stabilization Time (GST)}~\cite{DLS88}, and it is unknown to the nodes.
+Our protocols ensure safety under both asynchronous and synchronous execution periods. The FLP impossibility result~\cite{fischer1985idc} states that under asynchronous assumptions consensus cannot be both safe and live. We thus assume that the system is initially asynchronous and eventually becomes synchronous. The time when the system becomes synchronous is called the \emph{Global Stabilization Time (GST)}~\cite{DLS88}, and it is unknown to the nodes.
 Before GST, there are no bounds on the time it takes for messages to be transmitted and actions to be executed. After GST, such bounds exist but are unknown. After GST nodes are either \emph{correct} or \emph{faulty}. A correct node is operational ``forever" and can reliably exchange messages with other correct nodes. This assumption is only needed to prove liveness properties about the system. In practice, ``forever" means long enough for one instance of consensus to terminate.
 
 A game is composed of a set of objects. The game state is defined by the individual states of each one of its objects. We assume that the game objects are partitioned among different servers. Since objects have a location in the game, one way to perform this partitioning is by zoning the virtual world of the game. Each partition consists of a set of objects of the game and the server responsible for them is their \emph{coordinator}. As partitions represent physical regions in the game world, we define \emph{neighbor} regions as those which share a border with each other. We consider that each server is replicated, thus forming several groups which consist of the coordinator and its replicas. Therefore, for each region of the game world, there is a group assigned to it. This way, a group is said to coordinate an object when the group's coordinator is the coordinator for that object. Finally, groups are called neighbors when they are assigned to neighbor regions. From now on, the word `server' will be used for any kind of server, be it a coordinator or a replica.
@@ -115,10 +115,9 @@ As messages are delivered according to their generation time, the delivery order
 
 This property implies the FIFO order, although it does not guarantee that, if a message $m$ was sent, it will ever be delivered. As for the other properties of the algorithm, assuming a crash-stop model, we have:
 
-\textbf{Uniform Agreement}: if a process \cons{}s $m$, then every correct %process eventually also will 
-\cons{}s $m$.
+\textbf{Uniform Agreement}: if a process \cons{}s $m$, then every correct process that is a destination of $m$ also \cons{}s $m$.
 
-\textbf{Uniform Integrity}: for any message $m$, every correct process \cons{}s $m$ at most once, and only if some process executed \cmsend{$m$}.
+\textbf{Uniform Integrity}: for any message $m$, every correct process $p$ \cons{}s $m$ at most once, and only if some process executed \cmsend{$m$} and $p$ is one of $m$'s destinations.
 
 \textbf{Uniform Total Order}: if processes $p$ and $p'$ both \cons\ $m$ and $m'$, then $p$ \cons{}s $m$ before $m'$ if and only if $p'$ \cons{}s $m$ before $m'$.
 
@@ -130,7 +129,7 @@ Regarding the \textbf{termination} property, as presented in \cite{rodrigues2000
 
 We then relaxed the termination property to another one, which considers the optimistic assumption we just stated:
 
-\textbf{Optimistic termination}: For any message $m$, (1) if some correct process \cms{}s $m$ \textbf{and the assumption A2 is true}, or (2) if a process \cons{}s $m$, then all correct processes that are destinations of $m$ also \cons\ $m$.
+\textbf{Optimistic termination}: For any message $m$, if a correct process \cms{}s $m$ \textbf{and the assumption A2 is true} then all correct processes that are destinations of $m$ \cons\ $m$.
 
 Here, we consider that there are several processes. Each process $p$ belongs to a group $G = group(p)$, that is, $p \in G = group(p)$. 
 
@@ -162,18 +161,18 @@ Instead of having the conservative delivery done completely independently from t
 
 The complicating factor is the possibility of a message having at least one destination group different from its source group. So, all involved groups must somehow agree regarding the delivery order of these messages. However, from assumption A1, each group knows which other groups it could send messages to -- or receive messages from. We can use this by defining \emph{barriers} for multicast, such that $barrier(G_{send},G_{recv})$ = $t$ means that the group $G_{send}$ promised that it would send no more messages with a timestamp lower than $t$ to group $G_{recv}$. We have defined that $sendersTo(G) =$ \mbox{$\{G' : G'\text{ is able to send a message to }G\}$}. When a process $p$, from group $G$, has received all the barrier values from all the groups in $sendersTo(G)$, and they are all greater than a value $t$, then $p$ knows that no more messages with timestamp lower than $t$ are coming from other groups and that, once the local ordering (the ordering of messages originated in $G$) is done, all the messages with timestamp up to $t$ can be conservatively delivered. Besides, a barrier is sent along with the bundle of all messages with timestamp greater than the last previous barrier sent from $G_{send}$ to $G_{recv}$, so that when a process has received a barrier from a group, it means that it knows all the messages sent by that group until the time value stored in that barrier. 
 
-We use consensus to conservatively deliver each message. Consider that each consensus instance $I$ from each group $I.grp$ receives a monotonically increasing unique integer identifier, without gaps, that is, for any two instances $I_i$ and $I_k$, such that $I_i.grp = I_k.grp$, if $I_i.id + 1 < I_k.id$, there is necessarily an instance $I_j : I_i.grp = I_j.grp = I_k.grp \wedge I_i.id < I_j.id < I_k.id$. Consider also that each message $m$ sent by a group $G$ has a group sequence number $m.gs$ related to the order in which it is conservatively delivered, relatively to other messages also sent by $G$. As messages are conservatively delivered via consensus, the group sequence number of a message is equal to the id of the instance in which it was decided, that is, $m.gs = i \Leftrightarrow \exists I : I.id = i \wedge I.grp = m.src \wedge I.val = m$, where $I.val$ is the value decided by the instance $I$.
+We use consensus to conservatively deliver messages. Consider that each consensus instance $I$ from each group $I.grp$ receives a monotonically increasing unique integer identifier, without gaps, that is, for any two instances $I_i$ and $I_k$, such that $I_i.grp = I_k.grp$, if $I_i.id + 1 < I_k.id$, there is necessarily an instance $I_j : I_i.grp = I_j.grp = I_k.grp \wedge I_i.id < I_j.id < I_k.id$. No group runs two consensus instances in parallel: before initiating an instance of id $k+1$ each process checks whether the instance $k$ has already been decided, so some messages may wait to be proposed. When a process is allowed to initiate a new consensus instance, the pending messages may be proposed as a batch.%Consider also that each message $m$ sent by a group $G$ has a group sequence number $m.gs$ related to the order in which it is conservatively delivered, relatively to other messages also sent by $G$. As messages are conservatively delivered via consensus, the group sequence number of a message is equal to the id of the instance in which it was decided, that is, $m.gs = i \Leftrightarrow \exists I : I.id = i \wedge I.grp = m.src \wedge I.val = m$, where $I.val$ is the value decided by the instance $I$.
 
 There are three possibilities for each message $m$, in the perspective of a process $p$ of $G$:
 
 \begin{itemize}
   \item The message $m$ was originated in $G$, which is the only destination of $m$:
   
-  In this case, when $m$ is optimistically delivered by $p$, $p$ checks whether the latest consensus instance $I_{prev}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a queue $propPending$ as the next message being proposed by it, so other tasks can keep being executed. Then, once $I_{prev}$ has been decided, $p$ checks wheter $m$ -- or a message $m' : m'.ts > m.ts$ -- has already been decided in some previous consensus instance. If such message has indeed been decided previously, $p$ discards $m$; otherwise $p$ proposes $m$ as the next message from $G$. When $m$ is decided, it is not immediately delivered to the application. Instead, it is inserted in a $consPending$ list for later being conservatively delivered, which will happen once every group $G'$ in $sendersTo(G)$ have already sent a message $barrier(G',G) = t$, such that $t > m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
+  In this case, when $m$ is optimistically delivered by $p$, $p$ checks whether the latest consensus instance $I_{prev}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $propPending$ queue as the next message being proposed by it, so other tasks can keep being executed. Then, once $I_{prev}$ has been decided, $p$ may start a new instance. Before that, all messages in $propPending$ that have either been already decided, or that have a timestamp smaller than that of some already decided message, are discarded from $propPending$. The rest is proposed as a batch in the consensus instance. Once $m$ is decided, it is not immediately delivered to the application. Instead, it is inserted in a $consPending$ list for later being conservatively delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t$, such that $t > m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
 
   \item When $m$ is originated in $G$, but it has at least one group other then $G$ as a destination:
   
-  In this case, when $now > m.ts + w(p)$, $p$ tries to initiate a consensus instance within $G$ to decide $m$. If $p$ cannot start the proposal now, $m$ is enqueued in $propPending$ for being proposed later. Before proposing $m$, $p$ checks whether $m$ -- or a message $m' : m'.ts > m.ts$ -- has already been decided in some previous consensus instance. If it has, $m$ is discarded; otherwise, $p$ starts a consensus instance proposing $m$. Once any message $m$ is decided, if $G \in m.dst$, $m$ is inserted in the $consPending$ list. Besides, when $m$ is decided, $p$ sends a message $\{m, \text{`cons'}\}$ to every \mbox{$p' : (\exists G' \in m.dst \setminus \{G\}) \wedge (p' \in G')$}. When $\{m, \text{`cons'}\}$ is received by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $consPending$ list. If not, $p'$ inserts $m$ into $consPending$ and adjusts $barrier(G, G')$ to $m.ts$. To ensure that, once a message $\{m, \text{`cons'}\}$ is received, every message \mbox{$\{m', \text{`cons'}\}:m'.ts<m.ts$} has already been received from $m.src$, every $\{m, \text{`cons'}\}$ message is sent through a lossless FIFO channel\footnote{An ordinary TCP connection would be enough to provide such FIFO lossless channel.}.
+  In this case, when $now > m.ts + w(p)$, $p$ tries to initiate a consensus instance within $G$ to decide $m$. If $p$ cannot start the proposal now, $m$ is enqueued in $propPending$ for being proposed later along with other pending messages. Then, once $p$ may start a new instance, all messages in $propPending$ that have either been already decided, or that have a timestamp smaller than that of some already decided message, are discarded from $propPending$. The rest is proposed as a batch in the new consensus instance. Once any message $m$ is decided, if $G \in m.dst$, $m$ is inserted in the $consPending$ list. Besides, when $m$ is decided, $p$ sends a message $\{m, \text{`cons'}\}$ to every \mbox{$p' : (\exists G' \in m.dst \setminus \{G\}) \wedge (p' \in G')$}. When $\{m, \text{`cons'}\}$ is received by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $consPending$ list. If not, $p'$ inserts $m$ into $consPending$ and adjusts $barrier(G, G')$ to $m.ts$. To ensure that, once a message $\{m, \text{`cons'}\}$ is received, every message \mbox{$\{m', \text{`cons'}\}:m'.ts<m.ts$} has already been received from $m.src$, every $\{m, \text{`cons'}\}$ message is sent through a lossless FIFO channel\footnote{An ordinary TCP connection would be enough to provide such FIFO lossless channel.}.
   
   \item When $G$ is one of the destinations of $m$, but $m$ was originated in some other group $G'$:
   
@@ -186,16 +185,27 @@ The messages in the \textit{consPending} list are always sorted in ascending ord
 
 A more formal description of the protocol is given in Algorithm \ref{algorithm:quasi}. We consider that three primitives are given: $getTime()$, which returns the current value of the local wallclock; $Propose(k, val)$, which proposes a value $val$ for the consensus instance of id $k$ within its group; and also $Decide(k, val)$, which is called when the consensus instance of id $k$ finishes. $Decide(k, val)$ is called for all the processes of the group that initiated it, when they learn that the value $val$ has been agreed upon in instance of id $k$. For the sake of simplicity, we assume that, for consensus instances within the same group, the values are decided in the same order of the instances id's\footnote{This can be easily done by delaying the callback of $Decide(k, val)$ while there is some unfinished consensus instance of id $k': k' < k$ from the same group.}.
 
-Moreover, each process $p$ of group $G$ keeps an \textit{optPending} list which contains the messages waiting to be \mbox{\textit{\opt{}ed}} (optimistically delivered); a \mbox{\textit{propPending}} list containing the messages waiting to be proposed by $p$; and a \mbox{\textit{consPending}} list containing the messages ready to be \textit{\cons{}ed} (conservatively delivered), but which may be waiting for barriers from the groups in $sendersTo(G)$. Also, each message $m$ has at least four fields: $dst$, which is the set of $m$'s destination groups; $src$, which is the group where $m$ was generated; $ts$, the value of the wallclock of the process when $m$ was generated; and $gs$, which is $m$'s sequence number relatively to its group of origin. Note that, by abuse of notation, we have `process \mbox{$p \in m.dst$'} instead of `process \mbox{$p$ : $\exists$ group $G \in m.dst \wedge p \in G$'}.
+Moreover, each process $p$ of group $G$ keeps some lists of messages:
+\begin{itemize}
+  \item \textit{optPending}, which contains the messages waiting to be \mbox{\textit{\opt{}ed}} (optimistically delivered);
+  \item \textit{propPending}, containing the messages waiting to be proposed by $p$;
+  \item \textit{consPending}, with the messages ready to be \textit{\cons{}ed} (conservatively delivered), but which may be waiting for barriers from the groups in $sendersTo(G)$;
+  \item \textit{decided}, which contains the messages that have already been proposed and decided within $group(p)$;
+  \item \textit{delivered}, which contains the messages that have been \cons{}ed already.
+\end{itemize} 
 
-Something that must be noticed is that some messages might not have their source groups as a destination. Anyway, each message $m$ of this type still has to be agreed upon in its groups of origin, so that $m.gs$ can be decided, and also for $m$ to be retrievable, even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
+Also, each message $m$ has at least three fields: $dst$, which is the set of $m$'s destination groups; $src$, which is the group where $m$ was generated; and $ts$, which is the value of the wallclock of the process when $m$ was generated. %; and $gs$, which is $m$'s sequence number relatively to its group of origin. 
+Note that, by abuse of notation, we have `process \mbox{$p \in m.dst$'} instead of `\mbox{$\exists$ group $G \in m.dst : \text{process }p \in G$'}.
+
+Something that must be noticed is that some messages might not have their source groups as a destination. Anyway, each message $m$ of this type still has to be agreed upon in it group of origin $G$, so that its order among other messages from $G$ may be decided and %$m.gs$ can be decided, and also for 
+$m$ will be retrievable, even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
 
 \begin{algorithm}
 \begin{distribalgo}[1]
 
 \blankline
 \INDENT {Initialization}
-  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $propPending \leftarrow \emptyset$, $optPending \leftarrow \emptyset$, $consPending \leftarrow \emptyset$
+  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $delivered \leftarrow \emptyset$, $propPending \leftarrow \emptyset$, $optPending \leftarrow \emptyset$, $consPending \leftarrow \emptyset$
   \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
     \STATE $barrier(G',G) \leftarrow -\infty$ 
   \ENDINDENT
@@ -233,25 +243,27 @@ Something that must be noticed is that some messages might not have their source
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When $(\exists m \in propPending : \nexists m' \in propPending: m'.ts < m.ts) \wedge\ nextProp = k$}}
+\INDENT{\textit{When $\exists m \in propPending \wedge\ nextProp = k$}}
 %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
 %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
+    \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : \exists m \in msgSet \wedge m'.ts < m.ts \wedge m' \neq null\})$ \label{algline:nullstays}
     \STATE $nextProp \leftarrow k + 1$
-    \STATE Propose($k$,$m$)
+    \STATE Propose($k$,$propPending$)
 %  \ENDIF
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When} Decide($k$,$m$)}
+\INDENT{\textit{When} Decide($k$,$msgSet$)}
 %  \STATE $m.gs \leftarrow k$
-  \STATE $decided \leftarrow decided \cup \{m\}$
-  \STATE $propPending \leftarrow propPending \setminus (\{m\} \cup \{m' : m'.ts < m.ts \wedge m \neq null\})$ \label{algline:nullstays} 
-  \IF {$G \in m.dst \wedge m \neq null$} \label{algline:checkcons}
+  \STATE $decided \leftarrow decided \cup msgSet$ 
+  \INDENT{\textbf{for all} $m \in msgSet : G \in m.dst \wedge m \neq null$ \textbf{do}} \label{algline:checkcons}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
-  \ENDIF
-  \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
-    \STATE send($p'$, $\{m, \text{`cons'}\}$)
-    \COMMENT{this message is sent through a FIFO lossless channel}
+  \ENDINDENT
+  \INDENT{\textbf{for all} $m \in msgSet$ \textbf{do}}
+    \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
+      \STATE send($p'$, $\{m, \text{`cons'}\}$)
+      \COMMENT{this message is sent through a FIFO lossless channel}
+    \ENDINDENT
   \ENDINDENT
   \STATE $nextProp \leftarrow k + 1$
   \STATE $k \leftarrow k + 1$
@@ -278,6 +290,8 @@ Something that must be noticed is that some messages might not have their source
 \label{algorithm:quasi}
 \end{distribalgo}
 \end{algorithm}
+
+Assuming that $w(p)$ is the same for every process $p$, the time needed to decide a message $m$ after it has been \cms{} by some process is equal, in the worst case, to $w(p) + 2\tconsm$, where \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $propPending$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $propPending$ right before some proposal has been made, so it would take only $w(p) + \tconsm$ to decide $m$. As $m$ may go into $propPending$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $w(p) + 1.5\tconsm$. Nevertheless, the time needed to finally \cons{} $m$ will depend on barriers received from other groups.
 
 \subsubsection{Addressing liveness}
 
@@ -313,7 +327,7 @@ The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee l
 \end{distribalgo}
 \end{algorithm}
 
-The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b$ is less than $m.ts$ by an infinitesimal difference. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait at least for $barrierThreshold + \tconsm$, where \tcons\ is the time needed for a value to be decided after it has been proposed in some consensus instance -- assuming that such value is going to be decided at all in that instance. Because of that, the conservative delivery of $m$ will be delayed by $w(p) + barrierThreshold + 2\tconsm$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
+The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b$ is less than $m.ts$ by an infinitesimal difference. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait at least for $barrierThreshold + \tconsm$, where \tcons\ is the time needed for a value to be decided after it has been proposed in some consensus instance -- assuming that such value is going to be decided at all in that instance. Because of that, the conservative delivery of $m$ will be delayed by, at least, $w(p) + barrierThreshold + 2\tconsm$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
 
 Another problem with this approach is that it is necessary to guarantee that a $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it, so that progression is guaranteed. Therefore, this kind of messages are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:nullstays} of Algorithm \ref{algorithm:quasi}), since if at least one of the processes does not have it, it could never be decided. On the other hand, this brings another problem: if every process in $G$ creates a different $null$ message, many $null$ messages might have to be decided before a meaningful message. To circumvent this, we could make the empty messages in a way such that the different processes can somehow figure out that two different $null$ messages are equivalent, so deciding one would also prevent other $null$ messages that have been created for the same specific purpose of being proposed\footnote{This could be done by assuming no timestamp collisions and by using them to uniquely identify messages. Then, only one of the messages created with the same timestamp (l. \ref{algline:samenullid} of Algorithm \ref{algorithm:liveness}) would be decided.}.
 
