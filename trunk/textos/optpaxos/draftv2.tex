@@ -32,8 +32,12 @@
 \newcommand{\tcons}{\mbox{$\tconsm$}}
 \newcommand{\opt}{\mbox{GF-OPT-Deliver}}
 \newcommand{\cons}{\mbox{GF-CONS-Deliver}}
+\newcommand{\rmc}{\mbox{R-MCast}}
+\newcommand{\rmd}{\mbox{R-Deliver}}
 \newcommand{\optdel}[1]{\mbox{\opt({#1})}}
 \newcommand{\consdel}[1]{\mbox{\cons({#1})}}
+\newcommand{\rmcast}[2]{\mbox{\rmc({#1},{#2})}}
+\newcommand{\rmdel}[1]{\mbox{\rmd({#1})}}
 
 
 \title{Practical consistency management for geographically distributed MMOG servers}
@@ -64,7 +68,7 @@
 
 We assume a system composed of nodes, divided into \emph{players} and \emph{servers}, distributed over a geographical area. Nodes may fail by crashing and subsequently recover, but do not experience arbitrary behavior (i.e., no Byzantine failures). Communication is done by message passing, through the primitives \emph{send}$(p,m)$ and \emph{receive}$(m)$, where $p$ is the addressee of message $m$. Messages can be lost but not corrupted. If a message is repeatedly resubmitted to a \emph{correct node} (defined below), it is eventually received.
 
-Our protocols ensure safety under both asynchronous and synchronous execution periods. The FLP impossibility result~\cite{fischer1985idc} states that under asynchronous assumptions consensus cannot be both safe and live. We thus assume that the system is initially asynchronous and eventually becomes synchronous. The time when the system becomes synchronous is called the \emph{Global Stabilization Time (GST)}~\cite{DLS88}, and it is unknown to the nodes.
+Our protocols ensure safety under both asynchronous and synchronous execution periods. The FLP impossibility result~\cite{fischer1985idc} states that under asynchronous assumptions consensus cannot be both safe and live. We thus assume that the system is initially asynchronous and eventually becomes synchronous. The time when the system becomes synchronous is called the \emph{Global Stabilization Time (GST)}~\cite{dwork1988cpp}, and it is unknown to the nodes.
 Before GST, there are no bounds on the time it takes for messages to be transmitted and actions to be executed. After GST, such bounds exist but are unknown. After GST nodes are either \emph{correct} or \emph{faulty}. A correct node is operational ``forever" and can reliably exchange messages with other correct nodes. This assumption is only needed to prove liveness properties about the system. In practice, ``forever" means long enough for one instance of consensus to terminate.
 
 A game is composed of a set of objects. The game state is defined by the individual states of each one of its objects. We assume that the game objects are partitioned among different servers. Since objects have a location in the game, one way to perform this partitioning is by zoning the virtual world of the game. Each partition consists of a set of objects of the game and the server responsible for them is their \emph{coordinator}. As partitions represent physical regions in the game world, we define \emph{neighbor} regions as those which share a border with each other. We consider that each server is replicated, thus forming several groups which consist of the coordinator and its replicas. Therefore, for each region of the game world, there is a group assigned to it. This way, a group is said to coordinate an object when the group's coordinator is the coordinator for that object. Finally, groups are called neighbors when they are assigned to neighbor regions. From now on, the word `server' will be used for any kind of server, be it a coordinator or a replica.
@@ -183,7 +187,7 @@ The messages in the \textit{consPending} list are always sorted in ascending ord
 
 %The possibility not covered here is when a message is sent from a group to another one which is not its neighbour. However, it is realistic for this context to assume that objects should be close to each other in the virtual environment to interact and that, as such, this kind of interaction is not supported. Nevertheless, one simple way to provide this kind of support could be by each group waiting for the barriers of every other group in the system, instead of only those of its neighbors.
 
-A more formal description of the protocol is given in Algorithm \ref{algorithm:quasi}. We consider that three primitives are given: $getTime()$, which returns the current value of the local wallclock; $Propose(k, val)$, which proposes a value $val$ for the consensus instance of id $k$ within its group; and also $Decide(k, val)$, which is called when the consensus instance of id $k$ finishes. $Decide(k, val)$ is called for all the processes of the group that initiated it, when they learn that the value $val$ has been agreed upon in instance of id $k$. For the sake of simplicity, we assume that, for consensus instances within the same group, the values are decided in the same order of the instances id's\footnote{This can be easily done by delaying the callback of $Decide(k, val)$ while there is some unfinished consensus instance of id $k': k' < k$ from the same group.}.
+A more formal description of the protocol is given in Algorithm \ref{algorithm:quasi}. We consider that three primitives are given: $getTime()$, which returns the current value of the local wallclock; $Propose(k, val)$, which proposes a value $val$ for the consensus instance of id $k$ within its group; and also $Decide(k, val)$, which is called when the consensus instance of id $k$ finishes. $Decide(k, val)$ is called for all the processes of the group that initiated it, when they learn that the value $val$ has been agreed upon in instance of id $k$. For the sake of simplicity, we assume that, for consensus instances within the same group, the values are decided in the same order of the instances id's\footnote{This can be easily done by delaying the callback of $Decide(k, val)$ while there is some unfinished consensus instance of id $k': k' < k$ from the same group.}. Finally, we also use a reliable multicast primitive \rmcast{$m$}{$groupSet$}, which \rmd{}s $m$ to all the processes in all the groups in $groupSet$ in one communication step (e.g. the one described in \cite{}).
 
 Moreover, each process $p$ of group $G$ keeps some lists of messages:
 \begin{itemize}
@@ -215,14 +219,15 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 \INDENT{\textit{To send a message $m$} -- \cmsend{m}}
   \STATE $m.ts \leftarrow getTime()$  
   \COMMENT{current wallclock value as the timestamp of $m$}
-  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\}$ \textbf{do}}
-    \STATE send($p'$, $m$)    
-    \COMMENT{send optimistically $m$ to all involved processes}
-  \ENDINDENT
+  \STATE \rmcast{$m$}{$m.dst \cup \{G\}$}
+%  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\}$ \textbf{do}}
+%    \STATE send($p'$, $m$)    
+%    \COMMENT{send optimistically $m$ to all involved processes}
+%  \ENDINDENT
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When} receive($m'$)}
+\INDENT{\textit{When} \rmdel{$m'$}}
   \IF {$m'.ts < getTime() - w(p)$}
     \STATE discard $m'$
     \COMMENT{late commands probably lead to out-of-order delivery}
@@ -247,8 +252,10 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
 %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
     \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : \exists m \in msgSet \wedge m'.ts < m.ts \wedge m' \neq null\})$ \label{algline:nullstays}
-    \STATE $nextProp \leftarrow k + 1$
-    \STATE Propose($k$,$propPending$)
+    \IF {$propPending \neq \emptyset$}
+      \STATE $nextProp \leftarrow k + 1$
+      \STATE Propose($k$,$propPending$)
+    \ENDIF
 %  \ENDIF
 \ENDINDENT
 
@@ -291,32 +298,32 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 \end{distribalgo}
 \end{algorithm}
 
-Assuming that $w(p)$ is the same for every process $p$, the time needed to decide a message $m$ after it has been \cms{} by some process is equal, in the worst case, to $w(p) + 2\tconsm$, where \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $propPending$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $propPending$ right before some proposal has been made, so it would take only $w(p) + \tconsm$ to decide $m$. As $m$ may go into $propPending$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $w(p) + 1.5\tconsm$. Nevertheless, the time needed to finally \cons{} $m$ will depend on barriers received from other groups.
+Assuming that $w(p)$ is the same for every process $p$, the time needed to decide a message $m$ after it has been \cms{} by some process is equal, in the worst case, to $w(p) + 2\tconsm$, where \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $propPending$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $propPending$ right before some proposal has been made, so it would take only $w(p) + \tconsm$ to decide $m$. As $m$ may go into $propPending$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $w(p) + 1.5\tconsm$. Nevertheless, the time needed to finally \cons{} $m$ will depend on when barriers are received from other groups.
 
 \subsubsection{Addressing liveness}
 
-The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee liveness when a group has no message to receive from some other group and then keeps waiting for a new message to increase the barrier value and proceed with the conservative delivery. However, it does not disrupt the optimistic delivery. Also, liveness for the conservative delivery can be easily provided by sending periodic empty messages from $G$ to each $G' \in receiversFrom(G)$ to which no message has been sent for a specified time threshold \textit{barrierThreshold}. Algorithm \ref{algorithm:liveness} describes this. When a message from group $G$ to some other group $G'$ has been agreed upon and a $\{m, \text{`cons'}\}$ message is sent by each process $p$ of $G$ to every process $p'$ of $G'$, $p$ knows that $p'$ increased its barrier value for messages from $G$ (l. \ref{algline:incbar} of Algorithm \ref{algorithm:quasi}). However, when there is a long period after the last time such kind of message has been sent, $p$ decides to send some empty message to the processes of $G'$ with the sole purpose of increasing their barrier values and allow for the delivery of possibly blocked messages in $G'$.
+The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee liveness when a group has no message to receive from some other group and then keeps waiting for a new message to increase the barrier value and proceed with the conservative delivery. However, it does not disrupt the optimistic delivery. Also, liveness for the conservative delivery can be easily provided by sending periodic empty messages from $G$ to each $G' \in receiversFrom(G)$ to which no message has been sent for a specified time threshold \textit{barrierThreshold}. Algorithm \ref{algorithm:liveness} describes this. When a message $m$ from group $G$ to some other group $G'$ has been inserted into the $optPending$ list of $p \in G$, it knows that the other processes of $G$ did the same and that $m$ will be eventually decided and sent to $G'$, which will serve as barrier from $G$ to $G'$ (l. \ref{algline:incbar} of Algorithm \ref{algorithm:quasi}). However, when there is a long period after the last time when such kind of message has been created, $p$ decides to create some empty message to send to the processes of $G'$ with the sole purpose of increasing their barrier values and allow for the delivery of possibly blocked messages in $G'$.
 
 \begin{algorithm}
 \begin{distribalgo}[1]
 \blankline
 \INDENT {Initialization}
   \INDENT{\textbf{for all} $G' \in receiversFrom(G)$ \textbf{do}}
-    \STATE $lastBarrierSent(G') = -\infty$
+    \STATE $lastBarrierCreated(G') = -\infty$
   \ENDINDENT
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When} send($p'$,$\{m, \text{`cons'}\}$) for every $p' \in G'$}
-  \STATE $lastBarrierSent(G') \leftarrow m.ts$
+\INDENT{\textit{When} inserting into $optPending$ a message $m : (m.src = G \wedge \exists G' \in m.dst : G' \neq G)$}
+  \STATE $lastBarrierCreated(G') \leftarrow m.ts$
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When $\exists G' \in receiversFrom(G): getTime() - lastBarrierSent(G') > barrierThreshold$}}
+\INDENT{\textit{When $\exists G' \in receiversFrom(G): getTime() - lastBarrierCreated(G') > barrierThreshold$}}
   \STATE $null \leftarrow$ empty message
-  \STATE $null.ts \leftarrow lastBarrierSent(G') + barrierThreshold$ \label{algline:samenullid}
+  \STATE $null.ts \leftarrow lastBarrierCreated(G') + barrierThreshold$ \label{algline:samenullid}
   \STATE $null.src \leftarrow G$
-  \STATE $null.dst \leftarrow G'$ 
+  \STATE $null.dst \leftarrow \{G'\}$ 
   \STATE $optPending \leftarrow optPending \cup \{null\}$
   \COMMENT{saving that nothing was sent until null.ts}
 \ENDINDENT 
@@ -327,13 +334,14 @@ The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee l
 \end{distribalgo}
 \end{algorithm}
 
-The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b$ is less than $m.ts$ by an infinitesimal difference. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait at least for $barrierThreshold + \tconsm$, where \tcons\ is the time needed for a value to be decided after it has been proposed in some consensus instance -- assuming that such value is going to be decided at all in that instance. Because of that, the conservative delivery of $m$ will be delayed by, at least, $w(p) + barrierThreshold + 2\tconsm$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
+The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b < m.ts$. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait, at least, for $barrierThreshold$ -- maybe just to receive some $b' : b' < m.ts$, having to wait again and so on. How long exactly it will take to \cons{} $m$ depends on many variables, such as how far in the past $m$ was created and how long it takes for some barrier $b: b > m.ts$ to arrive.% Because of that, the time between \cms{}ing and \cons{}ing $m$ be, in the worst case, $2w(p) + 4\tconsm + barrierThreshold$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
 
-Another problem with this approach is that it is necessary to guarantee that a $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it, so that progression is guaranteed. Therefore, this kind of messages are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:nullstays} of Algorithm \ref{algorithm:quasi}), since if at least one of the processes does not have it, it could never be decided. On the other hand, this brings another problem: if every process in $G$ creates a different $null$ message, many $null$ messages might have to be decided before a meaningful message. To circumvent this, we could make the empty messages in a way such that the different processes can somehow figure out that two different $null$ messages are equivalent, so deciding one would also prevent other $null$ messages that have been created for the same specific purpose of being proposed\footnote{This could be done by assuming no timestamp collisions and by using them to uniquely identify messages. Then, only one of the messages created with the same timestamp (l. \ref{algline:samenullid} of Algorithm \ref{algorithm:liveness}) would be decided.}.
+It is necessary to guarantee that a $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it, so that progression is guaranteed. Therefore, this kind of messages are created by every process in the group, since if any one of them does not have it, such message might never be decided. Besides, they are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:nullstays} of Algorithm \ref{algorithm:quasi}). Since they are obviously never delivered to the application, they can remain in such list and be decided even after some message with higher timestamp is decided. Not removing them unless they are decided ensures that they will be sent and that other groups will be able to increase their barrier values. % On the other hand, this brings another problem: if every process in $G$ creates a different $null$ message, many $null$ messages might have to be decided before a meaningful message.
+To prevent the multiple $null$ messages -- created by different processes within the group -- of being decided, they could be created in a way such that the different processes can somehow figure out that two different $null$ messages are equivalent\footnote{This could be done by assuming no timestamp collisions and by using them to uniquely identify messages. Then, only one of the messages created with the same timestamp (l. \ref{algline:samenullid} of Algorithm \ref{algorithm:liveness}) would be decided.}.
 
-There is a way to provide liveness withouth such a possibly big delay, although creating more messages and making deeper changes in the delivery algorithm. Let $blockers(m)$ be defined as the set of groups whose barrier is needed in order for some group to deliver $m$. More formally, $blockers(m) =$ \mbox{$\{G_B : \exists G_{dst} \in m.dst \wedge G_B \in sendersTo(G_{dst})\}$}. The idea is that, once each group $G_B$ in $blockers(m)$ have sent a barrier $b > m.ts$ to all the groups belonging to \mbox{$m.dst \cap receiversFrom(G_B)$}, all possible destinations of $m$ can deliver it. This way, instead of relying on periodic messages, whenever a process $p$ in a group $G$ has a message $m$ to send, $p$ sends $m$ to every $p' \in m.dst \cup G \cup blockers(m)$. It is sent to the groups in $blockers(m)$, so that they know that there is a message which will be blocked until they send a proper barrier to unblock it.
+However, there is a way to provide liveness withouth such a possibly long delay for the conservative delivery of messages, although that would imply creating more messages and making deeper changes in the delivery algorithm. Let $blockers(m)$ be defined as the set of groups whose barrier is needed in order for some group to deliver $m$. More formally, $blockers(m) =$ \mbox{$\{G_B : \exists G_{dst} \in m.dst \wedge G_B \in sendersTo(G_{dst})\}$}. The idea is that, once each group $G_B$ in $blockers(m)$ have sent a barrier $b > m.ts$ to all the groups belonging to \mbox{$m.dst \cap receiversFrom(G_B)$}, all possible destinations of $m$ can deliver it. This way, instead of relying on periodic messages, whenever a process $p$ in a group $G$ has a message $m$ to send, $p$ sends $m$ to every $p' \in m.dst \cup G \cup blockers(m)$. It is sent to the groups in $blockers(m)$, so that they know that there is a message which will be blocked until they send a proper barrier to unblock it.
 
-When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$, $p'$ knows that there might be other groups depeding on the barrier of $G'$ to deliver $m$. For that reason, it will immediately create a $null$ message with a timestamp equals to $m.ts$ and with $null.dst = m.dst$ $\cap$ $receiversFrom(G')$. Then, $p$ will execute \mbox{\cmsend{$null$}}. As soon as $null.ts > now - w(p')$, the $null$ message will be proposed in $G'$ and, once $null$ is decided, each process $p'$ of $G'$ will send a $\{null, \text{`cons'}\}$ message to every process in every group \mbox{$G \in m.dst \cap receiversFrom(G')$}. This way, any group which was waiting for a barrier from $G'$ to deliver $m$ will be able to do so as soon as it receives such $null$ message. The new delivery algorithm would be as described in \mbox{Algorithm {\ref{algorithm:ondemand}}}.
+When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$, $p'$ knows that there might be other groups depeding on the barrier of $G'$ to deliver $m$. For that reason, it will immediately create a $null$ message with a timestamp equal to $m.ts$ and with $null.dst = m.dst$ $\cap$ $receiversFrom(G')$. Then, $p'$ will insert such message in its $optPending$ queue -- to ensure that, once it goes to $propPending$, any message \mbox{$m': m'.ts < null.ts \wedge m'.src = G'$} is already there. As soon as $null.ts > now - w(p')$, the $null$ message will be proposed in $G'$ and, once $null$ is decided, each process of $G'$ will send a $\{null, \text{`cons'}\}$ message to each process in each group \mbox{$G \in m.dst \cap receiversFrom(G')$}. This way, any group which was waiting for a barrier from $G'$ to deliver $m$ will be able to do so as soon as it receives such $null$ message. The new delivery algorithm would be as described in \mbox{Algorithm {\ref{algorithm:ondemand}}}.
 
 \begin{algorithm}
 \begin{distribalgo}[1]
@@ -350,15 +358,16 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
 \INDENT{\textit{To send a message $m$} -- \cmsend{m}}
   \STATE $m.ts \leftarrow getTime()$  
   \COMMENT{current wallclock value as the timestamp of $m$}
-  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\} \cup blockers(m)$ \textbf{do}}
-    \STATE send($p'$, $m$)    
-    \COMMENT{send optimistically $m$ to all involved processes}
-  \ENDINDENT
+  \STATE \rmcast{$m$}{$m.dst \cup \{G\} \cup blockers(m)$}
+%  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\} \cup blockers(m)$ \textbf{do}}
+%    \STATE send($p'$, $m$)    
+%    \COMMENT{send optimistically $m$ to all involved processes}
+%  \ENDINDENT
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When} receive($m'$)}
-  \IF {$G \neq m'.src$ $\wedge$ $(\exists G' \in m'.dst: G' \neq G$ $\wedge$ $G' \neq m'.src)$}
+\INDENT{\textit{When} \rmdel{$m'$}}
+  \IF {$G \neq m'.src$ $\wedge$ $\exists G' \in m'.dst \cap receiversFrom(G)$}
     \STATE $null \leftarrow$ empty message
     \STATE $null.src \leftarrow G$  \COMMENT{some other group needs a barrier from this one}
     \STATE $null.ts \leftarrow m'.ts$ \label{algline:nulltsmts}
@@ -385,27 +394,32 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When $(\exists m \in propPending : \nexists m' \in propPending: m'.ts < m.ts) \wedge\ nextProp = k$}}
+\INDENT{\textit{When $\exists m \in propPending \wedge\ nextProp = k$}}
 %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
 %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
-    \STATE $nextProp \leftarrow k + 1$
-    \STATE Propose($k$,$m$)
+    \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : m'.ts < m.ts \wedge m' \neq null\})$ \label{algline:keepnull}
+    \IF {$propPending \neq \emptyset$}
+      \STATE $nextProp \leftarrow k + 1$
+      \STATE Propose($k$,$propPending$)
+    \ENDIF
 %  \ENDIF
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When} Decide($k$,$m$)}
+\INDENT{\textit{When} Decide($k$,$msgSet$)}
 %  \STATE $m.gs \leftarrow k$
-  \STATE $decided \leftarrow decided \cup \{m\}$
-  \STATE $propPending \leftarrow propPending \setminus (\{m\} \cup \{m' : m'.ts < m.ts \wedge m' \neq null\})$ \label{algline:keepnull}
+  \STATE $decided \leftarrow decided \cup msgSet$
+  \INDENT{\textbf{for all} $m \in msgSet : G \in m.dst \wedge m \neq null$ \textbf{do}} \label{algline:checkcons}
+    \STATE $consPending \leftarrow consPending \cup \{m\}$
+  \ENDINDENT
+  \INDENT{\textbf{for all} $m \in msgSet$ \textbf{do}}
+    \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
+      \STATE send($p'$, $\{m, \text{`cons'}\}$)
+      \COMMENT{this message is sent through a FIFO lossless channel}
+    \ENDINDENT
+  \ENDINDENT
   \STATE $nextProp \leftarrow k + 1$
   \STATE $k \leftarrow k + 1$  
-  \IF {$G \in m.dst \wedge m \neq null$} \label{algline:checkcons}
-    \STATE $consPending \leftarrow consPending \cup \{m\}$
-  \ENDIF
-  \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
-    \STATE send($p'$, $\{m, \text{`cons'}\}$)  \COMMENT{this message is sent through a FIFO lossless channel}
-  \ENDINDENT
 \ENDINDENT
 
 \blankline
@@ -430,7 +444,7 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
 \end{distribalgo}
 \end{algorithm}
 
-Now, assuming that $w(p)$ is the same for every process $p$, we have a delivery latency for $m$ of $w(p) + \tconsm$, as the $null$ message is created and proposed in parallel with $m$. However, each sender process is sending $m$ not only to every destination process, but also to every process in its group and to every process belonging to some group of $blockers(m)$. This can create a fairly high amount of messages. Unfortunately, this has to be done to guarantee that such $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it. Although this kind of messages are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:keepnull} of Algorithm \ref{algorithm:ondemand}), if at least one of the processes does not have it, it could never be decided. Again, like in Algorithm \ref{algorithm:liveness}, there might be many processes in a group proposing a $null$ message because of the same $m$. Although this is not wrong, it is inefficient, and a way to identify $null$ messages created for the same purpose should be devised\footnote{Again, we could use timestamps as unique identifiers and assume no timestamp collisions. But for that to work, instead of making $null.ts = m.ts$ (l. \ref{algline:nulltsmts} of Algorithm \ref{algorithm:ondemand}), we could define $null.ts$ as a little bit greater than $m.ts$, but ensuring that there would be no $m' : m.ts < m'.ts < null.ts$, and also that the timestamps still wouldn't collide.}.
+Now, assuming that $w(p)$ is the same for every process $p$, we have a worst case delivery latency for $m$ of $w(p) + 2\tconsm$, as the $null$ message is created and proposed in parallel with $m$. However, each sender process is sending $m$ not only to every destination process, but also to every process in its group and to every process belonging to some group of $blockers(m)$. This can create a fairly high amount of messages. Unfortunately, this has to be done to guarantee that such $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it. Although this kind of messages are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:keepnull} of Algorithm \ref{algorithm:ondemand}), if at least one of the processes does not have it, it could never be decided. Again, like in Algorithm \ref{algorithm:liveness}, there might be many processes in a group proposing a $null$ message because of the same $m$. Although this is not wrong, it is inefficient, and a way to identify $null$ messages created for the same purpose should be devised\footnote{Again, we could use timestamps as unique identifiers and assume no timestamp collisions. But for that to work, instead of making $null.ts = m.ts$ (l. \ref{algline:nulltsmts} of Algorithm \ref{algorithm:ondemand}), we could define $null.ts$ as a little bit greater than $m.ts$.}.
 
 % Nevertheless, one possible way to implement the delivery for a command $C$ of this type would be to initiate a Paxos consensus instance in each group addressed by it, proposing $C$ and having as learns all servers in all involved groups. 
 
