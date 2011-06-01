@@ -367,7 +367,7 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
 
 \blankline
 \INDENT{\textit{When} \rmdel{$m'$}}
-  \IF {$G \neq m'.src$ $\wedge$ $\exists G' \in m'.dst \cap receiversFrom(G)$}
+  \IF {$G \neq m'.src$ $\wedge$ $\exists G' \in (m'.dst \cap receiversFrom(G))$}
     \STATE $null \leftarrow$ empty message
     \STATE $null.src \leftarrow G$  \COMMENT{some other group needs a barrier from this one}
     \STATE $null.ts \leftarrow m'.ts$ \label{algline:nulltsmts}
