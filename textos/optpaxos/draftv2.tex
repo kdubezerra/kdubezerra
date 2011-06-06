@@ -266,11 +266,13 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
   \INDENT{\textbf{for all} $m \in msgSet : G \in m.dst \wedge m \neq null$ \textbf{do}} \label{algline:checkcons}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDINDENT
-  \INDENT{\textbf{while} $\exists m \in msgSet : \nexists$ \textbf{do}}
+  \INDENT{\textbf{while} $\exists m \in msgSet : (\forall m' \in msgSet : m \neq m' \Rightarrow m.ts < m'.ts)$ \textbf{do}}
     \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
       \STATE send($p'$, $\{m, \text{`cons'}\}$)
       \COMMENT{this message is sent through a FIFO lossless channel}
     \ENDINDENT
+    \STATE $msgSet \leftarrow msgSet \setminus \{m\}$
+    \COMMENT{the messages are sent in ascending order of timestamp} 
   \ENDINDENT
   \STATE $nextProp \leftarrow k + 1$
   \STATE $k \leftarrow k + 1$
@@ -414,11 +416,13 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
   \INDENT{\textbf{for all} $m \in msgSet : G \in m.dst \wedge m \neq null$ \textbf{do}} \label{algline:checkcons}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDINDENT
-  \INDENT{\textbf{for all} $m \in msgSet$ \textbf{do}}
+  \INDENT{\textbf{while} $\exists m \in msgSet : (\forall m' \in msgSet : m \neq m' \Rightarrow m.ts < m'.ts)$ \textbf{do}}
     \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
       \STATE send($p'$, $\{m, \text{`cons'}\}$)
       \COMMENT{this message is sent through a FIFO lossless channel}
     \ENDINDENT
+    \STATE $msgSet \leftarrow msgSet \setminus \{m\}$
+    \COMMENT{the messages are sent in ascending order of timestamp}
   \ENDINDENT
   \STATE $nextProp \leftarrow k + 1$
   \STATE $k \leftarrow k + 1$  
