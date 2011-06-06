@@ -174,7 +174,7 @@ There are three possibilities for each message $m$, in the perspective of a proc
   
   In this case, when $m$ is optimistically delivered by $p$, $p$ checks whether the latest consensus instance $I_{prev}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $propPending$ queue as the next message being proposed by it, so other tasks can keep being executed. Then, once $I_{prev}$ has been decided, $p$ may start a new instance. Before that, all messages in $propPending$ that have either been already decided, or that have a timestamp smaller than that of some already decided message, are discarded from $propPending$. The rest is proposed as a batch in the consensus instance. Once $m$ is decided, it is not immediately delivered to the application. Instead, it is inserted in a $consPending$ list for later being conservatively delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t$, such that $t > m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
 
-  \item When $m$ is originated in $G$, but it has at least one group other then $G$ as a destination:
+  \item When $m$ is originated in $G$, but it has at least one group other than $G$ as a destination:
   
   In this case, when $now > m.ts + w(p)$, $p$ tries to initiate a consensus instance within $G$ to decide $m$. If $p$ cannot start the proposal now, $m$ is enqueued in $propPending$ for being proposed later along with other pending messages. Then, once $p$ may start a new instance, all messages in $propPending$ that have either been already decided, or that have a timestamp smaller than that of some already decided message, are discarded from $propPending$. The rest is proposed as a batch in the new consensus instance. Once any message $m$ is decided, if $G \in m.dst$, $m$ is inserted in the $consPending$ list. Besides, when $m$ is decided, $p$ sends a message $\{m, \text{`cons'}\}$ to every \mbox{$p' : (\exists G' \in m.dst \setminus \{G\}) \wedge (p' \in G')$}. When $\{m, \text{`cons'}\}$ is received by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $consPending$ list. If not, $p'$ inserts $m$ into $consPending$ and adjusts $barrier(G, G')$ to $m.ts$. To ensure that, once a message $\{m, \text{`cons'}\}$ is received, every message \mbox{$\{m', \text{`cons'}\}:m'.ts<m.ts$} has already been received from $m.src$, every $\{m, \text{`cons'}\}$ message is sent through a lossless FIFO channel\footnote{An ordinary TCP connection would be enough to provide such FIFO lossless channel.}.
   
@@ -251,7 +251,7 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 \INDENT{\textit{When $\exists m \in propPending \wedge nextProp = k$}}
 %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
 %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
-    \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : \exists m \in msgSet \wedge m'.ts < m.ts \wedge m' \neq null\})$ \label{algline:nullstays}
+    \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : \exists m'' \in decided \wedge m'.ts < m''.ts \wedge m' \neq null\})$ \label{algline:nullstays}
     \IF {$propPending \neq \emptyset$}
       \STATE $nextProp \leftarrow k + 1$
       \STATE Propose($k$,$propPending$)
@@ -266,7 +266,7 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
   \INDENT{\textbf{for all} $m \in msgSet : G \in m.dst \wedge m \neq null$ \textbf{do}} \label{algline:checkcons}
     \STATE $consPending \leftarrow consPending \cup \{m\}$
   \ENDINDENT
-  \INDENT{\textbf{for all} $m \in msgSet$ \textbf{do}}
+  \INDENT{\textbf{while} $\exists m \in msgSet : \nexists$ \textbf{do}}
     \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
       \STATE send($p'$, $\{m, \text{`cons'}\}$)
       \COMMENT{this message is sent through a FIFO lossless channel}
@@ -315,7 +315,9 @@ The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee l
 
 \blankline
 \INDENT{\textit{When} inserting into $optPending$ a message $m : (m.src = G \wedge \exists G' \in m.dst : G' \neq G)$}
-  \STATE $lastBarrierCreated(G') \leftarrow m.ts$
+  \INDENT{\textbf{for all} $G' \in m.dst : G' \neq G$ \textbf{do}}
+    \STATE $lastBarrierCreated(G') \leftarrow m.ts$
+  \ENDINDENT
 \ENDINDENT
 
 \blankline
@@ -329,9 +331,9 @@ The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee l
 \ENDINDENT 
 
 \blankline
-\caption{Achieving liveness; executed by every process $p$ of group $G$}
+\caption{Achieving liveness by sending periodic messages; executed by every process $p$ of group $G$}
 \label{algorithm:liveness}
-\end{distribalgo}
+\end{distribalgo} 
 \end{algorithm}
 
 The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b < m.ts$. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait, at least, for $barrierThreshold$ -- maybe just to receive some $b' : b' < m.ts$, having to wait again and so on. How long exactly it will take to \cons{} $m$ depends on many variables, such as how far in the past $m$ was created and how long it takes for some barrier $b: b > m.ts$ to arrive.% Because of that, the time between \cms{}ing and \cons{}ing $m$ be, in the worst case, $2w(p) + 4\tconsm + barrierThreshold$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
@@ -397,7 +399,7 @@ When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$
 \INDENT{\textit{When $\exists m \in propPending \wedge nextProp = k$}}
 %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
 %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
-    \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : m'.ts < m.ts \wedge m' \neq null\})$ \label{algline:keepnull}
+    \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : \exists m'' \in decided \wedge m'.ts < m''.ts \wedge m' \neq null\})$ \label{algline:keepnull}
     \IF {$propPending \neq \emptyset$}
       \STATE $nextProp \leftarrow k + 1$
       \STATE Propose($k$,$propPending$)
