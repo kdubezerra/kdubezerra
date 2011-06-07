@@ -292,6 +292,18 @@ $m$ to be retrievable even in the presence of failures.% Because of that, to ens
 \end{distribalgo}
 \end{algorithm}
 
+% http://kdubezerra.googlecode.com/svn/trunk/textos/optpaxos/draftv3.pdf
+% http://kdubezerra.googlecode.com/svn/trunk/textos/optpaxos/draftv3.tex
+% 
+% Eu tentei já fazer com que as instâncias de consenso fossem executadas em paralelo, mas é bem mais complicado do que eu esperava, e preferi deixar como está.
+% 
+% Pra exemplificar: como um processo, ao propor uma mensagem m, não sabe se m vai ser decidida, ele tem que mantê-la em uma fila pending, tal como no atomic broadcast do chandra, para ser proposta novamente se necessário.
+% Pra evitar que ele fique propondo várias vezes a mesma mensagem, ainda mais outra lista é necessária (algo como trying), que guarda duplas (m, i), onde i é o id de uma instância de consenso.
+% 
+% Antes de um processo p propor uma mensagem m, ele verifica se m está em decided OU em trying. Se não estiver em nenhuma das duas, p propõe m numa instância de consenso Ia e a dupla (m,Ia) é inserida na lista trying. (m,Ia) é removido de trying quando Ia é resolvida. Se em alguma instância qualquer, m foi decidida, m é removida de pending e inserida em decided. p não pode propor novamente m enquanto Ia não for resolvida.
+% 
+% O resultado disso é que se, após o término de Ia, m ainda não estiver em decided, m é novamente proposta por p em uma instância Ib e (m,Ib) é inserida em trying. E assim por diante. 
+
 Assuming $\delta$ as the communication delay between every pair of processes, the time needed to decide a message $m$ after it has been \cms{} by some process is equal, in the worst case, to $\delta + 2\tconsm$, where $\delta$ is the time needed to \rmd{} a message and \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $propPending$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $propPending$ right before some proposal has been made, so it would take only $\delta + \tconsm$ to decide $m$. As $m$ may go into $propPending$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $\delta + 1.5\tconsm$. Nevertheless, the time needed to finally \cons{} $m$ will depend on when barriers are received from other groups.
 
 \subsubsection{Addressing liveness}
