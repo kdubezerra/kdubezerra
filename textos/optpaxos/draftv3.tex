@@ -98,7 +98,7 @@ Before GST, there are no bounds on the time it takes for messages to be transmit
 
 %However, providing such level of consistency may prove to be costly in an MMOG context, since there may be several communication steps between the sending of a command and its atomic delivery. For this reason, we use a primitive we call quasi-genuine global fifo total order multicast, which is described in section \ref{sec:quasi}.
 
-\section{Quasi-genuine Global FIFO Multicast}
+\section{Quasi-Genuine FIFO Total Order Multicast}
 \label{sec:quasi}
 
 %To reduce the time needed to deliver a message, we use a multicast primitive which delivers messages optmistically, based on the time when they are created in a sender. This \emph{optimistic} delivery, although not guaranteeing that all replicas will receive all messages, is designed to have a fairly low latency, counting from when each message is sent until it is delivered.
@@ -149,7 +149,7 @@ Here, we consider that there are several processes. Each process $p$ belongs to 
 
 %However, even if the optimistic order is the same for all the processes, it won't be valid if the conservative order is different from it. For that reason, we devised a way to make the conservative delivery order as close as possible to the optimistic one.
 
-\subsection{Message delivery}
+\subsection{Message delivery algorithm}
 
 %Instead of having the conservative delivery done completely independently from the optimistic one, we can actually use the latter as a hint for the final delivery order. Since the optimistic delivery should be fast when compared to the conservative one, waiting for it should not decrease the system performance significantly. Also, if we wait a short period longer, we can avoid a rollback later caused by mismatches between the two delivery orders, which is not desirable. The basic idea is, then, to pick the optimistic delivery order seen at the processes of each group.
 
