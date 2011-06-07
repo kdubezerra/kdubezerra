@@ -174,7 +174,7 @@ different than that which sent $m'$, so inverting their order does not violate F
 To allow for the timestamp of messages to be increased and still have them delivered as soon as possible, their timestamps are increased by an infinitesimal value. For that reason, each timestamp value will consist of a real-time clock value, and a sequence value, which is used only when messages need to have their timestamps changed. Therefore, we have that $m.ts = (rtc, seq)$, where $rtc$ is some value related to the wallclock (real-time clock) of a process and $seq$ is a sequence number to define an order between messages with the same $rtc$. Then we have:
 
 \begin{align*}
-m.ts < m.ts \Leftrightarrow m.ts.rtc < m'.ts.rtc \vee (m.ts.rtc = m'.ts.rtc \wedge m.ts.seq < m'.ts.seq)\\
+m.ts < m'.ts \Leftrightarrow m.ts.rtc < m'.ts.rtc \vee (m.ts.rtc = m'.ts.rtc \wedge m.ts.seq < m'.ts.seq)\\
 %&\vee (m.ts.rtc = m'.ts.rtc \wedge m.ts.seq = m'.ts.seq \wedge m.ts.p_{id} < m'.ts.p_{id})
 \end{align*}
 
@@ -194,7 +194,7 @@ There are three possibilities for each message $m$, in the perspective of a proc
   In this case, when $m$ is received for the first time\footnote{Multiple processes may have sent $m$. To ensure integrity and order, only the first delivery is considered.} by $p$, $m$ is inserted into the $barPending$ list of $p$ and the value of $barrier(G',G)$ is set to $m.ts$.
 \end{itemize}
 
-The messages in the \textit{barPending} list are always sorted in ascending order of their timestamps. When the first message $m$, in the $barPending$ list of a process $p : group(p) = G$, is such that $m.ts < barrier(G, G')$ for all $G' \in sendersTo(G)$, then $m$ is conservatively delivered by $p$ to the application as the next message. We claim that this delivery respects the FIFO total order\footnote{Proof needed.}.
+The messages in the \textit{barPending} list are always sorted in ascending order of their timestamps. When the first message $m$ in the $barPending$ list of a process $p \in G$ is such that $m.ts < barrier(G, G')$ for all $G' \in sendersTo(G)$, then $m$ is \cons{}ed by $p$ to the application as the next message. We claim that this delivery respects the FIFO total order\footnote{Proof needed.}.
 
 %The possibility not covered here is when a message is sent from a group to another one which is not its neighbour. However, it is realistic for this context to assume that objects should be close to each other in the virtual environment to interact and that, as such, this kind of interaction is not supported. Nevertheless, one simple way to provide this kind of support could be by each group waiting for the barriers of every other group in the system, instead of only those of its neighbors.
 
@@ -211,8 +211,8 @@ Moreover, each process $p$ of group $G$ keeps some lists of messages:
 
 %; and $gs$, which is $m$'s sequence number relatively to its group of origin. 
 
-Something that must be noticed is that some messages might not have their source groups as a destination. Anyway, each message $m$ of this type still has to be agreed upon in its group of origin $G$, so that its order among other messages from $G$ may be decided and %$m.gs$ can be decided, and also for 
-$m$ will be retrievable, even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
+Something that must be noticed is that each message $m$ might not have its source group as a destination. Anyway, $m$ still has to be agreed upon in its group of origin $G$, so that its order among other messages from $G$ may be decided and for %$m.gs$ can be decided, and also for 
+$m$ to be retrievable even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
 
 \begin{algorithm}
 \begin{distribalgo}[1]
@@ -226,9 +226,9 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 \ENDINDENT 
 
 \blankline
-\INDENT{\textit{To send a message $m$} -- \cmsend{m}}
-  \STATE $m.ts \leftarrow getTime()$  
-  \COMMENT{current wallclock value as the timestamp of $m$}
+\INDENT{\textit{To} \cms{} \textit{a message $m$}}
+  \STATE $m.ts \leftarrow (getTime(),0)$
+  %\COMMENT{current wallclock value as the timestamp of $m$}
   \STATE \rmcast{$m$}{$\{G\}$}
 %  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\}$ \textbf{do}}
 %    \STATE send($p'$, $m$)    
@@ -262,14 +262,17 @@ $m$ will be retrievable, even in the presence of failures.% Because of that, to 
 \blankline
 \INDENT{\textit{When} Decide($k$,$msgSet$)}
 %  \STATE $m.gs \leftarrow k$
-  \STATE $decided \leftarrow decided \cup msgSet$ 
-  \INDENT{\textbf{for all} $m \in msgSet : G \in m.dst$ \textbf{do}} \label{algline:checkcons}
-    \STATE $barPending \leftarrow barPending \cup \{m\}$
-  \ENDINDENT
   \INDENT{\textbf{while} $\exists m \in msgSet : (\forall m' \in msgSet : m \neq m' \Rightarrow m.ts < m'.ts)$ \textbf{do}}
-    \STATE \rmcast{$m$}{$m.dst \setminus \{G\}$}
     \STATE $msgSet \leftarrow msgSet \setminus \{m\}$
-    \COMMENT{the messages are sent in ascending order of timestamp} 
+    \COMMENT{the messages are handled in ascending order of timestamp}
+    \IF{$\exists m' \in decided : m'.ts \geq m.ts \wedge (\nexists m'' \in decided : m''.ts > m'.ts)$}
+      \STATE $m.ts \leftarrow (m'.ts.rtc, m'.ts.seq + 1)$
+    \ENDIF     
+    \IF{$G \in m.dst$} \label{algline:checkcons}
+      \STATE $barPending \leftarrow barPending \cup \{m\}$
+    \ENDIF
+    \STATE $decided \leftarrow decided \cup \{m\}$  
+    \STATE \rmcast{$m$}{$m.dst \setminus \{G\}$} 
   \ENDINDENT
   \STATE $nextProp \leftarrow k + 1$
   \STATE $k \leftarrow k + 1$
@@ -306,15 +309,13 @@ The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee l
 
 \blankline
 \INDENT{\textit{When} \rmc{}ing a message $m$ to some group $G' \neq G$}
-  \INDENT{\textbf{for all} $G' \in m.dst : G' \neq G$ \textbf{do}}
-    \STATE $lastBarrierCreated(G') \leftarrow m.ts$
-  \ENDINDENT
+  \STATE $lastBarrierCreated(G') \leftarrow m.ts.rtc$
 \ENDINDENT
 
 \blankline
 \INDENT{\textit{When $\exists G' \in receiversFrom(G): getTime() - lastBarrierCreated(G') > barrierThreshold$}}
   \STATE $null \leftarrow$ empty message
-  \STATE $null.ts \leftarrow lastBarrierCreated(G') + barrierThreshold$ \label{algline:samenullid}
+  \STATE $null.ts \leftarrow (lastBarrierCreated(G') + barrierThreshold, 0)$ \label{algline:samenullid}
   \STATE $null.src \leftarrow G$
   \STATE $null.dst \leftarrow \{G'\}$ 
   \STATE $propPending \leftarrow propPending \cup \{null\}$
@@ -329,128 +330,128 @@ The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee l
 
 The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b < m.ts$. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait, at least, for $barrierThreshold$ -- maybe just to receive some $b' : b' < m.ts$, having to wait again and so on. How long exactly it will take to \cons{} $m$ depends on many variables, such as how far in the past $m$ was created and how long it takes for some barrier $b: b > m.ts$ to arrive.% Because of that, the time between \cms{}ing and \cons{}ing $m$ be, in the worst case, $2w(p) + 4\tconsm + barrierThreshold$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
 
-It is necessary to guarantee that a $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it, so that progression is guaranteed. Therefore, this kind of messages are created by every process in the group, since if any one of them does not have it, such message might never be decided. Besides, they are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:nullstays} of Algorithm \ref{algorithm:quasi}). Since they are obviously never delivered to the application, they can remain in such list and be decided even after some message with higher timestamp is decided. Not removing them unless they are decided ensures that they will be sent and that other groups will be able to increase their barrier values. % On the other hand, this brings another problem: if every process in $G$ creates a different $null$ message, many $null$ messages might have to be decided before a meaningful message.
+It is necessary to guarantee that a $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it, so that progression is guaranteed. Therefore, this kind of messages are created by every process in the group, since if any one of them does not have it, such message might never be decided. %Besides, they are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:nullstays} of Algorithm \ref{algorithm:quasi}). Since they are obviously never delivered to the application, they can remain in such list and be decided even after some message with higher timestamp is decided. Not removing them unless they are decided ensures that they will be sent and that other groups will be able to increase their barrier values. % On the other hand, this brings another problem: if every process in $G$ creates a different $null$ message, many $null$ messages might have to be decided before a meaningful message.
 To prevent the multiple $null$ messages -- created by different processes within the group -- of being decided, they could be created in a way such that the different processes can somehow figure out that two different $null$ messages are equivalent\footnote{This could be done by assuming no timestamp collisions and by using them to uniquely identify messages. Then, only one of the messages created with the same timestamp (l. \ref{algline:samenullid} of Algorithm \ref{algorithm:liveness}) would be decided.}.
 
 However, there is a way to provide liveness withouth such a possibly long delay for the conservative delivery of messages, although that would imply creating more messages and making deeper changes in the delivery algorithm. Let $blockers(m)$ be defined as the set of groups whose barrier is needed in order for some group to deliver $m$. More formally, $blockers(m) =$ \mbox{$\{G_B : \exists G_{dst} \in m.dst \wedge G_B \in sendersTo(G_{dst})\}$}. The idea is that, once each group $G_B$ in $blockers(m)$ have sent a barrier $b > m.ts$ to all the groups belonging to \mbox{$m.dst \cap receiversFrom(G_B)$}, all possible destinations of $m$ can deliver it. This way, instead of relying on periodic messages, whenever a process $p$ in a group $G$ has a message $m$ to send, $p$ sends $m$ to every $p' \in m.dst \cup G \cup blockers(m)$. It is sent to the groups in $blockers(m)$, so that they know that there is a message which will be blocked until they send a proper barrier to unblock it.
 
-When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$, $p'$ knows that there might be other groups depeding on the barrier of $G'$ to deliver $m$. For that reason, it will immediately create a $null$ message with a timestamp equal to $m.ts$ and with $null.dst = m.dst$ $\cap$ $receiversFrom(G')$. Then, $p'$ will insert such message in its $optPending$ queue -- to ensure that, once it goes to $propPending$, any message \mbox{$m': m'.ts < null.ts \wedge m'.src = G'$} is already there. As soon as $null.ts > now - w(p')$, the $null$ message will be proposed in $G'$ and, once $null$ is decided, each process of $G'$ will send a $\{null, \text{`cons'}\}$ message to each process in each group \mbox{$G \in m.dst \cap receiversFrom(G')$}. This way, any group which was waiting for a barrier from $G'$ to deliver $m$ will be able to do so as soon as it receives such $null$ message. The new delivery algorithm would be as described in \mbox{Algorithm {\ref{algorithm:ondemand}}}.
-
-\begin{algorithm}
-\begin{distribalgo}[1]
-
-\blankline
-\INDENT {Initialization}
-  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $propPending \leftarrow \emptyset$, $optPending \leftarrow \emptyset$, $barPending \leftarrow \emptyset$
-  \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
-    \STATE $barrier(G',G) \leftarrow -\infty$ 
-  \ENDINDENT
-\ENDINDENT 
-
-\blankline
-\INDENT{\textit{To send a message $m$} -- \cmsend{m}}
-  \STATE $m.ts \leftarrow getTime()$  
-  \COMMENT{current wallclock value as the timestamp of $m$}
-  \STATE \rmcast{$m$}{$m.dst \cup \{G\} \cup blockers(m)$}
-%  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\} \cup blockers(m)$ \textbf{do}}
-%    \STATE send($p'$, $m$)    
-%    \COMMENT{send optimistically $m$ to all involved processes}
-%  \ENDINDENT
-\ENDINDENT
-
-\blankline
-\INDENT{\textit{When} \rmdel{$m'$}}
-  \IF {$G \neq m'.src$ $\wedge$ $\exists G' \in (m'.dst \cap receiversFrom(G))$}
-    \STATE $null \leftarrow$ empty message
-    \STATE $null.src \leftarrow G$  \COMMENT{some other group needs a barrier from this one}
-    \STATE $null.ts \leftarrow m'.ts$ \label{algline:nulltsmts}
-    \STATE $null.dst \leftarrow m'.dst \cap receiversFrom(G)$
-    \STATE $optPending \leftarrow optPending \cup \{null\}$
-  \ENDIF
-  \IF {$m'.ts < getTime() - w(p) \vee G \notin m'.dst$}
-    \STATE discard $m'$
-    \COMMENT{late commands probably lead to out-of-order delivery}
-  \ELSE
-    \STATE $optPending \leftarrow optPending$ $\cup$ $\{m'\}$
-  \ENDIF
-\ENDINDENT
-
-\blankline
-\INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
-  \STATE $optPending \leftarrow optPending \setminus \{m\}$
-  \IF {$G \in m.dst \wedge m \neq null$}
-    \STATE \optdel{$m$}  
-  \ENDIF
-  \IF {$G = m.src$}
-    \STATE $propPending \leftarrow propPending \cup \{m\}$
-  \ENDIF
-\ENDINDENT
-
-\blankline
-\INDENT{\textit{When $\exists m \in propPending \wedge nextProp = k$}}
-%  \STATE $propPending \leftarrow propPending \setminus \{m\}$
-%  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
-    \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : \exists m'' \in decided \wedge m'.ts < m''.ts \wedge m' \neq null\})$ \label{algline:keepnull}
-    \IF {$propPending \neq \emptyset$}
-      \STATE $nextProp \leftarrow k + 1$
-      \STATE Propose($k$,$propPending$)
-    \ENDIF
-%  \ENDIF
-\ENDINDENT
-
-\blankline
-\INDENT{\textit{When} Decide($k$,$msgSet$)}
-%  \STATE $m.gs \leftarrow k$
-  \STATE $decided \leftarrow decided \cup msgSet$
-  \INDENT{\textbf{for all} $m \in msgSet : G \in m.dst \wedge m \neq null$ \textbf{do}} \label{algline:checkcons}
-    \STATE $barPending \leftarrow barPending \cup \{m\}$
-  \ENDINDENT
-  \INDENT{\textbf{while} $\exists m \in msgSet : (\forall m' \in msgSet : m \neq m' \Rightarrow m.ts < m'.ts)$ \textbf{do}}
-    \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
-      \STATE send($p'$, $\{m, \text{`cons'}\}$)
-      \COMMENT{this message is sent through a FIFO lossless channel}
-    \ENDINDENT
-    \STATE $msgSet \leftarrow msgSet \setminus \{m\}$
-    \COMMENT{the messages are sent in ascending order of timestamp}
-  \ENDINDENT
-  \STATE $nextProp \leftarrow k + 1$
-  \STATE $k \leftarrow k + 1$  
-\ENDINDENT
-
-\blankline
-\INDENT{\textit{When} receive($\{m',\{\text{`cons'}\}$)}  
-  \IF {$m' \notin\ barPending \wedge m' \notin\ delivered \wedge m' \neq\ null$}
-    \STATE $barPending \leftarrow barPending \cup \{m\}$
-  \ENDIF
-  \STATE $barrier(m'.src,G) \leftarrow max(m'.ts, barrier(m'.src,G))$  \COMMENT{channels are FIFO, but there are different senders}
-\ENDINDENT
-
-\blankline
-\INDENT{\textit{When $\exists m \in barPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in barPending : m'.ts < m.ts$ }}
-  \STATE $barPending \leftarrow barPending \setminus \{m\}$
-  \STATE \consdel{$m$}
-  \STATE $delivered \leftarrow delivered \cup \{m\}$
-
-\blankline
-\ENDINDENT
-
-\caption{\cmsend{m} -- executed by every process $p$ from group $G$}
-\label{algorithm:ondemand}
-\end{distribalgo}
-\end{algorithm}
-
-Now, assuming that $w(p)$ is the same for every process $p$, we have a worst case delivery latency for $m$ of $w(p) + 2\tconsm$, as the $null$ message is created and proposed in parallel with $m$. However, each sender process is sending $m$ not only to every destination process, but also to every process in its group and to every process belonging to some group of $blockers(m)$. This can create a fairly high amount of messages. Unfortunately, this has to be done to guarantee that such $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it. Although this kind of messages are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:keepnull} of Algorithm \ref{algorithm:ondemand}), if at least one of the processes does not have it, it could never be decided. Again, like in Algorithm \ref{algorithm:liveness}, there might be many processes in a group proposing a $null$ message because of the same $m$. Although this is not wrong, it is inefficient, and a way to identify $null$ messages created for the same purpose should be devised\footnote{Again, we could use timestamps as unique identifiers and assume no timestamp collisions. But for that to work, instead of making $null.ts = m.ts$ (l. \ref{algline:nulltsmts} of Algorithm \ref{algorithm:ondemand}), we could define $null.ts$ as a little bit greater than $m.ts$.}.
-
-% Nevertheless, one possible way to implement the delivery for a command $C$ of this type would be to initiate a Paxos consensus instance in each group addressed by it, proposing $C$ and having as learns all servers in all involved groups. 
-
-%In brief, our strategy is to combine state-machine replication (implemented with Paxos), used to handle object replicas, with Skeen's algorithm, used to select timestamps for commands that affect multiple objects.
-
-\subsection{Recovering from mistakes}
-
-Unfortunately, even with a very good delay estimation (e.g. on an environment with a low jitter), there is absolutely no guarantee that the multicast protocol described  in section \ref{sec:quasi} will deliver the game command messages optimistically and conservatively in the same order. When it doesn't, it is considered a \emph{mistake}. Every mistake of the optimistic delivery -- either a lost command message, or an out-of-order delivery -- will cause a rollback of the optimistic state of the objects and re-execution of some of the optimistically delivered commands.
-
-To perform that, we consider that each object has an optimistic delivery queue, $Q_{opt}$. Whenever a command is optimistically delivered, the optimistic state is updated and the command is pushed in the back of $Q_{opt}$. Whenever a command $C_c$ is conservatively delivered, it updates the conservative state of each object in $obj(C_c)$ and, for each one of them, the algorithm checks whether it is the first command in $Q_{opt}$. If it is, $C_c$ is simply removed from $Q_{opt}$ and the execution continues. If it isn't, it means that $C_c$ was either optimistically delivered out of order, or it was simply never optmistically delivered. It then checks whether $Q_{opt}$ contains $C_c$. If it does, it means the command was optimistically deliverd out of order, and it is removed from the list -- if $Q_{opt}$ doesn't contain $C_c$, it was probably lost\footnote{Also, when $C_c$ is delivered, but it is not in $Q_{opt}$, the remaining possibility is the very unlikely case where the conservative delivery happened before the optimistic one. To handle this case, $C_c$ is stored in a list of possibly delayed optimistic delivery and, if it is ever optimistically delivered, the algorithm will know that it should only discard that command, instead of updating the optimistic state.}. Then, the optimistic state is overwritten with the conservative one and, from that state, all the remaining comands in $Q_{opt}$ are re-executed, leading to a new optimistic state for that object.
-
+%When the process $p'$ of some group $G'$ receives $m$, such that $m.src \neq G'$, $p'$ knows that there might be other groups depeding on the barrier of $G'$ to deliver $m$. For that reason, it will immediately create a $null$ message with a timestamp equal to $m.ts$ and with $null.dst = m.dst$ $\cap$ $receiversFrom(G')$. Then, $p'$ will insert such message in its $optPending$ queue -- to ensure that, once it goes to $propPending$, any message \mbox{$m': m'.ts < null.ts \wedge m'.src = G'$} is already there. As soon as $null.ts > now - w(p')$, the $null$ message will be proposed in $G'$ and, once $null$ is decided, each process of $G'$ will send a $\{null, \text{`cons'}\}$ message to each process in each group \mbox{$G \in m.dst \cap receiversFrom(G')$}. This way, any group which was waiting for a barrier from $G'$ to deliver $m$ will be able to do so as soon as it receives such $null$ message. The new delivery algorithm would be as described in \mbox{Algorithm {\ref{algorithm:ondemand}}}.
+% 
+% \begin{algorithm}
+% \begin{distribalgo}[1]
+% 
+% \blankline
+% \INDENT {Initialization}
+%   \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $propPending \leftarrow \emptyset$, $optPending \leftarrow \emptyset$, $barPending \leftarrow \emptyset$
+%   \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
+%     \STATE $barrier(G',G) \leftarrow -\infty$ 
+%   \ENDINDENT
+% \ENDINDENT 
+% 
+% \blankline
+% \INDENT{\textit{To send a message $m$} -- \cmsend{m}}
+%   \STATE $m.ts \leftarrow getTime()$  
+%   \COMMENT{current wallclock value as the timestamp of $m$}
+%   \STATE \rmcast{$m$}{$m.dst \cup \{G\} \cup blockers(m)$}
+% %  \INDENT{\textbf{for all} $p' \in m.dst \cup \{G\} \cup blockers(m)$ \textbf{do}}
+% %    \STATE send($p'$, $m$)    
+% %    \COMMENT{send optimistically $m$ to all involved processes}
+% %  \ENDINDENT
+% \ENDINDENT
+% 
+% \blankline
+% \INDENT{\textit{When} \rmdel{$m'$}}
+%   \IF {$G \neq m'.src$ $\wedge$ $\exists G' \in (m'.dst \cap receiversFrom(G))$}
+%     \STATE $null \leftarrow$ empty message
+%     \STATE $null.src \leftarrow G$  \COMMENT{some other group needs a barrier from this one}
+%     \STATE $null.ts \leftarrow m'.ts$ \label{algline:nulltsmts}
+%     \STATE $null.dst \leftarrow m'.dst \cap receiversFrom(G)$
+%     \STATE $optPending \leftarrow optPending \cup \{null\}$
+%   \ENDIF
+%   \IF {$m'.ts < getTime() - w(p) \vee G \notin m'.dst$}
+%     \STATE discard $m'$
+%     \COMMENT{late commands probably lead to out-of-order delivery}
+%   \ELSE
+%     \STATE $optPending \leftarrow optPending$ $\cup$ $\{m'\}$
+%   \ENDIF
+% \ENDINDENT
+% 
+% \blankline
+% \INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
+%   \STATE $optPending \leftarrow optPending \setminus \{m\}$
+%   \IF {$G \in m.dst \wedge m \neq null$}
+%     \STATE \optdel{$m$}  
+%   \ENDIF
+%   \IF {$G = m.src$}
+%     \STATE $propPending \leftarrow propPending \cup \{m\}$
+%   \ENDIF
+% \ENDINDENT
+% 
+% \blankline
+% \INDENT{\textit{When $\exists m \in propPending \wedge nextProp = k$}}
+% %  \STATE $propPending \leftarrow propPending \setminus \{m\}$
+% %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
+%     \STATE $propPending \leftarrow propPending \setminus (decided \cup \{m' : \exists m'' \in decided \wedge m'.ts < m''.ts \wedge m' \neq null\})$ \label{algline:keepnull}
+%     \IF {$propPending \neq \emptyset$}
+%       \STATE $nextProp \leftarrow k + 1$
+%       \STATE Propose($k$,$propPending$)
+%     \ENDIF
+% %  \ENDIF
+% \ENDINDENT
+% 
+% \blankline
+% \INDENT{\textit{When} Decide($k$,$msgSet$)}
+% %  \STATE $m.gs \leftarrow k$
+%   \STATE $decided \leftarrow decided \cup msgSet$
+%   \INDENT{\textbf{for all} $m \in msgSet : G \in m.dst \wedge m \neq null$ \textbf{do}} \label{algline:checkcons}
+%     \STATE $barPending \leftarrow barPending \cup \{m\}$
+%   \ENDINDENT
+%   \INDENT{\textbf{while} $\exists m \in msgSet : (\forall m' \in msgSet : m \neq m' \Rightarrow m.ts < m'.ts)$ \textbf{do}}
+%     \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
+%       \STATE send($p'$, $\{m, \text{`cons'}\}$)
+%       \COMMENT{this message is sent through a FIFO lossless channel}
+%     \ENDINDENT
+%     \STATE $msgSet \leftarrow msgSet \setminus \{m\}$
+%     \COMMENT{the messages are sent in ascending order of timestamp}
+%   \ENDINDENT
+%   \STATE $nextProp \leftarrow k + 1$
+%   \STATE $k \leftarrow k + 1$  
+% \ENDINDENT
+% 
+% \blankline
+% \INDENT{\textit{When} receive($\{m',\{\text{`cons'}\}$)}  
+%   \IF {$m' \notin\ barPending \wedge m' \notin\ delivered \wedge m' \neq\ null$}
+%     \STATE $barPending \leftarrow barPending \cup \{m\}$
+%   \ENDIF
+%   \STATE $barrier(m'.src,G) \leftarrow max(m'.ts, barrier(m'.src,G))$  \COMMENT{channels are FIFO, but there are different senders}
+% \ENDINDENT
+% 
+% \blankline
+% \INDENT{\textit{When $\exists m \in barPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in barPending : m'.ts < m.ts$ }}
+%   \STATE $barPending \leftarrow barPending \setminus \{m\}$
+%   \STATE \consdel{$m$}
+%   \STATE $delivered \leftarrow delivered \cup \{m\}$
+% 
+% \blankline
+% \ENDINDENT
+% 
+% \caption{\cmsend{m} -- executed by every process $p$ from group $G$}
+% \label{algorithm:ondemand}
+% \end{distribalgo}
+% \end{algorithm}
+% 
+% Now, assuming that $w(p)$ is the same for every process $p$, we have a worst case delivery latency for $m$ of $w(p) + 2\tconsm$, as the $null$ message is created and proposed in parallel with $m$. However, each sender process is sending $m$ not only to every destination process, but also to every process in its group and to every process belonging to some group of $blockers(m)$. This can create a fairly high amount of messages. Unfortunately, this has to be done to guarantee that such $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it. Although this kind of messages are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:keepnull} of Algorithm \ref{algorithm:ondemand}), if at least one of the processes does not have it, it could never be decided. Again, like in Algorithm \ref{algorithm:liveness}, there might be many processes in a group proposing a $null$ message because of the same $m$. Although this is not wrong, it is inefficient, and a way to identify $null$ messages created for the same purpose should be devised\footnote{Again, we could use timestamps as unique identifiers and assume no timestamp collisions. But for that to work, instead of making $null.ts = m.ts$ (l. \ref{algline:nulltsmts} of Algorithm \ref{algorithm:ondemand}), we could define $null.ts$ as a little bit greater than $m.ts$.}.
+% 
+% % Nevertheless, one possible way to implement the delivery for a command $C$ of this type would be to initiate a Paxos consensus instance in each group addressed by it, proposing $C$ and having as learns all servers in all involved groups. 
+% 
+% %In brief, our strategy is to combine state-machine replication (implemented with Paxos), used to handle object replicas, with Skeen's algorithm, used to select timestamps for commands that affect multiple objects.
+% 
+% \subsection{Recovering from mistakes}
+% 
+% Unfortunately, even with a very good delay estimation (e.g. on an environment with a low jitter), there is absolutely no guarantee that the multicast protocol described  in section \ref{sec:quasi} will deliver the game command messages optimistically and conservatively in the same order. When it doesn't, it is considered a \emph{mistake}. Every mistake of the optimistic delivery -- either a lost command message, or an out-of-order delivery -- will cause a rollback of the optimistic state of the objects and re-execution of some of the optimistically delivered commands.
+% 
+% To perform that, we consider that each object has an optimistic delivery queue, $Q_{opt}$. Whenever a command is optimistically delivered, the optimistic state is updated and the command is pushed in the back of $Q_{opt}$. Whenever a command $C_c$ is conservatively delivered, it updates the conservative state of each object in $obj(C_c)$ and, for each one of them, the algorithm checks whether it is the first command in $Q_{opt}$. If it is, $C_c$ is simply removed from $Q_{opt}$ and the execution continues. If it isn't, it means that $C_c$ was either optimistically delivered out of order, or it was simply never optmistically delivered. It then checks whether $Q_{opt}$ contains $C_c$. If it does, it means the command was optimistically deliverd out of order, and it is removed from the list -- if $Q_{opt}$ doesn't contain $C_c$, it was probably lost\footnote{Also, when $C_c$ is delivered, but it is not in $Q_{opt}$, the remaining possibility is the very unlikely case where the conservative delivery happened before the optimistic one. To handle this case, $C_c$ is stored in a list of possibly delayed optimistic delivery and, if it is ever optimistically delivered, the algorithm will know that it should only discard that command, instead of updating the optimistic state.}. Then, the optimistic state is overwritten with the conservative one and, from that state, all the remaining comands in $Q_{opt}$ are re-executed, leading to a new optimistic state for that object.
+% 
 
 %\bibliographystyle{latex8}
 %\bibliography{main}
