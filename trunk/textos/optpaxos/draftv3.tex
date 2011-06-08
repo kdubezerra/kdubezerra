@@ -9,7 +9,7 @@
 \usepackage{amssymb}
 \usepackage[noend]{distribalgo}
 \usepackage[draft]{fixme}
-\usepackage[hmargin=2cm,vmargin=2cm]{geometry}
+\usepackage[hmargin=2.5cm,vmargin=2.2cm]{geometry}
 
 
 \begin{document}
@@ -98,8 +98,8 @@ Before GST, there are no bounds on the time it takes for messages to be transmit
 
 %However, providing such level of consistency may prove to be costly in an MMOG context, since there may be several communication steps between the sending of a command and its atomic delivery. For this reason, we use a primitive we call quasi-genuine global fifo total order multicast, which is described in section \ref{sec:quasi}.
 
-\section{Quasi-Genuine FIFO Total Order Multicast}
-\label{sec:quasi}
+%\section{Quasi-Genuine FIFO Total Order Multicast}
+%\label{sec:quasi}
 
 %To reduce the time needed to deliver a message, we use a multicast primitive which delivers messages optmistically, based on the time when they are created in a sender. This \emph{optimistic} delivery, although not guaranteeing that all replicas will receive all messages, is designed to have a fairly low latency, counting from when each message is sent until it is delivered.
 
@@ -149,7 +149,7 @@ Here, we consider that there are several processes. Each process $p$ belongs to 
 
 %However, even if the optimistic order is the same for all the processes, it won't be valid if the conservative order is different from it. For that reason, we devised a way to make the conservative delivery order as close as possible to the optimistic one.
 
-\subsection{Message delivery algorithm}
+\section{Message delivery algorithm}
 
 %Instead of having the conservative delivery done completely independently from the optimistic one, we can actually use the latter as a hint for the final delivery order. Since the optimistic delivery should be fast when compared to the conservative one, waiting for it should not decrease the system performance significantly. Also, if we wait a short period longer, we can avoid a rollback later caused by mismatches between the two delivery orders, which is not desirable. The basic idea is, then, to pick the optimistic delivery order seen at the processes of each group.
 
@@ -293,7 +293,7 @@ $m$ to be retrievable even in the presence of failures.% Because of that, to ens
 
 Assuming $\delta$ as the communication delay between every pair of processes, the time needed to decide a message $m$ after it has been \cms{} by some process is equal, in the worst case, to $\delta + 2\tconsm$, where $\delta$ is the time needed to \rmd{} a message and \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $propPending$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $propPending$ right before some proposal has been made, so it would take only $\delta + \tconsm$ to decide $m$. As $m$ may go into $propPending$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $\delta + 1.5\tconsm$. Nevertheless, the time needed to finally \cons{} $m$ will depend on when barriers are received from other groups.
 
-\subsubsection{Addressing liveness}
+\subsection{Addressing liveness}
 
 The problem with Algorithm \ref{algorithm:quasi} is that it does not guarantee liveness when a group has no message to receive from some other group and then keeps waiting for a new message to increase the barrier value and proceed with the delivery of new messages. However, liveness can be easily provided by sending periodic empty messages from $G$ to each $G' \in receiversFrom(G)$ to which no message has been sent for a specified time threshold \textit{barrierThreshold}. Algorithm \ref{algorithm:liveness} describes this. When a message $m$ from group $G$ to some other group $G'$ has been \rmc{} by $p \in G$, $p$ knows that the other processes of $G$ did the same and that $m$ will be eventually received by the processes of $G'$, serving as barrier from $G$ to $G'$ (l. \ref{algline:incbar} of Algorithm \ref{algorithm:quasi}). However, when there is a long period after the last time when such kind of message has been created, $p$ decides to create some empty message to send to the processes of $G'$ with the sole purpose of increasing their barrier values and allow for the delivery of possibly blocked messages in $G'$.
 
@@ -451,6 +451,20 @@ However, there is a way to provide liveness withouth such a possibly long delay 
 % 
 % To perform that, we consider that each object has an optimistic delivery queue, $Q_{opt}$. Whenever a command is optimistically delivered, the optimistic state is updated and the command is pushed in the back of $Q_{opt}$. Whenever a command $C_c$ is conservatively delivered, it updates the conservative state of each object in $obj(C_c)$ and, for each one of them, the algorithm checks whether it is the first command in $Q_{opt}$. If it is, $C_c$ is simply removed from $Q_{opt}$ and the execution continues. If it isn't, it means that $C_c$ was either optimistically delivered out of order, or it was simply never optmistically delivered. It then checks whether $Q_{opt}$ contains $C_c$. If it does, it means the command was optimistically deliverd out of order, and it is removed from the list -- if $Q_{opt}$ doesn't contain $C_c$, it was probably lost\footnote{Also, when $C_c$ is delivered, but it is not in $Q_{opt}$, the remaining possibility is the very unlikely case where the conservative delivery happened before the optimistic one. To handle this case, $C_c$ is stored in a list of possibly delayed optimistic delivery and, if it is ever optimistically delivered, the algorithm will know that it should only discard that command, instead of updating the optimistic state.}. Then, the optimistic state is overwritten with the conservative one and, from that state, all the remaining comands in $Q_{opt}$ are re-executed, leading to a new optimistic state for that object.
 % 
+
+\subsection{Optimistic delivery}
+
+\section{Proof of correctness}
+
+\section{Related work}
+
+\cite{sousa2002oto}: optimistic total order bcast in wans: for the opt-delivery to work properly, requires that the delay between each pair of processes stay constant (ours only requires that it never goes beyond $w(p)$ for each process $p$\ldots). sequencer based (no tolerance for failures of the sequencer). not mentioning multicast.
+
+\section{Experimental results}
+
+Really necessary?
+
+\section{Conclusion}
 
 %\bibliographystyle{latex8}
 %\bibliography{main}
