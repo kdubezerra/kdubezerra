@@ -30,7 +30,7 @@
 \newcommand{\cmsend}[1]{\mbox{\cms({#1})}}
 \newcommand{\tconsm}{T_{cons}}
 \newcommand{\tcons}{\mbox{$\tconsm$}}
-\newcommand{\opt}{\mbox{GF-OPT-Deliver}}
+\newcommand{\opt}{\mbox{OPT-Deliver}}
 \newcommand{\cons}{\mbox{QGFTO-Deliver}}
 \newcommand{\rmc}{\mbox{FR-MCast}}
 \newcommand{\rmd}{\mbox{FR-Deliver}}
@@ -345,7 +345,7 @@ To prevent the multiple $null$ messages -- created by different processes within
 \subsubsection{Requesting empty messages}
 \label{sec:nullondemand}
 
-There is a way to provide liveness with a lower delay for delivering messages, although that would imply creating more messages and making deeper changes in the delivery algorithm. Let $blockers(m)$ be defined as the set of groups whose barrier is needed in order for some group to deliver $m$. More formally, \mbox{$blockers(m) = \{G_B \neq m.src : \exists G_{dst} \in m.dst \wedge G_B \in sendersTo(G_{dst})\}$}. The idea is that, once each group $G_B$ in $blockers(m)$ has sent\footnote{Here, by `sending', we mean that the message has been received at the destination.} a barrier $b > m.ts$ to all the groups belonging to \mbox{$m.dst \cap receiversFrom(G_B)$}, all possible destinations of $m$ can deliver it. This way, instead of relying on periodic messages, whenever a process $p$ in a group $G$ knows that a message $m$ has just been decided in some consensus instance within $G$, $p$ requests a barrier to every $p' \in blockers(m)$. Such request is sent to the processes in the groups inside $blockers(m)$, so that they know that there is a message whose delivery will be blocked until they send a proper barrier to unblock it. Finally, a group never blocks the delivery of its own messages -- hence the condition $G_B \neq m.src$ -- because the message itself can be seen as a barrier from its source group.
+There is a way to provide liveness with a lower delay for delivering messages, although that would imply creating more messages and making deeper changes in the delivery algorithm. Let $blockers(m)$ be defined as the set of groups whose barrier is needed in order for some group to deliver $m$. More formally, \mbox{$blockers(m) = \{G_B \neq m.src : \exists G_{dst} \in m.dst \wedge G_B \in sendersTo(G_{dst})\}$}. The idea is that, once each group $G_B$ in $blockers(m)$ has sent\footnote{Here, by `sending', we mean that the message has been received at the destination.} a barrier $b > m.ts$ to all the groups belonging to \mbox{$m.dst \cap receiversFrom(G_B)$}, all possible destinations of $m$ can deliver it. This way, instead of relying on periodic messages, whenever a process $p$ in a group $G$ knows that a message $m$ has just been decided in some consensus instance within $G$, $p$ requests a barrier to every $p' \in blockers(m)$. This request is only sent after $m$ has been decided, because the timestamp of $m$ may have changed, which happens after the consensus. Such request is sent to the processes in the groups inside $blockers(m)$, so that they know that there is a message whose delivery will be blocked until they send a proper barrier to unblock it. Finally, a group never blocks the delivery of its own messages -- hence the condition $G_B \neq m.src$ -- because the message itself can be seen as a barrier from its source group.
 
 When the process $p'$ of some group $G'$ receives a barrier request for a message $m$, %such that $G' \in blockers(m)$,
 $p'$ knows that there are other groups depending on the barrier of $G'$ to deliver $m$. For that reason, it will immediately create a $null$ message with a timestamp equal to $m.ts$ and with $null.dst = m.dst$ $\cap$ $receiversFrom(G')$. Then, $p'$ will insert such message in its %$optPending$
@@ -413,14 +413,14 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
     \STATE $msgSet \leftarrow msgSet \setminus \{m\}$
     \COMMENT{the messages are handled in ascending order of timestamp}
     \IF{$\exists m' \in decided : m'.ts \geq m.ts \wedge (\nexists m'' \in decided : m''.ts > m'.ts)$}
-      \STATE $m.ts \leftarrow (m'.ts.rtc, m'.ts.seq + 1)$
+      \STATE $m.ts \leftarrow (m'.ts.rtc, m'.ts.seq + 1)$ \label{algline:chgts}
     \ENDIF     
     \IF{$G \in m.dst$} \label{algline:checkcons}
       \STATE $barPending \leftarrow barPending \cup \{m\}$
     \ENDIF
     \STATE $decided \leftarrow decided \cup \{m\}$
     \IF{$m \neq null$}
-      \STATE \rmcast{$m$}{$(m.dst \setminus \{G\}) \cup blockers(m)$} \COMMENT{the message is sent to blockers(m), as a barrier request}
+      \STATE \rmcast{$m$}{$(m.dst \setminus \{G\}) \cup blockers(m)$} \label{algline:barreq} \COMMENT{the message is sent to blockers(m), as a barrier request}
     \ELSE
       \STATE \rmcast{$m$}{$m.dst$} \COMMENT{no need to unblock $null$, besides it would create infinite messages}
     \ENDIF
@@ -444,8 +444,10 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
 \label{algorithm:nullondemand}
 \end{distribalgo}
 \end{algorithm}
-% 
-% Now, assuming that $w(p)$ is the same for every process $p$, we have a worst case delivery latency for $m$ of $w(p) + 2\tconsm$, as the $null$ message is created and proposed in parallel with $m$. However, each sender process is sending $m$ not only to every destination process, but also to every process in its group and to every process belonging to some group of $blockers(m)$. This can create a fairly high amount of messages. Unfortunately, this has to be done to guarantee that such $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it. Although this kind of messages are excluded from the $propPending$ list only when decided in the group (l. \ref{algline:keepnull} of Algorithm \ref{algorithm:nullondemand}), if at least one of the processes does not have it, it could never be decided. Again, like in Algorithm \ref{algorithm:nullperiodic}, there might be many processes in a group proposing a $null$ message because of the same $m$. Although this is not wrong, it is inefficient, and a way to identify $null$ messages created for the same purpose should be devised\footnote{Again, we could use timestamps as unique identifiers and assume no timestamp collisions. But for that to work, instead of making $null.ts = m.ts$ (l. \ref{algline:nulltsmts} of Algorithm \ref{algorithm:nullondemand}), we could define $null.ts$ as a little bit greater than $m.ts$.}.
+ 
+As discussed before, assuming $\delta$ as the communication delay between every pair or processes and \tcons{} as the time needed to run one consensus instance, we have a worst case time to decide a message within a group of $\delta + 2\tconsm$. If there is any destination of $m$ which is different from its source group, $m$ is \rmc{} to it after its final timestamp has been defined, which takes another $\delta$. At the same time (l. \ref{algline:barreq} of Alg. \ref{algorithm:nullondemand}), $m$ is \rmc{} also to the groups in $blockers(m)$, each of which then begins a consensus instance proposing an empty $null$ message. After deciding $null$, it is \rmc{} to the processes of the groups which might be needing a barrier to deliver $m$. This way, we can calculate the number of communication steps needed to deliver a message, which is $3\delta + 4\tconsm$ in the worst case and $3\delta + 2\tconsm$ in the best case, leading to an average case of $3\delta + 3\tconsm$.
+
+Although we have bounded the delay to deliver a message, this came at the expense of creating a fairly high amount of control messages for requesting barriers. Unfortunately, this has to be done to guarantee that such $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it.
 % 
 % % Nevertheless, one possible way to implement the delivery for a command $C$ of this type would be to initiate a Paxos consensus instance in each group addressed by it, proposing $C$ and having as learns all servers in all involved groups. 
 % 
@@ -459,6 +461,24 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
 % 
 
 \subsection{Optimistic delivery}
+
+We can further decrease the delivery time of the messages. If the timestamp assigned to each message by its sender process does not change, it can be used to predict the final delivery order when such message is \rmd{}ed by some of its destinations. However, messages from different destinations might arrive out of order at a destination $p_d$. However, since a reliable multicast primitive is being used, if every message is first \rmc{} to every destination, and if $p_d$ waits long enough to deliver some message $m$, every message $m' : m'.ts < m.ts$ will arrive eventually and $p_d$ will be able to deliver them in total order without needing any consensus for that.
+
+The problem is then how to define the length of such wait window for each message $m$ such that it guarantees that every message prior to $m$ will have already been received when the window time has elapsed. As the message delay is unpredictable in asynchronous systems, we make an optimistic assumption:
+
+\begin{center}
+\emph{A2: every process $p$ knows a value $w(p)$, which is at least the maximum sum of the message delay bound plus the clock deviation between $p$ and any process $p'$ which could send a message to $p$.}
+\end{center}
+
+We need to mention the clock deviation in this assumption because, even if a process waits for a period longer than the time needed for a message $m$ to arrive since it was sent, it might be the case that a clock deviation between the processes caused the timestamp of $m$ to be too low and lead to a violation of the timestamp order.
+
+There would be now two deliveries for each message: a conservative one, which may follow one of the algorithms described earlier, and an optimistic one. The difference is that, after a message $m$ was \rmd{}ed at $p$, $p$ inserts it into an $optPending$ list, which is sorted in ascending order of the timestamps of the messages in it. Before \opt{}ing (optimistically delivering) $m$, $p$ waits until its own wallclock has a value greater than $m.ts.rtc + w(p)$. If \emph{A2} holds, then any message from the sender of $m$ received after that will have a timestamp greater than $m.ts$, so $m$ can be delivered.
+
+The optimistic assumption allows for even further improvement. If it holds, the timestamp of the messages will never be changed (i.e. l. \ref{algline:chgts} of Alg. \ref{algorithm:nullondemand} will never be executed). Therefore, if Algorithm \ref{algorithm:nullondemand} is being used, there is no need to wait until a message $m$ has been decided to know its final timestamp and only then request barriers to groups in $blockers(m)$. All can be done in one single communication step: sending the message to other processes in $m.src$ to then start a consensus instance, sending it to be optimistically delivered to processes in destination groups other than $m.src$ and sending it to groups in $blockers(m)$.
+
+If it does not hold all the time and some message $m$ is received by a process $p$ after a message $m' : m'.ts > m.ts$ has been already \opt{}ed by $p$, then the optimistic delivery algorithm made a mistake, which the application can figure out by the different delivery orders and take action to correct whatever problem this mistake might have caused. Besides, when such thing happens, it means that the timestamp of $m$ has been changed by the conservative delivery algorithm and that, maybe, a new barrier request must be sent to $blockers(m)$ when this new timestamp is defined.
+
+The delivery time of a message $m$ will now depend on whether the assumption \emph{A2} holds or not while $m$ is being handled by the algorithm. If it does hold, it will be \opt{}ed in the correct order within $w(p)$ and, as a barrier request was done in parallel with the conservative delivery algorithm, it will take $2w(p) + 2\tconsm$ to \cons{} $m$ in the worst case. If it does not hold, after $w(p)$, $m$ may be \opt{}ed in an invalid order and, once its timestamp may have changed, a new barrier request may have to be done. Therefore, the worst case conservative message delivery time when the optimistic assumption does not hold and some message is delivered out of order would be $2w(p) + 4\tconsm + \delta$.
 
 % 
 % \begin{algorithm}
@@ -563,6 +583,17 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
 % \label{algorithm:nullondemand}
 % \end{distribalgo}
 % \end{algorithm}
+
+
+
+\subsection{Parallel instances of consensus}
+
+We can further optimize the delivery algorithm. One major problem with proposing messages with consensus is that the previous algorithms wait until a consensus instance has been finished to start a new one, so that no message is proposed twice. However, even if a message is proposed and accepted twice, each process may choose to consider only the first time (i.e. the consensus instance with lowest id) when a message $m$ has been proposed. This would require some more local processing and could cause some unnecessary traffic due to messages being proposed in different consensus instances. The worst case delivery time of a message $m$, when using the optimistic delivery and barrier requests, would be $2w(p) + 2\tconsm + \delta$. It must be noted, however, that this represents the case when the optimistic assumption fails to hold and $m$ has its timestamp changed. Otherwise, the conservative delivery time would be $w(p) + \tconsm + \delta$.
+
+The basic idea would be that, whenever a process $p$ has a pending message $m$ that it received, it will propose it in some instance $I$ as soon as its clock has a value greater than $m.ts.rtc + w(p)$. As $p$ cannot foresee whether $m$ will be decided in $I$ or not, it keeps the double $(m,I.id)$ in a $trying$ list. When $I$ terminates, $(m,I.id)$ is removed from $trying$ and $p$ checks whether $m$ has been decided -- which might have happened also in some instance $I' \neq I$ in the meantime -- by checking its $decided$ list. If not, $p$ proposes $m$ again in some consensus instance $I''$ and inserts $(m,I''.id)$ into $trying$.
+
+Even if the consensus instances are run in parallel, we consider that they make a callback to \emph{Decide()} in ascending order of instance id. This can be easily done by the consensus implementation using a sequence number. Whenever a message $m$ is agreed upon in some consensus instance $I$, any later decision of $m$ in some instance \mbox{$I' : I'.id > I.id$} is merely ignored.
+
 
 \section{Proof of correctness}
 
