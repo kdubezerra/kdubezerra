@@ -595,6 +595,25 @@ The basic idea would be that, whenever a process $p$ has a pending message $m$ t
 Even if the consensus instances are run in parallel, we consider that they make a callback to \emph{Decide()} in ascending order of instance id. This can be easily done by the consensus implementation using a sequence number. Whenever a message $m$ is agreed upon in some consensus instance $I$, any later decision of $m$ in some instance \mbox{$I' : I'.id > I.id$} is merely ignored.
 
 
+
+\subsection{Using Paxos with a leader for consensus}
+
+Although ensuring termination of consensus in an asynchronous system is not possible \cite{fischer1985idc}, the Paxos \cite{lamport1998ptp} algorithm can guarantee the termination of an instance $I$ as long as some assumptions are held:
+
+\begin{itemize}
+  \item when $I$ starts, a leader has been -- or is being -- elected and it does not fail for some time\footnote{Lamport demonstrates in \cite{lamport1998ptp} that, if the time needed to elect a leader is $T_{el}$ and, for a communication step, it is $\delta$, the time needed to conclude a consensus instance would be at most $T_{el} + 9\delta$.};
+  \item during the whole execution of $I$, more than half of the processes are correct, that is, if the number of faulty processes is $f$ and the total number of processes is $n$, $f < \lceil \frac{n}{2} \rceil$;
+  \item enough messages are successfully received, that is, for each phase of the execution of $I$, the leader process successfully receives the reply (be it a confirmation or a negative acknowledgement) from a majority of processes.
+\end{itemize}
+
+Paxos uses the abstraction of \emph{proposers}, \emph{acceptors} and \emph{learners}. In short, the acceptors are the processes which have to agree upon some value given by the proposers. The learners are those who are notified about which value has been accepted. With a leader, Paxos can achieve consensus in most instances, except the first one since the last leader change, in $3\delta$ -- forwarding a proposal to the leader, sending it to the other processes (acceptors) and receiving a confirmation. Each acceptor can send the confirmation to every learner, so that each learner can figure out by itself that a value has been agreed upon once it receives a confirmation from a majority of acceptors.
+
+In the context of our \cms{} primitive, the first communication step of Paxos -- forwarding a message $m$ to the leader -- is already done by means of \rmc{}ing each message to a set of processes that includes every process in $m$'s group of origin. The last phase, which consists of every learner receiving the confirmation of a majority of acceptors, can also include the $\delta$ included in the conservative message delivery time we analysed before: instead of waiting for a message to be decided and only then notify other groups, the acceptors of a group can also send the confirmation to processes in other groups, so that also they can infer the first group's decision right away. This implies that, for each consensus instance run within a group $G$, each the processes in the groups of $receiversFrom(G)$ would be a learner for that instance. Figure \ref{fig:paxosmegalearners} illustrates this: the group $G$ is delivering a message $m$ and the last phase of the consensus protocol already notifies the processes in $G' \in receiversFrom(G)$.
+
+
+
+
+
 \section{Proof of correctness}
 
 \section{Related work}
