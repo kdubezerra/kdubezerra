@@ -1,8 +1,8 @@
 set terminal postscript eps enhanced color solid lw 2 "Helvetica" 18
 set encoding iso_8859_1
 #set title 'title'
-set xlabel 'Mistakes (or dropped messages)'
-set ylabel 'w(p)'
+set xlabel 'w(p) / {/Symbol d}'
+set ylabel 'rate (messages/total number of messages)'
 #set xtics auto
 #set ytics auto
 set autoscale
@@ -11,7 +11,7 @@ set autoscale
 #set yrange [10000:25000]
 set grid
 set key top right
-#set pointsize 1.5
+set pointsize 1.5
 #set key below
 #set key width 1 box 9
 #load 'teorico.gp'
@@ -27,7 +27,7 @@ set output "discarding.eps"
 #nice colors:
 #plot "max.data" using 1:($2/(2)) title 'No interest management' with linespoints lt 1, "max.data" using 1:($3/(2)) title 'Circle' with linespoints lt 3, "max.data" using 1:($4/(2)) title 'Circle with attenuation' with linespoints lt 8, "max.data" using 1:($5/(2)) with linespoints title 'Field of View' lt 7, "max.data" using 1:($6/(2)) with linespoints title 'A^3' lt 4
 
-plot "mcndav.txt" using ($1):($3) title 'Mistakes (no discarding)' with linespoints lt 7, "mcdav.txt" using ($1):($3) title 'Mistakes (discarding)' with linespoints lt 7, "mcdav.txt" using ($1):($4) title 'Discarded messages' with linespoints lt 7, "mcdav.txt" using ($1):(($3)+($4)) title 'Discarded + Mistakes'
+plot "mcndav.txt" using (($1)/1000):(($3)/($2)) title 'NOT DISCARDING: mistakes' with linespoints lt 7, "mcdav.txt" using (($1)/1000):(($3)/($2)) title 'DISCARDING: mistakes' with linespoints lt 7, "mcdav.txt" using (($1)/1000):(($4)/($2)) title 'DISCARDING: dropped messages' with linespoints lt 7, "mcdav.txt" using (($1)/1000):((($3)+($4))/($2)) title 'DISCARDING: mistakes + dropped' with linespoints lt 7
 
 #plot "plot_1.txt" using 1:3:($3 - abs($9 - $3)):($3 + abs($9 - $3)) with yerrorbars
 
