@@ -667,6 +667,8 @@ As for processes from destinations groups which are not from the source group of
 
 For line \ref{algline:insbp1}, $m$ is inserted into $barPending$ of process $p$ of group $G$ when it has been \rmd{}ed, and only if $m.src \neq G$. For a process $p' \in G' \neq G$ to \rmc{} $m$, $m$ must have been decided within $G'$, which means that it was proposed within $G'$, therefore it was \cms{} -- satisfying condition (1) -- by $G' \neq G$ to $G$, which, from line \ref{algline:rmothers}, necessarily belongs to $m.dst$, satisfying condition (2).
 
+Finally, as for Algorithm \ref{algorithm:nullperiodic}, $null$ messages are never delivered, so they will never violate the uniform integrity property.
+
 \begin{flushright}
 $\square$
 \end{flushright}
