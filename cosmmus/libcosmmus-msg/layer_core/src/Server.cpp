@@ -119,7 +119,6 @@ void Server::handleClientMessage(Message* _msg) {
     case CLIENT_CMD : {
       Command* clientCommand = clientMessage->getCommandList().front();
       if (clientCommand->knowsGroups() == false) clientCommand->findGroups();
-      clientCommand->setTimeStamp(getTime()); // should be more like _cmd->setTimestamp(now + delay(this, coordinator))
       fwdCommandOptimistically(clientCommand);
       fwdCommandToCoordinator(clientCommand);
       break;
@@ -162,9 +161,7 @@ void Server::handlePeerMessage(Message* _msg) {
       if (cmd->getGroupList().size() == 1) {
         cmd->setConservativelyDeliverable(false);
         cmd->setStage(PROPOSING_LOCAL);
-        cout << "LOG Server::handlePeerMessage: set stage of command " << cmd->getId() << " to PROPOSING_LOCAL" << endl;
         cmd->calcLogicalStamp();
-        cout << "LOG Server::handlePeerMessage: updated clock of command " << cmd->getId() << " to " << cmd->getLogicalStamp() << endl;
         std::list<ObjectInfo*> targetList = cmd->getTargetList();
         for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
           Object* obj = Object::getObjectById((*it)->getId());
@@ -214,65 +211,51 @@ void Server::sendCommand(Command* cmd, long _clSeq, int _clId) {
 //When Exists m in PENDING : m.stage = s0 || m.stage = s2) && propK < or = K
 //
 int Server::tryProposingPendingCommands() {
-  std::list<Command*> proposableCommandsList;
   int proposalsMade = 0;
   static int createdPxInstances = 0;
 
   std::list<ObjectInfo*> localObjects = localGroup->getObjectsList();
   for (std::list<ObjectInfo*>::iterator ito = localObjects.begin() ; ito != localObjects.end() ; ito++) {
-    Object* localObject = Object::getObjectById((*ito)->getId());
-    std::list<Command*> objCmds = localObject->getConsCmdQueue();
+    Object* obj = Object::getObjectById((*ito)->getId());
+    std::list<Command*> objCmds = obj->getConsCmdQueue();
     for (std::list<Command*>::iterator itc = objCmds.begin() ; itc != objCmds.end() ; itc++) {
       if ((*itc)->getStage() != PROPOSING_LOCAL && (*itc)->getStage() != UPDATING_CLOCK)
         continue;
       std::list<ObjectInfo*> cmdTargets = (*itc)->getTargetList();
       bool cmdIsProposable = true;
       for (std::list<ObjectInfo*>::iterator itt = cmdTargets.begin() ; itt != cmdTargets.end() ; itt++) {
-        Object* targetObject = Object::getObjectById((*itt)->getId());
+        Object* obj = Object::getObjectById((*itt)->getId());
 
-        if (targetObject->getInfo()->getNextStamp() > targetObject->getInfo()->getClock()) //propk must be < or = K
+        if (obj->getInfo()->getNextStamp() > obj->getInfo()->getClock()) //propk must be < or = K
           cmdIsProposable = false;
 
-///        if (obj->isLocked())
-///          cmdIsProposable = false;
+        //if (obj->isLocked())
+        //  cmdIsProposable = false;
       }
-      if (cmdIsProposable)
-        proposableCommandsList.push_back(*itc);
+      if (!cmdIsProposable)
+        continue;
+      //cout << "Server::tryProposingPendingCommands: command " << (*itc)->getId() << " is proposable" << endl;
+      (*itc)->calcLogicalStamp();
+      for (std::list<ObjectInfo*>::iterator itt = cmdTargets.begin() ; itt != cmdTargets.end() ; itt++) {
+        Object* obj = Object::getObjectById((*itt)->getId());
+        obj->lock();
+        obj->getInfo()->setNextStamp((*itc)->getLogicalStamp() + 1);
+      }
+      if ((*itc)->getGroupList().size() == 1) {
+        cout << "createdPxInstances = " << ++createdPxInstances << endl;
+        PaxosInstance* pxInstance = new PaxosInstance(++lastPaxosInstance * GRP_ID_LEN + (long) localGroup->getId());
+        OPMessage* cmdMessage = new OPMessage();
+        cmdMessage->setType(CMD_ONE_GROUP_CONSERVATIVE);
+        cmdMessage->addCommand(new Command(*itc));
+        pxInstance->addAcceptors(localGroup);
+        pxInstance->addLearners(localGroup);
+        pxInstance->broadcast(cmdMessage);
+        proposalsMade++;
+        delete cmdMessage;
+        delete pxInstance;
+      }
+      //else if (cmd->knowsTargets())...;
     }
-  }
-
-  Command::removeDuplicates(proposableCommandsList);
-  proposableCommandsList.sort(Command::compareTimeStampThenId);
-
-  for (std::list<Command*>::iterator itc = proposableCommandsList.begin() ; itc != proposableCommandsList.end() ; itc++) {
-    std::list<ObjectInfo*> cmdTargets = (*itc)->getTargetList();
-    //cout << "Server::tryProposingPendingCommands: command " << (*itc)->getId() << " is proposable" << endl;
-    (*itc)->calcLogicalStamp();
-    cout << "LOG Server::tryProposingPendingCommands: updated clock of command " << (*itc)->getId() << " to " << (*itc)->getLogicalStamp() << endl;
-///    Command* cmd_copy = new Command(*itc); // TODO: fix this work around made to avoid having the enqueueOrUpdate method deleting the command object
-    for (std::list<ObjectInfo*>::iterator itt = cmdTargets.begin() ; itt != cmdTargets.end() ; itt++) {
-      Object* obj = Object::getObjectById((*itt)->getId());
-///      obj->lock();
-      obj->getInfo()->setNextStamp((*itc)->getLogicalStamp() + 1);
-      cout << "LOG Server::tryProposingPendingCommands: propK of object " << obj->getInfo()->getId() << " set to " << obj->getInfo()->getNextStamp() << endl;
-///      obj->enqueueOrUpdateConsQueue(cmd_copy);
-    }
-    if ((*itc)->getGroupList().size() == 1) {
-      cout << "LOG Server::tryProposingPendingCommands: proposed command " << (*itc)->getId() << endl;
-      cout << "createdPxInstances = " << ++createdPxInstances << endl;
-      PaxosInstance* pxInstance = new PaxosInstance(++lastPaxosInstance * GRP_ID_LEN + (long) localGroup->getId());
-      OPMessage* cmdMessage = new OPMessage();
-      cmdMessage->setType(CMD_ONE_GROUP_CONSERVATIVE);
-      cmdMessage->addCommand(new Command(*itc));
-      pxInstance->addAcceptors(localGroup);
-      pxInstance->addLearners(localGroup);
-      pxInstance->broadcast(cmdMessage);
-      proposalsMade++;
-      delete cmdMessage;
-      delete pxInstance;
-    }
-    //else if (cmd->knowsTargets())...;
-    break;
   }
 
   return proposalsMade;
@@ -283,11 +266,9 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
   switch (_learntMsg->getType()) {
     case CMD_ONE_GROUP_CONSERVATIVE : {
       Command* newCmd = _learntMsg->getCommandList().front();
-      cout << "LOG Server::handleLearntValue: paxos finished for command " << newCmd->getId() << endl;
       newCmd->setConservativelyDeliverable(true);
-      //newCmd->calcLogicalStamp(); //m.ts <- max(k), Oi in m's targets
+      newCmd->calcLogicalStamp(); //m.ts <- max(k), Oi in m's targets
       newCmd->setStage(DELIVERABLE); //m.stage = s3
-      cout << "LOG Server::handleLearntValue: set stage of command " << newCmd->getId() << " to DELIVERABLE" << endl;
       std::list<ObjectInfo*> targetList = newCmd->getTargetList();
       for (std::list<ObjectInfo*>::iterator it = targetList.begin() ; it != targetList.end() ; it++) {
         Object* obj = Object::getObjectById((*it)->getId());
@@ -295,7 +276,6 @@ void Server::handleLearntValue(OPMessage* _learntMsg) {
         else {
           obj->enqueueOrUpdateConsQueue(newCmd);
           obj->getInfo()->setClock(newCmd->getLogicalStamp() + 1);
-          cout << "LOG Server::handleLearntValue: updated clock of object " << obj->getInfo()->getId() << " to " << newCmd->getLogicalStamp() + 1 << endl;
           //obj->unlock();
         }
       }
@@ -344,6 +324,7 @@ void Server::sendCommandToClients(Command* _cmd, CommandType _cmdType) {
 
 
 void Server::fwdCommandOptimistically(Command* _cmd) {
+  _cmd->setTimeStamp(getTime()); // should be more like _cmd->setTimestamp(now + delay(this, coordinator))
   OPMessage* cmdOpMsg = new OPMessage();
   cmdOpMsg->setType(CMD_OPT);
   cmdOpMsg->addCommand(new Command(_cmd));

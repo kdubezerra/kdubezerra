@@ -124,7 +124,7 @@ void Object::enqueueOrUpdateOptQueue(Command* _cmd) {
 
   optCmdQueue.push_back(new Command(_cmd));
   optCmdQueue.sort(Command::compareTimeStampThenId);
-  cout << "LOG Object::enqueueOrUpdateConsQueue: inserted command " << _cmd->getId() << ", with logical stamp "
+  cout << "LOG Object::enqueueOrUpdateConsQueue: inserted/updated command " << _cmd->getId() << ", with logical stamp "
        << _cmd->getLogicalStamp() << " into the pending list of object " << this->objectInfo->getId() << endl;
 }
 
@@ -172,6 +172,11 @@ void Object::tryFlushingOptQueue() {
 
 std::list<Command*> Object::getConsCmdQueue() {
   return consCmdQueue;
+}
+
+
+void Object::sortConsQueue() {
+  consCmdQueue.sort(Command::compareLSthenTSthenID);
 }
 
 

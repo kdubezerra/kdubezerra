@@ -1,7 +1,7 @@
 set terminal postscript eps enhanced color solid lw 2 "Helvetica" 18
 set encoding iso_8859_1
 #set title 'title'
-set xlabel 'Instante (s)'
+set xlabel 'w(p)'
 set ylabel 'Total de migra\347\365es de jogadores entre servidoers'
 #set xtics auto
 #set ytics auto

@@ -146,6 +146,15 @@ bool Command::compareTimeStampThenId(Command* c1, Command* c2) {
     return c1->commandId < c2->commandId;
 }
 
+bool Command::compareLSthenTSthenID(Command* c1, Command* c2) {
+  if (c1->logicalStamp != c2->logicalStamp)
+    return c1->logicalStamp < c2->logicalStamp;
+  else if (c1->timeStamp != c2->timeStamp)
+    return c1->timeStamp < c2->timeStamp;
+  else
+    return c1->commandId < c2->commandId;
+}
+
 bool Command::compareId(Command* c1, Command* c2) {
   return c1->commandId < c2->commandId;
 }
@@ -287,7 +296,6 @@ void Command::calcLogicalStamp(Group* _localGroup) {
       logicalStamp = obj->getInfo()->getClock();
     }
   }
-
 }
 
 long Command::getLogicalStamp() {
