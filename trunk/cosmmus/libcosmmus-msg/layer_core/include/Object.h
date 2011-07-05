@@ -47,6 +47,7 @@ class Object {
     void tryFlushingOptQueue();
 
     std::list<Command*> getConsCmdQueue();
+    void sortConsQueue();
     void enqueueOrUpdateConsQueue(Command* _cmd);
     void tryFlushingConsQueue();
 

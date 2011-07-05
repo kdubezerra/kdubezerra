@@ -199,16 +199,16 @@ void clientloop(testclient* client, int clientid, int cmdcount) {
 
 Command* newRandomCommand() {
   Command* cmd = new Command();
-  unsigned char targsBitmap = 1 + rand() % 3;//1 + rand() % 7;
+  unsigned char targsBitmap = 1 + rand() % 4;//1 + rand() % 7;
 
   cout << endl;
 
-  if (targsBitmap & (unsigned char) 0x1) {
+  if (targsBitmap & (unsigned char) 0x1 || (targsBitmap >> 2) & (unsigned char) 0x1) {
     cmd->addTarget(o1->getInfo());
     cout << "    obj1 is a target" << endl;
   }
 
-  if ((targsBitmap >> 1) & (unsigned char) 0x1) {
+  if ((targsBitmap >> 1) & (unsigned char) 0x1 || (targsBitmap >> 2) & (unsigned char) 0x1) {
     cmd->addTarget(o2->getInfo());
     cout << "    obj2 is a target" << endl;
   }
