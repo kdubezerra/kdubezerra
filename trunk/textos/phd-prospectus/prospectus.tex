@@ -26,7 +26,7 @@
 \end{committee}
 
 \abstract {
-MMOGs -- massively multiplayer online games -- have become, in the last decade, an important genre of online entertainment, having a significant market share. In these games, many thousands of participants play simultaneously with one another in the same match. However, this kind of game is traditionally supported by a powerful (and expensive) central infrastructure with considerable cpu power and very fast and low latency Internet connections. This work proposes the use of a geographically distributed server system, formed by voluntary nodes which help serving the game to the players. Two very important features, therefore, must be provided: consistency (which may be week and only existing in the players' perspective) and fault tolerance, as some of the participating nodes may crash and become unavailable. For this work, we consider the crash-stop failure model.
+MMOGs -- massively multiplayer online games -- have become, in the last decade, an important genre of online entertainment, having a significant market share. In these games, many thousands of participants play simultaneously with one another in the same match. However, this kind of application is traditionally supported by a powerful (and expensive) central infrastructure with considerable cpu power and very fast and low latency Internet connections. This work proposes the use of a geographically distributed server system, formed by nodes which help serving the game to the players. The most important features that must be provided are: consistency (since different players should have the sense of one single shared virtual environment), timeliness (as these games are usually real-time applications) and fault tolerance (as some of the participating nodes may crash and become unavailable).
 }
  
 
@@ -103,14 +103,14 @@ Instead of forwarding each command to every server, now only the servers that ma
 
 Sending new states to other groups proactively based on the possibility that they might need such states, however, may lead to all groups sending to each other the state changes of every object, degenerating to a fully replicated approach. Nevertheless, we can explore the fact that, in games, objects interact only with other objects situated nearby: we can define the regions of the virtual environment in such a way that only objects either in the same or in neighboring regions would be able to interact -- two regions are neighbors if, and only if, they share a border. As commands are executed by avatars, which are simply objects controlled by players, the result will be that, for each pair of objects in the target set of any command, these two objects will be either located in the same or in neighbor regions. This way, only groups managing regions that share a border would need to forward commands to each other\footnote{Although unlikely, it is possible to have a command sequence $C = \{c_1,c_2,\ldots,c_n\}$ where (1) every $c_i$ depends on the state resulting from $c_{i-1}$, (2) not every $c_i$ is processed by the same group and (3) not all of these groups manage neighbor regions. Nevertheless, the servers can detect such dependencies and forward the object states to the servers which need them. In the worst case, every group but one -- there is no dependency cycle -- would be waiting for another group, so the time needed to process a command would be proportional to the number of groups.}.
 
-Figure \ref{fig:consistency} illustrates two avatars situated in regions managed by different server groups, but still close enough to interact. Each command issued by their players has to be forwarded to the groups that manage some object in its target set, which is done by multicast.
-
-\begin{figure}[!h]
-  \centering
-  \includegraphics[width=0.8\linewidth]{images/consistency}
-  \caption{Multicasting a command to a group which manages an object in that command's target set}
-  \label{fig:consistency}
-\end{figure}
+% Figure \ref{fig:consistency} illustrates two avatars situated in regions managed by different server groups, but still close enough to interact. Each command issued by their players has to be forwarded to the groups that manage some object in its target set, which is done by multicast.
+% 
+% \begin{figure}[!h]
+%   \centering
+%   \includegraphics[width=0.8\linewidth]{images/consistency}
+%   \caption{Multicasting a command to a group which manages an object in that command's target set}
+%   \label{fig:consistency}
+% \end{figure}
 
 %Each command will be processed by the group which contains its targets, being ordered among other commands who also are relevant to that same group. When a command has targets from different groups, than it must be ordered in all of the groups involved, i.e. all the groups which manage one of that command's targets.
 
@@ -165,17 +165,23 @@ To further decrease the message delivery time, an optimistic delivery will also 
 % 
 % As mentioned before, this work considers the crash-stop failure model. Therefore
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Published work} \label{sec:achievements}
+
+Some related work that we have published so far include:
+\begin{itemize}
+  \item C. E. B. Bezerra, J. L. D. Comba, C. F. R. Geyer. A fine granularity load balancing technique for MMOG servers using a kd-tree to partition the space. \textit{VIII Brazilian Symposium on Computer Games and Digital Entertainment - Computing Track}, 2009.
+  \item C. E. B. Bezerra, C. F. R. Geyer. A load balancing scheme for massively multiplayer online games. \textit{Multimedia Tools and Applications - Special Issue on Massively Multiplayer Online Gaming Systems and Applications}, v. 1, n. 1, pp. 263-289, 2009.
+  \item C. E. B. Bezerra, F. R. Cecin, C. F. R. Geyer. A3: a novel interest management algorithm for distributed simulations of MMOGs. \textit{12-th IEEE International Symposium on Distributed Simulation and Real Time Applications}, 2008.
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future work} \label{sec:futurework}
 
-We are currently workings towards the validation of both the optimistic multicast 
+We are currently workings towards the validation of both the quasi-genuine multicast and the game state consistency management protocols, which require both formal proofs regarding correctness and experimental results to demonstrate their performance. Another direction that we intend to follow is to consider not only crash-stop faults, but also Byzantine faults. By tolerating these faults, the server system would also be resistant to cheating, which can also be seen as Byzantine behavior.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Activities and publications} \label{sec:achievements}
-
-Some related work that we have published so far include:
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%
