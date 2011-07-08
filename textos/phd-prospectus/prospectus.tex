@@ -8,7 +8,7 @@
 
 \author{Carlos Eduardo B. Bezerra}
 
-\title{A fault tolerant multi-server system for MMOGs}
+\title{A fault-tolerant distributed infrastructure for massively multiplayer online games}
 %\subtitle{A crash-stop model oriented approach}
 \versiondate{\today}
   
@@ -26,7 +26,7 @@
 \end{committee}
 
 \abstract {
-MMOGs -- massively multiplayer online games -- have become, in the last decade, an important genre of online entertainment, having a significant market share. In these games, many thousands of participants play simultaneously with one another in the same match. However, this kind of application is traditionally supported by a powerful (and expensive) central infrastructure with considerable cpu power and very fast and low latency Internet connections. This work proposes the use of a geographically distributed server system, formed by nodes which help serving the game to the players. The most important features that must be provided are: consistency (since different players should have the sense of one single shared virtual environment), timeliness (as these games are usually real-time applications) and fault tolerance (as some of the participating nodes may crash and become unavailable).
+Massively multiplayer online games (MMOGs) have become an important genre of online entertainment in the last decade. In these games, many thousands of participants play simultaneously with one another in the same match. This kind of application has been traditionally supported by powerful and expensive central infrastructures with considerable cpu power and efficient Internet connections. This work proposes a geographically distributed infrastructure to support MMOGs formed by nodes which help serve the game to the players. The most important features that must be provided are: consistency (since different players should have the sense of one single shared virtual environment), timeliness (as these games are usually real-time applications) and fault tolerance (as some of the participating nodes may crash and become unavailable).
 }
  
 
@@ -39,9 +39,9 @@ MMOGs -- massively multiplayer online games -- have become, in the last decade, 
 
 MMOGs emerged in the last decade as a new trend because of the decrease of the domestic Internet connection cost and the increase of its average bandwidth. This kind of games have become very popular because they allow the online interaction of a massive number of players at the same time. In the most succesful cases, such as World of Warcraft \cite{worldofwarcraft}, Lineage II \cite{lineage2} and EVE Online \cite{eveonline}, for example, tens of thousands of players are supported simultaneously \cite{chen2006pch}. In these games, the players can interact with one another in a virtual environment.
 
-Generally, each player controls an entity called \emph{avatar}, which is his representation in the virtual environment -- a character who executes the orders given by the player, therefore interfering in the outcome of the game. To provide a consistent view among the different participants, every action performed by each avatar is processed by a server, which calculates the game state resulting from such action. This new state is then broadcast to the players to whom it might be relevant -- most players will need only the portion of the game state that they can see and interact with.
+Generally, each player controls an entity called \emph{avatar}, which is his representation in the virtual environment -- a character who executes the orders given by the player, therefore interfering in the outcome of the game. To provide a consistent view among the different participants, every action performed by each avatar is processed by a server, which calculates the game state resulting from the action. This new state is then broadcast to the players to whom it might be relevant.% -- most players will need only the portion of the game state that they can see and interact with.
 
-To cope with the receiving and processing of thousands of actions and the broadcasting of their respective resulting states, the traditional approach is to use a large central server -- usually a cluster with a high-speed, low latency Internet connection -- which provides such cpu power and network capabilities \cite{feng2007wnn}. Decentralized alternatives could be used, so that such expensive infrastructure would not be necessary. One example would be a fully decentralized system, where each player is a peer responsible for calculating a portion of the game state and for synchronizing it with other peers \cite{rieche2007ppb, hampel2006ppa, elrhalibi2005abm, iimura2004zfg, knutsson2004pps}.
+To cope with the receiving and processing of thousands of actions and the broadcasting of their respective resulting states, the traditional approach is to use a large central server -- usually a cluster with a high-speed, low latency Internet connection \cite{feng2007wnn}. Decentralized alternatives could be used, so that such expensive infrastructure would not be necessary. One example would be a fully decentralized system, where each player is a peer responsible for calculating a portion of the game state and for synchronizing it with other peers \cite{rieche2007ppb, hampel2006ppa, elrhalibi2005abm, iimura2004zfg, knutsson2004pps}.
 
 In such peer-to-peer approach, the players would need to agree upon the outcome of the actions, in order for their view to be consistent. To reduce the traffic between peers, the state updates could be sent only to whom they are relevant. To define what is relevant for each player, the virtual environment could be divided into regions \cite{schiele2007rpp}, so that players whose avatars were in a given region could form a small peer-to-peer group. This way, instead of all peers having to agree upon the outcome of every action, only the peers in a given group would have to agree upon actions which were relevant to that group. Unfortunately, nevertheless, the fully decentralized approach would imply a heavy communication cost on the players, specially when running some agreement protocol. This might not only degrade the quality of the game, but also increase the requirements imposed on the players' computational resources, therefore reducing the number of potential participants.
 
@@ -170,7 +170,7 @@ To further decrease the message delivery time, an optimistic delivery will also 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Published work} \label{sec:achievements}
 
-Some related work that we have published so far include:
+Some related work that we have published so far includes:
 \begin{itemize}
   \item C. E. B. Bezerra, J. L. D. Comba, C. F. R. Geyer. A fine granularity load balancing technique for MMOG servers using a kd-tree to partition the space. \textit{VIII Brazilian Symposium on Computer Games and Digital Entertainment - Computing Track}, 2009.
   \item C. E. B. Bezerra, C. F. R. Geyer. A load balancing scheme for massively multiplayer online games. \textit{Multimedia Tools and Applications - Special Issue on Massively Multiplayer Online Gaming Systems and Applications}, v. 1, n. 1, pp. 263-289, 2009.
