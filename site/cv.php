@@ -18,7 +18,7 @@ include("top.html");
 Lattes curriculum: <a target="_blank" href="http://lattes.cnpq.br/7512631263282644">http://lattes.cnpq.br/7512631263282644</a><br><br>
 
 <h3 class="meuh3">Summary</h3><br>
-PhD student in Computer Science in UFRGS and USI, Master in Computer Science by UFRGS (2009) and Bachelor in Computer Science by UFBA (2007). Possesses advanced knowledge of the C and C++ programming languages, as well as experience with Java, VisualBasic and long experience with Linux operating systems. Fluent in English and Portuguese, with basic knowledge of Italian, German and French.
+Research assistant at USI since April 2011, PhD student in Computer Science in UFRGS and USI, Master in Computer Science by UFRGS (2009) and Bachelor in Computer Science by UFBA (2007). Possesses advanced knowledge of the C and C++ programming languages, as well as experience with Java, VisualBasic and long experience with Linux operating systems. Fluent in English, Italian and Portuguese, with basic knowledge of German and French.
 
 <br><br>
 <br><h3 class="meuh3">Academic background</h3><br>
@@ -38,8 +38,8 @@ Advisor: Prof. Dr. George Marconi de Araújo Lima<br>
 <h3 class="meuh3">Languages</h3><br>
 <b>German (basic)</b> – <i>Alles Gute!</i> German course.<br>
 <b>French (basic)</b> – <i>Alliance Française</i> French scool.<br>
-<b>Italian (basic)</b> - <i>Massolin de Fiori</i> Italian society.<br>
-<b>English (fluent)</b> – fluency acquired by learning at school and by experiencing the language every day.<br>
+<b>Italian (advanced)</b> - knowledge acquired by living for several months in the Italian part of Switzerland, after having studied in the <i>Massolin de Fiori</i> Italian society for one semester in Brazil.<br>
+<b>English (fluent)</b> - fluency acquired by learning at school and by experiencing the language every day.<br>
 <b>Portuguese (native)</b> - native speaker of Brazilian Portuguese.<br>
 
 <br><br><h3 class="meuh3">Professional experience in software development</h3><br>
@@ -62,7 +62,11 @@ Software development with Java, Struts, Hibernate e PostgreSQL.<br><br>
 Software development with VB, VB.net and Microsoft SQL Server, as well as research with IEEE 802.11 wireless networks.<br><br>
 
 
-<br><h3 class="meuh3">Extra activities</h3><br>
+<br><h3 class="meuh3">Other activities</h3><br>
+
+<b>July 2011 to August 2011</b> - Committee member of the WSPPD 2011 (IX Workshop of Parallel and Distributed Processing).<br><br>
+
+<b>July 2010 to August 2010</b> - Committee member of the WSPPD 2010 (VIII Workshop of Parallel and Distributed Processing).<br><br>
 
 <b>Dec. 2009 to Sep. 2010</b> - Online tutor for the Specialization in Basic Informatics for Fundamental School Professors distance course.<br><br>
 
