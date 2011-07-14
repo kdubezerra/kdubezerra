@@ -165,9 +165,9 @@ We want the messages to be delivered according to their sending time from their 
 
 \textbf{Uniform Validity}: if a process \cms{}s $m$, then one of the correct processes that is a destination of $m$ eventually \cons{}s $m$.
 
-\textbf{Uniform Agreement}: if a process \cons{}s $m$, then every correct process that is a destination of $m$ also \cons{}s $m$.
-
 \textbf{Uniform Integrity}: for any message $m$, every correct process $p$ \cons{}s $m$ at most once, and only if some process executed \cmsend{$m$} and $p$ is one of $m$'s destinations.
+
+\textbf{Uniform Agreement}: if a process \cons{}s $m$, then every correct process that is a destination of $m$ also \cons{}s $m$.
 
 \textbf{Uniform Total Order}: if processes $p$ and $p'$ both \cons\ $m$ and $m'$, then $p$ \cons{}s $m$ before $m'$ if and only if $p'$ \cons{}s $m$ before $m'$.
 
@@ -524,7 +524,7 @@ Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption h
 \begin{figure} 
   \centering
   \includegraphics[width=0.8\linewidth]{images/optdel}
-  \caption{Execution examples when the optimistic assumption holds (a) and when it fails to hold (b)}
+  \caption{Execution examples when the optimistic assumption holds (a) and when its failure to hold causes a violation of the timestamp order (b)}
   \label{fig:optdel}
 \end{figure}
 
@@ -705,7 +705,7 @@ Here, we prove that the \cms{} primitive ensures the properties defined in secti
 %===   LEMMA   ====================================
 %===           ====================================
 \begin{lems} \label{lemma:mcastbarpending}
-Once a message has been \cms{}, it will be inserted into the $barPending$ list of the correct processes to which such message has been addressed.
+Once a message has been \cms{}, it will be inserted into the $barPending$ list of all the correct processes to which such message has been addressed.
 \end{lems}
 
 \begin{proof}
@@ -747,7 +747,7 @@ Once a message has been inserted into either the $barPending$ list or the $deliv
 \end{lems}
 
 \begin{proof}
-Immediate from the algorithm, considering that a message is never removed from the $delivered$ list, and that it is removed from $barPending$ (l. \ref{algline:rmfrombp}) only to be inserted into $delivered$ (l. \ref{algline:addtodelivered}).
+Immediate from the algorithm, considering that a message is never removed from the $delivered$ list, and that it is removed from $barPending$ (l. \ref{algline:rmfrombp}) right before being inserted into $delivered$ (l. \ref{algline:addtodelivered}).
 \end{proof}
 
 %===           ====================================
@@ -757,27 +757,27 @@ Immediate from the algorithm, considering that a message is never removed from t
   Once a process inserts a message $m$ from some group into its $barPending$ list, no message $m' : m'.ts < m.ts$ from the same group will be inserted into the same $barPending$ list afterwards.
 \end{lems}
 
-\begin{proof}Let $p$ be a process from the group $G$ which sent $m$. Before inserting $m$ into the $decided$ list (l. \ref{algline:addtodecided} of Algorithm \ref{algorithm:deliveryminimal}), $p$ checks whether there is already some other message with an equal or lower timestamp in such list. If that is the case, the timestamp of $m$ is changed to a value greater than that of any other message already within $decided$. Only then, if $G$ is a destination of $m$, $p$ inserts $m$ into its $barPending$ list (l. \ref{algline:insbp2}). Therefore, for processes from the group from which $m$ was sent, it is inserted in the $barPending$ list always in ascending order of timestamp. Besides, each process from $G$ \rmc{}s $m$ to its other destination groups in this same order (l. \ref{algline:rmothers}).
+\begin{proof}
+Let $p$ be a process from the group $G$ which sent $m$. Before inserting $m$ into the $decided$ list (l. \ref{algline:addtodecided} of Algorithm \ref{algorithm:deliveryminimal}), $p$ checks whether there is already some other message with an equal or lower timestamp in such list. If that is the case, the timestamp of $m$ is changed to a value greater than that of any other message already within $decided$. Only then, if $G$ is a destination of $m$, $p$ inserts $m$ into its $barPending$ list (l. \ref{algline:insbp2}). Therefore, for processes from the group from which $m$ was sent, it is inserted in the $barPending$ list always in ascending order of timestamp. Besides, each process from $G$ \rmc{}s $m$ to its other destination groups in this same order (l. \ref{algline:rmothers}).
 
 Regarding groups other than the source of the message, let $p'$ be any process that is a destination of $m$, but does not belong to the group $G$ from where $m$ came. The process $p'$ inserts $m$ into its $barPending$ list in line \ref{algline:insbp1}. Considering that every process in a group sends that group's messages to other groups in the same order in which they are decided, that once a group has received some message from another group, any message prior to that one from the same group has also already been received (from Lemma \ref{lemma:groupfifo}), and that no message is inserted twice in the $barPending$ list of any process (from line \ref{algline:notbptwice} and Lemma \ref{lemma:alwaysbpdel}), we can infer that, once $p'$ inserts $m$ into its $barPending$ list, no message $m' : m'.ts < m.ts$ from $G$ will be inserted into the same $barPending$ list afterwards.
-
 \end{proof}
 
 %===           ====================================
 %===   LEMMA   ====================================
 %===           ====================================
 \begin{lems} \label{lemma:oncebpwilldel}
-Once a message $m$ has been inserted into the $barPending$ list of a process $p$, it will eventually be removed from this list and, if $m \neq null$ it will be delivered by $p$.
+Once a message $m$ has been inserted into the $barPending$ list of a process $p$, it will eventually be removed from such list and, if $m$ is different from $null$, it will be delivered by $p$.
 \end{lems}
 
 \begin{proof}
-Eventually, $p$ will have received a barrier from every group in $sendersTo(group(p))$ with a value greater than the timestamp of $m$ (from Lemma \ref{lemma:barrierperiodic}). Once this happens, as any barrier is also a message, no more messages with a timestamp lower than that of $m$ will be received by $p$ (from Lemma \ref{lemma:oncedecidednotsmaller}). Let $barReady$ be the set of $m$ plus all messages from $barPending$ whose timestamps are lower than that of $m$, that is, $barReady = \{m\} \cup \{m' : m' \in barPending \wedge m'.ts < m.ts\}$.
+Eventually, $p$ will have received a barrier from every group in $sendersTo(group(p))$ with a value greater than the timestamp of $m$ (from Lemma \ref{lemma:barrierperiodic}). Once this happens, as any barrier is also a message, no more messages with a timestamp lower than that of $m$ will be inserted into the $barPending$ list of $p$ (from Lemma \ref{lemma:oncedecidednotsmaller}). Let $barReady$ be the set of $m$ plus all messages from $barPending$ whose timestamps are lower than that of $m$, that is, $barReady = \{m\} \cup \{m' : m' \in barPending \wedge m'.ts < m.ts\}$.
 
-It is important to note that, from Lemma \ref{lemma:oncedecidednotsmaller}, no more messages will be included in this set, meaning that any other message in $barPending$ will have a timestamp greater than that of any message in $barReady$. Besides, the barrier received for $m$ also apply to all the other messages in this set, since their timestamps are lower than that of $m$. We can, therefore, prove that all these messages will eventually be delivered by induction on the position $i$ of each message $m_i$ in $barReady$, in ascending order of timestamps.\\
+It is important to note that, from Lemma \ref{lemma:oncedecidednotsmaller}, no more messages will be included in this set, meaning that any other message that might be later inserted into $barPending$ will have a timestamp greater than that of any message in $barReady$. Besides, the barrier received for $m$ also apply to all the other messages in this set, since their timestamps are lower than that of $m$. We can, therefore, prove that all these messages will eventually be delivered by induction on the position $i$ of each message $m_i$ in $barReady$, in ascending order of timestamps.\\
 \\
-\noindent Base case ($i=1$): Let $m_1$ be the first message in $barReady$. It means that $\nexists m \in barPending : m.ts < m_1.ts$. The message $m_1$ has the lowest timestamp in the list, all the necessary barriers have been received and no more messages with lower timestamps will arrive at $p$. Therefore, $m_1$ satisfies all conditions from line \ref{algline:inbarpending} of Algorithm \ref{algorithm:deliveryminimal} and will be removed from $barPending$. If it is different from $null$, it will also be delivered.\\
+\noindent Base case ($i=1$): Let $m_1$ be the first message in $barReady$. It means that $\nexists m \in barPending : m.ts < m_1.ts$. The message $m_1$ has the lowest timestamp in the list and all the necessary barriers have been received already. Therefore, $m_1$ satisfies all conditions from line \ref{algline:inbarpending} of Algorithm \ref{algorithm:deliveryminimal} and will be removed from $barPending$. If it is different from $null$, it will also be delivered.\\
 \\
-\noindent Induction step: Suppose that $m_{i}$ will eventually be removed from $barPending$. Once this happens, it means that $m_{i}$ was the first message in the list. As soon as $m_{i}$ is removed, $m_{i+1}$ will be the new first one. Then, as $m_{i+1}$ will have the lowest timestamp in $barReady$ -- and, therefore, in $barPending$ --, it will satisfy both conditions of line \ref{algline:inbarpending} from Algorithm \ref{algorithm:deliveryminimal}), being removed from $barPending$ -- and delivered, if it is different from $null$. \end{proof}
+\noindent Induction step: Suppose that $m_{i}$ will eventually be removed from $barPending$. Once this happens, it means that $m_{i}$ was the first message in the list. Since no more messages have been inserted into $barReady$, as soon as $m_{i}$ is removed, $m_{i+1}$ will be the new first one. Then, as $m_{i+1}$ will have the lowest timestamp in $barReady$ -- and, therefore, in $barPending$ --, it will satisfy both conditions of line \ref{algline:inbarpending} from Algorithm \ref{algorithm:deliveryminimal}), being removed from $barPending$ -- and delivered, if it is different from $null$. \end{proof}
 
 
 %===                 ==============================
@@ -788,11 +788,8 @@ Once a process \cms{}s a message, then one of the correct processes that is a de
 \end{props}
 
 \begin{proof}
-Immediate from Lemma \ref{lemma:mcastbarpending}, Lemma \ref{lemma:oncebpwilldel}, and from the assumption that the application will not \cms{} a $null$ message -- not in the \cms{} protocol level at least, since the application might need to \cms{} an empty message, which in the protocol level would be handled as a meaningful one.
+Immediate from Lemma \ref{lemma:mcastbarpending}, Lemma \ref{lemma:oncebpwilldel}, and from the assumption that the application will not \cms{} a $null$ message -- not in the \cms{} protocol level at least; if the application needs to \cms{} an empty message, in the protocol level it would not be handled as a $null$ message.
 \end{proof}
-
-\subsection{Uniform Agreement}
-
 
 
 
@@ -807,7 +804,7 @@ Immediate from Lemma \ref{lemma:mcastbarpending}, Lemma \ref{lemma:oncebpwilldel
 %===                 ==============================
 %===   PROPOSITION   ==============================
 %===                 ==============================
-\begin{props}
+\begin{props} \label{props:integrity}
 If a message $m$ was delivered to process $p$ of group $G$, then it has (1) been \cms{} before, (2) $G \in m.dst$ and (3) it has not been \cons{}ed by $p$ before.
 \end{props}
 
@@ -828,6 +825,29 @@ For line \ref{algline:insbp1}, $m$ is inserted into $barPending$ of process $p'$
 
 Finally, as for Algorithm \ref{algorithm:nullperiodic}, $null$ messages are never delivered, so they will never violate the uniform integrity property.
 \end{proof}
+
+
+
+
+
+
+\subsection{Uniform Agreement}
+
+%===                 ==============================
+%===   PROPOSITION   ==============================
+%===                 ==============================
+\begin{props}
+If a correct process which is a destination of a message $m$ delivers it, then all correct processes that are also destinations of $m$ deliver it as well.
+\end{props}
+
+\begin{proof}
+Immediate from Proposition \ref{props:integrity}, Lemma \ref{lemma:mcastbarpending} and Lemma \ref{lemma:oncebpwilldel}.
+\end{proof}
+
+
+
+
+
 
 \subsection{Uniform Total Order}
 
