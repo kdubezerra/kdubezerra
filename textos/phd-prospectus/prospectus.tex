@@ -98,14 +98,15 @@ The problem with a fully replicated state machine approach for a distributed gam
 
 We decided, therefore, to use a partial state machine replication scheme, so that only the server group responsible for a given state will have to process the commands that alter such state. To make this possible, each command must specify a \emph{target set}, defined either by the player or by a server, which contains the objects whose states are needed or altered by the command. As every object is assigned to a different server group, the protocol will then be able to infer which servers must process each command.
 
-\begin{figure}[!h]
-  \centering
-  \includegraphics[width=0.8\linewidth]{images/consistency}
-  \caption{Each command is processed by every group that manages some object in that command's target set}
-  \label{fig:consistency}
-\end{figure}
+% \begin{figure}[!h]
+%   \centering
+%   \includegraphics[width=0.8\linewidth]{images/consistency}
+%   \caption{Each command is processed by every group that manages some object in that command's target set}
+%   \label{fig:consistency}
+% \end{figure}
 
-Instead of forwarding each command to every server, now only the servers that manage some object in the target set of a command would process it (Figure \ref{fig:consistency}). The problem with this scheme is that, in order to execute some command, a group might need the previous state of an object managed by some other group. To solve this, a possibility would be to have the groups requesting the states they need from other groups. Another solution, probably more latency-efficient, would be every group proactively sending the new states of the objects managed by it to other groups which might need them. We intend to look into both alternatives.
+Instead of forwarding each command to every server, now only the servers that manage some object in the target set of a command would process it. % (Figure \ref{fig:consistency}).
+The problem with this scheme is that, in order to execute some command, a group might need the previous state of an object managed by some other group. To solve this, a possibility would be to have the groups requesting the states they need from other groups. Another solution, probably more latency-efficient, would be every group proactively sending the new states of the objects managed by it to other groups which might need them. We intend to look into both alternatives.
 
 %Sending new states to other groups proactively based on the possibility that they might need such states, however, may lead to all groups sending to each other the state changes of every object, degenerating to a fully replicated approach. Nevertheless, we can explore the fact that, in games, objects interact only with other objects situated nearby: we can define the regions of the virtual environment in a way such that only objects either in the same or in neighboring regions would be able to interact -- two regions are neighbors if, and only if, they share a border. As commands are executed by avatars, which are simply objects controlled by players, the result will be that, for each pair of objects in the target set of any command, these two objects will be either located in the same or in neighbor regions. This way, only groups managing neighbor regions would ever execute the same command and each group would never need a state from another group which is not its neighbor.
 
