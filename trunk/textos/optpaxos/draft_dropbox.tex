@@ -141,9 +141,9 @@ A more formal description of the protocol is given in Algorithm \ref{algorithm:d
 Moreover, each process $p$ of group $G$ keeps some lists of messages:
 \begin{itemize}
   %\item \textit{optPending}, which contains the messages waiting to be \mbox{\textit{\opt{}ed}} (optimistically delivered);
-  \item \textit{groupMsgs}, containing the messages waiting to be proposed by $p$;
-  \item \textit{barPending}, with the messages ready to be \cons{}ed, but which may be waiting for barriers from the groups in $sendersTo(G)$;
-  \item \textit{decided}, which contains the messages that have already been proposed and decided within $group(p)$;
+  \item \textit{local\_msgs}, containing the messages waiting to be proposed by $p$;
+  \item \textit{am-multicast}, with the messages ready to be \cons{}ed, but which may be waiting for barriers from the groups in $sendersTo(G)$;
+  \item \textit{local\_decided}, which contains the messages that have already been proposed and decided within $group(p)$;
   \item \textit{delivered}, which contains the messages that have been \cons{}ed already.
 \end{itemize} 
 
@@ -185,35 +185,35 @@ For every message $m$, a given group $G$ may be its source or not. Therefore, ea
 \begin{itemize}
   \item The message $m$ was originated in $G$:
   
-  When a process in $G$ \amcast{}s $m$, it is first \rmcast{} to the other processes of $G$. Then, when $m$ is \rmdel{}ed at $p$, $p$ checks whether the latest consensus instance $I_{k}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $groupMsgs$ queue as the next message being proposed by it in the consensus instance $I_{k+1}$, so other tasks can keep being executed. Then, once $I_{k}$ has been decided, $p$ may start a new instance. Before that, all messages in $groupMsgs$ that have been already decided are discarded from $groupMsgs$. The rest is proposed as a batch in $I_{k+1}$.
+  When a process in $G$ \amcast{}s $m$, it is first \rmcast{} to the other processes of $G$. Then, when $m$ is \rmdel{}ed at $p$, $p$ checks whether the latest consensus instance $I_{k}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $local\_msgs$ queue as the next message being proposed by it in the consensus instance $I_{k+1}$, so other tasks can keep being executed. Then, once $I_{k}$ has been decided, $p$ may start a new instance. Before that, all messages in $local\_msgs$ that have been already decided are discarded from $local\_msgs$. The rest is proposed as a batch in $I_{k+1}$.
   
-  Once $m$ is decided, it is not immediately delivered to the application. Instead, $p$ checks whether some message $m_{prv} : m_{prv}.ts \geq m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, $m$ is inserted into a $barPending$ list for later being delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t_b$, such that $t_b \geq m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
+  Once $m$ is decided, it is not immediately delivered to the application. Instead, $p$ checks whether some message $m_{prv} : m_{prv}.ts \geq m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, $m$ is inserted into a $am-multicast$ list for later being delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t_b$, such that $t_b \geq m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
   
   Still, when a group $G$ is sending some message, it might be addressed to some other group or only to $G$. Therefore:
   
   \begin{itemize}
     \item If $G$ is the only destination of $m$:
     
-    In this case, $p$ only inserts $m$ in the $barPending$ list for being delivered once all necesarry barriers have arrived.
+    In this case, $p$ only inserts $m$ in the $am-multicast$ list for being delivered once all necesarry barriers have arrived.
     
     \item If there is some other group $G'$ as a destination of $m$:
     
-    In this case, when $m$ is decided, $p$ \rmcast{}s $m$ to every \mbox{$p' \in (m.dst \setminus \{G\})$}. When $m$ is \rmdel{}ed by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $barPending$ list. If not, $p'$ inserts $m$ into $barPending$ and adjusts $barrier(G, G')$ to $m.ts$. As the sending of these messages from a group to another is done via a FIFO reliable channel, once a message $m$ from another group $G$ is \rmdel{}ed, every message $m' : m'.ts < m.ts$ from $G$ has also already been \rmdel{}ed.
+    In this case, when $m$ is decided, $p$ \rmcast{}s $m$ to every \mbox{$p' \in (m.dst \setminus \{G\})$}. When $m$ is \rmdel{}ed by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $am-multicast$ list. If not, $p'$ inserts $m$ into $am-multicast$ and adjusts $barrier(G, G')$ to $m.ts$. As the sending of these messages from a group to another is done via a FIFO reliable channel, once a message $m$ from another group $G$ is \rmdel{}ed, every message $m' : m'.ts < m.ts$ from $G$ has also already been \rmdel{}ed.
     
   \end{itemize}
 %   
-%   In this case, when $m$ is received by $p$, $p$ checks whether the latest consensus instance $I_{k}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $groupMsgs$ queue as the next message being proposed by it in the consensus instance $I_{k+1}$, so other tasks can keep being executed. Then, once $I_{k}$ has been decided, $p$ may start a new instance. Before that, all messages in $groupMsgs$ that have been already decided are discarded from $groupMsgs$. The rest is proposed as a batch in $I_{k+1}$. Once $m$ is decided, it is not immediately delivered to the application. Instead, $p$ checks whether some message $m_{prv} : m_{prv}.ts \geq m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, $m$ is inserted into a $barPending$ list for later being delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t$, such that $t > m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
+%   In this case, when $m$ is received by $p$, $p$ checks whether the latest consensus instance $I_{k}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $local\_msgs$ queue as the next message being proposed by it in the consensus instance $I_{k+1}$, so other tasks can keep being executed. Then, once $I_{k}$ has been decided, $p$ may start a new instance. Before that, all messages in $local\_msgs$ that have been already decided are discarded from $local\_msgs$. The rest is proposed as a batch in $I_{k+1}$. Once $m$ is decided, it is not immediately delivered to the application. Instead, $p$ checks whether some message $m_{prv} : m_{prv}.ts \geq m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, $m$ is inserted into a $am-multicast$ list for later being delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t$, such that $t > m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
 % 
 %   \item When $m$ is originated in $G$, but it has at least one group other than $G$ as a destination:
 %   
-%   In this case, when $m$ is received, $p$ tries to initiate a consensus instance within $G$ to decide $m$. If $p$ cannot start the proposal now, $m$ is enqueued in $groupMsgs$ for being proposed later along with other pending messages. Then, once $p$ may start a new instance, all messages in $groupMsgs$ that have been already decided are discarded from $groupMsgs$. The rest is proposed as a batch in the new consensus instance. Once any message $m$ is decided, $p$ checks whether some message $m_{prv} : m_{prv}.ts > m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, if $G \in m.dst$, $m$ is inserted in the $barPending$ list. Besides, when $m$ is decided, $p$ sends $m$ to every \mbox{$p' \in (m.dst \setminus \{G\})$}. When $m$ is received by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $barPending$ list. If not, $p'$ inserts $m$ into $barPending$ and adjusts $barrier(G, G')$ to $m.ts$. To ensure that, once a message $m$ is received from another group $G$, every message $m' : m'.ts<m.ts$ also from $G$ has already been received, every message is sent through a lossless FIFO channel\footnote{An ordinary TCP connection would be enough to provide such FIFO lossless channel. Here, we use FIFO reliable multicast.}.
+%   In this case, when $m$ is received, $p$ tries to initiate a consensus instance within $G$ to decide $m$. If $p$ cannot start the proposal now, $m$ is enqueued in $local\_msgs$ for being proposed later along with other pending messages. Then, once $p$ may start a new instance, all messages in $local\_msgs$ that have been already decided are discarded from $local\_msgs$. The rest is proposed as a batch in the new consensus instance. Once any message $m$ is decided, $p$ checks whether some message $m_{prv} : m_{prv}.ts > m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, if $G \in m.dst$, $m$ is inserted in the $am-multicast$ list. Besides, when $m$ is decided, $p$ sends $m$ to every \mbox{$p' \in (m.dst \setminus \{G\})$}. When $m$ is received by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $am-multicast$ list. If not, $p'$ inserts $m$ into $am-multicast$ and adjusts $barrier(G, G')$ to $m.ts$. To ensure that, once a message $m$ is received from another group $G$, every message $m' : m'.ts<m.ts$ also from $G$ has already been received, every message is sent through a lossless FIFO channel\footnote{An ordinary TCP connection would be enough to provide such FIFO lossless channel. Here, we use FIFO reliable multicast.}.
   
   \item When $G$ is one of the destinations of $m$, but $m$ was originated in some other group $G'$:
   
-  In this case, when $m$ is received for the first time\footnote{Multiple processes may have sent $m$. To ensure integrity and order, only the first delivery is considered.} by $p$, $m$ is inserted into the $barPending$ list of $p$ and the value of $barrier(G',G)$ is set to $m.ts$.
+  In this case, when $m$ is received for the first time\footnote{Multiple processes may have sent $m$. To ensure integrity and order, only the first delivery is considered.} by $p$, $m$ is inserted into the $am-multicast$ list of $p$ and the value of $barrier(G',G)$ is set to $m.ts$.
 \end{itemize}
 
-The messages in the \textit{barPending} list are always sorted in ascending order of their timestamps. When the first message $m$ in the $barPending$ list of a process $p \in G$ is such that $m.ts < barrier(G, G')$ for all $G' \in sendersTo(G)$, then $m$ is \cons{}ed by $p$ to the application as the next message. We claim that this delivery respects the FIFO total order\footnote{Proof needed.}.
+The messages in the \textit{am-multicast} list are always sorted in ascending order of their timestamps. When the first message $m$ in the $am-multicast$ list of a process $p \in G$ is such that $m.ts < barrier(G, G')$ for all $G' \in sendersTo(G)$, then $m$ is \cons{}ed by $p$ to the application as the next message. We claim that this delivery respects the FIFO total order\footnote{Proof needed.}.
 
 %The possibility not covered here is when a message is sent from a group to another one which is not its neighbour. However, it is realistic for this context to assume that objects should be close to each other in the virtual environment to interact and that, as such, this kind of interaction is not supported. Nevertheless, one simple way to provide this kind of support could be by each group waiting for the barriers of every other group in the system, instead of only those of its neighbors.
 
@@ -223,7 +223,7 @@ The messages in the \textit{barPending} list are always sorted in ascending orde
 
 \blankline
 \INDENT{Initialization}
-  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $delivered \leftarrow \emptyset$, $groupMsgs \leftarrow \emptyset$, $barPending \leftarrow \emptyset$
+  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $local\_decided \leftarrow \emptyset$, $delivered \leftarrow \emptyset$, $local\_msgs \leftarrow \emptyset$, $am-multicast \leftarrow \emptyset$
   \INDENT{\textbf{for all} $h \in sendersTo(g)$ \textbf{do}}
     \STATE $barrier(h) \leftarrow (0,0)$ 
   \ENDINDENT
@@ -238,41 +238,40 @@ The messages in the \textit{barPending} list are always sorted in ascending orde
 \blankline
 \WHEN{\rmdelarg{$m$}}
   \IF{$g = m.src$}
-    \STATE $groupMsgs \leftarrow groupMsgs \cup \{m\}$ \label{algline:addtogroupMsgs}
-  \ELSIF{$m \notin barPending \wedge m \notin delivered$}
-    \STATE $barPending \leftarrow barPending \cup \{m\}$ \label{algline:insbp1}
+    \STATE $local\_msgs \leftarrow local\_msgs \cup \{m\}$ \label{algline:addtogroupmsgs}
+  \ELSIF{$m \notin am-multicast \wedge m \notin delivered$}
+    \STATE $am-multicast \leftarrow am-multicast \cup \{m\}$ \label{algline:insbp1}
     \STATE $barrier(m.src) \leftarrow m.ts$ \label{algline:incbar}
   \ENDIF
 \ENDWHEN
 
 \blankline
-\WHEN{$groupMsgs \setminus decided \neq \emptyset$}
+\WHEN{$local\_msgs \setminus local\_decided \neq \emptyset$}
   \STATE $k \leftarrow k + 1$
-	\STATE $undecided \leftarrow prop \setminus decided$
+	\STATE $undecided \leftarrow local\_msgs \setminus local\_decided$
 	\STATE propose($k, undecided$) \label{algline:propose}
 	\STATE \textbf{wait until} decide($k, msgSet$)
-  \STATE $msgSet \leftarrow msgSet \setminus decided$
-	\WHILE{$msgSet \setminus decided \neq \emptyset$}
-		\STATE let $m$ be the message in $msgSet \setminus decided$ with smallest timestamp
-		\STATE let $m'$ be the message in $decided$ with greatest timestamp
+	\WHILE{$msgSet \setminus local\_decided \neq \emptyset$}
+		\STATE let $m$ be the message in $msgSet \setminus local\_decided$ with smallest timestamp
+		\STATE let $m'$ be the message in $local\_decided$ with greatest timestamp
 		\IF{$m'.ts > m.ts$}
 			\STATE $m.ts \leftarrow (m'.ts.rtc, m'.ts.seq + 1)$
 		\ENDIF     
 		\IF{$g \in m.dst$} \label{algline:checkcons}
-			\STATE $barPending \leftarrow barPending \cup \{m\}$  \label{algline:insbp2}
+			\STATE $am-multicast \leftarrow am-multicast \cup \{m\}$  \label{algline:insbp2}
 		\ENDIF
-		\STATE $decided \leftarrow decided \cup \{m\}$  \label{algline:addtodecided}
+		\STATE $local\_decided \leftarrow local\_decided \cup \{m\}$  \label{algline:addtodecided}
 		\STATE \rmcastarg{$m.dst \setminus \{g\}$}{$m$} \label{algline:rmothers}
 	\ENDWHILE
 
 \ENDWHEN
 
 \blankline
-%\WHEN{$\exists m \in barPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in barPending : m'.ts < m.ts$} \label{algline:inbarPending}
-\WHEN{$barPending \setminus delivered \neq \emptyset$} \label{algline:inbarPending}
-	\STATE let $m$ be the message in $barPending \setminus delivered$ with smallest timestamp
+%\WHEN{$\exists m \in am-multicast : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in am-multicast : m'.ts < m.ts$} \label{algline:inam-multicast}
+\WHEN{$am-multicast \setminus delivered \neq \emptyset$} \label{algline:inam-multicast}
+	\STATE let $m$ be the message in $am-multicast \setminus delivered$ with smallest timestamp
 	\IF{$\forall h \in sendersTo(g): m.ts < barrier(h)$}
-%		\STATE $barPending \leftarrow barPending \setminus \{m\}$ \label{algline:rmfrombp}
+%		\STATE $am-multicast \leftarrow am-multicast \setminus \{m\}$ \label{algline:rmfrombp}
 		\IF {$m \neq null$}
 		  \STATE \amdelarg{$m$} \label{algline:consdeliver}
 		\ENDIF
@@ -319,7 +318,7 @@ The simplest way to provide liveness to the delivery algorithm is by sending emp
   \STATE $null.ts \leftarrow (lastBarrierCreated(h) + barrierThreshold, 0)$ \label{algline:samenullid}
   \STATE $null.src \leftarrow g$
   \STATE $null.dst \leftarrow \{h\}$ 
-  \STATE $groupMsgs \leftarrow groupMsgs \cup \{null\}$
+  \STATE $local\_msgs \leftarrow local\_msgs \cup \{null\}$
   \COMMENT{saving that nothing was sent until null.ts}
 \ENDINDENT 
 
@@ -331,7 +330,7 @@ The simplest way to provide liveness to the delivery algorithm is by sending emp
 
 The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b < m.ts$. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait, at least, for $barrierThreshold$ -- maybe just to receive some $b' : b' < m.ts$, having to wait again and so on. How long exactly it will take to \cons{} $m$ depends on many variables, such as how far in the past $m$ was created and how long it takes for some barrier $b: b > m.ts$ to arrive.% Because of that, the time between \amcast{}ing and \cons{}ing $m$ be, in the worst case, $2w(p) + 4\tconsm + barrierThreshold$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
 
-It is necessary to guarantee that a $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it, so that progression is guaranteed. Therefore, this kind of messages are created by every process in the group, since if any one of them does not have it, such message might never be decided. %Besides, they are excluded from the $groupMsgs$ list only when decided in the group (l. \ref{algline:nullstays} of Algorithm \ref{algorithm:deliveryminimal}). Since they are obviously never delivered to the application, they can remain in such list and be decided even after some message with higher timestamp is decided. Not removing them unless they are decided ensures that they will be sent and that other groups will be able to increase their barrier values. % On the other hand, this brings another problem: if every process in $G$ creates a different $null$ message, many $null$ messages might have to be decided before a meaningful message.
+It is necessary to guarantee that a $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it, so that progression is guaranteed. Therefore, this kind of messages are created by every process in the group, since if any one of them does not have it, such message might never be decided. %Besides, they are excluded from the $local\_msgs$ list only when decided in the group (l. \ref{algline:nullstays} of Algorithm \ref{algorithm:deliveryminimal}). Since they are obviously never delivered to the application, they can remain in such list and be decided even after some message with higher timestamp is decided. Not removing them unless they are decided ensures that they will be sent and that other groups will be able to increase their barrier values. % On the other hand, this brings another problem: if every process in $G$ creates a different $null$ message, many $null$ messages might have to be decided before a meaningful message.
 To prevent the multiple $null$ messages -- created by different processes within the group -- of being decided, they could be created in a way such that the different processes can somehow figure out that two different $null$ messages are equivalent\footnote{This could be done by assuming no timestamp collisions and by using them to uniquely identify messages. Then, only one of the messages created with the same timestamp (l. \ref{algline:samenullid} of Algorithm \ref{algorithm:nullperiodic}) would be decided.}.
 
 
@@ -344,7 +343,7 @@ There is a way to provide liveness with a lower delay for delivering messages, a
 
 When the process $p'$ of some group $G'$ receives a barrier request for a message $m$, %such that $G' \in blockers(m)$,
 $p'$ knows that there are other groups depending on the barrier of $G'$ to deliver $m$. For that reason, it will immediately create a $null$ message with a timestamp equal to $m.ts$ and with $null.dst = m.dst$ $\cap$ $receiversFrom(G')$. Then, $p'$ will insert such message in its %$optPending$
-$groupMsgs$ queue. % -- to ensure that, once it goes to $groupMsgs$, any message \mbox{$m': m'.ts < null.ts \wedge m'.src = G'$} is already there. As soon as $null.ts > now - w(p')$, the 
+$local\_msgs$ queue. % -- to ensure that, once it goes to $local\_msgs$, any message \mbox{$m': m'.ts < null.ts \wedge m'.src = G'$} is already there. As soon as $null.ts > now - w(p')$, the 
 Once the $null$ message is proposed and decided in $G'$, each process of $G'$ will send it to every process in each group \mbox{$G \in m.dst \cap receiversFrom(G')$}. This way, any group which was waiting for a barrier from $G'$ to deliver $m$ will be able to do so as soon as it receives such $null$ message. The new delivery algorithm would be as described in \mbox{Algorithm {\ref{algorithm:nullondemand}}}.
 
 \begin{algorithm}
@@ -352,7 +351,7 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
 
 \blankline
 \INDENT {Initialization}
-  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $delivered \leftarrow \emptyset$, $groupMsgs \leftarrow \emptyset$, $barPending \leftarrow \emptyset$
+  \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $local\_decided \leftarrow \emptyset$, $delivered \leftarrow \emptyset$, $local\_msgs \leftarrow \emptyset$, $am-multicast \leftarrow \emptyset$
   \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
     \STATE $barrier(G',G) \leftarrow -\infty$ 
   \ENDINDENT
@@ -372,31 +371,31 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
 \blankline
 \INDENT{\textit{When} \rmdelarg{$m'$}}
   \IF{$G = m'.src$}
-    \STATE $groupMsgs \leftarrow groupMsgs \cup \{m'\}$
-  \ELSIF{$m' \notin barPending \wedge m' \notin delivered$}
+    \STATE $local\_msgs \leftarrow local\_msgs \cup \{m'\}$
+  \ELSIF{$m' \notin am-multicast \wedge m' \notin delivered$}
     \STATE $barrier(m'.src,G) \leftarrow m'.ts$ \label{algline:incbar}
     \IF {$G \in m'.dst$}
-      \STATE $barPending \leftarrow barPending \cup \{m'\}$
+      \STATE $am-multicast \leftarrow am-multicast \cup \{m'\}$
     \ENDIF
     \IF{$G \in blockers(m') \wedge m' \neq null $}
       \STATE $null \leftarrow$ empty message
       \STATE $null.src \leftarrow G$
       \STATE $null.ts \leftarrow m'.ts$ \label{algline:nulltsmts}
       \STATE $null.dst \leftarrow m'.dst \cap receiversFrom(G)$
-      \STATE $groupMsgs \leftarrow groupMsgs \cup \{null\}$
+      \STATE $local\_msgs \leftarrow local\_msgs \cup \{null\}$
     \ENDIF
   \ENDIF
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When $\exists m \in groupMsgs \wedge nextProp = k$}}
-%  \STATE $groupMsgs \leftarrow groupMsgs \setminus \{m\}$
-%  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
-    \STATE $groupMsgs \leftarrow groupMsgs \setminus decided$%(decided \cup \{m' : \exists m'' \in decided \wedge m'.ts < m''.ts \wedge m' \neq null\})$ 
+\INDENT{\textit{When $\exists m \in local\_msgs \wedge nextProp = k$}}
+%  \STATE $local\_msgs \leftarrow local\_msgs \setminus \{m\}$
+%  \IF {$m \notin local\_decided \wedge \nexists m' \in local\_decided: m'.ts > m.ts$}
+    \STATE $local\_msgs \leftarrow local\_msgs \setminus local\_decided$%(local\_decided \cup \{m' : \exists m'' \in local\_decided \wedge m'.ts < m''.ts \wedge m' \neq null\})$ 
     \label{algline:nullstays}
-    \IF {$groupMsgs \neq \emptyset$}
+    \IF {$local\_msgs \neq \emptyset$}
       \STATE $nextProp \leftarrow k + 1$
-      \STATE Propose($k$,$groupMsgs$)
+      \STATE Propose($k$,$local\_msgs$)
     \ENDIF
 %  \ENDIF
 \ENDINDENT
@@ -407,13 +406,13 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
   \INDENT{\textbf{while} $\exists m \in msgSet : (\forall m' \in msgSet : m \neq m' \Rightarrow m.ts < m'.ts)$ \textbf{do}}
     \STATE $msgSet \leftarrow msgSet \setminus \{m\}$
     \COMMENT{the messages are handled in ascending order of timestamp}
-    \IF{$\exists m' \in decided : m'.ts \geq m.ts \wedge (\nexists m'' \in decided : m''.ts > m'.ts)$}
+    \IF{$\exists m' \in local\_decided : m'.ts \geq m.ts \wedge (\nexists m'' \in local\_decided : m''.ts > m'.ts)$}
       \STATE $m.ts \leftarrow (m'.ts.rtc, m'.ts.seq + 1)$ \label{algline:chgts}
     \ENDIF     
     \IF{$G \in m.dst$} \label{algline:checkcons}
-      \STATE $barPending \leftarrow barPending \cup \{m\}$
+      \STATE $am-multicast \leftarrow am-multicast \cup \{m\}$
     \ENDIF
-    \STATE $decided \leftarrow decided \cup \{m\}$
+    \STATE $local\_decided \leftarrow local\_decided \cup \{m\}$
     \IF{$m \neq null$}
       \STATE \rmcastarg{$m$}{$(m.dst \setminus \{G\}) \cup blockers(m)$} \label{algline:barreq} \COMMENT{the message is sent to blockers(m), as a barrier request}
     \ELSE
@@ -425,8 +424,8 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When $\exists m \in barPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in barPending : m'.ts < m.ts$ }}
-  \STATE $barPending \leftarrow barPending \setminus \{m\}$
+\INDENT{\textit{When $\exists m \in am-multicast : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in am-multicast : m'.ts < m.ts$ }}
+  \STATE $am-multicast \leftarrow am-multicast \setminus \{m\}$
   \IF{$m \neq null$}
     \STATE \consdel{$m$}
   \ENDIF
@@ -442,7 +441,7 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
  
  \subsection{Performance analysis}
  
- Assuming $\delta$ as the communication delay between every pair of processes, the time needed to decide a message $m$ after it has been \amcast{} by some process is equal, in the worst case, to $\delta + 2\tconsm$, where $\delta$ is the time needed to \rmdel{} a message and \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $groupMsgs$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $groupMsgs$ right before some proposal has been made, so it would take only $\delta + \tconsm$ to decide $m$. As $m$ may go into $groupMsgs$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $\delta + 1.5\tconsm$. Nevertheless, the time needed to finally \cons{} $m$ will depend on when barriers are received from other groups.
+ Assuming $\delta$ as the communication delay between every pair of processes, the time needed to decide a message $m$ after it has been \amcast{} by some process is equal, in the worst case, to $\delta + 2\tconsm$, where $\delta$ is the time needed to \rmdel{} a message and \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $local\_msgs$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $local\_msgs$ right before some proposal has been made, so it would take only $\delta + \tconsm$ to decide $m$. As $m$ may go into $local\_msgs$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $\delta + 1.5\tconsm$. Nevertheless, the time needed to finally \cons{} $m$ will depend on when barriers are received from other groups.
 
  
 As discussed before, assuming $\delta$ as the communication delay between every pair or processes and \tcons{} as the time needed to run one consensus instance, we have a worst case time to decide a message within a group of $\delta + 2\tconsm$. If there is any destination of $m$ which is different from its source group, $m$ is \rmcast{} to it after its final timestamp has been defined, which takes another $\delta$. At the same time (l. \ref{algline:barreq} of Alg. \ref{algorithm:nullondemand}), $m$ is \rmcast{} also to the groups in $blockers(m)$, each of which then begins a consensus instance proposing an empty $null$ message. After deciding $null$, it is \rmcast{} to the processes of the groups which might be needing a barrier to deliver $m$. This way, we can calculate the number of communication steps needed to deliver a message, which is $3\delta + 4\tconsm$ in the worst case and $3\delta + 2\tconsm$ in the best case, leading to an average case of $3\delta + 3\tconsm$.
@@ -496,7 +495,7 @@ Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption h
 % 
 % \blankline
 % \INDENT {Initialization}
-%   \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $decided \leftarrow \emptyset$, $groupMsgs \leftarrow \emptyset$, $optPending \leftarrow \emptyset$, $barPending \leftarrow \emptyset$
+%   \STATE $k \leftarrow 0$, $nextProp \leftarrow 0$, $local\_decided \leftarrow \emptyset$, $local\_msgs \leftarrow \emptyset$, $optPending \leftarrow \emptyset$, $am-multicast \leftarrow \emptyset$
 %   \INDENT{\textbf{for all} $G' \in sendersTo(G)$ \textbf{do}}
 %     \STATE $barrier(G',G) \leftarrow -\infty$ 
 %   \ENDINDENT
@@ -537,18 +536,18 @@ Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption h
 %     \STATE \optdel{$m$}  
 %   \ENDIF
 %   \IF {$G = m.src$}
-%     \STATE $groupMsgs \leftarrow groupMsgs \cup \{m\}$
+%     \STATE $local\_msgs \leftarrow local\_msgs \cup \{m\}$
 %   \ENDIF
 % \ENDINDENT
 % 
 % \blankline
-% \INDENT{\textit{When $\exists m \in groupMsgs \wedge nextProp = k$}}
-% %  \STATE $groupMsgs \leftarrow groupMsgs \setminus \{m\}$
-% %  \IF {$m \notin decided \wedge \nexists m' \in decided: m'.ts > m.ts$}
-%     \STATE $groupMsgs \leftarrow groupMsgs \setminus (decided \cup \{m' : \exists m'' \in decided \wedge m'.ts < m''.ts \wedge m' \neq null\})$ \label{algline:keepnull}
-%     \IF {$groupMsgs \neq \emptyset$}
+% \INDENT{\textit{When $\exists m \in local\_msgs \wedge nextProp = k$}}
+% %  \STATE $local\_msgs \leftarrow local\_msgs \setminus \{m\}$
+% %  \IF {$m \notin local\_decided \wedge \nexists m' \in local\_decided: m'.ts > m.ts$}
+%     \STATE $local\_msgs \leftarrow local\_msgs \setminus (local\_decided \cup \{m' : \exists m'' \in local\_decided \wedge m'.ts < m''.ts \wedge m' \neq null\})$ \label{algline:keepnull}
+%     \IF {$local\_msgs \neq \emptyset$}
 %       \STATE $nextProp \leftarrow k + 1$
-%       \STATE Propose($k$,$groupMsgs$)
+%       \STATE Propose($k$,$local\_msgs$)
 %     \ENDIF
 % %  \ENDIF
 % \ENDINDENT
@@ -556,9 +555,9 @@ Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption h
 % \blankline
 % \INDENT{\textit{When} Decide($k$,$msgSet$)}
 % %  \STATE $m.gs \leftarrow k$
-%   \STATE $decided \leftarrow decided \cup msgSet$
+%   \STATE $local\_decided \leftarrow local\_decided \cup msgSet$
 %   \INDENT{\textbf{for all} $m \in msgSet : G \in m.dst \wedge m \neq null$ \textbf{do}} \label{algline:checkcons}
-%     \STATE $barPending \leftarrow barPending \cup \{m\}$
+%     \STATE $am-multicast \leftarrow am-multicast \cup \{m\}$
 %   \ENDINDENT
 %   \INDENT{\textbf{while} $\exists m \in msgSet : (\forall m' \in msgSet : m \neq m' \Rightarrow m.ts < m'.ts)$ \textbf{do}}
 %     \INDENT{\textbf{for all} $p' \in m.dst \setminus \{G\}$ \textbf{do}}
@@ -574,15 +573,15 @@ Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption h
 % 
 % \blankline
 % \INDENT{\textit{When} receive($\{m',\{\text{`cons'}\}$)}  
-%   \IF {$m' \notin\ barPending \wedge m' \notin\ delivered \wedge m' \neq\ null$}
-%     \STATE $barPending \leftarrow barPending \cup \{m\}$
+%   \IF {$m' \notin\ am-multicast \wedge m' \notin\ delivered \wedge m' \neq\ null$}
+%     \STATE $am-multicast \leftarrow am-multicast \cup \{m\}$
 %   \ENDIF
 %   \STATE $barrier(m'.src,G) \leftarrow max(m'.ts, barrier(m'.src,G))$  \COMMENT{channels are FIFO, but there are different senders}
 % \ENDINDENT
 % 
 % \blankline
-% \INDENT{\textit{When $\exists m \in barPending : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in barPending : m'.ts < m.ts$ }}
-%   \STATE $barPending \leftarrow barPending \setminus \{m\}$
+% \INDENT{\textit{When $\exists m \in am-multicast : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in am-multicast : m'.ts < m.ts$ }}
+%   \STATE $am-multicast \leftarrow am-multicast \setminus \{m\}$
 %   \STATE \consdel{$m$}
 %   \STATE $delivered \leftarrow delivered \cup \{m\}$
 % 
@@ -601,7 +600,7 @@ Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption h
 
 We can further optimize the delivery algorithm. One major problem with proposing messages with consensus is that the previous algorithms wait until a consensus instance has been finished to start a new one, so that no message is proposed twice. However, even if a message is proposed and accepted twice, each process may choose to consider only the first time (i.e. the consensus instance with lowest id) when a message $m$ has been proposed. This would require some more local processing and could cause some unnecessary traffic due to messages being proposed in different consensus instances. The worst case delivery time of a message $m$, when using the optimistic delivery and barrier requests, would be $2w(p) + 2\tconsm + \delta$. It must be noted, however, that this represents the case when the optimistic assumption fails to hold and $m$ has its timestamp changed. Otherwise, the conservative delivery time would be $w(p) + \tconsm + \delta$.
 
-The basic idea would be that, whenever a process $p$ has a pending message $m$ that it received, it will propose it in some instance $I$ as soon as its clock has a value greater than $m.ts.rtc + w(p)$. As $p$ cannot foresee whether $m$ will be decided in $I$ or not, it keeps the double $(m,I.id)$ in a $trying$ list. When $I$ terminates, $(m,I.id)$ is removed from $trying$ and $p$ checks whether $m$ has been decided -- which might have happened also in some instance $I' \neq I$ in the meantime -- by checking its $decided$ list. If not, $p$ proposes $m$ again in some consensus instance $I''$ and inserts $(m,I''.id)$ into $trying$.
+The basic idea would be that, whenever a process $p$ has a pending message $m$ that it received, it will propose it in some instance $I$ as soon as its clock has a value greater than $m.ts.rtc + w(p)$. As $p$ cannot foresee whether $m$ will be decided in $I$ or not, it keeps the double $(m,I.id)$ in a $trying$ list. When $I$ terminates, $(m,I.id)$ is removed from $trying$ and $p$ checks whether $m$ has been decided -- which might have happened also in some instance $I' \neq I$ in the meantime -- by checking its $local\_decided$ list. If not, $p$ proposes $m$ again in some consensus instance $I''$ and inserts $(m,I''.id)$ into $trying$.
 
 Even if the consensus instances are run in parallel, we consider that they make a callback to \emph{Decide()} in ascending order of instance id. This can be easily done by the consensus implementation using a sequence number. Whenever a message $m$ is agreed upon in some consensus instance $I$, any later decision of $m$ in some instance \mbox{$I' : I'.id > I.id$} is merely ignored.
 
@@ -665,19 +664,19 @@ Here, we prove that the \amcast{} primitive ensures the properties defined in se
 
 This property means that, if a message $m$ was delivered to process $p$ of group $G$, then it has (1) been multicast before, (2) $G \in m.dst$ and (3) it has not been delivered by $p$ before.
 
-For a message $m$ to be delivered (l. \ref{algline:consdeliver}), it must be contained in the $barPending$ list (from the condition in line \ref{algline:inbarPending}).  There are two possibilities to when $m$ has been inserted into such list:
+For a message $m$ to be delivered (l. \ref{algline:consdeliver}), it must be contained in the $am-multicast$ list (from the condition in line \ref{algline:inam-multicast}).  There are two possibilities to when $m$ has been inserted into such list:
 \begin{itemize}
-  \item $m$ has been originated in the same same group of $p$, that is, $p \in m.dst$, which means $m$ was inserted into $barPending$ in line \ref{algline:insbp2} of Algorithm \ref{algorithm:deliveryminimal}, or
-  \item $m$ has been sent from a group $G \neq G'$, which means that it was inserted into $barPending$ in line \ref{algline:insbp1}. 
+  \item $m$ has been originated in the same same group of $p$, that is, $p \in m.dst$, which means $m$ was inserted into $am-multicast$ in line \ref{algline:insbp2} of Algorithm \ref{algorithm:deliveryminimal}, or
+  \item $m$ has been sent from a group $G \neq G'$, which means that it was inserted into $am-multicast$ in line \ref{algline:insbp1}. 
 \end{itemize}
 
-In line \ref{algline:insbp2}, $m$ is inserted into $barPending$ only if $G \in m.dst$, which satisfies condition (2), and if it was decided in some consensus instance within $G$. To have been decided within $G$, from the properties of consensus \cite{lamport1998ptp}, we know that it must have been proposed by some process of $G$, which happens in line \ref{algline:propose}. In line \ref{algline:propose}, for a message to be proposed, it must be in the $groupMsgs$, as its contents are the value proposed. For a message to be in the $groupMsgs$ list, it must have been inserted there, which happens only in line \ref{algline:addtogroupMsgs}. For l. \ref{algline:addtogroupMsgs} to be executed, $m$ must have been \rmdel{}ed and $G$ must be the source group of $m$, that is, $m.src = G$. For a message to be \rmcast{} by a process to its own group, a \amcastarg{$m$} call must have been made -- which satisfies condition (1) --, for line \ref{algline:rmlocal} is the only one where a process \rmcast{}s a message to its own group. 
+In line \ref{algline:insbp2}, $m$ is inserted into $am-multicast$ only if $G \in m.dst$, which satisfies condition (2), and if it was decided in some consensus instance within $G$. To have been decided within $G$, from the properties of consensus \cite{lamport1998ptp}, we know that it must have been proposed by some process of $G$, which happens in line \ref{algline:propose}. In line \ref{algline:propose}, for a message to be proposed, it must be in the $local\_msgs$, as its contents are the value proposed. For a message to be in the $local\_msgs$ list, it must have been inserted there, which happens only in line \ref{algline:addtogroupmsgs}. For l. \ref{algline:addtogroupmsgs} to be executed, $m$ must have been \rmdel{}ed and $G$ must be the source group of $m$, that is, $m.src = G$. For a message to be \rmcast{} by a process to its own group, a \amcastarg{$m$} call must have been made -- which satisfies condition (1) --, for line \ref{algline:rmlocal} is the only one where a process \rmcast{}s a message to its own group. 
 
-Also, for a message to be inserted into $groupMsgs$ (l. \ref{algline:addtogroupMsgs}) it cannot have been decided already (l. \ref{algline:removedecided}). We assume here that a process can only make a proposal for consensus instance $k$ when it knows all the values decided in all instances prior to $k$. Therefore, when a process proposes a message, it knows all the messages which were already decided in previous consensus instances. As a decided message is inserted into a $decided$ list (l. \ref{algline:addtodecided}, which is always executed after a decision), a process cannot propose a message which was decided already and, therefore, a message cannot be decided twice (in two different consensus instances). As a message is inserted into $barPending$ by processes of its own group of origin only when decided (l. \ref{algline:insbp2}), it cannot be inserted twice, thus it cannot be delivered twice, satisfying condition (3).
+Also, for a message to be inserted into $local\_msgs$ (l. \ref{algline:addtogroupmsgs}) it cannot have been decided already (l. \ref{algline:removedecided}). We assume here that a process can only make a proposal for consensus instance $k$ when it knows all the values decided in all instances prior to $k$. Therefore, when a process proposes a message, it knows all the messages which were already decided in previous consensus instances. As a decided message is inserted into a $local\_decided$ list (l. \ref{algline:addtodecided}, which is always executed after a decision), a process cannot propose a message which was decided already and, therefore, a message cannot be decided twice (in two different consensus instances). As a message is inserted into $am-multicast$ by processes of its own group of origin only when decided (l. \ref{algline:insbp2}), it cannot be inserted twice, thus it cannot be delivered twice, satisfying condition (3).
 
-As for processes from destination groups which are not from the source group of $m$, they will never execute line \ref{algline:insbp2}, since they never decide on $m$. However, processes of the group $m.src$, which is the source of $m$, will \rmcast{} $m$ to every $G'$ which is a destination of $m$ other than $G$ (l. \ref{algline:rmothers}). When a process in $G'$ \rmdel{}s $m$, it checks whether $m$ was already inserted into $barPending$ or $delivered$, where $delivered$ is the list of all messages which were ever \amdel{}ed. Once a message has been inserted into \mbox{$barPending \cup delivered$}, it stays there forever -- a message is only removed from $barPending$ in line \ref{algline:rmfrombp}, right after what it is then inserted into $delivered$, in line \ref{algline:addtodelivered}. Therefore, also messages which arrive from other groups are never inserted twice into $barPending$. As each message is removed from $barPending$ right before being \amdel{}ed, it is never delivered twice, satisfying (3).
+As for processes from destination groups which are not from the source group of $m$, they will never execute line \ref{algline:insbp2}, since they never decide on $m$. However, processes of the group $m.src$, which is the source of $m$, will \rmcast{} $m$ to every $G'$ which is a destination of $m$ other than $G$ (l. \ref{algline:rmothers}). When a process in $G'$ \rmdel{}s $m$, it checks whether $m$ was already inserted into $am-multicast$ or $delivered$, where $delivered$ is the list of all messages which were ever \amdel{}ed. Once a message has been inserted into \mbox{$am-multicast \cup delivered$}, it stays there forever -- a message is only removed from $am-multicast$ in line \ref{algline:rmfrombp}, right after what it is then inserted into $delivered$, in line \ref{algline:addtodelivered}. Therefore, also messages which arrive from other groups are never inserted twice into $am-multicast$. As each message is removed from $am-multicast$ right before being \amdel{}ed, it is never delivered twice, satisfying (3).
 
-For line \ref{algline:insbp1}, $m$ is inserted into $barPending$ of process $p'$ of group $G'$ when it has been \rmdel{}ed, and only if $m.src \neq G'$. For a process $p \in G \neq G'$ to \rmcast{} $m$, $m$ must have been decided within $G$, which means that it was proposed within $G$, therefore it was \amcast{} -- satisfying condition (1) -- by $G \neq G'$ to $G'$, which, from line \ref{algline:rmothers}, necessarily belongs to $m.dst$, satisfying condition (2).
+For line \ref{algline:insbp1}, $m$ is inserted into $am-multicast$ of process $p'$ of group $G'$ when it has been \rmdel{}ed, and only if $m.src \neq G'$. For a process $p \in G \neq G'$ to \rmcast{} $m$, $m$ must have been decided within $G$, which means that it was proposed within $G$, therefore it was \amcast{} -- satisfying condition (1) -- by $G \neq G'$ to $G'$, which, from line \ref{algline:rmothers}, necessarily belongs to $m.dst$, satisfying condition (2).
 
 Finally, as for Algorithm \ref{algorithm:nullperiodic}, $null$ messages are never delivered, so they will never violate the uniform integrity property.
 
