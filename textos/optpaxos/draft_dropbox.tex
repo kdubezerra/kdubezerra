@@ -85,7 +85,7 @@ In this section we introduce the underlying system model and define two higher-l
 
 We consider a system $\Pi = \{ p_1, ..., p_n \}$ of processes which communicate through message passing and do not have access to a shared memory or a global clock. The system is asynchronous: messages may experience arbitrarily large (but finite) delays and there is no bound on relative process speeds. We assume the benign crash-stop failure model: processes may fail by crashing, but do not behave maliciously. A process that never crashes is \emph{correct}; otherwise it is \emph{faulty}. We define $\Gamma = \{ g_1, ..., g_m \}$ as the set of process groups in the system. Groups are disjoint, non-empty, and satisfy $\bigcup_{g \in \Gamma} g = \Pi$. For each process $p \in \Pi$, $group(p)$ identifies the group $p$ belongs to. For the sake of simplicity, we abuse the notation by writing ``$p \in \gamma$'', instead of ``$\exists g \in \gamma: p \in g$'', where $\gamma$ is any set of groups, such that $\gamma \subseteq \Gamma$. Hereafter, we assume that each group can solve consensus, a problem we define next.
 
-Processes communicate using fifo reliable multicast, defined by the primitives \rmcast{}$(s,m)$ and \rmdel{}$(m)$, where $s$ is a set of groups and $m$ is a message. Reliable multicast guarantees that (i)~for any process $p$ and any message $m$, $p$ \rmdel{}s $m$ at most once, and only if $p \in s$ and $m$ was previously r-mcast \emph{(uniform integrity)}; (ii)~if a correct process $p$ r-mcasts $m$, then eventually all correct processes $q \in s$ r-deliver $m$ \emph{(validity)}; (iii)~if $p$ r-delivers $m$, then eventually all correct processes $q \in s$ r-deliver $m$ \emph{(uniform agreement)}; and (iv)~if $p$ r-mcasts $m$ and then $m'$, then no $q$ r-delivers $m'$ without first delivering $m$ \emph{(fifo order)}.
+Processes communicate using fifo reliable multicast, defined by the primitives \rmcast{}$(s,m)$ and \rmdel{}$(m)$, where $s$ is a set of groups and $m$ is a message. Reliable multicast guarantees that (i)~for any process $p$ and any message $m$, $p$ \rmdel{}s $m$ at most once, and only if $p \in s$ and $m$ was previously \rmcast{} \emph{(uniform integrity)}; (ii)~if a correct process $p$ \rmcast{}s $m$, then eventually all correct processes $q \in s$ \rmdel{} $m$ \emph{(validity)}; (iii)~if $p$ \rmdel{}s $m$, then eventually all correct processes $q \in s$ \rmdel{}s $m$ \emph{(uniform agreement)}; and (iv)~if $p$ \rmcast{}s $m$ and then $m'$, then no $q$ \rmdel{}s $m'$ without first \rmdel{}ing $m$ \emph{(fifo order)}.
 
 
 \subsection{Consensus}
@@ -237,7 +237,7 @@ The messages in the \textit{\stamped} set are always handled in ascending order 
 
 \blankline
 \INDENT{\textit{To} \amcast{} \textit{a message $m$}}
-  \STATE $m.ts \leftarrow (getTime(),0)$
+  \STATE $m.ts \leftarrow (getTime(),0)$ \label{algline:gettime}
   \STATE \rmcastarg{$\{g\}$}{$m$} \label{algline:rmlocal}
 \ENDINDENT
 
@@ -811,17 +811,17 @@ we can infer that, once $q$ inserts $m$ into its $\stamped$ set, no message $m' 
 %===   LEMMA   ====================================
 %===           ====================================
 \begin{lems} \label{lemma:oncebpwilldel}
-Once a message $m$ has been inserted into the $\stamped$ set of a correct process $p$, $m$ will eventually be delivered by $p$.
+Once a message $m \neq null$ has been inserted into the $\stamped$ set of a correct process $p$, $m$ will eventually be delivered by $p$.
 \end{lems}
 
 \begin{proof}
 Eventually, $p$, which necessarily belongs to some group $g$, will have received a barrier from every group in $sendersTo(g)$ with a value greater than the timestamp of $m$ (from Lemma \ref{lemma:barrierperiodic}). Once this happens, as any barrier is also a message, no more messages with a timestamp lower than that of $m$ will be inserted into the $\stamped$ set of $p$ (from the definition of $sendersTo(g)$ and Lemma \ref{lemma:oncedecidednotsmaller}). Let $ready$ be the set of $m$ plus all undelivered messages from $\stamped$ whose timestamps are lower than that of $m$, that is, $ready = \{m\} \cup \{m' : m' \in \stamped \setminus \delivered \wedge m'.ts < m.ts\}$.
 
-We can infer that no more messages will be included in this set, meaning that any other message that might be later inserted into $\stamped$ will have a timestamp greater than that of any message in $ready$. Besides, the barrier received for $m$ also applies to all the other messages in this set, since their timestamps are lower than that of $m$. We can, therefore, prove that all these messages will eventually be delivered by induction on the position $i$ of each message $m_i$ in $ready$, in ascending order of timestamps.\\
+We can infer that no more messages will be included in this set, meaning that any other message that might be later inserted into $\stamped$ will have a timestamp greater than that of any message in $ready$. Besides, the barrier received for $m$ also applies to all the other messages in this set, since their timestamps are lower than that of $m$. We can prove that each one of these messages will eventually be inserted into $\delivered$ and, if it is different from $null$, it will be delivered by $p$. We prove it by induction on the position $i$ of each message $m_i$ in $ready$, in ascending order of timestamps.\\
 \\
-\noindent Base case ($i=1$): Let $m_1$ be the first message in $ready$. It means that $\nexists m \in \stamped \setminus \delivered : m.ts < m_1.ts$. The message $m_1$ has the lowest timestamp from all messages in $ready$ and all the necessary barriers have been received already. Therefore, $m_1$ satisfies all conditions from lines \ref{algline:condel1} and \ref{algline:condel2} of \mbox{Algorithm \ref{algorithm:deliveryminimal}}, being delivered and inserted into the $\delivered$ set.\\%, after which implies that $m_1$ no longer belongs to $ready$.\\
+\noindent Base case ($i=1$): Let $m_1$ be the first message in $ready$, i.e., \mbox{$\nexists m \in \stamped \setminus \delivered : m.ts < m_1.ts$}. We know that all the necessary barriers have been received already, so $m_1$ satisfies all conditions from lines \ref{algline:condel1} and \ref{algline:condel2} of \mbox{Algorithm \ref{algorithm:deliveryminimal}}, being inserted into the $\delivered$ set, after which $m_1$ no longer belongs to $\stamped \setminus \delivered$ and, if $m_1 \neq null$, $m_1$ will be delivered.\\
 \\
-\noindent Induction step: Suppose that $m_{i}$ will eventually be delivered and inserted into the $\delivered$ set. Once this happens, it means that $m_{i}$ was the first message in $\stamped \setminus \delivered$ in ascending timestamp order. Since no more messages have been inserted into $ready$, as soon as $m_{i}$ is inserted into $\delivered$, $m_{i+1}$ will be the first one in $\stamped \setminus \delivered$, having, therefore, the lowest timestamp in such set. Then, as all barriers necessary for $m$ have already been received and $m_{i+1}.ts \leq m.ts$, $m$ will satisfy both conditions of lines \ref{algline:condel1} and \ref{algline:condel2} of \mbox{Algorithm \ref{algorithm:deliveryminimal}}. Thus, $m_{i+1}$ will also be delivered and inserted into the $\delivered$ set.
+\noindent Induction step: Suppose that $m_{i}$ will eventually be inserted into the $\delivered$ set and, if $m_i \neq null$, it will be delivered. Once this happens, it means that $m_{i}$ was the first message in $\stamped \setminus \delivered$ in ascending timestamp order. Since no more messages have been inserted into $ready$, as soon as $m_{i}$ is inserted into $\delivered$, $m_{i+1}$ will be the first one in $\stamped \setminus \delivered$, having, therefore, the lowest timestamp in such set. Then, as all barriers necessary for $m$ have already been received and $m_{i+1}.ts \leq m.ts$, $m$ will satisfy both conditions of lines \ref{algline:condel1} and \ref{algline:condel2} of \mbox{Algorithm \ref{algorithm:deliveryminimal}}. Thus, $m_{i+1}$ will also be inserted into the $\delivered$ set and, if $m_{i+1} \neq null$, it will be delivered.
 \end{proof}
 
 
@@ -850,23 +850,19 @@ Immediate from Lemma \ref{lemma:mcastbarpending} and Lemma \ref{lemma:oncebpwill
 %===   PROPOSITION   ==============================
 %===                 ==============================
 \begin{props} \label{props:integrity}
-If a message $m$ was delivered to process $p$ of group $G$, then it has (1) been \amcast{} before, (2) $G \in m.dst$ and (3) it has not been \cons{}ed by $p$ before.
+If a message $m$ was delivered by some process $p$ of group $g$, then (1) $m$ has been \amcast{} before, (2) $g \in m.dst$ and (3) it has not been \amdel{}ed by $p$ before.
 \end{props}
 
 \begin{proof}
-For a message $m$ to be delivered (l. \ref{algline:consdeliver}), it must be contained in the $barPending$ set (from the condition in line \ref{algline:inbarpending}).  There are two possibilities to when $m$ has been inserted into such set:
+From lines \ref{algline:condel1} to \ref{algline:addtodelivered}, and since no message is removed from The $delivered$ set, no message can be delivered twice, satisfying (3). For a message $m$ to be delivered (l. \ref{algline:consdeliver}), it must belong to the $\stamped$ set (l. \ref{algline:condel1}).  There are two possibilities to when $m$ has been inserted into such set:
 \begin{itemize}
-  \item $m$ has been originated in the same same group of $p$, that is, $p \in m.dst$, which means $m$ was inserted into $barPending$ in line \ref{algline:insbp2} of Algorithm \ref{algorithm:deliveryminimal}, or
-  \item $m$ has been sent from a group $G \neq G'$, which means that it was inserted into $barPending$ in line \ref{algline:insbp1}. 
+  \item $m$ has been originated in the same same group of $p$, that is, $p \in m.dst$, which means $m$ was inserted into $\stamped$ in line \ref{algline:insbp2} of Algorithm \ref{algorithm:deliveryminimal}, or
+  \item $m$ has been sent from a group $h \neq g$, which means that it was inserted by $p$ into $\stamped$ in line \ref{algline:insbp1}. 
 \end{itemize}
 
-In line \ref{algline:insbp2}, $m$ is inserted into $barPending$ only if $G \in m.dst$, which satisfies condition (2), and if it was decided in some consensus instance within $G$. To have been decided within $G$, from the properties of consensus \cite{lamport1998ptp}, we know that it must have been proposed by some process of $G$, which happens in line \ref{algline:propose}. In line \ref{algline:propose}, for a message to be proposed, it must be in the $propPending$, as its contents are the value proposed. For a message to be in the $propPending$ set, it must have been inserted there, which happens only in line \ref{algline:addtoproppending}. For l. \ref{algline:addtoproppending} to be executed, $m$ must have been \rmdel{}ed and $G$ must be the source group of $m$, that is, $m.src = G$. For a message to be \rmcast{} by a process to its own group, a \amcastarg{$m$} call must have been made -- which satisfies condition (1) --, for line \ref{algline:rmlocal} is the only one where a process \rmcast{}s a message to its own group. 
+For the case when $p \in m.src$, $m$ can be inserted into $\stamped$ only in line \ref{algline:insbp2}, which means that $g \in m.dst$, satisfying condition (2) for this case. Also, this happens only when $m$ has been decided in some consensus instance within $g$. To have been decided within $g$, from the properties of consensus, we know that it must have been proposed by some process of $g$, which happens in line \ref{algline:propose}. In line \ref{algline:propose}, for a message to be proposed, it must be in $\localmsgs \setminus \decided$, as the contents of such set are the value proposed. For a message to be in $\localmsgs$, it must have been inserted there, which happens only in line \ref{algline:addtogroupmsgs}. For l. \ref{algline:addtogroupmsgs} to be executed, $m$ must have been \rmdel{}ed and $g$ must be the source group of $m$, that is, $g = m.src$. For a message to be \rmcast{} by a process to its own group, a \amcastarg{$m$} call must have been made -- which satisfies condition (1) --, for line \ref{algline:rmlocal} is the only one where a process \rmcast{}s a message to its own group. 
 
-Also, for a message to be inserted into $propPending$ (l. \ref{algline:addtoproppending}) it cannot have been decided already (l. \ref{algline:removedecided}). We assume here that a process can only make a proposal for consensus instance $k$ when it knows all the values decided in all instances prior to $k$. Therefore, when a process proposes a message, it knows all the messages which were already decided in previous consensus instances. As a decided message is inserted into a $decided$ set (l. \ref{algline:addtodecided}, which is always executed after a decision), a process cannot propose a message which was decided already and, therefore, a message cannot be decided twice (in two different consensus instances). As a message is inserted into $barPending$ by processes of its own group of origin only when decided (l. \ref{algline:insbp2}), it cannot be inserted twice, thus it cannot be delivered twice, satisfying condition (3).
-
-As for processes from destination groups which are not from the source group of $m$, they will never execute line \ref{algline:insbp2}, since they never decide on $m$. However, processes of the group $m.src$, which is the source of $m$, will \rmcast{} $m$ to every $G'$ which is a destination of $m$ other than $G$ (l. \ref{algline:rmothers}). When a process in $G'$ \rmdel{}s $m$, it checks whether $m$ was already inserted into $barPending$ or $delivered$, where $delivered$ is the set of all messages which were ever \amdel{}ed. Once a message has been inserted into \mbox{$barPending \cup delivered$}, it stays there forever -- a message is only removed from $barPending$ in line \ref{algline:rmfrombp}, right after what it is then inserted into $delivered$, in line \ref{algline:addtodelivered}. Therefore, also messages which arrive from other groups are never inserted twice into $barPending$. As each message is removed from $barPending$ right before being \amdel{}ed, it is never delivered twice, satisfying (3).
-
-For line \ref{algline:insbp1}, $m$ is inserted into $barPending$ of process $p'$ of group $G'$ when it has been \rmdel{}ed, and only if $m.src \neq G'$. For a process $p \in G \neq G'$ to \rmcast{} $m$, $m$ must have been decided within $G$, which means that it was proposed within $G$, therefore it was \amcast{} -- satisfying condition (1) -- by $G \neq G'$ to $G'$, which, from line \ref{algline:rmothers}, necessarily belongs to $m.dst$, satisfying condition (2).
+As for the case when $p \notin m.src$, $m$ is inserted into the $stamped$ set of process $p$ in line \ref{algline:insbp1}, when it has been \rmdel{}ed. For a process $q \in h$, such that $h \neq g$, to \rmcast{} $m$, $m$ must have been decided within $h$, which means that it was proposed within $h$, therefore it was \amcast{} -- satisfying condition (1) -- by $h$ to $g$, which, from line \ref{algline:rmothers}, necessarily belongs to $m.dst$, satisfying condition (2).
 
 Finally, as for Algorithm \ref{algorithm:nullperiodic}, $null$ messages are never delivered, so they will never violate the uniform integrity property.
 \end{proof}
@@ -886,7 +882,7 @@ If a correct process which is a destination of a message $m$ delivers it, then a
 \end{props}
 
 \begin{proof}
-Immediate from Proposition \ref{props:integrity}, Lemma \ref{lemma:mcastbarpending} and Lemma \ref{lemma:oncebpwilldel}.
+Immediate from Proposition \ref{props:validity} and Proposition \ref{props:integrity}.
 \end{proof}
 
 
@@ -905,13 +901,13 @@ Immediate from Proposition \ref{props:integrity}, Lemma \ref{lemma:mcastbarpendi
 %===   LEMMA   ====================================
 %===           ====================================
 \begin{lems} \label{lemma:respecttimestamps}
-If two messages $m$ and $m'$ have both a correct process $p$ as a destination, and $m.ts < m'.ts$, then $p$ delivers $m'$ after delivering $m$.
+If two messages $m$ and $m'$, both different from $null$, have a correct process $p$ as a destination, and $m.ts < m'.ts$, then $p$ \amdel{}s $m'$ after \amdel{}ing $m$.
 \end{lems}
 
 \begin{proof}
-Consider Algorithm \ref{algorithm:deliveryminimal}. Suppose, by way of contradiction, that $m'$ has already been delivered by $p$, whereas $m$ has not. Message $m$ might have already been inserted into $barPending$ or not. In the former case, $m'$ could not have been delivered, since $m.ts < m'.ts$, thus it would not satisfy the condition from line \ref{algline:inbarpending} until $m$ has been delivered, so we have a contradiction in the case that $m$ was already in $barPending$.
+Consider Algorithm \ref{algorithm:deliveryminimal}. Suppose, by way of contradiction, that $m'$ has already been delivered by $p$, whereas $m$ has not. Message $m$ might have already been inserted into $\stamped$ or not. In the former case, as $m \neq null$ and $m$ has not been delivered, then $m$ belongs to $\stamped \setminus \delivered$. Therefore, $m'$ could not have been delivered, since $m.ts < m'.ts$ and it would not satisfy the condition from line \ref{algline:condel1} until $m$ has been delivered, so we have a contradiction in the case where $m$ was already in $\stamped$.
 
-The other case is if $m$ has not been inserted into $barPending$. From line \ref{algline:inbarpending}, we know that $p$ has received some barrier $b$ from every group in $sendersTo(group(p))$. Therefore, from Lemma \ref{lemma:oncedecidednotsmaller}, and since a barrier is also a message, we know that any new message that arrives at $p$ will have a timestamp greater than $m'.ts$. As $m$ has arrived after $m'$, then $m.ts > m'.ts$, which is also a contradiction.
+The other case is when $m$ has not been inserted into $\stamped$. From line \ref{algline:condel2}, and since $m'$ has been delivered, we know that $p$ has received some barrier $b > m'.ts$ from every group in $sendersTo(group(p))$. Therefore, from Lemma \ref{lemma:oncedecidednotsmaller}, and since any barrier is also a message, we know that any new message that arrives at $p$ will have a timestamp greater than $m'.ts$. As $m$ has arrived after $m'$, then $m.ts > m'.ts$, which is also a contradiction.
 
 We have proven that the timestamp order will not be violated by $p$. Considering that, once a message has been multicast, it will be delivered (Proposition \ref{props:validity}), then we know that all messages will be delivered by $p$, and in the correct timestamp order.\end{proof}
 
@@ -941,15 +937,15 @@ Immediate from Lemma \ref{lemma:agreetimestamps}, Lemma \ref{lemma:respecttimest
 %===   LEMMA   ====================================
 %===           ====================================
 \begin{lems} \label{lemma:fifofinalts}
-If a process $p$ \amcast{}s $m$, then $m'$, then the final values of their timestamps will be such that $m.ts < m'.ts$.
+If a process $p$, from group $g$, \amcast{}s $m$, then $m'$, then the final values of their timestamps will be such that $m.ts < m'.ts$.
 \end{lems}
 
 \begin{proof}
-From lines \ref{algline:gettime} and \ref{algline:rmlocal}, and the properties of the \rmcast{} primitive, we know that all correct processes \rmdel{} $m$ and then $m'$, which means that each process $p'$ from $group(p)$ also inserts them into its $propPending$ set in this same order.
+If $m$ and $m'$ are decided in different consensus instances, and $m$ is decided first, then, from lines \ref{algline:decidedloopbegin} to \ref{algline:changetsafterdecision}, it will necessarily have a timestamp greater than that of $m'$. Therefore, the two possible ways of having $m'.ts < m.ts$ are: either $m'$ is decided before $m$, or both are decided in the same consensus instance, but the timestamp of $m$ is set to a value higher than that of $m'$.
 
-Suppose, by way of contradiction, that $m'$ is decided before $m$. This implies that some process $p$ proposed a message set that included $m'$, but not $m$. As $p$ inserted $m$ before $m'$ in its $propPending$ set, it means that $m$ was removed by $p$ from such set before being included in some proposed message set. However, the only possibility of removing a message from $propPending$ is on line \ref{algline:removedecided}, which means that $m$ already belonged to the $decided$ set, so it had been decided before $m'$, which is a contradiction. Therefore, $m'$ is not decided before $m$.
+From lines \ref{algline:gettime} and \ref{algline:rmlocal}, and the properties of \rmcast{}, we know that all correct processes of $g$ \rmdel{} $m$, then $m'$, which means that each process $q$ from $g$ also inserts them into its $\localmsgs$ set in this same order. Suppose, by way of contradiction, that $m'$ is decided before $m$. This implies that some process $q \in g$ proposed a message set that included $m'$, but not $m$. As $q$ inserted $m$ before $m'$ in its $\localmsgs$ set, it means that $m$ was inserted by $q$ into $\decided$ before. This means that $m$ has been decided already, which is a contradiction. Therefore, $m'$ is not decided before $m$.
 
-This also means that $m'$ is not inserted into the $decided$ set before $m$ has already been inserted. From line \ref{algline:gettime}, we know that the initial timestamp of $m$ is already smaller than that of $m'$. The only way to change this order is by making the final timestamp $m.ts$ bigger than $m'.ts$ on line \ref{algline:changetsafterdecision}. Even if this happens, as $m'$ is inserted into $decided$ after $m$, from line \ref{algline:conditionchangets}, we know that the final timestamp of $m'$ will be made greater than that of $m$.
+As for the case where $m$ and $m'$ are decided in the same consensus instance, we know, from line \ref{algline:gettime}, that the initial timestamp of $m$ is already smaller than that of $m'$. Therefore, from line \ref{algline:decidedloopbegin}, $m$ is inserted into $\decided$ first. Even if the timestamp of $m$ has changed, as $m$ was already in $\decided$ before $m'$, from lines \ref{algline:decidedloopbegin} to \ref{algline:changetsafterdecision}, we know that the final timestamp of $m'$ will again be made greater than that of $m$.
 \end{proof}
 
 
@@ -961,7 +957,7 @@ This also means that $m'$ is not inserted into the $decided$ set before $m$ has 
 %===   PROPOSITION   ==============================
 %===                 ==============================
 \begin{props} \label{props:fifoorder}
-If $p$ \amcast{}s $m$ and then $m'$, then no process $p'$ in both $m.dst$ and $m'.dst$ delivers $m'$ before delivering $m$.
+If a process $p$ \amcast{}s $m$ before \amcast{}ing $m'$, then no process $q \in m.dst \cap m'.dst$ \amdel{}s $m'$ before delivering $m$.
 \end{props}
 
 \begin{proof}
