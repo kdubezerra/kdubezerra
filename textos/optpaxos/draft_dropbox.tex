@@ -260,7 +260,7 @@ The messages in the \textit{\stamped} set are always handled in ascending order 
 	\WHILE{$msgSet \setminus \decided \neq \emptyset$}
 		\STATE let $m$ be the message in $msgSet \setminus \decided$ with smallest timestamp \label{algline:decidedloopbegin}
 		\STATE let $m'$ be the message in $\decided$ with greatest timestamp
-		\IF{$m'.ts > m.ts$}
+		\IF{$\exists m' \wedge m'.ts > m.ts$}
 			\STATE $m.ts \leftarrow (m'.ts.rtc, m'.ts.seq + 1)$ \label{algline:changetsafterdecision}
 		\ENDIF     
 		\IF{$g \in m.dst$} \label{algline:checkcons}
