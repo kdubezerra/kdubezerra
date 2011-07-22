@@ -680,11 +680,11 @@ Here, we prove that the \amcast{} primitive ensures the properties defined in se
 %===   LEMMA   ====================================
 %===           ====================================
 \begin{lems} \label{lemma:mcastdecided}
-Once every correct processes in a group $g$ has inserted a message $m$ into its $\localmsgs$ set, $m$ will be decided by all correct processes of $g$.
+Once every correct process in a group $g$ has inserted a message $m$ into $\localmsgs$, $m$ will eventually be decided by all correct processes of $g$.
 \end{lems}
 
 \begin{proof}
-Once each correct process $p$ from $g$ has received $m$ and inserted into its $\localmsgs$ set, $m$ will be proposed by $p$ in every consensus instance. The message $m$ is not proposed anymore by $p$ only once it has been inserted into $\decided$ (lines \ref{algline:undecided} and \ref{algline:propose}). Finally, $m$ is inserted into $\decided$ only after being decided (l. \ref{algline:addtodecided}). Therefore, every processes of $g$ will propose $m$ at some point and $m$ will eventually be decided. From the uniform agreement property of consensus, as $m$ is decided, all correct processes of $g$ will decide $m$.
+In Algorithm \ref{algorithm:deliveryminimal}, once each correct process $p$ from $g$ has received $m$ and inserted into its $\localmsgs$ set, $m$ will be proposed by $p$ in every consensus instance, until $m$ has been inserted into $\decided$ (lines \ref{algline:undecided} and \ref{algline:propose}). As $m$ is inserted into $\decided$ only after being decided (l. \ref{algline:addtodecided}), every correct processes of $g$ will propose $m$ at some point, so $m$ will eventually be decided. From the uniform agreement property of consensus, as $m$ is decided, all correct processes of $g$ decide $m$.
 \end{proof}
 
 
@@ -797,14 +797,13 @@ Consider Algorithm \ref{algorithm:deliveryminimal}. Every process $q$ from $h$ s
 %===   LEMMA   ====================================
 %===           ====================================
 \begin{lems} \label{lemma:oncedecidednotsmaller}
-  Once a process has inserted a message $m$ from some group $g$ into its $\stamped$ set, no message $m' : m'.ts < m.ts$ from $g$ will be inserted into such $\stamped$ set afterwards.
+Once a process $p$ has inserted a message $m$ into its $\stamped$ set, no message $m' : m'.ts < m.ts$ from $m.src$ will be inserted into such $\stamped$ set afterwards.
 \end{lems}
 
 \begin{proof}
-Let $p$ be a process from the group $g$ which sent $m$. Before inserting $m$ into the $\decided$ set (l. \ref{algline:addtodecided} of Algorithm \ref{algorithm:deliveryminimal}), $p$ checks whether there is already some other message with an equal or lower timestamp in such set. If that is the case, the timestamp of $m$ is changed to a value greater than that of any other message already within $\decided$. Only then $m$ may be inserted into the $\stamped$ set of $p$ (l. \ref{algline:insbp2}). Therefore, $p$ inserts messages from other processes of $g$ into its $\stamped$ set in ascending order of timestamps. Besides, each process from $g$ \rmcast{}s $m$ to the other destination groups of $m$ in this same order (l. \ref{algline:rmothers}).
+Let $g$ be the group of $p$. Group $g$ is either $m.src$ or not. In the former case, beforing inserting any message $m' : m'.src = m.src$ into $\stamped$, $p$ has to decide $m'$ first. When a message is decided by $p$, $p$ checks whether some other message which was decided previously has a timestamp lower than $m'$ and, if that is the case, the timestamp of $m'$ is changed to a value greater than that of any other message already decided (lines \ref{algline:decidedloopbegin} to \ref{algline:changetsafterdecision} of Algorithm \ref{algorithm:deliveryminimal}). Only then $m'$ may be inserted into the $\stamped$ set of $p$ (l. \ref{algline:insbp2}). Therefore, $p$ inserts messages from other processes of $g$ into its $\stamped$ set in ascending order of timestamps. Besides, the messages from $g$ are \rmcast{} to other groups in this same order (l. \ref{algline:rmothers}) by all correct processes of $g$, from the uniform agreement property of consensus.
 
-Regarding groups other than the source of the message, let $q$ be any process that is a destination of $m$, such that $q \in h \wedge h \neq g$. The process $q$ inserts $m$ into its $\stamped$ set in line \ref{algline:insbp1}. Considering that every process in a group sends that group's messages to other groups in the same order in which they are decided, that once a group has received some message from another group, any message prior to that one from the same group has also already been received (from Lemma \ref{lemma:groupfifo}), and that no message is inserted twice in the $\stamped$ set of any process (from line \ref{algline:notbptwice}), % and Lemma \ref{lemma:alwaysbpdel}),
-we can infer that, once $q$ inserts $m$ into its $\stamped$ set, no message $m' : m'.ts < m.ts$ from $g$ will be inserted into the the $\stamped$ set of $q$ afterwards.
+In the case where $g \neq m.src$, $p$ inserts $m$ into $\stamped$ in line \ref{algline:insbp1}. Considering that when $p$ receives any message from $m.src$, any other other message from $m.src$ with a lower timestamp has already been received (from Lemma \ref{lemma:groupfifo}), we can infer that, once $p$ inserts $m$ into $\stamped$, no message $m' : m'.ts < m.ts$ from $m.src$ will be inserted into the the $\stamped$ set of $p$ afterwards.
 \end{proof}
 
 %===           ====================================
