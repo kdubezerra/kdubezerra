@@ -8,7 +8,6 @@
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{amssymb}
-\usepackage{xparse}
 \usepackage[noend]{distribalgo}
 \usepackage[draft]{fixme}
 \usepackage[hmargin=2.5cm,vmargin=2.2cm]{geometry}
@@ -48,8 +47,8 @@
 \newcommand{\stamped}{stamped}
 \newcommand{\delivered}{delivered}%{a\mbox{-}delivered}2
 
-\NewDocumentCommand \mycast { g }
-{\IfNoValueTF{#1}{\amcast}{\amcastarg{#1}}}
+%\NewDocumentCommand \mycast { g }
+%{\IfNoValueTF{#1}{\amcast}{\amcastarg{#1}}}
 
 %\title{Optimistic Atomic Multicast}
 \title{Optimistic Atomic Multicast in One Communication Delay}
@@ -130,20 +129,20 @@ WE BADLY NEED AN EXAMPLE HERE...
 
 \subsection{Overview of the algorithm}
 
-Hereafter, we assume that in addition to a set of destination groups, $m.dst$, each message $m$ has a source group, $m.src$, and a timestamp, $m.ts$. To multicast $m$ process $p$ in $g$ sets $m.ts$ to a unique timestamp based on its real-time local clock and then r-mcasts $m$ to all processes in $g$.
+Hereafter, we assume that in addition to a set of destination groups, $m.dst$, each message $m$ has a source group, $m.src$, and a timestamp, $m.ts$. To \amcast{} $m$, process $p$ in group $g$ sets $m.ts$ to a unique timestamp based on its real-time local clock and then \rmcast{}s $m$ to all processes in $g$.
 
-When processes in $g$ r-deliver $m$, they run a consensus instance to agree on the final timestamp assigned to $m$, after possibly adjusting it to ensure the following invariant: for any two messages $m$ and $m'$, multicast by processes in $g$ and decided in consensus instances $l$ and $l'$, respectively, where $l < l'$, it follows that $m.ts < m'.ts$. This is important since we intend to deliver messages according to their timestamp order.
+When processes in $g$ \rmdel{} $m$, they run a consensus instance to agree on the final timestamp assigned to $m$, after possibly adjusting it to ensure the following invariant: for any two messages $m$ and $m'$, \amcast{} by processes in $g$, if a process in $g$ decides $m$ before $m'$, then $m.ts < m'.ts$. 
+% and decided in consensus instances $l$ and $l'$, respectively, where $l < l'$, it follows that $m.ts < m'.ts$. 
+This is important since we intend to \amdel{} messages according to their timestamp order.
 
 Notice that the original timestamp assigned by the message's sender may violate the invariant due to the assynchrony of the system. In such a case, after consensus processes reassign the message's timestamp to make the condition hold.
 
-Once group $g$ has decided on $m$'s final timestamp, $m$ is r-mcast to all its destination groups. Let $h$ be a group in $m.dst$. Process $q \in h$ will deliver $m$ as soon as it has received at least one message from every group $i$ in $sendersTo(h)$ with a timestamp greater than $m$'s timestamp.
+Once group $g$ has decided on $m$'s final timestamp, $m$ is \rmcast{} to all its destination groups. Let $h$ be a group in $m.dst$. To ensure that no message $m'$, where $m'.ts < m.ts$, is \amdel{}ed after $m$, process $q \in h$ will \amdel{} $m$ only when it has received at least one message from every group $i$ in $sendersTo(h)$ with a timestamp greater than $m$'s timestamp.
 
 
 \subsection{Detailed description}
 
-A more formal description of the protocol is given in Algorithm \ref{algorithm:deliveryminimal}. We consider that three primitives are given: $getTime()$, which returns the current value of the local wallclock; $propose_g(k, v)$, which proposes a value $v$ for the consensus instance of id $k$ within its group; and also $decide_g(k, v)$, which is called when the consensus instance of id $k$ finishes. $decide_g(k, v)$ is called for all the processes of the group that initiated it, when they learn that the value $val$ has been agreed upon in instance of id $k$. For the sake of simplicity, we assume that, for consensus instances within the same group, the values are decided in the same order of the instances id's\footnote{This can be easily done by delaying the callback of $decide_g(k, v)$ while there is some unfinished consensus instance of id $k': k' < k$ from the same group.}. Finally, we also use a fifo reliable multicast primitive \rmcastarg{$m$}{$groupSet$}, which \rmdel{}s $m$ to all the processes in all the groups in $groupSet$ in one communication step, in fifo order (e.g. the one described in \cite{ufrmcast1delta}).
-
-Moreover, each process $p$ of group $g$ keeps some sets of messages:
+A more formal description of the protocol is given in Algorithm \ref{algorithm:deliveryminimal}. We use a $getTime()$ primitive, which returns the current value of the local wallclock, which is monotonically increasing. Moreover, each process $p$ of group $g$ keeps some sets of messages:
 \begin{itemize}
   %\item \textit{optPending}, which contains the messages waiting to be \mbox{\textit{\opt{}ed}} (optimistically delivered);
   \item \textit{\localmsgs}, containing the %local messages, i.e., the 
@@ -155,16 +154,20 @@ Moreover, each process $p$ of group $g$ keeps some sets of messages:
 
 %; and $gs$, which is $m$'s sequence number relatively to its group of origin. 
 
-Something that must be noticed is that each message $m$ might not have its source group as a destination. Anyway, $m$ still has to be agreed upon in its group of origin $G$, so that its order among other messages from $G$ may be decided and for %$m.gs$ can be decided, and also for 
-$m$ to be retrievable even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
+Even though each message $m$ might not have its source group as a destination, $m$ is still agreed upon in its group of origin, so its order among other messages from $m.src$ is decided and it %$m.gs$ can be decided, and also for 
+becomes retrievable even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
+
+Whenever $p$ has some message $m$ to \amcast, it assigns to $m$ an initial timestamp value, based on the local wallclock of $p$, after which it \rmcast{}s $m$ to all the other processes of $g$ (lines \ref{algline:gettime} and \ref{algline:rmlocal}). After \rmdel{}ing $m$, each process puts it in $\localmsgs$ to be proposed in $g$ until it is decided. As all correct processes of $g$ do so, some accepted proposal will end up containing $m$.
+
+The consensus instances within $g$ are decided in the same order for every correct process of $g$. Such order is used to define the delivery order of $g$'s messages as well. We want this order to be consistent with the timestamps of the messages, so such timestamps can be changed if they are not in accordance with the delivery order.
+
+
+Each consensus instances may decide not only one, but a batch of messages. When a message set is decided, the messages in it are handled in ascending order of timestamps, as if they were decided separately in the original timestamp order. 
 
 
 
 
-
-
-
-The total order delivery of messages in a group can be solved by using consensus. Each consensus instance agrees upon some message set as the next ones to be delivered -- messages within the same set are told apart by the timestamp $m.ts$ applied by the process which created them; to solve timestamp collisions, the unique id of the sender process can be used. If processes send messages to each other using fifo reliable channels, and after receival, messages are proposed via consensus in the order in which they are received, the fifo delivery order is ensured.
+The atomic delivery of messages in a group can be solved by using consensus. Each consensus instance decides some message set as the next ones to be delivered -- messages within the same set are told apart by the timestamp $m.ts$ applied by the process which created them; to solve timestamp collisions, the unique id of the sender process can be used. If processes send messages to each other using fifo reliable channels, and after receival, messages are proposed via consensus in the order in which they are received, the fifo delivery order is ensured.
 
 The complicating factor is the possibility of a message having at least one destination group different from its source group. So, all involved groups must somehow agree regarding the delivery order of these messages. However, from assumption \emph{A1}, each group knows which other groups it could send messages to -- or receive messages from. We can use this by defining \emph{barriers} for multicast, such that \mbox{$barrier(G_{send},G_{recv}) = t$} means that the group $G_{send}$ promised that it would send no more messages with a timestamp lower than $t$ to group $G_{recv}$. We have defined that $sendersTo(G) =$ \mbox{$\{G' \neq G : G'\text{ is able to send a message to }G\}$}. When a process $p$, from group $G$, has received all the barrier values from all the groups in $sendersTo(G)$, and they are all greater than a value $t$, then $p$ knows that no more messages with timestamp lower than $t$ are coming from other groups and that, once the local ordering (the ordering of messages originated in $G$) is done, all the pending messages with timestamp up to $t$ can be delivered. Besides, a barrier is sent along with the bundle of all messages with timestamp greater than the last previous barrier sent from $G_{send}$ to $G_{recv}$, so that when a process has received a barrier from a group, it means that it knows all the messages sent by that group until the time value stored in that barrier.
 
