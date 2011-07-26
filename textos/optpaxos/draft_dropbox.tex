@@ -126,8 +126,13 @@ WE BADLY NEED AN EXAMPLE HERE...
 \section{Baseline atomic multicast}
 \label{sec:baseline}
 
+In this section, we describe a simpler, more easily understandable version of our proposed multicast protocol, upon which several optimizations are made and presented afterwards. Here, we focus on the main principles of the algorithm, which are: fifo delivery of messages, consensus within each group regarding the order of messages from that group and the use of barriers to synchronize the delivery of messages across different groups.
+
+In Section \ref{sec:overview}, we give a high-level description of our baseline multicast protocol and, in Section \ref{sec:detailed}, we present its algorithm and explain it in detail.
+
 
 \subsection{Overview of the algorithm}
+\label{sec:overview}
 
 Hereafter, we assume that in addition to a set of destination groups, $m.dst$, each message $m$ has a source group, $m.src$, and a timestamp, $m.ts$. To \amcast{} $m$, process $p$ in group $g$ sets $m.ts$ to a unique timestamp based on its real-time local clock and then \rmcast{}s $m$ to all processes in $g$.
 
@@ -141,8 +146,11 @@ Once group $g$ has decided on $m$'s final timestamp, $m$ is \rmcast{} to all its
 
 
 \subsection{Detailed description}
+\label{sec:detailed}
 
-A more formal description of the protocol is given in Algorithm \ref{algorithm:deliveryminimal}. We use a $getTime()$ primitive, which returns the current value of the local wallclock, which is monotonically increasing. Moreover, each process $p$ of group $g$ keeps some sets of messages:
+A more formal description of the protocol is given in Algorithm \ref{algorithm:deliveryminimal}. We use a $getTime()$ primitive, which returns the current value of the local wallclock, which is monotonically increasing. We also use the concept of \textit{barrier}. A barrier is the certainty that a given group will not send any new messages with a timestamp lower than a given value to some other group. As all groups receive messages from each other in the order of their timestamps, which is possible by using \rmcast{}, every message is seen as a barrier.
+
+Moreover, each process $p$ of group $g$ keeps some sets of messages:
 \begin{itemize}
   %\item \textit{optPending}, which contains the messages waiting to be \mbox{\textit{\opt{}ed}} (optimistically delivered);
   \item \textit{\localmsgs}, containing the %local messages, i.e., the 
@@ -155,25 +163,33 @@ A more formal description of the protocol is given in Algorithm \ref{algorithm:d
 %; and $gs$, which is $m$'s sequence number relatively to its group of origin. 
 
 Even though each message $m$ might not have its source group as a destination, $m$ is still agreed upon in its group of origin, so its order among other messages from $m.src$ is decided and it %$m.gs$ can be decided, and also for 
-becomes retrievable even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
+may be retrievable even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
 
-Whenever $p$ has some message $m$ to \amcast, it assigns to $m$ an initial timestamp value, based on the local wallclock of $p$, after which it \rmcast{}s $m$ to all the other processes of $g$ (lines \ref{algline:gettime} and \ref{algline:rmlocal}). After \rmdel{}ing $m$, each process puts it in $\localmsgs$ to be proposed in $g$ until it is decided. As all correct processes of $g$ do so, some accepted proposal will end up containing $m$.
+Whenever $p$ has some message $m$ to \amcast, it assigns to $m$ an initial timestamp value, based on the local wallclock of $p$, after which $m$ is \rmcast{} to all the other processes of $g$ (l. \ref{algline:gettime} and l. \ref{algline:rmlocal}). After \rmdel{}ing $m$, each process puts it in $\localmsgs$ to be proposed in $g$ until it is decided (l. \ref{algline:undecided} and l. \ref{algline:propose}), along with other undecided messages. As all correct processes of $g$ do so, some accepted proposal will end up containing $m$.
+
+When a set of messages is decided, such messages are handled by each process of $g$ in ascending order of timestamps, as if such messages had been decided separately, in the original timestamp order. If $m$ has a timestamp that is lower than the timestamp of some previously decided message $m'$, the timestamp of $m$ is changed to a value greater than $m'.ts$ (l. \ref{algline:decidedloopbegin} to l. \ref{algline:changetsafterdecision}). Doing so will ensure that all messages from $g$ are decided by $p$ in the same order of their final timestamps.
+
+After deciding $m$, $p$ checks whether $g$ is one of its destinations. If this is the case, $m$ is inserted into $\stamped$ (l. \ref{algline:insbp2}), meaning that $p$ should deliver it eventually. Then, $m$ is inserted into $\decided$, so that $p$ knows that $m$ was decided already and may stop proposing it in the following consensus instances. As no message decided afterwards within $g$ will have a timestamp lower than that of $m$, $p$ sets $barrier(g)$ to $m.ts$ (l. \ref{algline:incbarlocal}).  Finally, if $m$ has any destination other than $g$, $p$ \rmcast{}s $m$ to it (l. \ref{algline:rmothers}).
+
+Let $h$ be any possible destination group of $m$ other than $g$. When some process $q$ of $h$ \rmdel{}s $m$ for the first time, $q$ sets $barrier(g)$ to $m.ts$ (l. \ref{algline:incbar}), since, from the \rmcast{} primitive, any previous message from $g$ has already been received. Besides, $q$ knows that the processes of $g$ have already decided the final timestamp of $m$, so $q$ inserts it into $\stamped$ (l. \ref{algline:insbp1}).
+
+For any process $r$, of any group $i$ in $m.dst$, when $m$ belongs to $\stamped$, having the lowest timestamp among all undelivered messages of such set (l. \ref{algline:condel1}), and $r$ has already received a barrier from every group in $sendersTo(i)$, where the value of such barrier is greater than $m.ts$ (l. \ref{algline:condel2}), $m$ is \amdel{}ed by $r$ (l. \ref{algline:consdeliver}). Doing so, no message $m'$ with a timestamp greater than $m.ts$ will be \amdel{}ed before $m$ by any process in $m.dst$.
 
 The consensus instances within $g$ are decided in the same order for every correct process of $g$. Such order is used to define the delivery order of $g$'s messages as well. We want this order to be consistent with the timestamps of the messages, so such timestamps can be changed if they are not in accordance with the delivery order.
 
 
-Each consensus instances may decide not only one, but a batch of messages. When a message set is decided, the messages in it are handled in ascending order of timestamps, as if they were decided separately in the original timestamp order. 
 
 
 
 
-The atomic delivery of messages in a group can be solved by using consensus. Each consensus instance decides some message set as the next ones to be delivered -- messages within the same set are told apart by the timestamp $m.ts$ applied by the process which created them; to solve timestamp collisions, the unique id of the sender process can be used. If processes send messages to each other using fifo reliable channels, and after receival, messages are proposed via consensus in the order in which they are received, the fifo delivery order is ensured.
 
-The complicating factor is the possibility of a message having at least one destination group different from its source group. So, all involved groups must somehow agree regarding the delivery order of these messages. However, from assumption \emph{A1}, each group knows which other groups it could send messages to -- or receive messages from. We can use this by defining \emph{barriers} for multicast, such that \mbox{$barrier(G_{send},G_{recv}) = t$} means that the group $G_{send}$ promised that it would send no more messages with a timestamp lower than $t$ to group $G_{recv}$. We have defined that $sendersTo(G) =$ \mbox{$\{G' \neq G : G'\text{ is able to send a message to }G\}$}. When a process $p$, from group $G$, has received all the barrier values from all the groups in $sendersTo(G)$, and they are all greater than a value $t$, then $p$ knows that no more messages with timestamp lower than $t$ are coming from other groups and that, once the local ordering (the ordering of messages originated in $G$) is done, all the pending messages with timestamp up to $t$ can be delivered. Besides, a barrier is sent along with the bundle of all messages with timestamp greater than the last previous barrier sent from $G_{send}$ to $G_{recv}$, so that when a process has received a barrier from a group, it means that it knows all the messages sent by that group until the time value stored in that barrier.
+%The atomic delivery of messages in a group can be solved by using consensus. Each consensus instance decides some message set as the next ones to be delivered -- messages within the same set are told apart by the timestamp $m.ts$ applied by the process which created them; to solve timestamp collisions, the unique id of the sender process can be used. If processes send messages to each other using fifo reliable channels, and after receival, messages are proposed via consensus in the order in which they are received, the fifo delivery order is ensured.
 
-As mentioned before, we use consensus to deliver messages. Consider that each consensus instance $I$ from each group $I.grp$ receives a monotonically increasing unique integer identifier, without gaps, that is, for any two instances $I_i$ and $I_k$, such that $I_i.grp = I_k.grp$, if $I_i.id + 1 < I_k.id$, there is necessarily an instance $I_j : I_i.grp = I_j.grp = I_k.grp \wedge I_i.id < I_j.id < I_k.id$. No group runs two consensus instances in parallel: before initiating an instance of id $k+1$ each process checks whether the instance $k$ has already been decided, so some messages may wait to be proposed. When a process is allowed to initiate a new consensus instance, the pending messages may be proposed as a batch.%Consider also that each message $m$ sent by a group $G$ has a group sequence number $m.gs$ related to the order in which it is conservatively delivered, relatively to other messages also sent by $G$. As messages are conservatively delivered via consensus, the group sequence number of a message is equal to the id of the instance in which it was decided, that is, $m.gs = i \Leftrightarrow \exists I : I.id = i \wedge I.grp = m.src \wedge I.val = m$, where $I.val$ is the value decided by the instance $I$.
+%The complicating factor is the possibility of a message having at least one destination group different from its source group. So, all involved groups must somehow agree regarding the delivery order of these messages. However, from assumption \emph{A1}, each group knows which other groups it could send messages to -- or receive messages from. We can use this by defining \emph{barriers} for multicast, such that \mbox{$barrier(G_{send},G_{recv}) = t$} means that the group $G_{send}$ promised that it would send no more messages with a timestamp lower than $t$ to group $G_{recv}$. We have defined that $sendersTo(G) =$ \mbox{$\{G' \neq G : G'\text{ is able to send a message to }G\}$}. When a process $p$, from group $G$, has received all the barrier values from all the groups in $sendersTo(G)$, and they are all greater than a value $t$, then $p$ knows that no more messages with timestamp lower than $t$ are coming from other groups and that, once the local ordering (the ordering of messages originated in $G$) is done, all the pending messages with timestamp up to $t$ can be delivered. Besides, a barrier is sent along with the bundle of all messages with timestamp greater than the last previous barrier sent from $G_{send}$ to $G_{recv}$, so that when a process has received a barrier from a group, it means that it knows all the messages sent by that group until the time value stored in that barrier.
 
-However, we are using the timestamp given at the creation of a message by its sender. Therefore, it might be the case that, after a message $m'$ has been proposed by a process $p$ in a consensus instance, a message $m : m.ts < m'.ts$ arrives at $p$. If $m$ is delivered with its original timestamp, the timestamp order is violated and there is no sense in using these timestamps for barriers. There are two possible solutions for that: either the message is simply discarded, and no violation to the timestamp order takes place, or we can change the timestamp of $m$ to something greater than the timestamp of $m'$. If uniform validity is to be ensured, discarding $m$ is not an option. As we need, then, to change the value of $m.ts$, two things should be noted: first, as we are using reliable fifo channels, then the process which sent $m$ is different than that which sent $m'$, so inverting their order does not violate fifo; finally, increasing a message timestamp must be done with caution, so that messages created by different groups at the same time have roughly the same timestamp and the barrier mechanism is efficient -- if a long sequence of messages have their timestamps increased, the last one of them may wait a long time until all the barriers required to deliver it have arrived.
+%As mentioned before, we use consensus to deliver messages. Consider that each consensus instance $I$ from each group $I.grp$ receives a monotonically increasing unique integer identifier, without gaps, that is, for any two instances $I_i$ and $I_k$, such that $I_i.grp = I_k.grp$, if $I_i.id + 1 < I_k.id$, there is necessarily an instance $I_j : I_i.grp = I_j.grp = I_k.grp \wedge I_i.id < I_j.id < I_k.id$. No group runs two consensus instances in parallel: before initiating an instance of id $k+1$ each process checks whether the instance $k$ has already been decided, so some messages may wait to be proposed. When a process is allowed to initiate a new consensus instance, the pending messages may be proposed as a batch.%Consider also that each message $m$ sent by a group $G$ has a group sequence number $m.gs$ related to the order in which it is conservatively delivered, relatively to other messages also sent by $G$. As messages are conservatively delivered via consensus, the group sequence number of a message is equal to the id of the instance in which it was decided, that is, $m.gs = i \Leftrightarrow \exists I : I.id = i \wedge I.grp = m.src \wedge I.val = m$, where $I.val$ is the value decided by the instance $I$.
+
+%However, we are using the timestamp given at the creation of a message by its sender. Therefore, it might be the case that, after a message $m'$ has been proposed by a process $p$ in a consensus instance, a message $m : m.ts < m'.ts$ arrives at $p$. If $m$ is delivered with its original timestamp, the timestamp order is violated and there is no sense in using these timestamps for barriers. There are two possible solutions for that: either the message is simply discarded, and no violation to the timestamp order takes place, or we can change the timestamp of $m$ to something greater than the timestamp of $m'$. If uniform validity is to be ensured, discarding $m$ is not an option. As we need, then, to change the value of $m.ts$, two things should be noted: first, as we are using reliable fifo channels, then the process which sent $m$ is different than that which sent $m'$, so inverting their order does not violate fifo; finally, increasing a message timestamp must be done with caution, so that messages created by different groups at the same time have roughly the same timestamp and the barrier mechanism is efficient -- if a long sequence of messages have their timestamps increased, the last one of them may wait a long time until all the barriers required to deliver it have arrived.
 
 % To allow for the timestamp of messages to be increased and still have them delivered as soon as possible, their timestamps are increased by an infinitesimal value. For that reason, each timestamp value will consist of a real-time clock value, and a sequence value, which is used only when messages need to have their timestamps changed. Also, to solve timestamp clashes, the id of the process which sent the message is also used. Therefore, we have that $m.ts = (rtc, seq, p_{id})$, where $rtc$ is some value related to the wallclock (real-time clock) of a process, $seq$ is a sequence number to define an order between messages with the same $rtc$ value and $p_{id}$ is the id of the process which sent $m$. Therefore, we have:
 % \begin{align*}
@@ -189,42 +205,42 @@ m.ts < m'.ts \Longleftrightarrow m.ts.rtc < m'.ts.rtc \vee (m.ts.rtc = m'.ts.rtc
 %&\vee (m.ts.rtc = m'.ts.rtc \wedge m.ts.seq = m'.ts.seq \wedge m.ts.p_{id} < m'.ts.p_{id})
 \end{align*}
 
-For every message $m$, a given group $G$ may be its source or not. Therefore, each process $p \in G$ will handle $m$ accordingly:
-
-\begin{itemize}
-  \item The message $m$ was originated in $G$:
-  
-  When a process in $G$ \amcast{}s $m$, it is first \rmcast{} to the other processes of $G$. Then, when $m$ is \rmdel{}ed at $p$, $p$ checks whether the latest consensus instance $I_{k}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $\localmsgs$ queue as the next message being proposed by it in the consensus instance $I_{k+1}$, so other tasks can keep being executed. Then, once $I_{k}$ has been decided, $p$ may start a new instance. Before that, all messages in $\localmsgs$ that have been already decided are discarded from $\localmsgs$. The rest is proposed as a batch in $I_{k+1}$.
-  
-  Once $m$ is decided, it is not immediately delivered to the application. Instead, $p$ checks whether some message $m_{prv} : m_{prv}.ts \geq m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, $m$ is inserted into a $\stamped$ set for later being delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t_b$, such that $t_b \geq m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
-  
-  Still, when a group $G$ is sending some message, it might be addressed to some other group or only to $G$. Therefore:
-  
-  \begin{itemize}
-    \item If $G$ is the only destination of $m$:
-    
-    In this case, $p$ only inserts $m$ in the $\stamped$ set for being delivered once all necesarry barriers have arrived.
-    
-    \item If there is some other group $G'$ as a destination of $m$:
-    
-    In this case, when $m$ is decided, $p$ \rmcast{}s $m$ to every \mbox{$p' \in (m.dst \setminus \{G\})$}. When $m$ is \rmdel{}ed by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $\stamped$ set. If not, $p'$ inserts $m$ into $\stamped$ and adjusts $barrier(G, G')$ to $m.ts$. As the sending of these messages from a group to another is done via a fifo reliable channel, once a message $m$ from another group $G$ is \rmdel{}ed, every message $m' : m'.ts < m.ts$ from $G$ has also already been \rmdel{}ed.
-    
-  \end{itemize}
-%   
-%   In this case, when $m$ is received by $p$, $p$ checks whether the latest consensus instance $I_{k}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $\localmsgs$ queue as the next message being proposed by it in the consensus instance $I_{k+1}$, so other tasks can keep being executed. Then, once $I_{k}$ has been decided, $p$ may start a new instance. Before that, all messages in $\localmsgs$ that have been already decided are discarded from $\localmsgs$. The rest is proposed as a batch in $I_{k+1}$. Once $m$ is decided, it is not immediately delivered to the application. Instead, $p$ checks whether some message $m_{prv} : m_{prv}.ts \geq m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, $m$ is inserted into a $\stamped$ set for later being delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t$, such that $t > m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
+% For every message $m$, a given group $G$ may be its source or not. Therefore, each process $p \in G$ will handle $m$ accordingly:
 % 
-%   \item When $m$ is originated in $G$, but it has at least one group other than $G$ as a destination:
+% \begin{itemize}
+%   \item The message $m$ was originated in $G$:
 %   
-%   In this case, when $m$ is received, $p$ tries to initiate a consensus instance within $G$ to decide $m$. If $p$ cannot start the proposal now, $m$ is enqueued in $\localmsgs$ for being proposed later along with other pending messages. Then, once $p$ may start a new instance, all messages in $\localmsgs$ that have been already decided are discarded from $\localmsgs$. The rest is proposed as a batch in the new consensus instance. Once any message $m$ is decided, $p$ checks whether some message $m_{prv} : m_{prv}.ts > m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, if $G \in m.dst$, $m$ is inserted in the $\stamped$ set. Besides, when $m$ is decided, $p$ sends $m$ to every \mbox{$p' \in (m.dst \setminus \{G\})$}. When $m$ is received by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $\stamped$ set. If not, $p'$ inserts $m$ into $\stamped$ and adjusts $barrier(G, G')$ to $m.ts$. To ensure that, once a message $m$ is received from another group $G$, every message $m' : m'.ts<m.ts$ also from $G$ has already been received, every message is sent through a lossless fifo channel\footnote{An ordinary TCP connection would be enough to provide such fifo lossless channel. Here, we use fifo reliable multicast.}.
-  
-  \item When $G$ is one of the destinations of $m$, but $m$ was originated in some other group $G'$:
-  
-  In this case, when $m$ is received for the first time\footnote{Multiple processes may have sent $m$. To ensure integrity and order, only the first delivery is considered.} by $p$, $m$ is inserted into the $\stamped$ set of $p$ and the value of $barrier(G',G)$ is set to $m.ts$.
-\end{itemize}
-
-The messages in the \textit{\stamped} set are always handled in ascending order of their timestamps. Let $m$ be the message with lowest timestamp in the $\stamped$ set of a process $p \in g$. When $m.ts < barrier(g, h)$ for all $h \in sendersTo(g)$, then $m$ is \amdel{}ed by $p$ to the application as the next message. We proved that this delivery respects the fifo total order.
-
-%The possibility not covered here is when a message is sent from a group to another one which is not its neighbour. However, it is realistic for this context to assume that objects should be close to each other in the virtual environment to interact and that, as such, this kind of interaction is not supported. Nevertheless, one simple way to provide this kind of support could be by each group waiting for the barriers of every other group in the system, instead of only those of its neighbors.
+%   When a process in $G$ \amcast{}s $m$, it is first \rmcast{} to the other processes of $G$. Then, when $m$ is \rmdel{}ed at $p$, $p$ checks whether the latest consensus instance $I_{k}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $\localmsgs$ queue as the next message being proposed by it in the consensus instance $I_{k+1}$, so other tasks can keep being executed. Then, once $I_{k}$ has been decided, $p$ may start a new instance. Before that, all messages in $\localmsgs$ that have been already decided are discarded from $\localmsgs$. The rest is proposed as a batch in $I_{k+1}$.
+%   
+%   Once $m$ is decided, it is not immediately delivered to the application. Instead, $p$ checks whether some message $m_{prv} : m_{prv}.ts \geq m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, $m$ is inserted into a $\stamped$ set for later being delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t_b$, such that $t_b \geq m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
+%   
+%   Still, when a group $G$ is sending some message, it might be addressed to some other group or only to $G$. Therefore:
+%   
+%   \begin{itemize}
+%     \item If $G$ is the only destination of $m$:
+%     
+%     In this case, $p$ only inserts $m$ in the $\stamped$ set for being delivered once all necesarry barriers have arrived.
+%     
+%     \item If there is some other group $G'$ as a destination of $m$:
+%     
+%     In this case, when $m$ is decided, $p$ \rmcast{}s $m$ to every \mbox{$p' \in (m.dst \setminus \{G\})$}. When $m$ is \rmdel{}ed by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $\stamped$ set. If not, $p'$ inserts $m$ into $\stamped$ and adjusts $barrier(G, G')$ to $m.ts$. As the sending of these messages from a group to another is done via a fifo reliable channel, once a message $m$ from another group $G$ is \rmdel{}ed, every message $m' : m'.ts < m.ts$ from $G$ has also already been \rmdel{}ed.
+%     
+%   \end{itemize}
+% %   
+% %   In this case, when $m$ is received by $p$, $p$ checks whether the latest consensus instance $I_{k}$ in which it participated, or is trying to start, has already been decided -- if not, $p$ enqueues $m$ in a $\localmsgs$ queue as the next message being proposed by it in the consensus instance $I_{k+1}$, so other tasks can keep being executed. Then, once $I_{k}$ has been decided, $p$ may start a new instance. Before that, all messages in $\localmsgs$ that have been already decided are discarded from $\localmsgs$. The rest is proposed as a batch in $I_{k+1}$. Once $m$ is decided, it is not immediately delivered to the application. Instead, $p$ checks whether some message $m_{prv} : m_{prv}.ts \geq m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, $m$ is inserted into a $\stamped$ set for later being delivered, which will happen once every group $G'$ in $sendersTo(G)$ has already sent a message $barrier(G',G) = t$, such that $t > m.ts$. This is done because there could be a message $m'$ yet to come from another group $G'$, such that $m'.ts < m.ts$.
+% % 
+% %   \item When $m$ is originated in $G$, but it has at least one group other than $G$ as a destination:
+% %   
+% %   In this case, when $m$ is received, $p$ tries to initiate a consensus instance within $G$ to decide $m$. If $p$ cannot start the proposal now, $m$ is enqueued in $\localmsgs$ for being proposed later along with other pending messages. Then, once $p$ may start a new instance, all messages in $\localmsgs$ that have been already decided are discarded from $\localmsgs$. The rest is proposed as a batch in the new consensus instance. Once any message $m$ is decided, $p$ checks whether some message $m_{prv} : m_{prv}.ts > m.ts$ has been decided previously. If that is the case, the value of $m.ts$ is changed to a value greater than the timestamp of any other message previously decided within $G$. Then, if $G \in m.dst$, $m$ is inserted in the $\stamped$ set. Besides, when $m$ is decided, $p$ sends $m$ to every \mbox{$p' \in (m.dst \setminus \{G\})$}. When $m$ is received by each $p' \in G'$, $p'$ checks whether it has ever inserted $m$ in its own $\stamped$ set. If not, $p'$ inserts $m$ into $\stamped$ and adjusts $barrier(G, G')$ to $m.ts$. To ensure that, once a message $m$ is received from another group $G$, every message $m' : m'.ts<m.ts$ also from $G$ has already been received, every message is sent through a lossless fifo channel\footnote{An ordinary TCP connection would be enough to provide such fifo lossless channel. Here, we use fifo reliable multicast.}.
+%   
+%   \item When $G$ is one of the destinations of $m$, but $m$ was originated in some other group $G'$:
+%   
+%   In this case, when $m$ is received for the first time\footnote{Multiple processes may have sent $m$. To ensure integrity and order, only the first delivery is considered.} by $p$, $m$ is inserted into the $\stamped$ set of $p$ and the value of $barrier(G',G)$ is set to $m.ts$.
+% \end{itemize}
+% 
+% The messages in the \textit{\stamped} set are always handled in ascending order of their timestamps. Let $m$ be the message with lowest timestamp in the $\stamped$ set of a process $p \in g$. When $m.ts < barrier(g, h)$ for all $h \in sendersTo(g)$, then $m$ is \amdel{}ed by $p$ to the application as the next message. We proved that this delivery respects the fifo total order.
+% 
+% %The possibility not covered here is when a message is sent from a group to another one which is not its neighbour. However, it is realistic for this context to assume that objects should be close to each other in the virtual environment to interact and that, as such, this kind of interaction is not supported. Nevertheless, one simple way to provide this kind of support could be by each group waiting for the barriers of every other group in the system, instead of only those of its neighbors.
 
 
 \begin{algorithm}
@@ -263,13 +279,14 @@ The messages in the \textit{\stamped} set are always handled in ascending order 
 	\WHILE{$msgSet \setminus \decided \neq \emptyset$}
 		\STATE let $m$ be the message in $msgSet \setminus \decided$ with smallest timestamp \label{algline:decidedloopbegin}
 		\STATE let $m'$ be the message in $\decided$ with greatest timestamp
-		\IF{$\exists m' \wedge m'.ts > m.ts$}
+		\IF{$m'$ exists and $m'.ts > m.ts$}
 			\STATE $m.ts \leftarrow (m'.ts.rtc, m'.ts.seq + 1)$ \label{algline:changetsafterdecision}
 		\ENDIF     
 		\IF{$g \in m.dst$} \label{algline:checkcons}
 			\STATE $\stamped \leftarrow \stamped \cup \{m\}$  \label{algline:insbp2}
 		\ENDIF
 		\STATE $\decided \leftarrow \decided \cup \{m\}$  \label{algline:addtodecided}
+		\STATE $barrier(g) \leftarrow m.ts$ \label{algline:incbarlocal}
 		\STATE \rmcastarg{$m.dst \setminus \{g\}$}{$m$} \label{algline:rmothers}
 	\ENDWHILE
 
@@ -315,12 +332,14 @@ The simplest way to provide liveness to the delivery algorithm is by sending emp
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When} \rmcast{}ing a message $m$ to some group $h \neq g$}
-  \STATE $lastBarrierCreated(h) \leftarrow m.ts.rtc$
+\INDENT{\textbf{when} deciding a message $m$}
+  \INDENT{\textbf{for all} $h \in m.dst \cup \{g\}$ \textbf{do}}
+    \STATE $lastBarrierCreated(h) \leftarrow m.ts.rtc$ 
+  \ENDINDENT  
 \ENDINDENT
 
 \blankline
-\INDENT{\textit{When $\exists h: g \in sendersTo(h) \wedge getTime() - lastBarrierCreated(h) > barrierThreshold$}}
+\INDENT{\textbf{when} $\exists h: g \in sendersTo(h) \wedge getTime() - lastBarrierCreated(h) > barrierThreshold$}
   \STATE $null \leftarrow$ empty message
   \STATE $null.ts \leftarrow (lastBarrierCreated(h) + barrierThreshold, 0)$ \label{algline:samenullid}
   \STATE $null.src \leftarrow g$
