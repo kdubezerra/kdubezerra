@@ -134,7 +134,7 @@ In Section \ref{sec:overview}, we give a high-level description of our baseline 
 \subsection{Overview of the algorithm}
 \label{sec:overview}
 
-Hereafter, we assume that in addition to a set of destination groups, $m.dst$, each message $m$ has a source group, $m.src$, and a timestamp, $m.ts$. To \amcast{} $m$, process $p$ in group $g$ sets $m.ts$ to a unique timestamp based on its real-time local clock and then \rmcast{}s $m$ to all processes in $g$.
+Hereafter, we assume that in addition to application data, each message $m$ has four fields: its set of destination groups $m.dst$, its source group $m.src$, its timestamp $m.ts$ and an unique message identifier $m.id$. To \amcast{} $m$, process $p$ in group $g$ sets $m.ts$ to a unique timestamp based on its real-time local clock and then \rmcast{}s $m$ to all processes in $g$.
 
 When processes in $g$ \rmdel{} $m$, they run a consensus instance to agree on the final timestamp assigned to $m$, after possibly adjusting it to ensure the following invariant: for any two messages $m$ and $m'$, \amcast{} by processes in $g$, if a process in $g$ decides $m$ before $m'$, then $m.ts < m'.ts$. 
 % and decided in consensus instances $l$ and $l'$, respectively, where $l < l'$, it follows that $m.ts < m'.ts$. 
@@ -148,7 +148,7 @@ Once group $g$ has decided on $m$'s final timestamp, $m$ is \rmcast{} to all its
 \subsection{Detailed description}
 \label{sec:detailed}
 
-A more formal description of the protocol is given in Algorithm \ref{algorithm:deliveryminimal}. We use a $getTime()$ primitive, which returns the current value of the local wallclock, which is monotonically increasing. We also use the concept of \textit{barrier}. A barrier is the certainty that a given group will not send any new messages with a timestamp lower than a given value to some other group. As all groups receive messages from each other in the order of their timestamps, which is possible by using \rmcast{}, every message is seen as a barrier.
+A more formal description of the protocol is given in Algorithm \ref{algorithm:deliveryminimal}. We use a $getTime()$ primitive, which returns the current value of the local wallclock, which is monotonically increasing. We also use the concept of \textit{barrier}. A barrier is the certainty that a given group will not send any new messages with a timestamp lower than a given value to some other group. As all groups receive messages from each other in the order of their timestamps, which is done by using \rmcast{}, every message is seen as a barrier.
 
 Moreover, each process $p$ of group $g$ keeps some sets of messages:
 \begin{itemize}
@@ -160,22 +160,88 @@ Moreover, each process $p$ of group $g$ keeps some sets of messages:
   \item \textit{\delivered}, which contains the messages that have been already \amdel{}ed by $p$.
 \end{itemize} 
 
+
 %; and $gs$, which is $m$'s sequence number relatively to its group of origin. 
 
-Even though each message $m$ might not have its source group as a destination, $m$ is still agreed upon in its group of origin, so its order among other messages from $m.src$ is decided and it %$m.gs$ can be decided, and also for 
-may be retrievable even in the presence of failures.% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
+\begin{algorithm}
+\begin{distribalgo}[1]
 
-Whenever $p$ has some message $m$ to \amcast, it assigns to $m$ an initial timestamp value, based on the local wallclock of $p$, after which $m$ is \rmcast{} to all the other processes of $g$ (l. \ref{algline:gettime} and l. \ref{algline:rmlocal}). After \rmdel{}ing $m$, each process puts it in $\localmsgs$ to be proposed in $g$ until it is decided (l. \ref{algline:undecided} and l. \ref{algline:propose}), along with other undecided messages. As all correct processes of $g$ do so, some accepted proposal will end up containing $m$.
+\blankline
+\INDENT{Initialization}
+  \STATE $k \leftarrow 0$, $\localmsgs \leftarrow \emptyset$, $\decided \leftarrow \emptyset$, $\stamped \leftarrow \emptyset$, $\delivered \leftarrow \emptyset$
+  \INDENT{\textbf{for all} $h \in sendersTo(g)$ \textbf{do}}
+    \STATE $barrier(h) \leftarrow 0$ 
+  \ENDINDENT
+\ENDINDENT 
+
+\blankline
+\INDENT{\textit{To} \amcast{} \textit{a message $m$}}
+  \STATE $m.ts \leftarrow getTime()$ \label{algline:gettime}
+  \STATE \rmcastarg{$\{g\}$}{$m$} \label{algline:rmlocal}
+\ENDINDENT
+
+\blankline
+\WHEN{\rmdelarg{$m$}}
+  \IF{$g = m.src$}
+    \STATE $\localmsgs \leftarrow \localmsgs \cup \{m\}$ \label{algline:addtogroupmsgs}
+  \ELSIF{$m \notin \stamped$} \label{algline:notbptwice}
+    \STATE $\stamped \leftarrow \stamped \cup \{m\}$ \label{algline:insbp1}
+    \STATE $barrier(m.src) \leftarrow m.ts$ \label{algline:incbar}
+  \ENDIF
+\ENDWHEN
+
+\blankline
+\WHEN{$\localmsgs \setminus \decided \neq \emptyset$}
+  \STATE $k \leftarrow k + 1$
+  \STATE $undecided \leftarrow \localmsgs \setminus \decided$ \label{algline:undecided}
+  \STATE propose$_g$($k, undecided$) \label{algline:propose}
+  \STATE \textbf{wait until} decide$_g$($k, msgSet$) \label{algline:decide}
+  \WHILE{$msgSet \setminus \decided \neq \emptyset$}
+    \STATE let $m$ be the message in $msgSet \setminus \decided$ with smallest timestamp \label{algline:decidedloopbegin}
+    \STATE let $m'$ be the message in $\decided$ with greatest timestamp
+    \IF{$m'$ exists and $m'.ts > m.ts$}
+      \STATE $m.ts \leftarrow m'.ts + 1$ \label{algline:changetsafterdecision}
+    \ENDIF     
+    \IF{$g \in m.dst$} \label{algline:checkcons}
+      \STATE $\stamped \leftarrow \stamped \cup \{m\}$  \label{algline:insbp2}
+    \ENDIF
+    \STATE $\decided \leftarrow \decided \cup \{m\}$  \label{algline:addtodecided}
+    \STATE $barrier(g) \leftarrow m.ts$ \label{algline:incbarlocal}
+    \STATE \rmcastarg{$m.dst \setminus \{g\}$}{$m$} \label{algline:rmothers}
+  \ENDWHILE
+
+\ENDWHEN
+
+\blankline
+%\WHEN{$\exists m \in \stamped : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in \stamped : m'.ts < m.ts$} \label{algline:in\stamped}
+\WHEN{$\stamped \setminus \delivered \neq \emptyset$} \label{algline:inammulticast}
+  \STATE let $m$ be the message in $\stamped \setminus \delivered$ with smallest timestamp \label{algline:condel1}
+  \IF{$\forall h \in sendersTo(g): m.ts < barrier(h)$} \label{algline:condel2}
+%   \STATE $\stamped \leftarrow \stamped \setminus \{m\}$ \label{algline:rmfrombp}
+      \STATE \amdelarg{$m$} \label{algline:consdeliver}
+    \STATE $\delivered \leftarrow \delivered \cup \{m\}$ \label{algline:addtodelivered}
+  \ENDIF
+\ENDWHEN
+\blankline
+
+\caption{\amcastarg{m} -- executed by process $p$ in group $g$}
+\label{algorithm:deliveryminimal}
+\end{distribalgo}
+\end{algorithm}
+
+% Because of that, to ensure that messages of this kind are also received by $group(p)$'s coordinator $c$, which then initiates the Paxos instance that allows for the conservative delivery of the message in all of its destinations, every message $m$ from $p$ must also be sent to $c$ (l. \ref{algline:sendcoord}). This way, when the clock value at the coordinator $time(c) > w(c) + m.ts$, $c$ will conservatively send $m$ to all the processes in $m.dst$. Finally, to avoid delivering a message $m$ in a group it is not addressed to, before OPT-Delivering it, each process must check whether it is one of $m$'s destinations or not (l. \ref{algline:notinterested}). In l. \ref{algline:sendcoord}, $m$ is sent to the whole group $G$, so that in the case of failure of $G$'s coordinator, it is more likely that the new coordinator will know about the existence of $m$.
+
+Whenever $p$ has some message $m$ to \amcast, it assigns to $m$ an initial timestamp value, based on the local wallclock of $p$, after which $m$ is \rmcast{} to all the other processes of $g$ (l. \ref{algline:gettime} and l. \ref{algline:rmlocal}). After \rmdel{}ing $m$, each process puts it in $\localmsgs$ to be proposed in $g$ until it is decided (l. \ref{algline:undecided} and l. \ref{algline:propose}), along with other undecided messages. As all correct processes of $g$ do so, some accepted proposal will end up containing $m$. Even though $m$ might not have its source group as a destination, $m$ is still agreed upon in its group of origin, so its order among other messages from $g$ is decided and it may be retrievable even in the presence of failures.
 
 When a set of messages is decided, such messages are handled by each process of $g$ in ascending order of timestamps, as if such messages had been decided separately, in the original timestamp order. If $m$ has a timestamp that is lower than the timestamp of some previously decided message $m'$, the timestamp of $m$ is changed to a value greater than $m'.ts$ (l. \ref{algline:decidedloopbegin} to l. \ref{algline:changetsafterdecision}). Doing so will ensure that all messages from $g$ are decided by $p$ in the same order of their final timestamps.
 
 After deciding $m$, $p$ checks whether $g$ is one of its destinations. If this is the case, $m$ is inserted into $\stamped$ (l. \ref{algline:insbp2}), meaning that $p$ should deliver it eventually. Then, $m$ is inserted into $\decided$, so that $p$ knows that $m$ was decided already and may stop proposing it in the following consensus instances. As no message decided afterwards within $g$ will have a timestamp lower than that of $m$, $p$ sets $barrier(g)$ to $m.ts$ (l. \ref{algline:incbarlocal}).  Finally, if $m$ has any destination other than $g$, $p$ \rmcast{}s $m$ to it (l. \ref{algline:rmothers}).
 
-Let $h$ be any possible destination group of $m$ other than $g$. When some process $q$ of $h$ \rmdel{}s $m$ for the first time, $q$ sets $barrier(g)$ to $m.ts$ (l. \ref{algline:incbar}), since, from the \rmcast{} primitive, any previous message from $g$ has already been received. Besides, $q$ knows that the processes of $g$ have already decided the final timestamp of $m$, so $q$ inserts it into $\stamped$ (l. \ref{algline:insbp1}).
+Let $h$ be any possible destination group of $m$ other than $g$. When some process $q$ of $h$ \rmdel{}s $m$ for the first time -- $m$ may be \rmdel{}ed multiple times, since all correct processes of $g$ \rmcast{} $m$ to $h$ --, $q$ sets $barrier(g)$ to $m.ts$ (l. \ref{algline:incbar}), since, from the \rmcast{} primitive, any previous message from $g$ has already been received. Besides, $q$ knows that the processes of $g$ have already decided the final timestamp of $m$, so $q$ inserts it into $\stamped$ (l. \ref{algline:insbp1}).
 
-For any process $r$, of any group $i$ in $m.dst$, when $m$ belongs to $\stamped$, having the lowest timestamp among all undelivered messages of such set (l. \ref{algline:condel1}), and $r$ has already received a barrier from every group in $sendersTo(i)$, where the value of such barrier is greater than $m.ts$ (l. \ref{algline:condel2}), $m$ is \amdel{}ed by $r$ (l. \ref{algline:consdeliver}). Doing so, no message $m'$ with a timestamp greater than $m.ts$ will be \amdel{}ed before $m$ by any process in $m.dst$.
+For any process $r$, of any group $i$ in $m.dst$, when $m$ belongs to $\stamped$, having the lowest timestamp among all undelivered messages of such set (l. \ref{algline:condel1}), and $r$ has already received a barrier from every group in $sendersTo(i)$, where the value of such barrier is greater than $m.ts$ (l. \ref{algline:condel2}), $m$ is \amdel{}ed by $r$ (l. \ref{algline:consdeliver}). Doing so, no message $m'$ with a timestamp greater than $m.ts$ will be \amdel{}ed before $m$ by process $r$. If two messages $m_1$ and $m_2$ have the same timestamp, we break ties using their message identifier. More precisely, if $m_1.ts = m_2.ts \wedge m_1.id < m_2.id$, we consider that $m_1.ts < m_2.ts$.
 
-The consensus instances within $g$ are decided in the same order for every correct process of $g$. Such order is used to define the delivery order of $g$'s messages as well. We want this order to be consistent with the timestamps of the messages, so such timestamps can be changed if they are not in accordance with the delivery order.
+%The consensus instances within $g$ are decided in the same order for every correct process of $g$. Such order is used to define the delivery order of $g$'s messages as well. We want this order to be consistent with the timestamps of the messages, so such timestamps can be changed if they are not in accordance with the delivery order.
 
 
 
@@ -198,12 +264,12 @@ The consensus instances within $g$ are decided in the same order for every corre
 % &\vee (m.ts.rtc = m'.ts.rtc \wedge m.ts.seq = m'.ts.seq \wedge m.ts.p_{id} < m'.ts.p_{id})
 % \end{align*}
 
-To allow for the timestamp of messages to be increased and still have these messages delivered as soon as possible, their timestamps are increased by an infinitesimal value. For that reason, each timestamp value will consist of a real-time clock value, and a sequence value, which is used only when messages need to have their timestamps changed. Therefore, we have that $m.ts = (rtc, seq)$, where $rtc$ is some value related to real-time clock of a process and $seq$ is a sequence number to define an order between messages with the same $rtc$. Then we have:
+%To allow for the timestamp of messages to be increased and still have these messages delivered as soon as possible, their timestamps are increased by an infinitesimal value. For that reason, each timestamp value will consist of a real-time clock value, and a sequence value, which is used only when messages need to have their timestamps changed. Therefore, we have that $m.ts = (rtc, seq)$, where $rtc$ is some value related to real-time clock of a process and $seq$ is a sequence number to define an order between messages with the same $rtc$. Then we have:
 
-\begin{align*}
-m.ts < m'.ts \Longleftrightarrow m.ts.rtc < m'.ts.rtc \vee (m.ts.rtc = m'.ts.rtc \wedge m.ts.seq < m'.ts.seq)\\
-%&\vee (m.ts.rtc = m'.ts.rtc \wedge m.ts.seq = m'.ts.seq \wedge m.ts.p_{id} < m'.ts.p_{id})
-\end{align*}
+%\begin{align*}
+%m.ts < m'.ts \Longleftrightarrow m.ts.rtc < m'.ts.rtc \vee (m.ts.rtc = m'.ts.rtc \wedge m.ts.seq < %m'.ts.seq)\\
+%%&\vee (m.ts.rtc = m'.ts.rtc \wedge m.ts.seq = m'.ts.seq \wedge m.ts.p_{id} < m'.ts.p_{id})
+%\end{align*}
 
 % For every message $m$, a given group $G$ may be its source or not. Therefore, each process $p \in G$ will handle $m$ accordingly:
 % 
@@ -243,84 +309,17 @@ m.ts < m'.ts \Longleftrightarrow m.ts.rtc < m'.ts.rtc \vee (m.ts.rtc = m'.ts.rtc
 % %The possibility not covered here is when a message is sent from a group to another one which is not its neighbour. However, it is realistic for this context to assume that objects should be close to each other in the virtual environment to interact and that, as such, this kind of interaction is not supported. Nevertheless, one simple way to provide this kind of support could be by each group waiting for the barriers of every other group in the system, instead of only those of its neighbors.
 
 
-\begin{algorithm}
-\begin{distribalgo}[1]
 
-\blankline
-\INDENT{Initialization}
-  \STATE $k \leftarrow 0$, $\localmsgs \leftarrow \emptyset$, $\decided \leftarrow \emptyset$, $\stamped \leftarrow \emptyset$, $\delivered \leftarrow \emptyset$
-  \INDENT{\textbf{for all} $h \in sendersTo(g)$ \textbf{do}}
-    \STATE $barrier(h) \leftarrow (0,0)$ 
-  \ENDINDENT
-\ENDINDENT 
-
-\blankline
-\INDENT{\textit{To} \amcast{} \textit{a message $m$}}
-  \STATE $m.ts \leftarrow (getTime(),0)$ \label{algline:gettime}
-  \STATE \rmcastarg{$\{g\}$}{$m$} \label{algline:rmlocal}
-\ENDINDENT
-
-\blankline
-\WHEN{\rmdelarg{$m$}}
-  \IF{$g = m.src$}
-    \STATE $\localmsgs \leftarrow \localmsgs \cup \{m\}$ \label{algline:addtogroupmsgs}
-  \ELSIF{$m \notin \stamped$} \label{algline:notbptwice}
-    \STATE $\stamped \leftarrow \stamped \cup \{m\}$ \label{algline:insbp1}
-    \STATE $barrier(m.src) \leftarrow m.ts$ \label{algline:incbar}
-  \ENDIF
-\ENDWHEN
-
-\blankline
-\WHEN{$\localmsgs \setminus \decided \neq \emptyset$}
-  \STATE $k \leftarrow k + 1$
-	\STATE $undecided \leftarrow \localmsgs \setminus \decided$ \label{algline:undecided}
-	\STATE propose$_g$($k, undecided$) \label{algline:propose}
-	\STATE \textbf{wait until} decide$_g$($k, msgSet$) \label{algline:decide}
-	\WHILE{$msgSet \setminus \decided \neq \emptyset$}
-		\STATE let $m$ be the message in $msgSet \setminus \decided$ with smallest timestamp \label{algline:decidedloopbegin}
-		\STATE let $m'$ be the message in $\decided$ with greatest timestamp
-		\IF{$m'$ exists and $m'.ts > m.ts$}
-			\STATE $m.ts \leftarrow (m'.ts.rtc, m'.ts.seq + 1)$ \label{algline:changetsafterdecision}
-		\ENDIF     
-		\IF{$g \in m.dst$} \label{algline:checkcons}
-			\STATE $\stamped \leftarrow \stamped \cup \{m\}$  \label{algline:insbp2}
-		\ENDIF
-		\STATE $\decided \leftarrow \decided \cup \{m\}$  \label{algline:addtodecided}
-		\STATE $barrier(g) \leftarrow m.ts$ \label{algline:incbarlocal}
-		\STATE \rmcastarg{$m.dst \setminus \{g\}$}{$m$} \label{algline:rmothers}
-	\ENDWHILE
-
-\ENDWHEN
-
-\blankline
-%\WHEN{$\exists m \in \stamped : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in \stamped : m'.ts < m.ts$} \label{algline:in\stamped}
-\WHEN{$\stamped \setminus \delivered \neq \emptyset$} \label{algline:inammulticast}
-	\STATE let $m$ be the message in $\stamped \setminus \delivered$ with smallest timestamp \label{algline:condel1}
-	\IF{$\forall h \in sendersTo(g): m.ts < barrier(h)$} \label{algline:condel2}
-%		\STATE $\stamped \leftarrow \stamped \setminus \{m\}$ \label{algline:rmfrombp}
-		  \STATE \amdelarg{$m$} \label{algline:consdeliver}
-		\STATE $\delivered \leftarrow \delivered \cup \{m\}$ \label{algline:addtodelivered}
-	\ENDIF
-\ENDWHEN
-\blankline
-
-\caption{\amcastarg{m} -- executed by process $p$ in group $g$}
-\label{algorithm:deliveryminimal}
-\end{distribalgo}
-\end{algorithm}
 
 
 \subsection{Addressing liveness}
 \label{sec:liveness}
 
-Algorithm \ref{algorithm:deliveryminimal} does not guarantee liveness when a group has no message to receive from some other group and then keeps waiting for a new message to increase the barrier value and proceed with the delivery of new messages. In the following, we discuss two mechanisms to address this issue. In Section \ref{sec:nullperiodic} we show how liveness can be  provided by sending periodic empty messages from $G$ to each $G' \in receiversFrom(G)$ to which no message has been sent for a specified time period. In Section \ref{sec:nullondemand}, another approach, based on sending empty messages when requested, is presented. The trade-off between them concerns message delivery latency against number of control messages sent. In either case, the empty messages are handled as ordinary messages, except they are never delivered to the application.
+Algorithm \ref{algorithm:deliveryminimal} does not guarantee liveness: a process $p \in g$ cannot deliver a message $m$ until it has received a barrier $b$ from every group in $sendersTo(g)$, where $b > m.ts$. The problem is that, if any group $h$ in $sendersTo(g)$ has no more messages to send to $g$, $p$ may not be able to deliver any more messages. We describe here how liveness can be ensured by sending periodic empty messages from each group $g$ to each group $h$, where $g \in sendersTo(h)$, to which no message has been sent for a specified time period.
 
+This is a quite straight-forward approach to ensure progression. In Section \ref{sec:nullondemand}, we present a more latency-efficient way to do it, based on sending empty messages when requested. The trade-off between those two approaches concerns message delivery latency against number of control messages sent. In either case, the empty messages are handled as ordinary messages, except they are never delivered to the application -- calling \amdelarg{$null$}, where $null$ is any empty message, has no effect.
 
-
-\subsubsection{Sending empty messages periodically}
-\label{sec:nullperiodic}
-
-The simplest way to provide liveness to the delivery algorithm is by sending empty messages periodically. The time threshold \textit{barrierThreshold} defines how long a process waits for a meaningful message to be sent before sending an empty message to ensure that some other group is eventually unblocked. Algorithm \ref{algorithm:nullperiodic} describes this. When a message $m$ from group $G$ to some other group $G'$ has been \rmcast{} by $p \in G$, $p$ knows that the other processes of $G$ did the same and that $m$ will be eventually received by the processes of $G'$, serving as barrier from $G$ to $G'$ (l. \ref{algline:incbar} of Algorithm \ref{algorithm:deliveryminimal}). However, when there is a long period after the last time when such kind of message has been created, $p$ decides to create some empty message to send to the processes of $G'$ with the sole purpose of increasing their barrier values and allow for the delivery of possibly blocked messages in $G'$.
+Algorithm \ref{algorithm:nullperiodic} describes the periodic sending of empty messages. The variable \mbox{\textit{barrierThreshold}} defines how long a process should wait before sending an empty message to some group. When process $p \in g$ decides a message $m$, $p$ knows that the other processes of $g$ have also decided $m$, serving as a barrier from $g$ to itself. Besides, as $m$ is decided by all correct processes of $g$, $m$ will be \rmcast{} and eventually received by its destinations, serving as a barrier from $g$ to every group $h : g \in sendersTo(h)$ (l. \ref{algline:incbar} of Algorithm \ref{algorithm:deliveryminimal}). However, when there is a long period after the last time when such kind of message has been created, $p$ decides to create some empty message to send to the processes of $h$ with the sole purpose of increasing their barrier values and allow for the delivery of possibly blocked messages in $h$.
 
 \begin{algorithm}
 \begin{distribalgo}[1]
@@ -332,19 +331,19 @@ The simplest way to provide liveness to the delivery algorithm is by sending emp
 \ENDINDENT
 
 \blankline
-\INDENT{\textbf{when} deciding a message $m$}
+\INDENT{\textbf{when} inserting a message $m$ into $\decided$}
   \INDENT{\textbf{for all} $h \in m.dst \cup \{g\}$ \textbf{do}}
-    \STATE $lastBarrierCreated(h) \leftarrow m.ts.rtc$ 
+    \STATE $lastBarrierCreated(h) \leftarrow m.ts$
   \ENDINDENT  
 \ENDINDENT
 
 \blankline
 \INDENT{\textbf{when} $\exists h: g \in sendersTo(h) \wedge getTime() - lastBarrierCreated(h) > barrierThreshold$}
   \STATE $null \leftarrow$ empty message
-  \STATE $null.ts \leftarrow (lastBarrierCreated(h) + barrierThreshold, 0)$ \label{algline:samenullid}
-  \STATE $null.src \leftarrow g$
+  \STATE $null.ts \leftarrow lastBarrierCreated(h) + barrierThreshold$ \label{algline:samenullid}
   \STATE $null.dst \leftarrow \{h\}$ 
   \STATE $\localmsgs \leftarrow \localmsgs \cup \{null\}$ \label{algline:enqnull}
+  \STATE $lastBarrierCreated(h) \leftarrow null.ts$
   \COMMENT{saving that nothing was sent until null.ts}
 \ENDINDENT 
 
@@ -354,15 +353,17 @@ The simplest way to provide liveness to the delivery algorithm is by sending emp
 \end{distribalgo} 
 \end{algorithm}
 
-The problem with addressing liveness this way is that, in the worst case, $G'$ has decided a message $m$ and has just received the last barrier $b$ from $G$, such that $b < m.ts$. This would mean that, if $G$ has no messages to send to $G'$, $G'$ will have to wait, at least, for $barrierThreshold$ -- maybe just to receive some $b' : b' < m.ts$, having to wait again and so on. How long exactly it will take to \cons{} $m$ depends on many variables, such as how far in the past $m$ was created and how long it takes for some barrier $b: b > m.ts$ to arrive.% Because of that, the time between \amcast{}ing and \cons{}ing $m$ be, in the worst case, $2w(p) + 4\tconsm + barrierThreshold$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
+The problem with addressing liveness this way is that a process $q$ from group $h$ might have received some message $m$ and has also just received a barrier $b$ from $g \in sendersTo(h)$, such that $b < m.ts$. This would mean that, if $g$ has no messages to send to $h$, $q$ will have to wait for, at least, $barrierThreshold$ -- maybe just to receive from $g$ some barrier $c : c < m.ts$, having to wait again and so on. How long exactly it will take for $q$ to finally \amdel{} $m$ depends on several variables: besides the value of $barrierThreshold$, it dependon on how far in the past $m$ was created and how long it takes for some barrier $d: d > m.ts$ to arrive at $q$.% Because of that, the time between \amcast{}ing and \cons{}ing $m$ be, in the worst case, $2w(p) + 4\tconsm + barrierThreshold$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
 
-It is necessary to guarantee that a $null$ message will eventually be proposed, decided, and a barrier will be sent to some group which might be needing it, so that progression is guaranteed. Therefore, this kind of messages are created by every process in the group, since if any one of them does not have it, such message might never be decided. %Besides, they are excluded from the $\localmsgs$ set only when decided in the group (l. \ref{algline:nullstays} of Algorithm \ref{algorithm:deliveryminimal}). Since they are obviously never delivered to the application, they can remain in such set and be decided even after some message with higher timestamp is decided. Not removing them unless they are decided ensures that they will be sent and that other groups will be able to increase their barrier values. % On the other hand, this brings another problem: if every process in $G$ creates a different $null$ message, many $null$ messages might have to be decided before a meaningful message.
-To prevent the multiple $null$ messages -- created by different processes within the group -- of being decided, they could be created in a way such that the different processes can somehow figure out that two different $null$ messages are equivalent\footnote{This could be done by assuming no timestamp collisions and by using them to uniquely identify messages. Then, only one of the messages created with the same timestamp (l. \ref{algline:samenullid} of Algorithm \ref{algorithm:nullperiodic}) would be decided.}.
-
-
+It is necessary to guarantee that, whenever the $barrierThreshold$ time has elapsed since the last message to a given group $h$ has been created, an empty message will eventually be decided and sent to $g$, so that progression in $g$ is guaranteed. Therefore, such empty message is created and proposed by every process in each group $g$: if some process of $g$ does not propose the empty message, it might never be decided in such group. %Besides, they are excluded from the $\localmsgs$ set only when decided in the group (l. \ref{algline:nullstays} of Algorithm \ref{algorithm:deliveryminimal}). Since they are obviously never delivered to the application, they can remain in such set and be decided even after some message with higher timestamp is decided. Not removing them unless they are decided ensures that they will be sent and that other groups will be able to increase their barrier values. % On the other hand, this brings another problem: if every process in $G$ creates a different $null$ message, many $null$ messages might have to be decided before a meaningful message.
+%To prevent the multiple $null$ messages created simultaneously by different processes within each group from being decided, they could be created in a way such that the different processes can somehow figure out that two different $null$ messages are equivalent. However, deciding and delivering them would not make the algorithm incorrect.%\footnote{This could be done by assuming no timestamp collisions and by using them to uniquely identify messages. Then, only one of the messages created with the same timestamp (l. \ref{algline:samenullid} of Algorithm \ref{algorithm:nullperiodic}) would be decided.}.
 
 
-\subsubsection{Requesting empty messages}
+\section{Optimistic atomic multicast}
+\label{sec:optimized}
+
+
+\subsection{Requesting empty messages}
 \label{sec:nullondemand}
 
 There is a way to provide liveness with a lower delay for delivering messages, although that would imply creating more messages and making deeper changes in the delivery algorithm. Let $blockers(m)$ be defined as the set of groups whose barrier is needed in order for some group to deliver $m$. More formally, \mbox{$blockers(m) = \{G_B \neq m.src : \exists G_{dst} \in m.dst \wedge G_B \in sendersTo(G_{dst})\}$}. The idea is that, once each group $G_B$ in $blockers(m)$ has sent\footnote{Here, by `sending', we mean that the message has been received at the destination.} a barrier $b > m.ts$ to all the groups belonging to \mbox{$m.dst \cap receiversFrom(G_B)$}, all possible destinations of $m$ can deliver it. This way, instead of relying on periodic messages, whenever a process $p$ in a group $G$ knows that a message $m$ has just been decided in some consensus instance within $G$, $p$ requests a barrier to every $p' \in blockers(m)$. This request is only sent after $m$ has been decided, because the timestamp of $m$ may have changed, which happens after the consensus. Such request is sent to the processes in the groups inside $blockers(m)$, so that they know that there is a message whose delivery will be blocked until they send a proper barrier to unblock it. Finally, a group never blocks the delivery of its own messages -- hence the condition $G_B \neq m.src$ -- because the message itself can be seen as a barrier from its source group.
@@ -465,7 +466,7 @@ Once the $null$ message is proposed and decided in $G'$, each process of $G'$ wi
 \end{distribalgo}
 \end{algorithm}
  
- \subsection{Performance analysis}
+ \subsubsection{Performance analysis}
  
  Assuming $\delta$ as the communication delay between every pair of processes, the time needed to decide a message $m$ after it has been \amcast{} by some process is equal, in the worst case, to $\delta + 2\tconsm$, where $\delta$ is the time needed to \rmdel{} a message and \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $\localmsgs$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $\localmsgs$ right before some proposal has been made, so it would take only $\delta + \tconsm$ to decide $m$. As $m$ may go into $\localmsgs$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $\delta + 1.5\tconsm$. Nevertheless, the time needed to finally \cons{} $m$ will depend on when barriers are received from other groups.
 
@@ -485,7 +486,7 @@ Although we have bounded the delay to deliver a message, this came at the expens
 % To perform that, we consider that each object has an optimistic delivery queue, $Q_{opt}$. Whenever a command is optimistically delivered, the optimistic state is updated and the command is pushed in the back of $Q_{opt}$. Whenever a command $C_c$ is conservatively delivered, it updates the conservative state of each object in $obj(C_c)$ and, for each one of them, the algorithm checks whether it is the first command in $Q_{opt}$. If it is, $C_c$ is simply removed from $Q_{opt}$ and the execution continues. If it isn't, it means that $C_c$ was either optimistically delivered out of order, or it was simply never optmistically delivered. It then checks whether $Q_{opt}$ contains $C_c$. If it does, it means the command was optimistically deliverd out of order, and it is removed from the set -- if $Q_{opt}$ doesn't contain $C_c$, it was probably lost\footnote{Also, when $C_c$ is delivered, but it is not in $Q_{opt}$, the remaining possibility is the very unlikely case where the conservative delivery happened before the optimistic one. To handle this case, $C_c$ is stored in a set of possibly delayed optimistic delivery and, if it is ever optimistically delivered, the algorithm will know that it should only discard that command, instead of updating the optimistic state.}. Then, the optimistic state is overwritten with the conservative one and, from that state, all the remaining comands in $Q_{opt}$ are re-executed, leading to a new optimistic state for that object.
 % 
 
-\section{Optimistic atomic multicast}
+\subsection{Optimistic Delivery}
 \label{sec:optdel}
 
 Even if a reliable multicast primitive is used to send every message to each one of its destinations, guaranteeing its arrival, messages from different senders may arrive in different orders at different destinations, so consensus is necessary to decide which one should be considered by all processes. However, we can predict the final delivery order using the timestamps assigned to the messages by their senders: if each process $p$ waits long enough before proposing some message $m$, every message $m' : m'.ts < m.ts$ will arrive eventually and $p$ will be able to propose them in the same order of their initial timestamps, achieving total order without needing any consensus for that.
