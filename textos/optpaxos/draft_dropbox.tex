@@ -359,7 +359,7 @@ It is necessary to guarantee that, whenever the $barrierThreshold$ time has elap
 %To prevent the multiple $null$ messages created simultaneously by different processes within each group from being decided, they could be created in a way such that the different processes can somehow figure out that two different $null$ messages are equivalent. However, deciding and delivering them would not make the algorithm incorrect.%\footnote{This could be done by assuming no timestamp collisions and by using them to uniquely identify messages. Then, only one of the messages created with the same timestamp (l. \ref{algline:samenullid} of Algorithm \ref{algorithm:nullperiodic}) would be decided.}.
 
 
-\section{Optimistic atomic multicast}
+\section{Optimized atomic multicast}
 \label{sec:optimized}
 
 
