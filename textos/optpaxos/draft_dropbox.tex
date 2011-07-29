@@ -33,12 +33,12 @@
 \newcommand{\amcastarg}[1]{\mbox{\amcast({#1})}}
 \newcommand{\tconsm}{T_{cons}}
 \newcommand{\tcons}{\mbox{$\tconsm$}}
-\newcommand{\opt}{\mbox{opt-deliver}}
-\newcommand{\cons}{\mbox{deliver}}
+\newcommand{\optdel}{\mbox{opt-deliver}}
+\newcommand{\consdel}{\amdel}
 \newcommand{\rmcast}{\mbox{fr-mcast}}
 \newcommand{\rmdel}{\mbox{fr-deliver}}
-\newcommand{\optdel}[1]{\mbox{\opt({#1})}}
-\newcommand{\consdel}[1]{\mbox{\cons({#1})}}
+\newcommand{\optdelarg}[1]{\mbox{\opt({#1})}}
+\newcommand{\consdelarg}[1]{\amdelarg{#1}}
 \newcommand{\rmcastarg}[2]{\mbox{\rmcast({#1},{#2})}}
 \newcommand{\rmdelarg}[1]{\mbox{\rmdel({#1})}}
 
@@ -152,7 +152,7 @@ A more formal description of the protocol is given in Algorithm \ref{algorithm:d
 
 Moreover, each process $p$ of group $g$ keeps some sets of messages:
 \begin{itemize}
-  %\item \textit{optPending}, which contains the messages waiting to be \mbox{\textit{\opt{}ed}} (optimistically delivered);
+  %\item \textit{optPending}, which contains the messages waiting to be \mbox{\textit{\optdel{}ed}} (optimistically delivered);
   \item \textit{\localmsgs}, containing the %local messages, i.e., the 
   messages that have been \amcast{} by some process of group $g$;
   \item \textit{\decided}, which contains the messages that have already been proposed and decided within $group(p)$;
@@ -369,19 +369,19 @@ However, when there is a long period after the last time when some message has b
 In Section \ref{sec:baseline}, we presented a straight-forward version of our atomic multicast protocol, which, despite being easily understandable, is open to several optimizations, which are described hereafter.  In Section \ref{sec:nullondemand}, we present a more latency-efficient approach to ensure that processes will eventually receive all barriers necessary to deliver each message; in Section \ref{sec:parallel}, we show that different instances of consensus may be voted upon and decided in parallel, further reducing the time needed for consensus; in Section \ref{sec:paxos}, we give more details regarding how consensus is achieved within only three communication steps and, in Section \ref{sec:optdel}, we present our optimistic delivery algorithm, which may deliver messages in one single communication step. Furthermore, in Section \ref{sec:compositets}, we present a better way to define the timestamps of the messages and, in Section \ref{sec:discard}, we show how to relax the uniform validity property in order to reduce the final delivery time and the number of mistakes made by the optimistic delivery.
 
 
-\subsection{Requesting empty messages}
+\subsection{Requesting barriers}
 \label{sec:nullondemand}
 
 The problem with addressing liveness by sending empty messages periodically, as in Algorithm \ref{algorithm:nullperiodic}, is that a process $q$ from some group $h$ might have received some message $m$ right after receiving a barrier $b$ from some other group $g \in sendersTo(h)$, such that $b < m.ts$. This would mean that, if $g$ has no messages to send to $h$, $q$ will have to wait for, at least, $barrierThreshold$ -- maybe just to receive from $g$ some barrier $c : c < m.ts$, having to wait again and so on. How long exactly it will take for $q$ to finally \amdel{} $m$ depends on several variables: besides the value of $barrierThreshold$, it depends on how far in the past $m$ was created and how long it takes for some barrier $d: d > m.ts$ to arrive at $q$.% Because of that, the time between \amcast{}ing and \cons{}ing $m$ be, in the worst case, $2w(p) + 4\tconsm + barrierThreshold$, where $w(p)$ is the wait window of the process $p \in G$, and \tcons\ is counted twice because there are two consensus proposals -- first in $G'$ regarding $m$, and then in $G$ regarding the empty message.
 
 There is a way to provide liveness with a lower delay for delivering messages, although that would imply exchanging more messages. Let $blockers(m)$ be the set of groups whose barrier is needed in order for a given group to deliver $m$, i.e., \mbox{$blockers(m) = \{g_b \in \Gamma: \exists g_{dst} \in m.dst \wedge g_b \in sendersTo(g_{dst})\}$}. The idea is that, once the processes of each group $g_b$ in $blockers(m)$ have \rmcast{} a barrier $b > m.ts$ to every group that might need it, i.e. to every group \mbox{$g_{dst} \in m.dst : g_b \in sendersTo(g_{dst})$}, all possible destinations of $m$ can deliver it. 
 
-Instead of relying on periodic messages, whenever a process $p$ in a group $g$ knows that a message $m$ has just been decided in some consensus instance within $g$, $p$ requests a barrier to every $q \in blockers(m)$. This request should be sent when the final timestamp of $m$ is known, so that the barrier sent by $q$ may be guaranteed to be greater than $m.ts$. Such request is sent to the processes in the groups inside $blockers(m)$, so that they know that there is a message whose delivery will be blocked until they send a proper barrier to unblock it.% Finally, a group never blocks the delivery of its own messages -- hence the condition $g_b \neq m.src$ -- because the message itself can be seen as a barrier from its source group.
+Instead of relying on periodic messages, as soon as a process $p$ in a group $g$ knows the final the final timestamp of a message $m$ from $g$, $p$ requests a barrier to every $q \in blockers(m)$. This request should be sent when the final timestamp of $m$ is known because the barrier sent by $q$ may be guaranteed to be greater than $m.ts$. Such request is sent to the processes in $blockers(m)$, so that they know that there is a message whose delivery will be blocked until they send a proper barrier to unblock it.% Finally, a group never blocks the delivery of its own messages -- hence the condition $g_b \neq m.src$ -- because the message itself can be seen as a barrier from its source group.
 
 When the process $q$ of some group $h$ receives a barrier request for a message $m$, %such that $G' \in blockers(m)$,
 $q$ knows that there are other groups depending on the barrier of $h$ to deliver $m$. For that reason, $q$ will create an empty message $null$ with a timestamp greater than $m.ts$ and its destination groups will be those in $m.dst$ that can receive messages from $h$, i.e., $null.dst = m.dst \cap \{i \in \Gamma: h \in sendersTo(i)\}$. %Then, $q$ will insert such message in its %$optPending$
 %$\localmsgs$ queue. % -- to ensure that, once it goes to $\localmsgs$, any message \mbox{$m': m'.ts < null.ts \wedge m'.src = G'$} is already there. As soon as $null.ts > now - w(p')$, the 
-Once $null$ is proposed and decided in $h$, each process of $h$ will \rmcast{} it to every group in $null.dst$. This way, any group which was waiting for a barrier from $h$ to deliver $m$ will receive such message $null$.% The new delivery algorithm would be as described in \mbox{Algorithm {\ref{algorithm:nullondemand}}}.
+Once $null$ is proposed and decided in $h$, each process of $h$ will \rmcast{} it to every group in $null.dst$. This way, any group which was waiting for a barrier from $h$ to deliver $m$ will receive the message $null$.% The new delivery algorithm would be as described in \mbox{Algorithm {\ref{algorithm:nullondemand}}}.
 % 
 % \begin{algorithm}
 % \begin{distribalgo}[1]
@@ -464,7 +464,7 @@ Once $null$ is proposed and decided in $h$, each process of $h$ will \rmcast{} i
 % \INDENT{\textit{When $\exists m \in \stamped : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in \stamped : m'.ts < m.ts$ }}
 %   \STATE $\stamped \leftarrow \stamped \setminus \{m\}$
 %   \IF{$m \neq null$}
-%     \STATE \consdel{$m$}
+%     \STATE \consdelarg{$m$}
 %   \ENDIF
 %   \STATE $\delivered \leftarrow \delivered \cup \{m\}$
 % 
@@ -478,7 +478,7 @@ Once $null$ is proposed and decided in $h$, each process of $h$ will \rmcast{} i
 %  
 %  \subsubsection{Performance analysis}
 %  
-%  Assuming $\delta$ as the communication delay between every pair of processes, the time needed to decide a message $m$ after it has been \amcast{} by some process is equal, in the worst case, to $\delta + 2\tconsm$, where $\delta$ is the time needed to \rmdel{} a message and \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $\localmsgs$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $\localmsgs$ right before some proposal has been made, so it would take only $\delta + \tconsm$ to decide $m$. As $m$ may go into $\localmsgs$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $\delta + 1.5\tconsm$. Nevertheless, the time needed to finally \cons{} $m$ will depend on when barriers are received from other groups.
+%  Assuming $\delta$ as the communication delay between every pair of processes, the time needed to decide a message $m$ after it has been \amcast{} by some process is equal, in the worst case, to $\delta + 2\tconsm$, where $\delta$ is the time needed to \rmdel{} a message and \tcons\ is the time needed to execute a consensus instance. This value is counted twice because $m$ may have been inserted into $\localmsgs$ right after a consensus instance has been initiated. In that case, $m$ would have to wait such consensus to finish, to be then proposed and finally decided. However, it may also happen that $m$ has been inserted into $\localmsgs$ right before some proposal has been made, so it would take only $\delta + \tconsm$ to decide $m$. As $m$ may go into $\localmsgs$ anytime between the worst and the best case with the same probability, the average time needed for deciding $m$ would be equal to $\delta + 1.5\tconsm$. Nevertheless, the time needed to finally \consdel{} $m$ will depend on when barriers are received from other groups.
 % 
 %  
 % As discussed before, assuming $\delta$ as the communication delay between every pair or processes and \tcons{} as the time needed to run one consensus instance, we have a worst case time to decide a message within a group of $\delta + 2\tconsm$. If there is any destination of $m$ which is different from its source group, $m$ is \rmcast{} to it after its final timestamp has been defined, which takes another $\delta$. At the same time (l. \ref{algline:barreq} of Alg. \ref{algorithm:nullondemand}), $m$ is \rmcast{} also to the groups in $blockers(m)$, each of which then begins a consensus instance proposing an empty $null$ message. After deciding $null$, it is \rmcast{} to the processes of the groups which might be needing a barrier to deliver $m$. This way, we can calculate the number of communication steps needed to deliver a message, which is $3\delta + 4\tconsm$ in the worst case and $3\delta + 2\tconsm$ in the best case, leading to an average case of $3\delta + 3\tconsm$.
@@ -514,7 +514,7 @@ As processes do not block while running a consensus instance, there is no guaran
 \subsection{Using Paxos with a leader for consensus}
 \label{sec:paxos}
 
-Although ensuring termination of consensus in an asynchronous system is not possible \cite{fischer1985idc}, the Paxos \cite{lamport1998ptp} algorithm can guarantee the termination of a consensus instance $k$ as long as some assumptions are held:
+Although ensuring termination of consensus in an asynchronous system is not possible \cite{fischer1985idc}, the Paxos algorithm~\cite{lamport1998ptp} can guarantee the termination of a consensus instance $k$ as long as some assumptions are held:
 
 \begin{itemize}
   \item the maximum message delay bound $\delta$ is known;
@@ -523,56 +523,58 @@ Although ensuring termination of consensus in an asynchronous system is not poss
   \item enough messages are successfully received, that is, for each phase of the execution of $k$, a majority of processes succesfully receive the leader's message or the leader successfully receives the reply (be it a confirmation or a negative acknowledgement) from a majority of processes.
 \end{itemize}
 
-Paxos uses the abstraction of \emph{proposers}, \emph{acceptors} and \emph{learners}. In short, the acceptors are the processes which have to agree upon some value given by the proposers. The learners are those who are notified about which value has been accepted. With a leader, Paxos can achieve consensus in most instances, except the first one since the last leader change, in $3\delta$ -- forwarding a proposal to the leader, sending it to the other processes (acceptors) and receiving a confirmation. Each acceptor can send the confirmation to every learner, so that each learner can figure out by itself that a value has been agreed upon once it receives a confirmation from a majority of acceptors.
+Paxos uses the abstraction of \emph{proposers}, \emph{acceptors} and \emph{learners}. In short, the acceptors are the processes which have to agree upon some value given by the proposers. The learners are those who are notified about which value has been accepted. With a leader, Paxos can achieve consensus in most instances, except the first one since the last leader change, in $3\delta$ -- the tree phases are: a proposal is sent to the leader, which forwards it to the other processes (acceptors) and receives a confirmation. Each acceptor can send the confirmation to every learner, so that each learner can figure out by itself that a value has been agreed upon once it receives a confirmation from a majority of acceptors.
 
-In the context of our \amcast{} primitive, we consider that every correct process of a group is proposer, acceptor and learner in every consensus instance run by that group. Besides, we assume that one of such processes has been elected as leader. The first communication step of Paxos -- forwarding a proposal to the leader -- is already done by means of \rmcast{}ing each message to a set of processes that includes every process in $m$'s group of origin. The last phase, which consists of every learner receiving the confirmation of a majority of acceptors, can also encompass the \rmcast{} of the message to all of its destinations: instead of waiting for a message to be decided and only then notifying other groups, the acceptors of a group can also send the confirmation to processes in such groups, so that also they can infer the source group's decision right away. This implies that, for the consensus instance deciding each message $m$ within a given group, each process in $m.dst$ would also be a learner for that instance.
+In the context of our \amcast{} primitive, we consider that every correct process of a group is proposer, acceptor and learner in every consensus instance run by that group. Besides, we assume that one of such processes has been elected as leader. The first phase of Paxos -- forwarding a proposal to the leader -- is already done when the source process $p$ of a message $m$ \rmcast{}s it to all process in $group(p)$. The last phase message can also be sent to all destination processes of $m$, so that they can infer that $m$ has been accepted in its source group. For the consensus instance deciding each message $m$ within a given group, each process in $m.dst$ would also be a learner for that instance. This would be done instead of the processes of $group(p)$ waiting for $m$ to be decided to only then \rmcast{} it of to all its destinations. By doing this, every message $m$ could be decided and sent to every destination process within 3$\delta$ from when $m$ was created.
 
- Figure \ref{fig:paxosmanylearnergroups} illustrates this: process $p_1$ from group $G$, whose leader is $p_3$, \amcast{}s $m$; in the last phase of the consensus protocol, the processes in $G' \in receiversFrom(G)$ receive the confirmation message from the acceptors of $G$, so no extra communication step is needed to notify them about the final timestamp of $m$.
+One problem could be that, if timestamps are defined as in Algorithm \ref{algorithm:deliveryminimal}, each destination process would need to know the contents of $\decided$ to infer the final timestamp of any message $m$ sent by group $g$. However, we are assuming that there is a leader process, by which all proposals have to pass. Such leader can, therefore, predict what will be contained in $\decided$ and set the final timestamp of $m$ before sending it to the acceptors in $g$ in the second phase, so that the confirmation message from the acceptors in the last phase of Paxos would already contain the final timestamp of $m$. Besides, the leader could request the barriers necessary for the delivery of $m$ at the beginning of the second phase of Paxos.
 
-As $m$ was \rmcast{} in the beginning, there is no need to send all of its contents again in the consensus instance. Instead, only the timestamp of $m$ is proposed, since this is the information that must be agreed upon -- and which may change if the optimistic assumption does not hold and some other message of higher timestamp is delivered before $m$. In any case, as all messages agreed upon in $G$ are notified to $G'$, also the processes of $G'$ are able to infer the final timestamp of each message from $G$.
+Figure \ref{fig:paxosmanylearnergroups} illustrates the execution: process $p_1$ from group $g$, whose leader is $p_3$, \amcast{}s $m$. In the first phase of the algorithm, $m$ is \rmcast{} to $p_3$. Then, in the second phase, $p_3$ has to change $m.ts$ because some other message with higher timestamp has passed by $p_3$ previously. Then, still in the second phase, $p_3$ sends $m$, with its new timestamp, to all acceptors, i.e., all processes of $g$. Finally, in the last phase, the processes in $h$ receive the confirmation message from the acceptors of $g$, already containing the final timestamp of $m$.
 
-As we are making an optimistic assumption -- that each $p$ waits for a time $w(p)$ long enough so that no timestamps must be changed -- for the message delivery, the barriers are being requested to other groups in parallel, since $m$ is also \rmcast{} to $blockers(m)$ in the first communication step of our protocol. If such assumption holds, the barriers received will have a greater timestamp than $m$ and, thus, the conservative delivery of $m$ will take place $w(p) + 2\delta$ after it has been sent. If the clocks are perfectly synchronized and $w(p)$ does correspond to the maximum interprocess communication delay $\delta$, the time needed to conservatively deliver a message using this algorithm would be $3\delta$.
+%As $m$ was \rmcast{} in the beginning, there is no need to send all of its contents again in the consensus instance. Instead, only the timestamp of $m$ is proposed, since this is the information that must be agreed upon -- and which may change if the optimistic assumption does not hold and some other message of higher timestamp is delivered before $m$. In any case, as all messages agreed upon in $G$ are notified to $G'$, also the processes of $G'$ are able to infer the final timestamp of each message from $G$.
 
-Finally, we can guarantee a conservative delivery time of $3\delta$, if no message had its timestamp changed, because the barrier requests for that message were made based on its initial timestamp. If the timestamp has changed, then a new barrier request may have to be made to ensure the delivery of that message. Unfortunately, to guarantee the delivery of the message, such request can be done only after the final timestamp has been decided: once the source group of a message $m$ noticed a change in $m.ts$, it sends another barrier request to $blockers(m)$. This request is handled in a way very similar to a conservative delivery, in the sense that, once it is received by a process, a null message is proposed, decided and then sent back to the destinations of $m$. This would take extra $3\delta$, so the worst case conservative delivery time would be $6\delta$.
+%As we are making an optimistic assumption -- that each $p$ waits for a time $w(p)$ long enough so that no timestamps must be changed -- for the message delivery, the barriers are being requested to other groups in parallel, since $m$ is also \rmcast{} to $blockers(m)$ in the first communication step of our protocol. If such assumption holds, the barriers received will have a greater timestamp than $m$ and, thus, the conservative delivery of $m$ will take place $w(p) + 2\delta$ after it has been sent. If the clocks are perfectly synchronized and $w(p)$ does correspond to the maximum interprocess communication delay $\delta$, the time needed to conservatively deliver a message using this algorithm would be $3\delta$.
 
-Note, however, that for this worst case scenario to happen it would be necessary for the leader $p$ of group $G$ to: (1) not know some value greater than or equal to $w(p)$; (2) have received and proposed some message $m' : m'.ts > m.ts$ before $m$ and (3) not have received any barrier with value greater than the new timestamp of $m$. Even after changing the timestamp of $m$, it may be not necessary to request a new barrier from each group in $sendersTo(G)$, because some other barrier -- possibly requested because of some other message -- with a value higher than the new timestamp of $m$ may have been received already.
+%Finally, we can guarantee a conservative delivery time of $3\delta$, if no message had its timestamp changed, because the barrier requests for that message were made based on its initial timestamp. If the timestamp has changed, then a new barrier request may have to be made to ensure the delivery of that message. Unfortunately, to guarantee the delivery of the message, such request can be done only after the final timestamp has been decided: once the source group of a message $m$ noticed a change in $m.ts$, it sends another barrier request to $blockers(m)$. This request is handled in a way very similar to a conservative delivery, in the sense that, once it is received by a process, a null message is proposed, decided and then sent back to the destinations of $m$. This would take extra $3\delta$, so the worst case conservative delivery time would be $6\delta$.
+
+%Note, however, that for this worst case scenario to happen it would be necessary for the leader $p$ of group $G$ to: (1) not know some value greater than or equal to $w(p)$; (2) have received and proposed some message $m' : m'.ts > m.ts$ before $m$ and (3) not have received any barrier with value greater than the new timestamp of $m$. Even after changing the timestamp of $m$, it may be not necessary to request a new barrier from each group in $sendersTo(G)$, because some other barrier -- possibly requested because of some other message -- with a value higher than the new timestamp of $m$ may have been received already.
 
 \begin{figure}
   \centering
   \includegraphics[width=0.8\linewidth]{images/paxos3d}
-  \caption{Deciding the final timestamp and notifying other groups in three communication steps}
+  \caption{Deciding the final timestamp and notifying all destination groups in three communication steps}
   \label{fig:paxosmanylearnergroups}
 \end{figure}
 
 \subsection{Optimistic Delivery}
 \label{sec:optdel}
 
-Even if a reliable multicast primitive is used to send every message to each one of its destinations, guaranteeing its arrival, messages from different senders may arrive in different orders at different destinations, so consensus is necessary to decide which one should be considered by all processes. However, we can predict the final delivery order using the timestamps assigned to the messages by their senders: if each process $p$ waits long enough before proposing some message $m$, every message $m' : m'.ts < m.ts$ will arrive eventually and $p$ will be able to propose them in the same order of their initial timestamps, achieving total order without needing any consensus for that.
+Even if a fifo reliable multicast primitive is used to send every message to each one of its destinations, guaranteeing its arrival in fifo order, messages from different senders may arrive in different orders at different destinations, so consensus is necessary to decide which order should be considered by all processes. However, we can predict the final delivery order using the timestamps assigned to the messages by their senders: if each process $p$ waits long enough before proposing some message $m$, every message $m' : m'.ts < m.ts$ will arrive eventually and $p$ will be able to propose them in the same order of their initial timestamps, achieving total order without needing any consensus for that.
 
-The problem is then how to define the length of such wait window for each message $m$ such that it guarantees that every message prior to $m$ will have already been received when the window time has elapsed. As the message delay is unpredictable in asynchronous systems, we make an optimistic assumption:
+The problem is then how to define the length of such wait window for each message $m$ such that every message prior to $m$ will have already been received when the window time has elapsed. As the message delay is unpredictable in asynchronous systems, we make an optimistic assumption:
 
 \begin{center}
 \emph{A2: every process $p$ knows a value $w(p)$, which is at least the maximum sum of the message delay bound plus the clock deviation between $p$ and any process $p'$ which could send a message to $p$.}
 \end{center}
 
-More formally, if $p \in G$, we can define $w(p)$ as $max_{p' \in sendersTo(G)}(\delta(p,p')+\epsilon(p,p'))$, where $\delta(p,p')$ is the maximum time a message takes to go all the way from $p$ to $p'$ and $\epsilon(p,p')$ is the difference between the clocks of $p$ and $p'$, so that clock deviations can be accounted for\footnote{If this difference is less than zero, it means that the clock value in $p'$ is higher than that in $p$, so $p$ actually has to wait less time for messages from $p'$, as they will have higher timestamps because of the clock deviation.}. The clock deviation is mentioned in this assumption because the timestamp $m.ts$ of each message $m$ is assigned by its sender according to its local clock and we want that, once a message $m$ has been proposed, no message $m' : m'.ts < m.ts$ arrives afterwards. If our optimistic assumption considered only the message transmission delay, such property would not be guaranteed by it.
+More formally, for $p$ in group $g$, we can define $w(p)$ as $max_{q \in sendersTo(g)}(\delta(p,q)+\epsilon(p,q))$, where $q$ is a process, $\delta(p,q)$ is the maximum time a message takes to go all the way from $p$ to $q$ and $\epsilon(p,q)$ is the difference between the clocks of $p$ and $q$\footnote{If this difference is less than zero, it means that the clock value in $q$ is higher than that in $p$, so $p$ actually has to wait less for messages from $q$, as they will have higher timestamps because of the clock deviation.}. The clock deviation is mentioned in this assumption because the timestamp $m.ts$ of each message $m$ is assigned by its sender according to its local clock and we want that, once a message $m$ has been proposed, no message $m' : m'.ts < m.ts$ arrives afterwards. If our optimistic assumption considered only the message transmission delay, such property would not be guaranteed. However, the assumption may not hold, so deliveries made based on it have to be confirmed. There would be then two deliveries for each message: an optimistic one, done within one communication step, and a conservative one, based on consensus and barriers. 
 
-However, the assumption may not hold, so deliveries made based on it have to be confirmed. There would be then two deliveries for each message: an optimistic one, done within one communication step, and a conservative one, which may follow one of the algorithms described earlier. The difference is that, after a message $m$ was \rmdel{}ed at $p$, instead of proposing it, $p$ inserts it into an $optPending$ set, which is sorted in ascending order of the timestamps of the messages in it. Then, $p$ waits until its own wallclock has a value greater than $m.ts.rtc + w(p)$, after which $p$ both proposes $m$ and \opt{}s (optimistically delivers) it. If \emph{A2} holds, then all messages sent by $m.src$ and received after $m$ has been \opt{}ed will have a timestamp greater than $m.ts$.
+To do the optimistic delivery, after a new message $m$ has been \rmdel{}ed at $p$, instead of proposing it, $p$ inserts it into an $optPending$ set. Then, $p$ waits until its own wallclock has a value greater than $m.ts + w(p)$. At this moment, if \emph{A2} holds, then all messages that could possibly have a timestamp lower than $m$ have already been received sent by $p$. Therefore, after $w(p)$ such messages can be \optdel{}ed in the order of their initial timestamps. Besides, they can be proposed by every process in this same order, in which they are also decided, meaning that there will be no timestamp changes.
 
-The optimistic assumption allows for even further improvement. If it holds, the timestamp of the messages will never be changed (i.e. l. \ref{algline:chgts} of Alg. \ref{algorithm:nullondemand} will never be executed). Therefore, if Algorithm \ref{algorithm:nullondemand} is being used, there is no need to wait until a message $m$ has been decided to know its final timestamp and only then request barriers to groups in $blockers(m)$. After the wait window for $m$ has elapsed, such barrier request can already be sent.
+The optimistic assumption allows for further improvement. If it holds, the timestamp of the messages will never be changed. Therefore, if barriers are being requested for each message $m$, as described in Section \ref{sec:nullondemand}, the requests may be sent to $blockers(m)$ at the same time that $m$ is \rmcast{} by its sender.
 
-If \emph{A2} fails to hold and some message $m$ is received by a process $p$ after a message \mbox{$m' : m'.ts > m.ts$} has been already \opt{}ed and proposed by $p$, then the optimistic delivery algorithm made a mistake, which the application can figure out by the different delivery orders and take action to correct whatever problem this mistake might have caused. Besides, when such thing happens, it means that the timestamp of $m$ has been changed by the conservative delivery algorithm and that, maybe, a new barrier request must be sent to $blockers(m)$ when this new timestamp is defined.
+If \emph{A2} fails to hold and some message $m$ is received by a process $p$ after a message \mbox{$m' : m'.ts > m.ts$} has been already \optdel{}ed and proposed by $p$, then the optimistic delivery algorithm made a \textit{mistake}, which the application can figure out by the difference between the optimistic delivery order and the conservative one. The application should then take action to correct whatever problem this mistake might have caused. Besides, when such a mistake happens, it means that the timestamp of the message has been changed by the conservative delivery algorithm and that, maybe, a new barrier request must be sent to $blockers(m)$ when $m$'s new timestamp is defined.
 
-The delivery time of each message $m$ will now depend on whether the assumption \emph{A2} holds or not while $m$ is being handled by the algorithm. If it does hold, it will be \opt{}ed in the correct order within $w(p)$ and, as a barrier request was done in parallel with the conservative delivery algorithm, it will take $w(p) + 2\tconsm + \delta$ to \cons{} $m$ in the worst case. If it does not hold, after $w(p)$, $m$ may be \opt{}ed in an invalid order and, since its timestamp may have changed, a new barrier request may have to be done. Therefore, the worst case conservative message delivery time when the optimistic assumption does not hold and some message is delivered out of order would be $2w(p) + 4\tconsm + \delta$.
+%The delivery time of each message $m$ will now depend on whether the assumption \emph{A2} holds or not while $m$ is being handled by the algorithm. If it does hold, it will be \optdel{}ed in the correct order within $w(p)$ and, as a barrier request was done in parallel with the conservative delivery algorithm, it will take $w(p) + 2\tconsm + \delta$ to \consdel{} $m$ in the worst case. If it does not hold, after $w(p)$, $m$ may be \optdel{}ed in an invalid order and, since its timestamp may have changed, a new barrier request may have to be done. Therefore, the worst case conservative message delivery time when the optimistic assumption does not hold and some message is delivered out of order would be $2w(p) + 4\tconsm + \delta$.
 
-Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption holds and otherwise. Three groups are shown: $G$, $G'$ and $G_b$, where $sendersTo(G) = \{G_b\}$, $sendersTo(G') = \{G\}$ and \mbox{$sendersTo(G_b) = \emptyset$}. A message $m : m.src = G \wedge m.dst = \{G, G'\}$ is \amcast{} and, at the same time, a barrier request is sent to the only group in $blockers(m)$, which is $G_b$. In (a), the optimistic assumption holds, so no message $m' : m'.ts < m.ts$ arrives after the proposal of $m$; in (b), however, it is necessary to make a second barrier request.
+%Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption holds and otherwise. Three groups are shown: $G$, $G'$ and $G_b$, where $sendersTo(G) = \{G_b\}$, $sendersTo(G') = \{G\}$ and \mbox{$sendersTo(G_b) = \emptyset$}. A message $m : m.src = G \wedge m.dst = \{G, G'\}$ is \amcast{} and, at the same time, a barrier request is sent to the only group in $blockers(m)$, which is $G_b$. In (a), the optimistic assumption holds, so no message $m' : m'.ts < m.ts$ arrives after the proposal of $m$; in (b), however, it is necessary to make a second barrier request.
 
-\begin{figure} 
-  \centering
-  \includegraphics[width=0.8\linewidth]{images/optdel}
-  \caption{Execution examples when the optimistic assumption holds (a) and when it fails to hold (b)}
-  \label{fig:optdel}
-\end{figure}
+% \begin{figure} 
+%   \centering
+%   \includegraphics[width=0.8\linewidth]{images/optdel}
+%   \caption{Execution examples when the optimistic assumption holds (a) and when it fails to hold (b)}
+%   \label{fig:optdel}
+% \end{figure}
 
 % 
 % \begin{algorithm}
@@ -618,7 +620,7 @@ Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption h
 % \INDENT{\textit{When $\exists m \in optPending : getTime() > m.ts + w(p)$ $\wedge\ \nexists m' \in optPending: m'.ts < m.ts$}}
 %   \STATE $optPending \leftarrow optPending \setminus \{m\}$
 %   \IF {$G \in m.dst \wedge m \neq null$}
-%     \STATE \optdel{$m$}  
+%     \STATE \optdelarg{$m$}  
 %   \ENDIF
 %   \IF {$G = m.src$}
 %     \STATE $\localmsgs \leftarrow \localmsgs \cup \{m\}$
@@ -667,7 +669,7 @@ Figure \ref{fig:optdel} illustrates both cases, when the optimistic assumption h
 % \blankline
 % \INDENT{\textit{When $\exists m \in \stamped : \forall G' \in sendersTo(G): m.ts < barrier(G',G)$\\ $\wedge\ \nexists m' \in \stamped : m'.ts < m.ts$ }}
 %   \STATE $\stamped \leftarrow \stamped \setminus \{m\}$
-%   \STATE \consdel{$m$}
+%   \STATE \consdelarg{$m$}
 %   \STATE $\delivered \leftarrow \delivered \cup \{m\}$
 % 
 % \blankline
@@ -688,7 +690,7 @@ Although unlikely to happen, the worst case delivery time of \amcast{} when usin
 
 Although discarding messages which do not follow the initial timestamp order conflicts with the properties we have defined for the \amcast{} primitive, we describe it here because then every message would be delivered within $3\delta$, in the worst case. The validity property would now be changed to:
 
-\textbf{Optimistic Uniform Validity}: if a process \amcast{}s $m$ and the optimistic assumption \emph{A2} holds, then one of the correct processes that is a destination of $m$ eventually \cons{}s $m$.
+\textbf{Optimistic Uniform Validity}: if a process \amcast{}s $m$ and the optimistic assumption \emph{A2} holds, then one of the correct processes that is a destination of $m$ eventually \consdel{}s $m$.
 
 The problem with changing the original uniform validity property is that it could make the multicast primitive impracticable for some applications. Nevertheless, some other applications not only do not require messages to be delivered if they arrive out of order, but also it is better not to deliver such messages at all -- such as real-time streams of audio or video or online real-time multiplayer games.
 
