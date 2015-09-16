@@ -74,6 +74,13 @@
 \usepackage{algorithmic}
 \usepackage{algorithm}
 \usepackage{times}
+
+%\usepackage{ifpdf}
+%\pdfpaperheight=9.25in
+%\pdfpaperwidth=6.10in
+
+\usepackage[margin=0.55in,paperwidth=6.10in,paperheight=9.25in]{geometry}
+
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
 %
@@ -95,18 +102,20 @@
 
 %\titlerunning{Short form of title}        % if too long for running head
 
-\author{Carlos E. B. Bezerra         \and
-        Cludio F. R. Geyer %etc.
+\author{Carlos Eduardo Bezerra         \and
+        Cl\'{a}udio Geyer %etc.
 }
 
 %\authorrunning{Short form of author list} % if too long for running head
 
-\institute{Carlos Eduardo Benevides Bezerra, Cludio Fernando Resin Geyer \at
+\institute{Carlos Eduardo Benevides Bezerra, Cl\'{a}udio Fernando Resin Geyer \at
 							Universidade Federal do Rio Grande do Sul \\
-              Av. Bento Gonalves, 9500, Porto Alegre, Brazil \\
+              Av. Bento Gon\c{c}alves, 9500, Porto Alegre, Brazil \\
               Tel.: +55-51-84065986\\
               Fax.: +55-51-33087308\\
-              \email{carlos.bezerra@inf.ufrgs.br, geyer@inf.ufrgs.br}           %  \\
+              \email{carlos.bezerra@inf.ufrgs.br, geyer@inf.ufrgs.br}           \\
+              The original publication is available at
+www.springerlink.com \\
 %             \emph{Present address:} of F. Author  %  if needed
 %           \and
 %           Cl�udio Fernando Resin Geyer \at
@@ -505,7 +514,7 @@ If even after all the neighbors, and the neighbors of the neighbors and so on, a
 	 		\STATE $\wshare \leftarrow \wtodiv \times \frac{p(s(R))}{\freecap}$ \label{alg:ggp:fraction}
 	 		\WHILE{$w_r(R) < \wshare$} \label{alg:ggp:whilefraction}
 	 		   \IF{there is any cell from $R$ neighboring a free cell}
-	 		   		\STATE $R \leftarrow R \cup \{$neighbor free cell with the highest $Int_c(C)$$\}$ \label{alg:ggp:freeneighbor}
+	 		   		\STATE $R \leftarrow R \cup \{$neighbor free cell with the highest $Int_c(C)\}$ \label{alg:ggp:freeneighbor}
 	 		   \ELSIF{there is any free cell}
 	 		   		\STATE $R \leftarrow R \cup \{$heaviest free cell$\}$ \label{alg:ggp:freeheavycell}
 	 		   \ELSE
@@ -852,7 +861,7 @@ This work was supported by the National Research Council (CNPq) and by the Coord
 \begin{figure}[h]
 %% Use the relevant command to insert your figure file.
 %% For example, with the graphicx package use
-	\includegraphics[width=0.3\linewidth]{images/Fig-Bezerra.jpg}
+	\includegraphics[width=0.3\linewidth]{images/Fig-Bezerra_2013_thumb.jpg}
 
 	\textbf{Carlos Eduardo Benevides Bezerra} is a full-time Ph.D. student at UFRGS (Universidade Federal do Rio Grande do Sul). He obtained his M.Sc. from the same university in 2009 and his B.Sc. degree from UFBA (Universidade Federal da Bahia) in 2007. His research interests include massively multiplayer online games, interest management algorithms, parallel and distributed algorithms, peer-to-peer networks and computational geometry.
 %% figure caption is below the figure
@@ -865,7 +874,7 @@ This work was supported by the National Research Council (CNPq) and by the Coord
 %% For example, with the graphicx package use
   \includegraphics[width=0.3\linewidth]{images/Fig-Geyer.jpg}
 
-  \textbf{Cludio Fernando Resin Geyer} is an associate professor at the Informatics Institute of the Federal University of Rio Grande do Sul. His research interests include massively multiplayer games, grid computing and ubiquitous computing. He received his Ph.D. in informatics from Joseph Fourier University. He is a member of ACM and of the Brazilian Computer Society (SBC).
+  \textbf{Cl\'{a}udio Fernando Resin Geyer} is an associate professor at the Informatics Institute of the Federal University of Rio Grande do Sul. His research interests include massively multiplayer games, grid computing and ubiquitous computing. He received his Ph.D. in informatics from Joseph Fourier University. He is a member of ACM and of the Brazilian Computer Society (SBC).
 
 
 %% figure caption is below the figure
